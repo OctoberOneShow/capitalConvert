@@ -8,6 +8,9 @@ A small web-based text toolkit (pure HTML/CSS/JS, no build step) for cleaning an
 - `words_replacing.html` – batch find-and-replace words
 - `assets/` – shared scripts and styles
 
+Each page also includes a shared mini-game drawer with Typing Sprint, Glyph Match,
+2048, and Reflex Tap.
+
 ## Usage
 
 Open any `.html` file directly in a browser. No server required.

@@ -210,6 +210,7 @@
       "tabTyping": "Typing Sprint",
       "tabMemory": "Glyph Match",
       "tab2048": "2048",
+      "tabReflex": "Reflex Tap",
       "hudTime": "Time",
       "hudWpm": "WPM",
       "hudAcc": "Acc",
@@ -217,6 +218,7 @@
       "hudPairs": "Pairs",
       "hudScore": "Score",
       "hudBest": "Best",
+      "hudLast": "Last",
       "typingPrompt": "Type the first character to start the clock.",
       "typingFinished":
         "Finished in {s}s at {wpm} WPM with {acc}% accuracy.",
@@ -249,6 +251,15 @@
       "btnTryAgain": "Try Again",
       "btnKeepGoing": "Keep Going",
       "btnNewGame": "New Game",
+      "reflexPadIdle": "Press Start",
+      "reflexPadWaiting": "Wait...",
+      "reflexPadReady": "Tap!",
+      "reflexPrompt": "Start a round, then tap when the panel turns green.",
+      "reflexWaiting": "Get ready. Do not tap yet.",
+      "reflexTooSoon": "Too soon! Start another round and wait for green.",
+      "reflexResult": "Your reaction time was {n} ms.",
+      "reflexHint": "Use the button, Space, or Enter. A new best is the lowest time.",
+      "logReflex": "Reflex Tap: {n} ms",
     },
     zh: {
       "langLabel": "语言",
@@ -426,6 +437,7 @@
       "tabTyping": "打字冲刺",
       "tabMemory": "灵符配对",
       "tab2048": "2048",
+      "tabReflex": "反应点击",
       "hudTime": "时间",
       "hudWpm": "WPM",
       "hudAcc": "准确率",
@@ -433,6 +445,7 @@
       "hudPairs": "配对",
       "hudScore": "得分",
       "hudBest": "最佳",
+      "hudLast": "上次",
       "typingPrompt": "输入第一个字符开始计时。",
       "typingFinished": "{s} 秒完成，{wpm} WPM，准确率 {acc}%。",
       "typingTimeUp": "时间到：{wpm} WPM，准确率 {acc}%。",
@@ -461,6 +474,15 @@
       "btnTryAgain": "再来一局",
       "btnKeepGoing": "继续游戏",
       "btnNewGame": "新游戏",
+      "reflexPadIdle": "点击开始",
+      "reflexPadWaiting": "请等待…",
+      "reflexPadReady": "快点！",
+      "reflexPrompt": "开始一局，在面板变绿时立即点击。",
+      "reflexWaiting": "准备好，暂时不要点击。",
+      "reflexTooSoon": "太早了！请重新开始并等待绿色出现。",
+      "reflexResult": "你的反应时间是 {n} 毫秒。",
+      "reflexHint": "可点击按钮或按空格键、回车键；用时越短越好。",
+      "logReflex": "反应点击：{n} 毫秒",
     },
   };
 
@@ -2681,6 +2703,7 @@
   var quietResetTyping = null;
   var quietResetMemory = null;
   var quietReset2048 = null;
+  var quietResetReflex = null;
 
   var memoryBestKey = "glyph-match-best";
   var memoryMatchPairs = 6;
@@ -2695,6 +2718,7 @@
 
   var g2048BestKey = "g2048-best";
   var g2048StateKey = "g2048-state";
+  var reflexBestKey = "reflex-tap-best";
 
   var typingPhrases = [
     "Paste your messy notes and let the formatter sweep every bracket away.",
@@ -2735,9 +2759,11 @@
     var tabTyping = getElement("gameTabTyping");
     var tabMemory = getElement("gameTabMemory");
     var tab2048 = getElement("gameTab2048");
+    var tabReflex = getElement("gameTabReflex");
     var panelTyping = getElement("gamePanelTyping");
     var panelMemory = getElement("gamePanelMemory");
     var panel2048 = getElement("gamePanel2048");
+    var panelReflex = getElement("gamePanelReflex");
     if (
       !dialog ||
       !backdrop ||
@@ -2745,9 +2771,11 @@
       !tabTyping ||
       !tabMemory ||
       !tab2048 ||
+      !tabReflex ||
       !panelTyping ||
       !panelMemory ||
-      !panel2048
+      !panel2048 ||
+      !panelReflex
     ) {
       return;
     }
@@ -2938,6 +2966,7 @@
       { name: "typing", tab: tabTyping, panel: panelTyping },
       { name: "memory", tab: tabMemory, panel: panelMemory },
       { name: "2048", tab: tab2048, panel: panel2048 },
+      { name: "reflex", tab: tabReflex, panel: panelReflex },
     ];
     var activeTabName = "typing";
 
@@ -2963,6 +2992,10 @@
         quietReset2048();
       }
 
+      if (quietResetReflex) {
+        quietResetReflex();
+      }
+
       if (shouldFocus) {
         gameTabEntries.forEach(function (entry) {
           if (entry.name === selected) {
@@ -2982,6 +3015,10 @@
 
     tab2048.addEventListener("click", function () {
       selectTab("2048");
+    });
+
+    tabReflex.addEventListener("click", function () {
+      selectTab("reflex");
     });
 
     tabTyping.parentElement.addEventListener("keydown", function (event) {
@@ -3061,6 +3098,10 @@
 
       if (quietResetMemory) {
         quietResetMemory();
+      }
+
+      if (quietResetReflex) {
+        quietResetReflex();
       }
 
       openBtn.focus();
@@ -3719,6 +3760,116 @@
     }
   }
 
+  function initReflexGame() {
+    var pad = getElement("reflexPad");
+    var padText = getElement("reflexPadText");
+    var lastEl = getElement("reflexLast");
+    var bestEl = getElement("reflexBest");
+    var resultEl = getElement("reflexResult");
+    var startBtn = getElement("reflexStartBtn");
+    if (!pad || !padText || !lastEl || !bestEl || !resultEl || !startBtn) {
+      return;
+    }
+
+    var state = "idle";
+    var readyAt = 0;
+    var waitId = null;
+
+    function readBest() {
+      var value = parseInt(localStorage.getItem(reflexBestKey), 10);
+      return isNaN(value) ? 0 : value;
+    }
+
+    function renderBest() {
+      var best = readBest();
+      bestEl.textContent = best ? best + " ms" : "—";
+    }
+
+    function setPad(nextState, labelKey) {
+      state = nextState;
+      pad.classList.remove("is-waiting", "is-ready", "is-early");
+      if (nextState === "waiting") {
+        pad.classList.add("is-waiting");
+      } else if (nextState === "ready") {
+        pad.classList.add("is-ready");
+      } else if (nextState === "early") {
+        pad.classList.add("is-early");
+      }
+      padText.textContent = t(labelKey);
+    }
+
+    function resetRound() {
+      window.clearTimeout(waitId);
+      waitId = null;
+      readyAt = 0;
+      setPad("idle", "reflexPadIdle");
+    }
+
+    function startRound() {
+      window.clearTimeout(waitId);
+      lastEl.textContent = "—";
+      resultEl.textContent = t("reflexWaiting");
+      setPad("waiting", "reflexPadWaiting");
+
+      var delay = 1200 + Math.floor(Math.random() * 2200);
+      waitId = window.setTimeout(function () {
+        waitId = null;
+        readyAt = performance.now();
+        setPad("ready", "reflexPadReady");
+        resultEl.textContent = t("reflexPadReady");
+      }, delay);
+      pad.focus();
+    }
+
+    function tapPad() {
+      if (state === "waiting") {
+        window.clearTimeout(waitId);
+        waitId = null;
+        readyAt = 0;
+        setPad("early", "reflexPadIdle");
+        resultEl.textContent = t("reflexTooSoon");
+        return;
+      }
+
+      if (state !== "ready") {
+        startRound();
+        return;
+      }
+
+      var reaction = Math.max(1, Math.round(performance.now() - readyAt));
+      var previousBest = readBest();
+      var isBest = !previousBest || reaction < previousBest;
+      if (isBest) {
+        localStorage.setItem(reflexBestKey, String(reaction));
+      }
+
+      lastEl.textContent = reaction + " ms";
+      resultEl.textContent =
+        t("reflexResult", { n: reaction }) + (isBest ? " " + t("newBest") : "");
+      setPad("idle", "reflexPadIdle");
+      renderBest();
+      logAction(t("logReflex", { n: reaction }));
+
+      if (isBest) {
+        var rect = pad.getBoundingClientRect();
+        createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      }
+    }
+
+    startBtn.addEventListener("click", startRound);
+    pad.addEventListener("click", tapPad);
+
+    quietResetReflex = function () {
+      if (state === "waiting" || state === "ready") {
+        resetRound();
+        resultEl.textContent = t("reflexPrompt");
+      }
+    };
+
+    renderBest();
+    resetRound();
+  }
+
   function focusOutput() {
     var output = getElement("outputText");
     if (!output) {
@@ -4107,6 +4258,7 @@
     initTypingGame();
     initMemoryGame();
     initG2048();
+    initReflexGame();
     initCounters();
     initUtilityActions();
     initUndo();

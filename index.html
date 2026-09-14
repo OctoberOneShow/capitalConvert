@@ -30,7 +30,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="assets/styles.css?v=3">
 </head>
 <body>
     <div class="topbar" role="banner">
@@ -246,6 +246,7 @@
                 <button class="game-tab" id="gameTabTyping" role="tab" aria-selected="true" aria-controls="gamePanelTyping" tabindex="0" type="button" data-i18n="tabTyping">Typing Sprint</button>
                 <button class="game-tab" id="gameTabMemory" role="tab" aria-selected="false" aria-controls="gamePanelMemory" tabindex="-1" type="button" data-i18n="tabMemory">Glyph Match</button>
                 <button class="game-tab" id="gameTab2048" role="tab" aria-selected="false" aria-controls="gamePanel2048" tabindex="-1" type="button" data-i18n="tab2048">2048</button>
+                <button class="game-tab" id="gameTabReflex" role="tab" aria-selected="false" aria-controls="gamePanelReflex" tabindex="-1" type="button" data-i18n="tabReflex">Reflex Tap</button>
             </div>
             <div class="game-panel" id="gamePanelTyping" role="tabpanel" aria-labelledby="gameTabTyping">
                 <p class="game-target" id="typingTarget" aria-hidden="true"></p>
@@ -319,9 +320,30 @@
                     </button>
                 </div>
             </div>
+            <div class="game-panel" id="gamePanelReflex" role="tabpanel" aria-labelledby="gameTabReflex" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudLast">Last</span><strong id="reflexLast">—</strong></div>
+                    <div class="game-stat"><span data-i18n="hudBest">Best</span><strong id="reflexBest">—</strong></div>
+                </div>
+                <button class="reflex-pad" id="reflexPad" type="button" aria-describedby="reflexResult">
+                    <span id="reflexPadText" data-i18n="reflexPadIdle">Press Start</span>
+                </button>
+                <p class="game-result" id="reflexResult" role="status" data-i18n="reflexPrompt">Start a round, then tap when the panel turns green.</p>
+                <div class="game-actions">
+                    <button class="primary" id="reflexStartBtn" type="button">
+                        <span class="button-content">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 5.5v13l11-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                            </svg>
+                            <span data-i18n="btnNewRound">New Round</span>
+                        </span>
+                    </button>
+                </div>
+                <p class="game-hint" data-i18n="reflexHint">Use the button, Space, or Enter. A new best is the lowest time.</p>
+            </div>
         </div>
     </div>
 
-    <script src="assets/app.js?v=2"></script>
+    <script src="assets/app.js?v=3"></script>
 </body>
 </html>
