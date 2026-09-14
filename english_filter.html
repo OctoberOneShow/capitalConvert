@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" data-page="filter">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Filter out Chinese characters while preserving English letters, numbers, and punctuation in mixed-language text.">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#050505">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#eef3f8">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23050505'/%3E%3Ctext x='32' y='44' font-family='Arial, sans-serif' font-size='30' font-weight='800' text-anchor='middle' fill='%2300f2ff'%3EcC%3C/text%3E%3C/svg%3E">
+    <title>English Letter Filter</title>
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem("theme");
+          if (!theme) {
+            theme = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          }
+          document.documentElement.setAttribute("data-theme", theme);
+          var motion = localStorage.getItem("motion-level");
+          if (!motion) {
+            motion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "off" : "full";
+          }
+          document.documentElement.setAttribute("data-motion", motion);
+        } catch (error) {
+          document.documentElement.setAttribute("data-theme", "dark");
+          document.documentElement.setAttribute("data-motion", "full");
+        }
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+    <div class="topbar" role="banner">
+        <nav aria-label="Primary" class="nav-left">            <a href="index.html" data-i18n="navFormatter">Text Formatter</a>
+            <a href="english_filter.html" data-i18n="navFilter">English Filter</a>
+            <a href="chinese_punctuation.html" data-i18n="navPunctuation">Chinese Converter</a>
+            <a href="words_replacing.html" data-i18n="navReplacer">Words Replacer</a>
+        </nav>
+        <div class="nav-right">
+            <label class="lang-picker" for="langSelect">
+                <span data-i18n="langLabel">Language</span>
+                <select id="langSelect" aria-label="Language">
+                    <option value="en">English</option>
+                    <option value="zh">中文</option>
+                </select>
+            </label>
+            <label class="motion-picker" for="motionLevel">
+                <span data-i18n="motionLabel">Motion</span>
+                <select id="motionLevel" aria-label="Motion intensity">
+                    <option value="full" data-i18n="motionFull">Full</option>
+                    <option value="calm" data-i18n="motionCalm">Calm</option>
+                    <option value="off" data-i18n="motionOff">Off</option>
+                </select>
+            </label>
+            <button id="resetLayoutBtn" class="ghost topbar-button" type="button">
+                <span class="button-content">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M4 12a8 8 0 1 0 2.34-5.66L4 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M4 4v5h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <span data-i18n="btnResetLayout">Reset Layout</span>
+                </span>
+            </button>
+            <button id="undoBtn" class="ghost topbar-button" type="button" disabled>
+                <span class="button-content">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M9 7 4 12l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M20 18a8 8 0 0 0-8-8H4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <span data-i18n="btnUndo">Undo</span>
+                </span>
+            </button>
+            <button id="gameToggleBtn" class="icon-button" type="button" aria-label="Open games" aria-haspopup="dialog" aria-expanded="false">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6.5 8.5h11a4 4 0 0 1 3.9 4.9l-.5 2.2a2.4 2.4 0 0 1-4.2 1l-1.2-1.6H8.6l-1.2 1.6a2.4 2.4 0 0 1-4.2-1l-.5-2.2a4 4 0 0 1 3.9-4.9Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                    <path d="M7 10.7v2.6M5.7 12h2.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                    <path d="M15.7 11.2h.01M17.9 13.2h.01" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"></path>
+                </svg>
+            </button>
+            <button id="themeToggle" class="icon-button" type="button" aria-label="Toggle theme" aria-pressed="false">
+                <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="currentColor"></path>
+                </svg>
+                <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="12" cy="12" r="4" fill="currentColor"></circle>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <h1 class="page-title" data-i18n="filter.title">English Letter Filter</h1>
+
+    <div class="description">
+        <p><p data-i18n="filter.desc">This tool filters out Chinese characters while preserving English letters, numbers, and all punctuation marks. Perfect for cleaning mixed-language text.</p></p>
+    </div>
+    <div class="activity-bar" aria-live="polite">
+        <p class="recent-action" id="recentAction" data-i18n="noRecent">No recent actions yet.</p>
+        <button class="ghost activity-toggle" id="historyToggle" type="button" aria-expanded="false" aria-controls="historyDrawer" data-i18n="historyToggle">History</button>
+    </div>
+    <div class="history-drawer" id="historyDrawer" hidden>
+        <div class="history-drawer-header">
+            <h2 data-i18n="recentActivity">Recent Activity</h2>
+            <button class="ghost" id="clearHistoryBtn" type="button" data-i18n="btnClearHistory">Clear</button>
+        </div>
+        <ul class="history-list" id="historyList">
+            <li data-i18n="noActions">No actions recorded yet.</li>
+        </ul>
+    </div>
+
+    <main id="main" class="container" role="main">
+        <div class="section" data-card-id="filter-input">
+            <div class="card-header">
+                <label for="inputText" data-i18n="inputLabel">Input Text</label>
+                <button class="drag-handle" type="button" aria-label="Reposition input card" data-i18n-aria="repositionInput" aria-expanded="false" title="Drag to move, or click for position buttons" data-i18n-title="dragTitle">
+                    <span class="button-content">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M9 5h.01M9 12h.01M9 19h.01M15 5h.01M15 12h.01M15 19h.01" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"></path>
+                        </svg>
+                        <span data-i18n="drag">Drag</span>
+                    </span>
+                </button>
+            </div>
+            <textarea id="inputText" placeholder="Enter your mixed text here (English + Chinese)..." data-i18n-placeholder="filter.phInput"></textarea>
+            <div class="field-meta">
+                <p class="counter" id="inputCounter">0 characters | 0 lines</p>
+            </div>
+            <div class="actions">
+                <button class="ghost" id="pasteBtn" type="button">
+                    <span class="button-content">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="8" y="4" width="8" height="4" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+                            <path d="M8 6H6.5A2.5 2.5 0 0 0 4 8.5v9A2.5 2.5 0 0 0 6.5 20h11a2.5 2.5 0 0 0 2.5-2.5v-9A2.5 2.5 0 0 0 17.5 6H16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                        </svg>
+                        <span data-i18n="btnPaste">Paste</span>
+                    </span>
+                </button>
+                <button class="ghost" id="clearInputBtn" type="button">
+                    <span class="button-content">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 7h16M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7m-8 0 1 11a2 2 0 0 0 2 1.8h4a2 2 0 0 0 2-1.8L17 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <span data-i18n="btnClear">Clear</span>
+                    </span>
+                </button>
+                <button class="primary" id="primaryBtn" type="button" onclick="filterText()">
+                    <span class="button-content">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 7h16M7 12h10M10 17h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                        </svg>
+                        <span data-i18n="filter.primary">Filter Text</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <div class="section" data-card-id="filter-output">
+            <div class="card-header">
+                <label for="outputText" data-i18n="filter.outputLabel">Filtered Text</label>
+                <button class="drag-handle" type="button" aria-label="Reposition output card" data-i18n-aria="repositionOutput" aria-expanded="false" title="Drag to move, or click for position buttons" data-i18n-title="dragTitle">
+                    <span class="button-content">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M9 5h.01M9 12h.01M9 19h.01M15 5h.01M15 12h.01M15 19h.01" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"></path>
+                        </svg>
+                        <span data-i18n="drag">Drag</span>
+                    </span>
+                </button>
+            </div>
+            <textarea id="outputText" readonly placeholder="Filtered text will appear here..." aria-live="polite" data-i18n-placeholder="filter.phOutput"></textarea>
+            <div class="field-meta">
+                <p class="counter" id="outputCounter">0 characters | 0 lines</p>
+                <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
+            </div>
+            <div class="output-insights">
+                <p class="change-summary" id="changeSummary" data-i18n="summaryDefault">Summary will appear after you run a tool.</p>
+                <details class="diff-preview" id="diffPreview">
+                    <summary data-i18n="previewChanges">Preview changes</summary>
+                    <div class="diff-grid">
+                        <div class="diff-card">
+                            <h3 data-i18n="diffBefore">Before</h3>
+                            <pre id="diffBefore" data-i18n="noInputYet">No input yet.</pre>
+                        </div>
+                        <div class="diff-card">
+                            <h3 data-i18n="diffAfter">After</h3>
+                            <pre id="diffAfter" data-i18n="noOutputYet">No output yet.</pre>
+                        </div>
+                    </div>
+                </details>
+            </div>
+            <div class="actions">
+                <button class="ghost" id="clearOutputBtn" type="button">
+                    <span class="button-content">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 7h16M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7m-8 0 1 11a2 2 0 0 0 2 1.8h4a2 2 0 0 0 2-1.8L17 7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <span data-i18n="btnClear">Clear</span>
+                    </span>
+                </button>
+                <button class="ghost" id="downloadBtn" type="button">
+                    <span class="button-content">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M12 4v10m0 0 4-4m-4 4-4-4M5 19h14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <span data-i18n="btnDownload">Download</span>
+                    </span>
+                </button>
+                <button class="ghost" id="swapBtn" type="button">
+                    <span class="button-content">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M7 7h10l-3-3m3 3-3 3M17 17H7l3 3m-3-3 3-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <span data-i18n="btnSwap">Swap Back</span>
+                    </span>
+                </button>
+                <button class="ghost" id="copyBtn" type="button">
+                    <span class="button-content">
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <rect x="9" y="9" width="10" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"></rect>
+                            <path d="M15 9V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <span data-i18n="btnCopy">Copy</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div class="footer" data-i18n="footer">Made with care by capitalConvert</div>
+
+    <div class="game-modal" id="gameModal" hidden>
+        <div class="game-modal-backdrop" id="gameBackdrop" aria-hidden="true"></div>
+        <div class="game-dialog" role="dialog" aria-modal="true" aria-labelledby="gameTitle">
+            <div class="game-dialog-header">
+                <h2 id="gameTitle" data-i18n="gamesTitle">Games</h2>
+                <button class="game-close" id="gameCloseBtn" type="button" aria-label="Close games" data-i18n-aria="closeGames">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="m6 6 12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="game-tabs" role="tablist" aria-label="Choose a game" data-i18n-aria="tablistLabel">
+                <button class="game-tab" id="gameTabTyping" role="tab" aria-selected="true" aria-controls="gamePanelTyping" tabindex="0" type="button" data-i18n="tabTyping">Typing Sprint</button>
+                <button class="game-tab" id="gameTabMemory" role="tab" aria-selected="false" aria-controls="gamePanelMemory" tabindex="-1" type="button" data-i18n="tabMemory">Glyph Match</button>
+                <button class="game-tab" id="gameTab2048" role="tab" aria-selected="false" aria-controls="gamePanel2048" tabindex="-1" type="button" data-i18n="tab2048">2048</button>
+            </div>
+            <div class="game-panel" id="gamePanelTyping" role="tabpanel" aria-labelledby="gameTabTyping">
+                <p class="game-target" id="typingTarget" aria-hidden="true"></p>
+                <span class="visually-hidden" id="typingTargetText"></span>
+                <input class="game-input" id="typingInput" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="gameHint" placeholder="Start typing to begin..." data-i18n-placeholder="gamePhInput">
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudTime">Time</span><strong id="gameTime">10.0s</strong></div>
+                    <div class="game-stat"><span data-i18n="hudWpm">WPM</span><strong id="gameWpm">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudAcc">Acc</span><strong id="gameAcc">100%</strong></div>
+                </div>
+                <div class="game-track" aria-hidden="true"><span class="game-track-fill" id="gameTrackFill"></span></div>
+                <p class="game-result" id="gameResult" role="status" data-i18n="typingPrompt">Type the first character to start the clock.</p>
+                <div class="game-actions">
+                    <button class="primary" id="gameStartBtn" type="button">
+                        <span class="button-content">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 5.5v13l11-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                            </svg>
+                            <span data-i18n="btnNewRound">New Round</span>
+                        </span>
+                    </button>
+                    <p class="game-best" id="gameBest" data-i18n="noBest">No best yet</p>
+                </div>
+                <p class="game-hint" id="gameHint" data-i18n="hintTyping">A 10-second typing dash. The clock starts on your first keystroke.</p>
+            </div>
+            <div class="game-panel" id="gamePanelMemory" role="tabpanel" aria-labelledby="gameTabMemory" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudMoves">Moves</span><strong id="memoryMoves">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudTime">Time</span><strong id="memoryTime">0.0s</strong></div>
+                    <div class="game-stat"><span data-i18n="hudPairs">Pairs</span><strong id="memoryPairs">0/6</strong></div>
+                </div>
+                <div class="memory-grid" id="memoryGrid" role="group" aria-label="Memory cards, find the matching pairs" data-i18n-aria="memoryGridLabel"></div>
+                <p class="game-result" id="memoryResult" role="status" data-i18n="memoryPrompt">Flip two cards. Match all six pairs as fast as you can.</p>
+                <div class="game-actions">
+                    <button class="primary" id="memoryStartBtn" type="button">
+                        <span class="button-content">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 5.5v13l11-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                            </svg>
+                            <span data-i18n="btnNewShuffle">New Shuffle</span>
+                        </span>
+                    </button>
+                    <p class="game-best" id="memoryBest" data-i18n="noBest">No best yet</p>
+                </div>
+            </div>
+            <div class="game-panel" id="gamePanel2048" role="tabpanel" aria-labelledby="gameTab2048" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudScore">Score</span><strong id="g2048Score">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudBest">Best</span><strong id="g2048BestStat">0</strong></div>
+                </div>
+                <div class="g2048-board" id="g2048Board" tabindex="0" role="application" aria-label="2048 board. Focus here and use the arrow keys to slide the tiles.">
+                    <div class="g2048-cells" id="g2048Cells" aria-hidden="true"></div>
+                    <div class="g2048-tiles" id="g2048Tiles" aria-hidden="true"></div>
+                    <div class="g2048-overlay" id="g2048Overlay" hidden>
+                        <p class="g2048-overlay-text" id="g2048OverlayText">Game over</p>
+                        <div class="g2048-overlay-actions">
+                            <button class="primary" id="g2048RetryBtn" type="button"><span class="button-content"><span data-i18n="btnTryAgain">Try Again</span></span></button>
+                            <button class="ghost" id="g2048KeepBtn" type="button" hidden><span class="button-content"><span data-i18n="btnKeepGoing">Keep Going</span></span></button>
+                        </div>
+                    </div>
+                </div>
+                <p class="game-result" id="g2048Result" role="status" data-i18n="g2048Prompt">Arrow keys or swipe slide the tiles. Match numbers to reach 2048!</p>
+                <div class="game-actions">
+                    <button class="primary" id="g2048NewBtn" type="button">
+                        <span class="button-content">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 5.5v13l11-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                            </svg>
+                            <span data-i18n="btnNewGame">New Game</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/app.js?v=2"></script>
+</body>
+</html>
