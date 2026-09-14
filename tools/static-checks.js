@@ -86,24 +86,20 @@ PAGES.forEach((page) => {
     assetLines.join(" | "),
   );
 
-  // The only change this task made to the HTML: ?v=4 -> ?v=5. The working tree
-  // already carried uncommitted Caret Dash changes before this task, so the
-  // honest check is: reverting ?v=5 -> ?v=4 leaves the versioned asset lines
-  // byte-identical to the pre-change ?v=4 state.
+  const headAssetLines = gitShow("HEAD", page)
+    .split("\n")
+    .filter((line) => /assets\/(app\.js|styles\.css)\?v=/.test(line));
+  const normalizeVersion = (line) =>
+    line.replace(/\?v=\d+/, "?v=<version>");
+  // Keep this check version-agnostic so it validates future bumps too.
   check(
     `${page}: asset lines differ from HEAD only by the version bump`,
-    assetLines.every((line) =>
-      /assets\/(app\.js|styles\.css)\?v=3"/.test(
-        gitShow("HEAD", page)
-          .split("\n")
-          .find((headLine) =>
-            headLine.includes(
-              line.includes("styles.css") ? "assets/styles.css" : "assets/app.js",
-            ),
-          ) || "",
-      ),
-    ),
-    "expected HEAD to carry ?v=3 on the same two lines",
+    assetLines.every((line) => {
+      const needle = line.includes("styles.css") ? "assets/styles.css" : "assets/app.js";
+      const headLine = headAssetLines.find((candidate) => candidate.includes(needle));
+      return !!headLine && normalizeVersion(headLine) === normalizeVersion(line);
+    }),
+    "asset reference shape changed beyond version token",
   );
 });
 
