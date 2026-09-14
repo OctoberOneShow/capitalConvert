@@ -3,7 +3,7 @@
  * Static acceptance checks for the pet companion change.
  *
  *   1. the four pages still expose exactly 5 game tabs / 5 game panels
- *   2. both shared assets are requested with ?v=5 on all four pages
+ *   2. both shared assets are requested with ?v=7 on all four pages
  *   3. only the cache-busting string changed on the asset lines of each page
  *   4. the pet markup is NOT present in any HTML file (it is JS-injected)
  *   5. UTF-8 / CJK integrity (BOM, no U+FFFD, no latin1 mojibake, sample strings)
@@ -11,6 +11,9 @@
  *      external assets, balanced braces
  *   7. pet JS: no window.prompt/confirm, DOM built with createElement(NS),
  *      mounted on document.body, no permanent rAF loop
+ *   8. the extended pet (progression / interactions / mini-games): every
+ *      mini-game timer is cancellable, lifecycle hooks exist, stages and
+ *      accessories all have CSS, motion-off rules cover the new effects
  *
  * Usage: node tools/static-checks.js
  */
@@ -66,11 +69,14 @@ PAGES.forEach((page) => {
   check(`${page}: exactly 5 game-tab`, tabs === 5, `found ${tabs}`);
   check(`${page}: exactly 5 game-panel`, panels === 5, `found ${panels}`);
   check(
-    `${page}: stylesheet requested as ?v=5`,
-    html.includes("assets/styles.css?v=5"),
+    `${page}: stylesheet requested as ?v=7`,
+    html.includes("assets/styles.css?v=7"),
   );
-  check(`${page}: script requested as ?v=5`, html.includes("assets/app.js?v=5"));
-  check(`${page}: no stale ?v=4 left`, !html.includes("?v=4"));
+  check(`${page}: script requested as ?v=7`, html.includes("assets/app.js?v=7"));
+  check(
+    `${page}: no stale ?v=6 / ?v=5 / ?v=4 left`,
+    !html.includes("?v=6") && !html.includes("?v=5") && !html.includes("?v=4"),
+  );
 
   const assetLines = html
     .split("\n")
@@ -81,8 +87,8 @@ PAGES.forEach((page) => {
     `found ${assetLines.length}`,
   );
   check(
-    `${page}: both asset references are ?v=5`,
-    assetLines.every((line) => line.includes("?v=5")),
+    `${page}: both asset references are ?v=7`,
+    assetLines.every((line) => line.includes("?v=7")),
     assetLines.join(" | "),
   );
 
@@ -323,6 +329,75 @@ check(
   "no hard-coded visible sentences in the pet JS",
   suspiciousLiterals.length === 0,
   suspiciousLiterals.join(" | "),
+);
+
+console.log("\n== 8. extended pet (progression / interactions / mini-games) ==");
+check(
+  "mini-game timers are tracked and cleared",
+  /function petMiniTrack/.test(petJs) &&
+    /function petMiniClearTimers/.test(petJs) &&
+    /window\.clearTimeout\(id\)/.test(petJs),
+);
+check(
+  "visibilitychange stops the mini-game",
+  /function petHandleVisibility[\s\S]{0,400}?petMiniStop\(\)/.test(petJs),
+);
+check(
+  "hiding the pet stops the mini-game",
+  /function petOnHide[\s\S]{0,300}?petMiniStop\(\)/.test(petJs),
+);
+check(
+  "game awareness hook exists and never calls into the games",
+  /function petNotifyGame\(/.test(petJs) &&
+    !/readBest\(|createConfetti\(|endRound\(|startRound\(/.test(petJs),
+);
+check(
+  "both mini-games are implemented",
+  petJs.includes("function petStartToss") && petJs.includes("function petStartSimon"),
+);
+check(
+  "progression is table-driven with 10 levels and 3 stages",
+  /petLevelXpTable = \[0, 20, 50, 90, 140, 200, 280, 380, 500, 650\]/.test(petJs) &&
+    /petStageOrder = \["baby", "grown", "elder"\]/.test(petJs),
+);
+["baby", "grown", "elder"].forEach((stage) => {
+  check(
+    `CSS reveals the "${stage}" evolution stage`,
+    petCss.includes(`[data-stage="${stage}"] .pet-stage-${stage}`),
+  );
+});
+["hat", "scarf", "glasses", "crown", "aura"].forEach((accessory) => {
+  check(
+    `CSS reveals the "${accessory}" accessory`,
+    petCss.includes(`[data-acc="${accessory}"] .pet-acc-${accessory}`),
+  );
+});
+["bl", "tr", "tl"].forEach((corner) => {
+  check(
+    `CSS positions the widget in corner "${corner}"`,
+    petCss.includes(`.pet-widget[data-corner="${corner}"]`),
+  );
+});
+check(
+  "motion-off disables the new cursor/combo/toast animations",
+  /\[data-motion="off"\] \.pet-look\s*\{[^}]*transform:\s*none/.test(petCss) &&
+    /\[data-motion="off"\] \.pet-combo[\s\S]{0,120}?animation:\s*none/.test(petCss),
+);
+check(
+  "reduced-motion media query also stills the new effects",
+  /@media \(prefers-reduced-motion: reduce\)\s*\{[\s\S]*?\.pet-game-marker[\s\S]*?animation:\s*none/.test(
+    petCss,
+  ),
+);
+check(
+  "richer idle animation (blink + antenna/plume wiggle) is declared",
+  ["petBlink", "petWiggle"].every((name) =>
+    petCss.includes(`@keyframes ${name}`),
+  ),
+);
+check(
+  "mini-game boards fit the narrow panel (a dedicated wider width exists)",
+  /\[data-view="games"\]\s*\.pet-panel[\s\S]{0,120}?width:/.test(petCss),
 );
 
 console.log("\n== summary ==");

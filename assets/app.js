@@ -345,6 +345,134 @@
       "petReactionLevel": "{name} reached level {n}!",
       "petAwayHours": "{n} h",
       "petAwayMinutes": "{n} min",
+      "petBtnTreat": "Give treat",
+      "petBtnBrush": "Brush",
+      "petBtnTalk": "Talk",
+      "petBtnTricks": "Tricks",
+      "petBtnGames": "Games",
+      "petBtnStats": "Stats",
+      "petBtnBack": "Back",
+      "petBtnDrag": "Drag companion",
+      "petMoveHandle": "Move companion (drag or use the arrow keys)",
+      "petReactionMoved": "{name} moved to the {corner} corner.",
+      "petCornerBr": "bottom-right",
+      "petCornerBl": "bottom-left",
+      "petCornerTr": "top-right",
+      "petCornerTl": "top-left",
+      "petBtnSound": "Sound",
+      "petSoundOn": "Sound on",
+      "petSoundOff": "Sound off",
+      "petTreatsLabel": "Treats",
+      "petTreatCount": "{n}",
+      "petReactionTreat": "You gave {name} a treat.",
+      "petReactionNoTreat": "{name} has no treats to spare.",
+      "petReactionBrush": "You brushed {name}.",
+      "petReactionTrickTeach": "{name} learned {trick}!",
+      "petReactionTrickNone": "{name} already knows every trick.",
+      "petReactionTrickLocked": "Teach {trick} at level {n}.",
+      "petReactionTrickPerform": "{name} performs {trick}!",
+      "petReactionTrickUnknown": "{name} does not know that trick yet.",
+      "petReactionStage": "{name} evolved into {stage}!",
+      "petReactionCombo": "Combo x{n}!",
+      "petComboLabel": "x{n}",
+      "petReactionMuted": "Sound muted.",
+      "petReactionUnmuted": "Sound on.",
+      "petReactionAcc": "{name} wears the {acc}.",
+      "petReactionHue": "You recoloured {name}.",
+      "petReactionCheer": "{name} cheers you on!",
+      "petReactionCheerBest": "{name} is wowed by your new best!",
+      "petReactionTyping": "Keep typing, you are doing great!",
+      "petReactionWoke": "{name} wakes up.",
+      "petReactionSleep": "{name} dozed off.",
+      "petStageBaby": "Baby",
+      "petStageGrown": "Grown",
+      "petStageElder": "Elder",
+      "petTrickJump": "Jump",
+      "petTrickSpin": "Spin",
+      "petTrickSing": "Sing",
+      "petTrickWave": "Wave",
+      "petTalkMorning": "Good morning!",
+      "petTalkAfternoon": "Good afternoon.",
+      "petTalkEvening": "Good evening.",
+      "petTalkNight": "It is late...",
+      "petTalkHappy": "I feel wonderful today.",
+      "petTalkNeutral": "What shall we do next?",
+      "petTalkHungry": "My tummy is rumbling.",
+      "petTalkSleepy": "I could use a little nap.",
+      "petTalkPageFormatter": "Let us tidy some text together.",
+      "petTalkPageFilter": "Chinese characters, begone!",
+      "petTalkPagePunctuation": "Let us fix those punctuation marks.",
+      "petTalkPageReplacer": "Time to swap a few words.",
+      "petStatsTitle": "Companion stats",
+      "petStatLevel": "Level",
+      "petStatStage": "Stage",
+      "petStatXp": "Experience",
+      "petStatTreats": "Treats",
+      "petStatDays": "Days visited",
+      "petStatStreak": "Day streak",
+      "petStatTricks": "Tricks",
+      "petStatCombo": "Best combo",
+      "petStatAchievements": "Achievements",
+      "petAchievementsCount": "{n}/{total}",
+      "petAchievementUnlocked": "{name} earned: {title}",
+      "petAchFirstPet": "New friend",
+      "petAchFirstPetDesc": "Adopt your first companion.",
+      "petAchFed10": "Well fed",
+      "petAchFed10Desc": "Feed your companion 10 times.",
+      "petAchLevel5": "Rising star",
+      "petAchLevel5Desc": "Reach level 5.",
+      "petAchLevel10": "Elder bond",
+      "petAchLevel10Desc": "Reach level 10.",
+      "petAchMiniWin": "Playmate",
+      "petAchMiniWinDesc": "Finish a mini-game.",
+      "petAchTrickster": "Trickster",
+      "petAchTricksterDesc": "Teach your companion a trick.",
+      "petAchStreak3": "Loyal friend",
+      "petAchStreak3Desc": "Visit three days in a row.",
+      "petAchTreats25": "Treat hoarder",
+      "petAchTreats25Desc": "Hold 25 treats at once.",
+      "petAchCombo5": "On a roll",
+      "petAchCombo5Desc": "Reach a 5x petting combo.",
+      "petAchEvolved": "Evolution",
+      "petAchEvolvedDesc": "Evolve to the grown stage.",
+      "petAchDressed": "Dressed up",
+      "petAchDressedDesc": "Put on an accessory.",
+      "petGamesTitle": "Mini-games",
+      "petGameTreatToss": "Treat Toss",
+      "petGameTrickTrainer": "Trick Trainer",
+      "petGameChoose": "Pick a mini-game",
+      "petGameExit": "Leave game",
+      "petGameTossHint": "Stop the marker in the glowing zone.",
+      "petGameTossStart": "Start tossing",
+      "petGameTossBtn": "Toss",
+      "petGameTossRound": "Round {n}/{total}",
+      "petGameTossPerfect": "Perfect!",
+      "petGameTossGood": "Nice!",
+      "petGameTossOk": "Okay.",
+      "petGameTossMiss": "Missed.",
+      "petGameTossScore": "Score {n}",
+      "petGameTossResult": "Treat Toss: {n} points, +{treats} treats.",
+      "petGameTossAria": "Treat Toss timing bar.",
+      "petGameSimonHint": "Watch the sequence, then repeat it.",
+      "petGameSimonWatch": "Watch...",
+      "petGameSimonGo": "Your turn!",
+      "petGameSimonRound": "Sequence {n}",
+      "petGameSimonWrong": "Not quite. Try again next time.",
+      "petGameSimonResult": "Trick Trainer: sequence {n}, +{treats} treats.",
+      "petGameSimonAria": "Trick Trainer memory game.",
+      "petAccLabel": "Accessory",
+      "petAccNone": "None",
+      "petAccHat": "Party hat",
+      "petAccScarf": "Scarf",
+      "petAccGlasses": "Glasses",
+      "petAccCrown": "Crown",
+      "petAccAura": "Aura",
+      "petHueLabel": "Coat",
+      "petHueDefault": "Classic",
+      "petHueMint": "Mint",
+      "petHueRose": "Rose",
+      "petHueGold": "Gold",
+      "petLockedAtLevel": "Unlocks at level {n}",
     },
     zh: {
       "langLabel": "语言",
@@ -647,6 +775,134 @@
       "petReactionLevel": "{name} 升到了等级 {n}！",
       "petAwayHours": "{n} 小时",
       "petAwayMinutes": "{n} 分钟",
+      "petBtnTreat": "投喂零食",
+      "petBtnBrush": "梳毛",
+      "petBtnTalk": "聊天",
+      "petBtnTricks": "动作",
+      "petBtnGames": "小游戏",
+      "petBtnStats": "状态",
+      "petBtnBack": "返回",
+      "petBtnDrag": "拖动伙伴",
+      "petMoveHandle": "移动伙伴（拖动或使用方向键）",
+      "petReactionMoved": "「{name}」移动到了{corner}角。",
+      "petCornerBr": "右下",
+      "petCornerBl": "左下",
+      "petCornerTr": "右上",
+      "petCornerTl": "左上",
+      "petBtnSound": "音效",
+      "petSoundOn": "音效开",
+      "petSoundOff": "音效关",
+      "petTreatsLabel": "零食",
+      "petTreatCount": "{n}",
+      "petReactionTreat": "你投喂了 {name} 一个零食。",
+      "petReactionNoTreat": "{name} 已经没有零食了。",
+      "petReactionBrush": "你给 {name} 梳了毛。",
+      "petReactionTrickTeach": "{name} 学会了{trick}！",
+      "petReactionTrickNone": "{name} 已经学会所有动作了。",
+      "petReactionTrickLocked": "等级 {n} 可教{trick}。",
+      "petReactionTrickPerform": "{name} 表演了{trick}！",
+      "petReactionTrickUnknown": "{name} 还不会这个动作。",
+      "petReactionStage": "{name} 进化成了{stage}！",
+      "petReactionCombo": "连击 x{n}！",
+      "petComboLabel": "x{n}",
+      "petReactionMuted": "音效已关闭。",
+      "petReactionUnmuted": "音效已开启。",
+      "petReactionAcc": "{name} 戴上了{acc}。",
+      "petReactionHue": "你给 {name} 换了毛色。",
+      "petReactionCheer": "{name} 为你加油！",
+      "petReactionCheerBest": "{name} 被你的新纪录惊呆了！",
+      "petReactionTyping": "继续打字，你做得很棒！",
+      "petReactionWoke": "{name} 醒来了。",
+      "petReactionSleep": "{name} 打起了瞌睡。",
+      "petStageBaby": "幼体",
+      "petStageGrown": "成长体",
+      "petStageElder": "长老体",
+      "petTrickJump": "跳跃",
+      "petTrickSpin": "转圈",
+      "petTrickSing": "唱歌",
+      "petTrickWave": "挥手",
+      "petTalkMorning": "早上好！",
+      "petTalkAfternoon": "下午好。",
+      "petTalkEvening": "晚上好。",
+      "petTalkNight": "已经很晚了……",
+      "petTalkHappy": "我今天感觉超棒。",
+      "petTalkNeutral": "接下来做点什么呢？",
+      "petTalkHungry": "肚子咕咕叫了。",
+      "petTalkSleepy": "有点想打个盹。",
+      "petTalkPageFormatter": "一起把文字整理干净吧。",
+      "petTalkPageFilter": "中文字符，退散！",
+      "petTalkPagePunctuation": "来修一修标点符号吧。",
+      "petTalkPageReplacer": "该替换一些词语了。",
+      "petStatsTitle": "伙伴状态",
+      "petStatLevel": "等级",
+      "petStatStage": "阶段",
+      "petStatXp": "经验",
+      "petStatTreats": "零食",
+      "petStatDays": "到访天数",
+      "petStatStreak": "连续天数",
+      "petStatTricks": "动作",
+      "petStatCombo": "最高连击",
+      "petStatAchievements": "成就",
+      "petAchievementsCount": "{n}/{total}",
+      "petAchievementUnlocked": "{name} 获得了：{title}",
+      "petAchFirstPet": "初次相遇",
+      "petAchFirstPetDesc": "领养第一个伙伴。",
+      "petAchFed10": "喂养达人",
+      "petAchFed10Desc": "喂食伙伴 10 次。",
+      "petAchLevel5": "崭露头角",
+      "petAchLevel5Desc": "达到等级 5。",
+      "petAchLevel10": "羁绊长老",
+      "petAchLevel10Desc": "达到等级 10。",
+      "petAchMiniWin": "游戏伙伴",
+      "petAchMiniWinDesc": "完成一次小游戏。",
+      "petAchTrickster": "动作大师",
+      "petAchTricksterDesc": "教会伙伴一个动作。",
+      "petAchStreak3": "忠实伙伴",
+      "petAchStreak3Desc": "连续到访三天。",
+      "petAchTreats25": "零食收藏家",
+      "petAchTreats25Desc": "一次拥有 25 个零食。",
+      "petAchCombo5": "连击高手",
+      "petAchCombo5Desc": "达成 5 连击。",
+      "petAchEvolved": "进化",
+      "petAchEvolvedDesc": "进化到成长体。",
+      "petAchDressed": "盛装打扮",
+      "petAchDressedDesc": "戴上任意配饰。",
+      "petGamesTitle": "小游戏",
+      "petGameTreatToss": "抛零食",
+      "petGameTrickTrainer": "动作训练",
+      "petGameChoose": "选择一个小游戏",
+      "petGameExit": "退出游戏",
+      "petGameTossHint": "在发光区域停下标记。",
+      "petGameTossStart": "开始抛掷",
+      "petGameTossBtn": "抛掷",
+      "petGameTossRound": "第 {n}/{total} 轮",
+      "petGameTossPerfect": "完美！",
+      "petGameTossGood": "不错！",
+      "petGameTossOk": "还行。",
+      "petGameTossMiss": "没中。",
+      "petGameTossScore": "得分 {n}",
+      "petGameTossResult": "抛零食：{n} 分，+{treats} 零食。",
+      "petGameTossAria": "抛零食计时条。",
+      "petGameSimonHint": "记住顺序，然后重复一遍。",
+      "petGameSimonWatch": "观看……",
+      "petGameSimonGo": "轮到你了！",
+      "petGameSimonRound": "序列 {n}",
+      "petGameSimonWrong": "差一点，下次再来。",
+      "petGameSimonResult": "动作训练：序列 {n}，+{treats} 零食。",
+      "petGameSimonAria": "动作训练记忆游戏。",
+      "petAccLabel": "配饰",
+      "petAccNone": "无",
+      "petAccHat": "派对帽",
+      "petAccScarf": "围巾",
+      "petAccGlasses": "眼镜",
+      "petAccCrown": "王冠",
+      "petAccAura": "光环",
+      "petHueLabel": "毛色",
+      "petHueDefault": "经典",
+      "petHueMint": "薄荷",
+      "petHueRose": "玫瑰",
+      "petHueGold": "鎏金",
+      "petLockedAtLevel": "等级 {n} 解锁",
     },
   };
 
@@ -3058,6 +3314,7 @@
         var rect = startBtn.getBoundingClientRect();
         createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
       }
+      petNotifyGame(isBest);
 
       resultEl.textContent = message;
       renderBest();
@@ -3522,6 +3779,7 @@
         var rect = startBtn.getBoundingClientRect();
         createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
       }
+      petNotifyGame(isBest);
 
       resultEl.textContent = message;
       renderBest();
@@ -3876,6 +4134,7 @@
           t("g2048OverResult", { n: score }) +
           (score > 0 && score > bestAtStart ? " " + t("newBest") : "");
         showOverlay(t("g2048Over", { n: score }), false);
+        petNotifyGame(score > 0 && score > bestAtStart);
       }
 
       saveState();
@@ -4037,6 +4296,7 @@
         var rect = pad.getBoundingClientRect();
         createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
       }
+      petNotifyGame(isBest);
     }
 
     startBtn.addEventListener("click", startRound);
@@ -4371,6 +4631,7 @@
         var rect = field.getBoundingClientRect();
         createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
       }
+      petNotifyGame(isBest);
 
       retryBtn.focus();
     }
@@ -5151,17 +5412,85 @@
   var petFxMs = 900;
   var petStatusRevertMs = 4200;
   var petNameMax = 16;
-  var petLevelXp = 20;
-  var petMaxLevel = 99;
   var petDecayCapMs = 12 * 60 * 60 * 1000;
   var petDecayPerHour = { happiness: 6, hunger: 9, energy: 5 };
   var petStartStats = { happiness: 72, hunger: 24, energy: 80 };
+  var petStartTreats = 3;
+  var petComboWindowMs = 2600;
+  var petIdleSleepMs = 3 * 60 * 1000;
+  var petTypingCooldownMs = 22000;
+  var petCursorThrottleMs = 90;
+  var petTossRounds = 5;
+  var petTossPeriodMs = 1400;
+  var petTossTickMs = 40;
+  var petSimonStepMs = 620;
+  var petToastMs = 4200;
+
+  /* Cumulative XP required to *reach* each level; index 0 is level 1. */
+  var petLevelXpTable = [0, 20, 50, 90, 140, 200, 280, 380, 500, 650];
+  var petMaxLevel = petLevelXpTable.length;
+  var petStageOrder = ["baby", "grown", "elder"];
+  var petStageMaxLevel = { baby: 3, grown: 7, elder: petMaxLevel };
+  var petTrickOrder = ["jump", "spin", "sing", "wave"];
+  var petTrickLevel = { jump: 1, spin: 2, sing: 4, wave: 6 };
+  var petTrickClass = {
+    jump: "pet-trick-jump",
+    spin: "pet-trick-spin",
+    sing: "pet-trick-sing",
+    wave: "pet-trick-wave",
+  };
+  var petAccessoryOrder = ["none", "hat", "scarf", "glasses", "crown", "aura"];
+  var petAccessoryLevel = {
+    none: 1,
+    hat: 2,
+    scarf: 4,
+    glasses: 6,
+    crown: 8,
+    aura: 10,
+  };
+  var petAccessoryClass = {
+    none: "pet-acc-none",
+    hat: "pet-acc-hat",
+    scarf: "pet-acc-scarf",
+    glasses: "pet-acc-glasses",
+    crown: "pet-acc-crown",
+    aura: "pet-acc-aura",
+  };
+  var petHueOrder = ["default", "mint", "rose", "gold"];
+  var petHueLevel = { default: 1, mint: 3, rose: 5, gold: 7 };
+  var petCornerOrder = ["br", "bl", "tr", "tl"];
+  var petStageClass = {
+    baby: "pet-stage-baby",
+    grown: "pet-stage-grown",
+    elder: "pet-stage-elder",
+  };
   var petParticleShapes = {
     happy: "is-heart",
     fed: "is-food",
     playing: "is-star",
     resting: "is-sleep",
+    treat: "is-food",
+    brush: "is-star",
+    level: "is-spark",
+    achievement: "is-spark",
+    cheer: "is-star",
   };
+  var petAchievements = [
+    { id: "firstPet", titleKey: "petAchFirstPet", descKey: "petAchFirstPetDesc", icon: "M12 20c-4.1 0-7.4-2.7-7.4-6.1 0-2.6 2.1-4.6 4.7-4.6.9 0 1.7.3 2.4.8A4.1 4.1 0 0 1 19.4 14c0 3.4-3.3 6-7.4 6z" },
+    { id: "fed10", titleKey: "petAchFed10", descKey: "petAchFed10Desc", icon: "M4 11h13a4 4 0 0 1 0 8H8a4 4 0 0 1-4-4z" },
+    { id: "level5", titleKey: "petAchLevel5", descKey: "petAchLevel5Desc", icon: "M12 3l2.6 6.1L21 10l-4.8 4.3L17.4 21 12 17.7 6.6 21l1.2-6.7L3 10l6.4-.9z" },
+    { id: "level10", titleKey: "petAchLevel10", descKey: "petAchLevel10Desc", icon: "M5 18h14M7 18V9l5-4 5 4v9" },
+    { id: "miniWin", titleKey: "petAchMiniWin", descKey: "petAchMiniWinDesc", icon: "M12 4l2 4.4 4.8.6-3.5 3.3.9 4.7L12 14.8 7.8 17l.9-4.7L5.2 9l4.8-.6z" },
+    { id: "trickster", titleKey: "petAchTrickster", descKey: "petAchTricksterDesc", icon: "M12 3v10m0 0l-4 4m4-4l4 4" },
+    { id: "streak3", titleKey: "petAchStreak3", descKey: "petAchStreak3Desc", icon: "M12 21s-7-4.4-7-9.5A4.5 4.5 0 0 1 12 8a4.5 4.5 0 0 1 7 3.5C19 16.6 12 21 12 21z" },
+    { id: "treats25", titleKey: "petAchTreats25", descKey: "petAchTreats25Desc", icon: "M6 8h12l-1 11H7zM9 8V6a3 3 0 0 1 6 0v2" },
+    { id: "combo5", titleKey: "petAchCombo5", descKey: "petAchCombo5Desc", icon: "M4 13h4l2-7 4 13 2-6h4" },
+    { id: "evolved", titleKey: "petAchEvolved", descKey: "petAchEvolvedDesc", icon: "M12 3l4 5-4 3-4-3zM7 21l1-6h8l1 6z" },
+    { id: "dressed", titleKey: "petAchDressed", descKey: "petAchDressedDesc", icon: "M5 9l4-3 3 2 3-2 4 3-3 3v7H8v-7z" },
+  ];
+  var petAchievementIds = petAchievements.map(function (definition) {
+    return definition.id;
+  });
 
   var petState = null;
   var petEls = null;
@@ -5174,11 +5503,26 @@
   var petStatusTimer = null;
   var petReactionTimer = null;
   var petResetTimer = null;
+  var petComboTimer = null;
+  var petToastTimer = null;
   var petCooldownUntil = 0;
   var petStatusText = "";
   var petTrackedTimeouts = [];
   var petSelectedSpecies = petSpeciesOrder[0];
   var petRenderedSpecies = "";
+  var petView = "main";
+  var petCombo = 0;
+  var petAsleep = false;
+  var petLastInteraction = 0;
+  var petTypingAt = 0;
+  var petCursorAt = 0;
+  var petLookX = 0;
+  var petLookY = 0;
+  var petMini = null;
+  var petMiniTimers = [];
+  var petAudio = null;
+  var petDrag = null;
+  var petListenersBound = false;
 
   function petClamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
@@ -5205,6 +5549,50 @@
     return "petStatus" + mood.charAt(0).toUpperCase() + mood.slice(1);
   }
 
+  function petStageKey(stage) {
+    return "petStage" + stage.charAt(0).toUpperCase() + stage.slice(1);
+  }
+
+  function petTrickKey(trick) {
+    return "petTrick" + trick.charAt(0).toUpperCase() + trick.slice(1);
+  }
+
+  function petHueKey(hue) {
+    return "petHue" + hue.charAt(0).toUpperCase() + hue.slice(1);
+  }
+
+  function petAccessoryKey(accessory) {
+    return "petAcc" + accessory.charAt(0).toUpperCase() + accessory.slice(1);
+  }
+
+  function petPickFrom(order, value, fallback) {
+    return order.indexOf(value) !== -1 ? value : fallback;
+  }
+
+  function petAchievementById(id) {
+    for (var index = 0; index < petAchievements.length; index += 1) {
+      if (petAchievements[index].id === id) {
+        return petAchievements[index];
+      }
+    }
+    return null;
+  }
+
+  function petLocalDay(now) {
+    var date = new Date(now);
+    try {
+      return (
+        date.getFullYear() +
+        "-" +
+        (date.getMonth() + 1) +
+        "-" +
+        date.getDate()
+      );
+    } catch (error) {
+      return "";
+    }
+  }
+
   function petSanitizeName(value) {
     if (typeof value !== "string") {
       return "";
@@ -5216,12 +5604,39 @@
       .slice(0, petNameMax);
   }
 
+  /*
+   * Defensive migration: this runs against every save, including the older
+   * schema (no treats / tricks / achievements / streak / accessory). Every
+   * field gets a sane default and out-of-range values are clamped, so a
+   * partial or corrupt payload can never throw.
+   */
   function petNormalizeState(raw) {
     if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
       return null;
     }
     if (!petIsSpecies(raw.species)) {
       return null;
+    }
+    var tricks = [];
+    if (Array.isArray(raw.tricks)) {
+      petTrickOrder.forEach(function (trick) {
+        if (raw.tricks.indexOf(trick) !== -1) {
+          tricks.push(trick);
+        }
+      });
+    }
+    var achievements = {};
+    if (
+      raw.achievements &&
+      typeof raw.achievements === "object" &&
+      !Array.isArray(raw.achievements)
+    ) {
+      petAchievementIds.forEach(function (id) {
+        var stamp = petToNumber(raw.achievements[id], 0);
+        if (stamp > 0) {
+          achievements[id] = Math.floor(stamp);
+        }
+      });
     }
     return {
       species: raw.species,
@@ -5234,6 +5649,24 @@
       hunger: petClamp(petToNumber(raw.hunger, petStartStats.hunger), 0, 100),
       energy: petClamp(petToNumber(raw.energy, petStartStats.energy), 0, 100),
       xp: Math.max(0, Math.floor(petToNumber(raw.xp, 0))),
+      treats: petClamp(Math.floor(petToNumber(raw.treats, petStartTreats)), 0, 9999),
+      tricks: tricks,
+      achievements: achievements,
+      accessory: petPickFrom(petAccessoryOrder, raw.accessory, "none"),
+      hue: petPickFrom(petHueOrder, raw.hue, "default"),
+      daysVisited: petClamp(Math.floor(petToNumber(raw.daysVisited, 1)), 1, 1000000),
+      streak: petClamp(Math.floor(petToNumber(raw.streak, 1)), 1, 1000000),
+      lastDay: typeof raw.lastDay === "string" ? raw.lastDay.slice(0, 24) : "",
+      totalFeeds: Math.max(0, Math.floor(petToNumber(raw.totalFeeds, 0))),
+      totalBrush: Math.max(0, Math.floor(petToNumber(raw.totalBrush, 0))),
+      totalTricks: Math.max(0, Math.floor(petToNumber(raw.totalTricks, 0))),
+      bestCombo: Math.max(0, Math.floor(petToNumber(raw.bestCombo, 0))),
+      miniGamesFinished: Math.max(
+        0,
+        Math.floor(petToNumber(raw.miniGamesFinished, 0)),
+      ),
+      pos: petPickFrom(petCornerOrder, raw.pos, "br"),
+      sound: raw.sound === true,
       lastSeen: petToNumber(raw.lastSeen, Date.now()),
       hidden: raw.hidden === true,
     };
@@ -5280,7 +5713,67 @@
     if (!petState) {
       return 1;
     }
-    return Math.min(petMaxLevel, 1 + Math.floor(petState.xp / petLevelXp));
+    var xp = Math.max(0, petState.xp);
+    var level = 1;
+    for (var index = 1; index < petLevelXpTable.length; index += 1) {
+      if (xp >= petLevelXpTable[index]) {
+        level = index + 1;
+      }
+    }
+    return level;
+  }
+
+  function petLevelProgress() {
+    var level = petLevelValue();
+    var base = petLevelXpTable[level - 1];
+    var atMax = level >= petMaxLevel;
+    var next = atMax ? base : petLevelXpTable[level];
+    var span = Math.max(1, next - base);
+    var into = atMax ? span : petClamp(petState.xp - base, 0, span);
+    return {
+      level: level,
+      into: into,
+      span: span,
+      percent: Math.round((into / span) * 100),
+    };
+  }
+
+  function petStageValue(level) {
+    var value = level === undefined ? petLevelValue() : level;
+    for (var index = 0; index < petStageOrder.length; index += 1) {
+      var stage = petStageOrder[index];
+      if (value <= petStageMaxLevel[stage]) {
+        return stage;
+      }
+    }
+    return petStageOrder[petStageOrder.length - 1];
+  }
+
+  function petStageIndex(stage) {
+    return petStageOrder.indexOf(stage === undefined ? petStageValue() : stage);
+  }
+
+  function petAccessoryUnlocked(accessory, level) {
+    var value = level === undefined ? petLevelValue() : level;
+    return value >= (petAccessoryLevel[accessory] || 1);
+  }
+
+  function petHueUnlocked(hue, level) {
+    var value = level === undefined ? petLevelValue() : level;
+    return value >= (petHueLevel[hue] || 1);
+  }
+
+  function petLearnedTrick(trick) {
+    return !!petState && petState.tricks.indexOf(trick) !== -1;
+  }
+
+  function petNextTrick() {
+    for (var index = 0; index < petTrickOrder.length; index += 1) {
+      if (!petLearnedTrick(petTrickOrder[index])) {
+        return petTrickOrder[index];
+      }
+    }
+    return "";
   }
 
   function petMood() {
@@ -5297,6 +5790,41 @@
       return "happy";
     }
     return "neutral";
+  }
+
+  function petTimeOfDay(now) {
+    var hour = 12;
+    try {
+      hour = new Date(now === undefined ? Date.now() : now).getHours();
+    } catch (error) {
+      hour = 12;
+    }
+    if (hour >= 5 && hour < 12) {
+      return "morning";
+    }
+    if (hour >= 12 && hour < 18) {
+      return "afternoon";
+    }
+    if (hour >= 18 && hour < 23) {
+      return "evening";
+    }
+    return "night";
+  }
+
+  function petTalkLine() {
+    if (!petState) {
+      return "";
+    }
+    var page = document.documentElement.getAttribute("data-page") || "formatter";
+    var pageKey = "petTalkPage" + page.charAt(0).toUpperCase() + page.slice(1);
+    var mood = petMood();
+    var time = petTimeOfDay();
+    var moodKey = "petTalk" + mood.charAt(0).toUpperCase() + mood.slice(1);
+    var timeKey = "petTalk" + time.charAt(0).toUpperCase() + time.slice(1);
+    if (time === "night" && mood !== "sleepy") {
+      return t(timeKey) + " " + t(pageKey);
+    }
+    return t(moodKey) + " " + t(timeKey) + " " + t(pageKey);
   }
 
   function petApplyDecay(now) {
@@ -5367,6 +5895,14 @@
       window.clearTimeout(petResetTimer);
       petResetTimer = null;
     }
+    if (petComboTimer !== null) {
+      window.clearTimeout(petComboTimer);
+      petComboTimer = null;
+    }
+    if (petToastTimer !== null) {
+      window.clearTimeout(petToastTimer);
+      petToastTimer = null;
+    }
   }
 
   function petStartTimer() {
@@ -5392,15 +5928,36 @@
       petStopTimer();
       return;
     }
-    if (petApplyDecay(Date.now()) > 0) {
+    var now = Date.now();
+    var changed = petApplyDecay(now) > 0;
+    changed = petRefreshIdleSleep(now) || changed;
+    if (changed) {
       petWriteState();
       petRender();
     }
   }
 
+  function petRefreshIdleSleep(now) {
+    if (!petState || petState.hidden) {
+      return false;
+    }
+    var shouldSleep =
+      now - petLastInteraction > petIdleSleepMs ||
+      (petTimeOfDay(now) === "night" && now - petLastInteraction > 60000);
+    if (shouldSleep && !petAsleep) {
+      petAsleep = true;
+      petSpawnParticles("sleep");
+      petRender();
+      petSetStatus(t("petReactionSleep", { name: petState.name }));
+      return true;
+    }
+    return false;
+  }
+
   function petHandleVisibility() {
     if (document.hidden) {
       petStopTimer();
+      petMiniStop();
       if (petState) {
         petApplyDecay(Date.now());
         petWriteState();
@@ -5420,6 +5977,489 @@
     }
     petApplyDecay(Date.now());
     petWriteState();
+  }
+
+  /* --- progression, visits, achievements --------------------------- */
+
+  function petTouchVisit() {
+    if (!petState) {
+      return 0;
+    }
+    var today = petLocalDay(Date.now());
+    if (!petState.lastDay) {
+      petState.lastDay = today;
+      petState.daysVisited = Math.max(1, petState.daysVisited);
+      petState.streak = Math.max(1, petState.streak);
+      return 0;
+    }
+    if (petState.lastDay === today) {
+      return 0;
+    }
+    var yesterday = petLocalDay(Date.now() - 86400000);
+    petState.streak = petState.lastDay === yesterday ? petState.streak + 1 : 1;
+    petState.daysVisited += 1;
+    petState.lastDay = today;
+    return petAddTreats(2);
+  }
+
+  function petAddTreats(amount) {
+    if (!petState) {
+      return 0;
+    }
+    var before = petState.treats;
+    petState.treats = petClamp(Math.floor(petState.treats + amount), 0, 9999);
+    return petState.treats - before;
+  }
+
+  function petUnlockedCount() {
+    var count = 0;
+    if (!petState) {
+      return 0;
+    }
+    petAchievementIds.forEach(function (id) {
+      if (petState.achievements[id]) {
+        count += 1;
+      }
+    });
+    return count;
+  }
+
+  function petCheckAchievements() {
+    var unlocked = [];
+    if (!petState) {
+      return unlocked;
+    }
+    var level = petLevelValue();
+    var stage = petStageIndex(petStageValue(level));
+    petAchievements.forEach(function (definition) {
+      if (petState.achievements[definition.id]) {
+        return;
+      }
+      var ok = false;
+      if (definition.id === "firstPet") {
+        ok = true;
+      } else if (definition.id === "fed10") {
+        ok = petState.totalFeeds >= 10;
+      } else if (definition.id === "level5") {
+        ok = level >= 5;
+      } else if (definition.id === "level10") {
+        ok = level >= 10;
+      } else if (definition.id === "miniWin") {
+        ok = petState.miniGamesFinished >= 1;
+      } else if (definition.id === "trickster") {
+        ok = petState.tricks.length >= 1;
+      } else if (definition.id === "streak3") {
+        ok = petState.streak >= 3;
+      } else if (definition.id === "treats25") {
+        ok = petState.treats >= 25;
+      } else if (definition.id === "combo5") {
+        ok = petState.bestCombo >= 5;
+      } else if (definition.id === "evolved") {
+        ok = stage >= 1;
+      } else if (definition.id === "dressed") {
+        ok = petState.accessory !== "none";
+      }
+      if (ok) {
+        petState.achievements[definition.id] = Date.now();
+        unlocked.push(definition.id);
+      }
+    });
+    return unlocked;
+  }
+
+  function petCelebrateAchievement(id) {
+    var definition = petAchievementById(id);
+    if (!definition || !petState) {
+      return;
+    }
+    if (petEls && petEls.toast) {
+      petEls.toast.textContent = t("petAchievementUnlocked", {
+        name: petState.name,
+        title: t(definition.titleKey),
+      });
+      petEls.toast.hidden = false;
+      if (petToastTimer !== null) {
+        window.clearTimeout(petToastTimer);
+      }
+      petToastTimer = window.setTimeout(function () {
+        petToastTimer = null;
+        if (petEls && petEls.toast) {
+          petEls.toast.hidden = true;
+          petEls.toast.textContent = "";
+        }
+      }, petToastMs);
+    }
+    petSpawnParticles("achievement");
+    petRenderBadges();
+    petBlip("win");
+  }
+
+  /* --- petting combo ----------------------------------------------- */
+
+  function petBumpCombo() {
+    petCombo += 1;
+    if (petState && petCombo > petState.bestCombo) {
+      petState.bestCombo = petCombo;
+    }
+    if (petComboTimer !== null) {
+      window.clearTimeout(petComboTimer);
+    }
+    petComboTimer = window.setTimeout(function () {
+      petComboTimer = null;
+      petCombo = 0;
+      petRenderCombo();
+    }, petComboWindowMs);
+    petRenderCombo();
+    if (petCombo % 3 === 0) {
+      petAddTreats(1);
+    }
+    return petCombo;
+  }
+
+  function petRenderCombo() {
+    if (!petEls || !petEls.combo) {
+      return;
+    }
+    if (petCombo >= 2) {
+      petEls.combo.textContent = t("petComboLabel", { n: petCombo });
+      petEls.combo.hidden = false;
+      return;
+    }
+    petEls.combo.hidden = true;
+    petEls.combo.textContent = "";
+  }
+
+  /* --- idle / wake / wake-up awareness ----------------------------- */
+
+  function petTouchInteraction() {
+    petLastInteraction = Date.now();
+    if (petAsleep) {
+      petAsleep = false;
+      petRender();
+      petSetStatus(t("petReactionWoke", { name: petState ? petState.name : "" }));
+    }
+  }
+
+  function petSleepNow() {
+    if (!petState || petAsleep) {
+      return;
+    }
+    petAsleep = true;
+    petSpawnParticles("sleep");
+    petRender();
+  }
+
+  /* --- optional WebAudio blips (off by default, no external files) -- */
+
+  function petSoundEnabled() {
+    return !!(petState && petState.sound === true);
+  }
+
+  function petBlip(kind) {
+    if (!petSoundEnabled()) {
+      return;
+    }
+    try {
+      var Ctor = window.AudioContext || window.webkitAudioContext;
+      if (!Ctor) {
+        return;
+      }
+      if (!petAudio) {
+        petAudio = new Ctor();
+      }
+      if (petAudio.state === "suspended" && typeof petAudio.resume === "function") {
+        petAudio.resume();
+      }
+      var at = petAudio.currentTime;
+      var osc = petAudio.createOscillator();
+      var gain = petAudio.createGain();
+      var frequency = kind === "win" ? 880 : kind === "bad" ? 240 : 620;
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(frequency, at);
+      gain.gain.setValueAtTime(0.0001, at);
+      gain.gain.exponentialRampToValueAtTime(0.05, at + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, at + 0.18);
+      osc.connect(gain);
+      gain.connect(petAudio.destination);
+      osc.start(at);
+      osc.stop(at + 0.2);
+    } catch (error) {
+      /* audio is purely optional */
+    }
+  }
+
+  /* --- mini-game lifecycle (timers only live while a game is open) -- */
+
+  function petMiniTrack(callback, delay) {
+    var id = window.setTimeout(function () {
+      var index = petMiniTimers.indexOf(id);
+      if (index !== -1) {
+        petMiniTimers.splice(index, 1);
+      }
+      callback();
+    }, delay);
+    petMiniTimers.push(id);
+    return id;
+  }
+
+  function petMiniClearTimers() {
+    petMiniTimers.forEach(function (id) {
+      window.clearTimeout(id);
+    });
+    petMiniTimers = [];
+  }
+
+  function petMiniStop() {
+    petMiniClearTimers();
+    petMini = null;
+    if (petEls && petEls.gameHost) {
+      while (petEls.gameHost.firstChild) {
+        petEls.gameHost.removeChild(petEls.gameHost.firstChild);
+      }
+    }
+    if (petEls && petEls.gameMenu) {
+      petEls.gameMenu.hidden = false;
+    }
+    if (petEls && petEls.gameExit) {
+      petEls.gameExit.hidden = true;
+    }
+  }
+
+  function petMiniFinish(resultKey, vars, treats, xp) {
+    if (!petState) {
+      return;
+    }
+    /* Baseline at game start, so per-round grants are part of the total. */
+    var treatsAtStart =
+      petMini && typeof petMini.treatsAtStart === "number"
+        ? petMini.treatsAtStart
+        : petState.treats;
+    petState.miniGamesFinished += 1;
+    petAddTreats(treats);
+    var gain = petAddXp(xp);
+    petMiniClearTimers();
+    petMini = null;
+    petBlip("win");
+    petCommit({ gain: gain, status: "" });
+    /* Announce exactly the treats that reached the balance in this game, once.
+     * Per-round grants and level-up bonuses are already counted here, so the
+     * result line can never diverge from what the player actually received. */
+    var granted = petState.treats - treatsAtStart;
+    if (petEls && petEls.gameResult) {
+      var merged = {};
+      Object.keys(vars || {}).forEach(function (name) {
+        merged[name] = vars[name];
+      });
+      merged.treats = granted;
+      petEls.gameResult.textContent = t(resultKey, merged);
+    }
+  }
+
+  /* --- pointer tracking + page awareness --------------------------- */
+
+  function petBindAwareness() {
+    if (petListenersBound) {
+      return;
+    }
+    petListenersBound = true;
+    document.addEventListener("pointermove", petOnPointerMove, { passive: true });
+    document.addEventListener("input", petOnPageInput, true);
+  }
+
+  function petOnPointerMove(event) {
+    if (!petState || !petEls || petEls.widget.hidden || isMotionOff()) {
+      return;
+    }
+    var now = Date.now();
+    if (now - petCursorAt < petCursorThrottleMs) {
+      return;
+    }
+    petCursorAt = now;
+    var centerX = 0;
+    var centerY = 0;
+    try {
+      var rect = petEls.button.getBoundingClientRect();
+      centerX = rect.left + rect.width / 2;
+      centerY = rect.top + rect.height / 2;
+    } catch (error) {
+      return;
+    }
+    var lookX = petClamp((event.clientX - centerX) / 120, -1, 1) * 2.4;
+    var lookY = petClamp((event.clientY - centerY) / 140, -1, 1) * 1.4;
+    if (lookX === petLookX && lookY === petLookY) {
+      return;
+    }
+    petLookX = lookX;
+    petLookY = lookY;
+    petEls.widget.style.setProperty("--pet-look-x", lookX.toFixed(2) + "px");
+    petEls.widget.style.setProperty("--pet-look-y", lookY.toFixed(2) + "px");
+  }
+
+  function petOnPageInput(event) {
+    if (!petState || !petEls || petEls.widget.hidden) {
+      return;
+    }
+    var target = event && event.target;
+    if (!target || !target.tagName) {
+      return;
+    }
+    var tag = String(target.tagName).toUpperCase();
+    if (tag !== "TEXTAREA" && tag !== "INPUT") {
+      return;
+    }
+    if (petEls.widget.contains(target)) {
+      return;
+    }
+    var now = Date.now();
+    if (now - petTypingAt < petTypingCooldownMs) {
+      return;
+    }
+    petTypingAt = now;
+    petLastInteraction = now;
+    if (petAsleep) {
+      petAsleep = false;
+      petRender();
+    }
+    petSetStatus(t("petReactionTyping"));
+    petReact("cheer");
+  }
+
+  /* --- draggable widget (snaps to a persisted corner) -------------- */
+
+  function petCornerFromPoint(x, y) {
+    var right = x >= (window.innerWidth || 0) / 2;
+    var bottom = y >= (window.innerHeight || 0) / 2;
+    return (bottom ? "b" : "t") + (right ? "r" : "l");
+  }
+
+  function petApplyCorner(corner) {
+    if (!petEls || !petEls.widget) {
+      return;
+    }
+    var value = corner === undefined
+      ? (petState ? petState.pos : "br")
+      : corner;
+    petEls.widget.setAttribute("data-corner", value);
+  }
+
+  function petOnDragStart(event) {
+    if (!petState || (event && event.button > 0)) {
+      return;
+    }
+    if (petMini) {
+      return;
+    }
+    petDrag = {
+      startX: event ? event.clientX : 0,
+      startY: event ? event.clientY : 0,
+      moved: false,
+    };
+    document.addEventListener("pointermove", petOnDragMove);
+    document.addEventListener("pointerup", petOnDragEnd);
+    document.addEventListener("pointercancel", petOnDragEnd);
+  }
+
+  function petOnDragMove(event) {
+    if (!petDrag) {
+      return;
+    }
+    var dx = event.clientX - petDrag.startX;
+    var dy = event.clientY - petDrag.startY;
+    if (!petDrag.moved && Math.abs(dx) + Math.abs(dy) < 6) {
+      return;
+    }
+    petDrag.moved = true;
+    if (petEls && petEls.widget) {
+      petEls.widget.setAttribute("data-dragging", "true");
+      petApplyCorner(petCornerFromPoint(event.clientX, event.clientY));
+    }
+    if (event && typeof event.preventDefault === "function") {
+      event.preventDefault();
+    }
+  }
+
+  function petOnDragEnd(event) {
+    document.removeEventListener("pointermove", petOnDragMove);
+    document.removeEventListener("pointerup", petOnDragEnd);
+    document.removeEventListener("pointercancel", petOnDragEnd);
+    if (!petDrag) {
+      return;
+    }
+    var dragged = petDrag.moved;
+    petDrag = null;
+    if (petEls && petEls.widget) {
+      petEls.widget.setAttribute("data-dragging", "false");
+    }
+    if (!petState || !dragged) {
+      petApplyCorner();
+      return;
+    }
+    petState.pos = petCornerFromPoint(
+      event ? event.clientX : 0,
+      event ? event.clientY : 0,
+    );
+    petWriteState();
+    petLastInteraction = Date.now();
+    petApplyCorner();
+  }
+
+  function petIsCorner(value) {
+    return petCornerOrder.indexOf(value) !== -1;
+  }
+
+  function petCornerKey(corner) {
+    if (corner === "bl") {
+      return "petCornerBl";
+    }
+    if (corner === "tr") {
+      return "petCornerTr";
+    }
+    if (corner === "tl") {
+      return "petCornerTl";
+    }
+    return "petCornerBr";
+  }
+
+  function petMoveCorner(next) {
+    if (!petState || !petIsCorner(next) || petState.pos === next) {
+      return;
+    }
+    petState.pos = next;
+    petWriteState();
+    petTouchInteraction();
+    petApplyCorner();
+    petSetStatus(
+      t("petReactionMoved", {
+        name: petState.name,
+        corner: t(petCornerKey(next)),
+      }),
+    );
+  }
+
+  function petOnHandleKeydown(event) {
+    if (!event || !petState) {
+      return;
+    }
+    var key = event.key;
+    var corner = petIsCorner(petState.pos) ? petState.pos : "br";
+    var row = corner.charAt(0);
+    var column = corner.charAt(1);
+    var next = null;
+    if (key === "ArrowLeft") {
+      next = row + "l";
+    } else if (key === "ArrowRight") {
+      next = row + "r";
+    } else if (key === "ArrowUp") {
+      next = "t" + column;
+    } else if (key === "ArrowDown") {
+      next = "b" + column;
+    } else {
+      return;
+    }
+    if (typeof event.preventDefault === "function") {
+      event.preventDefault();
+    }
+    petMoveCorner(next);
   }
 
   /* --- artwork ----------------------------------------------------- */
@@ -5500,6 +6540,76 @@
     ]);
   }
 
+  function petLook(nodes) {
+    var group = petSvg("g", { class: "pet-look" });
+    return petAppendAll(group, nodes);
+  }
+
+  /* All evolution stages are rendered; CSS reveals the active one. */
+  function petStageParts() {
+    return petStageOrder.map(function (stage) {
+      var group = petSvg("g", {
+        class: "pet-stage-part " + petStageClass[stage],
+        "data-stage": stage,
+      });
+      if (stage === "baby") {
+        petAppendAll(group, [
+          petSvg("path", { d: "M50 20c-5-5-4-11 0-13 3 3 4 9 0 13z" }),
+        ]);
+      } else if (stage === "grown") {
+        petAppendAll(group, [
+          petSvg("path", { d: "M33 68c10 7 24 7 34 0" }),
+        ]);
+      } else {
+        petAppendAll(group, [
+          petSvg("circle", { cx: 50, cy: 52, r: 45 }),
+          petSvg("path", { d: "M38 22l-4-12 8 6z" }),
+          petSvg("path", { d: "M62 22l4-12-8 6z" }),
+        ]);
+      }
+      return group;
+    });
+  }
+
+  /* All accessories are rendered; CSS reveals the equipped one. */
+  function petAccessoryParts() {
+    return petAccessoryOrder.map(function (accessory) {
+      if (accessory === "none") {
+        return null;
+      }
+      var group = petSvg("g", {
+        class: "pet-acc " + petAccessoryClass[accessory],
+        "data-acc": accessory,
+      });
+      if (accessory === "hat") {
+        petAppendAll(group, [
+          petSvg("path", { d: "M50 2l14 14H36z" }),
+          petSvg("path", { d: "M33 16h34" }),
+        ]);
+      } else if (accessory === "scarf") {
+        petAppendAll(group, [
+          petSvg("path", { d: "M31 68c12 8 26 8 38 0" }),
+          petSvg("path", { d: "M62 72l4 10-8-3z" }),
+        ]);
+      } else if (accessory === "glasses") {
+        petAppendAll(group, [
+          petSvg("circle", { cx: 41, cy: 50, r: 9 }),
+          petSvg("circle", { cx: 59, cy: 50, r: 9 }),
+          petSvg("path", { d: "M50 50h0" }),
+        ]);
+      } else if (accessory === "crown") {
+        petAppendAll(group, [
+          petSvg("path", { d: "M34 18l6-10 5 7 5-10 5 10 5-7 6 10z" }),
+        ]);
+      } else {
+        petAppendAll(group, [
+          petSvg("circle", { cx: 50, cy: 50, r: 40 }),
+        ]);
+      }
+      return group;
+    });
+  }
+
   function petCreateArt(species, className) {
     var svg = petSvg("svg", {
       viewBox: "0 0 100 100",
@@ -5534,11 +6644,12 @@
           cy: 72,
           r: 3.4,
         }),
-        petEye(42, 50),
-        petEye(58, 50),
+        petLook([petEye(42, 50), petEye(58, 50)]),
         petCheek(30, 61),
         petCheek(70, 61),
         petMouthSet(50, 62),
+        petStageParts(),
+        petAccessoryParts(),
         petZzz(70, 22),
       ]);
       return svg;
@@ -5569,11 +6680,12 @@
           height: 11,
           rx: 5,
         }),
-        petEye(44, 44),
-        petEye(60, 44),
+        petLook([petEye(44, 44), petEye(60, 44)]),
         petCheek(33, 55),
         petCheek(71, 55),
         petMouthSet(52, 56),
+        petStageParts(),
+        petAccessoryParts(),
         petZzz(74, 16),
       ]);
       return svg;
@@ -5619,11 +6731,12 @@
         height: 12,
         rx: 5.5,
       }),
-      petEye(41, 50),
-      petEye(59, 50),
+      petLook([petEye(41, 50), petEye(59, 50)]),
       petCheek(31, 61),
       petCheek(69, 61),
       petMouthSet(50, 63),
+      petStageParts(),
+      petAccessoryParts(),
       petZzz(74, 20),
     ]);
     return svg;
@@ -5670,6 +6783,22 @@
     return node;
   }
 
+  function petCreateSubview(id, titleKey, backId) {
+    var view = petCreate("div", "pet-subview");
+    view.setAttribute("id", id);
+    view.hidden = true;
+    var bar = petCreate("div", "pet-sub-head");
+    petAddI18nText(bar, titleKey, "span", "pet-sub-title");
+    var back = petCreate("button", "pet-action pet-back");
+    back.type = "button";
+    back.setAttribute("id", backId);
+    back.setAttribute("data-i18n", "petBtnBack");
+    back.setAttribute("data-view", "main");
+    bar.appendChild(back);
+    view.appendChild(bar);
+    return { view: view, back: back };
+  }
+
   function petBuildDom() {
     var widget = petCreate("div", "pet-widget");
     widget.setAttribute("id", "petWidget");
@@ -5683,7 +6812,11 @@
     var panel = petCreate("div", "pet-panel");
     panel.setAttribute("id", "petPanel");
 
-    var head = petCreate("div", "pet-head");
+    var head = petCreate("div", "pet-head pet-handle");
+    head.setAttribute("id", "petHead");
+    head.setAttribute("tabindex", "0");
+    head.setAttribute("aria-label", t("petMoveHandle"));
+    head.setAttribute("title", t("petMoveHandle"));
     petAddI18nText(head, "petTitle", "span", "pet-title");
     var collapseBtn = petCreate("button", "pet-icon-btn");
     collapseBtn.type = "button";
@@ -5714,6 +6847,13 @@
     status.setAttribute("role", "status");
     status.setAttribute("aria-live", "polite");
     bodyPanel.appendChild(status);
+
+    var combo = petCreate("span", "pet-combo");
+    combo.setAttribute("id", "petCombo");
+    combo.setAttribute("role", "status");
+    combo.setAttribute("aria-live", "polite");
+    combo.hidden = true;
+    bodyPanel.appendChild(combo);
 
     var stats = petCreate("div", "pet-stats");
     stats.setAttribute("role", "group");
@@ -5750,6 +6890,19 @@
     levelRow.appendChild(xpText);
     bodyPanel.appendChild(levelRow);
 
+    var treatsRow = petCreate("div", "pet-treats");
+    var treatsChip = petCreate("span", "pet-treat-chip");
+    treatsChip.setAttribute("aria-hidden", "true");
+    treatsChip.appendChild(petIcon("M6 8h12l-1 11H7zM9 8V6a3 3 0 0 1 6 0v2"));
+    var treatsValue = petCreate("span", "pet-treat-value");
+    treatsValue.setAttribute("id", "petTreatValue");
+    var treatsLabel = petCreate("span", "pet-treat-label");
+    treatsLabel.setAttribute("data-i18n", "petTreatsLabel");
+    treatsRow.appendChild(treatsChip);
+    treatsRow.appendChild(treatsValue);
+    treatsRow.appendChild(treatsLabel);
+    bodyPanel.appendChild(treatsRow);
+
     var actions = petCreate("div", "pet-actions");
     actions.setAttribute("role", "group");
     actions.setAttribute("aria-label", t("petControlsLabel"));
@@ -5757,8 +6910,15 @@
       ["Feed", "petFeedBtn", "petBtnFeed"],
       ["Play", "petPlayBtn", "petBtnPlay"],
       ["Rest", "petRestBtn", "petBtnRest"],
+      ["Treat", "petTreatBtn", "petBtnTreat"],
+      ["Brush", "petBrushBtn", "petBtnBrush"],
+      ["Talk", "petTalkBtn", "petBtnTalk"],
+      ["Tricks", "petTricksBtn", "petBtnTricks"],
+      ["Games", "petGamesBtn", "petBtnGames"],
+      ["Stats", "petStatsBtn", "petBtnStats"],
       ["Rename", "petRenameBtn", "petBtnRename"],
       ["Species", "petSpeciesBtn", "petBtnSpecies"],
+      ["Sound", "petSoundBtn", "petBtnSound"],
       ["Reset", "petResetBtn", "petBtnReset"],
       ["Hide", "petHideBtn", "petBtnHide"],
     ];
@@ -5797,8 +6957,116 @@
     renameForm.appendChild(renameActions);
     bodyPanel.appendChild(renameForm);
 
+    /* stats view */
+    var statsView = petCreateSubview("petStatsView", "petStatsTitle", "petBackStats");
+    var statsFields = petCreate("div", "pet-fields");
+    var fieldDefs = [
+      ["petStatLevel", "petStatLevelValue"],
+      ["petStatStage", "petStatStageValue"],
+      ["petStatXp", "petStatXpValue"],
+      ["petStatTreats", "petStatTreatsValue"],
+      ["petStatDays", "petStatDaysValue"],
+      ["petStatStreak", "petStatStreakValue"],
+      ["petStatTricks", "petStatTricksValue"],
+      ["petStatCombo", "petStatComboValue"],
+    ];
+    var fieldValues = {};
+    fieldDefs.forEach(function (definition) {
+      var field = petCreate("div", "pet-field");
+      var label = petCreate("span", "pet-field-label");
+      label.setAttribute("data-i18n", definition[0]);
+      var value = petCreate("span", "pet-field-value");
+      value.setAttribute("id", definition[1]);
+      field.appendChild(label);
+      field.appendChild(value);
+      statsFields.appendChild(field);
+      fieldValues[definition[1]] = value;
+    });
+    statsView.view.appendChild(statsFields);
+
+    var achHead = petCreate("div", "pet-sub-head");
+    petAddI18nText(achHead, "petStatAchievements", "span", "pet-sub-title");
+    var achCount = petCreate("span", "pet-field-value");
+    achCount.setAttribute("id", "petAchievementsCount");
+    achHead.appendChild(achCount);
+    statsView.view.appendChild(achHead);
+    var badges = petCreate("div", "pet-badges");
+    badges.setAttribute("id", "petBadges");
+    badges.setAttribute("role", "list");
+    statsView.view.appendChild(badges);
+
+    var accHead = petCreate("div", "pet-sub-head");
+    petAddI18nText(accHead, "petAccLabel", "span", "pet-sub-title");
+    statsView.view.appendChild(accHead);
+    var accGrid = petCreate("div", "pet-acc-grid");
+    accGrid.setAttribute("id", "petAccGrid");
+    accGrid.setAttribute("role", "group");
+    accGrid.setAttribute("aria-label", t("petAccLabel"));
+    statsView.view.appendChild(accGrid);
+
+    var hueHead = petCreate("div", "pet-sub-head");
+    petAddI18nText(hueHead, "petHueLabel", "span", "pet-sub-title");
+    statsView.view.appendChild(hueHead);
+    var hueGrid = petCreate("div", "pet-acc-grid");
+    hueGrid.setAttribute("id", "petHueGrid");
+    hueGrid.setAttribute("role", "group");
+    hueGrid.setAttribute("aria-label", t("petHueLabel"));
+    statsView.view.appendChild(hueGrid);
+    bodyPanel.appendChild(statsView.view);
+
+    /* tricks view */
+    var tricksView = petCreateSubview("petTricksView", "petBtnTricks", "petBackTricks");
+    var trickTeach = petCreate("button", "pet-action is-primary");
+    trickTeach.type = "button";
+    trickTeach.setAttribute("id", "petTrickTeachBtn");
+    tricksView.view.appendChild(trickTeach);
+    var trickList = petCreate("div", "pet-trick-list");
+    trickList.setAttribute("id", "petTrickList");
+    trickList.setAttribute("role", "group");
+    trickList.setAttribute("aria-label", t("petBtnTricks"));
+    tricksView.view.appendChild(trickList);
+    bodyPanel.appendChild(tricksView.view);
+
+    /* games view */
+    var gamesView = petCreateSubview("petGamesView", "petGamesTitle", "petBackGames");
+    var gameMenu = petCreate("div", "pet-game-menu");
+    gameMenu.setAttribute("id", "petGameMenu");
+    var tossStart = petCreate("button", "pet-action pet-game-choice");
+    tossStart.type = "button";
+    tossStart.setAttribute("id", "petGameTossStart");
+    tossStart.setAttribute("data-i18n", "petGameTreatToss");
+    var simonStart = petCreate("button", "pet-action pet-game-choice");
+    simonStart.type = "button";
+    simonStart.setAttribute("id", "petGameSimonStart");
+    simonStart.setAttribute("data-i18n", "petGameTrickTrainer");
+    gameMenu.appendChild(tossStart);
+    gameMenu.appendChild(simonStart);
+    gamesView.view.appendChild(gameMenu);
+    var gameHost = petCreate("div", "pet-game-host");
+    gameHost.setAttribute("id", "petGameHost");
+    gamesView.view.appendChild(gameHost);
+    var gameResult = petCreate("p", "pet-game-result");
+    gameResult.setAttribute("id", "petGameResult");
+    gameResult.setAttribute("role", "status");
+    gameResult.setAttribute("aria-live", "polite");
+    gamesView.view.appendChild(gameResult);
+    var gameExit = petCreate("button", "pet-action");
+    gameExit.type = "button";
+    gameExit.setAttribute("id", "petGameExitBtn");
+    gameExit.setAttribute("data-i18n", "petGameExit");
+    gameExit.hidden = true;
+    gamesView.view.appendChild(gameExit);
+    bodyPanel.appendChild(gamesView.view);
+
     panel.appendChild(bodyPanel);
     widget.appendChild(panel);
+
+    var toast = petCreate("p", "pet-toast");
+    toast.setAttribute("id", "petToast");
+    toast.setAttribute("role", "status");
+    toast.setAttribute("aria-live", "polite");
+    toast.hidden = true;
+    widget.appendChild(toast);
 
     /* adoption card */
     var adoptForm = petCreate("form", "pet-adopt");
@@ -5917,6 +7185,29 @@
       speciesInputs: speciesInputs,
       restore: restore,
       restoreLabel: restoreLabel,
+      head: head,
+      combo: combo,
+      treatsValue: treatsValue,
+      treatsLabel: treatsLabel,
+      treatsRow: treatsRow,
+      actionsNode: actions,
+      statsView: statsView,
+      fieldValues: fieldValues,
+      badges: badges,
+      achCount: achCount,
+      accGrid: accGrid,
+      hueGrid: hueGrid,
+      tricksView: tricksView,
+      trickTeach: trickTeach,
+      trickList: trickList,
+      gamesView: gamesView,
+      gameMenu: gameMenu,
+      gameHost: gameHost,
+      gameResult: gameResult,
+      gameExit: gameExit,
+      tossStart: tossStart,
+      simonStart: simonStart,
+      toast: toast,
     };
     petWireEvents();
   }
@@ -5925,18 +7216,56 @@
     petEls.button.addEventListener("click", petOnPetClick);
     petEls.collapse.addEventListener("click", function () {
       petCollapsed = !petCollapsed;
+      if (petCollapsed && petMini) {
+        petMiniStop();
+        petSetView("main");
+      }
       petSyncVisibility();
     });
 
     petEls.actions.Feed.addEventListener("click", petOnFeed);
     petEls.actions.Play.addEventListener("click", petOnPlay);
     petEls.actions.Rest.addEventListener("click", petOnRest);
+    petEls.actions.Treat.addEventListener("click", petOnTreat);
+    petEls.actions.Brush.addEventListener("click", petOnBrush);
+    petEls.actions.Talk.addEventListener("click", petOnTalk);
+    petEls.actions.Tricks.addEventListener("click", function () {
+      petSetView(petView === "tricks" ? "main" : "tricks");
+    });
+    petEls.actions.Games.addEventListener("click", function () {
+      petSetView(petView === "games" ? "main" : "games");
+    });
+    petEls.actions.Stats.addEventListener("click", function () {
+      petSetView(petView === "stats" ? "main" : "stats");
+    });
     petEls.actions.Rename.addEventListener("click", function () {
       petToggleRename(!petRenameOpen);
     });
     petEls.actions.Species.addEventListener("click", petOnSwitchSpecies);
+    petEls.actions.Sound.addEventListener("click", petOnToggleSound);
     petEls.actions.Reset.addEventListener("click", petOnResetClick);
     petEls.actions.Hide.addEventListener("click", petOnHide);
+
+    petEls.head.addEventListener("pointerdown", petOnDragStart);
+    petEls.head.addEventListener("keydown", petOnHandleKeydown);
+    petEls.statsView.back.addEventListener("click", function () {
+      petSetView("main");
+    });
+    petEls.tricksView.back.addEventListener("click", function () {
+      petSetView("main");
+    });
+    petEls.gamesView.back.addEventListener("click", function () {
+      petSetView("main");
+    });
+    petEls.trickTeach.addEventListener("click", petOnTeachTrick);
+    petEls.tossStart.addEventListener("click", petStartToss);
+    petEls.simonStart.addEventListener("click", petStartSimon);
+    petEls.gameExit.addEventListener("click", function () {
+      petMiniStop();
+      petSetView("games");
+      petEls.tossStart.focus();
+    });
+    petEls.widget.addEventListener("keydown", petOnKeydown);
 
     petEls.renameForm.addEventListener("submit", function (event) {
       if (event && typeof event.preventDefault === "function") {
@@ -6053,10 +7382,23 @@
     });
 
     var level = petLevelValue();
+    var progress = petLevelProgress();
     petEls.level.textContent = t("petLevel", { n: level });
     petEls.xpText.textContent = t("petXp", { n: petState.xp });
-    petEls.xpFill.style.width =
-      ((petState.xp % petLevelXp) / petLevelXp) * 100 + "%";
+    petEls.xpFill.style.width = progress.percent + "%";
+    petEls.widget.setAttribute("data-stage", petStageValue(level));
+    petEls.widget.setAttribute("data-acc", petState.accessory);
+    petEls.widget.setAttribute("data-hue", petState.hue);
+    petEls.widget.setAttribute("data-asleep", petAsleep ? "true" : "false");
+    petEls.widget.setAttribute("data-night", petTimeOfDay() === "night" ? "true" : "false");
+    petEls.treatsValue.textContent = String(petState.treats);
+    petEls.treatsLabel.textContent = t("petTreatsLabel");
+    petEls.treatsValue.setAttribute(
+      "aria-label",
+      t("petTreatsLabel") + " " + petState.treats,
+    );
+    petRenderCombo();
+    petRenderSubviewData();
     petEls.button.setAttribute(
       "aria-label",
       t("petButtonAria", {
@@ -6067,6 +7409,155 @@
     petEls.button.setAttribute("title", t("petTapHint", { name: petState.name }));
     petEls.renameInput.setAttribute("aria-label", t("petNameLabel"));
     petRenderStatus();
+  }
+
+  function petRenderSubviewData() {
+    if (!petEls || !petState) {
+      return;
+    }
+    var level = petLevelValue();
+    var stage = petStageValue(level);
+    var values = petEls.fieldValues;
+    values.petStatLevelValue.textContent = String(level);
+    values.petStatStageValue.textContent = t(petStageKey(stage));
+    values.petStatXpValue.textContent = String(petState.xp);
+    values.petStatTreatsValue.textContent = String(petState.treats);
+    values.petStatDaysValue.textContent = String(petState.daysVisited);
+    values.petStatStreakValue.textContent = String(petState.streak);
+    values.petStatTricksValue.textContent = String(petState.tricks.length);
+    values.petStatComboValue.textContent = String(petState.bestCombo);
+    petEls.achCount.textContent = t("petAchievementsCount", {
+      n: petUnlockedCount(),
+      total: petAchievements.length,
+    });
+    petRenderBadges();
+    petRenderAccessories();
+    petRenderTricks();
+  }
+
+  function petCreateBadgeElement(definition) {
+    var unlocked = !!petState.achievements[definition.id];
+    var badge = petCreate("span", "pet-badge" + (unlocked ? "" : " is-locked"));
+    badge.setAttribute("role", "listitem");
+    var icon = petSvg("svg", {
+      viewBox: "0 0 24 24",
+      class: "pet-badge-icon",
+      "aria-hidden": "true",
+      focusable: "false",
+    });
+    icon.appendChild(petSvg("path", { d: definition.icon }));
+    var label = petCreate("span", "pet-badge-label");
+    label.textContent = t(definition.titleKey);
+    badge.setAttribute("title", t(definition.titleKey) + " - " + t(definition.descKey));
+    badge.setAttribute("aria-label", t(definition.titleKey) + (unlocked ? "" : " " + t(definition.descKey)));
+    badge.appendChild(icon);
+    badge.appendChild(label);
+    return badge;
+  }
+
+  function petRenderBadges() {
+    if (!petEls || !petEls.badges || !petState) {
+      return;
+    }
+    var host = petEls.badges;
+    while (host.firstChild) {
+      host.removeChild(host.firstChild);
+    }
+    petAchievements.forEach(function (definition) {
+      host.appendChild(petCreateBadgeElement(definition));
+    });
+  }
+
+  function petRenderAccessories() {
+    if (!petEls || !petState) {
+      return;
+    }
+    var level = petLevelValue();
+    var accGrid = petEls.accGrid;
+    while (accGrid.firstChild) {
+      accGrid.removeChild(accGrid.firstChild);
+    }
+    petAccessoryOrder.forEach(function (accessory) {
+      var unlocked = petAccessoryUnlocked(accessory, level);
+      var option = petCreate("button", "pet-acc-option");
+      option.type = "button";
+      option.setAttribute("data-acc", accessory);
+      option.setAttribute("aria-pressed", petState.accessory === accessory ? "true" : "false");
+      if (petState.accessory === accessory) {
+        option.classList.add("is-selected");
+      }
+      var label = t(petAccessoryKey(accessory));
+      option.textContent = unlocked ? label : label + " " + t("petLockedAtLevel", { n: petAccessoryLevel[accessory] });
+      option.disabled = !unlocked;
+      option.addEventListener("click", function () {
+        petSelectAccessory(accessory);
+      });
+      accGrid.appendChild(option);
+    });
+
+    var hueGrid = petEls.hueGrid;
+    while (hueGrid.firstChild) {
+      hueGrid.removeChild(hueGrid.firstChild);
+    }
+    petHueOrder.forEach(function (hue) {
+      var unlocked = petHueUnlocked(hue, level);
+      var option = petCreate("button", "pet-acc-option");
+      option.type = "button";
+      option.setAttribute("data-hue", hue);
+      option.setAttribute("aria-pressed", petState.hue === hue ? "true" : "false");
+      if (petState.hue === hue) {
+        option.classList.add("is-selected");
+      }
+      var label = t(petHueKey(hue));
+      option.textContent = unlocked ? label : label + " " + t("petLockedAtLevel", { n: petHueLevel[hue] });
+      option.disabled = !unlocked;
+      option.addEventListener("click", function () {
+        petSelectHue(hue);
+      });
+      hueGrid.appendChild(option);
+    });
+  }
+
+  function petRenderTricks() {
+    if (!petEls || !petState) {
+      return;
+    }
+    var level = petLevelValue();
+    var next = petNextTrick();
+    if (!next) {
+      petEls.trickTeach.hidden = true;
+    } else {
+      petEls.trickTeach.hidden = false;
+      var unlockLevel = petTrickLevel[next] || 1;
+      if (level >= unlockLevel) {
+        petEls.trickTeach.textContent =
+          t("petBtnTricks") + ": " + t(petTrickKey(next));
+        petEls.trickTeach.disabled = false;
+      } else {
+        petEls.trickTeach.textContent = t("petReactionTrickLocked", {
+          trick: t(petTrickKey(next)),
+          n: unlockLevel,
+        });
+        petEls.trickTeach.disabled = true;
+      }
+    }
+    var host = petEls.trickList;
+    while (host.firstChild) {
+      host.removeChild(host.firstChild);
+    }
+    if (!petState.tricks.length) {
+      return;
+    }
+    petState.tricks.forEach(function (trick) {
+      var btn = petCreate("button", "pet-action pet-trick-btn " + petTrickClass[trick]);
+      btn.type = "button";
+      btn.setAttribute("data-trick", trick);
+      btn.textContent = t(petTrickKey(trick));
+      btn.addEventListener("click", function () {
+        petOnPerformTrick(trick);
+      });
+      host.appendChild(btn);
+    });
   }
 
   function petSyncVisibility() {
@@ -6100,6 +7591,43 @@
     } else {
       petStopTimer();
       petClearTrackedTimeouts();
+      if (petMini) {
+        petMiniStop();
+      }
+      if (petHidden) {
+        petSetView("main");
+      }
+    }
+    petSyncView();
+  }
+
+  function petSetView(view) {
+    var next = view === "stats" || view === "tricks" || view === "games"
+      ? view
+      : "main";
+    if (next !== "games" && petMini) {
+      petMiniStop();
+    }
+    petView = next;
+    petSyncView();
+  }
+
+  function petSyncView() {
+    if (!petEls) {
+      return;
+    }
+    petEls.widget.setAttribute("data-view", petView);
+    petEls.statsView.view.hidden = petView !== "stats";
+    petEls.tricksView.view.hidden = petView !== "tricks";
+    petEls.gamesView.view.hidden = petView !== "games";
+    if (petEls.actionsNode) {
+      petEls.actionsNode.hidden = petView !== "main";
+    }
+    if (petEls.renameForm) {
+      petEls.renameForm.hidden = !petRenameOpen || petView !== "main";
+    }
+    if (petView === "stats" && petState) {
+      petRenderSubviewData();
     }
   }
 
@@ -6145,7 +7673,16 @@
       return;
     }
     var className = "is-" + kind;
-    var classes = ["is-happy", "is-fed", "is-playing", "is-resting"];
+    var classes = [
+      "is-happy",
+      "is-fed",
+      "is-playing",
+      "is-resting",
+      "is-treat",
+      "is-brush",
+      "is-trick",
+      "is-cheer",
+    ];
     classes.forEach(function (name) {
       petEls.button.classList.remove(name);
     });
@@ -6163,14 +7700,41 @@
 
   function petAddXp(amount) {
     var before = petLevelValue();
+    var beforeStage = petStageIndex(petStageValue(before));
     petState.xp = Math.max(0, petState.xp + amount);
-    return petLevelValue() > before;
+    var after = petLevelValue();
+    return {
+      levels: Math.max(0, after - before),
+      stageChanged: petStageIndex(petStageValue(after)) > beforeStage,
+    };
   }
 
   function petCommit(result) {
+    if (!petState) {
+      return;
+    }
+    var gain = result && result.gain
+      ? result.gain
+      : { levels: 0, stageChanged: false };
+    if (gain.levels > 0) {
+      petAddTreats(gain.levels);
+    }
+    var unlocked = petCheckAchievements();
     petWriteState();
     petRender();
-    if (result && result.leveledUp) {
+    if (unlocked.length) {
+      petCelebrateAchievement(unlocked[0]);
+    }
+    if (gain.stageChanged) {
+      petSetStatus(
+        t("petReactionStage", {
+          name: petState.name,
+          stage: t(petStageKey(petStageValue())),
+        }),
+      );
+      return;
+    }
+    if (gain.levels > 0) {
       petSetStatus(
         t("petReactionLevel", { name: petState.name, n: petLevelValue() }),
       );
@@ -6189,12 +7753,17 @@
       return;
     }
     petCooldownUntil = now + petCooldownMs;
+    petTouchInteraction();
     petState.happiness = petClamp(petState.happiness + 6, 0, 100);
-    var leveledUp = petAddXp(2);
+    var gain = petAddXp(2);
+    var combo = petBumpCombo();
     petReact("happy");
+    petBlip("pet");
     petCommit({
-      leveledUp: leveledUp,
-      status: t("petReactionPet", { name: petState.name }),
+      gain: gain,
+      status: combo >= 2
+        ? t("petReactionCombo", { n: combo })
+        : t("petReactionPet", { name: petState.name }),
     });
   }
 
@@ -6206,12 +7775,15 @@
       petSetStatus(t("petReactionFull", { name: petState.name }));
       return;
     }
+    petTouchInteraction();
     petState.hunger = petClamp(petState.hunger - 30, 0, 100);
     petState.happiness = petClamp(petState.happiness + 3, 0, 100);
-    var leveledUp = petAddXp(4);
+    petState.totalFeeds += 1;
+    var gain = petAddXp(4);
     petReact("fed");
+    petBlip("pet");
     petCommit({
-      leveledUp: leveledUp,
+      gain: gain,
       status: t("petReactionFeed", { name: petState.name }),
     });
   }
@@ -6224,13 +7796,15 @@
       petSetStatus(t("petReactionTired", { name: petState.name }));
       return;
     }
+    petTouchInteraction();
     petState.happiness = petClamp(petState.happiness + 12, 0, 100);
     petState.hunger = petClamp(petState.hunger + 8, 0, 100);
     petState.energy = petClamp(petState.energy - 10, 0, 100);
-    var leveledUp = petAddXp(6);
+    var gain = petAddXp(6);
     petReact("playing");
+    petBlip("pet");
     petCommit({
-      leveledUp: leveledUp,
+      gain: gain,
       status: t("petReactionPlay", { name: petState.name }),
     });
   }
@@ -6243,15 +7817,500 @@
       petSetStatus(t("petReactionRested", { name: petState.name }));
       return;
     }
+    petTouchInteraction();
     petState.energy = petClamp(petState.energy + 45, 0, 100);
     petState.happiness = petClamp(petState.happiness + 4, 0, 100);
-    var leveledUp = petAddXp(3);
+    petAsleep = false;
+    var gain = petAddXp(3);
     petReact("resting");
     petCommit({
-      leveledUp: leveledUp,
+      gain: gain,
       status: t("petReactionRest", { name: petState.name }),
     });
   }
+
+  function petOnTreat() {
+    if (!petState) {
+      return;
+    }
+    if (petState.treats <= 0) {
+      petSetStatus(t("petReactionNoTreat", { name: petState.name }));
+      return;
+    }
+    petTouchInteraction();
+    petAddTreats(-1);
+    petState.happiness = petClamp(petState.happiness + 14, 0, 100);
+    petState.hunger = petClamp(petState.hunger - 12, 0, 100);
+    var gain = petAddXp(8);
+    petReact("treat");
+    petBlip("win");
+    petCommit({
+      gain: gain,
+      status: t("petReactionTreat", { name: petState.name }),
+    });
+  }
+
+  function petOnBrush() {
+    if (!petState) {
+      return;
+    }
+    petTouchInteraction();
+    petState.happiness = petClamp(petState.happiness + 7, 0, 100);
+    petState.totalBrush += 1;
+    var gain = petAddXp(5);
+    petReact("brush");
+    petBlip("pet");
+    petCommit({
+      gain: gain,
+      status: t("petReactionBrush", { name: petState.name }),
+    });
+  }
+
+  function petOnTalk() {
+    if (!petState) {
+      return;
+    }
+    petTouchInteraction();
+    var gain = petAddXp(1);
+    petCommit({ gain: gain, status: petTalkLine() });
+  }
+
+  function petOnTeachTrick() {
+    if (!petState) {
+      return;
+    }
+    var next = petNextTrick();
+    if (!next) {
+      petSetStatus(t("petReactionTrickNone", { name: petState.name }));
+      return;
+    }
+    var unlockLevel = petTrickLevel[next] || 1;
+    if (petLevelValue() < unlockLevel) {
+      petSetStatus(
+        t("petReactionTrickLocked", { trick: t(petTrickKey(next)), n: unlockLevel }),
+      );
+      return;
+    }
+    petTouchInteraction();
+    petState.tricks.push(next);
+    petState.totalTricks += 1;
+    var gain = petAddXp(10);
+    petReact("trick");
+    petBlip("win");
+    petCommit({
+      gain: gain,
+      status: t("petReactionTrickTeach", {
+        name: petState.name,
+        trick: t(petTrickKey(next)),
+      }),
+    });
+  }
+
+  function petOnPerformTrick(trick) {
+    if (!petState) {
+      return;
+    }
+    if (!petLearnedTrick(trick)) {
+      petSetStatus(t("petReactionTrickUnknown", { name: petState.name }));
+      return;
+    }
+    petTouchInteraction();
+    petState.totalTricks += 1;
+    var gain = petAddXp(2);
+    petReact("trick");
+    petBlip("pet");
+    petCommit({
+      gain: gain,
+      status: t("petReactionTrickPerform", {
+        name: petState.name,
+        trick: t(petTrickKey(trick)),
+      }),
+    });
+  }
+
+  function petOnToggleSound() {
+    if (!petState) {
+      return;
+    }
+    petState.sound = petState.sound !== true;
+    petWriteState();
+    petRender();
+    petSetStatus(t(petState.sound ? "petReactionUnmuted" : "petReactionMuted"));
+  }
+
+  function petSelectAccessory(accessory) {
+    if (!petState || !petAccessoryUnlocked(accessory)) {
+      return;
+    }
+    petTouchInteraction();
+    petState.accessory = accessory;
+    var gain = petAddXp(0);
+    petCommit({
+      gain: gain,
+      status: accessory === "none"
+        ? t("petReactionAcc", { name: petState.name, acc: t(petAccessoryKey("none")) })
+        : t("petReactionAcc", {
+            name: petState.name,
+            acc: t(petAccessoryKey(accessory)),
+          }),
+    });
+  }
+
+  function petSelectHue(hue) {
+    if (!petState || !petHueUnlocked(hue)) {
+      return;
+    }
+    petTouchInteraction();
+    petState.hue = hue;
+    var gain = petAddXp(0);
+    petCommit({ gain: gain, status: t("petReactionHue", { name: petState.name }) });
+  }
+
+  /* --- mini-game: Treat Toss (timing) ------------------------------ */
+
+  function petTossPhase(elapsed) {
+    var phase = (elapsed % (petTossPeriodMs * 2)) / petTossPeriodMs;
+    return phase <= 1 ? phase : 2 - phase;
+  }
+
+  function petTossHud() {
+    if (!petMini || petMini.id !== "toss" || !petMini.hud) {
+      return;
+    }
+    petMini.hud.textContent =
+      t("petGameTossRound", { n: petMini.round, total: petTossRounds }) +
+      " · " +
+      t("petGameTossScore", { n: petMini.score });
+  }
+
+  function petTossTick() {
+    if (!petMini || petMini.id !== "toss" || !petMini.active) {
+      return;
+    }
+    var pos = petTossPhase(Date.now() - petMini.start);
+    petMini.marker.style.left = (pos * 100).toFixed(2) + "%";
+    petMini.marker.setAttribute("data-pos", pos.toFixed(3));
+    petMiniTrack(petTossTick, petTossTickMs);
+  }
+
+  function petStartToss() {
+    if (!petState || !petEls) {
+      return;
+    }
+    petMiniStop();
+    petMini = {
+      id: "toss",
+      round: 1,
+      score: 0,
+      treats: 0,
+      treatsAtStart: petState.treats,
+      active: true,
+      start: Date.now(),
+      marker: null,
+      hud: null,
+      zone: null,
+    };
+    var wrap = petCreate("div", "pet-game pet-game-toss");
+    wrap.setAttribute("role", "group");
+    wrap.setAttribute("aria-label", t("petGameTossAria"));
+    var hud = petCreate("p", "pet-game-hud");
+    hud.setAttribute("id", "petGameHud");
+    hud.setAttribute("role", "status");
+    hud.setAttribute("aria-live", "polite");
+    var track = petCreate("div", "pet-game-track");
+    var zone = petCreate("span", "pet-game-zone");
+    zone.setAttribute("aria-hidden", "true");
+    var marker = petCreate("span", "pet-game-marker");
+    marker.setAttribute("aria-hidden", "true");
+    marker.setAttribute("data-pos", "0.5");
+    track.appendChild(zone);
+    track.appendChild(marker);
+    var tossBtn = petCreate("button", "pet-action is-primary pet-toss-btn");
+    tossBtn.type = "button";
+    tossBtn.setAttribute("id", "petGameTossBtn");
+    tossBtn.textContent = t("petGameTossBtn");
+    wrap.appendChild(hud);
+    wrap.appendChild(track);
+    wrap.appendChild(tossBtn);
+    petEls.gameHost.appendChild(wrap);
+    petEls.gameMenu.hidden = true;
+    petEls.gameExit.hidden = false;
+    petEls.gameResult.textContent = t("petGameTossHint");
+    petMini.hud = hud;
+    petMini.marker = marker;
+    petMini.zone = zone;
+    tossBtn.addEventListener("click", petTossStop);
+    petTossHud();
+    petTossTick();
+    tossBtn.focus();
+  }
+
+  function petTossStop() {
+    if (!petMini || petMini.id !== "toss" || !petMini.active) {
+      return;
+    }
+    var pos = petTossPhase(Date.now() - petMini.start);
+    var dist = Math.abs(pos - 0.5);
+    var label = "petGameTossMiss";
+    var points = 0;
+    if (dist <= 0.06) {
+      label = "petGameTossPerfect";
+      points = 3;
+      petMini.treats += 1;
+    } else if (dist <= 0.16) {
+      label = "petGameTossGood";
+      points = 2;
+    } else if (dist <= 0.32) {
+      label = "petGameTossOk";
+      points = 1;
+    }
+    petMini.active = false;
+    petMini.score += points;
+    petMiniClearTimers();
+    petMini.marker.setAttribute("data-pos", pos.toFixed(3));
+    petMini.marker.setAttribute("data-hit", label);
+    petEls.gameResult.textContent = t(label);
+    petBlip(points > 0 ? "win" : "bad");
+    if (petMini.round >= petTossRounds) {
+      petTossFinish();
+      return;
+    }
+    petMini.round += 1;
+    petTossHud();
+    petMiniTrack(petTossNextRound, petReactionMs);
+  }
+
+  function petTossNextRound() {
+    if (!petMini || petMini.id !== "toss") {
+      return;
+    }
+    petMini.active = true;
+    petMini.start = Date.now();
+    petEls.gameResult.textContent = t("petGameTossHint");
+    petTossHud();
+    petTossTick();
+  }
+
+  function petTossFinish() {
+    if (!petMini || petMini.id !== "toss") {
+      return;
+    }
+    var score = petMini.score;
+    var treats = petMini.treats + Math.max(0, Math.floor(score / 4));
+    petMiniFinish(
+      "petGameTossResult",
+      { n: score, treats: treats },
+      treats,
+      10 + score * 2,
+    );
+    petReact("cheer");
+    if (petEls.gameExit) {
+      petEls.gameExit.focus();
+    }
+  }
+
+  /* --- mini-game: Trick Trainer (memory) --------------------------- */
+
+  function petSimonHud() {
+    if (!petMini || petMini.id !== "simon" || !petMini.hud) {
+      return;
+    }
+    petMini.hud.textContent = t("petGameSimonRound", { n: petMini.round });
+  }
+
+  function petStartSimon() {
+    if (!petState || !petEls) {
+      return;
+    }
+    petMiniStop();
+    petMini = {
+      id: "simon",
+      sequence: [],
+      round: 0,
+      treats: 0,
+      treatsAtStart: petState.treats,
+      watching: true,
+      index: 0,
+      host: null,
+      hud: null,
+      buttons: {},
+    };
+    var wrap = petCreate("div", "pet-game pet-game-simon");
+    wrap.setAttribute("role", "group");
+    wrap.setAttribute("aria-label", t("petGameSimonAria"));
+    var hud = petCreate("p", "pet-game-hud");
+    hud.setAttribute("id", "petGameHud");
+    hud.setAttribute("role", "status");
+    hud.setAttribute("aria-live", "polite");
+    var seqWrap = petCreate("div", "pet-seq");
+    var buttons = {};
+    petTrickOrder.forEach(function (trick) {
+      var btn = petCreate("button", "pet-action pet-seq-btn " + petTrickClass[trick]);
+      btn.type = "button";
+      btn.setAttribute("data-trick", trick);
+      btn.textContent = t(petTrickKey(trick));
+      btn.addEventListener("click", function () {
+        petSimonInput(trick);
+      });
+      seqWrap.appendChild(btn);
+      buttons[trick] = btn;
+    });
+    wrap.appendChild(hud);
+    wrap.appendChild(seqWrap);
+    petEls.gameHost.appendChild(wrap);
+    petEls.gameMenu.hidden = true;
+    petEls.gameExit.hidden = false;
+    petEls.gameResult.textContent = t("petGameSimonHint");
+    petMini.host = wrap;
+    petMini.hud = hud;
+    petMini.buttons = buttons;
+    petSimonGrow();
+  }
+
+  function petSimonGrow() {
+    if (!petMini || petMini.id !== "simon") {
+      return;
+    }
+    petMini.round += 1;
+    petMini.sequence.push(
+      petTrickOrder[Math.floor(Math.random() * petTrickOrder.length)],
+    );
+    petMini.index = 0;
+    petMini.watching = true;
+    petMini.host.setAttribute("data-sequence", petMini.sequence.join(","));
+    petMini.host.setAttribute("data-watching", "true");
+    petSimonHud();
+    petSimonPlay(0);
+  }
+
+  function petSimonPlay(index) {
+    if (!petMini || petMini.id !== "simon") {
+      return;
+    }
+    var keys = Object.keys(petMini.buttons);
+    if (index >= petMini.sequence.length) {
+      petMini.watching = false;
+      petMini.host.setAttribute("data-watching", "false");
+      keys.forEach(function (key) {
+        petMini.buttons[key].disabled = false;
+      });
+      petMini.buttons[petMini.sequence[0]].focus();
+      petEls.gameResult.textContent = t("petGameSimonGo");
+      return;
+    }
+    var trick = petMini.sequence[index];
+    var btn = petMini.buttons[trick];
+    keys.forEach(function (key) {
+      petMini.buttons[key].disabled = true;
+      petMini.buttons[key].classList.remove("is-active");
+    });
+    void btn.offsetWidth;
+    btn.classList.add("is-active");
+    petBlip("pet");
+    petMiniTrack(function () {
+      btn.classList.remove("is-active");
+      petMiniTrack(function () {
+        petSimonPlay(index + 1);
+      }, 140);
+    }, petSimonStepMs);
+  }
+
+  function petSimonInput(trick) {
+    if (!petMini || petMini.id !== "simon" || petMini.watching) {
+      return;
+    }
+    if (trick !== petMini.sequence[petMini.index]) {
+      petSimonFail();
+      return;
+    }
+    petMini.index += 1;
+    var btn = petMini.buttons[trick];
+    if (btn) {
+      btn.classList.add("is-active");
+      petMiniTrack(function () {
+        btn.classList.remove("is-active");
+      }, 200);
+    }
+    petBlip("win");
+    if (petMini.index >= petMini.sequence.length) {
+      petMini.treats += 1;
+      petAddTreats(1);
+      petAddXp(4);
+      petWriteState();
+      petRender();
+      petMini.watching = true;
+      petEls.gameResult.textContent = t("petGameSimonRound", {
+        n: petMini.round + 1,
+      });
+      petMiniTrack(petSimonGrow, 700);
+    }
+  }
+
+  function petSimonFail() {
+    if (!petMini || petMini.id !== "simon") {
+      return;
+    }
+    var round = petMini.round;
+    var treats = petMini.treats;
+    petBlip("bad");
+    /* Each completed round already banked one treat, so the finish grants
+     * nothing extra: one coherent per-round rule, no double count. */
+    petMiniFinish(
+      "petGameSimonResult",
+      { n: round, treats: treats },
+      0,
+      4,
+    );
+    petReact("cheer");
+    if (petEls.gameExit) {
+      petEls.gameExit.focus();
+    }
+  }
+
+  function petOnKeydown(event) {
+    if (!event || event.key !== "Escape") {
+      return;
+    }
+    if (petMini) {
+      if (typeof event.preventDefault === "function") {
+        event.preventDefault();
+      }
+      petMiniStop();
+      petSetView("games");
+      if (petEls.tossStart) {
+        petEls.tossStart.focus();
+      }
+      return;
+    }
+    if (!petState || petState.hidden === true) {
+      return;
+    }
+    if (typeof event.preventDefault === "function") {
+      event.preventDefault();
+    }
+    petOnHide();
+  }
+
+  /* --- game awareness (called by the site's games, never the reverse) */
+
+  function petNotifyGame(isBest) {
+    if (!petState || !petEls || petEls.widget.hidden) {
+      return;
+    }
+    petLastInteraction = Date.now();
+    petAsleep = false;
+    petAddTreats(isBest ? 2 : 1);
+    var gain = petAddXp(isBest ? 6 : 3);
+    petReact("cheer");
+    petBlip(isBest ? "win" : "pet");
+    petCommit({
+      gain: gain,
+      status: isBest
+        ? t("petReactionCheerBest", { name: petState.name })
+        : t("petReactionCheer", { name: petState.name }),
+    });
+  }
+
 
   function petToggleRename(open) {
     petRenameOpen = open;
@@ -6273,10 +8332,10 @@
     }
     var next = petSanitizeName(petEls.renameInput.value) || t("petDefaultName");
     petState.name = next;
-    var leveledUp = petAddXp(2);
+    var gain = petAddXp(2);
     petToggleRename(false);
     petCommit({
-      leveledUp: leveledUp,
+      gain: gain,
       status: t("petReactionRenamed", { name: next }),
     });
   }
@@ -6288,9 +8347,9 @@
     var index = petSpeciesOrder.indexOf(petState.species);
     var next = petSpeciesOrder[(index + 1) % petSpeciesOrder.length];
     petState.species = next;
-    var leveledUp = petAddXp(2);
+    var gain = petAddXp(2);
     petCommit({
-      leveledUp: leveledUp,
+      gain: gain,
       status: t("petReactionSpecies", {
         name: petState.name,
         species: t(petSpeciesKey(next)),
@@ -6321,13 +8380,18 @@
     petRenderedSpecies = "";
     petCollapsed = false;
     petRenameOpen = false;
+    petCombo = 0;
+    petAsleep = false;
     petSelectedSpecies = petSpeciesOrder[0];
+    petMiniStop();
     petStopTimer();
     petClearTrackedTimeouts();
     petRemoveState();
     petEls.renameForm.hidden = true;
     petEls.adoptName.value = t("petDefaultName");
     petSelectSpeciesInput(petSelectedSpecies);
+    petSetView("main");
+    petRenderCombo();
     petSyncVisibility();
     petSetStatus(t("petReactionReset"));
   }
@@ -6339,6 +8403,8 @@
     petState.hidden = true;
     petWriteState();
     petToggleRename(false);
+    petMiniStop();
+    petSetView("main");
     petSyncVisibility();
     petEls.restore.focus();
   }
@@ -6368,17 +8434,41 @@
       hunger: petStartStats.hunger,
       energy: petStartStats.energy,
       xp: 0,
+      treats: petStartTreats,
+      tricks: [],
+      achievements: {},
+      accessory: "none",
+      hue: "default",
+      daysVisited: 1,
+      streak: 1,
+      lastDay: petLocalDay(Date.now()),
+      totalFeeds: 0,
+      totalBrush: 0,
+      totalTricks: 0,
+      bestCombo: 0,
+      miniGamesFinished: 0,
+      pos: "br",
+      sound: false,
       lastSeen: Date.now(),
       hidden: false,
     };
     petSelectedSpecies = species;
     petAdoptionDismissed = false;
     petCollapsed = false;
+    petCombo = 0;
+    petAsleep = false;
+    petLastInteraction = Date.now();
     petRenderedSpecies = "";
+    petBindAwareness();
+    petApplyCorner();
+    var unlocked = petCheckAchievements();
     petWriteState();
     petRender();
     petSyncVisibility();
     petSetStatus(t("petReactionAdopted", { name: name }));
+    if (unlocked.length) {
+      petCelebrateAchievement(unlocked[0]);
+    }
   }
 
   function initPet() {
@@ -6388,26 +8478,39 @@
 
     var saved = petReadState();
     var awayHours = 0;
+    var dailyTreats = 0;
     if (saved) {
       petState = saved;
       petSelectedSpecies = saved.species;
       awayHours = petApplyDecay(Date.now());
+      dailyTreats = petTouchVisit();
+      petCheckAchievements();
       petWriteState();
     }
 
     petBuildDom();
     applyI18nDom();
+    petBindAwareness();
+    petApplyCorner();
+    petLastInteraction = Date.now();
 
     if (petState) {
       petRender();
       petSyncVisibility();
-      if (awayHours >= 1 / 60) {
+      petRefreshIdleSleep(Date.now());
+      if (dailyTreats > 0) {
+        petSetStatus(
+          t("petReactionTreat", { name: petState.name }),
+        );
+      } else if (awayHours >= 1 / 60) {
         petSetStatus(
           t("petAway", {
             name: petState.name,
             n: petFormatAway(awayHours),
           }),
         );
+      } else {
+        petSetStatus(petTalkLine());
       }
       return;
     }

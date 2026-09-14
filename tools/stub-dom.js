@@ -534,6 +534,16 @@ function createEnvironment(options) {
 
   const timers = createTimers(clock);
 
+  /*
+   * Clock-backed `performance.now()`: the Reflex Tap game measures reaction
+   * time with it, so it must follow the virtual clock for headless tests.
+   */
+  const performance = {
+    now() {
+      return clock.now;
+    },
+  };
+
   class FakeDate extends Date {
     constructor(...args) {
       if (args.length === 0) super(clock.now);
@@ -613,6 +623,7 @@ function createEnvironment(options) {
   };
   window.location = location;
   window.navigator = navigator;
+  window.performance = performance;
 
   Object.assign(sandbox, {
     window,
@@ -621,6 +632,7 @@ function createEnvironment(options) {
     location,
     navigator,
     localStorage,
+    performance,
     Date: FakeDate,
     console,
     JSON,
