@@ -260,6 +260,91 @@
       "reflexResult": "Your reaction time was {n} ms.",
       "reflexHint": "Use the button, Space, or Enter. A new best is the lowest time.",
       "logReflex": "Reflex Tap: {n} ms",
+      "tabCaretDash": "Caret Dash",
+      "btnStart": "Start",
+      "hudSpeed": "Speed",
+      "caretFieldLabel":
+        "Caret Dash play area. Space or Arrow Up jumps, Arrow Down ducks.",
+      "caretPrompt":
+        "Press Start, then jump the glitch punctuation and duck under the floating glyphs.",
+      "caretGo":
+        "Running. Jump the glitch punctuation and duck under the floating glyphs.",
+      "caretOverReady": "Game over",
+      "caretOver": "Game over at {n}",
+      "caretOverResult": "Game over at {n} m.",
+      "caretBest": "Best {n} m",
+      "caretHint":
+        "Tap or click the field to jump and hold to duck. Space or Arrow Up jumps higher the longer you hold it.",
+      "btnJump": "Jump",
+      "btnDuck": "Duck",
+      "logCaretDash": "Caret Dash: {n} m",
+      "petTitle": "Companion",
+      "petAdoptTitle": "Adopt a companion",
+      "petAdoptBody":
+        "Choose a species and give it a name. It lives in the corner of every page and remembers you between visits.",
+      "petSpeciesLabel": "Species",
+      "petNameLabel": "Name",
+      "petNamePlaceholder": "Name your companion",
+      "petRenamePlaceholder": "New name",
+      "petAdoptConfirm": "Adopt",
+      "petAdoptLater": "Not now",
+      "petDefaultName": "Pip",
+      "petSpeciesBracko": "Bracko",
+      "petSpeciesQuillop": "Quillop",
+      "petSpeciesTagling": "Tagling",
+      "petSpeciesBrackoDesc":
+        "A brace-shaped hugger that keeps code blocks tidy.",
+      "petSpeciesQuillopDesc":
+        "A pen-nib drifter that sips leftover ink.",
+      "petSpeciesTaglingDesc":
+        "A tag-shaped scout that labels everything it finds.",
+      "petMoodHappy": "Happy",
+      "petMoodNeutral": "Content",
+      "petMoodHungry": "Hungry",
+      "petMoodSleepy": "Sleepy",
+      "petStatusHappy": "{name} is feeling great.",
+      "petStatusNeutral": "{name} is doing fine.",
+      "petStatusHungry": "{name} is getting hungry.",
+      "petStatusSleepy": "{name} is getting sleepy.",
+      "petButtonAria": "Pet {name}. Right now {name} is {mood}.",
+      "petTapHint": "Pet {name}",
+      "petAway": "You were away for {n}. {name} missed you.",
+      "petLevel": "Lv {n}",
+      "petXp": "{n} XP",
+      "petStatHappiness": "Happiness",
+      "petStatHunger": "Hunger",
+      "petStatEnergy": "Energy",
+      "petStatsLabel": "Companion needs",
+      "petControlsLabel": "Companion actions",
+      "petBtnFeed": "Feed",
+      "petBtnPlay": "Play",
+      "petBtnRest": "Rest",
+      "petBtnRename": "Rename",
+      "petBtnSpecies": "Switch",
+      "petBtnHide": "Hide",
+      "petBtnReset": "Reset",
+      "petBtnCollapse": "Collapse companion panel",
+      "petBtnExpand": "Expand companion panel",
+      "petBtnRestore": "Show companion",
+      "petBtnRenameConfirm": "Save",
+      "petBtnRenameCancel": "Cancel",
+      "petResetArmed": "Confirm reset?",
+      "petReactionPet": "You pet {name}.",
+      "petReactionFeed": "You fed {name}.",
+      "petReactionPlay": "You played with {name}.",
+      "petReactionRest": "{name} had a good rest.",
+      "petReactionTired": "{name} is too tired to play.",
+      "petReactionFull": "{name} is not hungry right now.",
+      "petReactionRested": "{name} already has full energy.",
+      "petReactionCooldown": "{name} is still enjoying that.",
+      "petReactionRenamed": "Now called {name}.",
+      "petReactionSpecies": "{name} shifted into a {species}.",
+      "petReactionReset": "Adoption reset. Pick a new companion.",
+      "petReactionAdopted": "Welcome, {name}!",
+      "petReactionMissed": "{name} missed you.",
+      "petReactionLevel": "{name} reached level {n}!",
+      "petAwayHours": "{n} h",
+      "petAwayMinutes": "{n} min",
     },
     zh: {
       "langLabel": "语言",
@@ -483,6 +568,85 @@
       "reflexResult": "你的反应时间是 {n} 毫秒。",
       "reflexHint": "可点击按钮或按空格键、回车键；用时越短越好。",
       "logReflex": "反应点击：{n} 毫秒",
+      "tabCaretDash": "光标疾驰",
+      "btnStart": "开始",
+      "hudSpeed": "速度",
+      "caretFieldLabel": "光标疾驰游戏区。空格键或方向上键跳跃，方向下键下蹲。",
+      "caretPrompt": "点击开始，跳过乱码标点，再从悬浮字符下方穿过。",
+      "caretGo": "奔跑中。跳过乱码标点，俯身穿过悬浮字符。",
+      "caretOverReady": "游戏结束",
+      "caretOver": "游戏结束，跑了 {n}",
+      "caretOverResult": "游戏结束，本次 {n} 米。",
+      "caretBest": "最佳 {n} 米",
+      "caretHint":
+        "轻点或点击游戏区跳跃，按住下蹲。空格键或方向上键按得越久跳得越高。",
+      "btnJump": "跳跃",
+      "btnDuck": "下蹲",
+      "logCaretDash": "光标疾驰：{n} 米",
+      "petTitle": "伙伴",
+      "petAdoptTitle": "领养伙伴",
+      "petAdoptBody":
+        "选择一种形态并取个名字。它会住在每个页面的角落，并记得你上次的来访。",
+      "petSpeciesLabel": "形态",
+      "petNameLabel": "名字",
+      "petNamePlaceholder": "给伙伴取个名字",
+      "petRenamePlaceholder": "新名字",
+      "petAdoptConfirm": "领养",
+      "petAdoptLater": "稍后再说",
+      "petDefaultName": "小豆",
+      "petSpeciesBracko": "括弧灵",
+      "petSpeciesQuillop": "笔尖灵",
+      "petSpeciesTagling": "标签灵",
+      "petSpeciesBrackoDesc": "括号形状的抱抱怪，喜欢把代码块收拾整齐。",
+      "petSpeciesQuillopDesc": "笔尖形状的漂流者，会啜饮剩下的墨水。",
+      "petSpeciesTaglingDesc": "标签形状的探索者，见到什么都要贴上标记。",
+      "petMoodHappy": "很开心",
+      "petMoodNeutral": "还不错",
+      "petMoodHungry": "有点饿",
+      "petMoodSleepy": "有点困",
+      "petStatusHappy": "{name} 感觉棒极了。",
+      "petStatusNeutral": "{name} 状态还不错。",
+      "petStatusHungry": "{name} 有点饿了。",
+      "petStatusSleepy": "{name} 有点困了。",
+      "petButtonAria": "抚摸 {name}。{name} 现在{mood}。",
+      "petTapHint": "抚摸 {name}",
+      "petAway": "你离开了 {n}，{name} 想你了。",
+      "petLevel": "等级 {n}",
+      "petXp": "{n} 经验",
+      "petStatHappiness": "心情",
+      "petStatHunger": "饥饿",
+      "petStatEnergy": "精力",
+      "petStatsLabel": "伙伴状态",
+      "petControlsLabel": "伙伴操作",
+      "petBtnFeed": "喂食",
+      "petBtnPlay": "玩耍",
+      "petBtnRest": "休息",
+      "petBtnRename": "改名",
+      "petBtnSpecies": "换形态",
+      "petBtnHide": "隐藏",
+      "petBtnReset": "重置",
+      "petBtnCollapse": "收起伙伴面板",
+      "petBtnExpand": "展开伙伴面板",
+      "petBtnRestore": "显示伙伴",
+      "petBtnRenameConfirm": "保存",
+      "petBtnRenameCancel": "取消",
+      "petResetArmed": "确认重置？",
+      "petReactionPet": "你抚摸了 {name}。",
+      "petReactionFeed": "你喂了 {name}。",
+      "petReactionPlay": "你和 {name} 玩了一会儿。",
+      "petReactionRest": "{name} 好好休息了一下。",
+      "petReactionTired": "{name} 太累了，玩不动。",
+      "petReactionFull": "{name} 现在还不饿。",
+      "petReactionRested": "{name} 的精力已经满了。",
+      "petReactionCooldown": "{name} 还在回味呢。",
+      "petReactionRenamed": "名字改成了 {name}。",
+      "petReactionSpecies": "{name} 变成了{species}。",
+      "petReactionReset": "已重置领养，请重新选择伙伴。",
+      "petReactionAdopted": "欢迎，{name}！",
+      "petReactionMissed": "{name} 想你了。",
+      "petReactionLevel": "{name} 升到了等级 {n}！",
+      "petAwayHours": "{n} 小时",
+      "petAwayMinutes": "{n} 分钟",
     },
   };
 
@@ -2704,6 +2868,7 @@
   var quietResetMemory = null;
   var quietReset2048 = null;
   var quietResetReflex = null;
+  var quietResetCaretDash = null;
 
   var memoryBestKey = "glyph-match-best";
   var memoryMatchPairs = 6;
@@ -2719,6 +2884,7 @@
   var g2048BestKey = "g2048-best";
   var g2048StateKey = "g2048-state";
   var reflexBestKey = "reflex-tap-best";
+  var caretDashBestKey = "caret-dash-best";
 
   var typingPhrases = [
     "Paste your messy notes and let the formatter sweep every bracket away.",
@@ -2760,10 +2926,12 @@
     var tabMemory = getElement("gameTabMemory");
     var tab2048 = getElement("gameTab2048");
     var tabReflex = getElement("gameTabReflex");
+    var tabCaretDash = getElement("gameTabCaretDash");
     var panelTyping = getElement("gamePanelTyping");
     var panelMemory = getElement("gamePanelMemory");
     var panel2048 = getElement("gamePanel2048");
     var panelReflex = getElement("gamePanelReflex");
+    var panelCaretDash = getElement("gamePanelCaretDash");
     if (
       !dialog ||
       !backdrop ||
@@ -2772,10 +2940,12 @@
       !tabMemory ||
       !tab2048 ||
       !tabReflex ||
+      !tabCaretDash ||
       !panelTyping ||
       !panelMemory ||
       !panel2048 ||
-      !panelReflex
+      !panelReflex ||
+      !panelCaretDash
     ) {
       return;
     }
@@ -2967,6 +3137,7 @@
       { name: "memory", tab: tabMemory, panel: panelMemory },
       { name: "2048", tab: tab2048, panel: panel2048 },
       { name: "reflex", tab: tabReflex, panel: panelReflex },
+      { name: "caretDash", tab: tabCaretDash, panel: panelCaretDash },
     ];
     var activeTabName = "typing";
 
@@ -2996,6 +3167,10 @@
         quietResetReflex();
       }
 
+      if (quietResetCaretDash) {
+        quietResetCaretDash();
+      }
+
       if (shouldFocus) {
         gameTabEntries.forEach(function (entry) {
           if (entry.name === selected) {
@@ -3019,6 +3194,10 @@
 
     tabReflex.addEventListener("click", function () {
       selectTab("reflex");
+    });
+
+    tabCaretDash.addEventListener("click", function () {
+      selectTab("caretDash");
     });
 
     tabTyping.parentElement.addEventListener("keydown", function (event) {
@@ -3102,6 +3281,10 @@
 
       if (quietResetReflex) {
         quietResetReflex();
+      }
+
+      if (quietResetCaretDash) {
+        quietResetCaretDash();
       }
 
       openBtn.focus();
@@ -3870,6 +4053,713 @@
     resetRound();
   }
 
+  function initCaretDash() {
+    var field = getElement("caretField");
+    var driftFar = getElement("caretDriftFar");
+    var driftNear = getElement("caretDriftNear");
+    var obstaclesEl = getElement("caretObstacles");
+    var playerEl = getElement("caretPlayer");
+    var railFill = getElement("caretRailFill");
+    var overlayEl = getElement("caretOverlay");
+    var overlayText = getElement("caretOverlayText");
+    var retryBtn = getElement("caretRetryBtn");
+    var againBtn = getElement("caretAgainBtn");
+    var startBtn = getElement("caretStartBtn");
+    var jumpBtn = getElement("caretJumpBtn");
+    var duckBtn = getElement("caretDuckBtn");
+    var scoreEl = getElement("caretScore");
+    var bestStatEl = getElement("caretBestStat");
+    var speedEl = getElement("caretSpeed");
+    var resultEl = getElement("caretResult");
+    var bestEl = getElement("caretBest");
+    var panel = getElement("gamePanelCaretDash");
+    if (
+      !field ||
+      !driftFar ||
+      !driftNear ||
+      !obstaclesEl ||
+      !playerEl ||
+      !railFill ||
+      !overlayEl ||
+      !overlayText ||
+      !retryBtn ||
+      !againBtn ||
+      !startBtn ||
+      !jumpBtn ||
+      !duckBtn ||
+      !scoreEl ||
+      !bestStatEl ||
+      !speedEl ||
+      !resultEl ||
+      !bestEl ||
+      !panel
+    ) {
+      return;
+    }
+
+    // Layout is expressed in the same pixel units the CSS uses, so the hit
+    // boxes below stay in sync with what the player sees.
+    var GROUND_INSET = 28;
+    var PLAYER_X_RATIO = 0.15;
+    var PLAYER_W = 6;
+    var PLAYER_H = 30;
+    var DUCK_H = 12;
+    var FLOAT_GAP = 22;
+    var BASE_SPEED = 168;
+    var SPEED_GAIN = 0.09;
+    var MAX_SPEED = 430;
+    var GRAVITY = 1850;
+    var HOLD_GRAVITY = 980;
+    var DUCK_GRAVITY = 2700;
+    var JUMP_V = -520;
+    var CUT_V = -230;
+    var PIXELS_PER_METRE = 12;
+    var DUCK_HOLD_MS = 170;
+    var STEP_CAP = 0.034;
+
+    var groundGlyphs = [
+      "\u00b6",
+      "\u00a7",
+      "\u00bf",
+      "\u00a1",
+      "\u00a4",
+      "\u00ac",
+      "\u00a6",
+      "\u00d7",
+      "\u00f7",
+      "\u2020",
+      "\u2021",
+      "\u2030",
+      "\u00b5",
+      "\u00b7",
+    ];
+    var floatGlyphs = [
+      "\ufffd",
+      "\u2400",
+      "\u240a",
+      "\u2421",
+      "\u2318",
+      "\u2301",
+      "\u235f",
+      "\u238b",
+      "\u259a",
+      "\u25ca",
+    ];
+
+    var state = "idle";
+    var obstacles = [];
+    var obsSeq = 0;
+    var travelled = 0;
+    var speedNow = BASE_SPEED;
+    var jumpOffset = 0;
+    var velY = 0;
+    var onGround = true;
+    var ducking = false;
+    var jumpHeld = false;
+    var rafId = null;
+    var lastTs = 0;
+    var spawnGap = 0;
+    var fieldW = 0;
+    var fieldH = 0;
+    var shakeId = null;
+    var holdId = null;
+    var holdTimer = null;
+    var holdDucked = false;
+
+    function fillDrift(element, pattern, repeat) {
+      var text = "";
+      for (var i = 0; i < repeat; i += 1) {
+        text += pattern;
+      }
+      element.textContent = text;
+    }
+
+    fillDrift(driftFar, " . : ; \u00b6 \u00a7 \u00a4 \u00ac \u00b7 \u2020 \u2030 ", 26);
+    fillDrift(
+      driftNear,
+      " const caret = line[i] \u2192 index++ \u2591\u2592\u2593 ",
+      18,
+    );
+    field.style.setProperty("--caret-ground-y", GROUND_INSET + "px");
+
+    function readBest() {
+      var value = parseInt(localStorage.getItem(caretDashBestKey), 10);
+      return isNaN(value) ? 0 : value;
+    }
+
+    function renderBest() {
+      var best = readBest();
+      bestStatEl.textContent = String(best);
+      bestEl.textContent = best ? t("caretBest", { n: best }) : t("noBest");
+    }
+
+    function playerX() {
+      return Math.round(fieldW * PLAYER_X_RATIO);
+    }
+
+    function currentScore() {
+      return Math.floor(travelled / PIXELS_PER_METRE);
+    }
+
+    function resetPlayerVisual() {
+      playerEl.style.transform = "translateY(0px)";
+      playerEl.classList.remove("is-ducking");
+    }
+
+    function measure() {
+      var previous = fieldW;
+      fieldW = field.clientWidth || 396;
+      fieldH = field.clientHeight || 150;
+      if (previous && previous !== fieldW) {
+        var ratio = fieldW / previous;
+        obstacles.forEach(function (obstacle) {
+          obstacle.x *= ratio;
+        });
+      }
+      playerEl.style.left = playerX() + "px";
+      playerEl.style.bottom = GROUND_INSET + "px";
+    }
+
+    function hitBox(step) {
+      var height = ducking ? DUCK_H : PLAYER_H;
+      var bottom = fieldH - GROUND_INSET - jumpOffset;
+      return {
+        x: playerX(),
+        y: bottom - height,
+        w: PLAYER_W + step,
+        h: height,
+      };
+    }
+
+    function obstacleBox(obstacle) {
+      var bottom =
+        fieldH - GROUND_INSET - (obstacle.floating ? FLOAT_GAP : 0);
+      return {
+        x: obstacle.x,
+        y: bottom - obstacle.h,
+        w: obstacle.w,
+        h: obstacle.h,
+      };
+    }
+
+    function overlaps(a, b) {
+      return (
+        a.x < b.x + b.w &&
+        b.x < a.x + a.w &&
+        a.y < b.y + b.h &&
+        b.y < a.y + a.h
+      );
+    }
+
+    function render() {
+      playerEl.style.transform = "translateY(" + -jumpOffset + "px)";
+      playerEl.classList.toggle("is-ducking", ducking);
+      obstacles.forEach(function (obstacle) {
+        obstacle.el.style.transform = "translateX(" + obstacle.x + "px)";
+      });
+    }
+
+    function updateHud() {
+      scoreEl.textContent = String(currentScore());
+      speedEl.textContent = (speedNow / BASE_SPEED).toFixed(1) + "x";
+      var progress = (speedNow - BASE_SPEED) / (MAX_SPEED - BASE_SPEED);
+      railFill.style.width = Math.round(Math.min(1, Math.max(0, progress)) * 100) + "%";
+    }
+
+    function clearObstacles() {
+      obstacles.forEach(function (obstacle) {
+        if (obstacle.el && obstacle.el.parentNode) {
+          obstacle.el.parentNode.removeChild(obstacle.el);
+        }
+      });
+      obstacles = [];
+      obstaclesEl.textContent = "";
+    }
+
+    function clearShake() {
+      if (shakeId !== null) {
+        window.clearTimeout(shakeId);
+        shakeId = null;
+      }
+      field.classList.remove("is-shaking");
+    }
+
+    function stopLoop() {
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+      lastTs = 0;
+    }
+
+    function startLoop() {
+      if (rafId !== null || state !== "running") {
+        return;
+      }
+      lastTs = 0;
+      rafId = window.requestAnimationFrame(frame);
+    }
+
+    function spawnObstacle() {
+      var floating = Math.random() < 0.34;
+      var width;
+      var height;
+      if (floating) {
+        width = 20 + Math.random() * 16;
+        height = 20 + Math.random() * 8;
+      } else {
+        width = 16 + Math.random() * 22;
+        height = 20 + Math.random() * 14;
+      }
+
+      var glyphs = floating ? floatGlyphs : groundGlyphs;
+      var element = document.createElement("span");
+      element.className =
+        "caret-obstacle " + (floating ? "is-floating" : "is-ground");
+      element.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+      element.style.width = Math.round(width) + "px";
+      element.style.height = Math.round(height) + "px";
+      element.style.bottom =
+        GROUND_INSET + (floating ? FLOAT_GAP : 0) + "px";
+      element.style.transform = "translateX(" + (fieldW + 14) + "px)";
+
+      var obstacle = {
+        id: (obsSeq += 1),
+        x: fieldW + 14,
+        w: Math.round(width),
+        h: Math.round(height),
+        floating: floating,
+        el: element,
+      };
+      obstaclesEl.appendChild(element);
+      obstacles.push(obstacle);
+
+      var seconds = 1.02 - Math.min(0.34, travelled / 11000);
+      spawnGap = speedNow * (seconds + Math.random() * 0.5);
+    }
+
+    function endRound() {
+      state = "over";
+      stopLoop();
+      setDuck(false);
+      jumpHeld = false;
+
+      var score = currentScore();
+      var previousBest = readBest();
+      var isBest = score > previousBest;
+      if (isBest) {
+        localStorage.setItem(caretDashBestKey, String(score));
+      }
+
+      overlayText.textContent = t("caretOver", { n: score });
+      overlayEl.hidden = false;
+      resultEl.textContent =
+        t("caretOverResult", { n: score }) +
+        (isBest ? " " + t("newBest") : "");
+      renderBest();
+      logAction(t("logCaretDash", { n: score }));
+
+      if (!isMotionOff()) {
+        field.classList.add("is-shaking");
+        shakeId = window.setTimeout(function () {
+          shakeId = null;
+          field.classList.remove("is-shaking");
+        }, 300);
+      }
+
+      if (isBest) {
+        var rect = field.getBoundingClientRect();
+        createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      }
+
+      retryBtn.focus();
+    }
+
+    function step(dt) {
+      travelled += speedNow * dt;
+
+      if (!onGround) {
+        var gravity = GRAVITY;
+        if (ducking) {
+          gravity = DUCK_GRAVITY;
+        } else if (jumpHeld && velY < 0) {
+          gravity = HOLD_GRAVITY;
+        }
+        velY += gravity * dt;
+        jumpOffset -= velY * dt;
+        if (jumpOffset <= 0) {
+          jumpOffset = 0;
+          velY = 0;
+          onGround = true;
+        }
+      }
+
+      speedNow = Math.min(MAX_SPEED, BASE_SPEED + travelled * SPEED_GAIN);
+
+      spawnGap -= speedNow * dt;
+      if (spawnGap <= 0) {
+        spawnObstacle();
+      }
+
+      var stepPx = speedNow * dt;
+      for (var index = obstacles.length - 1; index >= 0; index -= 1) {
+        var obstacle = obstacles[index];
+        obstacle.x -= stepPx;
+        if (obstacle.x + obstacle.w < -12) {
+          if (obstacle.el.parentNode) {
+            obstacle.el.parentNode.removeChild(obstacle.el);
+          }
+          obstacles.splice(index, 1);
+        }
+      }
+
+      var box = hitBox(stepPx);
+      for (var other = 0; other < obstacles.length; other += 1) {
+        if (overlaps(box, obstacleBox(obstacles[other]))) {
+          endRound();
+          return;
+        }
+      }
+
+      updateHud();
+    }
+
+    function frame(timestamp) {
+      rafId = null;
+      if (state !== "running") {
+        return;
+      }
+      if (document.hidden || panel.hidden) {
+        return;
+      }
+      if (!lastTs) {
+        lastTs = timestamp;
+      }
+      var dt = (timestamp - lastTs) / 1000;
+      lastTs = timestamp;
+      if (dt < 0) {
+        dt = 0;
+      }
+      if (dt > STEP_CAP) {
+        dt = STEP_CAP;
+      }
+      step(dt);
+      render();
+      if (state === "running") {
+        rafId = window.requestAnimationFrame(frame);
+      }
+    }
+
+    function doJump() {
+      if (state !== "running" || !onGround) {
+        return;
+      }
+      velY = JUMP_V;
+      jumpOffset = 0.01;
+      onGround = false;
+    }
+
+    function cutJump() {
+      if (velY < 0) {
+        velY = Math.max(velY, CUT_V);
+      }
+    }
+
+    function setDuck(value) {
+      var next = state === "running" ? value : false;
+      if (next === ducking) {
+        return;
+      }
+      ducking = next;
+      playerEl.classList.toggle("is-ducking", ducking);
+    }
+
+    function startRound() {
+      stopLoop();
+      clearShake();
+      clearObstacles();
+      measure();
+
+      state = "running";
+      travelled = 0;
+      speedNow = BASE_SPEED;
+      jumpOffset = 0;
+      velY = 0;
+      onGround = true;
+      jumpHeld = false;
+      holdDucked = false;
+      if (holdTimer !== null) {
+        window.clearTimeout(holdTimer);
+        holdTimer = null;
+      }
+      holdId = null;
+      spawnGap = fieldW * 0.85;
+
+      overlayEl.hidden = true;
+      ducking = false;
+      resetPlayerVisual();
+      render();
+      scoreEl.textContent = "0";
+      speedEl.textContent = "1.0x";
+      railFill.style.width = "0%";
+      resultEl.textContent = t("caretGo");
+      startLoop();
+      field.focus();
+    }
+
+    function resetQuiet() {
+      state = "idle";
+      stopLoop();
+      clearShake();
+      clearObstacles();
+      if (holdTimer !== null) {
+        window.clearTimeout(holdTimer);
+        holdTimer = null;
+      }
+      holdId = null;
+      holdDucked = false;
+      travelled = 0;
+      speedNow = BASE_SPEED;
+      jumpOffset = 0;
+      velY = 0;
+      onGround = true;
+      ducking = false;
+      jumpHeld = false;
+      overlayEl.hidden = true;
+      resetPlayerVisual();
+      scoreEl.textContent = "0";
+      speedEl.textContent = "1.0x";
+      railFill.style.width = "0%";
+      resultEl.textContent = t("caretPrompt");
+      renderBest();
+    }
+
+    function releaseHold(pointerId) {
+      if (holdId !== null && pointerId !== undefined && holdId !== pointerId) {
+        return;
+      }
+      if (holdTimer !== null) {
+        window.clearTimeout(holdTimer);
+        holdTimer = null;
+      }
+      var wasDucked = holdDucked;
+      holdId = null;
+      holdDucked = false;
+      if (wasDucked) {
+        setDuck(false);
+      }
+      return wasDucked;
+    }
+
+    field.addEventListener("pointerdown", function (event) {
+      if (state !== "running" || holdId !== null) {
+        return;
+      }
+      holdId = event.pointerId;
+      holdDucked = false;
+      if (field.setPointerCapture) {
+        try {
+          field.setPointerCapture(event.pointerId);
+        } catch (error) {
+          /* no-op: capture is a nicety, the listeners still fire */
+        }
+      }
+      holdTimer = window.setTimeout(function () {
+        holdTimer = null;
+        if (holdId === event.pointerId && state === "running") {
+          holdDucked = true;
+          setDuck(true);
+        }
+      }, DUCK_HOLD_MS);
+    });
+
+    field.addEventListener("pointerup", function (event) {
+      if (holdId !== event.pointerId) {
+        return;
+      }
+      var wasDucked = releaseHold(event.pointerId);
+      if (!wasDucked && state === "running") {
+        doJump();
+      }
+    });
+
+    field.addEventListener("pointercancel", function (event) {
+      releaseHold(event.pointerId);
+    });
+
+    field.addEventListener("keydown", function (event) {
+      if (
+        event.key === " " ||
+        event.key === "Spacebar" ||
+        event.key === "ArrowUp"
+      ) {
+        event.preventDefault();
+        if (event.repeat || state !== "running") {
+          return;
+        }
+        jumpHeld = true;
+        doJump();
+        return;
+      }
+
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        if (state === "running") {
+          setDuck(true);
+        }
+      }
+    });
+
+    field.addEventListener("keyup", function (event) {
+      if (
+        event.key === " " ||
+        event.key === "Spacebar" ||
+        event.key === "ArrowUp"
+      ) {
+        jumpHeld = false;
+        cutJump();
+        return;
+      }
+
+      if (event.key === "ArrowDown") {
+        setDuck(false);
+      }
+    });
+
+    field.addEventListener("blur", function () {
+      jumpHeld = false;
+      setDuck(false);
+    });
+
+    function bindJumpButton(button) {
+      button.addEventListener("pointerdown", function (event) {
+        event.preventDefault();
+        if (state !== "running") {
+          return;
+        }
+        jumpHeld = true;
+        doJump();
+      });
+      button.addEventListener("pointerup", function () {
+        jumpHeld = false;
+        cutJump();
+      });
+      button.addEventListener("pointercancel", function () {
+        jumpHeld = false;
+      });
+      button.addEventListener("pointerleave", function () {
+        if (jumpHeld) {
+          jumpHeld = false;
+          cutJump();
+        }
+      });
+      button.addEventListener("keydown", function (event) {
+        if (
+          event.key !== " " &&
+          event.key !== "Spacebar" &&
+          event.key !== "ArrowUp" &&
+          event.key !== "Enter"
+        ) {
+          return;
+        }
+        event.preventDefault();
+        if (event.repeat || state !== "running") {
+          return;
+        }
+        jumpHeld = true;
+        doJump();
+      });
+      button.addEventListener("keyup", function (event) {
+        if (
+          event.key !== " " &&
+          event.key !== "Spacebar" &&
+          event.key !== "ArrowUp" &&
+          event.key !== "Enter"
+        ) {
+          return;
+        }
+        jumpHeld = false;
+        cutJump();
+      });
+    }
+
+    function bindDuckButton(button) {
+      button.addEventListener("pointerdown", function (event) {
+        event.preventDefault();
+        setDuck(true);
+      });
+      button.addEventListener("pointerup", function () {
+        setDuck(false);
+      });
+      button.addEventListener("pointercancel", function () {
+        setDuck(false);
+      });
+      button.addEventListener("pointerleave", function () {
+        setDuck(false);
+      });
+      button.addEventListener("keydown", function (event) {
+        if (
+          event.key !== " " &&
+          event.key !== "Spacebar" &&
+          event.key !== "ArrowDown"
+        ) {
+          return;
+        }
+        event.preventDefault();
+        setDuck(true);
+      });
+      button.addEventListener("keyup", function (event) {
+        if (
+          event.key !== " " &&
+          event.key !== "Spacebar" &&
+          event.key !== "ArrowDown"
+        ) {
+          return;
+        }
+        event.preventDefault();
+        setDuck(false);
+      });
+    }
+
+    bindJumpButton(jumpBtn);
+    bindDuckButton(duckBtn);
+    jumpBtn.addEventListener("blur", function () {
+      jumpHeld = false;
+    });
+    duckBtn.addEventListener("blur", function () {
+      setDuck(false);
+    });
+
+    startBtn.addEventListener("click", startRound);
+    retryBtn.addEventListener("click", startRound);
+    againBtn.addEventListener("click", function () {
+      resetQuiet();
+      startBtn.focus();
+    });
+
+    function handleVisibility() {
+      if (document.hidden) {
+        stopLoop();
+      } else if (state === "running" && !panel.hidden) {
+        startLoop();
+      }
+    }
+
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    window.addEventListener("resize", function () {
+      if (state === "running") {
+        measure();
+        render();
+      }
+    });
+
+    quietResetCaretDash = resetQuiet;
+
+    measure();
+    resetQuiet();
+  }
+
   function focusOutput() {
     var output = getElement("outputText");
     if (!output) {
@@ -4246,8 +5136,1290 @@
       .trim();
   }
 
+  /* ------------------------------------------------------------------
+   * Pet companion
+   * A small original creature injected into every page. Its needs decay
+   * with real elapsed time and its whole state lives in one storage key.
+   * ------------------------------------------------------------------ */
+
+  var petStorageKey = "capitalconvert-pet";
+  var petSpeciesOrder = ["bracko", "quillop", "tagling"];
+  var petSvgNamespace = "http://www.w3.org/2000/svg";
+  var petTickMs = 30000;
+  var petCooldownMs = 900;
+  var petReactionMs = 620;
+  var petFxMs = 900;
+  var petStatusRevertMs = 4200;
+  var petNameMax = 16;
+  var petLevelXp = 20;
+  var petMaxLevel = 99;
+  var petDecayCapMs = 12 * 60 * 60 * 1000;
+  var petDecayPerHour = { happiness: 6, hunger: 9, energy: 5 };
+  var petStartStats = { happiness: 72, hunger: 24, energy: 80 };
+  var petParticleShapes = {
+    happy: "is-heart",
+    fed: "is-food",
+    playing: "is-star",
+    resting: "is-sleep",
+  };
+
+  var petState = null;
+  var petEls = null;
+  var petCollapsed = false;
+  var petRenameOpen = false;
+  var petResetArmed = false;
+  var petAdoptionDismissed = false;
+  var petStorageBlocked = false;
+  var petDecayTimer = null;
+  var petStatusTimer = null;
+  var petReactionTimer = null;
+  var petResetTimer = null;
+  var petCooldownUntil = 0;
+  var petStatusText = "";
+  var petTrackedTimeouts = [];
+  var petSelectedSpecies = petSpeciesOrder[0];
+  var petRenderedSpecies = "";
+
+  function petClamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function petToNumber(value, fallback) {
+    var number = typeof value === "number" ? value : parseFloat(value);
+    return isFinite(number) ? number : fallback;
+  }
+
+  function petIsSpecies(value) {
+    return petSpeciesOrder.indexOf(value) !== -1;
+  }
+
+  function petSpeciesKey(species) {
+    return "petSpecies" + species.charAt(0).toUpperCase() + species.slice(1);
+  }
+
+  function petMoodKey(mood) {
+    return "petMood" + mood.charAt(0).toUpperCase() + mood.slice(1);
+  }
+
+  function petMoodStatusKey(mood) {
+    return "petStatus" + mood.charAt(0).toUpperCase() + mood.slice(1);
+  }
+
+  function petSanitizeName(value) {
+    if (typeof value !== "string") {
+      return "";
+    }
+    return value
+      .replace(/[\u0000-\u001f\u007f<>]/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, petNameMax);
+  }
+
+  function petNormalizeState(raw) {
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+      return null;
+    }
+    if (!petIsSpecies(raw.species)) {
+      return null;
+    }
+    return {
+      species: raw.species,
+      name: petSanitizeName(raw.name) || t("petDefaultName"),
+      happiness: petClamp(
+        petToNumber(raw.happiness, petStartStats.happiness),
+        0,
+        100,
+      ),
+      hunger: petClamp(petToNumber(raw.hunger, petStartStats.hunger), 0, 100),
+      energy: petClamp(petToNumber(raw.energy, petStartStats.energy), 0, 100),
+      xp: Math.max(0, Math.floor(petToNumber(raw.xp, 0))),
+      lastSeen: petToNumber(raw.lastSeen, Date.now()),
+      hidden: raw.hidden === true,
+    };
+  }
+
+  function petReadState() {
+    var rawText = null;
+    try {
+      rawText = localStorage.getItem(petStorageKey);
+    } catch (error) {
+      petStorageBlocked = true;
+      return null;
+    }
+    if (!rawText) {
+      return null;
+    }
+    try {
+      return petNormalizeState(JSON.parse(rawText));
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function petWriteState() {
+    if (!petState || petStorageBlocked) {
+      return;
+    }
+    try {
+      localStorage.setItem(petStorageKey, JSON.stringify(petState));
+    } catch (error) {
+      petStorageBlocked = true;
+    }
+  }
+
+  function petRemoveState() {
+    try {
+      localStorage.removeItem(petStorageKey);
+    } catch (error) {
+      petStorageBlocked = true;
+    }
+  }
+
+  function petLevelValue() {
+    if (!petState) {
+      return 1;
+    }
+    return Math.min(petMaxLevel, 1 + Math.floor(petState.xp / petLevelXp));
+  }
+
+  function petMood() {
+    if (!petState) {
+      return "neutral";
+    }
+    if (petState.energy < 30) {
+      return "sleepy";
+    }
+    if (petState.hunger >= 65) {
+      return "hungry";
+    }
+    if (petState.happiness >= 65 && petState.hunger < 50) {
+      return "happy";
+    }
+    return "neutral";
+  }
+
+  function petApplyDecay(now) {
+    if (!petState) {
+      return 0;
+    }
+    var elapsed = now - petState.lastSeen;
+    petState.lastSeen = now;
+    if (!isFinite(elapsed) || elapsed <= 0) {
+      return 0;
+    }
+    var hours = Math.min(elapsed, petDecayCapMs) / 3600000;
+    petState.happiness = petClamp(
+      petState.happiness - petDecayPerHour.happiness * hours,
+      0,
+      100,
+    );
+    petState.hunger = petClamp(
+      petState.hunger + petDecayPerHour.hunger * hours,
+      0,
+      100,
+    );
+    petState.energy = petClamp(
+      petState.energy - petDecayPerHour.energy * hours,
+      0,
+      100,
+    );
+    return hours;
+  }
+
+  function petFormatAway(hours) {
+    if (hours >= 1) {
+      return t("petAwayHours", { n: Math.round(hours) });
+    }
+    return t("petAwayMinutes", { n: Math.max(1, Math.round(hours * 60)) });
+  }
+
+  function petTrackTimeout(callback, delay) {
+    var id = window.setTimeout(function () {
+      petUntrackTimeout(id);
+      callback();
+    }, delay);
+    petTrackedTimeouts.push(id);
+    return id;
+  }
+
+  function petUntrackTimeout(id) {
+    var index = petTrackedTimeouts.indexOf(id);
+    if (index !== -1) {
+      petTrackedTimeouts.splice(index, 1);
+    }
+  }
+
+  function petClearTrackedTimeouts() {
+    petTrackedTimeouts.forEach(function (id) {
+      window.clearTimeout(id);
+    });
+    petTrackedTimeouts = [];
+    if (petStatusTimer !== null) {
+      window.clearTimeout(petStatusTimer);
+      petStatusTimer = null;
+    }
+    if (petReactionTimer !== null) {
+      window.clearTimeout(petReactionTimer);
+      petReactionTimer = null;
+    }
+    if (petResetTimer !== null) {
+      window.clearTimeout(petResetTimer);
+      petResetTimer = null;
+    }
+  }
+
+  function petStartTimer() {
+    if (petDecayTimer !== null || !petState || petState.hidden) {
+      return;
+    }
+    if (document.hidden) {
+      return;
+    }
+    petDecayTimer = window.setInterval(petOnTick, petTickMs);
+  }
+
+  function petStopTimer() {
+    if (petDecayTimer === null) {
+      return;
+    }
+    window.clearInterval(petDecayTimer);
+    petDecayTimer = null;
+  }
+
+  function petOnTick() {
+    if (!petState || petState.hidden) {
+      petStopTimer();
+      return;
+    }
+    if (petApplyDecay(Date.now()) > 0) {
+      petWriteState();
+      petRender();
+    }
+  }
+
+  function petHandleVisibility() {
+    if (document.hidden) {
+      petStopTimer();
+      if (petState) {
+        petApplyDecay(Date.now());
+        petWriteState();
+      }
+      return;
+    }
+    if (petState) {
+      petApplyDecay(Date.now());
+      petRender();
+    }
+    petStartTimer();
+  }
+
+  function petPersistNow() {
+    if (!petState) {
+      return;
+    }
+    petApplyDecay(Date.now());
+    petWriteState();
+  }
+
+  /* --- artwork ----------------------------------------------------- */
+
+  function petSvg(tag, attrs) {
+    var node = document.createElementNS(petSvgNamespace, tag);
+    if (attrs) {
+      Object.keys(attrs).forEach(function (name) {
+        node.setAttribute(name, String(attrs[name]));
+      });
+    }
+    return node;
+  }
+
+  function petAppendAll(parent, nodes) {
+    nodes.forEach(function (node) {
+      if (!node) {
+        return;
+      }
+      if (Array.isArray(node)) {
+        petAppendAll(parent, node);
+        return;
+      }
+      parent.appendChild(node);
+    });
+    return parent;
+  }
+
+  function petEye(cx, cy) {
+    return [
+      petSvg("circle", { class: "pet-eye", cx: cx, cy: cy, r: 6.4 }),
+      petSvg("circle", {
+        class: "pet-eye-shine",
+        cx: cx + 2.2,
+        cy: cy - 2.2,
+        r: 1.9,
+      }),
+    ];
+  }
+
+  function petCheek(cx, cy) {
+    return petSvg("circle", { class: "pet-cheek", cx: cx, cy: cy, r: 4.4 });
+  }
+
+  function petMouthSet(cx, cy) {
+    return [
+      petSvg("path", {
+        class: "pet-mouth pet-mouth-happy",
+        d:
+          "M" + (cx - 8) + " " + (cy - 2) + "c2.6 6.4 13.4 6.4 16 0",
+      }),
+      petSvg("path", {
+        class: "pet-mouth pet-mouth-neutral",
+        d: "M" + (cx - 6) + " " + cy + "h12",
+      }),
+      petSvg("ellipse", {
+        class: "pet-mouth pet-mouth-hungry",
+        cx: cx,
+        cy: cy + 1,
+        rx: 6.4,
+        ry: 7.4,
+      }),
+      petSvg("path", {
+        class: "pet-mouth pet-mouth-sleepy",
+        d:
+          "M" + (cx - 6) + " " + cy + "c2-3.2 4-3.2 6 0s4 3.2 6 0",
+      }),
+    ];
+  }
+
+  function petZzz(x, y) {
+    var group = petSvg("g", { class: "pet-zzz" });
+    return petAppendAll(group, [
+      petSvg("path", { d: "M" + x + " " + y + "h9l-9 9h9" }),
+      petSvg("path", {
+        d: "M" + (x + 14) + " " + (y - 9) + "h6.5l-6.5 6.5h6.5",
+      }),
+    ]);
+  }
+
+  function petCreateArt(species, className) {
+    var svg = petSvg("svg", {
+      viewBox: "0 0 100 100",
+      class: className || "pet-svg",
+      "aria-hidden": "true",
+      focusable: "false",
+      "data-species": species,
+    });
+
+    if (species === "quillop") {
+      petAppendAll(svg, [
+        petSvg("path", {
+          class: "pet-accent pet-drop",
+          d: "M50 4c3.4 4.6 5.4 7.2 5.4 10.2a5.4 5.4 0 0 1-10.8 0c0-3 2-5.6 5.4-10.2z",
+        }),
+        petSvg("path", {
+          class: "pet-limb",
+          d: "M27 58c-6 1-10 5-11 9 5.2 1 10.4-1 13.4-4.2",
+        }),
+        petSvg("path", {
+          class: "pet-limb",
+          d: "M73 58c6 1 10 5 11 9-5.2 1-10.4-1-13.4-4.2",
+        }),
+        petSvg("path", {
+          class: "pet-body",
+          d: "M50 14c15 17.4 23.5 28.6 23.5 40.2a23.5 23.5 0 0 1-47 0C26.5 42.6 35 31.4 50 14z",
+        }),
+        petSvg("path", { class: "pet-seam", d: "M50 42v28" }),
+        petSvg("circle", {
+          class: "pet-accent pet-breather",
+          cx: 50,
+          cy: 72,
+          r: 3.4,
+        }),
+        petEye(42, 50),
+        petEye(58, 50),
+        petCheek(30, 61),
+        petCheek(70, 61),
+        petMouthSet(50, 62),
+        petZzz(70, 22),
+      ]);
+      return svg;
+    }
+
+    if (species === "tagling") {
+      petAppendAll(svg, [
+        petSvg("path", {
+          class: "pet-body",
+          d: "M30 18h30l20 20v32a12 12 0 0 1-12 12H30a12 12 0 0 1-12-12V30a12 12 0 0 1 12-12z",
+        }),
+        petSvg("circle", { class: "pet-hole", cx: 30, cy: 33, r: 5 }),
+        petSvg("path", { class: "pet-limb", d: "M38 62l-6 5.5 6 5.5" }),
+        petSvg("path", { class: "pet-limb", d: "M64 62l6 5.5-6 5.5" }),
+        petSvg("rect", {
+          class: "pet-foot",
+          x: 36,
+          y: 78,
+          width: 10,
+          height: 11,
+          rx: 5,
+        }),
+        petSvg("rect", {
+          class: "pet-foot",
+          x: 54,
+          y: 78,
+          width: 10,
+          height: 11,
+          rx: 5,
+        }),
+        petEye(44, 44),
+        petEye(60, 44),
+        petCheek(33, 55),
+        petCheek(71, 55),
+        petMouthSet(52, 56),
+        petZzz(74, 16),
+      ]);
+      return svg;
+    }
+
+    petAppendAll(svg, [
+      petSvg("path", { class: "pet-limb", d: "M50 30V17" }),
+      petSvg("circle", {
+        class: "pet-accent pet-antenna",
+        cx: 50,
+        cy: 13,
+        r: 4.4,
+      }),
+      petSvg("path", {
+        class: "pet-limb",
+        d: "M28 42c-8 0-4 8-12 8 8 0 4 8 12 8",
+      }),
+      petSvg("path", {
+        class: "pet-limb",
+        d: "M72 42c8 0 4 8 12 8-8 0-4 8-12 8",
+      }),
+      petSvg("rect", {
+        class: "pet-body",
+        x: 22,
+        y: 28,
+        width: 56,
+        height: 54,
+        rx: 24,
+      }),
+      petSvg("rect", {
+        class: "pet-foot",
+        x: 34,
+        y: 74,
+        width: 11,
+        height: 12,
+        rx: 5.5,
+      }),
+      petSvg("rect", {
+        class: "pet-foot",
+        x: 55,
+        y: 74,
+        width: 11,
+        height: 12,
+        rx: 5.5,
+      }),
+      petEye(41, 50),
+      petEye(59, 50),
+      petCheek(31, 61),
+      petCheek(69, 61),
+      petMouthSet(50, 63),
+      petZzz(74, 20),
+    ]);
+    return svg;
+  }
+
+  function petIcon(pathData) {
+    var svg = petSvg("svg", {
+      viewBox: "0 0 24 24",
+      class: "pet-icon",
+      "aria-hidden": "true",
+      focusable: "false",
+    });
+    svg.appendChild(petSvg("path", { d: pathData }));
+    return svg;
+  }
+
+  /* --- markup ------------------------------------------------------ */
+
+  function petCreate(tag, className) {
+    var node = document.createElement(tag);
+    if (className) {
+      node.className = className;
+    }
+    return node;
+  }
+
+  function petCreateStat(key, labelKey) {
+    var row = petCreate("div", "pet-stat");
+    var label = petCreate("span", "pet-stat-label");
+    label.setAttribute("data-i18n", labelKey);
+    var bar = petCreate("span", "pet-bar");
+    var fill = petCreate("i", "pet-bar-fill");
+    fill.setAttribute("id", "petBar" + key.charAt(0).toUpperCase() + key.slice(1));
+    bar.appendChild(fill);
+    var value = petCreate("span", "pet-stat-value");
+    value.setAttribute("id", "petStatValue" + key.charAt(0).toUpperCase() + key.slice(1));
+    return { row: row, fill: fill, value: value, label: label, bar: bar };
+  }
+
+  function petAddI18nText(parent, key, tag, className) {
+    var node = petCreate(tag || "span", className);
+    node.setAttribute("data-i18n", key);
+    parent.appendChild(node);
+    return node;
+  }
+
+  function petBuildDom() {
+    var widget = petCreate("div", "pet-widget");
+    widget.setAttribute("id", "petWidget");
+    widget.setAttribute("role", "region");
+    widget.setAttribute("aria-label", t("petTitle"));
+    widget.setAttribute("data-species", petSpeciesOrder[0]);
+    widget.setAttribute("data-mood", "neutral");
+    widget.hidden = true;
+
+    /* companion card */
+    var panel = petCreate("div", "pet-panel");
+    panel.setAttribute("id", "petPanel");
+
+    var head = petCreate("div", "pet-head");
+    petAddI18nText(head, "petTitle", "span", "pet-title");
+    var collapseBtn = petCreate("button", "pet-icon-btn");
+    collapseBtn.type = "button";
+    collapseBtn.setAttribute("id", "petCollapseBtn");
+    collapseBtn.setAttribute("aria-expanded", "true");
+    collapseBtn.setAttribute("aria-label", t("petBtnCollapse"));
+    collapseBtn.appendChild(petIcon("M6 9l6 6 6-6"));
+    head.appendChild(collapseBtn);
+    panel.appendChild(head);
+
+    var stage = petCreate("div", "pet-stage");
+    var button = petCreate("button", "pet-button");
+    button.type = "button";
+    button.setAttribute("id", "petButton");
+    var art = petCreate("span", "pet-art");
+    art.setAttribute("id", "petArt");
+    button.appendChild(art);
+    var fx = petCreate("div", "pet-fx");
+    fx.setAttribute("id", "petFx");
+    fx.setAttribute("aria-hidden", "true");
+    stage.appendChild(button);
+    stage.appendChild(fx);
+    panel.appendChild(stage);
+
+    var bodyPanel = petCreate("div", "pet-body-panel");
+    var status = petCreate("p", "pet-status");
+    status.setAttribute("id", "petStatus");
+    status.setAttribute("role", "status");
+    status.setAttribute("aria-live", "polite");
+    bodyPanel.appendChild(status);
+
+    var stats = petCreate("div", "pet-stats");
+    stats.setAttribute("role", "group");
+    stats.setAttribute("aria-label", t("petStatsLabel"));
+    var statDefs = [
+      ["happiness", "petStatHappiness"],
+      ["hunger", "petStatHunger"],
+      ["energy", "petStatEnergy"],
+    ];
+    var bars = {};
+    var statValues = {};
+    statDefs.forEach(function (definition) {
+      var stat = petCreateStat(definition[0], definition[1]);
+      bars[definition[0]] = stat.fill;
+      statValues[definition[0]] = stat.value;
+      stat.row.appendChild(stat.label);
+      stat.row.appendChild(stat.bar);
+      stat.row.appendChild(stat.value);
+      stats.appendChild(stat.row);
+    });
+    bodyPanel.appendChild(stats);
+
+    var levelRow = petCreate("div", "pet-level");
+    var levelText = petCreate("span", "pet-level-text");
+    levelText.setAttribute("id", "petLevelText");
+    var xpBar = petCreate("span", "pet-xp-bar");
+    var xpFill = petCreate("i", "pet-xp-fill");
+    xpFill.setAttribute("id", "petXpFill");
+    xpBar.appendChild(xpFill);
+    var xpText = petCreate("span", "pet-xp-text");
+    xpText.setAttribute("id", "petXpText");
+    levelRow.appendChild(levelText);
+    levelRow.appendChild(xpBar);
+    levelRow.appendChild(xpText);
+    bodyPanel.appendChild(levelRow);
+
+    var actions = petCreate("div", "pet-actions");
+    actions.setAttribute("role", "group");
+    actions.setAttribute("aria-label", t("petControlsLabel"));
+    var actionDefs = [
+      ["Feed", "petFeedBtn", "petBtnFeed"],
+      ["Play", "petPlayBtn", "petBtnPlay"],
+      ["Rest", "petRestBtn", "petBtnRest"],
+      ["Rename", "petRenameBtn", "petBtnRename"],
+      ["Species", "petSpeciesBtn", "petBtnSpecies"],
+      ["Reset", "petResetBtn", "petBtnReset"],
+      ["Hide", "petHideBtn", "petBtnHide"],
+    ];
+    var actionButtons = {};
+    actionDefs.forEach(function (definition) {
+      var action = petCreate("button", "pet-action");
+      action.type = "button";
+      action.setAttribute("id", definition[1]);
+      action.setAttribute("data-i18n", definition[2]);
+      actions.appendChild(action);
+      actionButtons[definition[0]] = action;
+    });
+    bodyPanel.appendChild(actions);
+
+    var renameForm = petCreate("form", "pet-rename");
+    renameForm.setAttribute("id", "petRenameForm");
+    renameForm.hidden = true;
+    var renameInput = petCreate("input", "pet-name-input");
+    renameInput.type = "text";
+    renameInput.setAttribute("id", "petRenameInput");
+    renameInput.setAttribute("maxlength", String(petNameMax));
+    renameInput.setAttribute("data-i18n-placeholder", "petRenamePlaceholder");
+    renameInput.setAttribute("aria-label", t("petNameLabel"));
+    var renameActions = petCreate("div", "pet-rename-actions");
+    var renameSave = petCreate("button", "pet-action is-primary");
+    renameSave.type = "submit";
+    renameSave.setAttribute("id", "petRenameSave");
+    renameSave.setAttribute("data-i18n", "petBtnRenameConfirm");
+    var renameCancel = petCreate("button", "pet-action");
+    renameCancel.type = "button";
+    renameCancel.setAttribute("id", "petRenameCancel");
+    renameCancel.setAttribute("data-i18n", "petBtnRenameCancel");
+    renameActions.appendChild(renameSave);
+    renameActions.appendChild(renameCancel);
+    renameForm.appendChild(renameInput);
+    renameForm.appendChild(renameActions);
+    bodyPanel.appendChild(renameForm);
+
+    panel.appendChild(bodyPanel);
+    widget.appendChild(panel);
+
+    /* adoption card */
+    var adoptForm = petCreate("form", "pet-adopt");
+    adoptForm.setAttribute("id", "petAdoptForm");
+    adoptForm.setAttribute("role", "dialog");
+    adoptForm.setAttribute("aria-labelledby", "petAdoptHeading");
+    adoptForm.hidden = true;
+    var adoptHeading = petAddI18nText(
+      adoptForm,
+      "petAdoptTitle",
+      "h2",
+      "pet-adopt-heading",
+    );
+    adoptHeading.setAttribute("id", "petAdoptHeading");
+    petAddI18nText(adoptForm, "petAdoptBody", "p", "pet-adopt-body");
+
+    var speciesGroup = petCreate("div", "pet-species");
+    speciesGroup.setAttribute("id", "petSpeciesGroup");
+    speciesGroup.setAttribute("role", "radiogroup");
+    speciesGroup.setAttribute("aria-label", t("petSpeciesLabel"));
+    var speciesInputs = [];
+    petSpeciesOrder.forEach(function (species) {
+      var option = petCreate("label", "pet-species-option");
+      option.setAttribute("for", "petSpeciesInput-" + species);
+      option.setAttribute("data-species", species);
+      var input = petCreate("input", "pet-species-input");
+      input.type = "radio";
+      input.setAttribute("name", "petSpecies");
+      input.setAttribute("id", "petSpeciesInput-" + species);
+      input.value = species;
+      var frame = petCreate("span", "pet-species-frame");
+      frame.setAttribute("aria-hidden", "true");
+      var name = petCreate("span", "pet-species-name");
+      name.textContent = t(petSpeciesKey(species));
+      var desc = petCreate("span", "pet-species-desc");
+      desc.textContent = t(petSpeciesKey(species) + "Desc");
+      petAppendAll(option, [
+        input,
+        frame,
+        petCreateArt(species, "pet-svg pet-svg-mini"),
+        name,
+        desc,
+      ]);
+      speciesGroup.appendChild(option);
+      speciesInputs.push(input);
+    });
+    adoptForm.appendChild(speciesGroup);
+
+    var nameLabel = petCreate("label", "pet-name-label");
+    nameLabel.setAttribute("for", "petAdoptName");
+    nameLabel.setAttribute("data-i18n", "petNameLabel");
+    adoptForm.appendChild(nameLabel);
+    var adoptName = petCreate("input", "pet-name-input");
+    adoptName.type = "text";
+    adoptName.setAttribute("id", "petAdoptName");
+    adoptName.setAttribute("maxlength", String(petNameMax));
+    adoptName.setAttribute("data-i18n-placeholder", "petNamePlaceholder");
+    adoptForm.appendChild(adoptName);
+
+    var adoptActions = petCreate("div", "pet-adopt-actions");
+    var adoptConfirm = petCreate("button", "pet-action is-primary");
+    adoptConfirm.type = "submit";
+    adoptConfirm.setAttribute("id", "petAdoptConfirm");
+    adoptConfirm.setAttribute("data-i18n", "petAdoptConfirm");
+    var adoptLater = petCreate("button", "pet-action");
+    adoptLater.type = "button";
+    adoptLater.setAttribute("id", "petAdoptLater");
+    adoptLater.setAttribute("data-i18n", "petAdoptLater");
+    adoptActions.appendChild(adoptConfirm);
+    adoptActions.appendChild(adoptLater);
+    adoptForm.appendChild(adoptActions);
+
+    var adoptStatus = petCreate("p", "pet-status");
+    adoptStatus.setAttribute("id", "petAdoptStatus");
+    adoptStatus.setAttribute("role", "status");
+    adoptStatus.setAttribute("aria-live", "polite");
+    adoptForm.appendChild(adoptStatus);
+    widget.appendChild(adoptForm);
+
+    /* restore pill */
+    var restore = petCreate("button", "pet-restore");
+    restore.type = "button";
+    restore.setAttribute("id", "petRestoreBtn");
+    restore.hidden = true;
+    restore.appendChild(petIcon("M12 3l2.4 5.6L20 11l-5.6 2.4L12 19l-2.4-5.6L4 11l5.6-2.4z"));
+    var restoreLabel = petCreate("span", "pet-restore-label");
+    restoreLabel.setAttribute("id", "petRestoreLabel");
+    restore.appendChild(restoreLabel);
+    widget.appendChild(restore);
+
+    document.body.appendChild(widget);
+
+    petEls = {
+      widget: widget,
+      panel: panel,
+      collapse: collapseBtn,
+      button: button,
+      art: art,
+      fx: fx,
+      status: status,
+      stats: stats,
+      bars: bars,
+      statValues: statValues,
+      level: levelText,
+      xpFill: xpFill,
+      xpText: xpText,
+      actions: actionButtons,
+      renameForm: renameForm,
+      renameInput: renameInput,
+      renameCancel: renameCancel,
+      adoptForm: adoptForm,
+      adoptName: adoptName,
+      adoptStatus: adoptStatus,
+      adoptLater: adoptLater,
+      speciesGroup: speciesGroup,
+      speciesInputs: speciesInputs,
+      restore: restore,
+      restoreLabel: restoreLabel,
+    };
+    petWireEvents();
+  }
+
+  function petWireEvents() {
+    petEls.button.addEventListener("click", petOnPetClick);
+    petEls.collapse.addEventListener("click", function () {
+      petCollapsed = !petCollapsed;
+      petSyncVisibility();
+    });
+
+    petEls.actions.Feed.addEventListener("click", petOnFeed);
+    petEls.actions.Play.addEventListener("click", petOnPlay);
+    petEls.actions.Rest.addEventListener("click", petOnRest);
+    petEls.actions.Rename.addEventListener("click", function () {
+      petToggleRename(!petRenameOpen);
+    });
+    petEls.actions.Species.addEventListener("click", petOnSwitchSpecies);
+    petEls.actions.Reset.addEventListener("click", petOnResetClick);
+    petEls.actions.Hide.addEventListener("click", petOnHide);
+
+    petEls.renameForm.addEventListener("submit", function (event) {
+      if (event && typeof event.preventDefault === "function") {
+        event.preventDefault();
+      }
+      petOnRenameSubmit();
+    });
+    petEls.renameCancel.addEventListener("click", function () {
+      petToggleRename(false);
+      petEls.button.focus();
+    });
+
+    petEls.adoptForm.addEventListener("submit", function (event) {
+      if (event && typeof event.preventDefault === "function") {
+        event.preventDefault();
+      }
+      petOnAdoptConfirm();
+    });
+    petEls.adoptLater.addEventListener("click", function () {
+      petAdoptionDismissed = true;
+      petSyncVisibility();
+    });
+
+    petEls.speciesInputs.forEach(function (input) {
+      input.addEventListener("change", function () {
+        if (input.checked) {
+          petSelectedSpecies = input.value;
+        }
+      });
+    });
+
+    petEls.restore.addEventListener("click", function () {
+      if (petState) {
+        petState.hidden = false;
+        petAdoptionDismissed = false;
+        petWriteState();
+        petRender();
+        petSyncVisibility();
+        petEls.button.focus();
+        return;
+      }
+      petAdoptionDismissed = false;
+      petSyncVisibility();
+      petEls.adoptName.focus();
+    });
+
+    document.addEventListener("visibilitychange", petHandleVisibility);
+    window.addEventListener("pagehide", petPersistNow);
+  }
+
+  /* --- rendering --------------------------------------------------- */
+
+  function petRenderStatus() {
+    if (!petEls) {
+      return;
+    }
+    var text = petStatusText;
+    if (!text && petState) {
+      text = t(petMoodStatusKey(petMood()), { name: petState.name });
+    }
+    petEls.status.textContent = text || "";
+    petEls.adoptStatus.textContent = petStatusText || "";
+  }
+
+  function petSetStatus(text) {
+    if (!petEls) {
+      return;
+    }
+    petStatusText = text || "";
+    if (petStatusTimer !== null) {
+      window.clearTimeout(petStatusTimer);
+      petStatusTimer = null;
+    }
+    if (petStatusText) {
+      petStatusTimer = window.setTimeout(function () {
+        petStatusTimer = null;
+        petStatusText = "";
+        petRenderStatus();
+      }, petStatusRevertMs);
+    }
+    petRenderStatus();
+  }
+
+  function petSyncArt() {
+    if (!petEls || !petState || petRenderedSpecies === petState.species) {
+      return;
+    }
+    petRenderedSpecies = petState.species;
+    while (petEls.art.firstChild) {
+      petEls.art.removeChild(petEls.art.firstChild);
+    }
+    petEls.art.appendChild(petCreateArt(petState.species, "pet-svg pet-idle"));
+  }
+
+  function petRender() {
+    if (!petEls) {
+      return;
+    }
+    if (!petState) {
+      petRenderStatus();
+      return;
+    }
+    var mood = petMood();
+    petEls.widget.setAttribute("data-mood", mood);
+    petEls.widget.setAttribute("data-species", petState.species);
+    petSyncArt();
+
+    var statKeys = ["happiness", "hunger", "energy"];
+    statKeys.forEach(function (key) {
+      var rounded = Math.round(petState[key]);
+      petEls.bars[key].style.width = rounded + "%";
+      petEls.bars[key].setAttribute("data-value", String(rounded));
+      petEls.statValues[key].textContent = String(rounded);
+    });
+
+    var level = petLevelValue();
+    petEls.level.textContent = t("petLevel", { n: level });
+    petEls.xpText.textContent = t("petXp", { n: petState.xp });
+    petEls.xpFill.style.width =
+      ((petState.xp % petLevelXp) / petLevelXp) * 100 + "%";
+    petEls.button.setAttribute(
+      "aria-label",
+      t("petButtonAria", {
+        name: petState.name,
+        mood: t(petMoodKey(mood)),
+      }),
+    );
+    petEls.button.setAttribute("title", t("petTapHint", { name: petState.name }));
+    petEls.renameInput.setAttribute("aria-label", t("petNameLabel"));
+    petRenderStatus();
+  }
+
+  function petSyncVisibility() {
+    if (!petEls) {
+      return;
+    }
+    var adopting = !petState && !petAdoptionDismissed;
+    var petHidden = !!petState && petState.hidden === true;
+    var showRestore = !adopting && (!petState || petHidden);
+
+    petEls.adoptForm.hidden = !adopting;
+    petEls.panel.hidden = adopting || petHidden;
+    petEls.restore.hidden = !showRestore;
+    petEls.widget.hidden = !(adopting || petState || showRestore);
+    petEls.widget.setAttribute("data-collapsed", petCollapsed ? "true" : "false");
+    petEls.collapse.setAttribute("aria-expanded", petCollapsed ? "false" : "true");
+    petEls.collapse.setAttribute(
+      "aria-label",
+      t(petCollapsed ? "petBtnExpand" : "petBtnCollapse"),
+    );
+
+    if (showRestore) {
+      var label = petState ? t("petBtnRestore") : t("petAdoptTitle");
+      petEls.restoreLabel.textContent = label;
+      petEls.restore.setAttribute("aria-label", label);
+      petEls.restore.setAttribute("title", label);
+    }
+
+    if (petState && !petHidden && !adopting) {
+      petStartTimer();
+    } else {
+      petStopTimer();
+      petClearTrackedTimeouts();
+    }
+  }
+
+  /* --- interactions ------------------------------------------------ */
+
+  function petRemover(node) {
+    return function () {
+      if (node.parentNode) {
+        node.parentNode.removeChild(node);
+      }
+    };
+  }
+
+  function petSpawnParticles(kind) {
+    if (!petEls || isMotionOff()) {
+      return;
+    }
+    var count = isMotionCalm() ? 3 : 6;
+    for (var index = 0; index < count; index += 1) {
+      var particle = document.createElement("span");
+      particle.className = "pet-particle " + (petParticleShapes[kind] || "is-star");
+      particle.setAttribute("aria-hidden", "true");
+      var angle = (Math.PI * (index + 0.5)) / count;
+      particle.style.setProperty(
+        "--pet-fx-x",
+        Math.round(Math.cos(angle) * (18 + Math.random() * 26)) + "px",
+      );
+      particle.style.setProperty(
+        "--pet-fx-y",
+        "-" + Math.round(46 + Math.sin(angle) * 30) + "px",
+      );
+      particle.style.setProperty("--pet-fx-delay", index * 45 + "ms");
+      petEls.fx.appendChild(particle);
+      petTrackTimeout(
+        petRemover(particle),
+        petFxMs + 160 + index * 45,
+      );
+    }
+  }
+
+  function petReact(kind) {
+    if (!petEls) {
+      return;
+    }
+    var className = "is-" + kind;
+    var classes = ["is-happy", "is-fed", "is-playing", "is-resting"];
+    classes.forEach(function (name) {
+      petEls.button.classList.remove(name);
+    });
+    void petEls.button.offsetWidth;
+    petEls.button.classList.add(className);
+    if (petReactionTimer !== null) {
+      window.clearTimeout(petReactionTimer);
+    }
+    petReactionTimer = window.setTimeout(function () {
+      petReactionTimer = null;
+      petEls.button.classList.remove(className);
+    }, petReactionMs);
+    petSpawnParticles(kind);
+  }
+
+  function petAddXp(amount) {
+    var before = petLevelValue();
+    petState.xp = Math.max(0, petState.xp + amount);
+    return petLevelValue() > before;
+  }
+
+  function petCommit(result) {
+    petWriteState();
+    petRender();
+    if (result && result.leveledUp) {
+      petSetStatus(
+        t("petReactionLevel", { name: petState.name, n: petLevelValue() }),
+      );
+      return;
+    }
+    petSetStatus(result ? result.status : "");
+  }
+
+  function petOnPetClick() {
+    if (!petState) {
+      return;
+    }
+    var now = Date.now();
+    if (now < petCooldownUntil) {
+      petSetStatus(t("petReactionCooldown", { name: petState.name }));
+      return;
+    }
+    petCooldownUntil = now + petCooldownMs;
+    petState.happiness = petClamp(petState.happiness + 6, 0, 100);
+    var leveledUp = petAddXp(2);
+    petReact("happy");
+    petCommit({
+      leveledUp: leveledUp,
+      status: t("petReactionPet", { name: petState.name }),
+    });
+  }
+
+  function petOnFeed() {
+    if (!petState) {
+      return;
+    }
+    if (petState.hunger <= 4) {
+      petSetStatus(t("petReactionFull", { name: petState.name }));
+      return;
+    }
+    petState.hunger = petClamp(petState.hunger - 30, 0, 100);
+    petState.happiness = petClamp(petState.happiness + 3, 0, 100);
+    var leveledUp = petAddXp(4);
+    petReact("fed");
+    petCommit({
+      leveledUp: leveledUp,
+      status: t("petReactionFeed", { name: petState.name }),
+    });
+  }
+
+  function petOnPlay() {
+    if (!petState) {
+      return;
+    }
+    if (petState.energy < 15) {
+      petSetStatus(t("petReactionTired", { name: petState.name }));
+      return;
+    }
+    petState.happiness = petClamp(petState.happiness + 12, 0, 100);
+    petState.hunger = petClamp(petState.hunger + 8, 0, 100);
+    petState.energy = petClamp(petState.energy - 10, 0, 100);
+    var leveledUp = petAddXp(6);
+    petReact("playing");
+    petCommit({
+      leveledUp: leveledUp,
+      status: t("petReactionPlay", { name: petState.name }),
+    });
+  }
+
+  function petOnRest() {
+    if (!petState) {
+      return;
+    }
+    if (petState.energy >= 98) {
+      petSetStatus(t("petReactionRested", { name: petState.name }));
+      return;
+    }
+    petState.energy = petClamp(petState.energy + 45, 0, 100);
+    petState.happiness = petClamp(petState.happiness + 4, 0, 100);
+    var leveledUp = petAddXp(3);
+    petReact("resting");
+    petCommit({
+      leveledUp: leveledUp,
+      status: t("petReactionRest", { name: petState.name }),
+    });
+  }
+
+  function petToggleRename(open) {
+    petRenameOpen = open;
+    petEls.renameForm.hidden = !open;
+    if (open && petState) {
+      petEls.renameInput.value = petState.name;
+      petEls.renameInput.focus();
+      if (typeof petEls.renameInput.select === "function") {
+        petEls.renameInput.select();
+      }
+      return;
+    }
+    petEls.renameInput.value = "";
+  }
+
+  function petOnRenameSubmit() {
+    if (!petState) {
+      return;
+    }
+    var next = petSanitizeName(petEls.renameInput.value) || t("petDefaultName");
+    petState.name = next;
+    var leveledUp = petAddXp(2);
+    petToggleRename(false);
+    petCommit({
+      leveledUp: leveledUp,
+      status: t("petReactionRenamed", { name: next }),
+    });
+  }
+
+  function petOnSwitchSpecies() {
+    if (!petState) {
+      return;
+    }
+    var index = petSpeciesOrder.indexOf(petState.species);
+    var next = petSpeciesOrder[(index + 1) % petSpeciesOrder.length];
+    petState.species = next;
+    var leveledUp = petAddXp(2);
+    petCommit({
+      leveledUp: leveledUp,
+      status: t("petReactionSpecies", {
+        name: petState.name,
+        species: t(petSpeciesKey(next)),
+      }),
+    });
+  }
+
+  function petDisarmReset() {
+    petResetArmed = false;
+    if (petResetTimer !== null) {
+      window.clearTimeout(petResetTimer);
+      petResetTimer = null;
+    }
+    petEls.actions.Reset.textContent = t("petBtnReset");
+    petEls.actions.Reset.classList.remove("is-armed");
+  }
+
+  function petOnResetClick() {
+    if (!petResetArmed) {
+      petResetArmed = true;
+      petEls.actions.Reset.textContent = t("petResetArmed");
+      petEls.actions.Reset.classList.add("is-armed");
+      petResetTimer = window.setTimeout(petDisarmReset, 4000);
+      return;
+    }
+    petDisarmReset();
+    petState = null;
+    petRenderedSpecies = "";
+    petCollapsed = false;
+    petRenameOpen = false;
+    petSelectedSpecies = petSpeciesOrder[0];
+    petStopTimer();
+    petClearTrackedTimeouts();
+    petRemoveState();
+    petEls.renameForm.hidden = true;
+    petEls.adoptName.value = t("petDefaultName");
+    petSelectSpeciesInput(petSelectedSpecies);
+    petSyncVisibility();
+    petSetStatus(t("petReactionReset"));
+  }
+
+  function petOnHide() {
+    if (!petState) {
+      return;
+    }
+    petState.hidden = true;
+    petWriteState();
+    petToggleRename(false);
+    petSyncVisibility();
+    petEls.restore.focus();
+  }
+
+  function petSelectSpeciesInput(species) {
+    petEls.speciesInputs.forEach(function (input) {
+      input.checked = input.value === species;
+    });
+  }
+
+  function petOnAdoptConfirm() {
+    var name = petSanitizeName(petEls.adoptName.value) || t("petDefaultName");
+    var species = petIsSpecies(petSelectedSpecies)
+      ? petSelectedSpecies
+      : petSpeciesOrder[0];
+    if (petEls.speciesInputs.length) {
+      petEls.speciesInputs.forEach(function (input) {
+        if (input.checked) {
+          species = input.value;
+        }
+      });
+    }
+    petState = {
+      species: species,
+      name: name,
+      happiness: petStartStats.happiness,
+      hunger: petStartStats.hunger,
+      energy: petStartStats.energy,
+      xp: 0,
+      lastSeen: Date.now(),
+      hidden: false,
+    };
+    petSelectedSpecies = species;
+    petAdoptionDismissed = false;
+    petCollapsed = false;
+    petRenderedSpecies = "";
+    petWriteState();
+    petRender();
+    petSyncVisibility();
+    petSetStatus(t("petReactionAdopted", { name: name }));
+  }
+
+  function initPet() {
+    if (!document.body) {
+      return;
+    }
+
+    var saved = petReadState();
+    var awayHours = 0;
+    if (saved) {
+      petState = saved;
+      petSelectedSpecies = saved.species;
+      awayHours = petApplyDecay(Date.now());
+      petWriteState();
+    }
+
+    petBuildDom();
+    applyI18nDom();
+
+    if (petState) {
+      petRender();
+      petSyncVisibility();
+      if (awayHours >= 1 / 60) {
+        petSetStatus(
+          t("petAway", {
+            name: petState.name,
+            n: petFormatAway(awayHours),
+          }),
+        );
+      }
+      return;
+    }
+
+    petSelectSpeciesInput(petSelectedSpecies);
+    petEls.adoptName.value = t("petDefaultName");
+    petSyncVisibility();
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     applyI18nDom();
+    initPet();
     initLanguagePicker();
     initMotionControls();
     initAmbientOrbs();
@@ -4259,6 +6431,7 @@
     initMemoryGame();
     initG2048();
     initReflexGame();
+    initCaretDash();
     initCounters();
     initUtilityActions();
     initUndo();

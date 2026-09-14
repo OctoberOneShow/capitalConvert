@@ -30,7 +30,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles.css?v=3">
+    <link rel="stylesheet" href="assets/styles.css?v=5">
 </head>
 <body>
     <div class="topbar" role="banner">
@@ -247,6 +247,7 @@
                 <button class="game-tab" id="gameTabMemory" role="tab" aria-selected="false" aria-controls="gamePanelMemory" tabindex="-1" type="button" data-i18n="tabMemory">Glyph Match</button>
                 <button class="game-tab" id="gameTab2048" role="tab" aria-selected="false" aria-controls="gamePanel2048" tabindex="-1" type="button" data-i18n="tab2048">2048</button>
                 <button class="game-tab" id="gameTabReflex" role="tab" aria-selected="false" aria-controls="gamePanelReflex" tabindex="-1" type="button" data-i18n="tabReflex">Reflex Tap</button>
+                <button class="game-tab" id="gameTabCaretDash" role="tab" aria-selected="false" aria-controls="gamePanelCaretDash" tabindex="-1" type="button" data-i18n="tabCaretDash">Caret Dash</button>
             </div>
             <div class="game-panel" id="gamePanelTyping" role="tabpanel" aria-labelledby="gameTabTyping">
                 <p class="game-target" id="typingTarget" aria-hidden="true"></p>
@@ -341,9 +342,48 @@
                 </div>
                 <p class="game-hint" data-i18n="reflexHint">Use the button, Space, or Enter. A new best is the lowest time.</p>
             </div>
+            <div class="game-panel" id="gamePanelCaretDash" role="tabpanel" aria-labelledby="gameTabCaretDash" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudScore">Score</span><strong id="caretScore">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudBest">Best</span><strong id="caretBestStat">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudSpeed">Speed</span><strong id="caretSpeed">1.0x</strong></div>
+                </div>
+                <div class="game-track" aria-hidden="true"><span class="game-track-fill" id="caretRailFill"></span></div>
+                <div class="caret-field" id="caretField" tabindex="0" role="group" aria-label="Caret Dash play area. Space or Arrow Up jumps, Arrow Down ducks." data-i18n-aria="caretFieldLabel" aria-describedby="caretResult">
+                    <div class="caret-drift caret-drift-far" id="caretDriftFar" aria-hidden="true"></div>
+                    <div class="caret-drift caret-drift-near" id="caretDriftNear" aria-hidden="true"></div>
+                    <div class="caret-ground" aria-hidden="true"></div>
+                    <div class="caret-obstacles" id="caretObstacles" aria-hidden="true"></div>
+                    <div class="caret-player" id="caretPlayer" aria-hidden="true"></div>
+                    <div class="caret-overlay" id="caretOverlay" hidden>
+                        <p class="caret-overlay-text" id="caretOverlayText" data-i18n="caretOverReady">Game over</p>
+                        <div class="caret-overlay-actions">
+                            <button class="primary" id="caretRetryBtn" type="button"><span class="button-content"><span data-i18n="btnTryAgain">Try Again</span></span></button>
+                            <button class="ghost" id="caretAgainBtn" type="button"><span class="button-content"><span data-i18n="btnNewRound">New Round</span></span></button>
+                        </div>
+                    </div>
+                </div>
+                <p class="game-result" id="caretResult" role="status" data-i18n="caretPrompt">Press Start, then jump the glitch punctuation and duck under the floating glyphs.</p>
+                <div class="caret-controls">
+                    <button class="caret-control" id="caretJumpBtn" type="button" data-i18n="btnJump">Jump</button>
+                    <button class="caret-control" id="caretDuckBtn" type="button" data-i18n="btnDuck">Duck</button>
+                </div>
+                <div class="game-actions">
+                    <button class="primary" id="caretStartBtn" type="button">
+                        <span class="button-content">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 5.5v13l11-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                            </svg>
+                            <span data-i18n="btnStart">Start</span>
+                        </span>
+                    </button>
+                    <p class="game-best" id="caretBest" data-i18n="noBest">No best yet</p>
+                </div>
+                <p class="game-hint" data-i18n="caretHint">Tap or click the field to jump and hold to duck. Space or Arrow Up jumps higher the longer you hold it.</p>
+            </div>
         </div>
     </div>
 
-    <script src="assets/app.js?v=3"></script>
+    <script src="assets/app.js?v=5"></script>
 </body>
 </html>
