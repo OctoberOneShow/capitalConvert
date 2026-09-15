@@ -82,6 +82,14 @@ class StubNode {
     return this.childNodes.filter((node) => node.nodeType === 1);
   }
 
+  /* app.js walks to a tab's container with parentElement, so the stub needs
+   * the element-only view of parentNode. */
+  get parentElement() {
+    return this.parentNode && this.parentNode.nodeType === 1
+      ? this.parentNode
+      : null;
+  }
+
   get firstChild() {
     return this.childNodes.length ? this.childNodes[0] : null;
   }
@@ -352,25 +360,53 @@ class StubElement extends StubNode {
     };
   }
 
-  getContext() {    const gradient = { addColorStop() {} };
-    return new Proxy(
-      {},
-      {
-        get(target, prop) {
-          if (prop === "createLinearGradient" || prop === "createRadialGradient") {
-            return () => gradient;
-          }
-          if (typeof prop === "string") {
-            if (!(prop in target)) return () => {};
-            return target[prop];
-          }
-          return undefined;
-        },
-        set() {
-          return true;
-        },
+  /* The gradient / particle calls stay no-ops, but ImageData is real so a
+   * harness can read back exactly what a canvas renderer wrote (and how the
+   * element ended up being scaled). One context per element, like a browser. */
+  getContext(kind) {
+    if (this._context) {
+      return this._context;
+    }
+    const gradient = { addColorStop() {} };
+    const target = {
+      canvas: this,
+      kind: kind,
+      imageSmoothingEnabled: false,
+      lastImage: null,
+      lastImageAt: null,
+      lastSource: null,
+      draws: 0,
+      createImageData(width, height) {
+        const w = Math.max(1, Math.round(Number(width) || 0) || 1);
+        const h = Math.max(1, Math.round(Number(height) || 0) || 1);
+        return { width: w, height: h, data: new Uint8ClampedArray(w * h * 4) };
       },
-    );
+      putImageData(image, x, y) {
+        target.lastImage = image;
+        target.lastImageAt = { x: Number(x) || 0, y: Number(y) || 0 };
+      },
+      drawImage(source) {
+        target.lastSource = source;
+        target.draws += 1;
+      },
+    };
+    this._context = new Proxy(target, {
+      get(inner, prop) {
+        if (prop === "createLinearGradient" || prop === "createRadialGradient") {
+          return () => gradient;
+        }
+        if (typeof prop === "string") {
+          if (!(prop in inner)) return () => {};
+          return inner[prop];
+        }
+        return undefined;
+      },
+      set(inner, prop, value) {
+        inner[prop] = value;
+        return true;
+      },
+    });
+    return this._context;
   }
 }
 

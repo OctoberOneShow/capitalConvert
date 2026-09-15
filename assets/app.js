@@ -230,8 +230,8 @@
         "A 10-second typing dash. The clock starts on your first keystroke.",
       "btnNewRound": "New Round",
       "gamePhInput": "Start typing to begin...",
-      "memoryPrompt": "Flip two cards. Match all six pairs as fast as you can.",
-      "memoryCleared": "Cleared in {s}s with {n} {unit}.",
+      "memoryPrompt": "Flip two cards. Match every pair as fast as you can.",
+      "memoryCleared": "Finished in {s}s with {n} {unit}.",
       "unitMoves": "moves",
       "unitMove": "move",
       "cardDown": "Card {n}, face down",
@@ -239,6 +239,15 @@
       "cardMatched": "Card {n}, {glyph}, matched",
       "btnNewShuffle": "New Shuffle",
       "memoryGridLabel": "Memory cards, find the matching pairs",
+      "hudLevel": "Level",
+      "memoryLevelAria": "Level {n} of {total}",
+      "memoryGridLevelLabel":
+        "Memory cards, find the matching pairs. {aria}.",
+      "memoryLevelCleared": "Level {n}/{total} cleared!",
+      "memoryNextUp": "Next up: level {n}/{total}.",
+      "memoryAllComplete": "All {total} levels cleared — the ladder is done!",
+      "btnNextLevel": "Next Level",
+      "btnReplayLevels": "Play Again",
       "bestTime": "Best {s}s",
       "g2048Prompt":
         "Arrow keys or swipe slide the tiles. Match numbers to reach 2048!",
@@ -278,6 +287,74 @@
       "btnJump": "Jump",
       "btnDuck": "Duck",
       "logCaretDash": "Caret Dash: {n} m",
+      "tabFixitLadder": "Fix-It Ladder",
+      "hudRung": "Rung",
+      "hudLeft": "Left",
+      "hudStrikes": "Strikes",
+      "btnCheck": "Check",
+      "fixitSourceLabel": "Messy line",
+      "fixitInputLabel": "Your repair",
+      "fixitPrompt":
+        "Take the rungs in order and repair each line exactly the way this site's tools would. Case matters.",
+      "fixitHint":
+        "Type the repaired line, then press Enter or Check. Extra spaces do not matter, letter case does.",
+      "fixitJobIdle": "Start a run to load the first rung.",
+      "fixitJob1":
+        "Convert the punctuation: the fullwidth marks become spaces and the ends of the line are trimmed.",
+      "fixitJob2":
+        "Make it a proper sentence: capitalise the first letter, close the missing apostrophes, and turn a lone \"i\" into \"I\".",
+      "fixitJob3":
+        "Convert the punctuation: every fullwidth mark becomes a single space.",
+      "fixitJob4":
+        "Make it a proper sentence: capitalise the first letter and close the missing apostrophes.",
+      "fixitJob5":
+        "Convert the punctuation: the marks become spaces, but the brackets and the dash are deleted.",
+      "fixitJob6":
+        "Make it a proper sentence: an all-caps line drops to sentence case and the contractions get their apostrophes.",
+      "fixitRungAria": "Rung {n} of {total}",
+      "fixitGo": "Clock running. Type the repaired line and submit it.",
+      "fixitWrong": "That is not the tool's output.",
+      "fixitTimeout": "Out of time.",
+      "fixitStrike": "Strike {n}/{total}!",
+      "fixitCleared": "Rung {n}/{total} cleared in {s}s!",
+      "fixitNextUp": "Next up: rung {n}/{total}.",
+      "fixitAllComplete": "All {total} rungs cleared — the ladder is done!",
+      "fixitFailed": "Three strikes, the run is over.",
+      "fixitLog": "Fix-It Ladder: {n}/{total} rungs cleared",
+      "tabElements": "Elements",
+      "hudGoal": "Goal",
+      "elementsChallengeLabel": "Challenge",
+      "elementsChallengeFree": "Free Play",
+      "elementsChallengeGrow": "Grow",
+      "elementsChallengeExtinguish": "Extinguish",
+      "elementsChallengeFlood": "Flood",
+      "elementsGoalFree":
+        "Free play: paint anything and watch it settle. Plants drink water, sand piles up and fire eats plants.",
+      "elementsGoalGrow":
+        "Grow the seed to the top of the shaft. The plant drinks the water above it, so keep pouring more in.",
+      "elementsGoalExtinguish":
+        "Put out the creeping fire before it walks the whole hedge.",
+      "elementsGoalFlood":
+        "Drop water in above the rim and flood the marked basin.",
+      "elementsToolsLabel": "Element palette",
+      "elementsEmpty": "Erase",
+      "elementsStone": "Stone",
+      "elementsSand": "Sand",
+      "elementsWater": "Water",
+      "elementsPlant": "Plant",
+      "elementsFire": "Fire",
+      "elementsReset": "Reset board",
+      "elementsCanvasLabel":
+        "Element sandbox. Number keys 1 to 6 pick an element, the arrow keys move the cursor and Space places it.",
+      "elementsDescription":
+        "A {cols} by {rows} element grid. On the board right now: {counts}.",
+      "elementsCountNone": "nothing yet",
+      "elementsGo": "Clock running.",
+      "elementsWin": "Goal met in {s}s!",
+      "elementsTimeUp": "Out of time. Try Again restarts the clock.",
+      "elementsLog": "Elements: {name} in {s}s",
+      "elementsHint":
+        "Drag on the grid to paint; Reset board restores the opening layout. Keyboard: 1-6 pick an element, the arrow keys move the cursor and Space places it.",
       "petTitle": "Companion",
       "petAdoptTitle": "Adopt a companion",
       "petAdoptBody":
@@ -473,6 +550,51 @@
       "petHueRose": "Rose",
       "petHueGold": "Gold",
       "petLockedAtLevel": "Unlocks at level {n}",
+      "petStatusAttentionHunger": "{name} is starving. Please feed them soon!",
+      "petStatusAttentionHappiness": "{name} feels neglected and needs you.",
+      "petAttentionLabel": "Needs attention",
+      "petStatCareMistakes": "Care mistakes",
+      "petCareMistakeLogged": "{name} waited too long. That counted as a care mistake.",
+      "petCareRecovered": "{name} feels cared for again.",
+      "petReactionStreak": "{name} keeps the streak going — day {n}! +{treats} treats.",
+      "petReactionStreakRepaired": "Streak saved! Day {n}, +{treats} treats.",
+      "petReactionStreakReset": "Streak reset. +{treats} treats for showing up.",
+      "petReactionUnlockMedal": "{name} earned the 7-day streak medal!",
+      "petRepairTitle": "Streak repair",
+      "petRepairBody": "You missed a day. Keep your {n}-day streak for {cost} treats?",
+      "petBtnRepair": "Repair ({cost} treats)",
+      "petBtnRepairDecline": "Let it reset",
+      "petRepairPoor": "Not enough treats to repair the streak.",
+      "petAccMedal": "Streak medal",
+      "petLockedExclusive": "Earn with a 7-day streak",
+      "petWelcomeBackShort": "You were away {n}. {name} perked up — +{treats} treats.",
+      "petWelcomeBackMedium": "Welcome back after {n}. {name} kept your seat warm — +{treats} treats.",
+      "petWelcomeBackLong": "{name} missed you for {n}. A local catch-up: +{treats} treats.",
+      "petWelcomeBackHungry": "You were away {n}. {name} is starving — +{treats} treats.",
+      "petWelcomeBackSleepy": "You were away {n}. {name} nearly dozed off — +{treats} treats.",
+      "petStatMoodWord": "Mood",
+      "petStatHungerWord": "Appetite",
+      "petWordDelighted": "Delighted",
+      "petWordContent": "Content",
+      "petWordOkay": "So-so",
+      "petWordGlum": "Glum",
+      "petWordMiserable": "Miserable",
+      "petWordFamished": "Famished",
+      "petWordHungry": "Hungry",
+      "petWordFine": "Fine",
+      "petWordFull": "Full",
+      "petWordBloated": "Bloated",
+      "petEmoteHappy": "(＾▽＾) Let us make something neat.",
+      "petEmoteNeutral": "(・_・) Just hanging around.",
+      "petEmoteHungry": "(´～`) Snack, please?",
+      "petEmoteSleepy": "(－_－) Zzz...",
+      "petSeasonWinter": "Everything feels crisp and cold.",
+      "petSeasonSpring": "The air smells like new starts.",
+      "petSeasonSummer": "It is warm and bright today.",
+      "petSeasonAutumn": "Leaves are turning outside.",
+      "petDateNewYear": "Happy New Year!",
+      "petDateHoliday": "Season's greetings!",
+      "petDateNewMonth": "A fresh month begins.",
     },
     zh: {
       "langLabel": "语言",
@@ -668,8 +790,8 @@
       "hintTyping": "10 秒打字冲刺，从敲下第一个字符开始计时。",
       "btnNewRound": "新一局",
       "gamePhInput": "输入即可开始...",
-      "memoryPrompt": "翻开两张卡片，尽快配齐六对。",
-      "memoryCleared": "用时 {s} 秒，{n} {unit}完成。",
+      "memoryPrompt": "翻开两张卡片，尽快配齐所有配对。",
+      "memoryCleared": "用时 {s} 秒，共 {n} {unit}。",
       "unitMoves": "步",
       "unitMove": "步",
       "cardDown": "第 {n} 张，未翻开",
@@ -677,6 +799,14 @@
       "cardMatched": "第 {n} 张，{glyph}，已配对",
       "btnNewShuffle": "重新洗牌",
       "memoryGridLabel": "记忆卡片，找出所有配对",
+      "hudLevel": "关卡",
+      "memoryLevelAria": "第 {n} 关，共 {total} 关",
+      "memoryGridLevelLabel": "记忆卡片，找出所有配对。{aria}。",
+      "memoryLevelCleared": "第 {n}/{total} 关完成！",
+      "memoryNextUp": "下一关：第 {n}/{total} 关。",
+      "memoryAllComplete": "{total} 关全部完成，整条关卡链已通关！",
+      "btnNextLevel": "下一关",
+      "btnReplayLevels": "再玩一轮",
       "bestTime": "最佳 {s} 秒",
       "g2048Prompt": "方向键或滑动屏幕移动方块，合出 2048！",
       "g2048BoardLabel": "2048 棋盘。聚焦后使用方向键移动方块。",
@@ -711,6 +841,69 @@
       "btnJump": "跳跃",
       "btnDuck": "下蹲",
       "logCaretDash": "光标疾驰：{n} 米",
+      "tabFixitLadder": "修文阶梯",
+      "hudRung": "关卡",
+      "hudLeft": "剩余",
+      "hudStrikes": "失误",
+      "btnCheck": "检查",
+      "fixitSourceLabel": "待修原文",
+      "fixitInputLabel": "你的修改",
+      "fixitPrompt":
+        "按顺序挑战每一关，把每行修成本站工具会输出的样子。大小写必须一致。",
+      "fixitHint":
+        "输入修改后的文本，按回车键或点击“检查”。多余空格不影响，大小写会影响。",
+      "fixitJobIdle": "开始一局即可载入第一关。",
+      "fixitJob1": "转换标点：全角标点变成空格，并去掉首尾空白。",
+      "fixitJob2": "改成规范的句子：首字母大写，补上缺失的撇号，并把单独的“i”改成“I”。",
+      "fixitJob3": "转换标点：每个全角标点都变成单个空格。",
+      "fixitJob4": "改成规范的句子：首字母大写，并补上缺失的撇号。",
+      "fixitJob5": "转换标点：标点变成空格，但括号和破折号会被整段删除。",
+      "fixitJob6":
+        "改成规范的句子：全大写的行会转成句首大写，并为缩写词补上撇号。",
+      "fixitRungAria": "第 {n} 关，共 {total} 关",
+      "fixitGo": "计时中，输入修改后的文本并提交。",
+      "fixitWrong": "这不是该工具的输出。",
+      "fixitTimeout": "时间到。",
+      "fixitStrike": "第 {n}/{total} 次失误！",
+      "fixitCleared": "第 {n}/{total} 关完成，用时 {s} 秒！",
+      "fixitNextUp": "下一关：第 {n}/{total} 关。",
+      "fixitAllComplete": "{total} 关全部完成，整条阶梯已通关！",
+      "fixitFailed": "三次失误，本局结束。",
+      "fixitLog": "修文阶梯：完成 {n}/{total} 关",
+      "tabElements": "元素沙盘",
+      "hudGoal": "目标",
+      "elementsChallengeLabel": "挑战",
+      "elementsChallengeFree": "自由沙盘",
+      "elementsChallengeGrow": "生长",
+      "elementsChallengeExtinguish": "灭火",
+      "elementsChallengeFlood": "注水",
+      "elementsGoalFree":
+        "自由沙盘：随意涂抹，观察元素沉降。植物会喝水，沙子会堆积，火焰会吞噬植物。",
+      "elementsGoalGrow":
+        "让种子一路长到井道顶端。植物靠喝掉上方的水生长，记得不断往下补水。",
+      "elementsGoalExtinguish":
+        "在火苗烧遍整条树篱之前把它扑灭。",
+      "elementsGoalFlood":
+        "从池沿上方注水，把标记的水池灌满。",
+      "elementsToolsLabel": "元素工具",
+      "elementsEmpty": "擦除",
+      "elementsStone": "石块",
+      "elementsSand": "沙子",
+      "elementsWater": "水",
+      "elementsPlant": "植物",
+      "elementsFire": "火",
+      "elementsReset": "重置面板",
+      "elementsCanvasLabel":
+        "元素沙盘。数字键 1 到 6 选择元素，方向键移动光标，空格键放置。",
+      "elementsDescription":
+        "{cols} 乘 {rows} 的像素元素网格。当前场上有：{counts}。",
+      "elementsCountNone": "暂无元素",
+      "elementsGo": "计时中。",
+      "elementsWin": "用时 {s} 秒完成目标！",
+      "elementsTimeUp": "时间到。点击“再来一局”可重置计时。",
+      "elementsLog": "元素沙盘：{name}，用时 {s} 秒",
+      "elementsHint":
+        "在网格上拖动即可涂抹；点“重置面板”可恢复初始布局。键盘：数字 1-6 选择元素，方向键移动光标，空格键放置。",
       "petTitle": "伙伴",
       "petAdoptTitle": "领养伙伴",
       "petAdoptBody":
@@ -903,6 +1096,51 @@
       "petHueRose": "玫瑰",
       "petHueGold": "鎏金",
       "petLockedAtLevel": "等级 {n} 解锁",
+      "petStatusAttentionHunger": "{name} 饿坏了，快喂喂它！",
+      "petStatusAttentionHappiness": "{name} 觉得被冷落了，需要你陪陪。",
+      "petAttentionLabel": "需要照顾",
+      "petStatCareMistakes": "照顾失误",
+      "petCareMistakeLogged": "{name} 等得太久了，记下一次照顾失误。",
+      "petCareRecovered": "{name} 又被照顾得很好啦。",
+      "petReactionStreak": "{name} 保住了连续记录——第 {n} 天！+{treats} 零食。",
+      "petReactionStreakRepaired": "连续记录保住了！第 {n} 天，+{treats} 零食。",
+      "petReactionStreakReset": "连续记录已重置。+{treats} 零食，谢谢你回来。",
+      "petReactionUnlockMedal": "{name} 获得了连续 7 天奖章！",
+      "petRepairTitle": "修复连续记录",
+      "petRepairBody": "你漏签了一天。花 {cost} 个零食保住 {n} 天的连续记录？",
+      "petBtnRepair": "修复（{cost} 零食）",
+      "petBtnRepairDecline": "让它重置",
+      "petRepairPoor": "零食不足，无法修复连续记录。",
+      "petAccMedal": "连续奖章",
+      "petLockedExclusive": "连续 7 天解锁",
+      "petWelcomeBackShort": "你离开了 {n}，{name} 一见到你就精神了——补上 +{treats} 零食。",
+      "petWelcomeBackMedium": "欢迎回来，你离开了 {n}，{name} 一直帮你守着座位——补上 +{treats} 零食。",
+      "petWelcomeBackLong": "{name} 想你了 {n}。这是本地的补课礼物：+{treats} 零食。",
+      "petWelcomeBackHungry": "你离开了 {n}，{name} 快饿坏了——补上 +{treats} 零食。",
+      "petWelcomeBackSleepy": "你离开了 {n}，{name} 差点睡着——补上 +{treats} 零食。",
+      "petStatMoodWord": "心情",
+      "petStatHungerWord": "食欲",
+      "petWordDelighted": "超开心",
+      "petWordContent": "满足",
+      "petWordOkay": "一般",
+      "petWordGlum": "低落",
+      "petWordMiserable": "很难过",
+      "petWordFamished": "饿坏了",
+      "petWordHungry": "有点饿",
+      "petWordFine": "刚好",
+      "petWordFull": "很饱",
+      "petWordBloated": "撑到了",
+      "petEmoteHappy": "(＾▽＾) 一起做点好东西吧。",
+      "petEmoteNeutral": "(・_・) 随便待着也挺好。",
+      "petEmoteHungry": "(´～`) 能给点零食吗？",
+      "petEmoteSleepy": "(－_－) 呼……",
+      "petSeasonWinter": "空气清清凉凉的。",
+      "petSeasonSpring": "像是有新的开始。",
+      "petSeasonSummer": "今天又暖又亮。",
+      "petSeasonAutumn": "外面的叶子在变色。",
+      "petDateNewYear": "新年快乐！",
+      "petDateHoliday": "节日快乐！",
+      "petDateNewMonth": "新的一月开始啦。",
     },
   };
 
@@ -3125,9 +3363,24 @@
   var quietReset2048 = null;
   var quietResetReflex = null;
   var quietResetCaretDash = null;
+  var quietResetElements = null;
 
   var memoryBestKey = "glyph-match-best";
-  var memoryMatchPairs = 6;
+  var memoryStoreVersion = 2;
+  var memoryMaxSeconds = 3600;
+  /* The ladder replaces the old fixed 6-pair board: each rung is a pair count
+   * plus the column count that keeps its cards legible inside the ~390px
+   * drawer panel. Rung 3 (6 pairs) is the original board. */
+  var memoryLegacyPairs = 6;
+  var memoryLevels = [
+    { pairs: 3, cols: 3 },
+    { pairs: 4, cols: 4 },
+    { pairs: 6, cols: 4 },
+    { pairs: 8, cols: 4 },
+    { pairs: 10, cols: 5 },
+  ];
+  /* Glyph pool: the first six are the original board's glyphs, the rest widen
+   * the pool so the largest rung has enough distinct faces. */
   var memoryGlyphs = [
     "\u5929",
     "\u4e3b",
@@ -3135,12 +3388,73 @@
     "\u5149",
     "\u5723",
     "\u7075",
+    "\u661f",
+    "\u6708",
+    "\u4e91",
+    "\u96f7",
+    "\u7389",
+    "\u7384",
   ];
 
   var g2048BestKey = "g2048-best";
   var g2048StateKey = "g2048-state";
   var reflexBestKey = "reflex-tap-best";
   var caretDashBestKey = "caret-dash-best";
+
+  var elementsBestKey = "elements-best";
+  var elementsStoreVersion = 1;
+  var elementsCols = 80;
+  var elementsRows = 56;
+  /* One cell is worth `elementsScale` internal canvas pixels: the 80x56 grid
+   * renders onto a 320x224 canvas, which the CSS then scales up to the panel
+   * width with image-rendering: pixelated. */
+  var elementsScale = 4;
+  /* The simulation advances one generation per tick, and the clock counts
+   * the ticks it actually ran, so time spent hidden is never charged. */
+  var elementsTickMs = 50;
+  /* The pointer drag paints a 5x5 blob, the keyboard cursor a 3x3 one. */
+  var elementsBrush = 2;
+  var elementsCursorBrush = 1;
+  var elementsMaxSeconds = 3600;
+  /* Free play plus the three goals. `tools` is the palette each board hands
+   * out, so a goal cannot simply be painted into existence: Grow only offers
+   * water, which is exactly what the growth rule consumes, and Flood keeps
+   * stone so a channel above the rim can still be built. `defaultTool` is the
+   * brush that board starts with. */
+  var elementsChallenges = [
+    {
+      id: "free",
+      labelKey: "elementsChallengeFree",
+      goalKey: "elementsGoalFree",
+      limit: 0,
+      defaultTool: "sand",
+      tools: ["empty", "stone", "sand", "water", "plant", "fire"],
+    },
+    {
+      id: "grow",
+      labelKey: "elementsChallengeGrow",
+      goalKey: "elementsGoalGrow",
+      limit: 60,
+      defaultTool: "water",
+      tools: ["empty", "water"],
+    },
+    {
+      id: "extinguish",
+      labelKey: "elementsChallengeExtinguish",
+      goalKey: "elementsGoalExtinguish",
+      limit: 20,
+      defaultTool: "water",
+      tools: ["empty", "water"],
+    },
+    {
+      id: "flood",
+      labelKey: "elementsChallengeFlood",
+      goalKey: "elementsGoalFlood",
+      limit: 60,
+      defaultTool: "water",
+      tools: ["empty", "stone", "water"],
+    },
+  ];
 
   var typingPhrases = [
     "Paste your messy notes and let the formatter sweep every bracket away.",
@@ -3183,11 +3497,13 @@
     var tab2048 = getElement("gameTab2048");
     var tabReflex = getElement("gameTabReflex");
     var tabCaretDash = getElement("gameTabCaretDash");
+    var tabElements = getElement("gameTabElements");
     var panelTyping = getElement("gamePanelTyping");
     var panelMemory = getElement("gamePanelMemory");
     var panel2048 = getElement("gamePanel2048");
     var panelReflex = getElement("gamePanelReflex");
     var panelCaretDash = getElement("gamePanelCaretDash");
+    var panelElements = getElement("gamePanelElements");
     if (
       !dialog ||
       !backdrop ||
@@ -3197,11 +3513,13 @@
       !tab2048 ||
       !tabReflex ||
       !tabCaretDash ||
+      !tabElements ||
       !panelTyping ||
       !panelMemory ||
       !panel2048 ||
       !panelReflex ||
-      !panelCaretDash
+      !panelCaretDash ||
+      !panelElements
     ) {
       return;
     }
@@ -3395,6 +3713,7 @@
       { name: "2048", tab: tab2048, panel: panel2048 },
       { name: "reflex", tab: tabReflex, panel: panelReflex },
       { name: "caretDash", tab: tabCaretDash, panel: panelCaretDash },
+      { name: "elements", tab: tabElements, panel: panelElements },
     ];
     var activeTabName = "typing";
 
@@ -3428,6 +3747,10 @@
         quietResetCaretDash();
       }
 
+      if (quietResetElements) {
+        quietResetElements();
+      }
+
       if (shouldFocus) {
         gameTabEntries.forEach(function (entry) {
           if (entry.name === selected) {
@@ -3455,6 +3778,10 @@
 
     tabCaretDash.addEventListener("click", function () {
       selectTab("caretDash");
+    });
+
+    tabElements.addEventListener("click", function () {
+      selectTab("elements");
     });
 
     tabTyping.parentElement.addEventListener("keydown", function (event) {
@@ -3544,6 +3871,10 @@
         quietResetCaretDash();
       }
 
+      if (quietResetElements) {
+        quietResetElements();
+      }
+
       openBtn.focus();
     }
 
@@ -3611,6 +3942,20 @@
       return;
     }
 
+    var totalLevels = memoryLevels.length;
+    var legacyLevel = 1;
+    memoryLevels.forEach(function (info, index) {
+      if (info.pairs === memoryLegacyPairs) {
+        legacyLevel = index + 1;
+      }
+    });
+
+    var progress = readProgress();
+    var level = progress.level; // rung whose board is on screen
+    var nextLevel = progress.level; // rung a "next level" click / reload resumes on
+    var bests = progress.bests;
+    var levelCleared = false;
+
     var firstCard = null;
     var lockBoard = false;
     var moves = 0;
@@ -3619,16 +3964,168 @@
     var startedAt = 0;
     var timerId = null;
 
-    function readBest() {
-      var value = parseFloat(localStorage.getItem(memoryBestKey));
-      return isNaN(value) ? 0 : value;
+    var primaryLabel = startBtn.querySelector("[data-i18n]");
+    var levelStat = buildLevelStat();
+
+    function clampLevel(value) {
+      var parsed = parseInt(value, 10);
+      if (isNaN(parsed) || parsed < 1) {
+        return 1;
+      }
+      return parsed > totalLevels ? totalLevels : parsed;
+    }
+
+    /* Reads the ladder progress. Version 1 of the key held one scalar best
+     * time for the fixed 6-pair board: that value migrates to the best of the
+     * rung that reproduces that board. Corrupt or out-of-range data falls back
+     * to the defaults instead of throwing. `stale` means the stored text is not
+     * in the current shape yet, so it is rewritten once on init. */
+    function readProgress() {
+      var blank = function (stale) {
+        return { level: 1, bests: {}, stale: stale };
+      };
+      var raw = null;
+      try {
+        raw = localStorage.getItem(memoryBestKey);
+      } catch (error) {
+        return blank(false);
+      }
+      if (raw === null || raw === undefined) {
+        return blank(false);
+      }
+
+      var text = String(raw).trim();
+      if (!text) {
+        return blank(true);
+      }
+
+      if (/^\d+(\.\d+)?$/.test(text)) {
+        var legacy = parseFloat(text);
+        var migrated = blank(true);
+        if (legacy > 0 && legacy <= memoryMaxSeconds) {
+          migrated.bests[String(legacyLevel)] = legacy;
+        }
+        return migrated;
+      }
+
+      var parsed = null;
+      try {
+        parsed = JSON.parse(text);
+      } catch (error) {
+        return blank(true);
+      }
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        return blank(true);
+      }
+
+      var storedBests = {};
+      var source = parsed.bests;
+      if (source && typeof source === "object" && !Array.isArray(source)) {
+        Object.keys(source).forEach(function (key) {
+          if (!/^\d+$/.test(key)) {
+            return;
+          }
+          var index = parseInt(key, 10);
+          var value = parseFloat(source[key]);
+          if (index < 1 || index > totalLevels) {
+            return;
+          }
+          if (!isFinite(value) || value <= 0 || value > memoryMaxSeconds) {
+            return;
+          }
+          storedBests[key] = value;
+        });
+      }
+
+      return {
+        level: clampLevel(parsed.level),
+        bests: storedBests,
+        stale: parsed.v !== memoryStoreVersion,
+      };
+    }
+
+    function writeProgress() {
+      try {
+        localStorage.setItem(
+          memoryBestKey,
+          JSON.stringify({
+            v: memoryStoreVersion,
+            level: nextLevel,
+            bests: bests,
+          }),
+        );
+      } catch (error) {
+        /* no-op: progress stays in memory for this page view */
+      }
+    }
+
+    function levelBest(index) {
+      var value = bests[String(index)];
+      return isFinite(value) && value > 0 ? value : 0;
+    }
+
+    function currentLevel() {
+      return memoryLevels[level - 1];
     }
 
     function renderBest() {
-      var best = readBest();
+      var best = levelBest(level);
       bestEl.textContent = best
         ? t("bestTime", { s: best.toFixed(1) })
         : t("noBest");
+    }
+
+    function levelLabel() {
+      return t("memoryLevelAria", { n: level, total: totalLevels });
+    }
+
+    function renderLevel() {
+      var info = currentLevel();
+      if (levelStat) {
+        levelStat.value.textContent = level + "/" + totalLevels;
+        levelStat.stat.setAttribute("aria-label", levelLabel());
+      }
+      grid.setAttribute("data-cols", String(info.cols));
+      grid.setAttribute(
+        "aria-label",
+        t("memoryGridLevelLabel", { aria: levelLabel() }),
+      );
+    }
+
+    /* The level HUD cell is injected here rather than hard-coded in the four
+     * pages, so their game drawer markup stays byte-identical. */
+    function buildLevelStat() {
+      var panel = grid.closest ? grid.closest(".game-panel") : null;
+      var hud = panel ? panel.querySelector(".game-hud") : null;
+      if (!hud) {
+        return null;
+      }
+
+      var stat = document.createElement("div");
+      stat.className = "game-stat memory-level-stat";
+      stat.setAttribute("role", "group");
+      stat.setAttribute("aria-label", t("hudLevel"));
+
+      var label = document.createElement("span");
+      label.setAttribute("data-i18n", "hudLevel");
+      label.textContent = t("hudLevel");
+
+      var value = document.createElement("strong");
+      value.id = "memoryLevel";
+
+      stat.appendChild(label);
+      stat.appendChild(value);
+      hud.insertBefore(stat, hud.firstChild);
+      return { stat: stat, value: value };
+    }
+
+    function setPrimaryLabel(key) {
+      if (primaryLabel) {
+        primaryLabel.setAttribute("data-i18n", key);
+        primaryLabel.textContent = t(key);
+      } else {
+        startBtn.setAttribute("aria-label", t(key));
+      }
     }
 
     function elapsed() {
@@ -3659,8 +4156,23 @@
       card.setAttribute("aria-label", state);
     }
 
+    /* A random subset of distinct glyphs: the same glyph never appears twice
+     * on one board except as the pair it is there to make. */
+    function pickGlyphs(count) {
+      var pool = memoryGlyphs.slice();
+      for (var i = pool.length - 1; i > 0; i -= 1) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var swap = pool[i];
+        pool[i] = pool[j];
+        pool[j] = swap;
+      }
+      return pool.slice(0, count);
+    }
+
     function buildBoard() {
-      var deck = memoryGlyphs.concat(memoryGlyphs);
+      var info = currentLevel();
+      var glyphs = pickGlyphs(info.pairs);
+      var deck = glyphs.concat(glyphs);
       for (var i = deck.length - 1; i > 0; i -= 1) {
         var j = Math.floor(Math.random() * (i + 1));
         var swap = deck[i];
@@ -3696,11 +4208,15 @@
       moves = 0;
       matchedPairs = 0;
       movesEl.textContent = "0";
-      pairsEl.textContent = "0/" + memoryMatchPairs;
+      pairsEl.textContent = "0/" + info.pairs;
       timeEl.textContent = "0.0s";
+      renderLevel();
+      renderBest();
     }
 
     function flipCard(card) {
+      var info = currentLevel();
+
       if (
         lockBoard ||
         card.classList.contains("flipped") ||
@@ -3736,9 +4252,9 @@
         setCardFace(pair, true);
         setCardFace(card, true);
         matchedPairs += 1;
-        pairsEl.textContent = matchedPairs + "/" + memoryMatchPairs;
+        pairsEl.textContent = matchedPairs + "/" + info.pairs;
 
-        if (matchedPairs === memoryMatchPairs) {
+        if (matchedPairs === info.pairs) {
           endRound(true);
         }
         return;
@@ -3765,20 +4281,40 @@
       timerId = null;
       timeEl.textContent = seconds.toFixed(1) + "s";
 
-      var best = readBest();
+      var finalLevel = level >= totalLevels;
+      var best = levelBest(level);
       var isBest = finished && seconds > 0 && (best === 0 || seconds < best);
-      var message = t("memoryCleared", {
-        s: seconds.toFixed(1),
-        n: moves,
-        unit: moves === 1 ? t("unitMove") : t("unitMoves"),
-      });
+      var message =
+        t("memoryLevelCleared", { n: level, total: totalLevels }) +
+        " " +
+        t("memoryCleared", {
+          s: seconds.toFixed(1),
+          n: moves,
+          unit: moves === 1 ? t("unitMove") : t("unitMoves"),
+        });
 
       if (isBest) {
-        localStorage.setItem(memoryBestKey, seconds.toFixed(2));
+        bests[String(level)] = seconds;
         message += " " + t("newBest");
         var rect = startBtn.getBoundingClientRect();
         createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
       }
+
+      if (finalLevel) {
+        message += " " + t("memoryAllComplete", { total: totalLevels });
+      } else {
+        message +=
+          " " +
+          t("memoryNextUp", { n: level + 1, total: totalLevels });
+      }
+
+      /* The cleared board stays on screen until the player advances, but the
+       * rung after it is already the resume point, so a reload lands there. */
+      levelCleared = true;
+      nextLevel = finalLevel ? 1 : level + 1;
+      writeProgress();
+      setPrimaryLabel(finalLevel ? "btnReplayLevels" : "btnNextLevel");
+
       petNotifyGame(isBest);
 
       resultEl.textContent = message;
@@ -3787,17 +4323,30 @@
       startBtn.focus();
     }
 
+    /* Moves the player onto the rung the finished round unlocked (or back to
+     * the first rung after the last one). */
+    function advanceLevel() {
+      level = nextLevel;
+      resetBoard();
+    }
+
     function resetBoard() {
       window.clearInterval(timerId);
       timerId = null;
       roundStarted = false;
       startedAt = 0;
+      levelCleared = false;
+      setPrimaryLabel("btnNewShuffle");
       buildBoard();
       resultEl.textContent = t("memoryPrompt");
     }
 
     startBtn.addEventListener("click", function () {
-      resetBoard();
+      if (levelCleared) {
+        advanceLevel();
+      } else {
+        resetBoard();
+      }
       startBtn.focus();
     });
 
@@ -3810,7 +4359,1462 @@
     };
 
     buildBoard();
-    renderBest();
+    resultEl.textContent = t("memoryPrompt");
+    if (progress.stale) {
+      writeProgress();
+    }
+  }
+
+  /* ------------------------------------------------------------------
+   * Elements
+   * An elemental particle sandbox: a fixed cell grid, one generation per
+   * tick, and four boards. The simulation, the boards and the win conditions
+   * all live in the self-contained factory below, so tools/pet-harness.js can
+   * lift it out of this file by name and drive the real rules headlessly -
+   * no canvas, no DOM, no timers.
+   *
+   * The rules, in the order a step applies them:
+   *   SAND  falls; blocked, it tries diagonally down-left and down-right so it
+   *         piles into a slope, and it sinks through water by swapping with it.
+   *   WATER falls, then moves diagonally down, then slides sideways (up to
+   *         `spread` cells) so a standing column levels out instead of
+   *         creeping sideways one cell at a time.
+   *   PLANT is static. Every `growEvery`-th generation it grows one cell
+   *         upward into a WATER cell and consumes that water.
+   *   FIRE  is static. It ignites every adjacent PLANT (a fresh flame starts
+   *         with a full life, which is what keeps a fire alive while it still
+   *         has fuel), an adjacent WATER cell puts it out and is consumed, and
+   *         with no fuel left it expires after `fireLife` generations.
+   *   STONE never moves.
+   * The step is seeded (a Lehmer generator, never Math.random), so two sims
+   * built with the same options and the same board stay identical for ever.
+   * ------------------------------------------------------------------ */
+  function createElementsSim(options) {
+    var settings = options || {};
+    var cols = Math.max(16, parseInt(settings.cols, 10) || 80);
+    var rows = Math.max(16, parseInt(settings.rows, 10) || 56);
+    var seed = parseInt(settings.seed, 10);
+    if (!isFinite(seed) || seed <= 0) {
+      seed = 1;
+    }
+    seed = seed % 2147483647;
+    if (seed === 0) {
+      seed = 1;
+    }
+
+    var EMPTY = 0;
+    var STONE = 1;
+    var SAND = 2;
+    var WATER = 3;
+    var PLANT = 4;
+    var FIRE = 5;
+    var ids = {
+      empty: EMPTY,
+      stone: STONE,
+      sand: SAND,
+      water: WATER,
+      plant: PLANT,
+      fire: FIRE,
+    };
+
+    /* Generations a flame burns once it has nothing left to feed on. */
+    var fireLife = 60;
+    /* Plant growth cadence: one cell every this many generations. */
+    var growEvery = 8;
+    /* How far water reaches sideways in a single step. */
+    var spread = 3;
+
+    var total = cols * rows;
+    var cells = [];
+    var life = [];
+    var movedAt = [];
+    var generation = 0;
+    var seedState = seed;
+    var outOfRangeWrites = 0;
+    /* Set by the flood board: paint is refused at or below this row. */
+    var aboveRow = -1;
+    /* Set by the flood board: the marked target zone. */
+    var zone = null;
+    var zoneTarget = 0;
+    /* How many flames the board started with, so the HUD can count down. */
+    var fireTarget = 0;
+
+    var at = 0;
+    for (at = 0; at < total; at += 1) {
+      cells[at] = EMPTY;
+      life[at] = 0;
+      movedAt[at] = 0;
+    }
+
+    /* Lehmer / MINSTD. Every intermediate value stays below 2^53, so the
+     * sequence is exactly the same in every engine and every run. */
+    function random() {
+      seedState = (seedState * 48271) % 2147483647;
+      if (seedState <= 0) {
+        seedState = 1;
+      }
+      return (seedState - 1) / 2147483646;
+    }
+
+    function inBounds(x, y) {
+      return x >= 0 && y >= 0 && x < cols && y < rows;
+    }
+
+    function index(x, y) {
+      return y * cols + x;
+    }
+
+    /* Out-of-bounds reads report STONE, so nothing ever falls off the grid,
+     * and out-of-bounds writes are counted and dropped rather than landing on
+     * a neighbouring row. */
+    function get(x, y) {
+      return inBounds(x, y) ? cells[index(x, y)] : STONE;
+    }
+
+    function set(x, y, value) {
+      if (!inBounds(x, y)) {
+        outOfRangeWrites += 1;
+        return false;
+      }
+      var cell = index(x, y);
+      cells[cell] = value;
+      life[cell] = value === FIRE ? fireLife : 0;
+      movedAt[cell] = generation;
+      return true;
+    }
+
+    function count(value) {
+      var found = 0;
+      var cell = 0;
+      for (cell = 0; cell < total; cell += 1) {
+        if (cells[cell] === value) {
+          found += 1;
+        }
+      }
+      return found;
+    }
+
+    /* A cheap checksum of the live board: two sims with the same seed that
+     * have stepped the same number of times hash the same. */
+    function hash() {
+      var value = 0;
+      var cell = 0;
+      for (cell = 0; cell < total; cell += 1) {
+        value = (value * 31 + cells[cell] + 1) % 2147483647;
+      }
+      return value;
+    }
+
+    /* --- movement --------------------------------------------------- */
+
+    function swap(a, b) {
+      var value = cells[a];
+      cells[a] = cells[b];
+      cells[b] = value;
+      var spare = life[a];
+      life[a] = life[b];
+      life[b] = spare;
+      movedAt[b] = generation;
+    }
+
+    function moveTo(a, b) {
+      cells[b] = cells[a];
+      life[b] = life[a];
+      cells[a] = EMPTY;
+      life[a] = 0;
+      movedAt[b] = generation;
+    }
+
+    /* Sand falls straight down, sinking through water, and otherwise takes a
+     * diagonal so a blocked grain still slides off the side of a pile. */
+    function moveSand(cell, x, y) {
+      var below = cell + cols;
+      if (y + 1 < rows && (cells[below] === EMPTY || cells[below] === WATER)) {
+        swap(cell, below);
+        return true;
+      }
+      var firstSign = random() < 0.5 ? -1 : 1;
+      var pass = 0;
+      for (pass = 0; pass < 2; pass += 1) {
+        var nx = x + (pass === 0 ? firstSign : -firstSign);
+        var ny = y + 1;
+        if (!inBounds(nx, ny)) {
+          continue;
+        }
+        var target = index(nx, ny);
+        if (cells[target] === EMPTY || cells[target] === WATER) {
+          swap(cell, target);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /* How far water slides sideways in one direction: it reaches along its own
+     * row until it finds an empty cell with an empty cell under it - a drop it
+     * can fall into. Sliding only towards a drop is what makes a pool level
+     * out and then come to rest, instead of a surface film wandering along a
+     * flat floor for ever. Returns -1 when there is nowhere lower to go. */
+    function flowReach(x, y, sign) {
+      var step = 0;
+      for (step = 1; step <= spread; step += 1) {
+        var nx = x + sign * step;
+        if (!inBounds(nx, y) || cells[index(nx, y)] !== EMPTY) {
+          return -1;
+        }
+        if (y + 1 < rows && cells[index(nx, y + 1)] === EMPTY) {
+          return nx;
+        }
+      }
+      return -1;
+    }
+
+    function moveWater(cell, x, y) {
+      var below = cell + cols;
+      if (y + 1 < rows && cells[below] === EMPTY) {
+        moveTo(cell, below);
+        return true;
+      }
+      var firstSign = random() < 0.5 ? -1 : 1;
+      var pass = 0;
+      for (pass = 0; pass < 2; pass += 1) {
+        var nx = x + (pass === 0 ? firstSign : -firstSign);
+        var ny = y + 1;
+        if (inBounds(nx, ny) && cells[index(nx, ny)] === EMPTY) {
+          moveTo(cell, index(nx, ny));
+          return true;
+        }
+      }
+      for (pass = 0; pass < 2; pass += 1) {
+        var sign = pass === 0 ? firstSign : -firstSign;
+        var reach = flowReach(x, y, sign);
+        if (reach !== -1) {
+          moveTo(cell, index(reach, y));
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /* A plant drinks the water above it and grows into it. */
+    function growPlant(cell, x, y) {
+      if (y <= 0) {
+        return false;
+      }
+      var above = cell - cols;
+      if (cells[above] !== WATER) {
+        return false;
+      }
+      cells[above] = PLANT;
+      life[above] = 0;
+      movedAt[above] = generation;
+      return true;
+    }
+
+    function ignite(x, y) {
+      if (!inBounds(x, y)) {
+        return false;
+      }
+      var cell = index(x, y);
+      if (cells[cell] !== PLANT) {
+        return false;
+      }
+      cells[cell] = FIRE;
+      life[cell] = fireLife;
+      movedAt[cell] = generation;
+      return true;
+    }
+
+    /* Fire: fed by plants, put out by water, and out of time when it has
+     * neither. Adjacent water is consumed as the flame is doused. */
+    function burn(cell, x, y) {
+      var doused = false;
+      if (get(x - 1, y) === WATER) {
+        set(x - 1, y, EMPTY);
+        doused = true;
+      } else if (get(x + 1, y) === WATER) {
+        set(x + 1, y, EMPTY);
+        doused = true;
+      } else if (get(x, y - 1) === WATER) {
+        set(x, y - 1, EMPTY);
+        doused = true;
+      } else if (get(x, y + 1) === WATER) {
+        set(x, y + 1, EMPTY);
+        doused = true;
+      }
+      if (doused) {
+        cells[cell] = EMPTY;
+        life[cell] = 0;
+        movedAt[cell] = generation;
+        return true;
+      }
+
+      var fed = false;
+      if (ignite(x - 1, y)) {
+        fed = true;
+      }
+      if (ignite(x + 1, y)) {
+        fed = true;
+      }
+      if (ignite(x, y - 1)) {
+        fed = true;
+      }
+      if (ignite(x, y + 1)) {
+        fed = true;
+      }
+
+      if (fed) {
+        life[cell] = fireLife;
+      } else {
+        life[cell] = life[cell] - 1;
+      }
+      if (life[cell] <= 0) {
+        cells[cell] = EMPTY;
+        life[cell] = 0;
+      }
+      return true;
+    }
+
+    /* One generation. The sweep runs bottom-up so a grain that has already
+     * fallen is not stepped twice, and the horizontal direction alternates per
+     * row so piles and pools do not all lean the same way. */
+    function step() {
+      generation += 1;
+      var growNow = generation % growEvery === 0;
+      var y = 0;
+      var k = 0;
+      for (y = rows - 1; y >= 0; y -= 1) {
+        var forward = (y + generation) % 2 === 0;
+        for (k = 0; k < cols; k += 1) {
+          var x = forward ? k : cols - 1 - k;
+          var cell = index(x, y);
+          var value = cells[cell];
+          if (value === EMPTY || value === STONE || movedAt[cell] === generation) {
+            continue;
+          }
+          if (value === SAND) {
+            moveSand(cell, x, y);
+          } else if (value === WATER) {
+            moveWater(cell, x, y);
+          } else if (value === PLANT) {
+            if (growNow) {
+              growPlant(cell, x, y);
+            }
+          } else if (value === FIRE) {
+            burn(cell, x, y);
+          }
+        }
+      }
+      return generation;
+    }
+
+    /* --- boards ----------------------------------------------------- */
+
+    function fill(x0, y0, x1, y1, value) {
+      var x = 0;
+      var y = 0;
+      for (y = y0; y <= y1; y += 1) {
+        for (x = x0; x <= x1; x += 1) {
+          set(x, y, value);
+        }
+      }
+    }
+
+    function clearBoard() {
+      var cell = 0;
+      for (cell = 0; cell < total; cell += 1) {
+        cells[cell] = EMPTY;
+        life[cell] = 0;
+        movedAt[cell] = 0;
+      }
+      generation = 0;
+      seedState = seed;
+      aboveRow = -1;
+      zone = null;
+      zoneTarget = 0;
+      fireTarget = 0;
+    }
+
+    /* Free play: a hopper pouring sand, a stone basin holding a pool, and a
+     * small garden. Nothing to win - just something alive to poke at. */
+    function buildFree() {
+      var floor = rows - 1;
+      var hopTop = 4;
+      var hopX = Math.round(cols * 0.22);
+      var step = 0;
+      var x = 0;
+      var gx = 0;
+
+      fill(0, floor, cols - 1, floor, STONE);
+      /* The shelf the hopper pours onto. */
+      fill(6, Math.round(rows * 0.5), Math.round(cols * 0.4), Math.round(rows * 0.5), STONE);
+
+      /* A sand load first, then the funnel walls on top of it, so the walls
+       * win where the two overlap and the throat stays open. */
+      fill(hopX - 4, hopTop + 1, hopX + 4, hopTop + 5, SAND);
+      for (step = 0; step < 6; step += 1) {
+        set(hopX - 6 + step, hopTop + step, STONE);
+        set(hopX + 6 - step, hopTop + step, STONE);
+      }
+
+      /* A stone bowl with a pool in it. */
+      var basinLeft = Math.round(cols * 0.66);
+      var basinRight = cols - 4;
+      var rim = floor - 16;
+      fill(basinLeft, rim, basinLeft + 1, floor - 1, STONE);
+      fill(basinRight - 1, rim, basinRight, floor - 1, STONE);
+      fill(basinLeft, floor - 1, basinRight, floor - 1, STONE);
+      fill(basinLeft + 2, floor - 9, basinRight - 2, floor - 2, WATER);
+
+      /* A garden on the floor between the hopper and the bowl. */
+      for (gx = 34; gx <= 46; gx += 3) {
+        set(gx, floor - 1, PLANT);
+        set(gx, floor - 2, PLANT);
+      }
+    }
+
+    /* Grow: a one-cell-wide well with a planted seed in a shallow pool. The
+     * plant climbs by drinking the water directly above it, so the pool runs
+     * dry partway up and the player has to keep pouring water down the well.
+     * The well is a single column on purpose: every drop the player pours
+     * lands on the plant instead of pooling beside it. */
+    function buildGrow() {
+      var floor = rows - 1;
+      var cx = Math.floor(cols / 2);
+      fill(0, floor, cols - 1, floor, STONE);
+      fill(cx - 4, 0, cx - 1, floor - 1, STONE);
+      fill(cx + 1, 0, cx + 4, floor - 1, STONE);
+      fill(cx, floor - 20, cx, floor - 1, WATER);
+      set(cx, floor - 1, PLANT);
+    }
+
+    /* Extinguish: a one-cell-wide serpentine hedge with a fire at its near
+     * end. Flames cross one cell per generation, so the front really does walk
+     * the garden while the player runs for the water. */
+    function buildExtinguish() {
+      var floor = rows - 1;
+      var x0 = 4;
+      var x1 = cols - 5;
+      var top = 4;
+      var pitch = 6;
+      var bottom = rows - 6;
+      var y = top;
+      var forward = true;
+      var x = 0;
+      var span = 0;
+      while (y <= bottom) {
+        if (forward) {
+          for (x = x0; x <= x1; x += 1) {
+            set(x, y, PLANT);
+          }
+        } else {
+          for (x = x1; x >= x0; x -= 1) {
+            set(x, y, PLANT);
+          }
+        }
+        if (y + pitch > bottom) {
+          break;
+        }
+        var connectorX = forward ? x1 : x0;
+        for (span = 1; span <= pitch; span += 1) {
+          set(connectorX, y + span, PLANT);
+        }
+        y += pitch;
+        forward = !forward;
+      }
+      fill(0, floor, cols - 1, floor, STONE);
+      set(x0, top, FIRE);
+    }
+
+    /* Flood: a stone basin with a marked target zone. Paint is refused at or
+     * below the rim, so the water has to be poured in from above and allowed
+     * to find its own level. */
+    function buildFlood() {
+      var floor = rows - 1;
+      var left = Math.round(cols * 0.3);
+      var right = Math.round(cols * 0.7);
+      var rim = Math.round(rows * 0.42);
+      fill(0, floor, cols - 1, floor, STONE);
+      fill(left, rim, left + 1, floor - 1, STONE);
+      fill(right - 1, rim, right, floor - 1, STONE);
+      fill(left, floor - 1, right, floor - 1, STONE);
+      zone = { x0: left + 3, y0: floor - 10, x1: right - 3, y1: floor - 2 };
+      zoneTarget = Math.ceil(
+        (zone.x1 - zone.x0 + 1) * (zone.y1 - zone.y0 + 1) * 0.65,
+      );
+      aboveRow = rim;
+    }
+
+    function loadPreset(id) {
+      clearBoard();
+      if (id === "grow") {
+        buildGrow();
+      } else if (id === "extinguish") {
+        buildExtinguish();
+      } else if (id === "flood") {
+        buildFlood();
+      } else {
+        buildFree();
+      }
+      fireTarget = count(FIRE);
+      return generation;
+    }
+
+    /* --- painting --------------------------------------------------- */
+
+    /* The brush refuses anything but an empty cell (so a wall or a settled
+     * pile is never overwritten by accident), only the eraser clears, and the
+     * flood board refuses paint at or below its rim. */
+    function paint(x, y, value) {
+      if (!inBounds(x, y)) {
+        outOfRangeWrites += 1;
+        return false;
+      }
+      if (value !== EMPTY && aboveRow >= 0 && y >= aboveRow) {
+        return false;
+      }
+      var cell = index(x, y);
+      if (value === EMPTY) {
+        if (cells[cell] === EMPTY) {
+          return false;
+        }
+        cells[cell] = EMPTY;
+        life[cell] = 0;
+        movedAt[cell] = generation;
+        return true;
+      }
+      if (cells[cell] !== EMPTY) {
+        return false;
+      }
+      return set(x, y, value);
+    }
+
+    function paintBlob(cx, cy, value, radius) {
+      var painted = 0;
+      var reach = Math.max(0, parseInt(radius, 10) || 0);
+      var dx = 0;
+      var dy = 0;
+      for (dy = -reach; dy <= reach; dy += 1) {
+        for (dx = -reach; dx <= reach; dx += 1) {
+          if (!inBounds(cx + dx, cy + dy)) {
+            continue;
+          }
+          if (paint(cx + dx, cy + dy, value)) {
+            painted += 1;
+          }
+        }
+      }
+      return painted;
+    }
+
+    /* --- goals ------------------------------------------------------ */
+
+    /* The win condition of a challenge, measured against the live board.
+     * `value` and `target` are exactly what the HUD prints, so the number on
+     * screen is always the number being checked. */
+    function progress(id) {
+      var cell = 0;
+      if (id === "grow") {
+        var topPlant = -1;
+        for (cell = 0; cell < total; cell += 1) {
+          if (cells[cell] !== PLANT) {
+            continue;
+          }
+          var row = Math.floor(cell / cols);
+          if (topPlant === -1 || row < topPlant) {
+            topPlant = row;
+          }
+        }
+        return {
+          value: topPlant === -1 ? 0 : rows - topPlant,
+          target: rows,
+          done: topPlant === 0,
+        };
+      }
+      if (id === "extinguish") {
+        var fires = count(FIRE);
+        return { value: fires, target: fireTarget, done: fires === 0 };
+      }
+      if (id === "flood") {
+        var wet = 0;
+        var x = 0;
+        var y = 0;
+        if (zone) {
+          for (y = zone.y0; y <= zone.y1; y += 1) {
+            for (x = zone.x0; x <= zone.x1; x += 1) {
+              if (cells[index(x, y)] === WATER) {
+                wet += 1;
+              }
+            }
+          }
+        }
+        return {
+          value: wet,
+          target: zoneTarget,
+          done: zoneTarget > 0 && wet >= zoneTarget,
+        };
+      }
+      return { value: 0, target: 0, done: false };
+    }
+
+    return {
+      cols: cols,
+      rows: rows,
+      ids: ids,
+      empty: EMPTY,
+      stone: STONE,
+      sand: SAND,
+      water: WATER,
+      plant: PLANT,
+      fire: FIRE,
+      fireLife: fireLife,
+      growEvery: growEvery,
+      spread: spread,
+      /* The live grid, for the renderer only. Everything else goes through the
+       * accessors, which is what keeps the rules bounds-safe. */
+      cells: cells,
+      life: life,
+      index: index,
+      inBounds: inBounds,
+      get: get,
+      set: set,
+      count: count,
+      hash: hash,
+      paint: paint,
+      paintBlob: paintBlob,
+      step: step,
+      generation: function () {
+        return generation;
+      },
+      clear: clearBoard,
+      loadPreset: loadPreset,
+      progress: progress,
+      zone: function () {
+        return zone
+          ? { x0: zone.x0, y0: zone.y0, x1: zone.x1, y1: zone.y1 }
+          : null;
+      },
+      paintAboveRow: function () {
+        return aboveRow;
+      },
+      outOfRangeWrites: function () {
+        return outOfRangeWrites;
+      },
+    };
+  }
+
+  function initElements() {
+    var panel = getElement("gamePanelElements");
+    var canvas = getElement("elementsCanvas");
+    var cursorEl = getElement("elementsCursor");
+    var descEl = getElement("elementsDescription");
+    var selectEl = getElement("elementsChallenge");
+    var timeLabel = getElement("elementsTimeLabel");
+    var timeEl = getElement("elementsTime");
+    var progressEl = getElement("elementsProgress");
+    var goalEl = getElement("elementsGoal");
+    var resultEl = getElement("elementsResult");
+    var bestEl = getElement("elementsBest");
+    var startBtn = getElement("elementsStartBtn");
+    var resetBtn = getElement("elementsResetBtn");
+    if (
+      !panel ||
+      !canvas ||
+      !cursorEl ||
+      !descEl ||
+      !selectEl ||
+      !timeLabel ||
+      !timeEl ||
+      !progressEl ||
+      !goalEl ||
+      !resultEl ||
+      !bestEl ||
+      !startBtn ||
+      !resetBtn
+    ) {
+      return;
+    }
+
+    var primaryLabel = startBtn.querySelector("[data-i18n]");
+    if (!primaryLabel) {
+      return;
+    }
+
+    var modal = getElement("gameModal");
+    var toolButtons = panel.querySelectorAll(".elements-tool");
+    var sim = createElementsSim({
+      cols: elementsCols,
+      rows: elementsRows,
+      seed: 20260915,
+    });
+    var EMPTY = sim.empty;
+    var STONE = sim.stone;
+    var FIRE = sim.fire;
+    var ids = sim.ids;
+    var elementOrder = ["empty", "stone", "sand", "water", "plant", "fire"];
+    var elementLabelKeys = {
+      empty: "elementsEmpty",
+      stone: "elementsStone",
+      sand: "elementsSand",
+      water: "elementsWater",
+      plant: "elementsPlant",
+      fire: "elementsFire",
+    };
+    /* Cell colours per theme, indexed by element id, plus the tint that marks
+     * the flood board's target zone. */
+    var darkPalette = {
+      cells: [
+        [9, 12, 20],
+        [96, 104, 126],
+        [214, 176, 106],
+        [58, 146, 226],
+        [86, 214, 126],
+        [255, 120, 40],
+      ],
+      zone: [26, 36, 58],
+    };
+    var lightPalette = {
+      cells: [
+        [244, 246, 250],
+        [128, 136, 154],
+        [212, 168, 92],
+        [56, 130, 212],
+        [46, 168, 96],
+        [230, 104, 36],
+      ],
+      zone: [219, 229, 243],
+    };
+
+    var challenge = elementsChallenges[0];
+    var allowed = challenge.tools;
+    var activeTool = challenge.defaultTool;
+    /* A board that has just been loaded is armed, not running: `runActive`
+     * only turns true once the player starts that run - with Start, or with
+     * the first paint that changes the grid - and it is the single definition
+     * of "the clock is on" for the HUD, the win check and the best time. An
+     * armed timed board freezes the world as well, so nothing can happen
+     * before the player starts (see `boardArmed` near the loop). */
+    var runActive = false;
+    var runFinished = false;
+    /* Whole milliseconds of simulated time: a float second counter rounds just
+     * short of the limit, which would leave the clock showing 0.0s while the
+     * run is still alive. Only ticks charged to a live run land here. */
+    var elapsedMs = 0;
+    var intervalId = null;
+    var tickCount = 0;
+    var cursorX = Math.floor(sim.cols / 2);
+    var cursorY = Math.floor(sim.rows / 2);
+    var painting = false;
+    var lastCell = null;
+    var lastLang = "";
+    var store = readProgress();
+    var cleared = store.cleared;
+    var bests = store.bests;
+    var canvasCtx = null;
+    var offCtx = null;
+    var offscreen = null;
+    var imageData = null;
+
+    function findChallenge(id) {
+      var found = elementsChallenges[0];
+      elementsChallenges.forEach(function (info) {
+        if (info.id === id) {
+          found = info;
+        }
+      });
+      return found;
+    }
+
+    function elapsedSeconds() {
+      return elapsedMs / 1000;
+    }
+
+    function clampBest(value) {
+      var parsed = parseFloat(value);
+      if (!isFinite(parsed) || parsed <= 0 || parsed > elementsMaxSeconds) {
+        return 0;
+      }
+      return parsed;
+    }
+
+    /* The stored progress. The shape is {v, cleared, bests}; anything
+     * foreign, truncated or hostile falls back to the defaults instead of
+     * throwing, and only known challenge ids are ever accepted. `stale` means
+     * the stored text is not in the current shape yet and is rewritten once. */
+    function readProgress() {
+      var blank = function (stale) {
+        return { cleared: {}, bests: {}, stale: stale };
+      };
+      var raw = null;
+      try {
+        raw = localStorage.getItem(elementsBestKey);
+      } catch (error) {
+        return blank(false);
+      }
+      if (raw === null || raw === undefined) {
+        return blank(false);
+      }
+
+      var text = String(raw).trim();
+      if (!text) {
+        return blank(true);
+      }
+
+      var parsed = null;
+      try {
+        parsed = JSON.parse(text);
+      } catch (error) {
+        return blank(true);
+      }
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        return blank(true);
+      }
+
+      var cleanCleared = {};
+      var sourceCleared = parsed.cleared;
+      if (sourceCleared && typeof sourceCleared === "object" && !Array.isArray(sourceCleared)) {
+        elementsChallenges.forEach(function (info) {
+          if (info.limit > 0 && sourceCleared[info.id] === true) {
+            cleanCleared[info.id] = true;
+          }
+        });
+      }
+
+      var cleanBests = {};
+      var sourceBests = parsed.bests;
+      if (sourceBests && typeof sourceBests === "object" && !Array.isArray(sourceBests)) {
+        elementsChallenges.forEach(function (info) {
+          if (info.limit <= 0) {
+            return;
+          }
+          var value = clampBest(sourceBests[info.id]);
+          if (value > 0) {
+            cleanBests[info.id] = value;
+          }
+        });
+      }
+
+      return {
+        cleared: cleanCleared,
+        bests: cleanBests,
+        stale: parsed.v !== elementsStoreVersion,
+      };
+    }
+
+    function writeProgress() {
+      try {
+        localStorage.setItem(
+          elementsBestKey,
+          JSON.stringify({
+            v: elementsStoreVersion,
+            cleared: cleared,
+            bests: bests,
+          }),
+        );
+      } catch (error) {
+        /* no-op: progress stays in memory for this page view */
+      }
+    }
+
+    function challengeBest(id) {
+      var value = bests[id];
+      return isFinite(value) && value > 0 ? value : 0;
+    }
+
+    /* --- rendering -------------------------------------------------- */
+
+    /* One ImageData at grid resolution, blitted through an offscreen canvas
+     * onto the 320x224 canvas the CSS scales up. Nothing per-cell touches the
+     * DOM, so a frame costs one putImageData and one drawImage. */
+    function setupCanvas() {
+      canvas.width = sim.cols * elementsScale;
+      canvas.height = sim.rows * elementsScale;
+      canvasCtx = canvas.getContext ? canvas.getContext("2d") : null;
+      if (!canvasCtx) {
+        return;
+      }
+      if ("imageSmoothingEnabled" in canvasCtx) {
+        canvasCtx.imageSmoothingEnabled = false;
+      }
+      offscreen = document.createElement("canvas");
+      offscreen.width = sim.cols;
+      offscreen.height = sim.rows;
+      offCtx = offscreen.getContext ? offscreen.getContext("2d") : null;
+      if (!offCtx || typeof offCtx.createImageData !== "function") {
+        offCtx = null;
+        return;
+      }
+      imageData = offCtx.createImageData(sim.cols, sim.rows);
+      if (!imageData || !imageData.data) {
+        imageData = null;
+      }
+    }
+
+    function render() {
+      if (!canvasCtx || !offCtx || !imageData) {
+        return;
+      }
+      var light =
+        document.documentElement.getAttribute("data-theme") === "light";
+      var palette = light ? lightPalette : darkPalette;
+      var board = sim.cells;
+      var flames = sim.life;
+      var target = sim.zone();
+      var data = imageData.data;
+      var cell = 0;
+      var x = 0;
+      var y = 0;
+      var colour = null;
+      var offset = 0;
+      var heat = 0;
+      var shade = 0;
+      for (cell = 0; cell < board.length; cell += 1) {
+        x = cell % sim.cols;
+        y = (cell - x) / sim.cols;
+        var value = board[cell];
+        colour = palette.cells[value] || palette.cells[EMPTY];
+        if (value === FIRE) {
+          heat = Math.max(0, Math.min(1, flames[cell] / sim.fireLife));
+          colour = [255, Math.round(110 + 110 * heat), Math.round(40 + 60 * heat)];
+        } else if (
+          value === EMPTY &&
+          target &&
+          x >= target.x0 &&
+          x <= target.x1 &&
+          y >= target.y0 &&
+          y <= target.y1
+        ) {
+          colour = palette.zone;
+        } else if (value === STONE) {
+          shade = ((x * 7 + y * 13) % 15) - 7;
+          colour = [colour[0] + shade, colour[1] + shade, colour[2] + shade];
+        }
+        offset = cell * 4;
+        data[offset] = colour[0];
+        data[offset + 1] = colour[1];
+        data[offset + 2] = colour[2];
+        data[offset + 3] = 255;
+      }
+      offCtx.putImageData(imageData, 0, 0);
+      canvasCtx.drawImage(offscreen, 0, 0, canvas.width, canvas.height);
+    }
+
+    function renderCursor() {
+      cursorEl.style.left = (cursorX / sim.cols) * 100 + "%";
+      cursorEl.style.top = (cursorY / sim.rows) * 100 + "%";
+      cursorEl.style.width = 100 / sim.cols + "%";
+      cursorEl.style.height = 100 / sim.rows + "%";
+    }
+
+    /* A concise description of what the grid holds right now, for the
+     * canvas's aria-describedby. */
+    function renderDescription() {
+      var parts = [];
+      elementOrder.forEach(function (name) {
+        if (name === "empty") {
+          return;
+        }
+        var found = sim.count(ids[name]);
+        if (found > 0) {
+          parts.push(found + " " + t(elementLabelKeys[name]));
+        }
+      });
+      descEl.textContent = t("elementsDescription", {
+        cols: String(sim.cols),
+        rows: String(sim.rows),
+        counts: parts.length ? parts.join(", ") : t("elementsCountNone"),
+      });
+    }
+
+    function buildChallengeOptions() {
+      var selected = challenge.id;
+      selectEl.innerHTML = "";
+      elementsChallenges.forEach(function (info) {
+        var option = document.createElement("option");
+        option.value = info.id;
+        option.textContent =
+          t(info.labelKey) + (cleared[info.id] ? " \u2713" : "");
+        if (info.id === selected) {
+          option.selected = true;
+        }
+        selectEl.appendChild(option);
+      });
+      selectEl.value = selected;
+    }
+
+    function renderTools() {
+      toolButtons.forEach(function (button) {
+        var name = button.getAttribute("data-element");
+        var offered = allowed.indexOf(name) !== -1;
+        button.disabled = !offered;
+        button.setAttribute(
+          "aria-pressed",
+          offered && name === activeTool ? "true" : "false",
+        );
+        button.classList.toggle("is-active", offered && name === activeTool);
+      });
+    }
+
+    function selectTool(name) {
+      if (allowed.indexOf(name) === -1) {
+        return false;
+      }
+      activeTool = name;
+      renderTools();
+      return true;
+    }
+
+    /* Everything that only moves when the board, the challenge or the
+     * language changes. */
+    function renderStatic() {
+      if (lastLang !== currentLang) {
+        lastLang = currentLang;
+        buildChallengeOptions();
+        goalEl.textContent = t(challenge.goalKey);
+      }
+      renderBest();
+      renderTools();
+      if (runFinished) {
+        primaryLabel.textContent = t("btnTryAgain");
+      } else if (challenge.limit > 0) {
+        primaryLabel.textContent = t("btnStart");
+      } else {
+        primaryLabel.textContent = t("btnNewGame");
+      }
+    }
+
+    function renderBest() {
+      var best = challengeBest(challenge.id);
+      bestEl.textContent = best
+        ? t("bestTime", { s: best.toFixed(1) })
+        : t("noBest");
+    }
+
+    function renderHud() {
+      if (challenge.limit > 0) {
+        timeLabel.textContent = t("hudLeft");
+        timeEl.textContent =
+          Math.max(0, challenge.limit - elapsedSeconds()).toFixed(1) + "s";
+      } else {
+        timeLabel.textContent = t("hudTime");
+        timeEl.textContent = elapsedSeconds().toFixed(1) + "s";
+      }
+      var state = sim.progress(challenge.id);
+      if (challenge.id === "extinguish") {
+        /* Fires are counted down, not filled up, so the HUD shows the count
+         * alone rather than a fraction that grows as the board burns. */
+        progressEl.textContent = String(state.value);
+      } else {
+        progressEl.textContent =
+          state.target > 0 ? state.value + "/" + state.target : "\u2014";
+      }
+    }
+
+    /* --- the loop --------------------------------------------------- */
+
+    function boardVisible() {
+      return !panel.hidden && !document.hidden && (!modal || !modal.hidden);
+    }
+
+    /* A timed board that has been selected, loaded or reset but not yet started
+     * is armed. Free play has no limit and is never armed, and neither is a run
+     * the player has already begun. */
+    function boardArmed() {
+      return challenge.limit > 0 && !runActive;
+    }
+
+    function startLoop() {
+      if (intervalId !== null || !boardVisible()) {
+        return;
+      }
+      intervalId = window.setInterval(tick, elementsTickMs);
+    }
+
+    function stopLoop() {
+      if (intervalId === null) {
+        return;
+      }
+      window.clearInterval(intervalId);
+      intervalId = null;
+    }
+
+    /* The sandbox keeps flowing while its panel is up; a finished challenge
+     * stays frozen until the player starts again or resets. An armed timed
+     * board keeps its loop up too, but every tick it produces advances nothing
+     * (see `tick`), so the sandbox is running without the world running away. */
+    function syncLoop() {
+      if (!boardVisible() || runFinished) {
+        stopLoop();
+        return;
+      }
+      startLoop();
+    }
+
+    function ensureLoop() {
+      if (runFinished) {
+        return;
+      }
+      startLoop();
+    }
+
+    /* Free play is already flowing when it is merely loaded, but a timed board
+     * is armed and frozen: both its world and its countdown start on the
+     * player's first paint that actually changes the grid, so reading the goal
+     * costs nothing and a recorded best only ever measures play. A paint the
+     * board refuses (a wall, an occupied cell, below the flood board's rim)
+     * moves nothing and so starts nothing either. Start remains an explicit go:
+     * it reloads the board and begins both at once. */
+    function beginRun(painted) {
+      if (runFinished) {
+        return;
+      }
+      if (painted > 0 && boardArmed()) {
+        runActive = true;
+        resultEl.textContent = t("elementsGo");
+        renderStatic();
+      }
+      startLoop();
+    }
+
+    /* One tick advances the world by a generation and the stopwatch by one
+     * tick - unless the board is armed, when it only redraws the frame. An
+     * armed timed board is frozen solid: the hedge cannot burn itself out, the
+     * plant cannot climb and the pool cannot level, so idling before the first
+     * paint cannot reach a goal, run the clock out or record a best time. Free
+     * play has no clock and is never armed, so it keeps evolving while it is
+     * merely on screen. */
+    function tick() {
+      var frozen = boardArmed();
+      if (!frozen) {
+        sim.step();
+        tickCount += 1;
+        /* Only free play and a live run get this far, so every generation
+         * produced is charged to a stopwatch that is actually running. */
+        elapsedMs += elementsTickMs;
+        if (runActive) {
+          if (sim.progress(challenge.id).done) {
+            completeRun();
+          } else if (challenge.limit > 0 && elapsedMs >= challenge.limit * 1000) {
+            expireRun();
+          }
+        }
+      }
+      /* An armed board still redraws, so a theme switch is picked up without
+       * the grid having to move. */
+      render();
+      renderHud();
+      if (!frozen && tickCount % 8 === 0) {
+        renderDescription();
+      }
+    }
+
+    /* --- run lifecycle ---------------------------------------------- */
+
+    function loadBoard() {
+      sim.loadPreset(challenge.id);
+      elapsedMs = 0;
+      tickCount = 0;
+      cursorX = Math.floor(sim.cols / 2);
+      cursorY = Math.floor(sim.rows / 2);
+      goalEl.textContent = t(challenge.goalKey);
+      renderCursor();
+      render();
+      renderHud();
+      renderDescription();
+    }
+
+    function completeRun() {
+      if (!runActive) {
+        return;
+      }
+      var seconds = elapsedSeconds();
+      runActive = false;
+      runFinished = true;
+      stopLoop();
+
+      var best = challengeBest(challenge.id);
+      var isBest = seconds > 0 && (best === 0 || seconds < best);
+      var changed = false;
+      if (isBest) {
+        bests[challenge.id] = seconds;
+        changed = true;
+      }
+      if (!cleared[challenge.id]) {
+        cleared[challenge.id] = true;
+        changed = true;
+      }
+      if (changed) {
+        writeProgress();
+        /* The picker marks cleared challenges, so it has to be rebuilt as
+         * soon as one is finished. */
+        buildChallengeOptions();
+      }
+
+      resultEl.textContent =
+        t("elementsWin", { s: seconds.toFixed(1) }) +
+        (isBest ? " " + t("newBest") : "");
+      logAction(
+        t("elementsLog", {
+          name: t(challenge.labelKey),
+          s: seconds.toFixed(1),
+        }),
+      );
+      petNotifyGame(isBest);
+      if (isBest) {
+        var rect = canvas.getBoundingClientRect
+          ? canvas.getBoundingClientRect()
+          : null;
+        createConfetti(
+          rect ? rect.left + rect.width / 2 : 0,
+          rect ? rect.top + rect.height / 2 : 0,
+        );
+      }
+      renderStatic();
+      renderHud();
+      renderDescription();
+    }
+
+    function expireRun() {
+      if (!runActive) {
+        return;
+      }
+      runActive = false;
+      runFinished = true;
+      stopLoop();
+      resultEl.textContent = t("elementsTimeUp");
+      renderStatic();
+      renderHud();
+    }
+
+    /* Start / Try Again / New Game: the explicit go. The board is reloaded and
+     * a timed challenge's clock begins ticking at once - the player asked for
+     * the run, so unlike a board that was merely selected nothing is charged
+     * that they did not choose. */
+    function startRun() {
+      loadBoard();
+      runActive = challenge.limit > 0;
+      runFinished = false;
+      resultEl.textContent = runActive
+        ? t("elementsGo")
+        : t(challenge.goalKey);
+      renderStatic();
+      startLoop();
+      if (typeof canvas.focus === "function") {
+        canvas.focus();
+      }
+    }
+
+    /* Reset: reload the board and hand both the world and the clock back frozen
+     * at the opening position and the full limit, where they stay until the
+     * player paints again. */
+    function resetBoard() {
+      runActive = false;
+      runFinished = false;
+      loadBoard();
+      resultEl.textContent = t(challenge.goalKey);
+      renderStatic();
+      startLoop();
+      if (typeof canvas.focus === "function") {
+        canvas.focus();
+      }
+    }
+
+    /* --- input ------------------------------------------------------ */
+
+    function cellAt(clientX, clientY) {
+      var rect = canvas.getBoundingClientRect
+        ? canvas.getBoundingClientRect()
+        : null;
+      var left = rect && rect.left ? rect.left : 0;
+      var top = rect && rect.top ? rect.top : 0;
+      var width = rect && rect.width ? rect.width : canvas.width || 1;
+      var height = rect && rect.height ? rect.height : canvas.height || 1;
+      var gx = Math.floor(((clientX - left) / width) * sim.cols);
+      var gy = Math.floor(((clientY - top) / height) * sim.rows);
+      if (!isFinite(gx)) {
+        gx = 0;
+      }
+      if (!isFinite(gy)) {
+        gy = 0;
+      }
+      return {
+        x: Math.max(0, Math.min(sim.cols - 1, gx)),
+        y: Math.max(0, Math.min(sim.rows - 1, gy)),
+      };
+    }
+
+    function paintAt(x, y) {
+      return sim.paintBlob(x, y, ids[activeTool], elementsBrush);
+    }
+
+    /* A drag paints every cell between two pointer samples, so a fast swipe
+     * leaves a line instead of a dotted trail. It reports how many cells the
+     * whole line changed, which is what tells an armed board its run began. */
+    function paintLine(from, to) {
+      var dx = to.x - from.x;
+      var dy = to.y - from.y;
+      var steps = Math.max(Math.abs(dx), Math.abs(dy));
+      var step = 0;
+      var painted = 0;
+      if (steps === 0) {
+        return paintAt(to.x, to.y);
+      }
+      for (step = 0; step <= steps; step += 1) {
+        painted += paintAt(
+          Math.round(from.x + (dx * step) / steps),
+          Math.round(from.y + (dy * step) / steps),
+        );
+      }
+      return painted;
+    }
+
+    function renderPainted() {
+      render();
+      renderDescription();
+    }
+
+    canvas.addEventListener("pointerdown", function (event) {
+      if (event.button) {
+        return;
+      }
+      event.preventDefault();
+      painting = true;
+      lastCell = cellAt(event.clientX, event.clientY);
+      if (typeof canvas.setPointerCapture === "function" && event.pointerId !== undefined) {
+        canvas.setPointerCapture(event.pointerId);
+      }
+      var painted = paintAt(lastCell.x, lastCell.y);
+      beginRun(painted);
+      renderPainted();
+    });
+
+    canvas.addEventListener("pointermove", function (event) {
+      if (!painting) {
+        return;
+      }
+      event.preventDefault();
+      var cell = cellAt(event.clientX, event.clientY);
+      var painted = paintLine(lastCell || cell, cell);
+      lastCell = cell;
+      beginRun(painted);
+      renderPainted();
+    });
+
+    ["pointerup", "pointercancel", "pointerleave"].forEach(function (type) {
+      canvas.addEventListener(type, function () {
+        painting = false;
+        lastCell = null;
+      });
+    });
+
+    canvas.addEventListener("keydown", function (event) {
+      var key = event.key;
+      if (
+        key === "ArrowLeft" ||
+        key === "ArrowRight" ||
+        key === "ArrowUp" ||
+        key === "ArrowDown"
+      ) {
+        event.preventDefault();
+        if (key === "ArrowLeft") {
+          cursorX = Math.max(0, cursorX - 1);
+        } else if (key === "ArrowRight") {
+          cursorX = Math.min(sim.cols - 1, cursorX + 1);
+        } else if (key === "ArrowUp") {
+          cursorY = Math.max(0, cursorY - 1);
+        } else {
+          cursorY = Math.min(sim.rows - 1, cursorY + 1);
+        }
+        renderCursor();
+        return;
+      }
+      if (key === " " || key === "Spacebar" || key === "Enter") {
+        event.preventDefault();
+        beginRun(sim.paintBlob(cursorX, cursorY, ids[activeTool], elementsCursorBrush));
+        renderPainted();
+        return;
+      }
+      var digit = parseInt(key, 10);
+      if (!isNaN(digit) && digit >= 1 && digit <= elementOrder.length) {
+        event.preventDefault();
+        selectTool(elementOrder[digit - 1]);
+      }
+    });
+
+    /* The cursor square is the keyboard player's pointer, so it is only on
+     * screen while the grid itself has focus. */
+    canvas.addEventListener("focus", function () {
+      cursorEl.hidden = false;
+    });
+    canvas.addEventListener("blur", function () {
+      cursorEl.hidden = true;
+    });
+
+    toolButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        selectTool(button.getAttribute("data-element"));
+        ensureLoop();
+      });
+    });
+
+    selectEl.addEventListener("change", function () {
+      var next = findChallenge(selectEl.value);
+      if (next.id === challenge.id) {
+        return;
+      }
+      challenge = next;
+      allowed = challenge.tools;
+      /* A freshly picked board is only armed: it shows its goal and its full
+       * limit, and neither the world nor the countdown moves until the player's
+       * first paint. */
+      runActive = false;
+      runFinished = false;
+      if (allowed.indexOf(activeTool) === -1) {
+        selectTool(challenge.defaultTool);
+      }
+      loadBoard();
+      resultEl.textContent = t(challenge.goalKey);
+      renderStatic();
+      startLoop();
+    });
+
+    startBtn.addEventListener("click", startRun);
+    resetBtn.addEventListener("click", resetBoard);
+
+    function handleVisibility() {
+      if (document.hidden) {
+        stopLoop();
+        return;
+      }
+      syncLoop();
+    }
+
+    document.addEventListener("visibilitychange", handleVisibility);
+
+    /* Leaving the tab (or closing the drawer) abandons the run: the clock goes
+     * back to frozen at its full limit and the board to its goal (an armed
+     * timed board is frozen anyway), so a run picked up again only starts both
+     * on the next paint. */
+    quietResetElements = function () {
+      if (runActive || runFinished || intervalId !== null) {
+        runActive = false;
+        runFinished = false;
+        elapsedMs = 0;
+        resultEl.textContent = t(challenge.goalKey);
+        renderStatic();
+        renderHud();
+      }
+      syncLoop();
+    };
+
+    setupCanvas();
+    buildChallengeOptions();
+    loadBoard();
+    renderStatic();
+    cursorEl.hidden = true;
+    if (store.stale) {
+      writeProgress();
+    }
   }
 
   function initG2048() {
@@ -5426,6 +7430,21 @@
   var petSimonStepMs = 620;
   var petToastMs = 4200;
 
+  /* Care & Return tuning. */
+  var petCareNeedOrder = ["hunger", "happiness"];
+  var petCareGraceMs = 15 * 60 * 1000;
+  var petCareHungerMax = 85;
+  var petCareHappinessMin = 10;
+  var petAwayThresholdMs = 30 * 60 * 1000;
+  var petAwayRewardMax = 5;
+  var petRepairCost = 3;
+  var petExclusiveStreak = 7;
+  var petExclusiveAccessory = "medal";
+  var petEmoteEveryMs = 3 * 60 * 1000;
+  var petEmoteHideMs = 5200;
+  /* Treats granted for reaching streak day 1..7 (index 0 is day 1). */
+  var petStreakRewards = [2, 3, 4, 5, 6, 8, 12];
+
   /* Cumulative XP required to *reach* each level; index 0 is level 1. */
   var petLevelXpTable = [0, 20, 50, 90, 140, 200, 280, 380, 500, 650];
   var petMaxLevel = petLevelXpTable.length;
@@ -5439,7 +7458,7 @@
     sing: "pet-trick-sing",
     wave: "pet-trick-wave",
   };
-  var petAccessoryOrder = ["none", "hat", "scarf", "glasses", "crown", "aura"];
+  var petAccessoryOrder = ["none", "hat", "scarf", "glasses", "crown", "aura", "medal"];
   var petAccessoryLevel = {
     none: 1,
     hat: 2,
@@ -5447,6 +7466,7 @@
     glasses: 6,
     crown: 8,
     aura: 10,
+    medal: 1,
   };
   var petAccessoryClass = {
     none: "pet-acc-none",
@@ -5455,7 +7475,10 @@
     glasses: "pet-acc-glasses",
     crown: "pet-acc-crown",
     aura: "pet-acc-aura",
+    medal: "pet-acc-medal",
   };
+  /* Accessories that are not level-gated but earned another way. */
+  var petExclusiveAccessories = { medal: "week7" };
   var petHueOrder = ["default", "mint", "rose", "gold"];
   var petHueLevel = { default: 1, mint: 3, rose: 5, gold: 7 };
   var petCornerOrder = ["br", "bl", "tr", "tl"];
@@ -5523,6 +7546,8 @@
   var petAudio = null;
   var petDrag = null;
   var petListenersBound = false;
+  var petEmoteHideTimer = null;
+  var petEmoteAt = 0;
 
   function petClamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
@@ -5605,6 +7630,47 @@
   }
 
   /*
+   * Attention episodes survive reloads: each entry is an absolute grace window
+   * (`since` / `deadline` in real ms) plus a `logged` latch so one episode can
+   * only ever record a single care mistake.
+   */
+  function petNormalizeEpisodes(raw) {
+    var out = {};
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+      return out;
+    }
+    petCareNeedOrder.forEach(function (need) {
+      var entry = raw[need];
+      if (!entry || typeof entry !== "object" || Array.isArray(entry)) {
+        return;
+      }
+      var since = petToNumber(entry.since, 0);
+      var deadline = petToNumber(entry.deadline, 0);
+      if (since <= 0 || deadline <= 0) {
+        return;
+      }
+      out[need] = {
+        since: Math.floor(since),
+        deadline: Math.floor(deadline),
+        logged: entry.logged === true,
+      };
+    });
+    return out;
+  }
+
+  function petNormalizeUnlocks(raw) {
+    var out = {};
+    if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+      return out;
+    }
+    var stamp = petToNumber(raw.week7, 0);
+    if (stamp > 0) {
+      out.week7 = Math.floor(stamp);
+    }
+    return out;
+  }
+
+  /*
    * Defensive migration: this runs against every save, including the older
    * schema (no treats / tricks / achievements / streak / accessory). Every
    * field gets a sane default and out-of-range values are clamped, so a
@@ -5669,6 +7735,10 @@
       sound: raw.sound === true,
       lastSeen: petToNumber(raw.lastSeen, Date.now()),
       hidden: raw.hidden === true,
+      careMistakes: Math.max(0, Math.floor(petToNumber(raw.careMistakes, 0))),
+      careEpisodes: petNormalizeEpisodes(raw.careEpisodes),
+      streakUnlocks: petNormalizeUnlocks(raw.streakUnlocks),
+      repairStreak: Math.max(0, Math.floor(petToNumber(raw.repairStreak, 0))),
     };
   }
 
@@ -5753,7 +7823,14 @@
     return petStageOrder.indexOf(stage === undefined ? petStageValue() : stage);
   }
 
+  function petExclusiveUnlocked(id) {
+    return !!(petState && petState.streakUnlocks && petState.streakUnlocks[id]);
+  }
+
   function petAccessoryUnlocked(accessory, level) {
+    if (petExclusiveAccessories[accessory]) {
+      return petExclusiveUnlocked(petExclusiveAccessories[accessory]);
+    }
     var value = level === undefined ? petLevelValue() : level;
     return value >= (petAccessoryLevel[accessory] || 1);
   }
@@ -5811,6 +7888,88 @@
     return "night";
   }
 
+  function petSeason(now) {
+    var month = 0;
+    try {
+      month = new Date(now === undefined ? Date.now() : now).getMonth();
+    } catch (error) {
+      month = 0;
+    }
+    if (month === 11 || month <= 1) {
+      return "winter";
+    }
+    if (month <= 4) {
+      return "spring";
+    }
+    if (month <= 7) {
+      return "summer";
+    }
+    return "autumn";
+  }
+
+  function petSeasonKey(season) {
+    return "petSeason" + season.charAt(0).toUpperCase() + season.slice(1);
+  }
+
+  /* Purely local date math: no network, no server, no other players. */
+  function petDateKey(now) {
+    var date = null;
+    try {
+      date = new Date(now === undefined ? Date.now() : now);
+    } catch (error) {
+      return "";
+    }
+    if (date.getMonth() === 0 && date.getDate() === 1) {
+      return "petDateNewYear";
+    }
+    if (date.getMonth() === 11 && date.getDate() === 25) {
+      return "petDateHoliday";
+    }
+    if (date.getDate() === 1) {
+      return "petDateNewMonth";
+    }
+    return "";
+  }
+
+  /* Evocative words the bars cannot say. */
+  function petHungerWordKey() {
+    if (!petState) {
+      return "petWordFine";
+    }
+    if (petState.hunger >= 85) {
+      return "petWordFamished";
+    }
+    if (petState.hunger >= 65) {
+      return "petWordHungry";
+    }
+    if (petState.hunger >= 35) {
+      return "petWordFine";
+    }
+    if (petState.hunger >= 15) {
+      return "petWordFull";
+    }
+    return "petWordBloated";
+  }
+
+  function petMoodWordKey() {
+    if (!petState) {
+      return "petWordContent";
+    }
+    if (petState.happiness >= 85) {
+      return "petWordDelighted";
+    }
+    if (petState.happiness >= 60) {
+      return "petWordContent";
+    }
+    if (petState.happiness >= 35) {
+      return "petWordOkay";
+    }
+    if (petState.happiness >= 15) {
+      return "petWordGlum";
+    }
+    return "petWordMiserable";
+  }
+
   function petTalkLine() {
     if (!petState) {
       return "";
@@ -5821,10 +7980,15 @@
     var time = petTimeOfDay();
     var moodKey = "petTalk" + mood.charAt(0).toUpperCase() + mood.slice(1);
     var timeKey = "petTalk" + time.charAt(0).toUpperCase() + time.slice(1);
+    var seasonKey = petSeasonKey(petSeason());
+    var dateKey = petDateKey();
+    var prefix = dateKey ? t(dateKey) + " " : "";
     if (time === "night" && mood !== "sleepy") {
-      return t(timeKey) + " " + t(pageKey);
+      return prefix + t(timeKey) + " " + t(seasonKey) + " " + t(pageKey);
     }
-    return t(moodKey) + " " + t(timeKey) + " " + t(pageKey);
+    return (
+      prefix + t(moodKey) + " " + t(timeKey) + " " + t(seasonKey) + " " + t(pageKey)
+    );
   }
 
   function petApplyDecay(now) {
@@ -5860,6 +8024,149 @@
       return t("petAwayHours", { n: Math.round(hours) });
     }
     return t("petAwayMinutes", { n: Math.max(1, Math.round(hours * 60)) });
+  }
+
+  /* --- attention / grace window (Care & Return) -------------------- */
+
+  function petCareNeedCritical(need) {
+    if (!petState) {
+      return false;
+    }
+    if (need === "hunger") {
+      return petState.hunger >= petCareHungerMax;
+    }
+    return petState.happiness <= petCareHappinessMin;
+  }
+
+  function petAttentionNeeds() {
+    var out = [];
+    petCareNeedOrder.forEach(function (need) {
+      if (petCareNeedCritical(need)) {
+        out.push(need);
+      }
+    });
+    return out;
+  }
+
+  /*
+   * Runs after decay, on every tick and on load. Returns the needs that just
+   * logged a mistake (at most once per episode) plus the needs that recovered,
+   * so a satisfied need clears its episode and can arm again later.
+   */
+  function petEvaluateAttention(now) {
+    var result = { logged: [], recovered: [], started: false };
+    if (!petState) {
+      return result;
+    }
+    if (!petState.careEpisodes || typeof petState.careEpisodes !== "object") {
+      petState.careEpisodes = {};
+    }
+    petCareNeedOrder.forEach(function (need) {
+      var critical = petCareNeedCritical(need);
+      var episode = petState.careEpisodes[need];
+      if (!critical) {
+        if (episode) {
+          delete petState.careEpisodes[need];
+          result.recovered.push(need);
+        }
+        return;
+      }
+      if (!episode) {
+        petState.careEpisodes[need] = {
+          since: now,
+          deadline: now + petCareGraceMs,
+          logged: false,
+        };
+        result.started = true;
+        return;
+      }
+      if (!episode.logged && now >= episode.deadline) {
+        episode.logged = true;
+        petState.careMistakes =
+          Math.max(0, Math.floor(petToNumber(petState.careMistakes, 0))) + 1;
+        result.logged.push(need);
+      }
+    });
+    return result;
+  }
+
+  function petAttentionChanged(result) {
+    return !!(
+      result &&
+      (result.logged.length || result.recovered.length || result.started)
+    );
+  }
+
+  function petAttentionStatusText() {
+    var needs = petAttentionNeeds();
+    if (!needs.length || !petState) {
+      return "";
+    }
+    return needs.indexOf("hunger") !== -1
+      ? t("petStatusAttentionHunger", { name: petState.name })
+      : t("petStatusAttentionHappiness", { name: petState.name });
+  }
+
+  /* --- welcome back (a purely local catch-up, no server involved) --- */
+
+  function petWelcomeBack(awayMs) {
+    if (!petState || !isFinite(awayMs) || awayMs < petAwayThresholdMs) {
+      return null;
+    }
+    var hours = Math.min(awayMs, petDecayCapMs) / 3600000;
+    var treats = petClamp(Math.round(hours), 1, petAwayRewardMax);
+    var mood = petMood();
+    var key = "petWelcomeBackShort";
+    if (mood === "hungry") {
+      key = "petWelcomeBackHungry";
+    } else if (mood === "sleepy") {
+      key = "petWelcomeBackSleepy";
+    } else if (awayMs >= 6 * 3600000) {
+      key = "petWelcomeBackLong";
+    } else if (awayMs >= 2 * 3600000) {
+      key = "petWelcomeBackMedium";
+    }
+    return {
+      treats: treats,
+      text: t(key, {
+        name: petState.name,
+        n: petFormatAway(hours),
+        treats: treats,
+      }),
+    };
+  }
+
+  /* --- streak escalation, exclusive unlock, repair ----------------- */
+
+  function petStreakReward(streak) {
+    var index =
+      petClamp(Math.floor(petToNumber(streak, 1)), 1, petStreakRewards.length) - 1;
+    return petStreakRewards[index];
+  }
+
+  function petGrantExclusive() {
+    if (!petState) {
+      return false;
+    }
+    if (!petState.streakUnlocks || typeof petState.streakUnlocks !== "object") {
+      petState.streakUnlocks = {};
+    }
+    if (petState.streakUnlocks.week7) {
+      return false;
+    }
+    petState.streakUnlocks.week7 = Date.now();
+    /* Actually applied: the exclusive medal goes on at once and is persisted. */
+    petState.accessory = petExclusiveAccessory;
+    return true;
+  }
+
+  function petApplyVisitReward() {
+    var granted = petAddTreats(petStreakReward(petState.streak));
+    var unlock = false;
+    if (petState.streak >= petExclusiveStreak) {
+      unlock = petGrantExclusive();
+    }
+    return { treats: granted, unlock: unlock };
   }
 
   function petTrackTimeout(callback, delay) {
@@ -5903,6 +8210,7 @@
       window.clearTimeout(petToastTimer);
       petToastTimer = null;
     }
+    petEmoteHideTimer = null;
   }
 
   function petStartTimer() {
@@ -5931,9 +8239,20 @@
     var now = Date.now();
     var changed = petApplyDecay(now) > 0;
     changed = petRefreshIdleSleep(now) || changed;
+    var attention = petEvaluateAttention(now);
+    changed = petAttentionChanged(attention) || changed;
+    petEmoteBeat(now);
     if (changed) {
       petWriteState();
       petRender();
+    }
+    if (attention.logged.length) {
+      petBlip("bad");
+      petSetStatus(t("petCareMistakeLogged", { name: petState.name }));
+      return;
+    }
+    if (attention.recovered.length && !petStatusText && !petAsleep) {
+      petSetStatus(t("petCareRecovered", { name: petState.name }));
     }
   }
 
@@ -5958,6 +8277,7 @@
     if (document.hidden) {
       petStopTimer();
       petMiniStop();
+      petStopEmote();
       if (petState) {
         petApplyDecay(Date.now());
         petWriteState();
@@ -5965,7 +8285,10 @@
       return;
     }
     if (petState) {
+      petEmoteAt = Date.now();
       petApplyDecay(Date.now());
+      petEvaluateAttention(Date.now());
+      petWriteState();
       petRender();
     }
     petStartTimer();
@@ -5981,25 +8304,41 @@
 
   /* --- progression, visits, achievements --------------------------- */
 
-  function petTouchVisit() {
+  /*
+   * Resolves the daily visit. A missed day is offered a repair (when the streak
+   * is worth keeping and affordable) instead of silently resetting; the visit
+   * stays deferred until the player decides.
+   */
+  function petTouchVisit(now) {
     if (!petState) {
-      return 0;
+      return { treats: 0, unlock: false, deferred: false };
     }
-    var today = petLocalDay(Date.now());
+    var at = now === undefined ? Date.now() : now;
+    var today = petLocalDay(at);
+    if (petState.repairStreak > 0) {
+      return { treats: 0, unlock: false, deferred: true };
+    }
     if (!petState.lastDay) {
       petState.lastDay = today;
       petState.daysVisited = Math.max(1, petState.daysVisited);
       petState.streak = Math.max(1, petState.streak);
-      return 0;
+      return { treats: 0, unlock: false, deferred: false };
     }
     if (petState.lastDay === today) {
-      return 0;
+      return { treats: 0, unlock: false, deferred: false };
     }
-    var yesterday = petLocalDay(Date.now() - 86400000);
-    petState.streak = petState.lastDay === yesterday ? petState.streak + 1 : 1;
+    var yesterday = petLocalDay(at - 86400000);
+    var missed = petState.lastDay !== yesterday;
+    if (missed && petState.streak >= 2 && petState.treats >= petRepairCost) {
+      petState.repairStreak = petState.streak;
+      return { treats: 0, unlock: false, deferred: true };
+    }
+    petState.streak = missed ? 1 : petState.streak + 1;
     petState.daysVisited += 1;
     petState.lastDay = today;
-    return petAddTreats(2);
+    var result = petApplyVisitReward();
+    result.deferred = false;
+    return result;
   }
 
   function petAddTreats(amount) {
@@ -6147,6 +8486,75 @@
     petAsleep = true;
     petSpawnParticles("sleep");
     petRender();
+  }
+
+  /* --- idle emote bubble: tick-driven so it owns no permanent timer -- */
+
+  function petEmoteLine() {
+    if (!petState) {
+      return "";
+    }
+    var mood = petMood();
+    return t("petEmote" + mood.charAt(0).toUpperCase() + mood.slice(1));
+  }
+
+  function petHideEmote() {
+    if (!petEls || !petEls.emote) {
+      return;
+    }
+    petEls.emote.hidden = true;
+    petEls.emote.textContent = "";
+    petEls.emote.classList.remove("is-pop");
+  }
+
+  function petShowEmote() {
+    if (!petEls || !petEls.emote || !petState || petState.hidden) {
+      return false;
+    }
+    if (petEls.widget.hidden || petCollapsed || petAsleep || document.hidden) {
+      return false;
+    }
+    petEls.emote.textContent = petEmoteLine();
+    /* Reduced motion: text only, never an animated pop. */
+    petEls.emote.classList.toggle("is-pop", !isMotionOff());
+    petEls.emote.hidden = false;
+    if (petEmoteHideTimer !== null) {
+      window.clearTimeout(petEmoteHideTimer);
+      petUntrackTimeout(petEmoteHideTimer);
+    }
+    petEmoteHideTimer = petTrackTimeout(function () {
+      petEmoteHideTimer = null;
+      petHideEmote();
+    }, petEmoteHideMs);
+    return true;
+  }
+
+  /*
+   * Called from the existing decay tick, so the pet never owns a permanent
+   * timer: at most one bubble every petEmoteEveryMs, and a short tracked
+   * timeout only while a bubble is actually on screen.
+   */
+  function petEmoteBeat(now) {
+    if (!petState || petState.hidden || document.hidden) {
+      return false;
+    }
+    if (now - petEmoteAt < petEmoteEveryMs) {
+      return false;
+    }
+    if (!petShowEmote()) {
+      return false;
+    }
+    petEmoteAt = now;
+    return true;
+  }
+
+  function petStopEmote() {
+    if (petEmoteHideTimer !== null) {
+      window.clearTimeout(petEmoteHideTimer);
+      petUntrackTimeout(petEmoteHideTimer);
+      petEmoteHideTimer = null;
+    }
+    petHideEmote();
   }
 
   /* --- optional WebAudio blips (off by default, no external files) -- */
@@ -6601,6 +9009,11 @@
         petAppendAll(group, [
           petSvg("path", { d: "M34 18l6-10 5 7 5-10 5 10 5-7 6 10z" }),
         ]);
+      } else if (accessory === "medal") {
+        petAppendAll(group, [
+          petSvg("path", { d: "M40 54l10 12 10-12" }),
+          petSvg("circle", { cx: 50, cy: 76, r: 8 }),
+        ]);
       } else {
         petAppendAll(group, [
           petSvg("circle", { cx: 50, cy: 50, r: 40 }),
@@ -6855,6 +9268,13 @@
     combo.hidden = true;
     bodyPanel.appendChild(combo);
 
+    /* Visual counterpart of the attention status line (not announced twice). */
+    var attention = petCreate("span", "pet-attention");
+    attention.setAttribute("id", "petAttention");
+    attention.setAttribute("aria-hidden", "true");
+    attention.hidden = true;
+    bodyPanel.appendChild(attention);
+
     var stats = petCreate("div", "pet-stats");
     stats.setAttribute("role", "group");
     stats.setAttribute("aria-label", t("petStatsLabel"));
@@ -6902,6 +9322,27 @@
     treatsRow.appendChild(treatsValue);
     treatsRow.appendChild(treatsLabel);
     bodyPanel.appendChild(treatsRow);
+
+    /* streak-repair offer: only visible while a repair is pending */
+    var repair = petCreate("div", "pet-repair");
+    repair.setAttribute("id", "petRepair");
+    repair.setAttribute("role", "group");
+    repair.setAttribute("aria-label", t("petRepairTitle"));
+    repair.hidden = true;
+    var repairText = petCreate("p", "pet-repair-text");
+    repairText.setAttribute("id", "petRepairText");
+    repair.appendChild(repairText);
+    var repairActions = petCreate("div", "pet-repair-actions");
+    var repairBtn = petCreate("button", "pet-action is-primary");
+    repairBtn.type = "button";
+    repairBtn.setAttribute("id", "petRepairBtn");
+    var repairDecline = petCreate("button", "pet-action");
+    repairDecline.type = "button";
+    repairDecline.setAttribute("id", "petRepairDeclineBtn");
+    repairActions.appendChild(repairBtn);
+    repairActions.appendChild(repairDecline);
+    repair.appendChild(repairActions);
+    bodyPanel.appendChild(repair);
 
     var actions = petCreate("div", "pet-actions");
     actions.setAttribute("role", "group");
@@ -6969,6 +9410,9 @@
       ["petStatStreak", "petStatStreakValue"],
       ["petStatTricks", "petStatTricksValue"],
       ["petStatCombo", "petStatComboValue"],
+      ["petStatMoodWord", "petStatMoodValue"],
+      ["petStatHungerWord", "petStatHungerValue"],
+      ["petStatCareMistakes", "petStatCareMistakesValue"],
     ];
     var fieldValues = {};
     fieldDefs.forEach(function (definition) {
@@ -7060,6 +9504,14 @@
 
     panel.appendChild(bodyPanel);
     widget.appendChild(panel);
+
+    /* idle speech bubble: sits above the card, near the creature */
+    var emote = petCreate("p", "pet-emote");
+    emote.setAttribute("id", "petEmote");
+    emote.setAttribute("role", "status");
+    emote.setAttribute("aria-live", "polite");
+    emote.hidden = true;
+    widget.insertBefore(emote, widget.firstChild);
 
     var toast = petCreate("p", "pet-toast");
     toast.setAttribute("id", "petToast");
@@ -7187,6 +9639,12 @@
       restoreLabel: restoreLabel,
       head: head,
       combo: combo,
+      attention: attention,
+      emote: emote,
+      repair: repair,
+      repairText: repairText,
+      repairBtn: repairBtn,
+      repairDecline: repairDecline,
       treatsValue: treatsValue,
       treatsLabel: treatsLabel,
       treatsRow: treatsRow,
@@ -7220,6 +9678,9 @@
         petMiniStop();
         petSetView("main");
       }
+      if (petCollapsed) {
+        petStopEmote();
+      }
       petSyncVisibility();
     });
 
@@ -7241,6 +9702,8 @@
     petEls.actions.Rename.addEventListener("click", function () {
       petToggleRename(!petRenameOpen);
     });
+    petEls.repairBtn.addEventListener("click", petOnRepair);
+    petEls.repairDecline.addEventListener("click", petOnRepairDecline);
     petEls.actions.Species.addEventListener("click", petOnSwitchSpecies);
     petEls.actions.Sound.addEventListener("click", petOnToggleSound);
     petEls.actions.Reset.addEventListener("click", petOnResetClick);
@@ -7324,7 +9787,9 @@
     }
     var text = petStatusText;
     if (!text && petState) {
-      text = t(petMoodStatusKey(petMood()), { name: petState.name });
+      text = petAttentionStatusText() || t(petMoodStatusKey(petMood()), {
+        name: petState.name,
+      });
     }
     petEls.status.textContent = text || "";
     petEls.adoptStatus.textContent = petStatusText || "";
@@ -7391,6 +9856,17 @@
     petEls.widget.setAttribute("data-hue", petState.hue);
     petEls.widget.setAttribute("data-asleep", petAsleep ? "true" : "false");
     petEls.widget.setAttribute("data-night", petTimeOfDay() === "night" ? "true" : "false");
+    petEls.widget.setAttribute("data-season", petSeason());
+    var attention = petAttentionNeeds();
+    if (attention.length) {
+      petEls.widget.setAttribute("data-attention", attention.join(" "));
+    } else {
+      petEls.widget.removeAttribute("data-attention");
+    }
+    if (petEls.attention) {
+      petEls.attention.textContent = t("petAttentionLabel");
+      petEls.attention.hidden = attention.length === 0;
+    }
     petEls.treatsValue.textContent = String(petState.treats);
     petEls.treatsLabel.textContent = t("petTreatsLabel");
     petEls.treatsValue.setAttribute(
@@ -7399,6 +9875,7 @@
     );
     petRenderCombo();
     petRenderSubviewData();
+    petRenderRepair();
     petEls.button.setAttribute(
       "aria-label",
       t("petButtonAria", {
@@ -7409,6 +9886,23 @@
     petEls.button.setAttribute("title", t("petTapHint", { name: petState.name }));
     petEls.renameInput.setAttribute("aria-label", t("petNameLabel"));
     petRenderStatus();
+  }
+
+  function petRenderRepair() {
+    if (!petEls || !petEls.repair || !petState) {
+      return;
+    }
+    var pending = petState.repairStreak > 0;
+    petEls.repair.hidden = !pending;
+    if (!pending) {
+      return;
+    }
+    petEls.repairText.textContent = t("petRepairBody", {
+      n: petState.repairStreak,
+      cost: petRepairCost,
+    });
+    petEls.repairBtn.textContent = t("petBtnRepair", { cost: petRepairCost });
+    petEls.repairDecline.textContent = t("petBtnRepairDecline");
   }
 
   function petRenderSubviewData() {
@@ -7426,6 +9920,9 @@
     values.petStatStreakValue.textContent = String(petState.streak);
     values.petStatTricksValue.textContent = String(petState.tricks.length);
     values.petStatComboValue.textContent = String(petState.bestCombo);
+    values.petStatMoodValue.textContent = t(petMoodWordKey());
+    values.petStatHungerValue.textContent = t(petHungerWordKey());
+    values.petStatCareMistakesValue.textContent = String(petState.careMistakes);
     petEls.achCount.textContent = t("petAchievementsCount", {
       n: petUnlockedCount(),
       total: petAchievements.length,
@@ -7487,7 +9984,10 @@
         option.classList.add("is-selected");
       }
       var label = t(petAccessoryKey(accessory));
-      option.textContent = unlocked ? label : label + " " + t("petLockedAtLevel", { n: petAccessoryLevel[accessory] });
+      var lockedSuffix = petExclusiveAccessories[accessory]
+        ? t("petLockedExclusive")
+        : t("petLockedAtLevel", { n: petAccessoryLevel[accessory] });
+      option.textContent = unlocked ? label : label + " " + lockedSuffix;
       option.disabled = !unlocked;
       option.addEventListener("click", function () {
         petSelectAccessory(accessory);
@@ -7591,6 +10091,7 @@
     } else {
       petStopTimer();
       petClearTrackedTimeouts();
+      petStopEmote();
       if (petMini) {
         petMiniStop();
       }
@@ -7754,7 +10255,12 @@
     }
     petCooldownUntil = now + petCooldownMs;
     petTouchInteraction();
-    petState.happiness = petClamp(petState.happiness + 6, 0, 100);
+    /* Gentle two-resource tension: petting costs a little energy and the
+     * happiness it gives diminishes across a fast combo, so mashing is not
+     * strictly optimal - but the first few pets stay as generous as before. */
+    var gainHappiness = petCombo <= 2 ? 6 : Math.max(2, 6 - (petCombo - 2));
+    petState.happiness = petClamp(petState.happiness + gainHappiness, 0, 100);
+    petState.energy = petClamp(petState.energy - (petCombo >= 4 ? 2 : 1), 0, 100);
     var gain = petAddXp(2);
     var combo = petBumpCombo();
     petReact("happy");
@@ -7964,6 +10470,53 @@
     petState.hue = hue;
     var gain = petAddXp(0);
     petCommit({ gain: gain, status: t("petReactionHue", { name: petState.name }) });
+  }
+
+  /* --- streak repair (one tap, or let it reset) -------------------- */
+
+  function petOnRepair() {
+    if (!petState || petState.repairStreak <= 0) {
+      return;
+    }
+    if (petState.treats < petRepairCost) {
+      petSetStatus(t("petRepairPoor"));
+      petRenderRepair();
+      return;
+    }
+    petTouchInteraction();
+    petAddTreats(-petRepairCost);
+    petState.streak = petState.repairStreak + 1;
+    petState.repairStreak = 0;
+    petState.daysVisited += 1;
+    petState.lastDay = petLocalDay(Date.now());
+    var result = petApplyVisitReward();
+    var gain = petAddXp(2);
+    petCommit({
+      gain: gain,
+      status: result.unlock
+        ? t("petReactionUnlockMedal", { name: petState.name })
+        : t("petReactionStreakRepaired", {
+            n: petState.streak,
+            treats: result.treats,
+          }),
+    });
+  }
+
+  function petOnRepairDecline() {
+    if (!petState || petState.repairStreak <= 0) {
+      return;
+    }
+    petTouchInteraction();
+    petState.repairStreak = 0;
+    petState.streak = 1;
+    petState.daysVisited += 1;
+    petState.lastDay = petLocalDay(Date.now());
+    var result = petApplyVisitReward();
+    var gain = petAddXp(0);
+    petCommit({
+      gain: gain,
+      status: t("petReactionStreakReset", { treats: result.treats }),
+    });
   }
 
   /* --- mini-game: Treat Toss (timing) ------------------------------ */
@@ -8386,6 +10939,7 @@
     petMiniStop();
     petStopTimer();
     petClearTrackedTimeouts();
+    petStopEmote();
     petRemoveState();
     petEls.renameForm.hidden = true;
     petEls.adoptName.value = t("petDefaultName");
@@ -8451,6 +11005,10 @@
       sound: false,
       lastSeen: Date.now(),
       hidden: false,
+      careMistakes: 0,
+      careEpisodes: {},
+      streakUnlocks: {},
+      repairStreak: 0,
     };
     petSelectedSpecies = species;
     petAdoptionDismissed = false;
@@ -8458,6 +11016,7 @@
     petCombo = 0;
     petAsleep = false;
     petLastInteraction = Date.now();
+    petEmoteAt = Date.now();
     petRenderedSpecies = "";
     petBindAwareness();
     petApplyCorner();
@@ -8477,13 +11036,16 @@
     }
 
     var saved = petReadState();
+    var awayMs = 0;
     var awayHours = 0;
-    var dailyTreats = 0;
+    var visit = { treats: 0, unlock: false, deferred: false };
     if (saved) {
+      awayMs = Math.max(0, Date.now() - petToNumber(saved.lastSeen, Date.now()));
       petState = saved;
       petSelectedSpecies = saved.species;
       awayHours = petApplyDecay(Date.now());
-      dailyTreats = petTouchVisit();
+      visit = petTouchVisit(Date.now());
+      petEvaluateAttention(Date.now());
       petCheckAchievements();
       petWriteState();
     }
@@ -8493,21 +11055,37 @@
     petBindAwareness();
     petApplyCorner();
     petLastInteraction = Date.now();
+    petEmoteAt = Date.now();
 
     if (petState) {
+      var welcome = petWelcomeBack(awayMs);
+      if (welcome) {
+        petAddTreats(welcome.treats);
+        petCheckAchievements();
+        petWriteState();
+      }
       petRender();
       petSyncVisibility();
       petRefreshIdleSleep(Date.now());
-      if (dailyTreats > 0) {
+      if (visit.deferred) {
         petSetStatus(
-          t("petReactionTreat", { name: petState.name }),
+          t("petRepairBody", { n: petState.repairStreak, cost: petRepairCost }),
         );
+      } else if (visit.unlock) {
+        petSetStatus(t("petReactionUnlockMedal", { name: petState.name }));
+      } else if (visit.treats > 0) {
+        petSetStatus(
+          t("petReactionStreak", {
+            name: petState.name,
+            n: petState.streak,
+            treats: visit.treats,
+          }),
+        );
+      } else if (welcome) {
+        petSetStatus(welcome.text);
       } else if (awayHours >= 1 / 60) {
         petSetStatus(
-          t("petAway", {
-            name: petState.name,
-            n: petFormatAway(awayHours),
-          }),
+          t("petAway", { name: petState.name, n: petFormatAway(awayHours) }),
         );
       } else {
         petSetStatus(petTalkLine());
@@ -8535,6 +11113,7 @@
     initG2048();
     initReflexGame();
     initCaretDash();
+    initElements();
     initCounters();
     initUtilityActions();
     initUndo();

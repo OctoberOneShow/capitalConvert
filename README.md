@@ -9,7 +9,8 @@ A small web-based text toolkit (pure HTML/CSS/JS, no build step) for cleaning an
 - `assets/` – shared scripts and styles
 
 Each page also includes a shared mini-game drawer with Typing Sprint, Glyph Match,
-2048, Reflex Tap, and Caret Dash.
+2048, Reflex Tap, Caret Dash, and Elements (an elemental particle sandbox with
+free play plus three timed challenges).
 
 ## Usage
 
