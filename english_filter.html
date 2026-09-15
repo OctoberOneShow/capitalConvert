@@ -30,7 +30,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles.css?v=15">
+    <link rel="stylesheet" href="assets/styles.css?v=19">
 </head>
 <body>
     <div class="topbar" role="banner">
@@ -385,10 +385,21 @@
                 <div class="game-hud">
                     <div class="game-stat"><span id="elementsTimeLabel" data-i18n="hudTime">Time</span><strong id="elementsTime">0.0s</strong></div>
                     <div class="game-stat"><span data-i18n="hudGoal">Goal</span><strong id="elementsProgress">—</strong></div>
+                    <div class="game-stat"><span data-i18n="elementsBudgetLabel">Ink</span><strong id="elementsBudget">—</strong></div>
+                    <div class="game-stat"><span data-i18n="elementsStarsLabel">Stars</span><strong id="elementsStars">—</strong></div>
                 </div>
                 <div class="elements-row">
                     <label class="elements-label" for="elementsChallenge" data-i18n="elementsChallengeLabel">Challenge</label>
                     <select class="elements-select" id="elementsChallenge"></select>
+                </div>
+                <div class="elements-row">
+                    <label class="elements-label" for="elementsSpeed" data-i18n="elementsSpeedLabel">Speed</label>
+                    <select class="elements-select" id="elementsSpeed">
+                        <option value="0.5">0.5x</option>
+                        <option value="1" selected>1x</option>
+                        <option value="2">2x</option>
+                        <option value="4">4x</option>
+                    </select>
                 </div>
                 <div class="elements-tools" role="group" aria-label="Element palette" data-i18n-aria="elementsToolsLabel">
                     <button class="elements-tool" id="elementsToolEmpty" type="button" data-element="empty" aria-pressed="false" data-i18n="elementsEmpty">Erase</button>
@@ -397,14 +408,41 @@
                     <button class="elements-tool" id="elementsToolWater" type="button" data-element="water" aria-pressed="false" data-i18n="elementsWater">Water</button>
                     <button class="elements-tool" id="elementsToolPlant" type="button" data-element="plant" aria-pressed="false" data-i18n="elementsPlant">Plant</button>
                     <button class="elements-tool" id="elementsToolFire" type="button" data-element="fire" aria-pressed="false" data-i18n="elementsFire">Fire</button>
+                    <button class="elements-tool" id="elementsToolWood" type="button" data-element="wood" aria-pressed="false" data-i18n="elementsWood">Wood</button>
+                    <button class="elements-tool" id="elementsToolAsh" type="button" data-element="ash" aria-pressed="false" data-i18n="elementsAsh">Ash</button>
+                    <button class="elements-tool" id="elementsToolOil" type="button" data-element="oil" aria-pressed="false" data-i18n="elementsOil">Oil</button>
+                    <button class="elements-tool" id="elementsToolLava" type="button" data-element="lava" aria-pressed="false" data-i18n="elementsLava">Lava</button>
+                    <button class="elements-tool" id="elementsToolIce" type="button" data-element="ice" aria-pressed="false" data-i18n="elementsIce">Ice</button>
+                    <button class="elements-tool" id="elementsToolSteam" type="button" data-element="steam" aria-pressed="false" data-i18n="elementsSteam">Steam</button>
+                    <button class="elements-tool" id="elementsToolAcid" type="button" data-element="acid" aria-pressed="false" data-i18n="elementsAcid">Acid</button>
+                    <button class="elements-tool" id="elementsToolSeed" type="button" data-element="seed" aria-pressed="false" data-i18n="elementsSeed">Seed</button>
+                    <button class="elements-tool" id="elementsToolSmoke" type="button" data-element="smoke" aria-pressed="false" data-i18n="elementsSmoke">Smoke</button>
+                    <button class="elements-tool" id="elementsToolGlass" type="button" data-element="glass" aria-pressed="false" data-i18n="elementsGlass">Glass</button>
+                    <button class="elements-tool" id="elementsToolVoid" type="button" data-element="void" aria-pressed="false" data-i18n="elementsVoid">Void</button>
+                </div>
+                <p class="elements-legend" id="elementsLegend"></p>
+                <div class="elements-row">
+                    <span class="elements-label" id="elementsBrushLabel" data-i18n="elementsBrushLabel">Brush</span>
+                    <div class="elements-brushes" role="group" aria-labelledby="elementsBrushLabel">
+                        <button class="elements-brush" id="elementsBrush1" type="button" data-size="0" aria-pressed="false">1</button>
+                        <button class="elements-brush" id="elementsBrush2" type="button" data-size="1" aria-pressed="false">3</button>
+                        <button class="elements-brush is-active" id="elementsBrush3" type="button" data-size="2" aria-pressed="true">5</button>
+                        <button class="elements-brush" id="elementsBrush4" type="button" data-size="3" aria-pressed="false">7</button>
+                    </div>
                 </div>
                 <div class="elements-stage" id="elementsStage">
-                    <canvas class="elements-canvas" id="elementsCanvas" width="320" height="224" tabindex="0" role="application" aria-label="Element sandbox. Number keys 1 to 6 pick an element, the arrow keys move the cursor and Space places it." data-i18n-aria="elementsCanvasLabel" aria-describedby="elementsDescription"></canvas>
+                    <canvas class="elements-canvas" id="elementsCanvas" width="320" height="224" tabindex="0" role="application" aria-label="Element sandbox. Number keys 1 to 9 pick an element, the arrow keys move the cursor and Space places it." data-i18n-aria="elementsCanvasLabel" aria-describedby="elementsDescription"></canvas>
                     <span class="elements-cursor" id="elementsCursor" aria-hidden="true" hidden></span>
                 </div>
                 <p class="visually-hidden" id="elementsDescription"></p>
                 <p class="elements-goal" id="elementsGoal"></p>
                 <p class="game-result" id="elementsResult" role="status" data-i18n="elementsGoalFree">Free play: paint anything and watch it settle.</p>
+                <div class="elements-actions">
+                    <button class="ghost" id="elementsPauseBtn" type="button" aria-pressed="false"><span class="button-content"><span data-i18n="elementsPause">Pause</span></span></button>
+                    <button class="ghost" id="elementsStepBtn" type="button"><span class="button-content"><span data-i18n="elementsStep">Step</span></span></button>
+                    <button class="ghost" id="elementsPickBtn" type="button" aria-pressed="false"><span class="button-content"><span data-i18n="elementsPick">Pick</span></span></button>
+                    <button class="ghost" id="elementsUndoBtn" type="button" disabled><span class="button-content"><span data-i18n="elementsUndo">Undo</span></span></button>
+                </div>
                 <div class="game-actions">
                     <div class="elements-actions">
                         <button class="primary" id="elementsStartBtn" type="button">
@@ -419,11 +457,11 @@
                     </div>
                     <p class="game-best" id="elementsBest" data-i18n="noBest">No best yet</p>
                 </div>
-                <p class="game-hint" data-i18n="elementsHint">Drag on the grid to paint; Reset board restores the opening layout. Keyboard: 1-6 pick an element, the arrow keys move the cursor and Space places it.</p>
+                <p class="game-hint" data-i18n="elementsHint">Drag on the grid to paint; Reset board restores the opening layout. The palette offers every element the board allows, the brush size sets how much you paint at once, and Pause, Step, Pick and Undo work the board by hand. Keyboard: 1-9 pick an element, the arrow keys move the cursor and Space places it.</p>
             </div>
         </div>
     </div>
 
-    <script src="assets/app.js?v=15"></script>
+    <script src="assets/app.js?v=19"></script>
 </body>
 </html>

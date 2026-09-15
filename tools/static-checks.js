@@ -3,14 +3,14 @@
  * Static acceptance checks for the pet companion change.
  *
  *   1. the four pages still expose exactly 6 game tabs / 6 game panels
- *   2. both shared assets are requested with ?v=15 on all four pages
+ *   2. both shared assets are requested with ?v=19 on all four pages
  *   3. only the cache-busting string changed on the asset lines of each page
  *   4. the pet markup is NOT present in any HTML file (it is JS-injected)
  *   5. UTF-8 / CJK integrity (BOM, no U+FFFD, no latin1 mojibake, sample strings)
  *   5b. the Glyph Match level ladder (keys, defensive storage, JS-injected
  *      level cells)
- *   5c. Elements (pure simulation core, challenges, canvas rendering, keyboard
- *      path, cancellable loop, versioned storage)
+ *   5c. Elements (pure simulation core, elemental expansion, challenges, canvas
+ *      rendering, keyboard path, cancellable loop, versioned storage)
  *   6. pet CSS: stacking below the game modal, motion + theme variants, no
  *      external assets, balanced braces, and the viewport guard that makes the
  *      panel scroll internally instead of overflowing the top of the screen
@@ -35,6 +35,48 @@ const PAGES = [
   "chinese_punctuation.html",
   "words_replacing.html",
 ];
+
+/* The full element roster, in the order the palette, the module's label map and
+ * the number keys all use. Ids 0-5 keep the meaning they have always had, so
+ * everything the checks pinned before the expansion is still pinned. */
+const ELEMENTS_ROSTER = [
+  "empty",
+  "stone",
+  "sand",
+  "water",
+  "plant",
+  "fire",
+  "wood",
+  "ash",
+  "oil",
+  "lava",
+  "ice",
+  "steam",
+  "acid",
+  "seed",
+  "smoke",
+  "glass",
+  "void",
+];
+const ELEMENTS_KEYS = {
+  empty: "elementsEmpty",
+  stone: "elementsStone",
+  sand: "elementsSand",
+  water: "elementsWater",
+  plant: "elementsPlant",
+  fire: "elementsFire",
+  wood: "elementsWood",
+  ash: "elementsAsh",
+  oil: "elementsOil",
+  lava: "elementsLava",
+  ice: "elementsIce",
+  steam: "elementsSteam",
+  acid: "elementsAcid",
+  seed: "elementsSeed",
+  smoke: "elementsSmoke",
+  glass: "elementsGlass",
+  void: "elementsVoid",
+};
 
 let passed = 0;
 const failures = [];
@@ -83,16 +125,20 @@ PAGES.forEach((page) => {
   check(`${page}: exactly 6 game-tab`, tabs === 6, `found ${tabs}`);
   check(`${page}: exactly 6 game-panel`, panels === 6, `found ${panels}`);
   check(
-    `${page}: stylesheet requested as ?v=15`,
-    html.includes("assets/styles.css?v=15"),
+    `${page}: stylesheet requested as ?v=19`,
+    html.includes("assets/styles.css?v=19"),
   );
   check(
-    `${page}: script requested as ?v=15`,
-    html.includes("assets/app.js?v=15"),
+    `${page}: script requested as ?v=19`,
+    html.includes("assets/app.js?v=19"),
   );
   check(
-    `${page}: no stale ?v=14 / ?v=13 / ?v=12 / ?v=11 / ?v=10 / ?v=9 / ?v=8 / ?v=7 / ?v=6 / ?v=5 / ?v=4 left`,
-    !html.includes("?v=14") &&
+    `${page}: no stale ?v=18 / ?v=17 / ?v=16 / ?v=15 / ?v=14 / ?v=13 / ?v=12 / ?v=11 / ?v=10 / ?v=9 / ?v=8 / ?v=7 / ?v=6 / ?v=5 / ?v=4 left`,
+    !html.includes("?v=18") &&
+      !html.includes("?v=17") &&
+      !html.includes("?v=16") &&
+      !html.includes("?v=15") &&
+      !html.includes("?v=14") &&
       !html.includes("?v=13") &&
       !html.includes("?v=12") &&
       !html.includes("?v=11") &&
@@ -114,8 +160,8 @@ PAGES.forEach((page) => {
     `found ${assetLines.length}`,
   );
   check(
-    `${page}: both asset references are ?v=15`,
-    assetLines.every((line) => line.includes("?v=15")),
+    `${page}: both asset references are ?v=19`,
+    assetLines.every((line) => line.includes("?v=19")),
     assetLines.join(" | "),
   );
 
@@ -290,11 +336,53 @@ PAGES.forEach((page) => {
       /<p class="visually-hidden" id="elementsDescription"><\/p>/.test(html),
   );
   check(
-    `${page}: the palette is six real buttons with pressed states`,
-    countOccurrences(html, 'class="elements-tool"') === 6 &&
-      countOccurrences(html, 'aria-pressed="false"') >= 6 &&
+    `${page}: the palette is seventeen real buttons with pressed states`,
+    countOccurrences(html, 'class="elements-tool"') === 17 &&
+      countOccurrences(html, 'aria-pressed="false"') >= 17 &&
       html.includes('data-element="water"') &&
       html.includes('data-element="fire"'),
+  );
+  check(
+    `${page}: the expanded palette carries every new element`,
+    ELEMENTS_ROSTER.every((name) =>
+      html.includes('data-element="' + name + '"'),
+    ) &&
+      ELEMENTS_ROSTER.every((name) =>
+        html.includes('data-i18n="' + ELEMENTS_KEYS[name] + '"'),
+      ),
+  );
+  check(
+    `${page}: the hand controls are real, labelled buttons`,
+    /<button[^>]*id="elementsPauseBtn"[^>]*>/.test(html) &&
+      /<button[^>]*id="elementsStepBtn"[^>]*>/.test(html) &&
+      /<button[^>]*id="elementsPickBtn"[^>]*>/.test(html) &&
+      /<button[^>]*id="elementsUndoBtn"[^>]*>/.test(html) &&
+      html.includes('data-i18n="elementsPause"') &&
+      html.includes('data-i18n="elementsStep"') &&
+      html.includes('data-i18n="elementsPick"') &&
+      html.includes('data-i18n="elementsUndo"'),
+  );
+  check(
+    `${page}: the brush sizes are a labelled group of four`,
+    /<div class="elements-brushes"[^>]*role="group"/.test(html) &&
+      countOccurrences(html, 'class="elements-brush"') === 3 &&
+      countOccurrences(html, 'class="elements-brush is-active"') === 1 &&
+      html.includes('data-size="0"') &&
+      html.includes('data-size="3"'),
+  );
+  check(
+    `${page}: the speed control is a labelled select of four ticks`,
+    /<label[^>]*for="elementsSpeed"[^>]*data-i18n="elementsSpeedLabel"/.test(html) &&
+      /<select[^>]*id="elementsSpeed"/.test(html) &&
+      ['value="0.5"', 'value="1" selected', 'value="2"', 'value="4"'].every(
+        (option) => html.includes(option),
+      ),
+  );
+  check(
+    `${page}: the HUD carries the paint allowance and the legend line`,
+    /<strong id="elementsBudget">/.test(html) &&
+      /<p class="elements-legend" id="elementsLegend"><\/p>/.test(html) &&
+      html.includes('data-i18n="elementsBudgetLabel"'),
   );
   check(
     `${page}: the challenge picker is a labelled select`,
@@ -385,10 +473,10 @@ check(
 check(
   "the palette names the module maps are the ones the markup carries",
   PAGES.every((page) =>
-    ["empty", "stone", "sand", "water", "plant", "fire"].every((name) =>
+    ELEMENTS_ROSTER.every((name) =>
       read(page).includes('data-element="' + name + '"'),
     ),
-  ),
+  ) && ELEMENTS_ROSTER.length === 17,
 );
 
 check(
@@ -419,25 +507,85 @@ check(
   "the factory text is not runnable on its own",
 );
 check(
-  "the element set is empty, stone, sand, water, plant and fire",
+  "the element set is empty, stone, sand, water, plant and fire, plus the expansion ids",
   /var EMPTY = 0;/.test(elementsJs) &&
     /var STONE = 1;/.test(elementsJs) &&
     /var SAND = 2;/.test(elementsJs) &&
     /var WATER = 3;/.test(elementsJs) &&
     /var PLANT = 4;/.test(elementsJs) &&
-    /var FIRE = 5;/.test(elementsJs),
+    /var FIRE = 5;/.test(elementsJs) &&
+    /var WOOD = 6;/.test(elementsJs) &&
+    /var ASH = 7;/.test(elementsJs) &&
+    /var OIL = 8;/.test(elementsJs) &&
+    /var LAVA = 9;/.test(elementsJs) &&
+    /var ICE = 10;/.test(elementsJs) &&
+    /var STEAM = 11;/.test(elementsJs) &&
+    /var ACID = 12;/.test(elementsJs) &&
+    /var SEED = 13;/.test(elementsJs) &&
+    /var SMOKE = 14;/.test(elementsJs) &&
+    /var GLASS = 15;/.test(elementsJs) &&
+    /var VOID = 16;/.test(elementsJs),
 );
 check(
   "sand falls, sinks through water and piles diagonally",
   /function moveSand/.test(elementsJs) &&
-    /cells\[below\] === EMPTY \|\| cells\[below\] === WATER/.test(elementsJs) &&
+    /function movePowder\(cell, x, y, sink\)/.test(elementsJs) &&
+    /under === EMPTY \|\| \(sink && under === WATER\)/.test(elementsJs) &&
+    /return movePowder\(cell, x, y, true\)/.test(elementsJs) &&
     /function swap/.test(elementsJs),
 );
 check(
   "water falls and then spreads sideways so it levels out",
   /spread = 3/.test(elementsJs) &&
-    /function flowReach/.test(elementsJs) &&
-    /function moveWater/.test(elementsJs),
+    /function flowReach\(x, y, sign, reach\)/.test(elementsJs) &&
+    /function moveLiquid\(cell, x, y, opts\)/.test(elementsJs) &&
+    /function moveWater\(cell, x, y\)/.test(elementsJs) &&
+    /return moveLiquid\(cell, x, y\);/.test(elementsJs),
+);
+check(
+  "the expansion's powders, liquids and gases share those movers",
+  /movePowder\(cell, x, y, false\)/.test(elementsJs) &&
+    /oilMotion = \{ spread: oilSpread, float: true \}/.test(elementsJs) &&
+    /lavaMotion = \{ spread: lavaSpread, chance: lavaChance \}/.test(elementsJs) &&
+    /function moveGas\(cell, x, y\)/.test(elementsJs) &&
+    /settings\.float && y > 0 && cells\[cell - cols\] === WATER/.test(elementsJs),
+);
+check(
+  "steam and smoke carry their own countdowns and acid its uses",
+  /var steamLife = 120;/.test(elementsJs) &&
+    /var smokeLife = 90;/.test(elementsJs) &&
+    /var acidUses = 3;/.test(elementsJs) &&
+    /function initialLife\(value\)/.test(elementsJs) &&
+    /function gasStep\(cell, x, y, kind\)/.test(elementsJs) &&
+    /cells\[cell\] = kind === STEAM \? WATER : EMPTY;/.test(elementsJs),
+);
+check(
+  "every fuel and every soluble solid is named in exactly one place",
+  /function isFuel\(value\)/.test(elementsJs) &&
+    /value === PLANT \|\| value === WOOD \|\| value === OIL \|\| value === SEED/.test(
+      elementsJs,
+    ) &&
+    /function isSoluble\(value\)/.test(elementsJs) &&
+    /!isFuel\(cells\[cell\]\)/.test(elementsJs) &&
+    /!isSoluble\(cells\[index\(nx, ny\)\]\)/.test(elementsJs),
+);
+check(
+  "lava is heat: it glasses sand, melts ice and boils water into stone",
+  /function lavaReacts\(cell, x, y\)/.test(elementsJs) &&
+    /set\(x \+ dirX\[step\], y \+ dirY\[step\], STEAM\);/.test(elementsJs) &&
+    /set\(x, y, STONE\);/.test(elementsJs) &&
+    /near === SAND/.test(elementsJs) &&
+    /set\(nx, ny, GLASS\);/.test(elementsJs),
+);
+check(
+  "the board can pour for itself and hand the brush an allowance",
+  /function addSpawner\(x, y, value, every, remaining\)/.test(elementsJs) &&
+    /generation % spec\.every !== 0/.test(elementsJs) &&
+    /if \(ink > 0 && inkLeft <= 0\) \{\s*return false;/.test(elementsJs) &&
+    /function spendInk\(\)/.test(elementsJs) &&
+    /function remember\(\)/.test(elementsJs) &&
+    /function undo\(\)/.test(elementsJs) &&
+    /var undoLimit = 6;/.test(elementsJs),
 );
 check(
   "a plant grows one cell upward into water and consumes it",
@@ -471,24 +619,114 @@ check(
     /function hash\(\)/.test(elementsJs),
 );
 check(
-  "four challenges declare a goal, a limit and a palette each",
-  countOccurrences(appJs, 'labelKey: "elementsChallenge') === 4 &&
-    countOccurrences(appJs, "goalKey:") === 4 &&
-    countOccurrences(appJs, "tools: [") === 4 &&
+  "twelve boards declare a goal, a limit, a par, a budget and a palette",
+  countOccurrences(appJs, 'labelKey: "elementsChallenge') === 12 &&
+    countOccurrences(appJs, "goalKey:") === 12 &&
+    countOccurrences(appJs, "tools: [") === 12 &&
+    countOccurrences(appJs, "stars: [") === 12 &&
+    countOccurrences(appJs, "budget:") === 12 &&
     /limit: 60/.test(appJs) &&
-    /limit: 20/.test(appJs),
+    /limit: 20/.test(appJs) &&
+    /limit: 90/.test(appJs),
+);
+check(
+  "the campaign table is the design's eleven boards in teaching order",
+  (() => {
+    const table = appJs.slice(
+      appJs.indexOf("var elementsChallenges = ["),
+      appJs.indexOf("var elementsBasePalette"),
+    );
+    const order = [];
+    const re = /id: "([a-z]+)",/g;
+    let m;
+    while ((m = re.exec(table)) !== null) order.push(m[1]);
+    return (
+      order.join(",") ===
+      "free,grow,flood,extinguish,glass,quench,thaw,spill,etch,sprout,geyser,grove"
+    );
+  })(),
+);
+check(
+  "the goals are the design's five descriptor kinds",
+  /free: \{ kind: "none" \}/.test(elementsJs) &&
+    /grow: \{ kind: "growTop" \}/.test(elementsJs) &&
+    /sprout: \{ kind: "growTop" \}/.test(elementsJs) &&
+    /extinguish: \{ kind: "countZero", element: FIRE \}/.test(elementsJs) &&
+    /quench: \{ kind: "countZero", element: LAVA \}/.test(elementsJs) &&
+    /spill: \{ kind: "countZero", element: OIL \}/.test(elementsJs) &&
+    /glass: \{ kind: "countAtLeast", element: GLASS, need: 16 \}/.test(elementsJs) &&
+    /kind: "countZeroPlusMin"/.test(elementsJs) &&
+    /kind: "zoneFill"/.test(elementsJs) &&
+    /function progress\(id\) \{\s*var goal = boardGoals\[id\]/.test(elementsJs) &&
+    /goal.kind === "growTop"/.test(elementsJs) &&
+    /goal.kind === "countZero"/.test(elementsJs) &&
+    /goal.kind === "countAtLeast"/.test(elementsJs) &&
+    /goal.kind === "zoneFill"/.test(elementsJs) &&
+    /goal.kind === "countZeroPlusMin"/.test(elementsJs),
+);
+check(
+  "the eight campaign boards are builders inside the factory",
+  [
+    "buildGlass",
+    "buildQuench",
+    "buildThaw",
+    "buildSpill",
+    "buildEtch",
+    "buildSprout",
+    "buildGeyser",
+    "buildGrove",
+    "buildShowcase",
+  ].every((name) => elementsJs.indexOf("function " + name + "(") !== -1) &&
+    /function markZone\(x0, y0, x1, y1, frac\)/.test(elementsJs) &&
+    /id === "grove"\) \{\s*buildGrove\(\);/.test(elementsJs) &&
+    /buildFree\(\);\s*buildShowcase\(\);/.test(elementsJs),
+);
+check(
+  "the campaign unlocks in order and derives the palette from it",
+  /var elementsBasePalette = \["empty", "stone", "sand", "water", "plant", "fire"\]/.test(
+    appJs,
+  ) &&
+    /elementsUnlockByChallenge = \{/.test(appJs) &&
+    /glass: \["lava"\]/.test(appJs) &&
+    /sprout: \["wood", "seed", "ash"\]/.test(appJs) &&
+    /grove: \["void"\]/.test(appJs) &&
+    /var elementsFinalUnlock = "glass"/.test(appJs) &&
+    /function challengeUnlocked\(id\)/.test(appJs) &&
+    /return cleared\[elementsChallenges\[rung - 1\]\.id\] === true/.test(appJs) &&
+    /function boardTools\(info\)/.test(appJs) &&
+    /option\.disabled = !open/.test(appJs),
 );
 check(
   "free play is the one board with no clock and every tool",
-  /id: "free",[\s\S]{0,240}?limit: 0,[\s\S]{0,80}?"empty", "stone", "sand", "water", "plant", "fire"/.test(
-    appJs,
-  ),
+  (() => {
+    const table = appJs.slice(
+      appJs.indexOf("var elementsChallenges = ["),
+      appJs.indexOf("var typingPhrases"),
+    );
+    const free = /id: "free",([\s\S]*?)\n    \},/.exec(table);
+    return (
+      !!free &&
+      /limit: 0,/.test(free[1]) &&
+      /budget: 0,/.test(free[1]) &&
+      /* The six original elements still lead the list, so the number keys
+       * 1-6 still pick what they always did. */
+      /tools: \[\s*"empty",\s*"stone",\s*"sand",\s*"water",\s*"plant",\s*"fire",/.test(
+        table,
+      ) &&
+      ELEMENTS_ROSTER.every((name) => free[1].includes('"' + name + '"')) &&
+      countOccurrences(table, "limit: 0,") === 1
+    );
+  })(),
 );
 check(
-  "the three win conditions are the documented ones",
+  "the three original win conditions keep their exact numbers",
   /topPlant === 0/.test(elementsJs) &&
-    /done: fires === 0/.test(elementsJs) &&
-    /done: zoneTarget > 0 && wet >= zoneTarget/.test(elementsJs),
+    /target: rows,/.test(elementsJs) &&
+    /return \{ value: left, target: zeroTarget, done: left === 0 \};/.test(
+      elementsJs,
+    ) &&
+    /done: zoneTarget > 0 && wet >= zoneTarget/.test(elementsJs) &&
+    /zoneTarget = Math\.ceil\(\s*\(zone\.x1 - zone\.x0 \+ 1\)/.test(elementsJs),
 );
 check(
   "the grow board is a walled shaft with a seed and a pool",
@@ -504,18 +742,82 @@ check(
     /pitch = 6/.test(elementsJs),
 );
 check(
-  "the flood board marks a target zone and refuses paint below its rim",
+  "the flood board marks a target zone and pours only from above its rim",
   /function buildFlood/.test(elementsJs) &&
     /zone = \{ x0: left \+ 3/.test(elementsJs) &&
-    /aboveRow = rim;/.test(elementsJs) &&
-    /aboveRow >= 0 && y >= aboveRow/.test(elementsJs) &&
-    /zoneTarget = Math\.ceil\(/.test(elementsJs),
+    /zoneTarget = Math\.ceil\(/.test(elementsJs) &&
+    /addPourZone\(0, 0, cols - 1, rim - 1\);/.test(elementsJs),
 );
 check(
   "the brush never overwrites a solid cell and the eraser clears anything",
   /if \(cells\[cell\] !== EMPTY\) \{\s*return false;/.test(elementsJs) &&
     /if \(value === EMPTY\) \{/.test(elementsJs) &&
     /return set\(x, y, value\);/.test(elementsJs),
+);
+check(
+  "a board's pour zone is enforced in the simulation, not in a DOM handler",
+  /var pourZones = \[\];/.test(elementsJs) &&
+    /function addPourZone\(x0, y0, x1, y1\)/.test(elementsJs) &&
+    /function inPourZone\(x, y\)/.test(elementsJs) &&
+    /if \(!pourZones\.length\) \{\s*return true;/.test(elementsJs) &&
+    /* The test sits in `paint` ahead of the empty-cell branch, so the eraser
+     * is fenced in exactly like an element. */
+    /if \(!inPourZone\(x, y\)\) \{\s*return false;\s*\}\s*var cell = index\(x, y\);\s*if \(value === EMPTY\) \{/.test(
+      elementsJs,
+    ) &&
+    /pourZones: function \(\) \{/.test(elementsJs) &&
+    /clearBoard\(\)[\s\S]*?pourZones = \[\];/.test(elementsJs),
+);
+check(
+  "every timed board fences the brush in, and free play does not",
+  (() => {
+    const builders = elementsJs.slice(elementsJs.indexOf("function buildFree("));
+    const timed = [
+      "buildGrow",
+      "buildFlood",
+      "buildExtinguish",
+      "buildGlass",
+      "buildQuench",
+      "buildThaw",
+      "buildSpill",
+      "buildEtch",
+      "buildSprout",
+      "buildGeyser",
+      "buildGrove",
+    ];
+    const fenced = (name) => {
+      const start = builders.indexOf("function " + name + "(");
+      const next = builders.indexOf("function build", start + 1);
+      const body = builders.slice(start, next === -1 ? builders.length : next);
+      return /addPourZone\(/.test(body);
+    };
+    const freeStart = builders.indexOf("function buildFree(");
+    const freeEnd = builders.indexOf("function buildGrow(");
+    const free = builders.slice(freeStart, freeEnd);
+    const showcase = builders.slice(
+      builders.indexOf("function buildShowcase("),
+      builders.indexOf("function loadPreset("),
+    );
+    return (
+      /* Fifteen fenced regions across the eleven timed boards: one each for
+       * ten of them, nine for the serpentine hedge (the bands of air between
+       * its rows), three for the sprout shaft and two for the geyser's
+       * pockets. */
+      countOccurrences(builders, "addPourZone(") === 15 &&
+      timed.every(fenced) &&
+      !/addPourZone\(/.test(free) &&
+      !/addPourZone\(/.test(showcase)
+    );
+  })(),
+  String(countOccurrences(elementsJs, "addPourZone(")),
+);
+check(
+  "the pour zone is drawn as a theme-aware wash over the empty cells",
+  /pour: \[12, 44, 40\]/.test(appJs) &&
+    /pour: \[222, 242, 228\]/.test(appJs) &&
+    /var pours = sim\.pourZones\(\);/.test(appJs) &&
+    /value === EMPTY && pours\.length/.test(appJs) &&
+    /colour = palette\.pour;/.test(appJs),
 );
 check(
   "rendering is one grid-resolution ImageData, never per-cell DOM",
@@ -536,7 +838,10 @@ check(
 );
 check(
   "the loop is a tracked interval, never rAF, and is cleared on every exit",
-  /window\.setInterval\(tick, elementsTickMs\)/.test(appJs) &&
+  /window\.setInterval\(tick, tickMs\(\)\)/.test(appJs) &&
+    /function tickMs\(\)\s*\{\s*return Math\.max\(1, Math\.round\(elementsTickMs \/ speed\)\);/.test(
+      appJs,
+    ) &&
     /window\.clearInterval\(intervalId\)/.test(appJs) &&
     !/requestAnimationFrame/.test(elementsJs),
 );
@@ -553,19 +858,36 @@ check(
   /function boardArmed\(\)\s*\{\s*return challenge\.limit > 0 && !runActive;/.test(
     elementsJs,
   ) &&
-    /var frozen = boardArmed\(\);\s*if \(!frozen\) \{\s*sim\.step\(\);/.test(
+    /var frozen = boardArmed\(\);\s*if \(!frozen\) \{\s*advance\(\);/.test(
       elementsJs,
     ) &&
+    /function advance\(\)\s*\{\s*sim\.step\(\);/.test(elementsJs) &&
+    countOccurrences(elementsJs, "sim.step()") === 1 &&
     /if \(runActive\) \{\s*if \(sim\.progress\(challenge\.id\)\.done\) \{\s*completeRun\(\);/.test(
       elementsJs,
     ),
+);
+check(
+  "pause, step and speed all go through the one tracked interval",
+  /function setPaused\(next\)/.test(elementsJs) &&
+    /function stepOnce\(\)/.test(elementsJs) &&
+    /if \(boardArmed\(\)\) \{\s*runActive = true;\s*resultEl\.textContent = t\("elementsGo"\);/.test(
+      elementsJs,
+    ) &&
+    /intervalId !== null \|\| !boardVisible\(\) \|\| paused/.test(elementsJs) &&
+    countOccurrences(elementsJs, "window.setInterval") === 1 &&
+    countOccurrences(elementsJs, "window.clearInterval") === 1,
 );
 check(
   "the keyboard path picks tools, moves a cursor and places elements",
   /parseInt\(key, 10\)/.test(elementsJs) &&
     /key === "ArrowLeft"/.test(elementsJs) &&
     /key === "Enter"/.test(elementsJs) &&
-    /paintBlob\(cursorX, cursorY, ids\[activeTool\], elementsCursorBrush\)/.test(elementsJs),
+    /paintBlob\(\s*cursorX,\s*cursorY,\s*ids\[activeTool\],\s*elementsCursorBrush,?\s*\)/.test(
+      elementsJs,
+    ) &&
+    /var brushRadii = \[0, 1, 2, 3\];/.test(elementsJs) &&
+    /sim\.paintBlob\(x, y, ids\[activeTool\], brushRadius\(\)\)/.test(elementsJs),
 );
 check(
   "pointer painting maps through the canvas rect and interpolates a drag",
@@ -590,7 +912,7 @@ check(
 check(
   "the stored progress is versioned under its own key",
   /elementsBestKey = "elements-best"/.test(appJs) &&
-    /elementsStoreVersion = 1/.test(appJs) &&
+    /elementsStoreVersion = 2/.test(appJs) &&
     /elementsMaxSeconds = 3600/.test(appJs),
 );
 check(
@@ -623,7 +945,40 @@ check(
   "elementsWater",
   "elementsPlant",
   "elementsFire",
+  "elementsWood",
+  "elementsAsh",
+  "elementsOil",
+  "elementsLava",
+  "elementsIce",
+  "elementsSteam",
+  "elementsAcid",
+  "elementsSeed",
+  "elementsSmoke",
+  "elementsGlass",
+  "elementsVoid",
   "elementsReset",
+  "elementsSpeedLabel",
+  "elementsBrushLabel",
+  "elementsPause",
+  "elementsResume",
+  "elementsStep",
+  "elementsPick",
+  "elementsUndo",
+  "elementsBudgetLabel",
+  "elementsBudgetUnlimited",
+  "elementsLegend",
+  "elementsClassStatic",
+  "elementsClassPowder",
+  "elementsClassLiquid",
+  "elementsClassGas",
+  "elementsPicked",
+  "elementsPickHint",
+  "elementsPickBlocked",
+  "elementsPourHint",
+  "elementsUndone",
+  "elementsUndoEmpty",
+  "elementsPaused",
+  "elementsResumed",
   "elementsCanvasLabel",
   "elementsDescription",
   "elementsCountNone",

@@ -328,14 +328,42 @@
       "elementsChallengeGrow": "Grow",
       "elementsChallengeExtinguish": "Extinguish",
       "elementsChallengeFlood": "Flood",
+      "elementsChallengeGlass": "Glassworks",
+      "elementsChallengeQuench": "Quench",
+      "elementsChallengeThaw": "Thaw",
+      "elementsChallengeSpill": "Oil Spill",
+      "elementsChallengeEtch": "Etch",
+      "elementsChallengeSprout": "Sprout",
+      "elementsChallengeGeyser": "Geyser",
+      "elementsChallengeGrove": "Save the Grove",
       "elementsGoalFree":
-        "Free play: paint anything and watch it settle. Plants drink water, sand piles up and fire eats plants.",
+        "Free play: paint anything and watch it settle. Fire eats plants, wood and oil, water boils into steam on lava, sand melts into glass and acid eats stone.",
       "elementsGoalGrow":
         "Grow the seed to the top of the shaft. The plant drinks the water above it, so keep pouring more in.",
       "elementsGoalExtinguish":
         "Put out the creeping fire before it walks the whole hedge.",
       "elementsGoalFlood":
         "Drop water in above the rim and flood the marked basin.",
+      "elementsGoalGlass":
+        "Melt 16 cells of glass in the crucible. Sand only turns to glass where it touches lava, and the glass that forms seals the lava below it.",
+      "elementsGoalQuench":
+        "Quench the whole lava tray. Every drop of water eats one cell of lava and leaves stone, so the tray empties from the surface inwards.",
+      "elementsGoalThaw":
+        "Cut the ice dam and flood the marked valley. The meltwater puts out the flame that made it, so cut where the water can run away.",
+      "elementsGoalSpill":
+        "Burn every cell of oil off the water. The flames the basin douses leave gaps, and the oil above them sinks in.",
+      "elementsGoalEtch":
+        "Open the roofed basin and fill it. The stone roof turns the brush away, so the way in is acid: dropped on the slab it eats straight down, one hole at a time.",
+      "elementsGoalSprout":
+        "Open the shelf over the well, then grow the seed to the top. The well is one cell wide, so every drop you pour lands on the plant.",
+      "elementsGoalGeyser":
+        "Fill the flood gauge. There is not enough water in the flask: the geyser has to melt the ice ceiling into the rest.",
+      "elementsGoalGrove":
+        "Save the protected grove: put every flame out and leave at least 14 cells of timber standing in its eight columns.",
+      "elementsPourHint": "Pour inside the tinted area.",
+      "elementsStarsLabel": "Stars",
+      "elementsLocked": "\u2014 locked",
+      "elementsGroveProgress": "{kept}/{need} timber \u00b7 fire {fires}",
       "elementsToolsLabel": "Element palette",
       "elementsEmpty": "Erase",
       "elementsStone": "Stone",
@@ -343,9 +371,41 @@
       "elementsWater": "Water",
       "elementsPlant": "Plant",
       "elementsFire": "Fire",
+      "elementsWood": "Wood",
+      "elementsAsh": "Ash",
+      "elementsOil": "Oil",
+      "elementsLava": "Lava",
+      "elementsIce": "Ice",
+      "elementsSteam": "Steam",
+      "elementsAcid": "Acid",
+      "elementsSeed": "Seed",
+      "elementsSmoke": "Smoke",
+      "elementsGlass": "Glass",
+      "elementsVoid": "Void",
       "elementsReset": "Reset board",
+      "elementsSpeedLabel": "Speed",
+      "elementsBrushLabel": "Brush",
+      "elementsPause": "Pause",
+      "elementsResume": "Resume",
+      "elementsStep": "Step",
+      "elementsPick": "Pick",
+      "elementsUndo": "Undo",
+      "elementsBudgetLabel": "Ink",
+      "elementsBudgetUnlimited": "unlimited",
+      "elementsLegend": "{name} — {kind}",
+      "elementsClassStatic": "immobile",
+      "elementsClassPowder": "falls and piles",
+      "elementsClassLiquid": "falls and spreads",
+      "elementsClassGas": "rises and thins out",
+      "elementsPicked": "Picked {name}.",
+      "elementsPickHint": "Pick: click a cell on the grid to take its element.",
+      "elementsPickBlocked": "That element is not part of this board.",
+      "elementsUndone": "Undone.",
+      "elementsUndoEmpty": "Nothing to undo.",
+      "elementsPaused": "Paused.",
+      "elementsResumed": "Running again.",
       "elementsCanvasLabel":
-        "Element sandbox. Number keys 1 to 6 pick an element, the arrow keys move the cursor and Space places it.",
+        "Element sandbox. Number keys 1 to 9 pick an element, the arrow keys move the cursor and Space places it.",
       "elementsDescription":
         "A {cols} by {rows} element grid. On the board right now: {counts}.",
       "elementsCountNone": "nothing yet",
@@ -354,7 +414,7 @@
       "elementsTimeUp": "Out of time. Try Again restarts the clock.",
       "elementsLog": "Elements: {name} in {s}s",
       "elementsHint":
-        "Drag on the grid to paint; Reset board restores the opening layout. Keyboard: 1-6 pick an element, the arrow keys move the cursor and Space places it.",
+        "Drag on the grid to paint; Reset board restores the opening layout. The palette offers every element the board allows, the brush size sets how much you paint at once, and Pause, Step, Pick and Undo work the board by hand. Keyboard: 1-9 pick an element, the arrow keys move the cursor and Space places it.",
       "petTitle": "Companion",
       "petAdoptTitle": "Adopt a companion",
       "petAdoptBody":
@@ -877,6 +937,14 @@
       "elementsChallengeGrow": "生长",
       "elementsChallengeExtinguish": "灭火",
       "elementsChallengeFlood": "注水",
+      "elementsChallengeGlass": "熔沙成器",
+      "elementsChallengeQuench": "冷却成岩",
+      "elementsChallengeThaw": "融冰",
+      "elementsChallengeSpill": "浮油",
+      "elementsChallengeEtch": "酸蚀",
+      "elementsChallengeSprout": "灰烬花园",
+      "elementsChallengeGeyser": "蒸汽泉",
+      "elementsChallengeGrove": "护林",
       "elementsGoalFree":
         "自由沙盘：随意涂抹，观察元素沉降。植物会喝水，沙子会堆积，火焰会吞噬植物。",
       "elementsGoalGrow":
@@ -885,6 +953,26 @@
         "在火苗烧遍整条树篱之前把它扑灭。",
       "elementsGoalFlood":
         "从池沿上方注水，把标记的水池灌满。",
+      "elementsGoalGlass":
+        "在坩埚里熔出 16 格玻璃。沙子只有碰到岩浆才会变成玻璃，而生成的玻璃会把下面的岩浆封住。",
+      "elementsGoalQuench":
+        "把整槽岩浆冷却成岩石。每一格水都会吃掉一格岩浆并留下石块，所以岩浆只会从表面一层层消失。",
+      "elementsGoalThaw":
+        "凿开冰坝，灌满标记的谷地。融水会熄灭凿冰的火，所以要选一个水能流走的位置下刀。",
+      "elementsGoalSpill":
+        "把水面上每一格原油都烧掉。水面熄灭的火会留下缺口，上面的原油会沉进去。",
+      "elementsGoalEtch":
+        "打开封顶的水池并将其灌满。石顶会挡住笔刷，唯一的入口是酸液：滴在石板上就会一路向下钻，一洞一格。",
+      "elementsGoalSprout":
+        "烧开井口上的木架，再让种子长到顶端。井道只有一格宽，你倒下的每一滴水都会落在植物上。",
+      "elementsGoalGeyser":
+        "把水位表灌满。瓶里的水不够：得靠间歇泉把冰顶融成剩下的水。",
+      "elementsGoalGrove":
+        "保住受保护的小树林：把火焰全部扑灭，并让那八列里至少留下 14 格木材。",
+      "elementsPourHint": "只能在着色区域内倾倒。",
+      "elementsStarsLabel": "星级",
+      "elementsLocked": "— 未解锁",
+      "elementsGroveProgress": "{kept}/{need} 木材 · 火 {fires}",
       "elementsToolsLabel": "元素工具",
       "elementsEmpty": "擦除",
       "elementsStone": "石块",
@@ -892,9 +980,41 @@
       "elementsWater": "水",
       "elementsPlant": "植物",
       "elementsFire": "火",
+      "elementsWood": "木材",
+      "elementsAsh": "灰烬",
+      "elementsOil": "原油",
+      "elementsLava": "岩浆",
+      "elementsIce": "冰",
+      "elementsSteam": "蒸汽",
+      "elementsAcid": "酸液",
+      "elementsSeed": "种子",
+      "elementsSmoke": "烟",
+      "elementsGlass": "玻璃",
+      "elementsVoid": "虚空",
       "elementsReset": "重置面板",
+      "elementsSpeedLabel": "速度",
+      "elementsBrushLabel": "笔刷",
+      "elementsPause": "暂停",
+      "elementsResume": "继续",
+      "elementsStep": "单步",
+      "elementsPick": "吸取",
+      "elementsUndo": "撤销",
+      "elementsBudgetLabel": "元素用量",
+      "elementsBudgetUnlimited": "不限量",
+      "elementsLegend": "{name} — {kind}",
+      "elementsClassStatic": "固定不动",
+      "elementsClassPowder": "下落堆积",
+      "elementsClassLiquid": "下落流淌",
+      "elementsClassGas": "上升消散",
+      "elementsPicked": "已吸取{name}。",
+      "elementsPickHint": "吸取：点击网格中的格子即可取用该元素。",
+      "elementsPickBlocked": "此面板没有这种元素。",
+      "elementsUndone": "已撤销。",
+      "elementsUndoEmpty": "没有可撤销的操作。",
+      "elementsPaused": "已暂停。",
+      "elementsResumed": "继续运行。",
       "elementsCanvasLabel":
-        "元素沙盘。数字键 1 到 6 选择元素，方向键移动光标，空格键放置。",
+        "元素沙盘。数字键 1 到 9 选择元素，方向键移动光标，空格键放置。",
       "elementsDescription":
         "{cols} 乘 {rows} 的像素元素网格。当前场上有：{counts}。",
       "elementsCountNone": "暂无元素",
@@ -903,7 +1023,7 @@
       "elementsTimeUp": "时间到。点击“再来一局”可重置计时。",
       "elementsLog": "元素沙盘：{name}，用时 {s} 秒",
       "elementsHint":
-        "在网格上拖动即可涂抹；点“重置面板”可恢复初始布局。键盘：数字 1-6 选择元素，方向键移动光标，空格键放置。",
+        "在网格上拖动即可涂抹；点“重置面板”可恢复初始布局。调色板提供该面板允许的所有元素，笔刷大小决定一次涂抹的范围，暂停、单步、吸取与撤销可以手动控制面板。键盘：数字 1-9 选择元素，方向键移动光标，空格键放置。",
       "petTitle": "伙伴",
       "petAdoptTitle": "领养伙伴",
       "petAdoptBody":
@@ -3402,7 +3522,10 @@
   var caretDashBestKey = "caret-dash-best";
 
   var elementsBestKey = "elements-best";
-  var elementsStoreVersion = 1;
+  /* v2 adds the per-board star table on top of the v1 {cleared, bests} pair.
+   * A v1 record is still read - its bests are re-scored against the current
+   * thresholds - and rewritten once in the new shape. */
+  var elementsStoreVersion = 2;
   var elementsCols = 80;
   var elementsRows = 56;
   /* One cell is worth `elementsScale` internal canvas pixels: the 80x56 grid
@@ -3416,33 +3539,56 @@
   var elementsBrush = 2;
   var elementsCursorBrush = 1;
   var elementsMaxSeconds = 3600;
-  /* Free play plus the three goals. `tools` is the palette each board hands
-   * out, so a goal cannot simply be painted into existence: Grow only offers
-   * water, which is exactly what the growth rule consumes, and Flood keeps
-   * stone so a channel above the rim can still be built. `defaultTool` is the
-   * brush that board starts with. */
+  /* The campaign: free play plus the eleven timed boards, in teaching order.
+   * The order is also the unlock chain - a board unlocks when the one before it
+   * is cleared, and the elements it introduces unlock with it. `tools` is the
+   * palette each board hands out, so a goal cannot simply be painted into
+   * existence: Grow only offers water, which is exactly what the growth rule
+   * consumes, and Flood keeps stone so a channel above the rim can still be
+   * built. `defaultTool` is the brush that board starts with. `budget` is the
+   * paint allowance in cells, where 0 means the board rations nothing. `stars`
+   * is [3-star, 2-star, 1-star] in seconds; a board with no clock never earns
+   * one. */
   var elementsChallenges = [
     {
       id: "free",
       labelKey: "elementsChallengeFree",
       goalKey: "elementsGoalFree",
       limit: 0,
+      budget: 0,
+      stars: [0, 0, 0],
       defaultTool: "sand",
-      tools: ["empty", "stone", "sand", "water", "plant", "fire"],
+      tools: [
+        "empty",
+        "stone",
+        "sand",
+        "water",
+        "plant",
+        "fire",
+        "wood",
+        "ash",
+        "oil",
+        "lava",
+        "ice",
+        "steam",
+        "acid",
+        "seed",
+        "smoke",
+        "glass",
+        "void",
+      ],
     },
     {
       id: "grow",
       labelKey: "elementsChallengeGrow",
       goalKey: "elementsGoalGrow",
       limit: 60,
-      defaultTool: "water",
-      tools: ["empty", "water"],
-    },
-    {
-      id: "extinguish",
-      labelKey: "elementsChallengeExtinguish",
-      goalKey: "elementsGoalExtinguish",
-      limit: 20,
+      budget: 0,
+      /* The plant drinks one cell per `growEvery` generations and the seed sits
+       * 54 cells down, so the climb alone costs 54 x 8 x 50 ms = 21.6 s before
+       * a pour can matter. The three-star rung has to clear that floor: a clean
+       * run lands just above it, and 24 s leaves a couple of seconds of air. */
+      stars: [24, 30, 55],
       defaultTool: "water",
       tools: ["empty", "water"],
     },
@@ -3451,10 +3597,118 @@
       labelKey: "elementsChallengeFlood",
       goalKey: "elementsGoalFlood",
       limit: 60,
+      budget: 0,
+      stars: [20, 40, 60],
       defaultTool: "water",
       tools: ["empty", "stone", "water"],
     },
+    {
+      id: "extinguish",
+      labelKey: "elementsChallengeExtinguish",
+      goalKey: "elementsGoalExtinguish",
+      limit: 20,
+      budget: 0,
+      stars: [8, 14, 20],
+      defaultTool: "water",
+      tools: ["empty", "water"],
+    },
+    {
+      id: "glass",
+      labelKey: "elementsChallengeGlass",
+      goalKey: "elementsGoalGlass",
+      limit: 60,
+      budget: 60,
+      stars: [15, 25, 45],
+      defaultTool: "sand",
+      tools: ["empty", "sand"],
+    },
+    {
+      id: "quench",
+      labelKey: "elementsChallengeQuench",
+      goalKey: "elementsGoalQuench",
+      limit: 90,
+      budget: 150,
+      stars: [25, 40, 65],
+      defaultTool: "water",
+      tools: ["empty", "water"],
+    },
+    {
+      id: "thaw",
+      labelKey: "elementsChallengeThaw",
+      goalKey: "elementsGoalThaw",
+      limit: 60,
+      budget: 24,
+      stars: [15, 25, 45],
+      defaultTool: "fire",
+      tools: ["empty", "fire"],
+    },
+    {
+      id: "spill",
+      labelKey: "elementsChallengeSpill",
+      goalKey: "elementsGoalSpill",
+      limit: 60,
+      budget: 48,
+      stars: [15, 25, 45],
+      defaultTool: "fire",
+      tools: ["empty", "fire"],
+    },
+    {
+      id: "etch",
+      labelKey: "elementsChallengeEtch",
+      goalKey: "elementsGoalEtch",
+      limit: 60,
+      budget: 300,
+      stars: [25, 40, 55],
+      defaultTool: "water",
+      tools: ["water", "acid"],
+    },
+    {
+      id: "sprout",
+      labelKey: "elementsChallengeSprout",
+      goalKey: "elementsGoalSprout",
+      limit: 90,
+      budget: 160,
+      stars: [40, 55, 75],
+      defaultTool: "water",
+      tools: ["water", "fire"],
+    },
+    {
+      id: "geyser",
+      labelKey: "elementsChallengeGeyser",
+      goalKey: "elementsGoalGeyser",
+      limit: 90,
+      budget: 200,
+      stars: [30, 45, 70],
+      defaultTool: "water",
+      tools: ["water"],
+    },
+    {
+      id: "grove",
+      labelKey: "elementsChallengeGrove",
+      goalKey: "elementsGoalGrove",
+      limit: 60,
+      budget: 60,
+      stars: [18, 30, 50],
+      defaultTool: "empty",
+      tools: ["empty", "water"],
+    },
   ];
+
+  /* The base palette every player starts with. The rest of the roster is
+   * unlocked by the campaign: an element unlocks the moment the board that
+   * introduces it becomes selectable, and glass (which is only ever a goal)
+   * unlocks once the last board is cleared. */
+  var elementsBasePalette = ["empty", "stone", "sand", "water", "plant", "fire"];
+  var elementsUnlockByChallenge = {
+    glass: ["lava"],
+    quench: ["steam"],
+    thaw: ["ice"],
+    spill: ["oil"],
+    etch: ["acid"],
+    sprout: ["wood", "seed", "ash"],
+    grove: ["void"],
+  };
+  var elementsFinalUnlock = "glass";
 
   var typingPhrases = [
     "Paste your messy notes and let the formatter sweep every bracket away.",
@@ -4408,6 +4662,19 @@
     var WATER = 3;
     var PLANT = 4;
     var FIRE = 5;
+    /* The expansion set (ids 6 and up). Ids 0-5 keep the meaning they had
+     * before it, so a board or a stored run never has to be re-read. */
+    var WOOD = 6;
+    var ASH = 7;
+    var OIL = 8;
+    var LAVA = 9;
+    var ICE = 10;
+    var STEAM = 11;
+    var ACID = 12;
+    var SEED = 13;
+    var SMOKE = 14;
+    var GLASS = 15;
+    var VOID = 16;
     var ids = {
       empty: EMPTY,
       stone: STONE,
@@ -4415,6 +4682,17 @@
       water: WATER,
       plant: PLANT,
       fire: FIRE,
+      wood: WOOD,
+      ash: ASH,
+      oil: OIL,
+      lava: LAVA,
+      ice: ICE,
+      steam: STEAM,
+      acid: ACID,
+      seed: SEED,
+      smoke: SMOKE,
+      glass: GLASS,
+      void: VOID,
     };
 
     /* Generations a flame burns once it has nothing left to feed on. */
@@ -4423,6 +4701,23 @@
     var growEvery = 8;
     /* How far water reaches sideways in a single step. */
     var spread = 3;
+    /* Oil is thinner than water and reaches further; lava is viscous, so it
+     * only creeps - one cell at a time, and only on about half the steps. */
+    var oilSpread = 4;
+    var lavaSpread = 1;
+    var lavaChance = 0.5;
+    /* A gas carries its own countdown: steam turns back into water when it
+     * runs out, smoke simply dissipates. */
+    var steamLife = 120;
+    var smokeLife = 90;
+    /* How many solids one cell of acid can dissolve before it is spent. */
+    var acidUses = 3;
+    /* How often a newly lit fuel cell leaves a puff of smoke behind. */
+    var smokeChance = 0.08;
+    /* The two liquids that are not plain water, as option records, so the
+     * dispatch in `step` reads as the rule it is. */
+    var oilMotion = { spread: oilSpread, float: true };
+    var lavaMotion = { spread: lavaSpread, chance: lavaChance };
 
     var total = cols * rows;
     var cells = [];
@@ -4431,13 +4726,56 @@
     var generation = 0;
     var seedState = seed;
     var outOfRangeWrites = 0;
-    /* Set by the flood board: paint is refused at or below this row. */
-    var aboveRow = -1;
+    /* Where a board lets the brush work, as a list of rectangles. An empty
+     * list is the whole grid, which is free play and every board that asks for
+     * no fence. A board that declares one refuses a paint outside it exactly
+     * like a paint off the grid, so a goal can never be reached by painting
+     * the winning material straight into the place that scores it: the
+     * elements have to flow, react or travel there instead. */
+    var pourZones = [];
     /* Set by the flood board: the marked target zone. */
     var zone = null;
     var zoneTarget = 0;
-    /* How many flames the board started with, so the HUD can count down. */
-    var fireTarget = 0;
+    /* How many of the goal's materials the board started with, so a
+     * "reduce this to zero" HUD can count down from the opening position. */
+    var zeroTarget = 0;
+    /* Every board's win condition, dispatched on `kind` by `progress`. The
+     * three original boards keep the numbers they have always had, so their
+     * pinned tests read the same value, target and verdict. `countZero` and
+     * `countAtLeast` name an element, `zoneFill` fills the marked zone, and
+     * `countZeroPlusMin` is the grove's "no fire, and this much wood left". */
+    var boardGoals = {
+      free: { kind: "none" },
+      grow: { kind: "growTop" },
+      flood: { kind: "zoneFill" },
+      extinguish: { kind: "countZero", element: FIRE },
+      glass: { kind: "countAtLeast", element: GLASS, need: 16 },
+      quench: { kind: "countZero", element: LAVA },
+      thaw: { kind: "zoneFill" },
+      spill: { kind: "countZero", element: OIL },
+      etch: { kind: "zoneFill" },
+      sprout: { kind: "growTop" },
+      geyser: { kind: "zoneFill" },
+      grove: {
+        kind: "countZeroPlusMin",
+        element: FIRE,
+        material: WOOD,
+        x0: 53,
+        y0: 52,
+        x1: 60,
+        y1: 53,
+        need: 14,
+      },
+    };
+    /* A board may pour material on a fixed cadence - see `spawn`. */
+    var spawners = [];
+    /* A board may hand the player a paint allowance, counted in cells; zero
+     * means they have as much as they like. */
+    var ink = 0;
+    var inkLeft = 0;
+    /* Undo: a short ring of whole-board snapshots, taken before a stroke. */
+    var undoLimit = 6;
+    var undoRing = [];
 
     var at = 0;
     for (at = 0; at < total; at += 1) {
@@ -4464,11 +4802,76 @@
       return y * cols + x;
     }
 
+    /* A board declares the region its brush may touch, one rectangle at a
+     * time. Rectangles are clipped to the grid here, so a builder can name the
+     * full board and a zone can never promise paint the grid cannot hold. */
+    function addPourZone(x0, y0, x1, y1) {
+      pourZones.push({
+        x0: Math.max(0, Math.min(x0, x1)),
+        y0: Math.max(0, Math.min(y0, y1)),
+        x1: Math.min(cols - 1, Math.max(x0, x1)),
+        y1: Math.min(rows - 1, Math.max(y0, y1)),
+      });
+      return pourZones.length;
+    }
+
+    /* No zone at all means every cell is inside: free play is the sandbox. */
+    function inPourZone(x, y) {
+      if (!pourZones.length) {
+        return true;
+      }
+      var step = 0;
+      for (step = 0; step < pourZones.length; step += 1) {
+        var rect = pourZones[step];
+        if (x >= rect.x0 && x <= rect.x1 && y >= rect.y0 && y <= rect.y1) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     /* Out-of-bounds reads report STONE, so nothing ever falls off the grid,
      * and out-of-bounds writes are counted and dropped rather than landing on
      * a neighbouring row. */
     function get(x, y) {
       return inBounds(x, y) ? cells[index(x, y)] : STONE;
+    }
+
+    /* The counter a freshly placed cell starts with: a flame its life, a gas
+     * its own countdown, acid the number of solids it can still eat. Anything
+     * without a countdown starts at zero. */
+    function initialLife(value) {
+      if (value === FIRE) {
+        return fireLife;
+      }
+      if (value === STEAM) {
+        return steamLife;
+      }
+      if (value === SMOKE) {
+        return smokeLife;
+      }
+      if (value === ACID) {
+        return acidUses;
+      }
+      return 0;
+    }
+
+    /* What a flame can feed on, and what acid can eat. Both sets are the whole
+     * definition of the rules that use them, so a new element joins a reaction
+     * by being named here and nowhere else. */
+    function isFuel(value) {
+      return value === PLANT || value === WOOD || value === OIL || value === SEED;
+    }
+
+    function isSoluble(value) {
+      return (
+        value === STONE ||
+        value === WOOD ||
+        value === GLASS ||
+        value === PLANT ||
+        value === SAND ||
+        value === ASH
+      );
     }
 
     function set(x, y, value) {
@@ -4478,9 +4881,24 @@
       }
       var cell = index(x, y);
       cells[cell] = value;
-      life[cell] = value === FIRE ? fireLife : 0;
+      life[cell] = initialLife(value);
       movedAt[cell] = generation;
       return true;
+    }
+
+    /* Every cell counted by value in a single pass, so the panel's summary of
+     * what is on the board never costs one full scan per element. */
+    function tally() {
+      var counts = [];
+      var value = 0;
+      for (value = 0; value <= VOID; value += 1) {
+        counts[value] = 0;
+      }
+      var cell = 0;
+      for (cell = 0; cell < total; cell += 1) {
+        counts[cells[cell]] += 1;
+      }
+      return counts;
     }
 
     function count(value) {
@@ -4525,24 +4943,32 @@
       movedAt[b] = generation;
     }
 
-    /* Sand falls straight down, sinking through water, and otherwise takes a
-     * diagonal so a blocked grain still slides off the side of a pile. */
-    function moveSand(cell, x, y) {
+    /* A grain falls one cell, into empty space or - for a grain that sinks -
+     * through the water it displaces. Blocked, it probes the two cells below
+     * its diagonals in an order drawn from `random()`, so a pile still slides
+     * off its own shoulder and spreads the same way on every replay. */
+    function movePowder(cell, x, y, sink) {
       var below = cell + cols;
-      if (y + 1 < rows && (cells[below] === EMPTY || cells[below] === WATER)) {
-        swap(cell, below);
-        return true;
+      var under = EMPTY;
+      if (y + 1 < rows) {
+        under = cells[below];
+        if (under === EMPTY || (sink && under === WATER)) {
+          swap(cell, below);
+          return true;
+        }
       }
       var firstSign = random() < 0.5 ? -1 : 1;
       var pass = 0;
+      var target = 0;
       for (pass = 0; pass < 2; pass += 1) {
         var nx = x + (pass === 0 ? firstSign : -firstSign);
         var ny = y + 1;
         if (!inBounds(nx, ny)) {
           continue;
         }
-        var target = index(nx, ny);
-        if (cells[target] === EMPTY || cells[target] === WATER) {
+        target = index(nx, ny);
+        under = cells[target];
+        if (under === EMPTY || (sink && under === WATER)) {
           swap(cell, target);
           return true;
         }
@@ -4550,14 +4976,19 @@
       return false;
     }
 
-    /* How far water slides sideways in one direction: it reaches along its own
-     * row until it finds an empty cell with an empty cell under it - a drop it
-     * can fall into. Sliding only towards a drop is what makes a pool level
+    /* Sand: the powder that sinks through water and piles into a slope. */
+    function moveSand(cell, x, y) {
+      return movePowder(cell, x, y, true);
+    }
+
+    /* How far a liquid slides sideways in one direction: it reaches along its
+     * own row until it finds an empty cell with an empty cell under it - a drop
+     * it can fall into. Sliding only towards a drop is what makes a pool level
      * out and then come to rest, instead of a surface film wandering along a
      * flat floor for ever. Returns -1 when there is nowhere lower to go. */
-    function flowReach(x, y, sign) {
+    function flowReach(x, y, sign, reach) {
       var step = 0;
-      for (step = 1; step <= spread; step += 1) {
+      for (step = 1; step <= reach; step += 1) {
         var nx = x + sign * step;
         if (!inBounds(nx, y) || cells[index(nx, y)] !== EMPTY) {
           return -1;
@@ -4569,7 +5000,17 @@
       return -1;
     }
 
-    function moveWater(cell, x, y) {
+    /* A liquid falls, then takes a diagonal, then reaches `spread` cells
+     * sideways towards a drop - the shape water has always had. `opts.spread`
+     * widens or shortens that reach, `opts.chance` lets a viscous liquid sit
+     * still on some generations, and `opts.float` lifts the cell up through the
+     * water directly above it, which is how oil climbs to the surface. */
+    function moveLiquid(cell, x, y, opts) {
+      var settings = opts || {};
+      var reach = isFinite(settings.spread) ? settings.spread : spread;
+      if (isFinite(settings.chance) && random() >= settings.chance) {
+        return false;
+      }
       var below = cell + cols;
       if (y + 1 < rows && cells[below] === EMPTY) {
         moveTo(cell, below);
@@ -4587,9 +5028,49 @@
       }
       for (pass = 0; pass < 2; pass += 1) {
         var sign = pass === 0 ? firstSign : -firstSign;
-        var reach = flowReach(x, y, sign);
-        if (reach !== -1) {
-          moveTo(cell, index(reach, y));
+        var stop = flowReach(x, y, sign, reach);
+        if (stop !== -1) {
+          moveTo(cell, index(stop, y));
+          return true;
+        }
+      }
+      if (settings.float && y > 0 && cells[cell - cols] === WATER) {
+        swap(cell, cell - cols);
+        return true;
+      }
+      return false;
+    }
+
+    /* Water: falls, then diagonal, then slides sideways towards a drop, so a
+     * pool levels out and rests. */
+    function moveWater(cell, x, y) {
+      return moveLiquid(cell, x, y);
+    }
+
+    /* A gas rises: straight up first, then up-left or up-right, then sideways -
+     * all of it into empty space only, so a bubble under a lid stays put. */
+    function moveGas(cell, x, y) {
+      if (y <= 0) {
+        return false;
+      }
+      var above = cell - cols;
+      if (cells[above] === EMPTY) {
+        moveTo(cell, above);
+        return true;
+      }
+      var firstSign = random() < 0.5 ? -1 : 1;
+      var pass = 0;
+      for (pass = 0; pass < 2; pass += 1) {
+        var nx = x + (pass === 0 ? firstSign : -firstSign);
+        if (inBounds(nx, y - 1) && cells[index(nx, y - 1)] === EMPTY) {
+          moveTo(cell, index(nx, y - 1));
+          return true;
+        }
+      }
+      for (pass = 0; pass < 2; pass += 1) {
+        var sx = x + (pass === 0 ? firstSign : -firstSign);
+        if (inBounds(sx, y) && cells[index(sx, y)] === EMPTY) {
+          moveTo(cell, index(sx, y));
           return true;
         }
       }
@@ -4611,12 +5092,18 @@
       return true;
     }
 
+    /* The four orthogonal steps, in the order every reaction probes them. One
+     * list, so no rule can depend on which way the sweep is running. */
+    var dirX = [-1, 1, 0, 0];
+    var dirY = [0, 0, -1, 1];
+
+    /* Anything in `isFuel` catches here and becomes a flame with a full life. */
     function ignite(x, y) {
       if (!inBounds(x, y)) {
         return false;
       }
       var cell = index(x, y);
-      if (cells[cell] !== PLANT) {
+      if (!isFuel(cells[cell])) {
         return false;
       }
       cells[cell] = FIRE;
@@ -4625,8 +5112,32 @@
       return true;
     }
 
-    /* Fire: fed by plants, put out by water, and out of time when it has
-     * neither. Adjacent water is consumed as the flame is doused. */
+    /* A fuel cell that has just caught may leave a puff of smoke behind it.
+     * Seeded, like every other roll in the sandbox. */
+    function puff(x, y) {
+      if (random() >= smokeChance) {
+        return false;
+      }
+      var start = Math.floor(random() * 4);
+      var step = 0;
+      var which = 0;
+      for (step = 0; step < 4; step += 1) {
+        which = (start + step) % 4;
+        if (
+          inBounds(x + dirX[which], y + dirY[which]) &&
+          cells[index(x + dirX[which], y + dirY[which])] === EMPTY
+        ) {
+          set(x + dirX[which], y + dirY[which], SMOKE);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /* Fire: fed by anything that burns, put out by water, chilled by ice, and
+     * out of time when it has neither. Adjacent water is consumed as the flame
+     * is doused, and a flame that burns out where it stood leaves the cell
+     * empty. */
     function burn(cell, x, y) {
       var doused = false;
       if (get(x - 1, y) === WATER) {
@@ -4649,24 +5160,43 @@
         return true;
       }
 
+      /* Ice touching a flame melts where it stands, and chills the flame as it
+       * goes - which is why a fire cannot sit against a wall of ice for ever,
+       * and why a candle held to a dam cuts a channel instead of dying on it. */
+      var chilled = false;
+      var probe = 0;
+      for (probe = 0; probe < 4; probe += 1) {
+        if (get(x + dirX[probe], y + dirY[probe]) === ICE) {
+          set(x + dirX[probe], y + dirY[probe], WATER);
+          chilled = true;
+        }
+      }
+
       var fed = false;
       if (ignite(x - 1, y)) {
         fed = true;
+        puff(x - 1, y);
       }
       if (ignite(x + 1, y)) {
         fed = true;
+        puff(x + 1, y);
       }
       if (ignite(x, y - 1)) {
         fed = true;
+        puff(x, y - 1);
       }
       if (ignite(x, y + 1)) {
         fed = true;
+        puff(x, y + 1);
       }
 
       if (fed) {
         life[cell] = fireLife;
       } else {
         life[cell] = life[cell] - 1;
+        if (chilled) {
+          life[cell] = life[cell] - 1;
+        }
       }
       if (life[cell] <= 0) {
         cells[cell] = EMPTY;
@@ -4675,12 +5205,237 @@
       return true;
     }
 
+    /* Lava is heat: it sets light to anything that burns and turns sand into
+     * glass, and it sets as stone the moment it meets water or ice. That second
+     * path is why a goal of no lava left is always reachable. */
+    function lavaReacts(cell, x, y) {
+      var step = 0;
+      for (step = 0; step < 4; step += 1) {
+        var quenched = get(x + dirX[step], y + dirY[step]);
+        if (quenched === WATER) {
+          set(x + dirX[step], y + dirY[step], STEAM);
+          set(x, y, STONE);
+          return true;
+        }
+        if (quenched === ICE) {
+          set(x + dirX[step], y + dirY[step], WATER);
+          set(x, y, STONE);
+          return true;
+        }
+      }
+      for (step = 0; step < 4; step += 1) {
+        var nx = x + dirX[step];
+        var ny = y + dirY[step];
+        if (!inBounds(nx, ny)) {
+          continue;
+        }
+        var near = cells[index(nx, ny)];
+        if (near === SAND) {
+          set(nx, ny, GLASS);
+        } else if (isFuel(near)) {
+          ignite(nx, ny);
+        }
+      }
+      return true;
+    }
+
+    /* Acid eats one neighbouring solid per generation and spends one of its
+     * uses doing it, so a fixed amount of acid can never dissolve an unbounded
+     * amount of board. The last use leaves nothing behind. */
+    function corrode(cell, x, y) {
+      var step = 0;
+      var eaten = false;
+      for (step = 0; step < 4; step += 1) {
+        var nx = x + dirX[step];
+        var ny = y + dirY[step];
+        if (!inBounds(nx, ny) || !isSoluble(cells[index(nx, ny)])) {
+          continue;
+        }
+        set(nx, ny, EMPTY);
+        eaten = true;
+        break;
+      }
+      if (!eaten) {
+        return false;
+      }
+      life[cell] = life[cell] - 1;
+      if (life[cell] <= 0) {
+        cells[cell] = EMPTY;
+        life[cell] = 0;
+      }
+      movedAt[cell] = generation;
+      return true;
+    }
+
+    /* A seed that has come to rest next to water sprouts: the seed becomes the
+     * plant and the water it drank is consumed. */
+    function sprout(cell, x, y) {
+      var step = 0;
+      for (step = 0; step < 4; step += 1) {
+        var nx = x + dirX[step];
+        var ny = y + dirY[step];
+        if (get(nx, ny) !== WATER) {
+          continue;
+        }
+        cells[cell] = PLANT;
+        life[cell] = 0;
+        movedAt[cell] = generation;
+        set(nx, ny, EMPTY);
+        return true;
+      }
+      return false;
+    }
+
+    /* Steam touching ice condenses at once, and takes the ice with it. */
+    function condense(cell, x, y) {
+      var step = 0;
+      for (step = 0; step < 4; step += 1) {
+        var nx = x + dirX[step];
+        var ny = y + dirY[step];
+        if (get(nx, ny) !== ICE) {
+          continue;
+        }
+        set(nx, ny, WATER);
+        cells[cell] = WATER;
+        life[cell] = 0;
+        movedAt[cell] = generation;
+        return true;
+      }
+      return false;
+    }
+
+    /* Steam and smoke share their tick: the gas counts its life down, and then
+     * either condenses back into water (steam) or simply dissipates (smoke).
+     * The counter rides along with every move, so a rising plume keeps its age. */
+    function gasStep(cell, x, y, kind) {
+      if (kind === STEAM && condense(cell, x, y)) {
+        return true;
+      }
+      life[cell] = life[cell] - 1;
+      if (life[cell] <= 0) {
+        cells[cell] = kind === STEAM ? WATER : EMPTY;
+        life[cell] = 0;
+        movedAt[cell] = generation;
+        return true;
+      }
+      return moveGas(cell, x, y);
+    }
+
+    /* Void is a drain: every generation it erases each neighbour that is not a
+     * wall. Nothing it touches can come back, so it is only ever a fixture. */
+    function drain(cell, x, y) {
+      var step = 0;
+      var eaten = false;
+      for (step = 0; step < 4; step += 1) {
+        var nx = x + dirX[step];
+        var ny = y + dirY[step];
+        if (!inBounds(nx, ny)) {
+          continue;
+        }
+        var near = cells[index(nx, ny)];
+        if (near === EMPTY || near === STONE) {
+          continue;
+        }
+        set(nx, ny, EMPTY);
+        eaten = true;
+      }
+      return eaten;
+    }
+
+    /* --- boards: live sources and undo ------------------------------ */
+
+    /* A board may pour material into a fixed cell on a fixed cadence - the
+     * living version of a pre-loaded hopper. `remaining` of -1 pours for ever,
+     * and the countdown is in generations, so a pour is as reproducible as any
+     * other rule. A cell that is not empty is simply skipped. */
+    function addSpawner(x, y, value, every, remaining) {
+      spawners.push({
+        x: x,
+        y: y,
+        value: value,
+        every: Math.max(1, parseInt(every, 10) || 1),
+        remaining: isFinite(remaining) ? remaining : -1,
+      });
+      return spawners.length;
+    }
+
+    function spawn() {
+      var step = 0;
+      for (step = 0; step < spawners.length; step += 1) {
+        var spec = spawners[step];
+        if (spec.remaining === 0) {
+          continue;
+        }
+        if (generation % spec.every !== 0) {
+          continue;
+        }
+        if (get(spec.x, spec.y) !== EMPTY) {
+          continue;
+        }
+        set(spec.x, spec.y, spec.value);
+        if (spec.remaining > 0) {
+          spec.remaining -= 1;
+        }
+      }
+    }
+
+    /* Undo keeps a short ring of whole-board snapshots, taken before a stroke
+     * by the panel. Six of them is a bounded handful of kilobytes for a
+     * 4480-cell grid, and it never grows. Restoring rewinds the generator and
+     * the random stream with the board, so a replay after an undo is the same
+     * replay the player would have had. */
+    function remember() {
+      if (undoRing.length >= undoLimit) {
+        undoRing.shift();
+      }
+      undoRing.push({
+        cells: cells.slice(0),
+        life: life.slice(0),
+        movedAt: movedAt.slice(0),
+        generation: generation,
+        seedState: seedState,
+      });
+      return undoRing.length;
+    }
+
+    /* Drop the newest snapshot: a stroke the board refused changed nothing, so
+     * it should not have cost the player an undo. */
+    function forget() {
+      if (undoRing.length) {
+        undoRing.pop();
+      }
+      return undoRing.length;
+    }
+
+    function undo() {
+      if (!undoRing.length) {
+        return false;
+      }
+      var shot = undoRing.pop();
+      var cell = 0;
+      for (cell = 0; cell < total; cell += 1) {
+        cells[cell] = shot.cells[cell];
+        life[cell] = shot.life[cell];
+        movedAt[cell] = shot.movedAt[cell];
+      }
+      generation = shot.generation;
+      seedState = shot.seedState;
+      return true;
+    }
+
+    function undoDepth() {
+      return undoRing.length;
+    }
+
     /* One generation. The sweep runs bottom-up so a grain that has already
      * fallen is not stepped twice, and the horizontal direction alternates per
-     * row so piles and pools do not all lean the same way. */
+     * row so piles and pools do not all lean the same way. Stone, wood, glass
+     * and ice are inert solids: they are never stepped, they only change when a
+     * neighbour that does react reaches for them. */
     function step() {
       generation += 1;
       var growNow = generation % growEvery === 0;
+      spawn();
       var y = 0;
       var k = 0;
       for (y = rows - 1; y >= 0; y -= 1) {
@@ -4689,19 +5444,50 @@
           var x = forward ? k : cols - 1 - k;
           var cell = index(x, y);
           var value = cells[cell];
-          if (value === EMPTY || value === STONE || movedAt[cell] === generation) {
+          if (
+            value === EMPTY ||
+            value === STONE ||
+            value === WOOD ||
+            value === GLASS ||
+            value === ICE ||
+            movedAt[cell] === generation
+          ) {
             continue;
           }
           if (value === SAND) {
             moveSand(cell, x, y);
+          } else if (value === ASH) {
+            movePowder(cell, x, y, false);
+          } else if (value === SEED) {
+            /* A seed that could not fall has come to rest, so this is the
+             * generation its sprouting is checked. */
+            if (!movePowder(cell, x, y, false)) {
+              sprout(cell, x, y);
+            }
           } else if (value === WATER) {
             moveWater(cell, x, y);
+          } else if (value === OIL) {
+            moveLiquid(cell, x, y, oilMotion);
+          } else if (value === LAVA) {
+            if (!moveLiquid(cell, x, y, lavaMotion)) {
+              lavaReacts(cell, x, y);
+            }
+          } else if (value === ACID) {
+            if (!moveLiquid(cell, x, y)) {
+              corrode(cell, x, y);
+            }
+          } else if (value === STEAM) {
+            gasStep(cell, x, y, STEAM);
+          } else if (value === SMOKE) {
+            gasStep(cell, x, y, SMOKE);
           } else if (value === PLANT) {
             if (growNow) {
               growPlant(cell, x, y);
             }
           } else if (value === FIRE) {
             burn(cell, x, y);
+          } else if (value === VOID) {
+            drain(cell, x, y);
           }
         }
       }
@@ -4729,10 +5515,18 @@
       }
       generation = 0;
       seedState = seed;
-      aboveRow = -1;
+      /* A board's fence belongs to the board, so it is cleared with it and
+       * re-declared by whichever builder runs next. */
+      pourZones = [];
       zone = null;
       zoneTarget = 0;
-      fireTarget = 0;
+      zeroTarget = 0;
+      /* A reload hands back the whole picture: the pours a board declared are
+       * re-declared by its builder, the allowance is refilled and no stroke
+       * from the previous life of the board is left to undo. */
+      spawners = [];
+      inkLeft = ink;
+      undoRing = [];
     }
 
     /* Free play: a hopper pouring sand, a stone basin holding a pool, and a
@@ -4771,13 +5565,20 @@
         set(gx, floor - 1, PLANT);
         set(gx, floor - 2, PLANT);
       }
+
+      /* One live drip over the bowl, so the sandbox keeps moving even when the
+       * player is only watching it. It pours the same way a hopper does - on a
+       * fixed cadence, into an empty cell - so it costs nothing to replay. */
+      addSpawner(basinLeft + 8, 6, WATER, 12, -1);
     }
 
     /* Grow: a one-cell-wide well with a planted seed in a shallow pool. The
      * plant climbs by drinking the water directly above it, so the pool runs
      * dry partway up and the player has to keep pouring water down the well.
      * The well is a single column on purpose: every drop the player pours
-     * lands on the plant instead of pooling beside it. */
+     * lands on the plant instead of pooling beside it. The pour zone is that
+     * column, so the water has to fall the shaft and the plant has to drink it
+     * one cell at a time. */
     function buildGrow() {
       var floor = rows - 1;
       var cx = Math.floor(cols / 2);
@@ -4786,11 +5587,16 @@
       fill(cx + 1, 0, cx + 4, floor - 1, STONE);
       fill(cx, floor - 20, cx, floor - 1, WATER);
       set(cx, floor - 1, PLANT);
+      addPourZone(cx, 0, cx, floor - 1);
     }
 
     /* Extinguish: a one-cell-wide serpentine hedge with a fire at its near
      * end. Flames cross one cell per generation, so the front really does walk
-     * the garden while the player runs for the water. */
+     * the garden while the player runs for the water. The pour zone follows the
+     * hedge - the air above every row and the gaps between them - so a flame
+     * can be met wherever it walks, while the fuel rows themselves stay out of
+     * the brush's reach: an eraser that could take the fire itself would put
+     * the board out in one stroke. */
     function buildExtinguish() {
       var floor = rows - 1;
       var x0 = 4;
@@ -4802,7 +5608,9 @@
       var forward = true;
       var x = 0;
       var span = 0;
+      var hedgeRows = [];
       while (y <= bottom) {
+        hedgeRows.push(y);
         if (forward) {
           for (x = x0; x <= x1; x += 1) {
             set(x, y, PLANT);
@@ -4824,6 +5632,13 @@
       }
       fill(0, floor, cols - 1, floor, STONE);
       set(x0, top, FIRE);
+      /* The bands of open air the hedge leaves behind, top to bottom. */
+      var bandTop = 0;
+      hedgeRows.forEach(function (hedgeRow) {
+        addPourZone(0, bandTop, cols - 1, hedgeRow - 1);
+        bandTop = hedgeRow + 1;
+      });
+      addPourZone(0, bandTop, cols - 1, floor);
     }
 
     /* Flood: a stone basin with a marked target zone. Paint is refused at or
@@ -4842,7 +5657,201 @@
       zoneTarget = Math.ceil(
         (zone.x1 - zone.x0 + 1) * (zone.y1 - zone.y0 + 1) * 0.65,
       );
-      aboveRow = rim;
+      /* Everything above the rim, which is where the weather is. */
+      addPourZone(0, 0, cols - 1, rim - 1);
+    }
+
+    /* A marked rectangle with its target already worked out. The zone and the
+     * number the HUD prints are set together, so a tinted rectangle can never
+     * disagree with the goal it stands for. */
+    function markZone(x0, y0, x1, y1, frac) {
+      zone = { x0: x0, y0: y0, x1: x1, y1: y1 };
+      zoneTarget = Math.ceil(
+        (x1 - x0 + 1) * (y1 - y0 + 1) * frac,
+      );
+    }
+
+    /* Glassworks: a stone crucible holding a lava bath, fed by a stone funnel
+     * with a charge of sand already in it. Sand only turns to glass where it
+     * touches lava, and glass is a solid, so the bath is skinned row by row -
+     * the charge covers part of it and the player has to cover the rest. The
+     * pour zone is the mouth of the crucible, so the sand has to fall the
+     * height of the board and land on the bath. */
+    function buildGlass() {
+      var floor = rows - 1;
+      var k = 0;
+
+      fill(0, floor, cols - 1, floor, STONE);
+      fill(29, 51, 30, floor - 1, STONE);
+      fill(49, 51, 50, floor - 1, STONE);
+      fill(31, 51, 48, floor - 1, LAVA);
+
+      /* A sand load first, then the funnel walls on top of it, so the walls
+       * win where the two overlap and the throat stays open. */
+      fill(37, 3, 43, 4, SAND);
+      for (k = 0; k < 4; k += 1) {
+        set(36 + k, 2 + k, STONE);
+        set(44 - k, 2 + k, STONE);
+      }
+      addPourZone(31, 0, 48, 50);
+    }
+
+    /* Quench: a wide, shallow tray of lava. Water poured over the rim eats one
+     * lava cell per cell and leaves stone behind, so the tray empties from the
+     * surface inwards. A pool deeper than one cell would be sealed by its own
+     * stone lid, which is why the tray is one cell deep. The pour zone is the
+     * air over the tray: the water has to fall in over the rim, and the lava
+     * itself is out of the eraser's reach. */
+    function buildQuench() {
+      var floor = rows - 1;
+
+      fill(0, floor, cols - 1, floor, STONE);
+      fill(14, 44, 15, floor - 1, STONE);
+      fill(64, 44, 65, floor - 1, STONE);
+      fill(16, floor - 1, 63, floor - 1, LAVA);
+      addPourZone(16, 0, 63, 43);
+    }
+
+    /* Thaw: a reservoir held back by a dam of ice, with a marked valley in
+     * front of it. Fire melts the ice it is painted against, but the meltwater
+     * quenches the flame in the same breath - and a channel cut at the floor
+     * fills with meltwater and stops flowing, so the cut has to be made where
+     * the water can run away down the dam's face. The pour zone is the dam's
+     * outer face: the flame can only be put where the ice meets the air, so
+     * the cut has to be eaten through the wall one layer at a time. */
+    function buildThaw() {
+      var floor = rows - 1;
+
+      fill(0, floor, cols - 1, floor, STONE);
+      fill(6, 32, 37, floor - 1, WATER);
+      fill(38, 20, 40, floor - 1, ICE);
+      markZone(44, 46, 74, 53, 0.3);
+      addPourZone(39, 20, 43, floor - 1);
+    }
+
+    /* Oil Spill: a film of oil floating on a stone basin of water. Fire races
+     * along the surface one cell per generation, and the flames the water
+     * douses leave gaps the oil above them sinks into - so the last of the
+     * slick has to be hunted out by hand. The pour zone is the mouth of the
+     * basin and the basin itself, which is where the leftovers surface. */
+    function buildSpill() {
+      var floor = rows - 1;
+
+      fill(0, floor, cols - 1, floor, STONE);
+      fill(12, 44, 13, floor - 1, STONE);
+      fill(66, 44, 67, floor - 1, STONE);
+      fill(12, floor - 1, 67, floor - 1, STONE);
+      fill(14, 48, 65, floor - 2, WATER);
+      fill(14, 44, 65, 47, OIL);
+      addPourZone(14, 43, 65, floor - 2);
+    }
+
+    /* Etch: a stone basin with a roof of solid rock. The brush only paints
+     * into empty cells, so the roof is what the basin is locked behind - and
+     * acid dropped on the slab eats straight down through it, one cell per
+     * cell, leaving the holes the water is poured through. Acid that reaches
+     * the basin spends itself on the floor and is harmless. The pour zone is
+     * the source chamber above the slab, so nothing can be put into the basin
+     * directly: the roof has to be eaten and the water has to drain through. */
+    function buildEtch() {
+      var floor = rows - 1;
+
+      fill(0, floor, cols - 1, floor, STONE);
+      fill(28, 43, 70, 43, STONE);
+      fill(28, 43, 29, floor - 1, STONE);
+      fill(69, 43, 70, floor - 1, STONE);
+      markZone(30, 44, 68, 53, 0.5);
+      addPourZone(28, 0, 70, 42);
+    }
+
+    /* Sprout: a walled shaft with a single-cell well, a wood shelf holding a
+     * pool of water over the well's mouth, and a seed on the floor. Burn the
+     * shelf open above the well and the pool drops onto the seed; the plant
+     * that sprouts then has to be fed all the way up a well one cell wide,
+     * where every drop the player pours lands on it instead of pooling
+     * beside it. The pour zone is the well above the shelf and the pockets of
+     * air under it, so the shelf really has to be burned open before water can
+     * reach the seed. */
+    function buildSprout() {
+      var floor = rows - 1;
+      var y = 0;
+
+      fill(0, floor, cols - 1, floor, STONE);
+      fill(34, 0, 35, floor - 1, STONE);
+      fill(44, 0, 45, floor - 1, STONE);
+      /* The well's cheeks. They run the whole height so the column the plant
+       * climbs is one cell wide from the shelf to the sky. */
+      fill(38, 0, 38, floor - 1, STONE);
+      fill(40, 0, 40, floor - 1, STONE);
+      fill(36, 40, 43, 41, WOOD);
+      for (y = 36; y <= 39; y += 1) {
+        set(36, y, WATER);
+        set(37, y, WATER);
+        set(39, y, WATER);
+        set(41, y, WATER);
+        set(42, y, WATER);
+        set(43, y, WATER);
+      }
+      set(39, floor - 1, SEED);
+      addPourZone(39, 0, 39, 39);
+      addPourZone(36, 42, 37, floor - 1);
+      addPourZone(41, 42, 43, floor - 1);
+    }
+
+    /* Geyser: a flooded lower chamber over a lava bed, with a shaft in the
+     * ceiling and a ceiling of ice above. Water poured on the lava flashes to
+     * steam, the steam climbs the shaft, and whatever it touches on the ice
+     * comes back down as rain - one extra cell of water for every plume that
+     * reaches the roof, which is what the flood gauge needs. The pour zone is
+     * the pair of pockets at the foot of the chamber's walls, so every drop
+     * has to fall the whole chamber onto the lava bed and the gauge can only be
+     * filled by rain coming back down. */
+    function buildGeyser() {
+      var floor = rows - 1;
+
+      fill(0, floor, cols - 1, floor, STONE);
+      fill(4, 0, 5, floor - 1, STONE);
+      fill(74, 0, 75, floor - 1, STONE);
+      fill(6, 2, 73, 4, ICE);
+      fill(6, 36, 73, 36, STONE);
+      fill(28, 36, 32, 36, EMPTY);
+      fill(6, floor - 1, 73, floor - 1, LAVA);
+      markZone(10, 50, 70, 53, 0.6);
+      addPourZone(6, 37, 9, floor - 2);
+      addPourZone(71, 37, 73, floor - 2);
+    }
+
+    /* Save the Grove: a floor of timber with a fire lit at its near end and
+     * eight protected columns at the far end. The flames walk one cell a
+     * generation, faster than water can be poured on them, so the grove is
+     * saved with a firebreak - water for the flames that get through, and the
+     * eraser to take the fuel out of their path. The pour zone starts one
+     * column in, so the fire the board lit itself cannot simply be erased: the
+     * flames have to be starved or doused. */
+    function buildGrove() {
+      var floor = rows - 1;
+
+      fill(0, floor, cols - 1, floor, STONE);
+      fill(10, 52, 60, 53, WOOD);
+      set(9, 52, FIRE);
+      set(9, 53, FIRE);
+      addPourZone(10, 45, cols - 1, floor);
+    }
+
+    /* The free-play showcase: a lava basin, a block of ice and a film of oil,
+     * so the sandbox opens with something from every family on it. It is laid
+     * out beside the hopper, the basin and the garden rather than on top of
+     * them, so those three stand exactly where they always have - but the
+     * opening position is no longer the pre-showcase one, because the lava,
+     * ice and oil this touches down are part of it from the first frame. */
+    function buildShowcase() {
+      var floor = rows - 1;
+
+      fill(7, 52, 7, floor - 1, STONE);
+      fill(13, 52, 13, floor - 1, STONE);
+      fill(8, 53, 12, floor - 1, LAVA);
+      fill(56, 45, 73, 45, OIL);
+      fill(70, 44, 72, 48, ICE);
     }
 
     function loadPreset(id) {
@@ -4853,24 +5862,54 @@
         buildExtinguish();
       } else if (id === "flood") {
         buildFlood();
+      } else if (id === "glass") {
+        buildGlass();
+      } else if (id === "quench") {
+        buildQuench();
+      } else if (id === "thaw") {
+        buildThaw();
+      } else if (id === "spill") {
+        buildSpill();
+      } else if (id === "etch") {
+        buildEtch();
+      } else if (id === "sprout") {
+        buildSprout();
+      } else if (id === "geyser") {
+        buildGeyser();
+      } else if (id === "grove") {
+        buildGrove();
       } else {
         buildFree();
+        buildShowcase();
       }
-      fireTarget = count(FIRE);
+      /* What the goal's "count down to zero" material started at, read after
+       * the board is laid out so it matches the opening position exactly. */
+      var goal = boardGoals[id];
+      zeroTarget =
+        goal && goal.kind === "countZero" ? count(goal.element) : 0;
       return generation;
     }
 
     /* --- painting --------------------------------------------------- */
 
     /* The brush refuses anything but an empty cell (so a wall or a settled
-     * pile is never overwritten by accident), only the eraser clears, and the
-     * flood board refuses paint at or below its rim. */
+     * pile is never overwritten by accident), only the eraser clears, and a
+     * board that declares a pour zone refuses every stroke - the eraser
+     * included - outside it. The test sits here, in the simulation, rather
+     * than in a pointer handler, so a pointer, a touch, the keyboard cursor
+     * and a direct `sim.paint` call are all held to the same fence. A board
+     * that hands out a paint allowance refuses everything once the allowance
+     * is gone, which is also what keeps an armed board armed: a refused stroke
+     * changes nothing. */
     function paint(x, y, value) {
       if (!inBounds(x, y)) {
         outOfRangeWrites += 1;
         return false;
       }
-      if (value !== EMPTY && aboveRow >= 0 && y >= aboveRow) {
+      if (ink > 0 && inkLeft <= 0) {
+        return false;
+      }
+      if (!inPourZone(x, y)) {
         return false;
       }
       var cell = index(x, y);
@@ -4881,12 +5920,22 @@
         cells[cell] = EMPTY;
         life[cell] = 0;
         movedAt[cell] = generation;
+        spendInk();
         return true;
       }
       if (cells[cell] !== EMPTY) {
         return false;
       }
+      /* The cell is in bounds and empty, so the write cannot be refused - which
+       * is why the allowance can be spent before the element lands. */
+      spendInk();
       return set(x, y, value);
+    }
+
+    function spendInk() {
+      if (ink > 0) {
+        inkLeft = Math.max(0, inkLeft - 1);
+      }
     }
 
     function paintBlob(cx, cy, value, radius) {
@@ -4909,52 +5958,86 @@
 
     /* --- goals ------------------------------------------------------ */
 
-    /* The win condition of a challenge, measured against the live board.
-     * `value` and `target` are exactly what the HUD prints, so the number on
-     * screen is always the number being checked. */
-    function progress(id) {
-      var cell = 0;
-      if (id === "grow") {
-        var topPlant = -1;
-        for (cell = 0; cell < total; cell += 1) {
-          if (cells[cell] !== PLANT) {
-            continue;
-          }
-          var row = Math.floor(cell / cols);
-          if (topPlant === -1 || row < topPlant) {
-            topPlant = row;
+    /* How many cells of `value` sit inside a rectangle, clipped to the board. */
+    function countIn(x0, y0, x1, y1, value) {
+      var x = 0;
+      var y = 0;
+      var found = 0;
+      for (y = Math.max(0, y0); y <= Math.min(rows - 1, y1); y += 1) {
+        for (x = Math.max(0, x0); x <= Math.min(cols - 1, x1); x += 1) {
+          if (cells[index(x, y)] === value) {
+            found += 1;
           }
         }
+      }
+      return found;
+    }
+
+    /* The topmost row a plant has reached, or -1 when the board has none. */
+    function topPlantRow() {
+      var cell = 0;
+      var best = -1;
+      for (cell = 0; cell < total; cell += 1) {
+        if (cells[cell] !== PLANT) {
+          continue;
+        }
+        var row = Math.floor(cell / cols);
+        if (best === -1 || row < best) {
+          best = row;
+        }
+      }
+      return best;
+    }
+
+    /* The win condition of a challenge, dispatched on the descriptor the board
+     * declared. `value` and `target` are exactly what the HUD prints, so the
+     * number on screen is always the number being checked. */
+    function progress(id) {
+      var goal = boardGoals[id] || boardGoals.free;
+      var cell = 0;
+
+      if (goal.kind === "growTop") {
+        var topPlant = topPlantRow();
         return {
           value: topPlant === -1 ? 0 : rows - topPlant,
           target: rows,
           done: topPlant === 0,
         };
       }
-      if (id === "extinguish") {
-        var fires = count(FIRE);
-        return { value: fires, target: fireTarget, done: fires === 0 };
+      if (goal.kind === "countZero") {
+        var left = count(goal.element);
+        return { value: left, target: zeroTarget, done: left === 0 };
       }
-      if (id === "flood") {
-        var wet = 0;
-        var x = 0;
-        var y = 0;
-        if (zone) {
-          for (y = zone.y0; y <= zone.y1; y += 1) {
-            for (x = zone.x0; x <= zone.x1; x += 1) {
-              if (cells[index(x, y)] === WATER) {
-                wet += 1;
-              }
-            }
-          }
-        }
+      if (goal.kind === "countAtLeast") {
+        var held = count(goal.element);
+        return { value: held, target: goal.need, done: held >= goal.need };
+      }
+      if (goal.kind === "zoneFill") {
+        var wet = zone ? countIn(zone.x0, zone.y0, zone.x1, zone.y1, WATER) : 0;
         return {
           value: wet,
           target: zoneTarget,
           done: zoneTarget > 0 && wet >= zoneTarget,
         };
       }
+      if (goal.kind === "countZeroPlusMin") {
+        var fires = count(goal.element);
+        var kept = countIn(goal.x0, goal.y0, goal.x1, goal.y1, goal.material);
+        return {
+          value: kept,
+          target: goal.need,
+          zero: fires,
+          done: fires === 0 && kept >= goal.need,
+        };
+      }
       return { value: 0, target: 0, done: false };
+    }
+
+    /* Which shape a board's goal takes, so the panel can print a countdown, a
+     * fraction or a two-part line without repeating the table. */
+    function goalKind(id) {
+      var goal = boardGoals[id];
+      return goal ? goal.kind : "none";
     }
 
     return {
@@ -4967,9 +6050,29 @@
       water: WATER,
       plant: PLANT,
       fire: FIRE,
+      wood: WOOD,
+      ash: ASH,
+      oil: OIL,
+      lava: LAVA,
+      ice: ICE,
+      steam: STEAM,
+      acid: ACID,
+      seed: SEED,
+      smoke: SMOKE,
+      glass: GLASS,
+      void: VOID,
       fireLife: fireLife,
       growEvery: growEvery,
       spread: spread,
+      oilSpread: oilSpread,
+      lavaSpread: lavaSpread,
+      steamLife: steamLife,
+      smokeLife: smokeLife,
+      acidUses: acidUses,
+      /* The fuel and corrosion sets, so a test can ask the sandbox which
+       * elements a rule covers instead of repeating the list. */
+      isFuel: isFuel,
+      isSoluble: isSoluble,
       /* The live grid, for the renderer only. Everything else goes through the
        * accessors, which is what keeps the rules bounds-safe. */
       cells: cells,
@@ -4979,6 +6082,7 @@
       get: get,
       set: set,
       count: count,
+      tally: tally,
       hash: hash,
       paint: paint,
       paintBlob: paintBlob,
@@ -4989,14 +6093,41 @@
       clear: clearBoard,
       loadPreset: loadPreset,
       progress: progress,
+      goalKind: goalKind,
       zone: function () {
         return zone
           ? { x0: zone.x0, y0: zone.y0, x1: zone.x1, y1: zone.y1 }
           : null;
       },
-      paintAboveRow: function () {
-        return aboveRow;
+      /* Where this board lets the brush work, as a fresh list of rectangles.
+       * An empty list is the whole grid - free play, and any board that asked
+       * for no fence - which is what the renderer tints and the panel words. */
+      pourZones: function () {
+        return pourZones.map(function (rect) {
+          return { x0: rect.x0, y0: rect.y0, x1: rect.x1, y1: rect.y1 };
+        });
       },
+      /* The paint allowance, counted in cells and refilled by every reload. */
+      setInk: function (cells_) {
+        var next = parseInt(cells_, 10);
+        ink = isFinite(next) && next > 0 ? next : 0;
+        inkLeft = ink;
+        return ink;
+      },
+      ink: function () {
+        return ink;
+      },
+      inkLeft: function () {
+        return inkLeft;
+      },
+      addSpawner: addSpawner,
+      spawners: function () {
+        return spawners.length;
+      },
+      remember: remember,
+      forget: forget,
+      undo: undo,
+      undoDepth: undoDepth,
       outOfRangeWrites: function () {
         return outOfRangeWrites;
       },
@@ -5015,8 +6146,16 @@
     var goalEl = getElement("elementsGoal");
     var resultEl = getElement("elementsResult");
     var bestEl = getElement("elementsBest");
+    var starsEl = getElement("elementsStars");
     var startBtn = getElement("elementsStartBtn");
     var resetBtn = getElement("elementsResetBtn");
+    var speedEl = getElement("elementsSpeed");
+    var legendEl = getElement("elementsLegend");
+    var budgetEl = getElement("elementsBudget");
+    var pauseBtn = getElement("elementsPauseBtn");
+    var stepBtn = getElement("elementsStepBtn");
+    var pickBtn = getElement("elementsPickBtn");
+    var undoBtn = getElement("elementsUndoBtn");
     if (
       !panel ||
       !canvas ||
@@ -5029,19 +6168,29 @@
       !goalEl ||
       !resultEl ||
       !bestEl ||
+      !starsEl ||
       !startBtn ||
-      !resetBtn
+      !resetBtn ||
+      !speedEl ||
+      !legendEl ||
+      !budgetEl ||
+      !pauseBtn ||
+      !stepBtn ||
+      !pickBtn ||
+      !undoBtn
     ) {
       return;
     }
 
     var primaryLabel = startBtn.querySelector("[data-i18n]");
-    if (!primaryLabel) {
+    var pauseLabel = pauseBtn.querySelector("[data-i18n]");
+    if (!primaryLabel || !pauseLabel) {
       return;
     }
 
     var modal = getElement("gameModal");
     var toolButtons = panel.querySelectorAll(".elements-tool");
+    var brushButtons = panel.querySelectorAll(".elements-brush");
     var sim = createElementsSim({
       cols: elementsCols,
       rows: elementsRows,
@@ -5051,7 +6200,28 @@
     var STONE = sim.stone;
     var FIRE = sim.fire;
     var ids = sim.ids;
-    var elementOrder = ["empty", "stone", "sand", "water", "plant", "fire"];
+    /* The palette order, and the only order the number keys follow. Ids 0-5
+     * keep the positions they have always had, so 1-6 still mean what they
+     * meant before the expansion. */
+    var elementOrder = [
+      "empty",
+      "stone",
+      "sand",
+      "water",
+      "plant",
+      "fire",
+      "wood",
+      "ash",
+      "oil",
+      "lava",
+      "ice",
+      "steam",
+      "acid",
+      "seed",
+      "smoke",
+      "glass",
+      "void",
+    ];
     var elementLabelKeys = {
       empty: "elementsEmpty",
       stone: "elementsStone",
@@ -5059,9 +6229,56 @@
       water: "elementsWater",
       plant: "elementsPlant",
       fire: "elementsFire",
+      wood: "elementsWood",
+      ash: "elementsAsh",
+      oil: "elementsOil",
+      lava: "elementsLava",
+      ice: "elementsIce",
+      steam: "elementsSteam",
+      acid: "elementsAcid",
+      seed: "elementsSeed",
+      smoke: "elementsSmoke",
+      glass: "elementsGlass",
+      void: "elementsVoid",
     };
-    /* Cell colours per theme, indexed by element id, plus the tint that marks
-     * the flood board's target zone. */
+    /* Which family each element belongs to, for the legend under the palette.
+     * The classes are the design document's: a static is never stepped, a
+     * powder falls in grains, a liquid falls and flows, a gas rises. */
+    var elementClasses = {
+      empty: "static",
+      stone: "static",
+      sand: "powder",
+      water: "liquid",
+      plant: "static",
+      fire: "static",
+      wood: "static",
+      ash: "powder",
+      oil: "liquid",
+      lava: "liquid",
+      ice: "static",
+      steam: "gas",
+      acid: "liquid",
+      seed: "powder",
+      smoke: "gas",
+      glass: "static",
+      void: "static",
+    };
+    var classKeys = {
+      static: "elementsClassStatic",
+      powder: "elementsClassPowder",
+      liquid: "elementsClassLiquid",
+      gas: "elementsClassGas",
+    };
+    /* Brush radii, in cells: 1x1, 3x3, 5x5 and 7x7. The 5x5 is the pointer
+     * brush the sandbox has always had, so the middle chip is the default. */
+    var brushRadii = [0, 1, 2, 3];
+    var brushDefault = 2;
+    /* Cell colours per theme, indexed by element id, plus the two tints the
+     * renderer lays over an empty cell: the target zone a goal is scored in,
+     * and the pour zone a board lets the brush work in. Both are washes rather
+     * than fills, so the board underneath stays readable, and neither moves, so
+     * the canvas looks the same with motion off. Fire is the one id the
+     * renderer colours from its own life counter instead of from here. */
     var darkPalette = {
       cells: [
         [9, 12, 20],
@@ -5069,9 +6286,21 @@
         [214, 176, 106],
         [58, 146, 226],
         [86, 214, 126],
-        [255, 120, 40],
+        [255, 110, 40],
+        [138, 96, 52],
+        [120, 118, 112],
+        [74, 60, 44],
+        [226, 86, 26],
+        [170, 220, 240],
+        [200, 210, 225],
+        [150, 220, 60],
+        [176, 140, 70],
+        [90, 92, 100],
+        [190, 220, 230],
+        [20, 10, 30],
       ],
       zone: [26, 36, 58],
+      pour: [12, 44, 40],
     };
     var lightPalette = {
       cells: [
@@ -5081,12 +6310,23 @@
         [56, 130, 212],
         [46, 168, 96],
         [230, 104, 36],
+        [186, 150, 104],
+        [150, 148, 142],
+        [126, 108, 84],
+        [236, 120, 60],
+        [196, 232, 248],
+        [222, 230, 240],
+        [126, 190, 62],
+        [196, 166, 96],
+        [132, 134, 142],
+        [214, 234, 242],
+        [64, 52, 84],
       ],
       zone: [219, 229, 243],
+      pour: [222, 242, 228],
     };
 
     var challenge = elementsChallenges[0];
-    var allowed = challenge.tools;
     var activeTool = challenge.defaultTool;
     /* A board that has just been loaded is armed, not running: `runActive`
      * only turns true once the player starts that run - with Start, or with
@@ -5096,6 +6336,16 @@
      * before the player starts (see `boardArmed` near the loop). */
     var runActive = false;
     var runFinished = false;
+    /* The hand controls. `paused` holds the interval stopped while the player
+     * looks at a frame; `speed` scales the interval, never the clock; `pick`
+     * turns the next click on the grid into an eyedropper; `brushIndex` is the
+     * brush the pointer draws with; `strokePainted` counts what the gesture in
+     * progress has changed, so a stroke the board refused costs no undo. */
+    var paused = false;
+    var speed = 1;
+    var pick = false;
+    var brushIndex = brushDefault;
+    var strokePainted = 0;
     /* Whole milliseconds of simulated time: a float second counter rounds just
      * short of the limit, which would leave the clock showing 0.0s while the
      * run is still alive. Only ticks charged to a live run land here. */
@@ -5110,10 +6360,74 @@
     var store = readProgress();
     var cleared = store.cleared;
     var bests = store.bests;
+    var stars = store.stars;
+    /* What this board hands the brush: the elements it declares that the
+     * campaign has unlocked. Grow's water is base kit, so the three original
+     * boards offer exactly what they always did. */
+    var allowed = boardTools(challenge);
     var canvasCtx = null;
     var offCtx = null;
     var offscreen = null;
     var imageData = null;
+
+    /* --- the campaign's unlock chain --------------------------------- */
+
+    /* Where a board sits in the teaching order. Free play is rung 0 and is
+     * never locked; every later board waits on the one before it. */
+    function challengeRung(id) {
+      var rung = 0;
+      var found = -1;
+      elementsChallenges.forEach(function (info, index) {
+        if (info.id === id) {
+          found = index;
+        }
+      });
+      rung = found;
+      return rung;
+    }
+
+    /* Free play is never locked and Grow is the board the campaign opens
+     * with, so the first two rungs are always open; every later board waits on
+     * the one before it. There is no stored unlock state: the chain is derived
+     * from the clears, so it can never fall out of step with them. */
+    function challengeUnlocked(id) {
+      var rung = challengeRung(id);
+      if (rung <= 1) {
+        return true;
+      }
+      return cleared[elementsChallenges[rung - 1].id] === true;
+    }
+
+    /* Every element the player has unlocked so far. The base six are always
+     * there; an element arrives with the board that introduces it, so it can
+     * be tried out before that board is solved. */
+    function unlockedElements() {
+      var list = elementsBasePalette.slice();
+      elementsChallenges.forEach(function (info) {
+        var adds = elementsUnlockByChallenge[info.id];
+        if (!adds || !challengeUnlocked(info.id)) {
+          return;
+        }
+        adds.forEach(function (name) {
+          if (list.indexOf(name) === -1) {
+            list.push(name);
+          }
+        });
+      });
+      if (cleared[elementsChallenges[elementsChallenges.length - 1].id] === true) {
+        if (list.indexOf(elementsFinalUnlock) === -1) {
+          list.push(elementsFinalUnlock);
+        }
+      }
+      return list;
+    }
+
+    function boardTools(info) {
+      var unlocked = unlockedElements();
+      return info.tools.filter(function (name) {
+        return unlocked.indexOf(name) !== -1;
+      });
+    }
 
     function findChallenge(id) {
       var found = elementsChallenges[0];
@@ -5143,7 +6457,7 @@
      * the stored text is not in the current shape yet and is rewritten once. */
     function readProgress() {
       var blank = function (stale) {
-        return { cleared: {}, bests: {}, stale: stale };
+        return { cleared: {}, bests: {}, stars: {}, stale: stale };
       };
       var raw = null;
       try {
@@ -5194,10 +6508,47 @@
         });
       }
 
+      /* The star table is never trusted from disk: it is recomputed from the
+       * bests against the thresholds the board declares, so re-tuning a par
+       * time needs no migration and a hand-edited record cannot invent one. */
+      var cleanStars = {};
+      var starsAgree = true;
+      elementsChallenges.forEach(function (info) {
+        if (info.limit <= 0 || !cleanCleared[info.id]) {
+          return;
+        }
+        var earned = starsFor(info.id, cleanBests[info.id]);
+        /* A board that was cleared but has no time left in the record (a v1
+         * record, or one whose best was dropped as out of range) still earned
+         * its first star. */
+        if (earned === 0 && !cleanBests[info.id]) {
+          earned = 1;
+        }
+        if (earned > 0) {
+          cleanStars[info.id] = earned;
+        }
+      });
+      /* A record whose cached star table disagrees with its own best times is
+       * rewritten once, the same way an old version is. */
+      var storedStars = parsed.stars;
+      if (storedStars && typeof storedStars === "object" && !Array.isArray(storedStars)) {
+        Object.keys(cleanStars).forEach(function (key) {
+          if (storedStars[key] !== cleanStars[key]) {
+            starsAgree = false;
+          }
+        });
+        Object.keys(storedStars).forEach(function (key) {
+          if (cleanStars[key] !== storedStars[key]) {
+            starsAgree = false;
+          }
+        });
+      }
+
       return {
         cleared: cleanCleared,
         bests: cleanBests,
-        stale: parsed.v !== elementsStoreVersion,
+        stars: cleanStars,
+        stale: parsed.v !== elementsStoreVersion || !starsAgree,
       };
     }
 
@@ -5209,6 +6560,7 @@
             v: elementsStoreVersion,
             cleared: cleared,
             bests: bests,
+            stars: stars,
           }),
         );
       } catch (error) {
@@ -5219,6 +6571,37 @@
     function challengeBest(id) {
       var value = bests[id];
       return isFinite(value) && value > 0 ? value : 0;
+    }
+
+    /* Stars are a pure function of the best time and the board's par times, so
+     * they can be re-read at any moment and never drift from the record. */
+    function starsFor(id, best) {
+      var info = findChallenge(id);
+      var value = parseFloat(best);
+      var rungs = 0;
+      if (!info || info.limit <= 0 || !isFinite(value) || value <= 0) {
+        return 0;
+      }
+      rungs = info.stars;
+      if (value <= rungs[0]) {
+        return 3;
+      }
+      if (value <= rungs[1]) {
+        return 2;
+      }
+      if (value <= rungs[2]) {
+        return 1;
+      }
+      return 0;
+    }
+
+    function starGlyphs(count) {
+      var out = "";
+      var step = 0;
+      for (step = 0; step < 3; step += 1) {
+        out += step < count ? "\u2605" : "\u2606";
+      }
+      return out;
     }
 
     /* --- rendering -------------------------------------------------- */
@@ -5260,6 +6643,9 @@
       var board = sim.cells;
       var flames = sim.life;
       var target = sim.zone();
+      /* The region the brush is allowed in, read once per frame. An empty list
+       * is the whole board, which is free play: nothing is tinted. */
+      var pours = sim.pourZones();
       var data = imageData.data;
       var cell = 0;
       var x = 0;
@@ -5268,6 +6654,8 @@
       var offset = 0;
       var heat = 0;
       var shade = 0;
+      var inPour = false;
+      var step = 0;
       for (cell = 0; cell < board.length; cell += 1) {
         x = cell % sim.cols;
         y = (cell - x) / sim.cols;
@@ -5285,6 +6673,22 @@
           y <= target.y1
         ) {
           colour = palette.zone;
+        } else if (value === EMPTY && pours.length) {
+          inPour = false;
+          for (step = 0; step < pours.length; step += 1) {
+            if (
+              x >= pours[step].x0 &&
+              x <= pours[step].x1 &&
+              y >= pours[step].y0 &&
+              y <= pours[step].y1
+            ) {
+              inPour = true;
+              break;
+            }
+          }
+          if (inPour) {
+            colour = palette.pour;
+          }
         } else if (value === STONE) {
           shade = ((x * 7 + y * 13) % 15) - 7;
           colour = [colour[0] + shade, colour[1] + shade, colour[2] + shade];
@@ -5307,16 +6711,17 @@
     }
 
     /* A concise description of what the grid holds right now, for the
-     * canvas's aria-describedby. */
+     * canvas's aria-describedby. One pass over the board, not one per
+     * element, so a seventeen-element roster costs the same as six did. */
     function renderDescription() {
+      var counts = sim.tally();
       var parts = [];
       elementOrder.forEach(function (name) {
         if (name === "empty") {
           return;
         }
-        var found = sim.count(ids[name]);
-        if (found > 0) {
-          parts.push(found + " " + t(elementLabelKeys[name]));
+        if (counts[ids[name]] > 0) {
+          parts.push(counts[ids[name]] + " " + t(elementLabelKeys[name]));
         }
       });
       descEl.textContent = t("elementsDescription", {
@@ -5331,9 +6736,17 @@
       selectEl.innerHTML = "";
       elementsChallenges.forEach(function (info) {
         var option = document.createElement("option");
+        var open = challengeUnlocked(info.id);
+        var earned = starsFor(info.id, challengeBest(info.id));
         option.value = info.id;
         option.textContent =
-          t(info.labelKey) + (cleared[info.id] ? " \u2713" : "");
+          t(info.labelKey) +
+          (cleared[info.id] ? " \u2713" : "") +
+          (earned > 0 ? " " + starGlyphs(earned) : "") +
+          (open ? "" : " " + t("elementsLocked"));
+        /* A locked board cannot be picked at all: the option is disabled, so
+         * neither the pointer nor the keyboard can land on it. */
+        option.disabled = !open;
         if (info.id === selected) {
           option.selected = true;
         }
@@ -5361,7 +6774,42 @@
       }
       activeTool = name;
       renderTools();
+      renderLegend();
       return true;
+    }
+
+    /* What the chosen element is and how it behaves, in one line under the
+     * palette. The palette itself is a wall of seventeen chips, so the legend
+     * is what keeps it readable. */
+    function renderLegend() {
+      legendEl.textContent = t("elementsLegend", {
+        name: t(elementLabelKeys[activeTool]),
+        kind: t(classKeys[elementClasses[activeTool]] || classKeys.static),
+      });
+    }
+
+    function brushRadius() {
+      var radius = brushRadii[brushIndex];
+      return isFinite(radius) ? radius : elementsBrush;
+    }
+
+    function renderBrushes() {
+      brushButtons.forEach(function (button) {
+        var size = parseInt(button.getAttribute("data-size"), 10);
+        var on = size === brushIndex;
+        button.setAttribute("aria-pressed", on ? "true" : "false");
+        button.classList.toggle("is-active", on);
+      });
+    }
+
+    function renderButtons() {
+      pauseLabel.setAttribute("data-i18n", paused ? "elementsResume" : "elementsPause");
+      pauseLabel.textContent = t(paused ? "elementsResume" : "elementsPause");
+      pauseBtn.setAttribute("aria-pressed", paused ? "true" : "false");
+      pickBtn.setAttribute("aria-pressed", pick ? "true" : "false");
+      stepBtn.disabled = runFinished;
+      /* Undo is only offered when there is a stroke to undo. */
+      undoBtn.disabled = sim.undoDepth() === 0;
     }
 
     /* Everything that only moves when the board, the challenge or the
@@ -5370,10 +6818,13 @@
       if (lastLang !== currentLang) {
         lastLang = currentLang;
         buildChallengeOptions();
-        goalEl.textContent = t(challenge.goalKey);
+        goalEl.textContent = boardGoalText();
       }
       renderBest();
       renderTools();
+      renderLegend();
+      renderBrushes();
+      renderButtons();
       if (runFinished) {
         primaryLabel.textContent = t("btnTryAgain");
       } else if (challenge.limit > 0) {
@@ -5385,9 +6836,36 @@
 
     function renderBest() {
       var best = challengeBest(challenge.id);
+      var earned = starsFor(challenge.id, best);
       bestEl.textContent = best
         ? t("bestTime", { s: best.toFixed(1) })
         : t("noBest");
+      starsEl.textContent = earned > 0 ? starGlyphs(earned) : "\u2014";
+      starsEl.setAttribute(
+        "aria-label",
+        t("elementsStarsLabel") + " " + starGlyphs(earned),
+      );
+    }
+
+    /* The goal line. Grow, the zone boards and the quarries print a fraction,
+     * the "reduce this to zero" boards print a bare countdown, and the grove
+     * prints both halves of its two-part goal. */
+    function renderGoalState(state) {
+      var kind = sim.goalKind(challenge.id);
+      if (kind === "countZero") {
+        progressEl.textContent = String(state.value);
+        return;
+      }
+      if (kind === "countZeroPlusMin") {
+        progressEl.textContent = t("elementsGroveProgress", {
+          kept: String(state.value),
+          need: String(state.target),
+          fires: String(state.zero),
+        });
+        return;
+      }
+      progressEl.textContent =
+        state.target > 0 ? state.value + "/" + state.target : "\u2014";
     }
 
     function renderHud() {
@@ -5399,15 +6877,16 @@
         timeLabel.textContent = t("hudTime");
         timeEl.textContent = elapsedSeconds().toFixed(1) + "s";
       }
-      var state = sim.progress(challenge.id);
-      if (challenge.id === "extinguish") {
-        /* Fires are counted down, not filled up, so the HUD shows the count
-         * alone rather than a fraction that grows as the board burns. */
-        progressEl.textContent = String(state.value);
+      renderGoalState(sim.progress(challenge.id));
+      /* The paint allowance. Zero means the board did not ration the brush,
+       * which the sandbox and the first three goals do not, and the HUD says
+       * so rather than showing a countdown that will never move. */
+      if (sim.ink() > 0) {
+        budgetEl.textContent = sim.inkLeft() + "/" + sim.ink();
       } else {
-        progressEl.textContent =
-          state.target > 0 ? state.value + "/" + state.target : "\u2014";
+        budgetEl.textContent = t("elementsBudgetUnlimited");
       }
+      undoBtn.disabled = sim.undoDepth() === 0;
     }
 
     /* --- the loop --------------------------------------------------- */
@@ -5423,11 +6902,19 @@
       return challenge.limit > 0 && !runActive;
     }
 
+    /* The tick the loop actually runs at: the base tick divided by the speed
+     * multiplier. The clock still charges the base tick, so a recorded time
+     * measures generations rather than the wall-clock seconds they were run in
+     * and a best time means the same thing at every speed. */
+    function tickMs() {
+      return Math.max(1, Math.round(elementsTickMs / speed));
+    }
+
     function startLoop() {
-      if (intervalId !== null || !boardVisible()) {
+      if (intervalId !== null || !boardVisible() || paused) {
         return;
       }
-      intervalId = window.setInterval(tick, elementsTickMs);
+      intervalId = window.setInterval(tick, tickMs());
     }
 
     function stopLoop() {
@@ -5439,11 +6926,12 @@
     }
 
     /* The sandbox keeps flowing while its panel is up; a finished challenge
-     * stays frozen until the player starts again or resets. An armed timed
-     * board keeps its loop up too, but every tick it produces advances nothing
-     * (see `tick`), so the sandbox is running without the world running away. */
+     * stays frozen until the player starts again or resets, and so does a board
+     * the player has paused. An armed timed board keeps its loop up too, but
+     * every tick it produces advances nothing (see `tick`), so the sandbox is
+     * running without the world running away. */
     function syncLoop() {
-      if (!boardVisible() || runFinished) {
+      if (!boardVisible() || runFinished || paused) {
         stopLoop();
         return;
       }
@@ -5451,10 +6939,42 @@
     }
 
     function ensureLoop() {
-      if (runFinished) {
+      if (runFinished || paused) {
         return;
       }
       startLoop();
+    }
+
+    /* Changing speed swaps the interval for one at the new tick - the loop is
+     * still the same tracked, cleared interval it has always been, never a
+     * frame callback and never two intervals at once. */
+    function applySpeed() {
+      if (intervalId === null) {
+        return;
+      }
+      stopLoop();
+      startLoop();
+    }
+
+    function setSpeed(next) {
+      var parsed = parseFloat(next);
+      speed = isFinite(parsed) && parsed > 0 ? parsed : 1;
+      applySpeed();
+    }
+
+    /* Pause stops the interval; nothing else about the board changes, so the
+     * clock and the world are both exactly where the player left them. Because
+     * the loop only ever steps a board that is not armed, pausing can never be
+     * a way to make a frozen board move either. */
+    function setPaused(next) {
+      paused = !!next;
+      if (paused) {
+        stopLoop();
+      } else {
+        syncLoop();
+      }
+      renderButtons();
+      resultEl.textContent = t(paused ? "elementsPaused" : "elementsResumed");
     }
 
     /* Free play is already flowing when it is merely loaded, but a timed board
@@ -5486,18 +7006,7 @@
     function tick() {
       var frozen = boardArmed();
       if (!frozen) {
-        sim.step();
-        tickCount += 1;
-        /* Only free play and a live run get this far, so every generation
-         * produced is charged to a stopwatch that is actually running. */
-        elapsedMs += elementsTickMs;
-        if (runActive) {
-          if (sim.progress(challenge.id).done) {
-            completeRun();
-          } else if (challenge.limit > 0 && elapsedMs >= challenge.limit * 1000) {
-            expireRun();
-          }
-        }
+        advance();
       }
       /* An armed board still redraws, so a theme switch is picked up without
        * the grid having to move. */
@@ -5508,15 +7017,68 @@
       }
     }
 
+    /* One generation of world and clock, with the win and the timeout checked
+     * against it. Shared by the loop and by Step, so a stepped generation is
+     * charged and judged exactly like a looped one. */
+    function advance() {
+      sim.step();
+      tickCount += 1;
+      /* Only free play and a live run get this far, so every generation
+       * produced is charged to a stopwatch that is actually running. */
+      elapsedMs += elementsTickMs;
+      if (runActive) {
+        if (sim.progress(challenge.id).done) {
+          completeRun();
+        } else if (challenge.limit > 0 && elapsedMs >= challenge.limit * 1000) {
+          expireRun();
+        }
+      }
+    }
+
+    /* Step: one generation on demand while the loop is held. On an armed timed
+     * board a step is the go, exactly like the first paint that changes the
+     * grid, so the frozen board is never advanced behind the player's back. */
+    function stepOnce() {
+      if (runFinished) {
+        return;
+      }
+      if (boardArmed()) {
+        runActive = true;
+        resultEl.textContent = t("elementsGo");
+        renderStatic();
+      }
+      advance();
+      render();
+      renderHud();
+      renderDescription();
+    }
+
     /* --- run lifecycle ---------------------------------------------- */
 
+    /* The goal line. A board that fences the brush in says so here as well as
+     * on the canvas, so the note travels with the goal into the status line and
+     * a player reading either one is told where painting is allowed. */
+    function boardGoalText() {
+      var text = t(challenge.goalKey);
+      if (sim.pourZones().length > 0) {
+        text += " \u00b7 " + t("elementsPourHint");
+      }
+      return text;
+    }
+
     function loadBoard() {
+      /* The allowance belongs to the board, so it is set before the board is
+       * laid out - the reload is what refills it. */
+      sim.setInk(challenge.budget);
       sim.loadPreset(challenge.id);
       elapsedMs = 0;
       tickCount = 0;
+      pick = false;
+      strokePainted = 0;
+      lastCell = null;
       cursorX = Math.floor(sim.cols / 2);
       cursorY = Math.floor(sim.rows / 2);
-      goalEl.textContent = t(challenge.goalKey);
+      goalEl.textContent = boardGoalText();
       renderCursor();
       render();
       renderHud();
@@ -5541,6 +7103,14 @@
       }
       if (!cleared[challenge.id]) {
         cleared[challenge.id] = true;
+        changed = true;
+      }
+      /* A clear is also the moment a new board (and with it a new element)
+       * comes into reach, so the best, the star and the unlock are all written
+       * in the same record. */
+      var earned = starsFor(challenge.id, bests[challenge.id]);
+      if (earned > (stars[challenge.id] || 0)) {
+        stars[challenge.id] = earned;
         changed = true;
       }
       if (changed) {
@@ -5589,14 +7159,17 @@
     /* Start / Try Again / New Game: the explicit go. The board is reloaded and
      * a timed challenge's clock begins ticking at once - the player asked for
      * the run, so unlike a board that was merely selected nothing is charged
-     * that they did not choose. */
+     * that they did not choose. An explicit go also lifts a pause: starting a
+     * board and then not being able to see it move is nobody's idea of start. */
     function startRun() {
+      paused = false;
+      pick = false;
       loadBoard();
       runActive = challenge.limit > 0;
       runFinished = false;
       resultEl.textContent = runActive
         ? t("elementsGo")
-        : t(challenge.goalKey);
+        : boardGoalText();
       renderStatic();
       startLoop();
       if (typeof canvas.focus === "function") {
@@ -5610,8 +7183,10 @@
     function resetBoard() {
       runActive = false;
       runFinished = false;
+      paused = false;
+      pick = false;
       loadBoard();
-      resultEl.textContent = t(challenge.goalKey);
+      resultEl.textContent = boardGoalText();
       renderStatic();
       startLoop();
       if (typeof canvas.focus === "function") {
@@ -5644,7 +7219,31 @@
     }
 
     function paintAt(x, y) {
-      return sim.paintBlob(x, y, ids[activeTool], elementsBrush);
+      return sim.paintBlob(x, y, ids[activeTool], brushRadius());
+    }
+
+    /* The eyedropper: whatever the player clicks becomes the brush, as long as
+     * this board offers it. It paints nothing, so it starts nothing. */
+    function pickAt(x, y) {
+      var value = sim.get(x, y);
+      var name = null;
+      elementOrder.forEach(function (candidate) {
+        if (ids[candidate] === value) {
+          name = candidate;
+        }
+      });
+      pick = false;
+      if (name === null || allowed.indexOf(name) === -1) {
+        resultEl.textContent = t("elementsPickBlocked");
+        renderButtons();
+        return false;
+      }
+      selectTool(name);
+      renderButtons();
+      resultEl.textContent = t("elementsPicked", {
+        name: t(elementLabelKeys[name]),
+      });
+      return true;
     }
 
     /* A drag paints every cell between two pointer samples, so a fast swipe
@@ -5671,6 +7270,7 @@
     function renderPainted() {
       render();
       renderDescription();
+      renderButtons();
     }
 
     canvas.addEventListener("pointerdown", function (event) {
@@ -5678,13 +7278,23 @@
         return;
       }
       event.preventDefault();
-      painting = true;
       lastCell = cellAt(event.clientX, event.clientY);
       if (typeof canvas.setPointerCapture === "function" && event.pointerId !== undefined) {
         canvas.setPointerCapture(event.pointerId);
       }
-      var painted = paintAt(lastCell.x, lastCell.y);
-      beginRun(painted);
+      /* The eyedropper paints nothing, so it neither starts nor charges a run. */
+      if (pick) {
+        pickAt(lastCell.x, lastCell.y);
+        renderPainted();
+        return;
+      }
+      painting = true;
+      /* One snapshot per gesture, taken before the first cell of it changes:
+       * undo takes back a stroke, not a sample. */
+      strokePainted = 0;
+      sim.remember();
+      strokePainted += paintAt(lastCell.x, lastCell.y);
+      beginRun(strokePainted);
       renderPainted();
     });
 
@@ -5696,14 +7306,22 @@
       var cell = cellAt(event.clientX, event.clientY);
       var painted = paintLine(lastCell || cell, cell);
       lastCell = cell;
+      strokePainted += painted;
       beginRun(painted);
       renderPainted();
     });
 
     ["pointerup", "pointercancel", "pointerleave"].forEach(function (type) {
       canvas.addEventListener(type, function () {
+        /* A gesture the board refused every cell of changed nothing, so it
+         * should not have cost the player an undo. */
+        if (painting && strokePainted === 0) {
+          sim.forget();
+        }
         painting = false;
+        strokePainted = 0;
         lastCell = null;
+        renderButtons();
       });
     });
 
@@ -5730,8 +7348,24 @@
       }
       if (key === " " || key === "Spacebar" || key === "Enter") {
         event.preventDefault();
-        beginRun(sim.paintBlob(cursorX, cursorY, ids[activeTool], elementsCursorBrush));
+        if (pick) {
+          pickAt(cursorX, cursorY);
+          renderPainted();
+          return;
+        }
+        sim.remember();
+        var placed = sim.paintBlob(
+          cursorX,
+          cursorY,
+          ids[activeTool],
+          elementsCursorBrush,
+        );
+        if (placed === 0) {
+          sim.forget();
+        }
+        beginRun(placed);
         renderPainted();
+        renderButtons();
         return;
       }
       var digit = parseInt(key, 10);
@@ -5757,23 +7391,68 @@
       });
     });
 
+    brushButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        var size = parseInt(button.getAttribute("data-size"), 10);
+        brushIndex = isFinite(size) && size >= 0 && size < brushRadii.length
+          ? size
+          : brushDefault;
+        renderBrushes();
+      });
+    });
+
+    speedEl.addEventListener("change", function () {
+      setSpeed(speedEl.value);
+    });
+
+    pauseBtn.addEventListener("click", function () {
+      setPaused(!paused);
+    });
+
+    stepBtn.addEventListener("click", function () {
+      stepOnce();
+    });
+
+    pickBtn.addEventListener("click", function () {
+      pick = !pick;
+      renderButtons();
+      resultEl.textContent = pick ? t("elementsPickHint") : boardGoalText();
+    });
+
+    /* Undo takes the board back to the snapshot from before the stroke. It
+     * does not rewind the clock: the stroke and the generations it was charged
+     * for really happened, and a best time should not be rewritable. */
+    undoBtn.addEventListener("click", function () {
+      if (!sim.undo()) {
+        resultEl.textContent = t("elementsUndoEmpty");
+        renderButtons();
+        return;
+      }
+      render();
+      renderHud();
+      renderDescription();
+      resultEl.textContent = t("elementsUndone");
+    });
+
     selectEl.addEventListener("change", function () {
       var next = findChallenge(selectEl.value);
       if (next.id === challenge.id) {
         return;
       }
       challenge = next;
-      allowed = challenge.tools;
+      allowed = boardTools(challenge);
       /* A freshly picked board is only armed: it shows its goal and its full
        * limit, and neither the world nor the countdown moves until the player's
        * first paint. */
       runActive = false;
       runFinished = false;
+      paused = false;
+      pick = false;
       if (allowed.indexOf(activeTool) === -1) {
         selectTool(challenge.defaultTool);
       }
       loadBoard();
-      resultEl.textContent = t(challenge.goalKey);
+      resultEl.textContent = boardGoalText();
       renderStatic();
       startLoop();
     });
@@ -5794,13 +7473,16 @@
     /* Leaving the tab (or closing the drawer) abandons the run: the clock goes
      * back to frozen at its full limit and the board to its goal (an armed
      * timed board is frozen anyway), so a run picked up again only starts both
-     * on the next paint. */
+     * on the next paint. A tab switch also lifts a pause, because the board
+     * that comes back is presented as a fresh armed one. */
     quietResetElements = function () {
-      if (runActive || runFinished || intervalId !== null) {
+      if (runActive || runFinished || intervalId !== null || paused) {
         runActive = false;
         runFinished = false;
+        paused = false;
+        pick = false;
         elapsedMs = 0;
-        resultEl.textContent = t(challenge.goalKey);
+        resultEl.textContent = boardGoalText();
         renderStatic();
         renderHud();
       }
@@ -5810,6 +7492,7 @@
     setupCanvas();
     buildChallengeOptions();
     loadBoard();
+    setSpeed(speedEl.value);
     renderStatic();
     cursorEl.hidden = true;
     if (store.stale) {

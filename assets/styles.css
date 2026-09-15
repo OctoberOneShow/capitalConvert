@@ -2323,16 +2323,18 @@ body.game-modal-open {
     margin-top: 10px;
 }
 
+/* Seventeen chips have to live in the same drawer six did, so they are
+ * compact enough to fit three rows and still at least 32px tall. */
 .elements-tool {
     flex: 1 1 auto;
-    min-height: 38px;
-    padding: 6px 10px;
+    min-height: 32px;
+    padding: 4px 6px;
     border-radius: 10px;
     border: 1px solid var(--border);
     background: rgba(255, 255, 255, 0.04);
     color: var(--text);
     font: inherit;
-    font-size: 0.8rem;
+    font-size: 0.72rem;
     font-weight: 700;
     cursor: pointer;
     transition:
@@ -2351,6 +2353,48 @@ body.game-modal-open {
 .elements-tool[disabled] {
     opacity: 0.4;
     cursor: not-allowed;
+}
+
+/* What the selected element is: the chips only carry names, so this line is
+ * what says whether the thing about to be painted falls, flows, rises or
+ * simply stands there. */
+.elements-legend {
+    margin-top: 8px;
+    color: var(--text-secondary);
+    font-size: 0.75rem;
+    line-height: 1.4;
+}
+
+.elements-brushes {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.elements-brush {
+    flex: 0 0 auto;
+    min-width: 42px;
+    min-height: 34px;
+    padding: 4px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.elements-brush.is-active {
+    border-color: rgba(0, 242, 255, 0.6);
+    background: rgba(0, 242, 255, 0.14);
+    color: var(--text);
 }
 
 .elements-stage {
@@ -2398,6 +2442,17 @@ body.game-modal-open {
     gap: 8px;
 }
 
+/* Pause and Pick are toggles, so they read as latched while they are on. */
+.elements-actions .ghost[aria-pressed="true"] {
+    border-color: rgba(0, 242, 255, 0.6);
+    background: rgba(0, 242, 255, 0.14);
+}
+
+.elements-actions .ghost[disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
 @keyframes elementsToolPulse {
     0%,
     100% {
@@ -2414,11 +2469,13 @@ body.game-modal-open {
 }
 
 [data-theme="light"] .elements-select,
-[data-theme="light"] .elements-tool {
+[data-theme="light"] .elements-tool,
+[data-theme="light"] .elements-brush {
     background: rgba(255, 255, 255, 0.7);
 }
 
-[data-motion="off"] .elements-tool {
+[data-motion="off"] .elements-tool,
+[data-motion="off"] .elements-brush {
     transition: none !important;
 }
 

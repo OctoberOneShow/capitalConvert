@@ -2679,6 +2679,29 @@ function resting(sim, x, y, value) {
 }
 
 /* The panel the four pages carry, rebuilt for a headless boot. */
+/* The full roster, in the order the palette and the number keys use. Ids 0-5
+ * keep the positions they have always had, so 1-6 still mean what they meant
+ * before the expansion. */
+const ELEMENT_TOOLS = [
+  "empty",
+  "stone",
+  "sand",
+  "water",
+  "plant",
+  "fire",
+  "wood",
+  "ash",
+  "oil",
+  "lava",
+  "ice",
+  "steam",
+  "acid",
+  "seed",
+  "smoke",
+  "glass",
+  "void",
+];
+
 function buildElementsPanel(env) {
   const doc = env.document;
   const panel = doc.createElement("div");
@@ -2692,6 +2715,10 @@ function buildElementsPanel(env) {
     ["elementsTimeLabel", "Time", "span"],
     ["elementsTime", "0.0s", "strong"],
     ["elementsProgress", "-", "strong"],
+    ["elementsBudgetLabel", "Ink", "span"],
+    ["elementsBudget", "-", "strong"],
+    ["elementsStarsLabel", "Stars", "span"],
+    ["elementsStars", "-", "strong"],
   ].forEach(([id, text, tag]) => {
     const stat = doc.createElement("div");
     stat.className = "game-stat";
@@ -2715,10 +2742,24 @@ function buildElementsPanel(env) {
   row.appendChild(label);
   row.appendChild(select);
 
+  const speedRow = doc.createElement("div");
+  speedRow.className = "elements-row";
+  const speedLabel = doc.createElement("label");
+  speedLabel.className = "elements-label";
+  speedLabel.setAttribute("for", "elementsSpeed");
+  speedLabel.setAttribute("data-i18n", "elementsSpeedLabel");
+  speedLabel.textContent = "Speed";
+  const speed = doc.createElement("select");
+  speed.className = "elements-select";
+  speed.id = "elementsSpeed";
+  speed.value = "1";
+  speedRow.appendChild(speedLabel);
+  speedRow.appendChild(speed);
+
   const tools = doc.createElement("div");
   tools.className = "elements-tools";
   tools.setAttribute("role", "group");
-  ["empty", "stone", "sand", "water", "plant", "fire"].forEach((name) => {
+  ELEMENT_TOOLS.forEach((name) => {
     const button = doc.createElement("button");
     const suffix = name.charAt(0).toUpperCase() + name.slice(1);
     button.className = "elements-tool";
@@ -2729,6 +2770,34 @@ function buildElementsPanel(env) {
     button.setAttribute("data-i18n", "elements" + suffix);
     tools.appendChild(button);
   });
+
+  const legend = doc.createElement("p");
+  legend.className = "elements-legend";
+  legend.id = "elementsLegend";
+
+  const brushRow = doc.createElement("div");
+  brushRow.className = "elements-row";
+  const brushLabel = doc.createElement("span");
+  brushLabel.className = "elements-label";
+  brushLabel.id = "elementsBrushLabel";
+  brushLabel.setAttribute("data-i18n", "elementsBrushLabel");
+  brushLabel.textContent = "Brush";
+  const brushes = doc.createElement("div");
+  brushes.className = "elements-brushes";
+  brushes.setAttribute("role", "group");
+  brushes.setAttribute("aria-labelledby", "elementsBrushLabel");
+  [0, 1, 2, 3].forEach((size, index) => {
+    const button = doc.createElement("button");
+    button.className = "elements-brush" + (size === 2 ? " is-active" : "");
+    button.id = "elementsBrush" + String(index + 1);
+    button.setAttribute("type", "button");
+    button.setAttribute("data-size", String(size));
+    button.setAttribute("aria-pressed", size === 2 ? "true" : "false");
+    button.textContent = String(size * 2 + 1);
+    brushes.appendChild(button);
+  });
+  brushRow.appendChild(brushLabel);
+  brushRow.appendChild(brushes);
 
   const stage = doc.createElement("div");
   stage.className = "elements-stage";
@@ -2764,6 +2833,27 @@ function buildElementsPanel(env) {
   result.setAttribute("data-i18n", "elementsGoalFree");
   result.textContent = "Free play.";
 
+  /* The hand controls the expansion added: hold the loop, take one generation,
+   * eyedrop and undo. */
+  const hand = doc.createElement("div");
+  hand.className = "elements-actions";
+  [
+    ["elementsPauseBtn", "elementsPause", "Pause", true],
+    ["elementsStepBtn", "elementsStep", "Step", false],
+    ["elementsPickBtn", "elementsPick", "Pick", true],
+    ["elementsUndoBtn", "elementsUndo", "Undo", false],
+  ].forEach(([id, key, text, pressed]) => {
+    const button = doc.createElement("button");
+    button.className = "ghost";
+    button.id = id;
+    if (pressed) button.setAttribute("aria-pressed", "false");
+    const inner = doc.createElement("span");
+    inner.setAttribute("data-i18n", key);
+    inner.textContent = text;
+    button.appendChild(inner);
+    hand.appendChild(button);
+  });
+
   const actions = doc.createElement("div");
   actions.className = "game-actions";
   const startBtn = doc.createElement("button");
@@ -2789,9 +2879,20 @@ function buildElementsPanel(env) {
   actions.appendChild(resetBtn);
   actions.appendChild(best);
 
-  [hud, row, tools, stage, description, goal, result, actions].forEach((node) =>
-    panel.appendChild(node),
-  );
+  [
+    hud,
+    row,
+    speedRow,
+    tools,
+    legend,
+    brushRow,
+    stage,
+    description,
+    goal,
+    result,
+    hand,
+    actions,
+  ].forEach((node) => panel.appendChild(node));
   return panel;
 }
 
@@ -2829,10 +2930,68 @@ function bootElementsWith(record) {
   return bootElements({ store: new Map([[ELEMENTS_KEY, record]]) });
 }
 
+/* The campaign order, which is also the unlock chain. */
+const ELEMENTS_ORDER = [
+  "free",
+  "grow",
+  "flood",
+  "extinguish",
+  "glass",
+  "quench",
+  "thaw",
+  "spill",
+  "etch",
+  "sprout",
+  "geyser",
+  "grove",
+];
+
+/* The par table as the page declares it, so a check can compare a board's
+ * rungs against what the board can actually do instead of a copy. */
+const ELEMENTS_PARS = (() => {
+  const table = appSource.slice(
+    appSource.indexOf("var elementsChallenges = ["),
+    appSource.indexOf("var elementsBasePalette"),
+  );
+  const pars = {};
+  const re = /id: "([a-z]+)",[\s\S]*?stars: \[([^\]]+)\]/g;
+  let match;
+  while ((match = re.exec(table)) !== null) {
+    pars[match[1]] = match[2].split(",").map((n) => parseFloat(n));
+  }
+  return pars;
+})();
+
+/* A v2 record cleared through `id` (inclusive), so a case can start with the
+ * board it wants to play already unlocked - and with the elements that board
+ * era has handed out. */
+function clearedThrough(id, bests) {
+  const cleared = {};
+  const upto = ELEMENTS_ORDER.indexOf(id);
+  ELEMENTS_ORDER.forEach((name, index) => {
+    if (name !== "free" && index <= upto) cleared[name] = true;
+  });
+  return JSON.stringify({ v: 2, cleared: cleared, bests: bests || {} });
+}
+
+/* Every challenge cleared: the whole roster, glass included, is unlocked. */
+function unlockedRecord() {
+  return clearedThrough("grove");
+}
+
+/* The board the campaign opens on, with every element the last era unlocks. */
+function boardRecordUpTo(id) {
+  return bootElementsWith(clearedThrough(id));
+}
+
 function selectChallenge(env, id) {
   const select = env.byId("elementsChallenge");
   select.value = id;
   env.dispatch(select, "change", {});
+}
+
+function challengeOptionEl(env, id) {
+  return env.byId("elementsChallenge").childNodes.find((node) => node.value === id);
 }
 
 function challengeOption(env, id) {
@@ -2848,6 +3007,20 @@ function clickTool(env, name) {
 
 function pressKey(env, key) {
   env.dispatch(env.byId("elementsCanvas"), "keydown", { key: key });
+}
+
+function clickBrush(env, size) {
+  env.byId("elementsBrush" + String(size + 1)).click();
+}
+
+function setSpeedTo(env, value) {
+  const select = env.byId("elementsSpeed");
+  select.value = String(value);
+  env.dispatch(select, "change", {});
+}
+
+function clickHand(env, id) {
+  env.byId(id).click();
 }
 
 /* The canvas maps pointer coordinates through its bounding rect; the stub
@@ -3453,6 +3626,535 @@ run("elements-sim", () => {
   );
 });
 
+/* 44b. the expanded roster and every essential reaction ------------------ */
+
+/* A two-cell pocket sealed on all sides but its own column, so a rule under
+ * test is decided by the rule and not by its own material flowing away. The
+ * free cells are the middle column's bottom two rows. */
+function pocket() {
+  const sim = newSim();
+  sim.clear();
+  for (let x = 0; x < sim.cols; x += 1) sim.set(x, sim.rows - 1, sim.stone);
+  for (let y = sim.rows - 3; y <= sim.rows - 2; y += 1) {
+    sim.set(9, y, sim.stone);
+    sim.set(11, y, sim.stone);
+  }
+  sim.set(9, sim.rows - 4, sim.stone);
+  sim.set(10, sim.rows - 4, sim.stone);
+  sim.set(11, sim.rows - 4, sim.stone);
+  return sim;
+}
+
+/* A five-wide, seven-tall basin on the floor, for the rules that need a column
+ * of one liquid beside another. */
+function basin() {
+  const sim = newSim();
+  sim.clear();
+  for (let x = 0; x < sim.cols; x += 1) sim.set(x, sim.rows - 1, sim.stone);
+  for (let y = sim.rows - 8; y <= sim.rows - 2; y += 1) {
+    sim.set(7, y, sim.stone);
+    sim.set(13, y, sim.stone);
+  }
+  return sim;
+}
+
+run("elements-expansion", () => {
+  const sim = newSim();
+  check(
+    "elements-expansion",
+    "the roster is the six originals plus eleven new ids",
+    Object.keys(sim.ids).length === 17 &&
+      sim.empty === 0 &&
+      sim.stone === 1 &&
+      sim.sand === 2 &&
+      sim.water === 3 &&
+      sim.plant === 4 &&
+      sim.fire === 5 &&
+      sim.wood === 6 &&
+      sim.ash === 7 &&
+      sim.oil === 8 &&
+      sim.lava === 9 &&
+      sim.ice === 10 &&
+      sim.steam === 11 &&
+      sim.acid === 12 &&
+      sim.seed === 13 &&
+      sim.smoke === 14 &&
+      sim.glass === 15 &&
+      sim.void === 16,
+    JSON.stringify(sim.ids),
+  );
+  check(
+    "elements-expansion",
+    "the expanded board is still 80 by 56 with one counter per cell",
+    sim.cells.length === 80 * 56 && sim.life.length === 80 * 56,
+  );
+  check(
+    "elements-expansion",
+    "the fuel and corrosion sets are the documented ones",
+    sim.isFuel(sim.plant) &&
+      sim.isFuel(sim.wood) &&
+      sim.isFuel(sim.oil) &&
+      sim.isFuel(sim.seed) &&
+      !sim.isFuel(sim.water) &&
+      !sim.isFuel(sim.ash) &&
+      !sim.isFuel(sim.glass) &&
+      sim.isSoluble(sim.stone) &&
+      sim.isSoluble(sim.wood) &&
+      sim.isSoluble(sim.glass) &&
+      sim.isSoluble(sim.plant) &&
+      sim.isSoluble(sim.sand) &&
+      sim.isSoluble(sim.ash) &&
+      !sim.isSoluble(sim.ice) &&
+      !sim.isSoluble(sim.empty),
+  );
+  check(
+    "elements-expansion",
+    "steam, smoke and acid are handed their counters on creation",
+    (() => {
+      const board = newSim();
+      board.clear();
+      board.set(10, 10, board.steam);
+      board.set(20, 10, board.smoke);
+      board.set(30, 10, board.acid);
+      const counters = [
+        board.life[board.index(10, 10)],
+        board.life[board.index(20, 10)],
+        board.life[board.index(30, 10)],
+      ];
+      return (
+        counters[0] === board.steamLife &&
+        counters[1] === board.smokeLife &&
+        counters[2] === board.acidUses &&
+        board.steamLife === 120 &&
+        board.smokeLife === 90 &&
+        board.acidUses === 3
+      );
+    })(),
+  );
+
+  /* 2: sand meets lava. */
+  check(
+    "elements-expansion",
+    "sand + lava -> glass, and the lava stays lava",
+    (() => {
+      const board = pocket();
+      board.set(10, 54, board.lava);
+      board.set(10, 53, board.sand);
+      board.step();
+      return (
+        board.get(10, 54) === board.lava &&
+        board.get(10, 53) === board.glass &&
+        board.count(board.sand) === 0 &&
+        board.count(board.glass) === 1
+      );
+    })(),
+  );
+  /* 3: lava meets water. */
+  check(
+    "elements-expansion",
+    "lava + water -> stone + steam, two cells for two",
+    (() => {
+      const board = pocket();
+      board.set(10, 54, board.lava);
+      board.set(10, 53, board.water);
+      board.step();
+      return (
+        board.get(10, 54) === board.stone &&
+        board.get(10, 53) === board.steam &&
+        board.count(board.lava) === 0 &&
+        board.count(board.water) === 0
+      );
+    })(),
+  );
+  /* 4: lava meets ice. */
+  check(
+    "elements-expansion",
+    "lava + ice -> stone + water",
+    (() => {
+      const board = pocket();
+      board.set(10, 54, board.lava);
+      board.set(10, 53, board.ice);
+      board.step();
+      return (
+        board.get(10, 54) === board.stone &&
+        board.get(10, 53) === board.water &&
+        board.count(board.ice) === 0
+      );
+    })(),
+  );
+  /* 7: fire meets wood. Wood is structural fuel: it burns, it is not a plant. */
+  check(
+    "elements-expansion",
+    "fire ignites wood, and wood neither grows nor drinks water",
+    (() => {
+      const board = pocket();
+      board.set(10, 54, board.fire);
+      board.set(10, 53, board.wood);
+      board.step();
+      const burnt = board.get(10, 53) === board.fire && board.count(board.fire) === 2;
+      const garden = pocket();
+      garden.set(10, 54, garden.wood);
+      garden.set(10, 53, garden.water);
+      steps(garden, 40);
+      return (
+        burnt &&
+        garden.get(10, 54) === garden.wood &&
+        garden.count(garden.water) === 1 &&
+        garden.count(garden.wood) === 1
+      );
+    })(),
+  );
+  /* 8: fire meets oil. */
+  check(
+    "elements-expansion",
+    "fire ignites oil",
+    (() => {
+      const board = pocket();
+      board.set(10, 54, board.oil);
+      board.set(10, 53, board.fire);
+      board.step();
+      return board.count(board.fire) === 2 && board.count(board.oil) === 0;
+    })(),
+  );
+  /* 9: fire meets seed. */
+  check(
+    "elements-expansion",
+    "fire ignites seed",
+    (() => {
+      const board = pocket();
+      board.set(10, 54, board.seed);
+      board.set(10, 53, board.fire);
+      board.step();
+      return board.count(board.fire) === 2 && board.count(board.seed) === 0;
+    })(),
+  );
+  /* 12: oil floats. */
+  check(
+    "elements-expansion",
+    "oil rises through the water above it, one cell per generation",
+    (() => {
+      const board = basin();
+      for (let x = 8; x <= 12; x += 1) {
+        for (let y = 49; y <= 54; y += 1) board.set(x, y, board.water);
+      }
+      board.set(10, 54, board.oil);
+      board.step();
+      const oneUp = board.get(10, 53) === board.oil && board.get(10, 54) === board.water;
+      steps(board, 8);
+      /* It climbs to the surface and stops there: nothing lighter can be
+       * above it, and the water underneath holds it up. */
+      const surfaced = board.get(10, 49) === board.oil;
+      return (
+        oneUp &&
+        surfaced &&
+        board.count(board.oil) === 1 &&
+        board.count(board.water) === 29
+      );
+    })(),
+  );
+  /* 13: a seed sprouts. */
+  check(
+    "elements-expansion",
+    "a seed next to water sprouts into a plant and drinks the water",
+    (() => {
+      const board = pocket();
+      board.set(10, 54, board.water);
+      board.set(10, 53, board.seed);
+      board.step();
+      return (
+        board.get(10, 53) === board.plant &&
+        board.count(board.seed) === 0 &&
+        board.count(board.water) === 0
+      );
+    })(),
+  );
+  /* 14: acid corrodes, and is bounded by its uses. */
+  check(
+    "elements-expansion",
+    "acid dissolves three solids and is spent",
+    (() => {
+      const board = basin();
+      for (let x = 8; x <= 12; x += 1) board.set(x, 54, board.stone);
+      board.set(10, 54, board.acid);
+      const before = board.count(board.stone);
+      steps(board, 6);
+      return (
+        board.count(board.stone) === before - 3 &&
+        board.count(board.acid) === 0
+      );
+    })(),
+  );
+  check(
+    "elements-expansion",
+    "acid eats only what it is allowed to, and only when it is there",
+    (() => {
+      /* Walled in by ice, which is not in the soluble set, so the acid has
+       * nothing to do and keeps every use it has. */
+      const board = newSim();
+      board.clear();
+      for (let y = 52; y <= 55; y += 1) {
+        board.set(9, y, board.ice);
+        board.set(11, y, board.ice);
+      }
+      for (let x = 9; x <= 11; x += 1) {
+        board.set(x, 55, board.ice);
+        board.set(x, 52, board.ice);
+      }
+      board.set(10, 53, board.ice);
+      board.set(10, 54, board.acid);
+      const ice = board.count(board.ice);
+      steps(board, 20);
+      return (
+        board.count(board.acid) === 1 &&
+        board.life[board.index(10, 54)] === board.acidUses &&
+        board.count(board.ice) === ice
+      );
+    })(),
+  );
+  /* 16/18: the gases and their countdowns. */
+  check(
+    "elements-expansion",
+    "steam rises, then condenses into water when its life runs out",
+    (() => {
+      const board = newSim();
+      board.clear();
+      board.set(10, 40, board.steam);
+      board.step();
+      const rose = board.get(10, 39) === board.steam;
+      steps(board, board.steamLife - 2);
+      const alive = board.count(board.steam) === 1;
+      board.step();
+      return (
+        rose &&
+        alive &&
+        board.count(board.steam) === 0 &&
+        board.count(board.water) === 1 &&
+        board.get(10, 0) === board.water
+      );
+    })(),
+  );
+  check(
+    "elements-expansion",
+    "smoke rises, then dissipates into nothing at all",
+    (() => {
+      const board = newSim();
+      board.clear();
+      board.set(10, 40, board.smoke);
+      steps(board, board.smokeLife - 1);
+      const alive = board.count(board.smoke) === 1;
+      board.step();
+      return (
+        alive &&
+        board.count(board.smoke) === 0 &&
+        board.count(board.water) === 0 &&
+        board.count(board.empty) === 80 * 56
+      );
+    })(),
+  );
+  check(
+    "elements-expansion",
+    "steam condenses on ice and takes the ice with it",
+    (() => {
+      const board = pocket();
+      board.set(10, 54, board.ice);
+      board.set(10, 53, board.steam);
+      board.step();
+      return (
+        board.get(10, 53) === board.water &&
+        board.get(10, 54) === board.water &&
+        board.count(board.ice) === 0
+      );
+    })(),
+  );
+  /* Ice: melted by heat, chilled rather than instantly doused. */
+  check(
+    "elements-expansion",
+    "a flame melts the ice it touches and is chilled, not doused",
+    (() => {
+      const board = pocket();
+      board.set(10, 54, board.ice);
+      board.set(10, 53, board.fire);
+      board.step();
+      const chilled = board.life[board.index(10, 53)];
+      const melted =
+        board.count(board.ice) === 0 &&
+        board.count(board.water) === 1 &&
+        board.count(board.fire) === 1;
+      const surviving = chilled === board.fireLife - 2;
+      board.step();
+      /* With the meltwater trapped beside it, the douse rule takes over. */
+      return (
+        melted && surviving && board.count(board.fire) === 0 && board.count(board.water) === 0
+      );
+    })(),
+  );
+  /* 20: void drains. */
+  check(
+    "elements-expansion",
+    "void erases every neighbour that is not a wall",
+    (() => {
+      const board = newSim();
+      board.clear();
+      board.set(40, 30, board.void);
+      board.set(39, 30, board.sand);
+      board.set(41, 30, board.water);
+      board.set(40, 29, board.plant);
+      board.set(40, 31, board.ice);
+      board.set(39, 31, board.stone);
+      board.step();
+      return (
+        board.get(39, 30) === board.empty &&
+        board.get(41, 30) === board.empty &&
+        board.get(40, 29) === board.empty &&
+        board.get(40, 31) === board.empty &&
+        board.get(39, 31) === board.stone &&
+        board.count(board.void) === 1
+      );
+    })(),
+  );
+  /* The inert ones stay inert, which is what makes them useful as structure. */
+  check(
+    "elements-expansion",
+    "ash and glass are inert: fire cannot light them and lava cannot melt them",
+    (() => {
+      const board = pocket();
+      board.set(10, 54, board.ash);
+      board.set(10, 53, board.fire);
+      steps(board, board.fireLife + 6);
+      const ashSurvived = board.count(board.ash) === 1 && board.count(board.fire) === 0;
+      const kiln = pocket();
+      kiln.set(10, 54, kiln.lava);
+      kiln.set(10, 53, kiln.glass);
+      steps(kiln, 5);
+      return (
+        ashSurvived &&
+        kiln.count(kiln.glass) === 1 &&
+        kiln.count(kiln.lava) === 1
+      );
+    })(),
+  );
+  check(
+    "elements-expansion",
+    "steam is not water: a flame beside it is not doused",
+    (() => {
+      const board = pocket();
+      board.set(10, 54, board.steam);
+      board.set(10, 53, board.fire);
+      steps(board, 20);
+      return board.count(board.fire) === 1 && board.count(board.steam) === 1;
+    })(),
+  );
+  check(
+    "elements-expansion",
+    "every element can be piled on the board without a single stray write",
+    (() => {
+      const board = newSim();
+      board.clear();
+      Object.keys(board.ids).forEach((name) => {
+        for (let y = 0; y < board.rows; y += 1) board.set(39, y, board.ids[name]);
+      });
+      steps(board, 300);
+      return (
+        board.outOfRangeWrites() === 0 &&
+        board.cells.length === 80 * 56 &&
+        board.get(-1, -1) === board.stone &&
+        board.get(80, 56) === board.stone &&
+        board.count(board.empty) <= 80 * 56
+      );
+    })(),
+  );
+  check(
+    "elements-expansion",
+    "the whole expanded board is still a seeded, repeatable world",
+    (() => {
+      const a = newSim();
+      const b = newSim();
+      a.loadPreset("free");
+      b.loadPreset("free");
+      for (let x = 20; x < 30; x += 1) {
+        a.set(x, 10, a.lava);
+        b.set(x, 10, b.lava);
+        a.set(x, 20, a.acid);
+        b.set(x, 20, b.acid);
+        a.set(x, 30, a.oil);
+        b.set(x, 30, b.oil);
+      }
+      steps(a, 250);
+      steps(b, 250);
+      return a.hash() === b.hash() && a.hash() > 0;
+    })(),
+  );
+  /* The mechanics that live in the factory itself. */
+  check(
+    "elements-expansion",
+    "a spawner pours on its cadence and only into an empty cell",
+    (() => {
+      const board = newSim();
+      board.loadPreset("free");
+      const before = board.count(board.water);
+      steps(board, 11);
+      const notYet = board.count(board.water) === before;
+      steps(board, 1);
+      const poured = board.count(board.water) === before + 1;
+      board.clear();
+      board.addSpawner(20, 20, board.water, 1, 2);
+      steps(board, 6);
+      return notYet && poured && board.count(board.water) === 2;
+    })(),
+  );
+  check(
+    "elements-expansion",
+    "the paint allowance is exact, refuses at zero and refills on reload",
+    (() => {
+      const board = newSim();
+      board.clear();
+      board.setInk(2);
+      const first = board.paint(10, 10, board.sand);
+      const second = board.paint(11, 10, board.sand);
+      const third = board.paint(12, 10, board.sand);
+      const spent = board.inkLeft() === 0 && board.count(board.sand) === 2;
+      board.clear();
+      const refilled = board.inkLeft() === 2 && board.paint(12, 10, board.sand) === true;
+      const free = newSim();
+      free.clear();
+      return (
+        first === true &&
+        second === true &&
+        third === false &&
+        spent &&
+        refilled &&
+        free.ink() === 0 &&
+        free.paint(10, 10, free.sand) === true
+      );
+    })(),
+  );
+  check(
+    "elements-expansion",
+    "undo rewinds the board, the generator and the random stream together",
+    (() => {
+      const board = newSim();
+      board.loadPreset("free");
+      const before = board.hash();
+      const generation = board.generation();
+      board.remember();
+      board.paint(30, 30, board.sand);
+      board.paint(31, 30, board.sand);
+      const changed = board.hash() !== before;
+      const back = board.undo() === true && board.hash() === before;
+      const rewound = board.generation() === generation;
+      const empty = board.undo() === false && board.undoDepth() === 0;
+      board.remember();
+      board.forget();
+      const refused = board.undoDepth() === 0;
+      board.remember();
+      for (let i = 0; i < 10; i += 1) board.remember();
+      return (
+        changed && back && rewound && empty && refused && board.undoDepth() === 6
+      );
+    })(),
+  );
+});
+
 /* 45. the four boards -------------------------------------------------- */
 run("elements-boards", () => {
   ["free", "grow", "extinguish", "flood"].forEach((id) => {
@@ -3561,12 +4263,18 @@ run("elements-boards", () => {
   check(
     "elements-boards",
     "flood: paint is refused at or below the rim, allowed above it",
-    flood.paintAboveRow() >= 0 &&
-      flood.paint(40, flood.paintAboveRow() - 1, flood.water) === true &&
-      flood.paint(40, flood.paintAboveRow(), flood.water) === false &&
-      flood.paint(40, zone.y1, flood.water) === false &&
-      flood.count(flood.water) === 1,
-    String(flood.paintAboveRow()),
+    (() => {
+      const pours = flood.pourZones();
+      return (
+        pours.length === 1 &&
+        pours[0].y1 === 23 &&
+        flood.paint(40, pours[0].y1, flood.water) === true &&
+        flood.paint(40, pours[0].y1 + 1, flood.water) === false &&
+        flood.paint(40, zone.y1, flood.water) === false &&
+        flood.count(flood.water) === 1
+      );
+    })(),
+    JSON.stringify(flood.pourZones()),
   );
   check(
     "elements-boards",
@@ -3684,6 +4392,1114 @@ run("elements-goals", () => {
   );
 });
 
+/* 46b. the campaign: the eight new boards, their goals, the unlock chain,
+ * the star table and the v2 store ---------------------------------------- */
+
+/* The starting board of every campaign board, as the factory lays it out. */
+const CAMPAIGN_STARTS = {
+  glass: (b) => b.count(b.lava) === 72 && b.count(b.sand) === 10 && b.count(b.glass) === 0,
+  quench: (b) => b.count(b.lava) === 48 && b.count(b.water) === 0 && b.count(b.stone) === 124,
+  thaw: (b) => b.count(b.water) === 736 && b.count(b.ice) === 105,
+  spill: (b) => b.count(b.oil) === 208 && b.count(b.water) === 312,
+  etch: (b) => b.count(b.water) === 0 && b.count(b.stone) === 167 && b.count(b.acid) === 0,
+  sprout: (b) => b.count(b.wood) === 16 && b.count(b.water) === 24 && b.count(b.seed) === 1,
+  geyser: (b) => b.count(b.lava) === 68 && b.count(b.ice) === 204,
+  grove: (b) => b.count(b.wood) === 102 && b.count(b.fire) === 2,
+};
+
+run("elements-campaign", () => {
+  /* --- every campaign board lays out what it declares ----------------- */
+  Object.keys(CAMPAIGN_STARTS).forEach((id) => {
+    const one = newSim();
+    const two = newSim();
+    one.loadPreset(id);
+    two.loadPreset(id);
+    check(
+      "elements-campaign",
+      `${id}: the opening board is deterministic and writes nothing out of range`,
+      one.hash() === two.hash() && one.outOfRangeWrites() === 0 && one.count(one.stone) > 0,
+      String(one.outOfRangeWrites()),
+    );
+    check(
+      "elements-campaign",
+      `${id}: the opening layout is the one the board declares`,
+      CAMPAIGN_STARTS[id](one),
+      JSON.stringify({
+        lava: one.count(one.lava),
+        water: one.count(one.water),
+        ice: one.count(one.ice),
+        oil: one.count(one.oil),
+        wood: one.count(one.wood),
+        sand: one.count(one.sand),
+      }),
+    );
+    check(
+      "elements-campaign",
+      `${id}: the board does not start already won`,
+      one.progress(id).done === false,
+    );
+  });
+
+  /* --- the three original boards keep their opening numbers ----------- */
+  const growBoard = newSim();
+  growBoard.loadPreset("grow");
+  const floodBoard = newSim();
+  floodBoard.loadPreset("flood");
+  const hedgeBoard = newSim();
+  hedgeBoard.loadPreset("extinguish");
+  check(
+    "elements-campaign",
+    "grow, flood and extinguish keep the numbers their tests pin down",
+    growBoard.progress("grow").value === 2 &&
+      growBoard.progress("grow").target === 56 &&
+      growBoard.count(growBoard.water) === 19 &&
+      floodBoard.progress("flood").target === 158 &&
+      floodBoard.progress("flood").value === 0 &&
+      hedgeBoard.progress("extinguish").value === 1 &&
+      hedgeBoard.progress("extinguish").target === 1,
+    JSON.stringify([
+      growBoard.progress("grow"),
+      floodBoard.progress("flood"),
+      hedgeBoard.progress("extinguish"),
+    ]),
+  );
+
+  /* --- free play's showcase ------------------------------------------- */
+  const showcase = newSim();
+  showcase.loadPreset("free");
+  check(
+    "elements-campaign",
+    "free play adds the showcase without disturbing the hopper or garden",
+    showcase.count(showcase.lava) > 0 &&
+      showcase.count(showcase.ice) > 0 &&
+      showcase.count(showcase.oil) > 0 &&
+      showcase.count(showcase.sand) > 20 &&
+      showcase.count(showcase.water) > 50 &&
+      showcase.count(showcase.plant) > 5 &&
+      showcase.count(showcase.fire) === 0 &&
+      showcase.progress("free").target === 0,
+    JSON.stringify({
+      lava: showcase.count(showcase.lava),
+      ice: showcase.count(showcase.ice),
+      oil: showcase.count(showcase.oil),
+    }),
+  );
+
+  /* --- each new goal fires exactly at its threshold -------------------- */
+  const glassGate = (() => {
+    const b = newSim();
+    b.loadPreset("glass");
+    b.set(1, 1, b.glass);
+    const under = b.progress("glass");
+    for (let i = 0; i < 20; i += 1) b.set(i, 1, b.glass);
+    const at = b.progress("glass");
+    return { under, at };
+  })();
+  check(
+    "elements-campaign",
+    "glass: 16 cells wins it, 15 does not",
+    glassGate.under.value === 1 &&
+      glassGate.under.done === false &&
+      glassGate.under.target === 16 &&
+      glassGate.at.value === 20 &&
+      glassGate.at.done === true,
+    JSON.stringify(glassGate),
+  );
+
+  const quenchGate = (() => {
+    const b = newSim();
+    b.loadPreset("quench");
+    const start = b.progress("quench");
+    const last = cellsWith(b, b.lava)[0];
+    b.set(last.x, last.y, b.stone);
+    const one = b.progress("quench");
+    const dry = newSim();
+    dry.loadPreset("quench");
+    cellsWith(dry, dry.lava).forEach((c) => dry.set(c.x, c.y, dry.stone));
+    return { start, one, empty: dry.progress("quench") };
+  })();
+  check(
+    "elements-campaign",
+    "quench: the tray counts down and only an empty tray wins it",
+    quenchGate.start.value === 48 &&
+      quenchGate.start.target === 48 &&
+      quenchGate.start.done === false &&
+      quenchGate.one.value === 47 &&
+      quenchGate.one.done === false &&
+      quenchGate.empty.value === 0 &&
+      quenchGate.empty.done === true,
+    JSON.stringify(quenchGate),
+  );
+
+  const spillGate = (() => {
+    const b = newSim();
+    b.loadPreset("spill");
+    const start = b.progress("spill");
+    const drop = cellsWith(b, b.oil)[0];
+    b.set(drop.x, drop.y, b.empty);
+    const one = b.progress("spill");
+    cellsWith(b, b.oil).forEach((c) => b.set(c.x, c.y, b.empty));
+    return { start, one, none: b.progress("spill") };
+  })();
+  check(
+    "elements-campaign",
+    "spill: one drop of oil left is not a win, none is",
+    spillGate.start.value === 208 &&
+      spillGate.start.target === 208 &&
+      spillGate.one.done === false &&
+      spillGate.none.value === 0 &&
+      spillGate.none.done === true,
+    JSON.stringify(spillGate),
+  );
+
+  /* The three zone boards: one cell short is not a win, the target cell is -
+   * and water outside the marked rectangle never counts. */
+  ["thaw", "etch", "geyser"].forEach((id) => {
+    const b = newSim();
+    b.loadPreset(id);
+    const z = b.zone();
+    const target = b.progress(id).target;
+    let placed = 0;
+    for (let y = z.y1; y >= z.y0 && placed < target - 1; y -= 1) {
+      for (let x = z.x0; x <= z.x1 && placed < target - 1; x += 1) {
+        b.set(x, y, b.water);
+        placed += 1;
+      }
+    }
+    const short = b.progress(id);
+    const outsider = newSim();
+    outsider.loadPreset(id);
+    for (let x = 0; x < 8; x += 1) outsider.set(x, 1, outsider.water);
+    const outside = outsider.progress(id).value;
+    b.set(z.x0, z.y0, b.water);
+    const wonNow = b.progress(id);
+    check(
+      "elements-campaign",
+      `${id}: the marked zone wins at its target and not a drop earlier`,
+      target > 0 &&
+        short.value === target - 1 &&
+        short.done === false &&
+        wonNow.value >= target &&
+        wonNow.done === true &&
+        outside === 0,
+      JSON.stringify({ target, short, wonNow, outside }),
+    );
+  });
+
+  /* Save the Grove is a two-part goal: no fire AND enough timber left. */
+  const groveGate = (() => {
+    const b = newSim();
+    b.loadPreset("grove");
+    const start = b.progress("grove");
+    cellsWith(b, b.fire).forEach((c) => b.set(c.x, c.y, b.empty));
+    const outButFull = b.progress("grove");
+    const groveCells = [];
+    for (let y = 52; y <= 53; y += 1) {
+      for (let x = 53; x <= 60; x += 1) {
+        if (b.get(x, y) === b.wood) groveCells.push({ x, y });
+      }
+    }
+    groveCells.slice(0, 3).forEach((c) => b.set(c.x, c.y, b.empty));
+    const thirteen = b.progress("grove");
+    b.set(groveCells[2].x, groveCells[2].y, b.wood);
+    const fourteen = b.progress("grove");
+    b.set(9, 52, b.fire);
+    const burning = b.progress("grove");
+    return { start, outButFull, thirteen, fourteen, burning };
+  })();
+  check(
+    "elements-campaign",
+    "grove: the timber is protected by fire and by count",
+    groveGate.start.value === 16 &&
+      groveGate.start.zero === 2 &&
+      groveGate.start.done === false &&
+      groveGate.outButFull.value === 16 &&
+      groveGate.outButFull.done === true &&
+      groveGate.thirteen.value === 13 &&
+      groveGate.thirteen.done === false &&
+      groveGate.fourteen.value === 14 &&
+      groveGate.fourteen.done === true &&
+      groveGate.burning.done === false,
+    JSON.stringify(groveGate),
+  );
+
+  /* --- the unlock chain ----------------------------------------------- */
+  const fresh = bootElements({});
+  const gate = (env, id) => challengeOptionEl(env, id).disabled;
+  check(
+    "elements-campaign",
+    "a fresh record opens free play and Grow, and nothing else",
+    gate(fresh, "free") === false &&
+      gate(fresh, "grow") === false &&
+      ELEMENTS_ORDER.slice(2).every((id) => gate(fresh, id) === true),
+    ELEMENTS_ORDER.filter((id) => gate(fresh, id) === false).join(","),
+  );
+  check(
+    "elements-campaign",
+    "clearing a board opens the next one and only the next one",
+    (() => {
+      const env = boardRecordUpTo("grow");
+      return (
+        gate(env, "grow") === false &&
+        gate(env, "flood") === false &&
+        gate(env, "extinguish") === true &&
+        gate(env, "glass") === true
+      );
+    })(),
+  );
+  check(
+    "elements-campaign",
+    "the whole chain follows the campaign order",
+    ELEMENTS_ORDER.every((id, index) => {
+      const env = boardRecordUpTo(id);
+      const next = ELEMENTS_ORDER[index + 1];
+      const open = ELEMENTS_ORDER.filter((other) => !gate(env, other));
+      return (
+        gate(env, id) === false &&
+        (!next || gate(env, next) === false) &&
+        ELEMENTS_ORDER.slice(index + 2).every((later) => gate(env, later) === true) &&
+        open.length === Math.min(index + 2, ELEMENTS_ORDER.length)
+      );
+    }),
+    ELEMENTS_ORDER.map((id) => {
+      const env = boardRecordUpTo(id);
+      return id + ":" + ELEMENTS_ORDER.filter((other) => !gate(env, other)).join("+");
+    }).join(" | "),
+  );
+  check(
+    "elements-campaign",
+    "free play is never locked and never recorded as cleared",
+    (() => {
+      const env = boardRecordUpTo("grove");
+      return gate(env, "free") === false && elementsStore(env).cleared.free === undefined;
+    })(),
+  );
+
+  /* --- element unlocks ------------------------------------------------- */
+  const offered = (env) =>
+    ELEMENT_TOOLS.filter((name) => {
+      const button = env.byId(
+        "elementsTool" + name.charAt(0).toUpperCase() + name.slice(1),
+      );
+      return button.disabled === false;
+    });
+  check(
+    "elements-campaign",
+    "the base six are the whole palette until the campaign hands more out",
+    offered(fresh).join(",") === "empty,stone,sand,water,plant,fire",
+    offered(fresh).join(","),
+  );
+  check(
+    "elements-campaign",
+    "a new element arrives with the board that introduces it",
+    offered(fresh).indexOf("lava") === -1 &&
+      /* floor is cleared, so glass is still locked and lava is not out yet */
+      offered(boardRecordUpTo("flood")).indexOf("lava") === -1 &&
+      offered(boardRecordUpTo("extinguish")).indexOf("lava") !== -1 &&
+      offered(boardRecordUpTo("extinguish")).indexOf("steam") === -1 &&
+      offered(boardRecordUpTo("glass")).indexOf("steam") !== -1 &&
+      offered(boardRecordUpTo("quench")).indexOf("ice") !== -1 &&
+      offered(boardRecordUpTo("thaw")).indexOf("oil") !== -1 &&
+      offered(boardRecordUpTo("spill")).indexOf("acid") !== -1,
+    offered(boardRecordUpTo("flood")).join(","),
+  );
+  check(
+    "elements-campaign",
+    "wood, seed and ash unlock with Sprout, void with the grove, glass last",
+    offered(boardRecordUpTo("spill")).indexOf("wood") === -1 &&
+      offered(boardRecordUpTo("etch")).indexOf("wood") !== -1 &&
+      offered(boardRecordUpTo("sprout")).indexOf("wood") !== -1 &&
+      offered(boardRecordUpTo("sprout")).indexOf("seed") !== -1 &&
+      offered(boardRecordUpTo("sprout")).indexOf("ash") !== -1 &&
+      offered(boardRecordUpTo("sprout")).indexOf("void") === -1 &&
+      offered(boardRecordUpTo("geyser")).indexOf("void") !== -1 &&
+      offered(boardRecordUpTo("geyser")).indexOf("glass") === -1 &&
+      offered(boardRecordUpTo("grove")).indexOf("glass") !== -1,
+    offered(boardRecordUpTo("sprout")).join(","),
+  );
+  check(
+    "elements-campaign",
+    "a challenge only offers its own tools, intersected with the unlocks",
+    (() => {
+      const env = boardRecordUpTo("grove");
+      selectChallenge(env, "sprout");
+      return (
+        env.byId("elementsToolWater").disabled === false &&
+        env.byId("elementsToolFire").disabled === false &&
+        env.byId("elementsToolSand").disabled === true &&
+        env.byId("elementsToolEmpty").disabled === true
+      );
+    })(),
+  );
+
+  /* --- stars are computed from the bests ------------------------------- */
+  const starEnv = (bests) => bootElementsWith(clearedThrough("grove", bests));
+  const starLine = (env, id) => {
+    selectChallenge(env, id);
+    return env.byId("elementsStars").textContent;
+  };
+  check(
+    "elements-campaign",
+    "the star line is empty until a board has a time",
+    starLine(bootElements({}), "grow") === "\u2014",
+    starLine(bootElements({}), "grow"),
+  );
+  check(
+    "elements-campaign",
+    "the thresholds award three, two and one star",
+    starLine(starEnv({ flood: 20 }), "flood") === "\u2605\u2605\u2605" &&
+      starLine(starEnv({ flood: 40 }), "flood") === "\u2605\u2605\u2606" &&
+      starLine(starEnv({ flood: 60 }), "flood") === "\u2605\u2606\u2606",
+    [
+      starLine(starEnv({ flood: 20 }), "flood"),
+      starLine(starEnv({ flood: 40 }), "flood"),
+      starLine(starEnv({ flood: 60 }), "flood"),
+    ].join(" / "),
+  );
+  check(
+    "elements-campaign",
+    "a time just inside the three-star par still counts as three",
+    starLine(starEnv({ grow: 23.9 }), "grow") === "\u2605\u2605\u2605" &&
+      starLine(starEnv({ grow: 24 }), "grow") === "\u2605\u2605\u2605" &&
+      starLine(starEnv({ grow: 24.1 }), "grow") === "\u2605\u2605\u2606",
+    starLine(starEnv({ grow: 24.1 }), "grow"),
+  );
+  check(
+    "elements-campaign",
+    "Grow's three-star par sits above the climb's own floor",
+    (() => {
+      /* The plant climbs one cell per growEvery generations and the seed starts
+       * near the floor, so no run can be scored before the whole shaft has been
+       * climbed. The par has to clear that, or the best a player can do is
+       * two stars. */
+      const sim = newSim();
+      sim.loadPreset("grow");
+      let seedRow = -1;
+      for (let y = 0; y < sim.rows && seedRow < 0; y += 1) {
+        if (sim.get(40, y) === sim.plant) seedRow = y;
+      }
+      const floorSeconds = (seedRow * sim.growEvery * 50) / 1000;
+      return seedRow > 0 && ELEMENTS_PARS.grow[0] > floorSeconds;
+    })(),
+    `${ELEMENTS_PARS.grow[0]}s vs the climb`,
+  );
+  check(
+    "elements-campaign",
+    "the picker carries the stars a board has earned",
+    /\u2605\u2605\u2606/.test(challengeOption(starEnv({ flood: 40 }), "flood")),
+    challengeOption(starEnv({ flood: 40 }), "flood"),
+  );
+  check(
+    "elements-campaign",
+    "a hand-written star table cannot disagree with the best times",
+    (() => {
+      const env = bootElementsWith(
+        JSON.stringify({
+          v: 2,
+          cleared: { flood: true },
+          bests: { flood: 55 },
+          stars: { flood: 3 },
+        }),
+      );
+      selectChallenge(env, "flood");
+      return (
+        env.byId("elementsStars").textContent === "\u2605\u2606\u2606" &&
+        elementsStore(env).stars.flood === 1
+      );
+    })(),
+  );
+  check(
+    "elements-campaign",
+    "a clear records its star alongside the best",
+    (() => {
+      const env = bootElements({});
+      selectChallenge(env, "grow");
+      env.byId("elementsStartBtn").click();
+      const clearedIt = pourGrow(env);
+      const written = elementsStore(env);
+      return (
+        clearedIt &&
+        written.v === 2 &&
+        written.cleared.grow === true &&
+        written.bests.grow > 0 &&
+        written.stars.grow >= 1 &&
+        env.byId("elementsStars").textContent !== "\u2014"
+      );
+    })(),
+  );
+
+  /* --- the v1 record migrates in place --------------------------------- */
+  check(
+    "elements-campaign",
+    "a v1 record is read, re-scored and rewritten as v2",
+    (() => {
+      let env = null;
+      let threw = null;
+      try {
+        env = bootElementsWith(
+          JSON.stringify({
+            v: 1,
+            cleared: { grow: true, flood: true, extinguish: true },
+            bests: { flood: 25.5, extinguish: 4 },
+          }),
+        );
+      } catch (error) {
+        threw = error;
+      }
+      const written = env ? elementsStore(env) : null;
+      return (
+        !threw &&
+        !!written &&
+        written.v === 2 &&
+        written.cleared.flood === true &&
+        written.bests.flood === 25.5 &&
+        written.stars.flood === 2 &&
+        written.stars.grow === 1 &&
+        written.stars.extinguish === 3
+      );
+    })(),
+    "a v1 record did not migrate cleanly",
+  );
+  check(
+    "elements-campaign",
+    "an unversioned v1 record migrates too",
+    (() => {
+      const env = bootElementsWith(
+        JSON.stringify({ cleared: { flood: true }, bests: { flood: 10 } }),
+      );
+      const written = elementsStore(env);
+      return (
+        written.v === 2 &&
+        written.cleared.flood === true &&
+        written.bests.flood === 10 &&
+        written.stars.flood === 3
+      );
+    })(),
+  );
+  check(
+    "elements-campaign",
+    "a v2 record is left alone",
+    (() => {
+      const env = bootElementsWith(
+        JSON.stringify({ v: 2, cleared: { grow: true }, bests: { grow: 9 }, stars: { grow: 3 } }),
+      );
+      return elementsStore(env).v === 2 && elementsStore(env).stars.grow === 3;
+    })(),
+  );
+  check(
+    "elements-campaign",
+    "a record from a future version keeps its clears but not its bests",
+    (() => {
+      const env = bootElementsWith(
+        '{"v":3,"cleared":{"flood":true},"bests":{"flood":2}}',
+      );
+      const written = elementsStore(env);
+      return (
+        written.v === 2 &&
+        written.cleared.flood === true &&
+        written.bests.flood === 2 &&
+        written.stars.flood === 3
+      );
+    })(),
+  );
+  check(
+    "elements-campaign",
+    "an out-of-range v1 best is dropped but the clear and its star survive",
+    (() => {
+      const env = bootElementsWith(
+        JSON.stringify({ v: 1, cleared: { flood: true }, bests: { flood: 999999 } }),
+      );
+      const written = elementsStore(env);
+      return written.bests.flood === undefined && written.stars.flood === 1;
+    })(),
+  );
+  check(
+    "elements-campaign",
+    "a truncated record falls back to a blank v2 record",
+    (() => {
+      const env = bootElementsWith('{"v":2,"cleared":{"flood":tr');
+      const written = elementsStore(env);
+      return (
+        written.v === 2 &&
+        JSON.stringify(written.cleared) === "{}" &&
+        JSON.stringify(written.stars) === "{}"
+      );
+    })(),
+  );
+
+  /* --- nothing is recorded while a board is armed ---------------------- */
+  const armed = bootElements({});
+  selectChallenge(armed, "grove");
+  armed.timers.advance(30000);
+  check(
+    "elements-campaign",
+    "an armed campaign board runs no clock, wins nothing and stores nothing",
+    armed.store.get(ELEMENTS_KEY) === undefined &&
+      !won(armed) &&
+      armed.byId("elementsTime").textContent === "60.0s",
+    `${armed.store.get(ELEMENTS_KEY)} / ${armed.byId("elementsTime").textContent}`,
+  );
+});
+
+/* 46c. the pour zones: where a board lets the brush work ----------------- */
+
+/* Every timed board's fence, exactly as the campaign declares it. Free play is
+ * the one board with an empty list: the sandbox stays completely open. No
+ * timed board's fence overlaps the place its goal is scored in, which is what
+ * stops a board being won by painting the winning material straight into the
+ * target: the elements have to flow, react or travel there instead. */
+const POUR_ZONES = {
+  free: [],
+  grow: [[40, 0, 40, 54]],
+  flood: [[0, 0, 79, 23]],
+  extinguish: [
+    [0, 0, 79, 3],
+    [0, 5, 79, 9],
+    [0, 11, 79, 15],
+    [0, 17, 79, 21],
+    [0, 23, 79, 27],
+    [0, 29, 79, 33],
+    [0, 35, 79, 39],
+    [0, 41, 79, 45],
+    [0, 47, 79, 55],
+  ],
+  glass: [[31, 0, 48, 50]],
+  quench: [[16, 0, 63, 43]],
+  thaw: [[39, 20, 43, 54]],
+  spill: [[14, 43, 65, 53]],
+  etch: [[28, 0, 70, 42]],
+  sprout: [[39, 0, 39, 39], [36, 42, 37, 54], [41, 42, 43, 54]],
+  geyser: [[6, 37, 9, 53], [71, 37, 73, 53]],
+  grove: [[10, 45, 79, 55]],
+};
+
+/* Each board's clock and ink, read out of the campaign table the page declares
+ * rather than copied, so a scripted run is held to the numbers on the page. */
+const ELEMENTS_LIMITS = (() => {
+  const table = appSource.slice(
+    appSource.indexOf("var elementsChallenges = ["),
+    appSource.indexOf("var elementsBasePalette"),
+  );
+  const found = {};
+  const re = /id: "([a-z]+)",[\s\S]*?limit: (\d+),\s*budget: (\d+)/g;
+  let match;
+  while ((match = re.exec(table)) !== null) {
+    found[match[1]] = { limit: parseFloat(match[2]), budget: parseFloat(match[3]) };
+  }
+  return found;
+})();
+
+/* The strokes the fence exists to refuse. Each is a body of open air the old
+ * brush would have taken, or the eraser on the board's own goal material, and
+ * every one of them used to be reachable in a stroke or two: water painted
+ * straight into the basin, the gauge or the valley; the fire or the lava
+ * deleted; the dam taken out from under the reservoir. */
+const FENCE_PROBES = {
+  grow: [
+    { x: 30, y: 2, value: "water", why: "water painted beside the well" },
+    { x: 39, y: 30, value: "empty", why: "the well's wall erased" },
+  ],
+  flood: [{ x: 40, y: 40, value: "water", why: "water painted inside the basin" }],
+  extinguish: [
+    { x: 4, y: 4, value: "empty", why: "the fire the board lit, erased" },
+    { x: 40, y: 10, value: "empty", why: "a cell of hedge erased" },
+  ],
+  glass: [{ x: 20, y: 20, value: "sand", why: "sand poured outside the crucible" }],
+  quench: [
+    { x: 40, y: 54, value: "empty", why: "the lava cell erased" },
+    { x: 40, y: 50, value: "water", why: "water painted over the tray" },
+  ],
+  thaw: [
+    { x: 38, y: 44, value: "empty", why: "the dam's last layer erased" },
+    { x: 50, y: 50, value: "water", why: "water painted into the valley" },
+  ],
+  spill: [
+    { x: 5, y: 50, value: "fire", why: "fire lit outside the basin" },
+    { x: 40, y: 30, value: "oil", why: "oil painted in over the basin" },
+  ],
+  etch: [
+    { x: 40, y: 50, value: "water", why: "water painted into the roofed basin" },
+    { x: 40, y: 43, value: "empty", why: "the stone roof erased" },
+  ],
+  sprout: [
+    { x: 39, y: 53, value: "water", why: "water poured into the well below the shelf" },
+    { x: 39, y: 53, value: "fire", why: "fire lit inside the well below the shelf" },
+  ],
+  geyser: [
+    { x: 40, y: 52, value: "water", why: "water painted into the gauge" },
+    { x: 40, y: 54, value: "empty", why: "the lava bed erased" },
+  ],
+  grove: [
+    { x: 9, y: 52, value: "empty", why: "the fire the board lit, erased" },
+    { x: 40, y: 30, value: "water", why: "water poured in above the timber" },
+  ],
+};
+
+/* A cell inside each fence the board leaves empty and empty-able, so a paint
+ * there has to land. */
+const INSIDE_PROBE = {
+  grow: [40, 4],
+  flood: [40, 20],
+  extinguish: [40, 30],
+  glass: [40, 20],
+  quench: [40, 43],
+  thaw: [41, 30],
+  spill: [20, 43],
+  etch: [40, 20],
+  sprout: [39, 20],
+  geyser: [7, 45],
+  grove: [12, 51],
+};
+
+/* The intended solution of each timed board, played through the real paint
+ * path with the board's own budget, exactly as its goal text describes it.
+ * Every one of them has to reach the goal inside the board's limit. */
+const POUR_SOLUTIONS = {
+  grow(sim) {
+    /* Keep the top of the well wet: every drop falls the shaft onto the plant,
+     * which drinks one cell every `growEvery` generations. */
+    for (let y = 0; y <= 6; y += 1) {
+      if (sim.get(40, y) === sim.empty) sim.paint(40, y, sim.water);
+    }
+  },
+  flood(sim) {
+    for (let x = 27; x <= 53; x += 1) {
+      for (let y = 20; y <= 23; y += 1) {
+        if (sim.get(x, y) === sim.empty) sim.paint(x, y, sim.water);
+      }
+    }
+  },
+  extinguish(sim) {
+    /* Rain on the hedge where the front is walking. */
+    for (let x = 6; x <= 73; x += 1) {
+      if (sim.get(x, 3) === sim.empty) sim.paint(x, 3, sim.water);
+    }
+  },
+  glass(sim) {
+    for (let x = 31; x <= 48; x += 1) {
+      if (sim.get(x, 50) === sim.empty) sim.paint(x, 50, sim.sand);
+    }
+  },
+  quench(sim) {
+    for (let x = 16; x <= 63; x += 1) {
+      if (sim.get(x, 43) === sim.empty) sim.paint(x, 43, sim.water);
+    }
+  },
+  thaw(sim) {
+    /* Eat the cut through the dam's outer face, at a row the water can run
+     * away from, one layer at a time. */
+    [41, 40, 39].forEach((x) => {
+      if (sim.get(x, 44) === sim.empty) sim.paint(x, 44, sim.fire);
+    });
+  },
+  spill(sim, state) {
+    /* Light the slick in a few places, then hunt what the water doused. */
+    if (!state.sparked) {
+      [16, 24, 32, 40, 48, 56, 64].forEach((x) => sim.paint(x, 43, sim.fire));
+      state.sparked = true;
+      return;
+    }
+    if (sim.count(sim.oil) > 0 && sim.count(sim.fire) === 0) {
+      const dirs = [[0, -1], [-1, 0], [1, 0], [0, 1]];
+      for (let y = 0; y < sim.rows; y += 1) {
+        for (let x = 0; x < sim.cols; x += 1) {
+          if (sim.get(x, y) !== sim.oil) continue;
+          for (let d = 0; d < dirs.length; d += 1) {
+            const nx = x + dirs[d][0];
+            const ny = y + dirs[d][1];
+            if (sim.get(nx, ny) === sim.empty) {
+              sim.paint(nx, ny, sim.fire);
+              break;
+            }
+          }
+        }
+      }
+    }
+  },
+  etch(sim) {
+    /* Acid opens the holes, then the water is poured down them. */
+    const holes = [33, 38, 43, 48, 53, 58, 63];
+    holes.forEach((h) => {
+      if (sim.get(h, 42) === sim.empty) sim.paint(h, 42, sim.acid);
+    });
+    holes.forEach((h) => {
+      for (let y = 38; y <= 42; y += 1) {
+        if (sim.get(h, y) === sim.empty) sim.paint(h, y, sim.water);
+      }
+    });
+  },
+  sprout(sim) {
+    /* Burn the shelf open from the pocket under it, then feed the well. */
+    if (sim.count(sim.wood) > 0) {
+      if (sim.get(36, 42) === sim.empty) sim.paint(36, 42, sim.fire);
+      return;
+    }
+    for (let y = 0; y <= 39; y += 1) {
+      if (sim.get(39, y) === sim.empty) sim.paint(39, y, sim.water);
+    }
+  },
+  geyser(sim) {
+    /* Pour down the pockets at the foot of the walls and let the steam climb,
+     * rain and fill the gauge. */
+    [
+      [6, 9],
+      [71, 73],
+    ].forEach((band) => {
+      for (let x = band[0]; x <= band[1]; x += 1) {
+        for (let y = 37; y <= 53; y += 1) {
+          if (sim.get(x, y) === sim.empty) sim.paint(x, y, sim.water);
+        }
+      }
+    });
+  },
+  grove(sim) {
+    /* Take the fuel out of the flames' path and soak what is left. */
+    [52, 53].forEach((y) => {
+      if (sim.get(12, y) === sim.wood) sim.paint(12, y, sim.empty);
+    });
+    for (let x = 10; x <= 75; x += 1) {
+      if (sim.get(x, 51) === sim.empty) sim.paint(x, 51, sim.water);
+    }
+  },
+};
+
+/* Plays a board's intended solution through the real simulation, so a board
+ * can be held against its own clock limit rather than an assumed one. */
+function playBoard(board) {
+  const sim = newSim();
+  const info = ELEMENTS_LIMITS[board];
+  sim.setInk(info.budget);
+  sim.loadPreset(board);
+  const state = {};
+  let generations = 0;
+  const cap = Math.max(1, info.limit) * 40;
+  while (!sim.progress(board).done && generations < cap) {
+    POUR_SOLUTIONS[board](sim, state);
+    sim.step();
+    generations += 1;
+  }
+  return {
+    board,
+    generations,
+    seconds: (generations * 50) / 1000,
+    done: sim.progress(board).done,
+    limit: info.limit,
+    inkLeft: sim.inkLeft(),
+  };
+}
+
+/* A board's frame, read back cell by cell. The theme is set after boot
+ * because the page's own theme init reads the system preference, and the
+ * points are grid cells rather than pixels so a case reads as the board it is
+ * looking at. */
+function boardPixels(board, theme, points, motion) {
+  const env = createEnvironment({ theme: theme, motion: motion || "full" });
+  seedToolDom(env);
+  seedElementsDom(env);
+  env.load(appSource);
+  env.domReady();
+  env.setTheme(theme);
+  /* Bounce through another board first: the picker ignores a change to the
+   * board it is already showing, and a frame has to be drawn after the theme
+   * is set for the pixels to mean anything. */
+  selectChallenge(env, board === "grow" ? "flood" : "grow");
+  selectChallenge(env, board);
+  return points.map((point) => pixelAt(env, point[0], point[1]));
+}
+
+const samePixel = (a, b) =>
+  !!a && !!b && a[0] === b[0] && a[1] === b[1] && a[2] === b[2];
+
+run("elements-pour", () => {
+  /* --- every board declares its fence, and only the sandbox has none --- */
+  check(
+    "elements-pour",
+    "every timed board declares a pour zone and free play declares none",
+    ELEMENTS_ORDER.every(
+      (id) => (id === "free" ? POUR_ZONES.free.length === 0 : POUR_ZONES[id].length > 0),
+    ),
+  );
+  ELEMENTS_ORDER.forEach((id) => {
+    const sim = newSim();
+    sim.loadPreset(id);
+    const declared = sim
+      .pourZones()
+      .map((r) => [r.x0, r.y0, r.x1, r.y1])
+      .sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    const expected = POUR_ZONES[id].slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    check(
+      "elements-pour",
+      `${id}: the board declares its fence exactly`,
+      JSON.stringify(declared) === JSON.stringify(expected),
+      JSON.stringify(declared),
+    );
+  });
+
+  /* --- the strokes the fence is for are refused, and change nothing --- */
+  ELEMENTS_ORDER.forEach((id) => {
+    if (id === "free") return;
+    FENCE_PROBES[id].forEach((probe) => {
+      const sim = newSim();
+      sim.loadPreset(id);
+      const before = sim.hash();
+      const countBefore = sim.tally()[sim.ids[probe.value]];
+      const refused = sim.paint(probe.x, probe.y, sim.ids[probe.value]) === false;
+      const unchanged = sim.hash() === before && sim.tally()[sim.ids[probe.value]] === countBefore;
+      check(
+        "elements-pour",
+        `${id}: ${probe.why} is refused and changes nothing`,
+        refused && unchanged && sim.progress(id).done === false,
+        `${probe.value} at ${probe.x},${probe.y} -> refused=${refused} changed=${!unchanged}`,
+      );
+    });
+  });
+
+  /* The hedge is fenced off, but the connector the fire walks down is not:
+   * the firebreak the board is designed around is still playable. */
+  check(
+    "elements-pour",
+    "extinguish still lets the eraser cut the hedge's connector",
+    (() => {
+      const sim = newSim();
+      sim.loadPreset("extinguish");
+      const before = sim.count(sim.plant);
+      const cut = sim.paint(75, 7, sim.empty);
+      return cut === true && sim.count(sim.plant) === before - 1;
+    })(),
+  );
+
+  /* --- and the brush still works inside the fence --------------------- */
+  ELEMENTS_ORDER.forEach((id) => {
+    if (id === "free") return;
+    const inside = INSIDE_PROBE[id];
+    const sim = newSim();
+    sim.loadPreset(id);
+    const before = sim.hash();
+    const waterBefore = sim.count(sim.water);
+    const landed = sim.paint(inside[0], inside[1], sim.water) === true;
+    check(
+      "elements-pour",
+      `${id}: a paint inside the fence lands`,
+      landed && sim.hash() !== before && sim.count(sim.water) === waterBefore + 1,
+      `${inside} -> ${landed}`,
+    );
+  });
+
+  /* --- a fence never covers the place the goal is scored ---------------- */
+  ELEMENTS_ORDER.forEach((id) => {
+    const sim = newSim();
+    sim.loadPreset(id);
+    const target = sim.zone();
+    if (!target) return;
+    const shared = sim.pourZones().filter(
+      (r) =>
+        r.x0 <= target.x1 && r.x1 >= target.x0 && r.y0 <= target.y1 && r.y1 >= target.y0,
+    );
+    check(
+      "elements-pour",
+      `${id}: the fence does not overlap the zone that scores the goal`,
+      shared.length === 0,
+      `${JSON.stringify(shared)} vs ${JSON.stringify(target)}`,
+    );
+  });
+
+  /* --- free play is still the sandbox ---------------------------------- */
+  check(
+    "elements-pour",
+    "free play takes a stroke anywhere on the board, corners included",
+    (() => {
+      const sim = newSim();
+      sim.loadPreset("free");
+      /* The three open corners take water; the two floor corners are stone
+       * and refuse it; and the eraser clears the floor exactly as it used to. */
+      const before = sim.count(sim.water);
+      const air = [[0, 0], [79, 0], [40, 30]];
+      const floor = [[0, 55], [79, 55]];
+      const placed = air.filter(([x, y]) => sim.paint(x, y, sim.water)).length;
+      const refused = floor.filter(([x, y]) => sim.paint(x, y, sim.water)).length;
+      const stone = sim.count(sim.stone);
+      const erased = sim.paint(0, 55, sim.empty);
+      return (
+        sim.pourZones().length === 0 &&
+        placed === 3 &&
+        refused === 0 &&
+        erased === true &&
+        sim.count(sim.water) === before + 3 &&
+        sim.count(sim.stone) === stone - 1
+      );
+    })(),
+  );
+
+  /* --- the eraser's allowance is still capped by the board's ink ------ */
+  check(
+    "elements-pour",
+    "the slick board rations less ink than the eraser would need to clear it",
+    (() => {
+      const sim = newSim();
+      sim.loadPreset("spill");
+      return ELEMENTS_LIMITS.spill.budget < sim.count(sim.oil);
+    })(),
+    `budget ${ELEMENTS_LIMITS.spill.budget} vs the slick`,
+  );
+
+  /* --- every board is still winnable by its intended solution ---------- */
+  const solved = ELEMENTS_ORDER.filter((id) => id !== "free").map(playBoard);
+  check(
+    "elements-pour",
+    "every timed board is still winnable by its intended solution inside its limit",
+    solved.every((run) => run.done && run.seconds < run.limit),
+    solved.map((run) => `${run.board} ${run.seconds.toFixed(2)}s/${run.limit}s`).join(", "),
+  );
+  check(
+    "elements-pour",
+    "and every one of them still clears three stars under the par table",
+    solved.every((run) => run.seconds <= ELEMENTS_PARS[run.board][0]),
+    solved
+      .map((run) => `${run.board} ${run.seconds.toFixed(2)}s vs ${ELEMENTS_PARS[run.board][0]}s`)
+      .join(", "),
+  );
+  /* The times the intended solutions actually took, recorded on the run so the
+   * gate carries the evidence a board is still playable inside its clock. */
+  notes.push(
+    "elements-pour: intended solutions " +
+      solved
+        .map(
+          (run) =>
+            `${run.board} ${run.seconds.toFixed(2)}s/${run.limit}s (${run.generations} generations, ${run.inkLeft} ink left)`,
+        )
+        .join(", "),
+  );
+
+  /* The two boards whose clock is a wall rather than a nudge: neither can be
+   * scored before the plant has climbed all 54 cells of its well, so their
+   * scripted runs have to sit above that floor. That is what proves the fence
+   * handed back no shortcut. */
+  const climbFloor = (54 * 8 * 50) / 1000;
+  check(
+    "elements-pour",
+    "Grow and Sprout still pay the plant's whole climb",
+    solved.every((run) => run.board !== "grow" || run.seconds >= climbFloor - 0.05) &&
+      solved.every((run) => run.board !== "sprout" || run.seconds >= climbFloor - 0.05),
+    solved
+      .filter((run) => run.board === "grow" || run.board === "sprout")
+      .map((run) => `${run.board} ${run.seconds.toFixed(2)}s vs floor ${climbFloor}s`)
+      .join(", "),
+  );
+
+  /* --- the fence is drawn where the brush may work --------------------- */
+  /* Quench: the air over the tray is inside the fence, the tray itself is not,
+   * so the two empty cells must come out in two different colours in both
+   * themes. Nothing about the tint animates, so motion off cannot lose it. */
+  const TINT_IN = [40, 20]; /* quench: the air over the tray, in the fence */
+  const TINT_OUT = [40, 50]; /* quench: the tray's own air, outside it */
+  check(
+    "elements-pour",
+    "the pour zone is tinted on the canvas in both themes, motion on or off",
+    [["dark", "full"], ["light", "full"], ["dark", "off"], ["light", "off"]].every(
+      (mode) => {
+        const pixels = boardPixels("quench", mode[0], [TINT_IN, TINT_OUT], mode[1]);
+        return !samePixel(pixels[0], pixels[1]);
+      },
+    ),
+    JSON.stringify({
+      dark: boardPixels("quench", "dark", [TINT_IN, TINT_OUT]),
+      light: boardPixels("quench", "light", [TINT_IN, TINT_OUT]),
+      darkMotionOff: boardPixels("quench", "dark", [TINT_IN, TINT_OUT], "off"),
+      lightMotionOff: boardPixels("quench", "light", [TINT_IN, TINT_OUT], "off"),
+    }),
+  );
+  check(
+    "elements-pour",
+    "free play has no tint at all, because it has no fence",
+    ["dark", "light"].every((theme) => {
+      /* The sandbox's empty air has to match a cell that is provably outside
+       * the fence on the board that has one, in the same theme: the untinted
+       * empty colour. */
+      const free = boardPixels("free", theme, [[40, 30]])[0];
+      const untinted = boardPixels("quench", theme, [TINT_OUT])[0];
+      return samePixel(free, untinted);
+    }),
+    JSON.stringify({
+      dark: boardPixels("free", "dark", [[40, 30]]),
+      light: boardPixels("free", "light", [[40, 30]]),
+      untintedDark: boardPixels("quench", "dark", [TINT_OUT]),
+      untintedLight: boardPixels("quench", "light", [TINT_OUT]),
+    }),
+  );
+
+  /* --- the fence is words as well as pixels ---------------------------- */
+  check(
+    "elements-pour",
+    "a fenced board says so on its goal line, free play does not",
+    (() => {
+      const env = bootElements({});
+      const freeGoal = env.byId("elementsGoal").textContent;
+      selectChallenge(env, "grow");
+      const fencedGoal = env.byId("elementsGoal").textContent;
+      const fencedResult = env.byId("elementsResult").textContent;
+      return (
+        freeGoal.indexOf("Pour inside") === -1 &&
+        fencedGoal.indexOf("Pour inside") !== -1 &&
+        fencedGoal === fencedResult
+      );
+    })(),
+  );
+
+  /* --- a refused stroke on an armed board still starts nothing --------- */
+  const armedFence = bootElements({});
+  selectChallenge(armedFence, "grow");
+  clickTool(armedFence, "water");
+  const armedBefore = frameSnapshot(armedFence);
+  paintCell(armedFence, 20, 20); /* open air, outside the well */
+  check(
+    "elements-pour",
+    "a stroke the fence refuses leaves an armed board frozen, uncharged and unrecorded",
+    frameDiff(armedBefore, frameSnapshot(armedFence)) === 0 &&
+      armedFence.byId("elementsTime").textContent === "60.0s" &&
+      armedFence.byId("elementsResult").textContent.indexOf("Pour inside") !== -1 &&
+      armedFence.byId("elementsUndoBtn").disabled === true &&
+      !armedFence.store.has(ELEMENTS_KEY),
+    `${armedFence.byId("elementsTime").textContent} / ${armedFence.byId("elementsResult").textContent}`,
+  );
+  paintCell(armedFence, 40, 0); /* inside the well */
+  armedFence.timers.advance(500);
+  check(
+    "elements-pour",
+    "and a stroke inside it starts the run exactly as it always did",
+    /Clock running/.test(armedFence.byId("elementsResult").textContent) &&
+      armedFence.byId("elementsTime").textContent === "59.5s",
+    `${armedFence.byId("elementsTime").textContent} / ${armedFence.byId("elementsResult").textContent}`,
+  );
+
+  /* --- the fence holds on the keyboard path too ------------------------ */
+  const keys = bootElements({});
+  selectChallenge(keys, "grow");
+  clickTool(keys, "water");
+  keys.dispatch(keys.byId("elementsCanvas"), "focus", {});
+  const keysBefore = frameSnapshot(keys);
+  for (let i = 0; i < 10; i += 1) pressKey(keys, "ArrowLeft");
+  pressKey(keys, " ");
+  check(
+    "elements-pour",
+    "the keyboard cursor cannot place anything outside the fence either",
+    frameDiff(keysBefore, frameSnapshot(keys)) === 0 &&
+      keys.byId("elementsTime").textContent === "60.0s" &&
+      keys.byId("elementsUndoBtn").disabled === true,
+    keys.byId("elementsTime").textContent,
+  );
+  for (let i = 0; i < 10; i += 1) pressKey(keys, "ArrowRight");
+  pressKey(keys, " ");
+  keys.timers.advance(500);
+  check(
+    "elements-pour",
+    "and inside it the keyboard places the element and starts the run",
+    /Clock running/.test(keys.byId("elementsResult").textContent) &&
+      keys.byId("elementsTime").textContent === "59.5s" &&
+      keys.byId("elementsUndoBtn").disabled === false,
+    `${keys.byId("elementsTime").textContent} / ${keys.byId("elementsResult").textContent}`,
+  );
+});
+
 /* 47. the panel: chrome, palette and clock ------------------------------ */
 run("elements-ui", () => {
   const env = bootDrawer({});
@@ -3722,9 +5538,14 @@ run("elements-ui", () => {
   const panel = env.byId("gamePanelElements");
   check(
     "elements-ui",
-    "the palette is six real buttons",
-    panel.querySelectorAll(".elements-tool").length === 6 &&
-      panel.querySelectorAll('.elements-tool[data-element]').length === 6,
+    "the palette is seventeen real buttons",
+    panel.querySelectorAll(".elements-tool").length === 17 &&
+      panel.querySelectorAll('.elements-tool[data-element]').length === 17 &&
+      ELEMENT_TOOLS.every(
+        (name) =>
+          panel.querySelectorAll('.elements-tool[data-element="' + name + '"]')
+            .length === 1,
+      ),
   );
   check(
     "elements-ui",
@@ -3735,8 +5556,8 @@ run("elements-ui", () => {
   );
   check(
     "elements-ui",
-    "the picker offers free play plus the three goals",
-    env.byId("elementsChallenge").childNodes.length === 4,
+    "the picker offers free play plus all eleven campaign boards",
+    env.byId("elementsChallenge").childNodes.length === 12,
     String(env.byId("elementsChallenge").childNodes.length),
   );
   check(
@@ -3778,8 +5599,18 @@ run("elements-ui", () => {
   );
   check(
     "elements-ui",
-    "every free-play tool is offered",
-    panel.querySelectorAll(".elements-tool").every((button) => button.disabled === false),
+    "free play opens on the base palette and locks the rest",
+    panel.querySelectorAll(".elements-tool").length === 17 &&
+      ELEMENT_TOOLS.slice(0, 6).every(
+        (name) =>
+          env.byId("elementsTool" + name.charAt(0).toUpperCase() + name.slice(1))
+            .disabled === false,
+      ) &&
+      ELEMENT_TOOLS.slice(6).every(
+        (name) =>
+          env.byId("elementsTool" + name.charAt(0).toUpperCase() + name.slice(1))
+            .disabled === true,
+      ),
   );
   check(
     "elements-ui",
@@ -4253,7 +6084,7 @@ run("elements-persistence", () => {
   check(
     "elements-persistence",
     "the win is stored under its own versioned key",
-    !!saved && saved.v === 1 && first.store.has(ELEMENTS_KEY),
+    !!saved && saved.v === 2 && first.store.has(ELEMENTS_KEY),
     String(first.store.get(ELEMENTS_KEY)),
   );
   check(
@@ -4382,7 +6213,7 @@ run("elements-corrupt", () => {
       `${label} still boots a playable board`,
       !threw &&
         !!env &&
-        env.byId("elementsChallenge").childNodes.length === 4 &&
+        env.byId("elementsChallenge").childNodes.length === 12 &&
         env.byId("elementsGoal").textContent.length > 0 &&
         env.byId("elementsCanvas").width === 320 &&
         env.byId("elementsToolSand").disabled === false,
@@ -4429,7 +6260,7 @@ run("elements-corrupt", () => {
     (() => {
       const old = bootElementsWith('{"v":0,"cleared":{"flood":true},"bests":{"flood":2}}');
       const written = elementsStore(old);
-      return written.v === 1 && written.cleared.flood === true && written.bests.flood === 2;
+      return written.v === 2 && written.cleared.flood === true && written.bests.flood === 2;
     })(),
   );
   check(
@@ -4438,7 +6269,7 @@ run("elements-corrupt", () => {
     (() => {
       const broken = bootElementsWith("not json at all");
       const written = elementsStore(broken);
-      return written.v === 1 && JSON.stringify(written.cleared) === "{}";
+      return written.v === 2 && JSON.stringify(written.cleared) === "{}";
     })(),
   );
   check(
@@ -4450,7 +6281,7 @@ run("elements-corrupt", () => {
       env.byId("elementsStartBtn").click();
       const cleared = douseHedge(env);
       const written = elementsStore(env);
-      return cleared && written.v === 1 && written.cleared.extinguish === true && written.bests.extinguish > 0;
+      return cleared && written.v === 2 && written.cleared.extinguish === true && written.bests.extinguish > 0;
     })(),
   );
   check(
@@ -4732,8 +6563,40 @@ run("elements-i18n", () => {
     "elementsWater",
     "elementsPlant",
     "elementsFire",
+    "elementsWood",
+    "elementsAsh",
+    "elementsOil",
+    "elementsLava",
+    "elementsIce",
+    "elementsSteam",
+    "elementsAcid",
+    "elementsSeed",
+    "elementsSmoke",
+    "elementsGlass",
+    "elementsVoid",
     "elementsReset",
     "elementsToolsLabel",
+    "elementsSpeedLabel",
+    "elementsBrushLabel",
+    "elementsPause",
+    "elementsResume",
+    "elementsStep",
+    "elementsPick",
+    "elementsPickHint",
+    "elementsUndo",
+    "elementsBudgetLabel",
+    "elementsBudgetUnlimited",
+    "elementsLegend",
+    "elementsClassStatic",
+    "elementsClassPowder",
+    "elementsClassLiquid",
+    "elementsClassGas",
+    "elementsPicked",
+    "elementsPickBlocked",
+    "elementsUndone",
+    "elementsUndoEmpty",
+    "elementsPaused",
+    "elementsResumed",
     "elementsChallengeLabel",
     "elementsChallengeFree",
     "elementsChallengeGrow",
@@ -5013,6 +6876,306 @@ run("elements-frozen", () => {
       !/Clock running/.test(free.byId("elementsResult").textContent) &&
       free.byId("elementsTime").textContent === "2.0s",
     `${frameDiff(idleFree, frameSnapshot(free))} pixels / ${free.byId("elementsTime").textContent}`,
+  );
+});
+
+/* 57. the hand controls: brush, speed, pause, step, pick and undo -------- */
+run("elements-controls", () => {
+  const env = bootElementsWith(unlockedRecord());
+  check(
+    "elements-controls",
+    "the sandbox opens on the 5x5 brush and a 1x tick",
+    env.byId("elementsBrush3").getAttribute("aria-pressed") === "true" &&
+      env.byId("elementsBrush1").getAttribute("aria-pressed") === "false" &&
+      env.byId("elementsSpeed").value === "1",
+  );
+  check(
+    "elements-controls",
+    "the legend names the chosen element and its family",
+    /Sand/.test(env.byId("elementsLegend").textContent) &&
+      /piles/.test(env.byId("elementsLegend").textContent),
+    env.byId("elementsLegend").textContent,
+  );
+  clickTool(env, "lava");
+  check(
+    "elements-controls",
+    "and follows the palette",
+    /Lava/.test(env.byId("elementsLegend").textContent) &&
+      /spreads/.test(env.byId("elementsLegend").textContent),
+    env.byId("elementsLegend").textContent,
+  );
+
+  /* Brush sizes: the pointer blob is the chip that is lit. */
+  clickTool(env, "fire");
+  paintCell(env, 60, 20);
+  check(
+    "elements-controls",
+    "the 5x5 chip paints two cells out and no further",
+    looksLikeFire(pixelAt(env, 58, 18)) &&
+      looksLikeFire(pixelAt(env, 62, 22)) &&
+      looksLikeEmpty(pixelAt(env, 56, 20)),
+  );
+  clickBrush(env, 3);
+  check(
+    "elements-controls",
+    "the 7x7 chip is a lit toggle",
+    env.byId("elementsBrush4").getAttribute("aria-pressed") === "true" &&
+      env.byId("elementsBrush3").getAttribute("aria-pressed") === "false",
+  );
+  paintCell(env, 30, 12);
+  check(
+    "elements-controls",
+    "and really does paint three cells out",
+    looksLikeFire(pixelAt(env, 27, 9)) &&
+      looksLikeFire(pixelAt(env, 33, 15)) &&
+      looksLikeEmpty(pixelAt(env, 25, 12)),
+  );
+  clickBrush(env, 0);
+  paintCell(env, 45, 20);
+  check(
+    "elements-controls",
+    "the 1x1 chip paints the one cell under the pointer",
+    looksLikeFire(pixelAt(env, 45, 20)) &&
+      looksLikeEmpty(pixelAt(env, 44, 20)) &&
+      looksLikeEmpty(pixelAt(env, 46, 20)),
+  );
+  clickBrush(env, 2);
+
+  /* Speed: the loop is still one tracked interval, and the clock counts
+   * generations rather than the wall-clock seconds they were run in. */
+  const clockValue = () => parseFloat(env.byId("elementsTime").textContent);
+  env.timers.advance(1000);
+  const atOne = clockValue();
+  setSpeedTo(env, "0.5");
+  env.timers.advance(1000);
+  const atHalf = clockValue() - atOne;
+  setSpeedTo(env, "4");
+  env.timers.advance(1000);
+  const atFour = clockValue() - atOne - atHalf;
+  check(
+    "elements-controls",
+    "half speed runs half the generations in the same second",
+    Math.abs(atHalf - 0.5) < 1e-6 && atOne === 1.0,
+    `${atOne} then +${atHalf}`,
+  );
+  check(
+    "elements-controls",
+    "four times the speed runs several times the generations, still one interval",
+    atFour > 3 && atFour < 4.2 && env.timers.pendingIntervals() === 1,
+    `+${atFour} over 1s, ${env.timers.pendingIntervals()} intervals`,
+  );
+  setSpeedTo(env, "1");
+
+  /* Pause holds both the world and the clock. A fresh board starts the clock
+   * at zero, so one stepped generation is a visible tenth of a second. */
+  const hand = bootElements({});
+  clickHand(hand, "elementsPauseBtn");
+  const pausedFrame = frameSnapshot(hand);
+  const pausedClock = hand.byId("elementsTime").textContent;
+  check(
+    "elements-controls",
+    "pause stops the interval and says so",
+    hand.timers.pendingIntervals() === 0 &&
+      hand.byId("elementsPauseBtn").getAttribute("aria-pressed") === "true" &&
+      /Resume/.test(hand.byId("elementsPauseBtn").textContent) &&
+      /Paused/.test(hand.byId("elementsResult").textContent),
+    hand.byId("elementsResult").textContent,
+  );
+  hand.timers.advance(5000);
+  check(
+    "elements-controls",
+    "five paused seconds move neither the board nor the clock",
+    frameDiff(pausedFrame, frameSnapshot(hand)) === 0 &&
+      hand.byId("elementsTime").textContent === pausedClock &&
+      pausedClock === "0.0s",
+    `${hand.byId("elementsTime").textContent} vs ${pausedClock}`,
+  );
+  /* One generation on demand, with the loop still held. */
+  clickHand(hand, "elementsStepBtn");
+  check(
+    "elements-controls",
+    "step advances exactly one generation without restarting the loop",
+    hand.timers.pendingIntervals() === 0 &&
+      hand.byId("elementsTime").textContent === "0.1s" &&
+      frameDiff(pausedFrame, frameSnapshot(hand)) > 0,
+    `${hand.byId("elementsTime").textContent} / ${hand.timers.pendingIntervals()} intervals`,
+  );
+  clickHand(hand, "elementsPauseBtn");
+  const resumed = frameSnapshot(hand);
+  hand.timers.advance(500);
+  check(
+    "elements-controls",
+    "resume starts the world again from where it was held",
+    hand.timers.pendingIntervals() === 1 &&
+      hand.byId("elementsPauseBtn").getAttribute("aria-pressed") === "false" &&
+      frameDiff(resumed, frameSnapshot(hand)) > 0 &&
+      hand.byId("elementsTime").textContent === "0.6s",
+    hand.byId("elementsTime").textContent,
+  );
+
+  /* Step on an armed board is the go, exactly like the first paint. */
+  const armed = bootElements({});
+  selectChallenge(armed, "grow");
+  const armedFrame = frameSnapshot(armed);
+  clickHand(armed, "elementsStepBtn");
+  check(
+    "elements-controls",
+    "a step on an armed board starts the run rather than advancing it behind the player",
+    /Clock running/.test(armed.byId("elementsResult").textContent) &&
+      armed.byId("elementsProgress").textContent === "2/56" &&
+      !armed.store.has(ELEMENTS_KEY),
+    armed.byId("elementsResult").textContent,
+  );
+  armed.timers.advance(500);
+  check(
+    "elements-controls",
+    "and from there the world and the countdown both run",
+    armed.byId("elementsTime").textContent === "59.5s" &&
+      armed.byId("elementsProgress").textContent !== "2/56" &&
+      frameDiff(armedFrame, frameSnapshot(armed)) > 0,
+    `${armed.byId("elementsTime").textContent} / ${armed.byId("elementsProgress").textContent}`,
+  );
+
+  /* The eyedropper: it paints nothing, so it starts nothing. */
+  const drop = bootElements({});
+  selectChallenge(drop, "extinguish");
+  const dropFrame = frameSnapshot(drop);
+  clickHand(drop, "elementsPickBtn");
+  check(
+    "elements-controls",
+    "pick is a lit toggle",
+    drop.byId("elementsPickBtn").getAttribute("aria-pressed") === "true",
+  );
+  paintCell(drop, 40, 30);
+  check(
+    "elements-controls",
+    "picking an empty cell takes the eraser and paints nothing",
+    drop.byId("elementsToolEmpty").getAttribute("aria-pressed") === "true" &&
+      frameDiff(dropFrame, frameSnapshot(drop)) === 0 &&
+      !/Clock running/.test(drop.byId("elementsResult").textContent),
+    drop.byId("elementsResult").textContent,
+  );
+  drop.timers.advance(3000);
+  check(
+    "elements-controls",
+    "and an armed board is still frozen and uncharged after a pick",
+    drop.byId("elementsTime").textContent === "20.0s" &&
+      drop.byId("elementsProgress").textContent === "1" &&
+      frameDiff(dropFrame, frameSnapshot(drop)) === 0 &&
+      !drop.store.has(ELEMENTS_KEY),
+    `${drop.byId("elementsTime").textContent} / ${drop.byId("elementsProgress").textContent}`,
+  );
+  clickHand(drop, "elementsPickBtn");
+  paintCell(drop, 1, 55);
+  check(
+    "elements-controls",
+    "an element the board does not offer is refused, and the brush is left alone",
+    /not part of this board/.test(drop.byId("elementsResult").textContent) &&
+      drop.byId("elementsToolEmpty").getAttribute("aria-pressed") === "true" &&
+      drop.byId("elementsPickBtn").getAttribute("aria-pressed") === "false",
+    drop.byId("elementsResult").textContent,
+  );
+
+  /* Undo takes back a stroke, and a refused stroke costs nothing. */
+  const undo = bootElements({});
+  selectChallenge(undo, "extinguish");
+  const before = frameSnapshot(undo);
+  check(
+    "elements-controls",
+    "undo starts disabled with nothing to take back",
+    undo.byId("elementsUndoBtn").disabled === true,
+  );
+  clickTool(undo, "water");
+  paintCell(undo, 40, 30);
+  check(
+    "elements-controls",
+    "a stroke enables undo",
+    undo.byId("elementsUndoBtn").disabled === false &&
+      frameDiff(before, frameSnapshot(undo)) > 0,
+  );
+  clickHand(undo, "elementsUndoBtn");
+  check(
+    "elements-controls",
+    "undo puts the board back exactly where it was",
+    frameDiff(before, frameSnapshot(undo)) === 0 &&
+      undo.byId("elementsUndoBtn").disabled === true &&
+      /Undone/.test(undo.byId("elementsResult").textContent),
+    undo.byId("elementsResult").textContent,
+  );
+  clickHand(undo, "elementsUndoBtn");
+  check(
+    "elements-controls",
+    "and says so when there is nothing left to undo",
+    /Nothing to undo/.test(undo.byId("elementsResult").textContent),
+    undo.byId("elementsResult").textContent,
+  );
+  selectChallenge(undo, "flood");
+  clickTool(undo, "water");
+  paintCell(undo, 40, 48);
+  check(
+    "elements-controls",
+    "a stroke the board refuses costs the player no undo",
+    undo.byId("elementsUndoBtn").disabled === true,
+  );
+
+  /* The allowance is reported even on a board that rations nothing, and the
+   * controls cannot advance an armed board. */
+  const armedFree = bootElements({});
+  check(
+    "elements-controls",
+    "the HUD reports the paint allowance on every board",
+    armedFree.byId("elementsBudget").textContent === "unlimited" &&
+      /Budget|Ink/.test(
+        armedFree.byId("gamePanelElements").querySelector(".game-hud")
+          .textContent,
+      ),
+    armedFree.byId("elementsBudget").textContent,
+  );
+  const idle = bootElements({});
+  selectChallenge(idle, "grow");
+  const idleFrame = frameSnapshot(idle);
+  clickBrush(idle, 3);
+  clickBrush(idle, 0);
+  setSpeedTo(idle, "4");
+  setSpeedTo(idle, "1");
+  clickHand(idle, "elementsPickBtn");
+  clickHand(idle, "elementsPickBtn");
+  clickHand(idle, "elementsPauseBtn");
+  clickHand(idle, "elementsPauseBtn");
+  idle.timers.advance(40000);
+  check(
+    "elements-controls",
+    "no control can advance, charge or unwin an armed board",
+    idle.byId("elementsTime").textContent === "60.0s" &&
+      idle.byId("elementsProgress").textContent === "2/56" &&
+      !won(idle) &&
+      !/Out of time/.test(idle.byId("elementsResult").textContent) &&
+      idle.byId("elementsBest").textContent === "No best yet" &&
+      !idle.store.has(ELEMENTS_KEY) &&
+      frameDiff(idleFrame, frameSnapshot(idle)) === 0,
+    `${idle.byId("elementsTime").textContent} / ${idle.byId("elementsProgress").textContent} / ${idle.byId("elementsResult").textContent}`,
+  );
+
+  /* The translated controls. */
+  const zh = bootElements({ language: "zh-CN" });
+  check(
+    "elements-controls",
+    "the hand controls are translated",
+    /[\u4e00-\u9fff]/.test(zh.byId("elementsPauseBtn").textContent) &&
+      /[\u4e00-\u9fff]/.test(zh.byId("elementsStepBtn").textContent) &&
+      /[\u4e00-\u9fff]/.test(zh.byId("elementsPickBtn").textContent) &&
+      /[\u4e00-\u9fff]/.test(zh.byId("elementsUndoBtn").textContent) &&
+      /[\u4e00-\u9fff]/.test(zh.byId("elementsLegend").textContent) &&
+      /[\u4e00-\u9fff]/.test(zh.byId("elementsBrushLabel").textContent),
+    zh.byId("elementsLegend").textContent,
+  );
+  check(
+    "elements-controls",
+    "the expanded palette is translated",
+    zh.byId("elementsToolLava").textContent === "\u5ca9\u6d46" &&
+      zh.byId("elementsToolVoid").textContent === "\u865a\u7a7a" &&
+      zh.byId("elementsBudget").textContent !== "unlimited",
+    `${zh.byId("elementsToolLava").textContent} / ${zh.byId("elementsBudget").textContent}`,
   );
 });
 
