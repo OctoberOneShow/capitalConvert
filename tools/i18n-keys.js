@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * i18n key audit for assets/app.js.
+ * i18n key audit for assets/app/i18n.js (split modules; was assets/app.js).
  *
  * Extracts the `en:` and `zh:` key sets from the I18N dictionary, asserts they
  * are 1:1, and (when a baseline file is given) asserts no previously-existing
@@ -16,11 +16,11 @@
 const fs = require("fs");
 const path = require("path");
 
-const APP_JS = path.join(__dirname, "..", "assets", "app.js");
+const APP_I18N_JS = path.join(__dirname, "..", "assets", "app", "i18n.js");
 
 function extractDicts(source) {
   const start = source.indexOf("var I18N = {");
-  const end = source.indexOf("\n  var currentLang");
+  const end = source.indexOf("App.I18N = I18N");
   if (start === -1 || end === -1) {
     throw new Error("could not locate the I18N dictionary region");
   }
@@ -50,7 +50,7 @@ function main() {
   const argv = process.argv.slice(2);
   const baselineIdx = argv.indexOf("--baseline");
   const writeIdx = argv.indexOf("--write-baseline");
-  const source = fs.readFileSync(APP_JS, "utf8");
+  const source = fs.readFileSync(APP_I18N_JS, "utf8");
   const { en, zh } = extractDicts(source);
 
   const enSet = new Set(en);

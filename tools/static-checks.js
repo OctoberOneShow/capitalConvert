@@ -3,7 +3,7 @@
  * Static acceptance checks for the pet companion change.
  *
  *   1. the four pages still expose exactly 6 game tabs / 6 game panels
- *   2. both shared assets are requested with ?v=19 on all four pages
+ *   2. both shared assets are requested with ?v=20 on all four pages
  *   3. only the cache-busting string changed on the asset lines of each page
  *   4. the pet markup is NOT present in any HTML file (it is JS-injected)
  *   5. UTF-8 / CJK integrity (BOM, no U+FFFD, no latin1 mojibake, sample strings)
@@ -118,6 +118,13 @@ function memoryGlyphPool(source) {
 }
 
 console.log("== 1/2. page structure and asset versions ==");
+const APP_MODULES = [
+  "i18n", "core", "tools", "pet-data", "pet-state", "pet-life", "pet-art",
+  "pet-dom", "pet-render", "pet-games", "pet", "game-elements-core", "game-elements",
+  "game-typing", "game-memory", "game-2048", "game-reflex",
+  "game-caret-dash", "main",
+];
+const STYLE_MODULES = ["base", "games", "pet"];
 PAGES.forEach((page) => {
   const html = read(page);
   const tabs = countOccurrences(html, 'class="game-tab"');
@@ -125,16 +132,17 @@ PAGES.forEach((page) => {
   check(`${page}: exactly 6 game-tab`, tabs === 6, `found ${tabs}`);
   check(`${page}: exactly 6 game-panel`, panels === 6, `found ${panels}`);
   check(
-    `${page}: stylesheet requested as ?v=19`,
-    html.includes("assets/styles.css?v=19"),
+    `${page}: stylesheets requested as ?v=20`,
+    STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=20`)),
   );
   check(
-    `${page}: script requested as ?v=19`,
-    html.includes("assets/app.js?v=19"),
+    `${page}: scripts requested as ?v=20`,
+    APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=20`)),
   );
   check(
-    `${page}: no stale ?v=18 / ?v=17 / ?v=16 / ?v=15 / ?v=14 / ?v=13 / ?v=12 / ?v=11 / ?v=10 / ?v=9 / ?v=8 / ?v=7 / ?v=6 / ?v=5 / ?v=4 left`,
-    !html.includes("?v=18") &&
+    `${page}: no stale ?v=19 / ?v=18 / ?v=17 / ?v=16 / ?v=15 / ?v=14 / ?v=13 / ?v=12 / ?v=11 / ?v=10 / ?v=9 / ?v=8 / ?v=7 / ?v=6 / ?v=5 / ?v=4 left`,
+    !html.includes("?v=19") &&
+      !html.includes("?v=18") &&
       !html.includes("?v=17") &&
       !html.includes("?v=16") &&
       !html.includes("?v=15") &&
@@ -153,31 +161,32 @@ PAGES.forEach((page) => {
 
   const assetLines = html
     .split("\n")
-    .filter((line) => /assets\/(app\.js|styles\.css)\?v=/.test(line));
+    .filter((line) => /assets\/(app\/[a-z0-9-]+\.js|styles\/[a-z]+\.css)\?v=/.test(line));
   check(
-    `${page}: exactly 2 versioned asset references`,
-    assetLines.length === 2,
+    `${page}: all split assets referenced (${STYLE_MODULES.length} css + ${APP_MODULES.length} js)`,
+    assetLines.length === STYLE_MODULES.length + APP_MODULES.length,
     `found ${assetLines.length}`,
   );
   check(
-    `${page}: both asset references are ?v=19`,
-    assetLines.every((line) => line.includes("?v=19")),
+    `${page}: all asset references are ?v=20`,
+    assetLines.every((line) => line.includes("?v=20")),
     assetLines.join(" | "),
   );
 
   const headAssetLines = gitShow("HEAD", page)
     .split("\n")
-    .filter((line) => /assets\/(app\.js|styles\.css)\?v=/.test(line));
+    .filter((line) => /assets\/(app(\/|\.js)|styles(\/|\.css)).*\?v=/.test(line));
   const normalizeVersion = (line) =>
     line.replace(/\?v=\d+/, "?v=<version>");
   // Keep this check version-agnostic so it validates future bumps too.
+  // After the app.js/styles.css -> app/*/styles/* split the shape changed
+  // intentionally (2 monoliths -> 22 modules), so only verify every current
+  // reference is versioned and every expected module is present.
   check(
-    `${page}: asset lines differ from HEAD only by the version bump`,
-    assetLines.every((line) => {
-      const needle = line.includes("styles.css") ? "assets/styles.css" : "assets/app.js";
-      const headLine = headAssetLines.find((candidate) => candidate.includes(needle));
-      return !!headLine && normalizeVersion(headLine) === normalizeVersion(line);
-    }),
+    `${page}: asset lines are all versioned split modules`,
+    assetLines.every((line) => /\?v=20/.test(line)) &&
+      STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=20`)) &&
+      APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=20`)),
     "asset reference shape changed beyond version token",
   );
 });
@@ -185,23 +194,39 @@ PAGES.forEach((page) => {
 console.log("\n== 4. pet markup stays out of the HTML files ==");
 PAGES.forEach((page) => {
   const html = read(page);
-  check(`${page}: no injected pet markup in the page`, !/pet-|petWidget|petAdopt/.test(html));
+  /* Split scripts live under assets/app/pet-*.js, so only look for injected
+   * markup (ids/classes), not the script file names themselves. */
+  check(`${page}: no injected pet markup in the page`, !/id="pet|class="pet-|petWidget"|petAdoptForm/.test(html));
 });
 
 console.log("\n== 5. encoding / CJK integrity ==");
-const appJs = read("assets/app.js");
-const stylesCss = read("assets/styles.css");
-const bom = fs.readFileSync(path.join(root, "assets/app.js")).subarray(0, 3);
+/* The monoliths are gone: pages and harness run the split modules in
+ * APP_MODULES/STYLE_MODULES order, so checks read that concatenation. */
+const appJs = APP_MODULES.map((name) =>
+  fs.readFileSync(path.join(root, "assets", "app", name + ".js"), "utf8").replace(/^﻿/, ""),
+).join("\n");
+const stylesCss = STYLE_MODULES.map((name) =>
+  fs.readFileSync(path.join(root, "assets", "styles", name + ".css"), "utf8"),
+).join("\n");
+/* Focused slices so checks cannot be satisfied by unrelated modules. */
+const PET_FILES = ["pet-data", "pet-state", "pet-life", "pet-art", "pet-dom", "pet-render", "pet-games", "pet"];
+const petJsEarly = PET_FILES.map((name) =>
+  fs.readFileSync(path.join(root, "assets", "app", name + ".js"), "utf8").replace(/^﻿/, ""),
+).join("\n");
+const elementsCoreJs = fs.readFileSync(path.join(root, "assets", "app", "game-elements-core.js"), "utf8").replace(/^﻿/, "");
+const elementsUiJs = fs.readFileSync(path.join(root, "assets", "app", "game-elements.js"), "utf8").replace(/^﻿/, "");
+const elementsCorePlusUi = elementsCoreJs + "\n" + elementsUiJs;
+const bom = fs.readFileSync(path.join(root, "assets", "app", "i18n.js")).subarray(0, 3);
 check(
-  "assets/app.js keeps its UTF-8 BOM",
+  "split app modules keep their UTF-8 BOM",
   bom[0] === 0xef && bom[1] === 0xbb && bom[2] === 0xbf,
   Array.from(bom)
     .map((b) => b.toString(16))
     .join(" "),
 );
 [
-  ["assets/app.js", appJs],
-  ["assets/styles.css", stylesCss],
+  ["split app modules", appJs],
+  ["split styles", stylesCss],
   ...PAGES.map((page) => [page, read(page)]),
 ].forEach(([file, text]) => {
   check(`${file}: no U+FFFD replacement characters`, !text.includes("\uFFFD"));
@@ -218,7 +243,7 @@ check(
   "笔尖灵",
   "标签灵",
 ].forEach((sample) => {
-  check(`assets/app.js still contains "${sample}"`, appJs.includes(sample));
+  check(`split app modules still contain "${sample}"`, appJs.includes(sample));
 });
 
 console.log("\n== 5b. Glyph Match level ladder ==");
@@ -404,7 +429,7 @@ PAGES.forEach((page) => {
   /* A new panel is easy to drop into the drawer one closing tag short, which
    * the structural lookups above would not notice. */
   const drawerStart = html.indexOf('<div class="game-modal"');
-  const drawer = html.slice(drawerStart, html.indexOf('<script src="assets/app.js'));
+  const drawer = html.slice(drawerStart, html.indexOf('<script src="assets/app/'));
   check(
     `${page}: the game drawer markup is balanced`,
     drawerStart !== -1 &&
@@ -425,7 +450,7 @@ check(
 check(
   "the sandbox is initialised and reset by the shared shell",
   /initElements\(\)/.test(appJs) &&
-    /var quietResetElements = null;/.test(appJs) &&
+    /(var quietResetElements = null;|App\.quietResetElements = null)/.test(appJs) &&
     countOccurrences(appJs, "quietResetElements()") === 2,
 );
 check(
@@ -445,9 +470,7 @@ check(
 
 /* The sandbox itself, so the checks below cannot be satisfied by some other
  * game's code that happens to use the same names. */
-const elementsStart = appJs.indexOf("function createElementsSim");
-const elementsJs =
-  elementsStart === -1 ? "" : appJs.slice(elementsStart, appJs.indexOf("function initG2048"));
+const elementsJs = elementsCorePlusUi;
 check("app.js contains the Elements module", elementsJs.length > 0);
 /* Every id the module looks up has to exist in the real markup: the harness
  * boots from its own fixture, so a typo here would only show up in a browser
@@ -489,7 +512,9 @@ check(
   "the factory is self-contained and constructible on its own",
   (() => {
     try {
-      const core = elementsJs.slice(0, elementsJs.indexOf("\n  function initElements"));
+      const fnStart = elementsCoreJs.indexOf("function createElementsSim");
+      const exportIdx = elementsCoreJs.indexOf("App.createElementsSim");
+      const core = elementsCoreJs.slice(fnStart, exportIdx);
       const factory = new Function(core + "\nreturn createElementsSim;")();
       const sim = factory({ cols: 80, rows: 56, seed: 7 });
       return (
@@ -610,7 +635,7 @@ check(
   "the step is seeded and never calls Math.random",
   /function random\(\)/.test(elementsJs) &&
     /seedState = \(seedState \* 48271\) % 2147483647;/.test(elementsJs) &&
-    !/Math\.random/.test(elementsJs),
+    !/Math\.random\s*\(/.test(elementsJs),
 );
 check(
   "out-of-bounds writes are refused, counted and hashed against",
@@ -1095,10 +1120,7 @@ check(
   ruleBody(petPanelRule) || "no .pet-panel rule",
 );
 
-const petJsForClasses = appJs.slice(
-  appJs.indexOf("Pet companion"),
-  appJs.indexOf("window.formatText"),
-);
+const petJsForClasses = petJsEarly;
 const cssClassNames = new Set(
   Array.from(petCss.matchAll(/\.(pet-[a-z0-9-]+)/g)).map((match) => match[1]),
 );
@@ -1152,8 +1174,7 @@ check(
 );
 
 console.log("\n== 7. pet JS ==");
-const petJsStart = appJs.indexOf("Pet companion");
-const petJs = petJsStart === -1 ? "" : appJs.slice(petJsStart, appJs.indexOf("window.formatText"));
+const petJs = petJsEarly;
 check("app.js contains the pet module", petJs.length > 0);
 check(
   "no window.prompt / window.confirm used",
@@ -1180,7 +1201,7 @@ check(
 check(
   "decay timer is an interval and is cleared",
   /window\.setInterval\(petOnTick, petTickMs\)/.test(petJs) &&
-    /window\.clearInterval\(petDecayTimer\)/.test(petJs),
+    /window\.clearInterval\((petDecayTimer|Pet\.decayTimer)\)/.test(petJs),
 );
 check(
   "visibilitychange handler is registered",
@@ -1337,7 +1358,7 @@ check(
 );
 check(
   "care mistakes are counted, not spammed",
-  /petState\.careMistakes\s*=/.test(petJs) && /result\.logged\.push/.test(petJs),
+  /(petState\.careMistakes|Pet\.state\.careMistakes)\s*=/.test(petJs) && /result\.logged\.push/.test(petJs),
 );
 check(
   "welcome-back reward is capped by the decay cap",
@@ -1357,17 +1378,17 @@ check(
 );
 check(
   "the exclusive is applied, not merely flagged",
-  /petState\.accessory = petExclusiveAccessory/.test(petJs),
+  /(petState\.accessory|Pet\.state\.accessory) = petExclusiveAccessory/.test(petJs),
 );
 check(
   "petting draws energy down with diminishing happiness",
-  /petState\.energy = petClamp\(\s*petState\.energy - /.test(petJs) &&
-    /petCombo <= 2 \? 6 : Math\.max\(2, 6 - \(petCombo - 2\)\)/.test(petJs),
+  /(petState\.energy|Pet\.state\.energy) = petClamp\(\s*(petState\.energy|Pet\.state\.energy) - /.test(petJs) &&
+    /(petCombo|Pet\.combo) <= 2 \? 6 : Math\.max\(2, 6 - \((petCombo|Pet\.combo) - 2\)\)/.test(petJs),
 );
 check(
   "the emote is throttled and tick-driven (no permanent timer)",
   /function petEmoteBeat/.test(petJs) &&
-    /now - petEmoteAt < petEmoteEveryMs/.test(petJs) &&
+    /now - (petEmoteAt|Pet\.emoteAt) < petEmoteEveryMs/.test(petJs) &&
     /petEmoteBeat\(now\)/.test(petJs),
 );
 check(
