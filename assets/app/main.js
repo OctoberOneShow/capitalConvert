@@ -39,6 +39,18 @@
   var initG2048 = App.initG2048;
   var initReflexGame = App.initReflexGame;
   var initCaretDash = App.initCaretDash;
+  var initSpotDiffGame = App.initSpotDiffGame;
+  var initPlumberGame = App.initPlumberGame;
+  var initStackGame = App.initStackGame;
+  var initColorCodeGame = App.initColorCodeGame;
+  var initBreakoutGame = App.initBreakoutGame;
+  var initEmberDiceGame = App.initEmberDiceGame;
+  var initSnakeGame = App.initSnakeGame;
+  var initLightsGame = App.initLightsGame;
+  var initMinesGame = App.initMinesGame;
+  var initGomokuGame = App.initGomokuGame;
+  var initTrafficGame = App.initTrafficGame;
+  var initVaultGame = App.initVaultGame;
   var initPet = App.initPet;
   document.addEventListener("DOMContentLoaded", function () {
     applyI18nDom();
@@ -56,6 +68,18 @@
     initReflexGame();
     initCaretDash();
     initElements();
+    initSpotDiffGame();
+    initPlumberGame();
+    initStackGame();
+    initColorCodeGame();
+    initBreakoutGame();
+    initEmberDiceGame();
+    initSnakeGame();
+    initLightsGame();
+    initMinesGame();
+    initGomokuGame();
+    initTrafficGame();
+    initVaultGame();
     initCounters();
     initUtilityActions();
     initUndo();

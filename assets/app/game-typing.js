@@ -51,28 +51,84 @@
     var tabReflex = getElement("gameTabReflex");
     var tabCaretDash = getElement("gameTabCaretDash");
     var tabElements = getElement("gameTabElements");
+    var tabSpotDiff = getElement("gameTabSpotDiff");
+    var tabPlumber = getElement("gameTabPlumber");
+    var tabStack = getElement("gameTabStack");
+    var tabColorCode = getElement("gameTabColorCode");
+    var tabBreakout = getElement("gameTabBreakout");
+    var tabEmberDice = getElement("gameTabEmberDice");
+    var tabSnake = getElement("gameTabSnake");
+    var tabLights = getElement("gameTabLights");
+    var tabMines = getElement("gameTabMines");
+    var tabGomoku = getElement("gameTabGomoku");
+    var tabTraffic = getElement("gameTabTraffic");
+    var tabVault = getElement("gameTabVault");
     var panelTyping = getElement("gamePanelTyping");
     var panelMemory = getElement("gamePanelMemory");
     var panel2048 = getElement("gamePanel2048");
     var panelReflex = getElement("gamePanelReflex");
     var panelCaretDash = getElement("gamePanelCaretDash");
     var panelElements = getElement("gamePanelElements");
+    var panelSpotDiff = getElement("gamePanelSpotDiff");
+    var panelPlumber = getElement("gamePanelPlumber");
+    var panelStack = getElement("gamePanelStack");
+    var panelColorCode = getElement("gamePanelColorCode");
+    var panelBreakout = getElement("gamePanelBreakout");
+    var panelEmberDice = getElement("gamePanelEmberDice");
+    var panelSnake = getElement("gamePanelSnake");
+    var panelLights = getElement("gamePanelLights");
+    var panelMines = getElement("gamePanelMines");
+    var panelGomoku = getElement("gamePanelGomoku");
+    var panelTraffic = getElement("gamePanelTraffic");
+    var panelVault = getElement("gamePanelVault");
+    var tabsGrid = getElement("gameTabs");
+    var pickerToggle = getElement("gameTabsToggle");
+    var pickerLabel = getElement("gameTabsLabel");
+    var pickerCount = getElement("gameTabsCount");
     if (
       !dialog ||
       !backdrop ||
       !closeBtn ||
+      !tabsGrid ||
+      !pickerToggle ||
+      !pickerLabel ||
+      !pickerCount ||
       !tabTyping ||
       !tabMemory ||
       !tab2048 ||
       !tabReflex ||
       !tabCaretDash ||
       !tabElements ||
+      !tabSpotDiff ||
+      !tabPlumber ||
+      !tabStack ||
+      !tabColorCode ||
+      !tabBreakout ||
+      !tabEmberDice ||
+      !tabSnake ||
+      !tabLights ||
+      !tabMines ||
+      !tabGomoku ||
+      !tabTraffic ||
+      !tabVault ||
       !panelTyping ||
       !panelMemory ||
       !panel2048 ||
       !panelReflex ||
       !panelCaretDash ||
-      !panelElements
+      !panelElements ||
+      !panelSpotDiff ||
+      !panelPlumber ||
+      !panelStack ||
+      !panelColorCode ||
+      !panelBreakout ||
+      !panelEmberDice ||
+      !panelSnake ||
+      !panelLights ||
+      !panelMines ||
+      !panelGomoku ||
+      !panelTraffic ||
+      !panelVault
     ) {
       return;
     }
@@ -267,8 +323,55 @@
       { name: "reflex", tab: tabReflex, panel: panelReflex },
       { name: "caretDash", tab: tabCaretDash, panel: panelCaretDash },
       { name: "elements", tab: tabElements, panel: panelElements },
+      { name: "spotDiff", tab: tabSpotDiff, panel: panelSpotDiff },
+      { name: "plumber", tab: tabPlumber, panel: panelPlumber },
+      { name: "stack", tab: tabStack, panel: panelStack },
+      { name: "colorCode", tab: tabColorCode, panel: panelColorCode },
+      { name: "breakout", tab: tabBreakout, panel: panelBreakout },
+      { name: "emberDice", tab: tabEmberDice, panel: panelEmberDice },
+      { name: "snake", tab: tabSnake, panel: panelSnake },
+      { name: "lights", tab: tabLights, panel: panelLights },
+      { name: "mines", tab: tabMines, panel: panelMines },
+      { name: "gomoku", tab: tabGomoku, panel: panelGomoku },
+      { name: "traffic", tab: tabTraffic, panel: panelTraffic },
+      { name: "vault", tab: tabVault, panel: panelVault },
     ];
     var activeTabName = "typing";
+    var pickerVisibleCount = 6;
+    var pickerExpanded = readPickerExpanded();
+
+    function readPickerExpanded() {
+      try {
+        return localStorage.getItem("game-tabs-expanded") === "1";
+      } catch (error) {
+        return false;
+      }
+    }
+
+    /* The collapsed grid hides its overflow behind a named count, not a
+     * scroll gesture: "More games +9" says exactly what is missing. The
+     * label carries its own data-i18n key so a language switch re-translates
+     * it in whichever mode the picker sits. */
+    function applyPickerMode() {
+      tabsGrid.classList.toggle("is-collapsed", !pickerExpanded);
+      pickerToggle.setAttribute("aria-expanded", String(pickerExpanded));
+      var labelKey = pickerExpanded ? "tabsShowLess" : "tabsShowMore";
+      pickerLabel.setAttribute("data-i18n", labelKey);
+      pickerLabel.textContent = t(labelKey);
+      pickerCount.textContent = pickerExpanded
+        ? ""
+        : "+" + Math.max(0, gameTabEntries.length - pickerVisibleCount);
+      try {
+        localStorage.setItem("game-tabs-expanded", pickerExpanded ? "1" : "0");
+      } catch (error) {
+        /* the mode simply starts fresh next time */
+      }
+    }
+
+    pickerToggle.addEventListener("click", function () {
+      pickerExpanded = !pickerExpanded;
+      applyPickerMode();
+    });
 
     function selectTab(selected, shouldFocus) {
       activeTabName = selected;
@@ -304,6 +407,30 @@
         App.quietResetElements();
       }
 
+      if (App.quietResetSpotDiff) {
+        App.quietResetSpotDiff();
+      }
+
+      if (App.quietResetPlumber) {
+        App.quietResetPlumber();
+      }
+
+      if (App.quietResetStack) {
+        App.quietResetStack();
+      }
+
+      if (App.quietResetBreakout) {
+        App.quietResetBreakout();
+      }
+
+      if (App.quietResetSnake) {
+        App.quietResetSnake();
+      }
+
+      if (App.quietResetMines) {
+        App.quietResetMines();
+      }
+
       if (shouldFocus) {
         gameTabEntries.forEach(function (entry) {
           if (entry.name === selected) {
@@ -335,6 +462,54 @@
 
     tabElements.addEventListener("click", function () {
       selectTab("elements");
+    });
+
+    tabSpotDiff.addEventListener("click", function () {
+      selectTab("spotDiff");
+    });
+
+    tabPlumber.addEventListener("click", function () {
+      selectTab("plumber");
+    });
+
+    tabStack.addEventListener("click", function () {
+      selectTab("stack");
+    });
+
+    tabColorCode.addEventListener("click", function () {
+      selectTab("colorCode");
+    });
+
+    tabBreakout.addEventListener("click", function () {
+      selectTab("breakout");
+    });
+
+    tabEmberDice.addEventListener("click", function () {
+      selectTab("emberDice");
+    });
+
+    tabSnake.addEventListener("click", function () {
+      selectTab("snake");
+    });
+
+    tabLights.addEventListener("click", function () {
+      selectTab("lights");
+    });
+
+    tabMines.addEventListener("click", function () {
+      selectTab("mines");
+    });
+
+    tabGomoku.addEventListener("click", function () {
+      selectTab("gomoku");
+    });
+
+    tabTraffic.addEventListener("click", function () {
+      selectTab("traffic");
+    });
+
+    tabVault.addEventListener("click", function () {
+      selectTab("vault");
     });
 
     tabTyping.parentElement.addEventListener("keydown", function (event) {
@@ -428,6 +603,30 @@
         App.quietResetElements();
       }
 
+      if (App.quietResetSpotDiff) {
+        App.quietResetSpotDiff();
+      }
+
+      if (App.quietResetPlumber) {
+        App.quietResetPlumber();
+      }
+
+      if (App.quietResetStack) {
+        App.quietResetStack();
+      }
+
+      if (App.quietResetBreakout) {
+        App.quietResetBreakout();
+      }
+
+      if (App.quietResetSnake) {
+        App.quietResetSnake();
+      }
+
+      if (App.quietResetMines) {
+        App.quietResetMines();
+      }
+
       openBtn.focus();
     }
 
@@ -473,6 +672,8 @@
     buildTarget();
     renderBest();
     roundActive = true;
+
+    applyPickerMode();
   }
 
 

@@ -2,14 +2,20 @@
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
   var I18N = App.I18N;
-  /* Quiet-reset hooks: every game registers its reset here so the
-   * shared drawer can reset all six without knowing them. */
+  /* Quiet-reset hooks: every timer-driven game registers its reset here so
+   * the shared drawer can pause it without knowing the game. */
   App.quietResetTyping = null;
   App.quietResetMemory = null;
   App.quietReset2048 = null;
   App.quietResetReflex = null;
   App.quietResetCaretDash = null;
   App.quietResetElements = null;
+  App.quietResetSpotDiff = null;
+  App.quietResetPlumber = null;
+  App.quietResetStack = null;
+  App.quietResetBreakout = null;
+  App.quietResetSnake = null;
+  App.quietResetMines = null;
   function getFileName(path) {
     try {
       return path.split("/").pop().split("\\").pop();

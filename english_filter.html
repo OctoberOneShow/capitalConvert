@@ -30,9 +30,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles/base.css?v=20">
-    <link rel="stylesheet" href="assets/styles/games.css?v=20">
-    <link rel="stylesheet" href="assets/styles/pet.css?v=20">
+    <link rel="stylesheet" href="assets/styles/base.css?v=38">
+    <link rel="stylesheet" href="assets/styles/games.css?v=38">
+    <link rel="stylesheet" href="assets/styles/pet.css?v=38">
 </head>
 <body>
     <div class="topbar" role="banner">
@@ -243,14 +243,35 @@
                     </svg>
                 </button>
             </div>
-            <div class="game-tabs" role="tablist" aria-label="Choose a game" data-i18n-aria="tablistLabel">
+            <div class="game-tabs" id="gameTabs" role="tablist" aria-label="Choose a game" data-i18n-aria="tablistLabel">
                 <button class="game-tab" id="gameTabTyping" role="tab" aria-selected="true" aria-controls="gamePanelTyping" tabindex="0" type="button" data-i18n="tabTyping">Typing Sprint</button>
                 <button class="game-tab" id="gameTabMemory" role="tab" aria-selected="false" aria-controls="gamePanelMemory" tabindex="-1" type="button" data-i18n="tabMemory">Glyph Match</button>
                 <button class="game-tab" id="gameTab2048" role="tab" aria-selected="false" aria-controls="gamePanel2048" tabindex="-1" type="button" data-i18n="tab2048">2048</button>
                 <button class="game-tab" id="gameTabReflex" role="tab" aria-selected="false" aria-controls="gamePanelReflex" tabindex="-1" type="button" data-i18n="tabReflex">Reflex Tap</button>
                 <button class="game-tab" id="gameTabCaretDash" role="tab" aria-selected="false" aria-controls="gamePanelCaretDash" tabindex="-1" type="button" data-i18n="tabCaretDash">Caret Dash</button>
                 <button class="game-tab" id="gameTabElements" role="tab" aria-selected="false" aria-controls="gamePanelElements" tabindex="-1" type="button" data-i18n="tabElements">Elements</button>
+                <button class="game-tab" id="gameTabSpotDiff" role="tab" aria-selected="false" aria-controls="gamePanelSpotDiff" tabindex="-1" type="button" data-i18n="tabSpotDiff">Spot the Diff</button>
+                <button class="game-tab" id="gameTabPlumber" role="tab" aria-selected="false" aria-controls="gamePanelPlumber" tabindex="-1" type="button" data-i18n="tabPlumber">Punctuation Plumber</button>
+                <button class="game-tab" id="gameTabStack" role="tab" aria-selected="false" aria-controls="gamePanelStack" tabindex="-1" type="button" data-i18n="tabStack">Stack!</button>
+                <button class="game-tab" id="gameTabColorCode" role="tab" aria-selected="false" aria-controls="gamePanelColorCode" tabindex="-1" type="button" data-i18n="tabColorCode">Color Code</button>
+                <button class="game-tab" id="gameTabBreakout" role="tab" aria-selected="false" aria-controls="gamePanelBreakout" tabindex="-1" type="button" data-i18n="tabBreakout">Inkball</button>
+                <button class="game-tab" id="gameTabEmberDice" role="tab" aria-selected="false" aria-controls="gamePanelEmberDice" tabindex="-1" type="button" data-i18n="tabEmberDice">Ember Dice</button>
+                <button class="game-tab" id="gameTabSnake" role="tab" aria-selected="false" aria-controls="gamePanelSnake" tabindex="-1" type="button" data-i18n="tabSnake">Serpent</button>
+                <button class="game-tab" id="gameTabLights" role="tab" aria-selected="false" aria-controls="gamePanelLights" tabindex="-1" type="button" data-i18n="tabLights">Lights Out</button>
+                    <button class="game-tab" id="gameTabMines" role="tab" aria-selected="false" aria-controls="gamePanelMines" tabindex="-1" type="button" data-i18n="tabMines">Glyph Mines</button>
+                <button class="game-tab" id="gameTabGomoku" role="tab" aria-selected="false" aria-controls="gamePanelGomoku" tabindex="-1" type="button" data-i18n="tabGomoku">Gomoku</button>
+                <button class="game-tab" id="gameTabTraffic" role="tab" aria-selected="false" aria-controls="gamePanelTraffic" tabindex="-1" type="button" data-i18n="tabTraffic">Traffic Jam</button>
+                <button class="game-tab" id="gameTabVault" role="tab" aria-selected="false" aria-controls="gamePanelVault" tabindex="-1" type="button" data-i18n="tabVault">Letter Vault</button>
             </div>
+            <button class="game-tabs-more" id="gameTabsToggle" type="button" aria-expanded="false" aria-controls="gameTabs">
+                <span class="button-content">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                    <span id="gameTabsLabel" data-i18n="tabsShowMore">More games</span>
+                    <span id="gameTabsCount">+9</span>
+                </span>
+            </button>
             <div class="game-panel" id="gamePanelTyping" role="tabpanel" aria-labelledby="gameTabTyping">
                 <p class="game-target" id="typingTarget" aria-hidden="true"></p>
                 <span class="visually-hidden" id="typingTargetText"></span>
@@ -461,27 +482,309 @@
                 </div>
                 <p class="game-hint" data-i18n="elementsHint">Drag on the grid to paint; Reset board restores the opening layout. The palette offers every element the board allows, the brush size sets how much you paint at once, and Pause, Step, Pick and Undo work the board by hand. Keyboard: 1-9 pick an element, the arrow keys move the cursor and Space places it.</p>
             </div>
+            <div class="game-panel" id="gamePanelSpotDiff" role="tabpanel" aria-labelledby="gameTabSpotDiff" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudFound">Found</span><strong id="spotFoundStat">0/3</strong></div>
+                    <div class="game-stat"><span data-i18n="hudTime">Time</span><strong id="spotTime">0.0s</strong></div>
+                    <div class="game-stat"><span data-i18n="hudMisses">Misses</span><strong id="spotMisses">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudLevel">Level</span><strong id="spotLevel">1/3</strong></div>
+                </div>
+                <p class="spot-line" id="spotBase" aria-hidden="true"></p>
+                <div class="spot-line spot-line-edit" id="spotEdit" tabindex="0" role="group" aria-label="Edited line. The arrow keys move the caret and Enter marks a character." data-i18n-aria="spotEditLabel" aria-describedby="spotResult"></div>
+                <p class="game-result" id="spotResult" role="status" data-i18n="spotPrompt">Some characters in the lower line were broken on purpose. Find them all.</p>
+                <div class="game-actions">
+                    <button class="primary" id="spotStartBtn" type="button">
+                        <span class="button-content">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 5.5v13l11-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                            </svg>
+                            <span data-i18n="btnNewRound">New Round</span>
+                        </span>
+                    </button>
+                    <p class="game-best" id="spotBest" data-i18n="noBest">No best yet</p>
+                </div>
+                <p class="game-hint" data-i18n="spotHint">Click a character, or arrow to it and press Enter. A new best is the lowest clear time.</p>
+            </div>
+            <div class="game-panel" id="gamePanelPlumber" role="tabpanel" aria-labelledby="gameTabPlumber" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudScore">Score</span><strong id="plumberScore">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudStrikes">Strikes</span><strong id="plumberStrikes">0/3</strong></div>
+                    <div class="game-stat"><span data-i18n="hudSpeed">Speed</span><strong id="plumberSpeed">1.0x</strong></div>
+                    <div class="game-stat"><span data-i18n="hudCombo">Combo</span><strong id="plumberCombo">0</strong></div>
+                </div>
+                <div class="plumber-field" id="plumberField" tabindex="0" role="group" aria-label="Sorting lane. Arrow Left routes to the fullwidth bin, Arrow Right to the halfwidth bin." data-i18n-aria="plumberFieldLabel" aria-describedby="plumberResult">
+                    <span class="plumber-glyph" id="plumberGlyph" aria-hidden="true" hidden></span>
+                </div>
+                <div class="plumber-bins">
+                    <button class="plumber-bin" id="plumberBinFull" type="button" data-i18n="plumberBinFull">Fullwidth</button>
+                    <button class="plumber-bin" id="plumberBinHalf" type="button" data-i18n="plumberBinHalf">Halfwidth</button>
+                </div>
+                <p class="game-result" id="plumberResult" role="status" data-i18n="plumberPrompt">Start a round, then sort every falling mark into the bin matching its width.</p>
+                <div class="game-actions">
+                    <button class="primary" id="plumberStartBtn" type="button">
+                        <span class="button-content">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 5.5v13l11-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                            </svg>
+                            <span data-i18n="btnStart">Start</span>
+                        </span>
+                    </button>
+                    <p class="game-best" id="plumberBest" data-i18n="noBest">No best yet</p>
+                </div>
+                <p class="game-hint" data-i18n="plumberHint">Focus the lane and press Left or Right, or tap a bin. Three misses ends the run.</p>
+            </div>
+            <div class="game-panel" id="gamePanelStack" role="tabpanel" aria-labelledby="gameTabStack" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudHeight">Height</span><strong id="stackHeight">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudPerfect">Perfect</span><strong id="stackStreak">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudBest">Best</span><strong id="stackBestStat">0</strong></div>
+                </div>
+                <div class="stack-field" id="stackField" tabindex="0" role="group" aria-label="Stacking tower. Click or press Space to drop the sliding block." data-i18n-aria="stackFieldLabel" aria-describedby="stackResult">
+                    <div class="stack-tower" id="stackTower" aria-hidden="true"></div>
+                    <span class="stack-block" id="stackBlock" aria-hidden="true"></span>
+                </div>
+                <p class="game-result" id="stackResult" role="status" data-i18n="stackPrompt">Press New Game, then drop each sliding block onto the tower. Overhang gets sliced off.</p>
+                <div class="game-actions">
+                    <button class="primary" id="stackStartBtn" type="button">
+                        <span class="button-content">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 5.5v13l11-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                            </svg>
+                            <span data-i18n="btnNewGame">New Game</span>
+                        </span>
+                    </button>
+                    <p class="game-best" id="stackBest" data-i18n="noBest">No best yet</p>
+                </div>
+                <p class="game-hint" data-i18n="stackHint">A near-perfect drop keeps the full width; streaks of perfect drops are how towers get tall.</p>
+            </div>
+            <div class="game-panel" id="gamePanelColorCode" role="tabpanel" aria-labelledby="gameTabColorCode" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudTry">Try</span><strong id="ccTryStat">1/10</strong></div>
+                    <div class="game-stat"><span data-i18n="hudStreak">Streak</span><strong id="ccStreakStat">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudBest">Best</span><strong id="ccBestStat">&#8212;</strong></div>
+                </div>
+                <div class="cc-palette" id="ccPalette" role="group" aria-label="Pick a colour" data-i18n-aria="ccPaletteLabel">
+                    <button class="cc-swatch is-selected" id="ccSwatch0" type="button" data-color="0" aria-pressed="true" style="background:#22d3ee"><span class="visually-hidden" data-i18n="ccColor0">Cyan</span></button>
+                    <button class="cc-swatch" id="ccSwatch1" type="button" data-color="1" aria-pressed="false" style="background:#fbbf24"><span class="visually-hidden" data-i18n="ccColor1">Amber</span></button>
+                    <button class="cc-swatch" id="ccSwatch2" type="button" data-color="2" aria-pressed="false" style="background:#f472b6"><span class="visually-hidden" data-i18n="ccColor2">Magenta</span></button>
+                    <button class="cc-swatch" id="ccSwatch3" type="button" data-color="3" aria-pressed="false" style="background:#a3e635"><span class="visually-hidden" data-i18n="ccColor3">Lime</span></button>
+                    <button class="cc-swatch" id="ccSwatch4" type="button" data-color="4" aria-pressed="false" style="background:#a78bfa"><span class="visually-hidden" data-i18n="ccColor4">Violet</span></button>
+                    <button class="cc-swatch" id="ccSwatch5" type="button" data-color="5" aria-pressed="false" style="background:#e2e8f0"><span class="visually-hidden" data-i18n="ccColor5">Mist</span></button>
+                </div>
+                <div class="cc-board" id="ccBoard" role="group" aria-label="Guess rows. Fill four slots, then press Check." data-i18n-aria="ccBoardLabel"></div>
+                <p class="game-result" id="ccResult" role="status" data-i18n="ccPrompt">Crack the four-colour code. Solid peg: right colour, right place. Hollow peg: right colour, wrong place.</p>
+                <div class="game-actions">
+                    <button class="primary" id="ccCheckBtn" type="button"><span class="button-content"><span data-i18n="btnCheck">Check</span></span></button>
+                    <button class="ghost" id="ccNewBtn" type="button"><span class="button-content"><span data-i18n="btnNewRound">New Round</span></span></button>
+                </div>
+                <p class="game-hint" data-i18n="ccHint">Click a swatch, then click slots to paint them. Check submits the row; New Round deals a fresh code.</p>
+            </div>
+            <div class="game-panel" id="gamePanelBreakout" role="tabpanel" aria-labelledby="gameTabBreakout" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudScore">Score</span><strong id="brkScore">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudLives">Lives</span><strong id="brkLives">3</strong></div>
+                    <div class="game-stat"><span data-i18n="hudLevel">Level</span><strong id="brkLevel">1/15</strong></div>
+                </div>
+                <div class="elements-row">
+                    <label class="elements-label" for="brkLevelSel" data-i18n="brkLevelSelectLabel">Street</label>
+                    <select class="elements-select" id="brkLevelSel"></select>
+                </div>
+                <canvas class="brk-canvas" id="brkCanvas" width="320" height="224" tabindex="0" role="application" aria-label="Inkball field. The arrow keys or the mouse move the paddle, Space launches the ball." data-i18n-aria="brkCanvasLabel" aria-describedby="brkResult"></canvas>
+                <p class="game-result" id="brkResult" role="status" data-i18n="brkPrompt">Smash the glyph wall with the inkball. Don't let it fall.</p>
+                <div class="game-actions">
+                    <button class="primary" id="brkStartBtn" type="button">
+                        <span class="button-content">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 5.5v13l11-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                            </svg>
+                            <span data-i18n="btnStart">Start</span>
+                        </span>
+                    </button>
+                    <p class="game-best" id="brkBest" data-i18n="noBest">No best yet</p>
+                </div>
+                <p class="game-hint" data-i18n="brkHint">The ball inherits the paddle's angle — clip it with an edge to bend the shot. Bricks chained between paddle touches stack the combo bonus.</p>
+            </div>
+            <div class="game-panel" id="gamePanelEmberDice" role="tabpanel" aria-labelledby="gameTabEmberDice" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudTurn">Turn</span><strong id="diceTurn">1/10</strong></div>
+                    <div class="game-stat"><span data-i18n="diceAtStake">At stake</span><strong id="diceStake">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudBank">Bank</span><strong id="diceBank">0/40</strong></div>
+                </div>
+                <div class="elements-row">
+                    <label class="elements-label" for="diceTableSel" data-i18n="diceTableSelectLabel">Table</label>
+                    <select class="elements-select" id="diceTableSel"></select>
+                </div>
+                <button class="dice-pad" id="dicePad" type="button" aria-label="Roll" data-i18n-aria="diceRoll" aria-describedby="diceResult"><span id="diceFace">&#9856;</span></button>
+                <div class="dice-actions">
+                    <button class="ghost" id="diceRollBtn" type="button" disabled><span class="button-content"><span data-i18n="diceRoll">Roll</span></span></button>
+                    <button class="ghost" id="diceBankBtn" type="button" disabled><span class="button-content"><span data-i18n="diceBankBtn">Bank it</span></span></button>
+                </div>
+                <p class="game-result" id="diceResult" role="status" data-i18n="dicePrompt">Ten turns. Roll to pile embers, bank before a 1 burns the pile.</p>
+                <div class="game-actions">
+                    <button class="primary" id="diceStartBtn" type="button">
+                        <span class="button-content">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 5.5v13l11-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                            </svg>
+                            <span data-i18n="btnNewGame">New Game</span>
+                        </span>
+                    </button>
+                    <p class="game-best" id="diceBest" data-i18n="noBest">No best yet</p>
+                </div>
+                <p class="game-hint" data-i18n="diceHint">Click the die or Roll to throw; Bank it locks the stake in. Every turn ends the moment you bank or burn.</p>
+            </div>
+            <div class="game-panel" id="gamePanelSnake" role="tabpanel" aria-labelledby="gameTabSnake" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudLength">Length</span><strong id="snkLength">3</strong></div>
+                    <div class="game-stat"><span data-i18n="hudGoal">Goal</span><strong id="snkGoalStat">3/6</strong></div>
+                    <div class="game-stat"><span data-i18n="hudTime">Time</span><strong id="snkTime">0.0s</strong></div>
+                </div>
+                <div class="elements-row">
+                    <label class="elements-label" for="snkLevelSel" data-i18n="snkLevelSelectLabel">House</label>
+                    <select class="elements-select" id="snkLevelSel"></select>
+                </div>
+                <canvas class="snk-canvas" id="snkCanvas" width="240" height="240" tabindex="0" role="application" aria-label="Serpent field. The arrow keys steer." data-i18n-aria="snkFieldLabel" aria-describedby="snkResult"></canvas>
+                <p class="game-result" id="snkResult" role="status" data-i18n="snkPrompt">Press Start, then steer the serpent to eat and grow. Walls and tails bite back.</p>
+                <div class="game-actions">
+                    <button class="primary" id="snkStartBtn" type="button">
+                        <span class="button-content">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 5.5v13l11-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                            </svg>
+                            <span data-i18n="btnStart">Start</span>
+                        </span>
+                    </button>
+                    <p class="game-best" id="snkBest" data-i18n="noBest">No best yet</p>
+                </div>
+                <p class="game-hint" data-i18n="snkHint">Arrow keys or WASD steer; every bite speeds the slither a little. Reversing into yourself is the only way it ends early.</p>
+            </div>
+            <div class="game-panel" id="gamePanelLights" role="tabpanel" aria-labelledby="gameTabLights" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudMoves">Moves</span><strong id="litMoves">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudLevel">Level</span><strong id="litLevel">1/5</strong></div>
+                    <div class="game-stat"><span data-i18n="hudBest">Best</span><strong id="litBestStat">&#8212;</strong></div>
+                </div>
+                <div class="lit-grid" id="litGrid" role="group" aria-label="Lights grid. Tapping a cell flips it and its neighbours." data-i18n-aria="litFieldLabel" aria-describedby="litResult"></div>
+                <p class="game-result" id="litResult" role="status" data-i18n="litPrompt">Put every light out. Fewer moves is the better win.</p>
+                <div class="game-actions">
+                    <button class="primary" id="litNewBtn" type="button">
+                        <span class="button-content">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 5.5v13l11-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                            </svg>
+                            <span data-i18n="btnNewGame">New Game</span>
+                        </span>
+                    </button>
+                    <p class="game-best" id="litBest" data-i18n="noBest">No best yet</p>
+                </div>
+                <p class="game-hint" data-i18n="litHint">Each tap flips a plus-shaped cross, so undoing by tapping again is part of the puzzle.</p>
+            </div>
+            <div class="game-panel" id="gamePanelMines" role="tabpanel" aria-labelledby="gameTabMines" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudMines">Mines</span><strong id="mnMineStat">12</strong></div>
+                    <div class="game-stat"><span data-i18n="hudFlags">Flags</span><strong id="mnFlagStat">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudTime">Time</span><strong id="mnTime">0.0s</strong></div>
+                </div>
+                <div class="mn-grid" id="mnGrid" role="group" aria-label="Mine grid. Click to dig; Flag mode or right click plants a flag." data-i18n-aria="mnFieldLabel" aria-describedby="mnResult"></div>
+                <p class="game-result" id="mnResult" role="status" data-i18n="mnPrompt">Nine by nine with twelve buried glyphs. Your first dig is always safe.</p>
+                <div class="game-actions">
+                    <button class="primary" id="mnStartBtn" type="button">
+                        <span class="button-content">
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8 5.5v13l11-6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path>
+                            </svg>
+                            <span data-i18n="btnNewGame">New Game</span>
+                        </span>
+                    </button>
+                    <button class="ghost" id="mnFlagBtn" type="button" aria-pressed="false"><span class="button-content"><span data-i18n="mnFlagMode">Flag</span></span></button>
+                    <p class="game-best" id="mnBest" data-i18n="noBest">No best yet</p>
+                </div>
+                <p class="game-hint" data-i18n="mnHint">Numbers count buried glyphs in the eight cells around them. Clear every safe cell to win; a new best is the lowest time.</p>
+            </div>
+            <div class="game-panel" id="gamePanelGomoku" role="tabpanel" aria-labelledby="gameTabGomoku" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudMoves">Moves</span><strong id="gomokuMoves">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudStreak">Streak</span><strong id="gomokuStreak">0</strong></div>
+                </div>
+                <div class="elements-row">
+                    <label class="elements-label" for="gomokuRankSel" data-i18n="gomokuRankLabel">Rank</label>
+                    <select class="elements-select" id="gomokuRankSel"></select>
+                </div>
+                <div class="gm-board" id="gomokuBoard" role="group" aria-label="Gomoku board. Click an empty cell to place a black stone." data-i18n-aria="gomokuBoardLabel" aria-describedby="gomokuResult"></div>
+                <p class="game-result" id="gomokuResult" role="status" data-i18n="gomokuPrompt">Face a rank: black moves first, five in a row wins.</p>
+                <div class="game-actions">
+                    <button class="primary" id="gomokuNewBtn" type="button"><span class="button-content"><span data-i18n="btnNewGame">New Game</span></span></button>
+                    <button class="ghost" id="gomokuUndoBtn" type="button" disabled><span class="button-content"><span data-i18n="gomokuUndo">Undo</span></span></button>
+                    <p class="game-best" id="gomokuBest"></p>
+                </div>
+                <p class="game-hint" data-i18n="gomokuHint">Click an empty cell to place your stone; Undo walks back a full round. Fewer moves, more stars.</p>
+            </div>
+            <div class="game-panel" id="gamePanelTraffic" role="tabpanel" aria-labelledby="gameTabTraffic" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudMoves">Moves</span><strong id="trafMoves">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudLevel">Level</span><strong id="trafBoardStat">1/16</strong></div>
+                </div>
+                <div class="elements-row">
+                    <label class="elements-label" for="trafLevelSel" data-i18n="trafLevelSelectLabel">Block</label>
+                    <select class="elements-select" id="trafLevelSel"></select>
+                </div>
+                <div class="traf-board" id="trafBoard" tabindex="0" role="group" aria-label="Traffic Jam lot. Click a car, then drag it or use the arrow keys." data-i18n-aria="trafBoardLabel" aria-describedby="trafResult"></div>
+                <p class="game-result" id="trafResult" role="status" data-i18n="trafPrompt">Slide the cars and free the taxi out the exit. Fewer moves shine brighter.</p>
+                <div class="game-actions">
+                    <button class="primary" id="trafNewBtn" type="button"><span class="button-content"><span data-i18n="btnNewGame">New Game</span></span></button>
+                    <p class="game-best" id="trafBest"></p>
+                </div>
+                <p class="game-hint" data-i18n="trafHint">Click a car to select it, then drag or press the arrows along its axis; Tab walks between cars.</p>
+            </div>
+            <div class="game-panel" id="gamePanelVault" role="tabpanel" aria-labelledby="gameTabVault" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudGuesses">Guesses</span><strong id="vaultGuessStat">0/6</strong></div>
+                    <div class="game-stat"><span data-i18n="hudStreak">Streak</span><strong id="vaultStreakStat">0</strong></div>
+                </div>
+                <div class="vault-board" id="vaultBoard" role="group" aria-label="Letter Vault guess grid. Five letters, six guesses." data-i18n-aria="vaultBoardLabel" aria-describedby="vaultResult"></div>
+                <div class="vault-kb" id="vaultKb"></div>
+                <p class="game-result" id="vaultResult" role="status" data-i18n="vaultPromptDaily">Today's vault is locked. Six guesses, five letters.</p>
+                <div class="game-actions">
+                    <button class="primary" id="vaultDailyBtn" type="button" aria-pressed="true"><span class="button-content"><span data-i18n="vaultDailyBtn">Daily</span></span></button>
+                    <button class="ghost" id="vaultNewBtn" type="button" aria-pressed="false"><span class="button-content"><span data-i18n="vaultRandomBtn">Random</span></span></button>
+                    <p class="game-best" id="vaultBest"></p>
+                </div>
+                <p class="game-hint" data-i18n="vaultHint">Type on the on-screen keys or your real keyboard. Green fits the spot, yellow hides elsewhere.</p>
+            </div>
         </div>
     </div>
 
-    <script src="assets/app/i18n.js?v=20"></script>
-    <script src="assets/app/core.js?v=20"></script>
-    <script src="assets/app/tools.js?v=20"></script>
-    <script src="assets/app/pet-data.js?v=20"></script>
-    <script src="assets/app/pet-state.js?v=20"></script>
-    <script src="assets/app/pet-life.js?v=20"></script>
-    <script src="assets/app/pet-art.js?v=20"></script>
-    <script src="assets/app/pet-dom.js?v=20"></script>
-    <script src="assets/app/pet-render.js?v=20"></script>
-    <script src="assets/app/pet-games.js?v=20"></script>
-    <script src="assets/app/pet.js?v=20"></script>
-    <script src="assets/app/game-elements-core.js?v=20"></script>
-    <script src="assets/app/game-elements.js?v=20"></script>
-    <script src="assets/app/game-typing.js?v=20"></script>
-    <script src="assets/app/game-memory.js?v=20"></script>
-    <script src="assets/app/game-2048.js?v=20"></script>
-    <script src="assets/app/game-reflex.js?v=20"></script>
-    <script src="assets/app/game-caret-dash.js?v=20"></script>
-    <script src="assets/app/main.js?v=20"></script>
+    <script src="assets/app/i18n.js?v=38"></script>
+    <script src="assets/app/core.js?v=38"></script>
+    <script src="assets/app/tools.js?v=38"></script>
+    <script src="assets/app/pet-data.js?v=38"></script>
+    <script src="assets/app/pet-state.js?v=38"></script>
+    <script src="assets/app/pet-life.js?v=38"></script>
+    <script src="assets/app/pet-art.js?v=38"></script>
+    <script src="assets/app/pet-dom.js?v=38"></script>
+    <script src="assets/app/pet-render.js?v=38"></script>
+    <script src="assets/app/pet-games.js?v=38"></script>
+    <script src="assets/app/pet.js?v=38"></script>
+    <script src="assets/app/game-campaign.js?v=38"></script>
+    <script src="assets/app/game-elements-core.js?v=38"></script>
+    <script src="assets/app/game-elements.js?v=38"></script>
+    <script src="assets/app/game-typing.js?v=38"></script>
+    <script src="assets/app/game-memory.js?v=38"></script>
+    <script src="assets/app/game-2048.js?v=38"></script>
+    <script src="assets/app/game-reflex.js?v=38"></script>
+    <script src="assets/app/game-caret-dash.js?v=38"></script>
+    <script src="assets/app/game-spot-diff.js?v=38"></script>
+    <script src="assets/app/game-plumber.js?v=38"></script>
+    <script src="assets/app/game-stack.js?v=38"></script>
+    <script src="assets/app/game-color-code.js?v=38"></script>
+    <script src="assets/app/game-breakout.js?v=38"></script>
+    <script src="assets/app/game-ember-dice.js?v=38"></script>
+    <script src="assets/app/game-snake.js?v=38"></script>
+    <script src="assets/app/game-lights.js?v=38"></script>
+    <script src="assets/app/game-mines.js?v=38"></script>
+    <script src="assets/app/game-gomoku.js?v=38"></script>
+    <script src="assets/app/game-traffic.js?v=38"></script>
+    <script src="assets/app/game-vault.js?v=38"></script>
+    <script src="assets/app/main.js?v=38"></script>
 </body>
 </html>

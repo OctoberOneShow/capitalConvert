@@ -2,8 +2,8 @@
 /*
  * Static acceptance checks for the pet companion change.
  *
- *   1. the four pages still expose exactly 6 game tabs / 6 game panels
- *   2. both shared assets are requested with ?v=20 on all four pages
+ *   1. the four pages still expose exactly 18 game tabs / 18 game panels
+ *   2. both shared assets are requested with ?v=38 on all four pages
  *   3. only the cache-busting string changed on the asset lines of each page
  *   4. the pet markup is NOT present in any HTML file (it is JS-injected)
  *   5. UTF-8 / CJK integrity (BOM, no U+FFFD, no latin1 mojibake, sample strings)
@@ -120,28 +120,50 @@ function memoryGlyphPool(source) {
 console.log("== 1/2. page structure and asset versions ==");
 const APP_MODULES = [
   "i18n", "core", "tools", "pet-data", "pet-state", "pet-life", "pet-art",
-  "pet-dom", "pet-render", "pet-games", "pet", "game-elements-core", "game-elements",
+  "pet-dom", "pet-render", "pet-games", "pet", "game-campaign",
+  "game-elements-core", "game-elements",
   "game-typing", "game-memory", "game-2048", "game-reflex",
-  "game-caret-dash", "main",
+  "game-caret-dash", "game-spot-diff", "game-plumber", "game-stack",
+  "game-color-code", "game-breakout", "game-ember-dice", "game-snake",
+  "game-lights", "game-mines", "game-gomoku", "game-traffic", "game-vault",
+  "main",
 ];
 const STYLE_MODULES = ["base", "games", "pet"];
 PAGES.forEach((page) => {
   const html = read(page);
   const tabs = countOccurrences(html, 'class="game-tab"');
   const panels = countOccurrences(html, 'class="game-panel"');
-  check(`${page}: exactly 6 game-tab`, tabs === 6, `found ${tabs}`);
-  check(`${page}: exactly 6 game-panel`, panels === 6, `found ${panels}`);
+  check(`${page}: exactly 18 game-tab`, tabs === 18, `found ${tabs}`);
+  check(`${page}: exactly 18 game-panel`, panels === 18, `found ${panels}`);
   check(
-    `${page}: stylesheets requested as ?v=20`,
-    STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=20`)),
+    `${page}: stylesheets requested as ?v=38`,
+    STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=38`)),
   );
   check(
-    `${page}: scripts requested as ?v=20`,
-    APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=20`)),
+    `${page}: scripts requested as ?v=38`,
+    APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=38`)),
   );
   check(
-    `${page}: no stale ?v=19 / ?v=18 / ?v=17 / ?v=16 / ?v=15 / ?v=14 / ?v=13 / ?v=12 / ?v=11 / ?v=10 / ?v=9 / ?v=8 / ?v=7 / ?v=6 / ?v=5 / ?v=4 left`,
-    !html.includes("?v=19") &&
+    `${page}: no stale ?v=37 / ?v=36 / ?v=35 / ?v=34 / ?v=33 / ?v=32 / ?v=31 / ?v=30 / ?v=29 / ?v=28 / ?v=27 / ?v=26 / ?v=25 / ?v=24 / ?v=23 / ?v=22 / ?v=21 / ?v=20 / ?v=19 / ?v=18 / ?v=17 / ?v=16 / ?v=15 / ?v=14 / ?v=13 / ?v=12 / ?v=11 / ?v=10 / ?v=9 / ?v=8 / ?v=7 / ?v=6 / ?v=5 / ?v=4 left`,
+    !html.includes("?v=37") &&
+      !html.includes("?v=36") &&
+      !html.includes("?v=35") &&
+      !html.includes("?v=34") &&
+      !html.includes("?v=33") &&
+      !html.includes("?v=32") &&
+      !html.includes("?v=31") &&
+      !html.includes("?v=30") &&
+      !html.includes("?v=29") &&
+      !html.includes("?v=28") &&
+      !html.includes("?v=27") &&
+      !html.includes("?v=26") &&
+      !html.includes("?v=25") &&
+      !html.includes("?v=24") &&
+      !html.includes("?v=23") &&
+      !html.includes("?v=22") &&
+      !html.includes("?v=21") &&
+      !html.includes("?v=20") &&
+      !html.includes("?v=19") &&
       !html.includes("?v=18") &&
       !html.includes("?v=17") &&
       !html.includes("?v=16") &&
@@ -168,8 +190,8 @@ PAGES.forEach((page) => {
     `found ${assetLines.length}`,
   );
   check(
-    `${page}: all asset references are ?v=20`,
-    assetLines.every((line) => line.includes("?v=20")),
+    `${page}: all asset references are ?v=38`,
+    assetLines.every((line) => line.includes("?v=38")),
     assetLines.join(" | "),
   );
 
@@ -184,9 +206,9 @@ PAGES.forEach((page) => {
   // reference is versioned and every expected module is present.
   check(
     `${page}: asset lines are all versioned split modules`,
-    assetLines.every((line) => /\?v=20/.test(line)) &&
-      STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=20`)) &&
-      APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=20`)),
+    assetLines.every((line) => /\?v=38/.test(line)) &&
+      STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=38`)) &&
+      APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=38`)),
     "asset reference shape changed beyond version token",
   );
 });
@@ -1012,6 +1034,801 @@ check(
   "elementsTimeUp",
   "elementsLog",
   "elementsHint",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+
+console.log("\n== 5d. Spot the Diff and Punctuation Plumber ==");
+PAGES.forEach((page) => {
+  const html = read(page);
+  check(
+    `${page}: has both new tabs wired to their panels`,
+    html.includes('id="gameTabSpotDiff"') &&
+      html.includes('aria-controls="gamePanelSpotDiff"') &&
+      html.includes('data-i18n="tabSpotDiff"') &&
+      html.includes('id="gameTabPlumber"') &&
+      html.includes('aria-controls="gamePanelPlumber"') &&
+      html.includes('data-i18n="tabPlumber"'),
+  );
+  check(
+    `${page}: both new panels are wired back to their tabs`,
+    html.includes('id="gamePanelSpotDiff"') &&
+      html.includes('aria-labelledby="gameTabSpotDiff"') &&
+      html.includes('id="gamePanelPlumber"') &&
+      html.includes('aria-labelledby="gameTabPlumber"'),
+  );
+});
+check(
+  "the two new games are registered as drawer tabs",
+  /\{ name: "spotDiff", tab: tabSpotDiff, panel: panelSpotDiff \}/.test(appJs) &&
+    /\{ name: "plumber", tab: tabPlumber, panel: panelPlumber \}/.test(appJs) &&
+    /tabSpotDiff\.addEventListener\("click"/.test(appJs) &&
+    /tabPlumber\.addEventListener\("click"/.test(appJs),
+);
+check(
+  "both new games are reset by the shared shell",
+  /App\.quietResetSpotDiff = null/.test(appJs) &&
+    /App\.quietResetPlumber = null/.test(appJs) &&
+    countOccurrences(appJs, "quietResetSpotDiff()") === 2 &&
+    countOccurrences(appJs, "quietResetPlumber()") === 2,
+);
+const spotJs = fs
+  .readFileSync(path.join(root, "assets", "app", "game-spot-diff.js"), "utf8")
+  .replace(/^﻿/, "");
+const plumberJs = fs
+  .readFileSync(path.join(root, "assets", "app", "game-plumber.js"), "utf8")
+  .replace(/^﻿/, "");
+const newGameLookups = Array.from(
+  `${spotJs}\n${plumberJs}`.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+).map((match) => match[1]);
+check(
+  "every id the new games look up exists in all four pages",
+  newGameLookups.length >= 18 &&
+    PAGES.every((page) => {
+      const html = read(page);
+      return newGameLookups.every((id) => html.includes('id="' + id + '"'));
+    }),
+  newGameLookups.join(","),
+);
+check(
+  "the Spot the Diff ladder grows its diffs rung by rung",
+  (() => {
+    const block = /var spotLevels = \[([\s\S]*?)\];/.exec(spotJs);
+    if (!block) return false;
+    const counts = Array.from(block[1].matchAll(/diffs:\s*(\d+)/g)).map(
+      (match) => Number(match[1]),
+    );
+    return (
+      counts.length >= 3 &&
+      counts.every((n, index) => index === 0 || n > counts[index - 1])
+    );
+  })(),
+);
+check(
+  "the Spot the Diff storage is versioned and migrates the v1 scalar best",
+  /spotStoreVersion = 2/.test(spotJs) &&
+    /\^\\d\+\$/.test(spotJs) &&
+    /function readProgress/.test(spotJs) &&
+    /JSON\.parse\(String\(raw\)\)/.test(spotJs),
+);
+check(
+  "a missed click costs the Spot the Diff clock",
+  /spotPenaltyMs = 2000/.test(spotJs) &&
+    /penaltyMs \+= spotPenaltyMs/.test(spotJs) &&
+    /Date\.now\(\) - startedAt \+ penaltyMs/.test(spotJs),
+);
+check(
+  "rung 3 plants homoglyph damage the easier rungs never use",
+  /var spotHomoglyphs = \{/.test(spotJs) &&
+    /homoglyphs: true/.test(spotJs) &&
+    /homoglyphs: false/.test(spotJs),
+);
+check(
+  "spot-the-diff character spans keep their spaces visible",
+  /\.spot-char\s*\{[^}]*display:\s*inline-block[^}]*white-space:\s*pre/.test(stylesCss),
+);
+check(
+  "plumber scores ride the combo multiplier and a strike wipes it",
+  /function comboMult/.test(plumberJs) &&
+    /score \+= gained/.test(plumberJs) &&
+    /streak = 0;/.test(plumberJs),
+);
+check(
+  "the slow drizzle halves fall speed inside a time-boxed window",
+  /plumberDrizzleMs = 3000/.test(plumberJs) &&
+    /drizzleUntil = Date\.now\(\) \+ plumberDrizzleMs/.test(plumberJs) &&
+    /drizzleActive\(\) \? 0\.5 : 1/.test(plumberJs),
+);
+[
+  "tabSpotDiff",
+  "hudFound",
+  "hudMisses",
+  "spotPrompt",
+  "spotGo",
+  "spotWrong",
+  "spotFound",
+  "spotEditLabel",
+  "spotHint",
+  "logSpot",
+  "spotPenalty",
+  "spotLevelCleared",
+  "spotNextLevel",
+  "spotAllLevels",
+  "tabPlumber",
+  "plumberPrompt",
+  "plumberGo",
+  "plumberMissed",
+  "plumberOver",
+  "plumberBinFull",
+  "plumberBinHalf",
+  "plumberFieldLabel",
+  "plumberHint",
+  "logPlumber",
+  "hudCombo",
+  "plumberStreak",
+  "plumberSlow",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+
+console.log("\n== 5e. Stack, Color Code, Inkball and Ember Dice ==");
+const FOUR_GAMES = [
+  { name: "stack", tab: "gameTabStack", panel: "gamePanelStack", file: "game-stack" },
+  { name: "colorCode", tab: "gameTabColorCode", panel: "gamePanelColorCode", file: "game-color-code" },
+  { name: "breakout", tab: "gameTabBreakout", panel: "gamePanelBreakout", file: "game-breakout" },
+  { name: "emberDice", tab: "gameTabEmberDice", panel: "gamePanelEmberDice", file: "game-ember-dice" },
+];
+FOUR_GAMES.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 8 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  const entryRe = new RegExp(
+    `\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`,
+  );
+  const listenerRe = new RegExp(`tab${pascal}\\.addEventListener\\("click"`);
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    entryRe.test(appJs) && listenerRe.test(appJs),
+  );
+});
+check(
+  "the two interval games are reset by the shared shell",
+  /App\.quietResetStack = null/.test(appJs) &&
+    /App\.quietResetBreakout = null/.test(appJs) &&
+    countOccurrences(appJs, "quietResetStack()") === 2 &&
+    countOccurrences(appJs, "quietResetBreakout()") === 2,
+);
+[
+  "tabStack",
+  "hudHeight",
+  "hudPerfect",
+  "stackFieldLabel",
+  "stackPrompt",
+  "stackGo",
+  "stackPerfect",
+  "stackOver",
+  "stackHint",
+  "logStack",
+  "tabColorCode",
+  "hudTry",
+  "hudStreak",
+  "ccPaletteLabel",
+  "ccBoardLabel",
+  "ccPrompt",
+  "ccNoFill",
+  "ccFeedback",
+  "ccWin",
+  "ccLost",
+  "ccBestLine",
+  "ccSlotLabel",
+  "ccEmpty",
+  "ccSecretLabel",
+  "ccHint",
+  "logCC",
+  "ccColor0",
+  "ccColor1",
+  "ccColor2",
+  "ccColor3",
+  "ccColor4",
+  "ccColor5",
+  "tabBreakout",
+  "hudLives",
+  "brkCanvasLabel",
+  "brkPrompt",
+  "brkLaunch",
+  "brkPlay",
+  "brkLifeLost",
+  "brkLevelUp",
+  "brkOver",
+  "brkHint",
+  "logBrk",
+  "tabEmberDice",
+  "hudTurn",
+  "hudBank",
+  "diceAtStake",
+  "diceRoll",
+  "diceBankBtn",
+  "dicePrompt",
+  "diceGo",
+  "diceRolled",
+  "diceBurn",
+  "diceBanked",
+  "diceOver",
+  "diceHint",
+  "logDice",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+
+console.log("\n== 5f. Serpent, Lights Out and Glyph Mines ==");
+const THREE_GAMES = [
+  { name: "snake", tab: "gameTabSnake", panel: "gamePanelSnake", file: "game-snake" },
+  { name: "lights", tab: "gameTabLights", panel: "gamePanelLights", file: "game-lights" },
+  { name: "mines", tab: "gameTabMines", panel: "gamePanelMines", file: "game-mines" },
+];
+THREE_GAMES.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 7 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\.addEventListener\\("click"`).test(appJs),
+  );
+});
+check(
+  "the two interval games of batch three are reset by the shell",
+  /App\.quietResetSnake = null/.test(appJs) &&
+    /App\.quietResetMines = null/.test(appJs) &&
+    countOccurrences(appJs, "quietResetSnake()") === 2 &&
+    countOccurrences(appJs, "quietResetMines()") === 2,
+);
+check(
+  "the picker is a two-column grid, not a hidden carousel",
+  /\.game-tabs\s*\{[^}]*display:\s*grid/.test(stylesCss) &&
+    /\.game-tabs\s*\{[^}]*grid-template-columns:\s*repeat\(2/.test(stylesCss) &&
+    !/\.game-tabs\s*\{[^}]*overflow-x/.test(stylesCss) &&
+    !stylesCss.includes("is-fade-left") &&
+    !stylesCss.includes("game-tabs-bar") &&
+    !appJs.includes("updateStripFade") &&
+    !appJs.includes("scrollIntoView"),
+  "carousel machinery still present",
+);
+check(
+  "the collapsed grid names its hidden count",
+  /\.game-tabs\.is-collapsed \.game-tab:nth-child\(n \+ 7\)\s*\{\s*display:\s*none/.test(stylesCss) &&
+    /"\+" \+ Math\.max\(0, gameTabEntries\.length - pickerVisibleCount\)/.test(appJs) &&
+    PAGES.every((page) => read(page).includes('class="game-tabs-more"')),
+);
+check(
+  "mines places its field after the first dig",
+  /function placeMines\(safeIndex\)/.test(
+    fs.readFileSync(path.join(root, "assets", "app", "game-mines.js"), "utf8"),
+  ) &&
+    /banned\.indexOf\(spot\) === -1/.test(
+      fs.readFileSync(path.join(root, "assets", "app", "game-mines.js"), "utf8"),
+    ),
+);
+check(
+  "lights boards start from darkness and get shuffled, so they are always solvable",
+  /flipCross\(Math\.floor\(Math\.random\(\) \* cells\.length\)\)/.test(
+    fs.readFileSync(path.join(root, "assets", "app", "game-lights.js"), "utf8"),
+  ),
+);
+[
+  "tabSnake",
+  "hudLength",
+  "snkFieldLabel",
+  "snkPrompt",
+  "snkGo",
+  "snkOver",
+  "snkHint",
+  "logSnk",
+  "tabLights",
+  "litFieldLabel",
+  "litPrompt",
+  "litSolved",
+  "litLevelUp",
+  "litDone",
+  "litBestLine",
+  "litHint",
+  "logLit",
+  "litCell",
+  "litOn",
+  "litOff",
+  "tabMines",
+  "hudFlags",
+  "hudMines",
+  "mnFieldLabel",
+  "mnPrompt",
+  "mnGo",
+  "mnBoom",
+  "mnCleared",
+  "mnFlagMode",
+  "mnFlagOn",
+  "mnFlagOff",
+  "mnHint",
+  "mnCell",
+  "mnFlagged",
+  "mnMine",
+  "logMines",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+
+console.log("\n== 5g. grid picker polish ==");
+PAGES.forEach((page) => {
+  const html = read(page);
+  check(
+    `${page}: the More games toggle is wired to the tablist`,
+    html.includes('id="gameTabs"') &&
+      html.includes('id="gameTabsToggle"') &&
+      html.includes('aria-controls="gameTabs"') &&
+      html.includes('aria-expanded="false"') &&
+      html.includes('id="gameTabsLabel"') &&
+      html.includes('id="gameTabsCount"'),
+  );
+});
+check(
+  "the toggle swaps its own i18n key and persists the mode",
+  /pickerLabel\.setAttribute\("data-i18n", labelKey\)/.test(appJs) &&
+    /"tabsShowLess" : "tabsShowMore"/.test(appJs) &&
+    /localStorage\.getItem\("game-tabs-expanded"\)/.test(appJs) &&
+    /localStorage\.setItem\("game-tabs-expanded"/.test(appJs),
+);
+check(
+  "tabs meet the 44px touch minimum",
+  /\.game-tab\s*\{[^}]*min-height:\s*44px/.test(stylesCss),
+);
+check(
+  "tabs answer presses, and motion-off stills them",
+  /\.game-tab:active\s*\{[^}]*scale\(/.test(stylesCss) &&
+    /\[data-motion="off"\] \.game-tab:active\s*\{[^}]*transform:\s*none !important/.test(stylesCss),
+);
+check(
+  "the focus ring is one token defined for both themes",
+  countOccurrences(stylesCss, "--focus-ring:") === 2 &&
+    countOccurrences(stylesCss, "0 0 0 3px rgba(255, 107, 53, 0.28)") === 1 &&
+    countOccurrences(stylesCss, "0 0 0 3px rgba(0, 112, 138, 0.45)") === 1 &&
+    countOccurrences(stylesCss, "0 0 0 3px rgba(0, 242, 255, 0.24)") === 0,
+  `dark=${countOccurrences(stylesCss, "0 0 0 3px rgba(255, 107, 53, 0.28)")} light=${countOccurrences(stylesCss, "0 0 0 3px rgba(0, 112, 138, 0.45)")}`,
+);
+["tabsShowMore", "tabsShowLess"].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+
+console.log("\n== 5h. campaigns ==");
+const campaignJs = fs
+  .readFileSync(path.join(root, "assets", "app", "game-campaign.js"), "utf8")
+  .replace(/^﻿/, "");
+check(
+  "the campaign core runs headless and chains unlocks",
+  (() => {
+    try {
+      const fnStart = campaignJs.indexOf("function starsFor");
+      const exportIdx = campaignJs.indexOf("App.starsFor");
+      const core = campaignJs.slice(fnStart, exportIdx);
+      const factory = new Function(core + "\nreturn createCampaign;")();
+      const levels = [{ id: "a" }, { id: "b" }, { id: "c" }];
+      const c = factory({ key: "probe-campaign", levels });
+      if (c.isUnlocked("b")) return false;
+      const outcome = c.record("a", { stars: 2, best: 10, better: "high" });
+      return (
+        outcome.firstClear === true &&
+        outcome.unlockedNext === "b" &&
+        c.isUnlocked("b") &&
+        !c.isUnlocked("c") &&
+        c.stars("a") === 2 &&
+        c.best("a") === 10 &&
+        c.nextLevelId() === "b" &&
+        c.totalStars() === 2 &&
+        c.maxStars() === 9
+      );
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+check(
+  "starsFor reads both directions against the 3/2/1 thresholds",
+  (() => {
+    try {
+      const fnStart = campaignJs.indexOf("function starsFor");
+      const exportIdx = campaignJs.indexOf("App.starsFor");
+      const fn = new Function(
+        campaignJs.slice(fnStart, exportIdx) + "\nreturn starsFor;",
+      )();
+      return (
+        fn(100, [90, 60, 30], "high") === 3 &&
+        fn(45, [90, 60, 30], "high") === 1 &&
+        fn(10, [20, 30, 45], "low") === 3 &&
+        fn(50, [20, 30, 45], "low") === 0
+      );
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+const campaignGames = [
+  { file: "game-breakout", table: "brkLevels", count: 15, select: "brkLevelSel" },
+  { file: "game-snake", table: "snkLevels", count: 10, select: "snkLevelSel" },
+  { file: "game-ember-dice", table: "diceTables", count: 5, select: "diceTableSel" },
+];
+campaignGames.forEach((game) => {
+  const source = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const block = new RegExp("var " + game.table + " = \\[([\\s\\S]*?)\\n  \\];").exec(source);
+  const ids = block
+    ? Array.from(block[1].matchAll(/id:\s*"([a-z0-9]+)"/g)).map((m) => m[1])
+    : [];
+  check(
+    `${game.file}: the ${game.table} table has ${game.count} distinct levels`,
+    ids.length === game.count && new Set(ids).size === game.count,
+    String(ids.length),
+  );
+  check(
+    `${game.file}: the campaign picker is wired in init`,
+    source.includes("createCampaign") &&
+      source.includes("fillCampaignPicker") &&
+      source.includes('getElement("' + game.select + '")'),
+  );
+  PAGES.forEach((page) => {
+    check(
+      `${page}: ${game.select} exists`,
+      read(page).includes('id="' + game.select + '"'),
+    );
+  });
+});
+[
+  "campaignStars",
+  "brkLevelSelectLabel",
+  "brkCleared",
+  "brkNextLevel",
+  "brkCampaignDone",
+  "snkLevelSelectLabel",
+  "snkGoal",
+  "snkCleared",
+  "snkNextHouse",
+  "snkCampaignDone",
+  "snkRetry",
+  "diceTableSelectLabel",
+  "diceCleared",
+  "diceNextTable",
+  "diceCampaignDone",
+  "diceMissed",
+  "diceTaxed",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+["brkL", "snkL", "diceTable", "diceRule"].forEach((prefix) => {
+  for (let index = 1; index <= 15; index += 1) {
+    const key = prefix + index;
+    const hits = countOccurrences(appJs, `"${key}":`);
+    if (prefix === "brkL" || hits > 0) {
+      check(
+        `the "${key}" key exists in both languages`,
+        hits === 2,
+        String(hits),
+      );
+    }
+  }
+});
+
+console.log("\n== 5i. Gomoku, Traffic Jam and Letter Vault ==");
+const TRIO_GAMES = [
+  { name: "gomoku", tab: "gameTabGomoku", panel: "gamePanelGomoku", file: "game-gomoku" },
+  { name: "traffic", tab: "gameTabTraffic", panel: "gamePanelTraffic", file: "game-traffic" },
+  { name: "vault", tab: "gameTabVault", panel: "gamePanelVault", file: "game-vault" },
+];
+TRIO_GAMES.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 7 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\.addEventListener\\("click"`).test(appJs),
+  );
+});
+check(
+  "gomoku's Undo unlocks from the move that creates the history",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-gomoku.js"),
+      "utf8",
+    );
+    const start = src.indexOf("function place(");
+    const body = src.slice(start, src.indexOf("function playHuman(", start));
+    return (
+      start !== -1 &&
+      body.includes("history.push(index)") &&
+      body.includes("undoBtn.disabled")
+    );
+  })(),
+);
+check(
+  "Traffic Jam needs the taxi at the exit wall, not just a clear lane",
+  (() => {
+    try {
+      const src = fs.readFileSync(
+        path.join(root, "assets", "app", "game-traffic.js"),
+        "utf8",
+      );
+      const code = src.slice(
+        src.indexOf("var trafSize"),
+        src.indexOf("App.trafficSolvable"),
+      );
+      const probe = new Function(
+        code +
+          "\nreturn { lane: trafExitOpen([[0, 2, 2, 1]]), parked: trafTaxiOut([[0, 2, 2, 1]]), out: trafTaxiOut([[4, 2, 2, 1]]) };",
+      )();
+      return probe.lane === true && probe.parked === false && probe.out === true;
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+check(
+  "every Traffic Jam 3-star band is reachable (budgeted Dijkstra)",
+  (() => {
+    try {
+      const src = fs.readFileSync(
+        path.join(root, "assets", "app", "game-traffic.js"),
+        "utf8",
+      );
+      const code = src.slice(
+        src.indexOf("var trafSize"),
+        src.indexOf("App.trafficSolvable"),
+      );
+      const api = new Function(
+        code + "\nreturn { trafLevels, trafSlide, trafKey, trafTaxiOut };",
+      )();
+      const slide = api.trafSlide;
+      const key = api.trafKey;
+      const out = api.trafTaxiOut;
+      return api.trafLevels.every((level) => {
+        const budget = level.par[0];
+        const start = level.cars.map((car) => car.slice());
+        if (out(start)) {
+          return true;
+        }
+        const buckets = [];
+        for (let cost = 0; cost <= budget; cost += 1) {
+          buckets.push([]);
+        }
+        buckets[0].push(start);
+        const best = {};
+        best[key(start)] = 0;
+        for (let cost = 0; cost <= budget; cost += 1) {
+          for (const cars of buckets[cost]) {
+            if (best[key(cars)] < cost) {
+              continue;
+            }
+            for (let index = 0; index < cars.length; index += 1) {
+              const horiz = cars[index][3] === 1;
+              for (const dir of [-1, 1]) {
+                const reach = slide(
+                  cars,
+                  index,
+                  horiz ? dir : 0,
+                  horiz ? 0 : dir,
+                );
+                for (let step = 1; step <= Math.abs(reach); step += 1) {
+                  const total = cost + step;
+                  if (total > budget) {
+                    continue;
+                  }
+                  const next = cars.map((car) => car.slice());
+                  next[index][0] += horiz ? dir * step : 0;
+                  next[index][1] += horiz ? 0 : dir * step;
+                  if (index === 0 && out(next)) {
+                    return true;
+                  }
+                  if (best[key(next)] === undefined || best[key(next)] > total) {
+                    best[key(next)] = total;
+                    buckets[total].push(next);
+                  }
+                }
+              }
+            }
+          }
+        }
+        return false;
+      });
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+check(
+  "every Traffic Jam board is provably solvable (BFS)",
+  (() => {
+    try {
+      const src = fs.readFileSync(
+        path.join(root, "assets", "app", "game-traffic.js"),
+        "utf8",
+      );
+      const constStart = src.indexOf("var trafSize");
+      const exportIdx = src.indexOf("App.trafficSolvable");
+      const code = src.slice(constStart, exportIdx);
+      const probe = new Function(
+        code + "\nreturn trafLevels.map((l) => trafficSolvable(l, 30000));",
+      )();
+      return probe.length === 16 && probe.every(Boolean);
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+check(
+  "the vault's letter feedback counts duplicates the Wordle way",
+  (() => {
+    try {
+      const src = fs.readFileSync(
+        path.join(root, "assets", "app", "game-vault.js"),
+        "utf8",
+      );
+      const fnStart = src.indexOf("var vaultWidth");
+      const vExport = src.indexOf("App.initVaultGame");
+      const fn = new Function(
+        src.slice(fnStart, vExport) + "\nreturn vaultLetterStatus;",
+      )();
+      const s1 = fn("speed", "spend");
+      const s2 = fn("eerie", "reedy");
+      return (
+        s1.join(",") === "green,green,green,gray,green" &&
+        s2[0] === "yellow" &&
+        s2[1] === "green" &&
+        s2[2] === "yellow" &&
+        s2[3] === "gray"
+      );
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+[
+  "tabGomoku",
+  "gomokuRankLabel",
+  "gomokuRank1",
+  "gomokuRank2",
+  "gomokuRank3",
+  "gomokuBoardLabel",
+  "gomokuPrompt",
+  "gomokuYourTurn",
+  "gomokuAiTurn",
+  "gomokuWin",
+  "gomokuLoss",
+  "gomokuDraw",
+  "gomokuNextRank",
+  "gomokuAllRanks",
+  "gomokuCell",
+  "gomokuBlack",
+  "gomokuWhite",
+  "gomokuUndo",
+  "gomokuHint",
+  "logGomoku",
+  "tabTraffic",
+  "trafLevelSelectLabel",
+  "trafBoardLabel",
+  "trafBoardLabelN",
+  "trafPrompt",
+  "trafWin",
+  "trafNext",
+  "trafAllBoards",
+  "trafCar",
+  "trafTaxi",
+  "trafHint",
+  "logTraf",
+  "tabVault",
+  "hudGuesses",
+  "vaultBoardLabel",
+  "vaultPromptDaily",
+  "vaultPromptRandom",
+  "vaultTooShort",
+  "vaultWin",
+  "vaultLoss",
+  "vaultBestLine",
+  "vaultEnter",
+  "vaultBack",
+  "vaultDailyBtn",
+  "vaultRandomBtn",
+  "vaultHint",
+  "logVault",
 ].forEach((key) => {
   check(
     `the "${key}" key exists in both languages`,

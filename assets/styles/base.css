@@ -654,9 +654,7 @@ textarea:focus-visible,
 .nav-left a:focus-visible,
 select:focus-visible,
 summary:focus-visible {
-    box-shadow:
-        0 0 0 3px rgba(255, 107, 53, 0.28),
-        0 0 0 6px rgba(0, 242, 255, 0.18);
+    box-shadow: var(--focus-ring);
 }
 
 [data-theme="light"] button:focus-visible,
@@ -664,9 +662,7 @@ summary:focus-visible {
 [data-theme="light"] .nav-left a:focus-visible,
 [data-theme="light"] select:focus-visible,
 [data-theme="light"] summary:focus-visible {
-    box-shadow:
-        0 0 0 3px rgba(0, 112, 138, 0.45),
-        0 0 0 6px rgba(0, 112, 138, 0.15);
+    box-shadow: var(--focus-ring);
 }
 
 summary:focus-visible {

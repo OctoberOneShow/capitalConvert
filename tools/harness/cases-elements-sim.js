@@ -593,8 +593,8 @@ function douseHedge(env, rounds) {
 
 /* The whole drawer, so tab switching / closing really runs the shared shell
  * (initTypingGame owns those listeners and its fail-closed guard needs all
- * six tabs and panels). Only the typing and ladder panels need their bodies:
- * the other three games return early without theirs. */
+ * eighteen tabs and panels). Only the typing and ladder panels need their bodies:
+ * the other games return early without theirs. */
 function seedDrawerDom(env) {
   const doc = env.document;
 
@@ -624,6 +624,8 @@ function seedDrawerDom(env) {
 
   const tabs = doc.createElement("div");
   tabs.className = "game-tabs";
+  tabs.id = "gameTabs";
+  tabs.setAttribute("role", "tablist");
   dialog.appendChild(tabs);
   [
     ["gameTabTyping", "gamePanelTyping", true],
@@ -632,6 +634,18 @@ function seedDrawerDom(env) {
     ["gameTabReflex", "gamePanelReflex", false],
     ["gameTabCaretDash", "gamePanelCaretDash", false],
     ["gameTabElements", "gamePanelElements", false],
+    ["gameTabSpotDiff", "gamePanelSpotDiff", false],
+    ["gameTabPlumber", "gamePanelPlumber", false],
+    ["gameTabStack", "gamePanelStack", false],
+    ["gameTabColorCode", "gamePanelColorCode", false],
+    ["gameTabBreakout", "gamePanelBreakout", false],
+    ["gameTabEmberDice", "gamePanelEmberDice", false],
+    ["gameTabSnake", "gamePanelSnake", false],
+    ["gameTabLights", "gamePanelLights", false],
+    ["gameTabMines", "gamePanelMines", false],
+    ["gameTabGomoku", "gamePanelGomoku", false],
+    ["gameTabTraffic", "gamePanelTraffic", false],
+    ["gameTabVault", "gamePanelVault", false],
   ].forEach(([tabId, panelId, first]) => {
     const tab = doc.createElement("button");
     tab.className = "game-tab";
@@ -643,8 +657,26 @@ function seedDrawerDom(env) {
     tabs.appendChild(tab);
   });
 
+  const pickerToggle = doc.createElement("button");
+  pickerToggle.className = "game-tabs-more";
+  pickerToggle.id = "gameTabsToggle";
+  pickerToggle.setAttribute("aria-expanded", "false");
+  pickerToggle.setAttribute("aria-controls", "gameTabs");
+  const pickerLabel = doc.createElement("span");
+  pickerLabel.id = "gameTabsLabel";
+  pickerLabel.setAttribute("data-i18n", "tabsShowMore");
+  const pickerCount = doc.createElement("span");
+  pickerCount.id = "gameTabsCount";
+  pickerToggle.appendChild(pickerLabel);
+  pickerToggle.appendChild(pickerCount);
+  dialog.appendChild(pickerToggle);
+
   ["gamePanelTyping", "gamePanelMemory", "gamePanel2048", "gamePanelReflex",
-    "gamePanelCaretDash"].forEach((panelId, index) => {
+    "gamePanelCaretDash", "gamePanelSpotDiff", "gamePanelPlumber",
+    "gamePanelStack", "gamePanelColorCode", "gamePanelBreakout",
+    "gamePanelEmberDice", "gamePanelSnake", "gamePanelLights",
+    "gamePanelMines", "gamePanelGomoku", "gamePanelTraffic",
+    "gamePanelVault"].forEach((panelId, index) => {
     const panel = doc.createElement("div");
     panel.className = "game-panel";
     panel.id = panelId;

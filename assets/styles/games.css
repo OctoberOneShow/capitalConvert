@@ -1,4 +1,16 @@
-/* Game drawer styles - the shared game modal and the six mini-games. */
+/* Game drawer styles - the shared game modal and the eighteen mini-games. */
+:root {
+    --focus-ring:
+        0 0 0 3px rgba(255, 107, 53, 0.28),
+        0 0 0 6px rgba(0, 242, 255, 0.18);
+}
+
+[data-theme="light"] {
+    --focus-ring:
+        0 0 0 3px rgba(0, 112, 138, 0.45),
+        0 0 0 6px rgba(0, 112, 138, 0.15);
+}
+
 .game-modal {
     position: fixed;
     inset: 0;
@@ -135,15 +147,11 @@ body.game-modal-open {
 }
 
 .game-input:focus-visible {
-    box-shadow:
-        0 0 0 3px rgba(255, 107, 53, 0.28),
-        0 0 0 6px rgba(0, 242, 255, 0.18);
+    box-shadow: var(--focus-ring);
 }
 
 [data-theme="light"] .game-input:focus-visible {
-    box-shadow:
-        0 0 0 3px rgba(0, 112, 138, 0.45),
-        0 0 0 6px rgba(0, 112, 138, 0.15);
+    box-shadow: var(--focus-ring);
 }
 
 .game-input:disabled {
@@ -245,6 +253,9 @@ body.game-modal-open {
     line-height: 1.5;
 }
 
+/* The picker is a two-column grid: every game it shows is visible, and the
+ * collapsed state names the hidden count instead of hiding it behind a
+ * scroll gesture. */
 .game-tabs {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -253,16 +264,20 @@ body.game-modal-open {
     border-radius: 12px;
     border: 1px solid var(--border);
     background: rgba(255, 255, 255, 0.04);
-    margin-bottom: 14px;
+    margin-bottom: 8px;
 }
 
 [data-theme="light"] .game-tabs {
     background: rgba(15, 23, 42, 0.04);
 }
 
+.game-tabs.is-collapsed .game-tab:nth-child(n + 7) {
+    display: none;
+}
+
 .game-tab {
     width: 100%;
-    min-height: 38px;
+    min-height: 44px;
     padding: 8px 10px;
     border-radius: 9px;
     border: none;
@@ -271,6 +286,67 @@ body.game-modal-open {
     font-weight: 700;
     font-size: 0.9rem;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    transition:
+        color 0.16s ease,
+        background 0.16s ease,
+        transform 0.16s ease;
+}
+
+.game-tab:active {
+    transform: scale(0.96);
+}
+
+[data-motion="off"] .game-tab:active {
+    transform: none !important;
+}
+
+/* The explicit overflow: a footer toggle that states how many games hide. */
+.game-tabs-more {
+    width: 100%;
+    min-height: 40px;
+    margin-bottom: 14px;
+    border-radius: 9px;
+    border: 1px dashed var(--border);
+    background: transparent;
+    color: var(--text-secondary);
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition:
+        color 0.16s ease,
+        border-color 0.16s ease;
+}
+
+.game-tabs-more:hover {
+    color: var(--text);
+    border-color: rgba(0, 242, 255, 0.45);
+}
+
+.game-tabs-more .button-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.game-tabs-more .icon {
+    width: 16px;
+    height: 16px;
+    transition: transform 0.18s ease;
+}
+
+.game-tabs-more[aria-expanded="true"] .icon {
+    transform: rotate(180deg);
+}
+
+.game-tabs-more[aria-expanded="true"] #gameTabsCount {
+    display: none;
+}
+
+[data-motion="off"] .game-tabs-more .icon {
+    transition: none !important;
 }
 
 .game-tab:hover {
@@ -397,15 +473,11 @@ body.game-modal-open {
 }
 
 .g2048-board:focus-visible {
-    box-shadow:
-        0 0 0 3px rgba(255, 107, 53, 0.28),
-        0 0 0 6px rgba(0, 242, 255, 0.18);
+    box-shadow: var(--focus-ring);
 }
 
 [data-theme="light"] .g2048-board:focus-visible {
-    box-shadow:
-        0 0 0 3px rgba(0, 112, 138, 0.45),
-        0 0 0 6px rgba(0, 112, 138, 0.15);
+    box-shadow: var(--focus-ring);
 }
 
 .g2048-cells {
@@ -577,9 +649,7 @@ body.game-modal-open {
 
 .reflex-pad:focus-visible {
     outline: none;
-    box-shadow:
-        0 0 0 3px rgba(255, 107, 53, 0.28),
-        0 0 0 6px rgba(0, 242, 255, 0.18);
+    box-shadow: var(--focus-ring);
 }
 
 .reflex-pad.is-waiting {
@@ -650,9 +720,7 @@ body.game-modal-open {
 
 .caret-field:focus-visible {
     border-color: rgba(0, 242, 255, 0.5);
-    box-shadow:
-        0 0 0 3px rgba(0, 242, 255, 0.24),
-        0 0 0 6px rgba(255, 107, 53, 0.14);
+    box-shadow: var(--focus-ring);
 }
 
 [data-theme="light"] .caret-field {
@@ -872,9 +940,7 @@ body.game-modal-open {
 
 .caret-control:focus-visible {
     outline: none;
-    box-shadow:
-        0 0 0 3px rgba(0, 242, 255, 0.28),
-        0 0 0 6px rgba(255, 107, 53, 0.18);
+    box-shadow: var(--focus-ring);
 }
 
 [data-theme="light"] .caret-control {
@@ -1112,6 +1178,766 @@ body.game-modal-open {
     .elements-select {
         width: 100%;
     }
+}
+
+/* Spot the Diff: two stacked lines rendered one character per cell, the
+ * lower one clickable and keyboard-movable. */
+.spot-line {
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.86rem;
+    line-height: 2;
+    color: var(--text-secondary);
+    word-break: break-all;
+}
+
+[data-theme="light"] .spot-line {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.spot-line-edit {
+    color: var(--text);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    outline: none;
+}
+
+.spot-line-edit:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.spot-char {
+    display: inline-block;
+    /* A space-only inline-block collapses to zero width, which would glue
+     * the lines together and hide doubled-space mutations. */
+    white-space: pre;
+    border-radius: 4px;
+    padding: 1px 0;
+}
+
+.spot-char.is-cursor {
+    outline: 1px dashed var(--accent-2);
+    background: rgba(0, 242, 255, 0.1);
+}
+
+.spot-char.is-found {
+    background: rgba(109, 226, 122, 0.28);
+    color: var(--success-text);
+    font-weight: 700;
+}
+
+.spot-char.is-wrong {
+    background: rgba(255, 138, 128, 0.24);
+    color: var(--danger-text);
+    animation: spotWrongShake 0.3s ease;
+}
+
+@keyframes spotWrongShake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-2px);
+    }
+
+    75% {
+        transform: translateX(2px);
+    }
+}
+
+[data-motion="off"] .spot-char.is-wrong {
+    animation: none !important;
+}
+
+/* Punctuation Plumber: one drop lane over two sorting bins. */
+.plumber-field {
+    position: relative;
+    height: 190px;
+    margin-top: 12px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background:
+        radial-gradient(
+            circle at 16% 10%,
+            rgba(0, 242, 255, 0.1),
+            transparent 42%
+        ),
+        linear-gradient(180deg, rgba(8, 12, 20, 0.7), rgba(4, 6, 12, 0.92));
+    overflow: hidden;
+    outline: none;
+}
+
+.plumber-field:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .plumber-field {
+    background: linear-gradient(
+        180deg,
+        rgba(248, 250, 252, 0.92),
+        rgba(226, 232, 240, 0.9)
+    );
+}
+
+.plumber-glyph {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text);
+    text-shadow: 0 0 18px rgba(0, 242, 255, 0.35);
+}
+
+.plumber-glyph[hidden] {
+    display: none;
+}
+
+[data-theme="light"] .plumber-glyph {
+    text-shadow: none;
+}
+
+.plumber-bins {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.plumber-bin {
+    min-height: 48px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    font-weight: 800;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition:
+        background 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.plumber-bin:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+}
+
+.plumber-bin.is-hit {
+    background: rgba(109, 226, 122, 0.24);
+    border-color: rgba(109, 226, 122, 0.7);
+}
+
+[data-theme="light"] .plumber-bin {
+    background: rgba(248, 250, 252, 0.88);
+}
+
+[data-theme="light"] .plumber-bin.is-hit {
+    background: rgba(23, 112, 52, 0.14);
+    border-color: rgba(23, 112, 52, 0.5);
+}
+
+[data-motion="off"] .plumber-bin {
+    transition: none !important;
+}
+
+/* Stack!: landed tiles and the sliding block share one stage. */
+.stack-field {
+    position: relative;
+    height: 220px;
+    margin-top: 12px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(8, 12, 20, 0.7), rgba(4, 6, 12, 0.92));
+    overflow: hidden;
+    cursor: pointer;
+    outline: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+[data-theme="light"] .stack-field {
+    background: linear-gradient(
+        180deg,
+        rgba(248, 250, 252, 0.92),
+        rgba(226, 232, 240, 0.9)
+    );
+}
+
+.stack-field:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.stack-tower {
+    position: absolute;
+    inset: 0;
+}
+
+.stack-tile,
+.stack-block {
+    position: absolute;
+    left: 0;
+    height: 18px;
+    border-radius: 4px;
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+}
+
+.stack-block {
+    bottom: 0;
+    box-shadow:
+        inset 0 -3px 0 rgba(0, 0, 0, 0.25),
+        0 0 14px rgba(34, 211, 238, 0.35);
+}
+
+.stack-block[hidden] {
+    display: none;
+}
+
+/* Color Code: the swatch picker, then the guess rows with their pegs. */
+.cc-palette {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.cc-swatch {
+    min-height: 34px;
+    border-radius: 9px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.14s ease;
+}
+
+.cc-swatch.is-selected {
+    border-color: var(--text);
+    transform: translateY(-2px);
+}
+
+.cc-board {
+    display: grid;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.cc-row {
+    display: grid;
+    grid-template-columns: repeat(4, 34px) 1fr;
+    align-items: center;
+    gap: 6px;
+}
+
+.cc-row.is-locked .cc-slot,
+.cc-row.is-secret .cc-slot {
+    cursor: default;
+}
+
+.cc-secret-label {
+    grid-column: 1 / -1;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.cc-slot {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: transparent;
+    cursor: pointer;
+}
+
+.cc-row.is-current .cc-slot {
+    outline: 1px dashed rgba(255, 255, 255, 0.25);
+}
+
+[data-theme="light"] .cc-row.is-current .cc-slot {
+    outline-color: rgba(15, 23, 42, 0.25);
+}
+
+.cc-pegs {
+    display: flex;
+    gap: 3px;
+    margin-left: 6px;
+}
+
+.cc-peg {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+
+.cc-peg.is-exact {
+    background: #6de27a;
+}
+
+.cc-peg.is-white {
+    border: 1.5px solid var(--accent-2);
+    background: transparent;
+}
+
+/* Inkball: like Elements, the pixel canvas scales up to fill the panel. */
+.brk-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.85);
+    image-rendering: pixelated;
+    outline: none;
+    touch-action: none;
+}
+
+[data-theme="light"] .brk-canvas {
+    background: rgba(248, 250, 252, 0.95);
+}
+
+.brk-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+/* Ember Dice: one big clickable die, then the two decisions. */
+.dice-pad {
+    width: 100%;
+    min-height: 120px;
+    display: grid;
+    place-items: center;
+    margin-top: 12px;
+    padding: 16px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    font-size: 4.2rem;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+        background 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.dice-pad:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.dice-pad.is-ember {
+    background: rgba(255, 107, 53, 0.16);
+    border-color: rgba(255, 107, 53, 0.5);
+}
+
+[data-theme="light"] .dice-pad {
+    background: rgba(248, 250, 252, 0.88);
+}
+
+.dice-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.dice-actions button {
+    min-height: 44px;
+}
+
+[data-motion="off"] .dice-pad,
+[data-motion="off"] .cc-swatch {
+    transition: none !important;
+}
+
+[data-motion="off"] .cc-swatch.is-selected {
+    transform: none !important;
+}
+
+/* Serpent: the same pixel canvas idea as Inkball. */
+.snk-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.85);
+    image-rendering: pixelated;
+    outline: none;
+    touch-action: none;
+}
+
+[data-theme="light"] .snk-canvas {
+    background: rgba(248, 250, 252, 0.95);
+}
+
+.snk-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+/* Lights Out: a 5x5 grid of lamp tiles. */
+.lit-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.lit-cell {
+    aspect-ratio: 1;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    transition:
+        background 0.14s ease,
+        box-shadow 0.14s ease;
+}
+
+.lit-cell.is-on {
+    background: rgba(251, 191, 36, 0.85);
+    box-shadow:
+        0 0 12px rgba(251, 191, 36, 0.45),
+        inset 0 -3px 0 rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .lit-cell {
+    background: rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .lit-cell.is-on {
+    background: rgba(217, 119, 6, 0.85);
+}
+
+.lit-cell:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+[data-motion="off"] .lit-cell {
+    transition: none !important;
+}
+
+/* Glyph Mines: a 9x9 dig field. */
+.mn-grid {
+    display: grid;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    gap: 3px;
+    margin-top: 12px;
+}
+
+.mn-cell {
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    font-weight: 800;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.mn-cell:hover {
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+.mn-cell.is-open {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: transparent;
+    cursor: default;
+}
+
+[data-theme="light"] .mn-cell {
+    background: rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .mn-cell.is-open {
+    background: rgba(15, 23, 42, 0.03);
+}
+
+.mn-cell.is-flagged {
+    color: #f472b6;
+}
+
+.mn-cell.is-mine {
+    background: rgba(255, 107, 53, 0.22);
+    color: var(--danger-text);
+}
+
+.mn-cell.is-boom {
+    background: rgba(255, 107, 53, 0.45);
+    box-shadow: 0 0 14px rgba(255, 107, 53, 0.5);
+}
+
+.mn-cell:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.mn-cell[disabled] {
+    cursor: default;
+}
+
+/* Flag is a latched toggle, so it reads as on while pressed. */
+#mnFlagBtn.is-active {
+    background: rgba(244, 114, 182, 0.18);
+    border-color: rgba(244, 114, 182, 0.5);
+}
+
+/* Gomoku: a 13x13 grid of intersections-as-cells. */
+.gm-board {
+    display: grid;
+    grid-template-columns: repeat(13, minmax(0, 1fr));
+    gap: 2px;
+    margin-top: 12px;
+    padding: 6px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] .gm-board {
+    background: rgba(15, 23, 42, 0.05);
+}
+
+.gm-cell {
+    aspect-ratio: 1;
+    position: relative;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+}
+
+.gm-cell:hover {
+    background: rgba(0, 242, 255, 0.08);
+}
+
+.gm-cell.is-black,
+.gm-cell.is-white {
+    cursor: default;
+}
+
+.gm-cell.is-black::after,
+.gm-cell.is-white::after {
+    content: "";
+    position: absolute;
+    inset: 12%;
+    border-radius: 50%;
+}
+
+.gm-cell.is-black::after {
+    background: radial-gradient(circle at 35% 30%, #4b5563, #0b0f19 70%);
+}
+
+.gm-cell.is-white::after {
+    background: radial-gradient(circle at 35% 30%, #ffffff, #94a3b8 75%);
+}
+
+.gm-cell.is-last::before {
+    content: "";
+    position: absolute;
+    inset: 4%;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+}
+
+.gm-cell:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+/* Traffic Jam: a 6x6 lot with absolutely-placed cars. */
+.traf-board {
+    position: relative;
+    aspect-ratio: 1;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background:
+        repeating-linear-gradient(
+            0deg,
+            transparent 0 calc(100% / 6 - 1px),
+            rgba(255, 255, 255, 0.06) calc(100% / 6 - 1px) calc(100% / 6)
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent 0 calc(100% / 6 - 1px),
+            rgba(255, 255, 255, 0.06) calc(100% / 6 - 1px) calc(100% / 6)
+        ),
+        rgba(8, 12, 20, 0.7);
+    outline: none;
+    touch-action: none;
+}
+
+.traf-board::after {
+    content: "";
+    position: absolute;
+    right: -1px;
+    top: calc(200% / 6);
+    height: calc(100% / 6);
+    width: 4px;
+    background: #6de27a;
+    border-radius: 2px;
+}
+
+.traf-board:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.traf-car {
+    position: absolute;
+    border: none;
+    border-radius: 8px;
+    padding: 0;
+    cursor: grab;
+    box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    background: #22d3ee;
+}
+
+.traf-car.is-selected {
+    outline-color: var(--accent);
+}
+
+.traf-car.is-taxi {
+    background: #fbbf24 !important;
+}
+
+/* Letter Vault: six rows of five tiles, then the on-screen keys. */
+.vault-board {
+    display: grid;
+    gap: 5px;
+    margin-top: 12px;
+}
+
+.vault-row {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+}
+
+.vault-tile {
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 1.3rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.vault-tile.is-filled {
+    border-color: rgba(0, 242, 255, 0.4);
+}
+
+.vault-tile.is-green {
+    background: rgba(109, 226, 122, 0.75);
+    border-color: transparent;
+    color: #06210c;
+}
+
+.vault-tile.is-yellow {
+    background: rgba(251, 191, 36, 0.8);
+    border-color: transparent;
+    color: #241703;
+}
+
+.vault-tile.is-gray {
+    background: rgba(148, 163, 184, 0.28);
+    border-color: transparent;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .vault-tile.is-green {
+    background: rgba(23, 112, 52, 0.75);
+    color: #f0fff4;
+}
+
+[data-theme="light"] .vault-tile.is-yellow {
+    background: rgba(180, 83, 9, 0.85);
+    color: #fffbeb;
+}
+
+.vault-kb {
+    display: grid;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.vault-kb-row {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+}
+
+.vault-key {
+    min-width: 26px;
+    min-height: 40px;
+    flex: 1;
+    border-radius: 7px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.07);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.vault-key.is-wide {
+    flex: 1.6;
+    text-transform: none;
+}
+
+.vault-key.is-green {
+    background: rgba(109, 226, 122, 0.75);
+    color: #06210c;
+    border-color: transparent;
+}
+
+.vault-key.is-yellow {
+    background: rgba(251, 191, 36, 0.8);
+    color: #241703;
+    border-color: transparent;
+}
+
+.vault-key.is-gray {
+    background: rgba(148, 163, 184, 0.25);
+    color: var(--text-secondary);
+    border-color: transparent;
+}
+
+.vault-key:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
 }
 
 .output-insights {

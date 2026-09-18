@@ -15,9 +15,13 @@ const { createEnvironment } = require("../stub-dom");
  * so the harness keeps driving the real code the pages run. */
 const APP_MODULES = [
   "i18n", "core", "tools", "pet-data", "pet-state", "pet-life", "pet-art",
-  "pet-dom", "pet-render", "pet-games", "pet", "game-elements-core", "game-elements",
+  "pet-dom", "pet-render", "pet-games", "pet", "game-campaign",
+  "game-elements-core", "game-elements",
   "game-typing", "game-memory", "game-2048", "game-reflex",
-  "game-caret-dash", "main",
+  "game-caret-dash", "game-spot-diff", "game-plumber", "game-stack",
+  "game-color-code", "game-breakout", "game-ember-dice", "game-snake",
+  "game-lights", "game-mines", "game-gomoku", "game-traffic", "game-vault",
+  "main",
 ];
 
 const appSource = APP_MODULES.map((name) =>
