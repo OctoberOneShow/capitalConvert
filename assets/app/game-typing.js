@@ -63,6 +63,31 @@
     var tabGomoku = getElement("gameTabGomoku");
     var tabTraffic = getElement("gameTabTraffic");
     var tabVault = getElement("gameTabVault");
+    var tabGlyphBlocks = getElement("gameTabGlyphBlocks");
+    var tabInkCascade = getElement("gameTabInkCascade");
+    var tabInkBeat = getElement("gameTabInkBeat");
+    var tabBubbleInk = getElement("gameTabBubbleInk");
+    var tabGlyphEcho = getElement("gameTabGlyphEcho");
+    var tabInkSlash = getElement("gameTabInkSlash");
+    var tabPegSplash = getElement("gameTabPegSplash");
+    var tabGlyphRaid = getElement("gameTabGlyphRaid");
+    var tabGlyphLeap = getElement("gameTabGlyphLeap");
+    var tabAuroraFlow = getElement("gameTabAuroraFlow");
+    var tabCometGolf = getElement("gameTabCometGolf");
+    var tabPrismPath = getElement("gameTabPrismPath");
+    var tabStarfall = getElement("gameTabStarfall");
+    var tabInkSort = getElement("gameTabInkSort");
+    var tabGlyphCrossing = getElement("gameTabGlyphCrossing");
+    var tabGlyphPusher = getElement("gameTabGlyphPusher");
+    var tabGlyphNet = getElement("gameTabGlyphNet");
+    var tabGlyphSketch = getElement("gameTabGlyphSketch");
+    var tabGlyphFifteen = getElement("gameTabGlyphFifteen");
+    var tabGlyphSudoku = getElement("gameTabGlyphSudoku");
+    var tabGlyphReversi = getElement("gameTabGlyphReversi");
+    var tabGlyphGlide = getElement("gameTabGlyphGlide");
+    var tabGlyphFour = getElement("gameTabGlyphFour");
+    var tabGlyphTower = getElement("gameTabGlyphTower");
+    var tabGlyphFleet = getElement("gameTabGlyphFleet");
     var panelTyping = getElement("gamePanelTyping");
     var panelMemory = getElement("gamePanelMemory");
     var panel2048 = getElement("gamePanel2048");
@@ -81,6 +106,31 @@
     var panelGomoku = getElement("gamePanelGomoku");
     var panelTraffic = getElement("gamePanelTraffic");
     var panelVault = getElement("gamePanelVault");
+    var panelGlyphBlocks = getElement("gamePanelGlyphBlocks");
+    var panelInkCascade = getElement("gamePanelInkCascade");
+    var panelInkBeat = getElement("gamePanelInkBeat");
+    var panelBubbleInk = getElement("gamePanelBubbleInk");
+    var panelGlyphEcho = getElement("gamePanelGlyphEcho");
+    var panelInkSlash = getElement("gamePanelInkSlash");
+    var panelPegSplash = getElement("gamePanelPegSplash");
+    var panelGlyphRaid = getElement("gamePanelGlyphRaid");
+    var panelGlyphLeap = getElement("gamePanelGlyphLeap");
+    var panelAuroraFlow = getElement("gamePanelAuroraFlow");
+    var panelCometGolf = getElement("gamePanelCometGolf");
+    var panelPrismPath = getElement("gamePanelPrismPath");
+    var panelStarfall = getElement("gamePanelStarfall");
+    var panelInkSort = getElement("gamePanelInkSort");
+    var panelGlyphCrossing = getElement("gamePanelGlyphCrossing");
+    var panelGlyphPusher = getElement("gamePanelGlyphPusher");
+    var panelGlyphNet = getElement("gamePanelGlyphNet");
+    var panelGlyphSketch = getElement("gamePanelGlyphSketch");
+    var panelGlyphFifteen = getElement("gamePanelGlyphFifteen");
+    var panelGlyphSudoku = getElement("gamePanelGlyphSudoku");
+    var panelGlyphReversi = getElement("gamePanelGlyphReversi");
+    var panelGlyphGlide = getElement("gamePanelGlyphGlide");
+    var panelGlyphFour = getElement("gamePanelGlyphFour");
+    var panelGlyphTower = getElement("gamePanelGlyphTower");
+    var panelGlyphFleet = getElement("gamePanelGlyphFleet");
     var tabsGrid = getElement("gameTabs");
     var pickerToggle = getElement("gameTabsToggle");
     var pickerLabel = getElement("gameTabsLabel");
@@ -128,7 +178,32 @@
       !panelMines ||
       !panelGomoku ||
       !panelTraffic ||
-      !panelVault
+      !panelVault ||
+      !panelGlyphBlocks ||
+      !panelInkCascade ||
+      !panelInkBeat ||
+      !panelBubbleInk ||
+      !panelGlyphEcho ||
+      !panelInkSlash ||
+      !panelPegSplash ||
+      !panelGlyphRaid ||
+      !panelGlyphLeap ||
+      !panelAuroraFlow ||
+      !panelCometGolf ||
+      !panelPrismPath ||
+      !panelStarfall ||
+      !panelInkSort ||
+      !panelGlyphCrossing ||
+      !panelGlyphPusher ||
+      !panelGlyphNet ||
+      !panelGlyphSketch ||
+      !panelGlyphFifteen ||
+      !panelGlyphSudoku ||
+      !panelGlyphReversi ||
+      !panelGlyphGlide ||
+      !panelGlyphFour ||
+      !panelGlyphTower ||
+      !panelGlyphFleet
     ) {
       return;
     }
@@ -335,6 +410,31 @@
       { name: "gomoku", tab: tabGomoku, panel: panelGomoku },
       { name: "traffic", tab: tabTraffic, panel: panelTraffic },
       { name: "vault", tab: tabVault, panel: panelVault },
+      { name: "glyphBlocks", tab: tabGlyphBlocks, panel: panelGlyphBlocks },
+      { name: "inkCascade", tab: tabInkCascade, panel: panelInkCascade },
+      { name: "inkBeat", tab: tabInkBeat, panel: panelInkBeat },
+      { name: "bubbleInk", tab: tabBubbleInk, panel: panelBubbleInk },
+      { name: "glyphEcho", tab: tabGlyphEcho, panel: panelGlyphEcho },
+      { name: "inkSlash", tab: tabInkSlash, panel: panelInkSlash },
+      { name: "pegSplash", tab: tabPegSplash, panel: panelPegSplash },
+      { name: "glyphRaid", tab: tabGlyphRaid, panel: panelGlyphRaid },
+      { name: "glyphLeap", tab: tabGlyphLeap, panel: panelGlyphLeap },
+      { name: "auroraFlow", tab: tabAuroraFlow, panel: panelAuroraFlow },
+      { name: "cometGolf", tab: tabCometGolf, panel: panelCometGolf },
+      { name: "prismPath", tab: tabPrismPath, panel: panelPrismPath },
+      { name: "starfall", tab: tabStarfall, panel: panelStarfall },
+      { name: "inkSort", tab: tabInkSort, panel: panelInkSort },
+      { name: "glyphCrossing", tab: tabGlyphCrossing, panel: panelGlyphCrossing },
+      { name: "glyphPusher", tab: tabGlyphPusher, panel: panelGlyphPusher },
+      { name: "glyphNet", tab: tabGlyphNet, panel: panelGlyphNet },
+      { name: "glyphSketch", tab: tabGlyphSketch, panel: panelGlyphSketch },
+      { name: "glyphFifteen", tab: tabGlyphFifteen, panel: panelGlyphFifteen },
+      { name: "glyphSudoku", tab: tabGlyphSudoku, panel: panelGlyphSudoku },
+      { name: "glyphReversi", tab: tabGlyphReversi, panel: panelGlyphReversi },
+      { name: "glyphGlide", tab: tabGlyphGlide, panel: panelGlyphGlide },
+      { name: "glyphFour", tab: tabGlyphFour, panel: panelGlyphFour },
+      { name: "glyphTower", tab: tabGlyphTower, panel: panelGlyphTower },
+      { name: "glyphFleet", tab: tabGlyphFleet, panel: panelGlyphFleet },
     ];
     var activeTabName = "typing";
     var pickerVisibleCount = 6;
@@ -431,6 +531,102 @@
         App.quietResetMines();
       }
 
+      if (App.quietResetGlyphBlocks) {
+        App.quietResetGlyphBlocks();
+      }
+
+      if (App.quietResetInkBeat) {
+        App.quietResetInkBeat();
+      }
+
+      if (App.quietResetBubbleInk) {
+        App.quietResetBubbleInk();
+      }
+
+      if (App.quietResetGlyphEcho) {
+        App.quietResetGlyphEcho();
+      }
+
+      if (App.quietResetInkSlash) {
+        App.quietResetInkSlash();
+      }
+
+      if (App.quietResetPegSplash) {
+        App.quietResetPegSplash();
+      }
+
+      if (App.quietResetGlyphRaid) {
+        App.quietResetGlyphRaid();
+      }
+
+      if (App.quietResetGlyphLeap) {
+        App.quietResetGlyphLeap();
+      }
+
+      if (App.quietResetAuroraFlow) {
+        App.quietResetAuroraFlow();
+      }
+
+      if (App.quietResetCometGolf) {
+        App.quietResetCometGolf();
+      }
+
+      if (App.quietResetPrismPath) {
+        App.quietResetPrismPath();
+      }
+
+      if (App.quietResetStarfall) {
+        App.quietResetStarfall();
+      }
+
+      if (App.quietResetInkSort) {
+        App.quietResetInkSort();
+      }
+
+      if (App.quietResetGlyphCrossing) {
+        App.quietResetGlyphCrossing();
+      }
+
+      if (App.quietResetGlyphPusher) {
+        App.quietResetGlyphPusher();
+      }
+
+      if (App.quietResetGlyphNet) {
+        App.quietResetGlyphNet();
+      }
+
+      if (App.quietResetGlyphSketch) {
+        App.quietResetGlyphSketch();
+      }
+
+      if (App.quietResetGlyphFifteen) {
+        App.quietResetGlyphFifteen();
+      }
+
+      if (App.quietResetGlyphSudoku) {
+        App.quietResetGlyphSudoku();
+      }
+
+      if (App.quietResetGlyphReversi) {
+        App.quietResetGlyphReversi();
+      }
+
+      if (App.quietResetGlyphGlide) {
+        App.quietResetGlyphGlide();
+      }
+
+      if (App.quietResetGlyphFour) {
+        App.quietResetGlyphFour();
+      }
+
+      if (App.quietResetGlyphTower) {
+        App.quietResetGlyphTower();
+      }
+
+      if (App.quietResetGlyphFleet) {
+        App.quietResetGlyphFleet();
+      }
+
       if (shouldFocus) {
         gameTabEntries.forEach(function (entry) {
           if (entry.name === selected) {
@@ -510,6 +706,106 @@
 
     tabVault.addEventListener("click", function () {
       selectTab("vault");
+    });
+
+    tabGlyphBlocks.addEventListener("click", function () {
+      selectTab("glyphBlocks");
+    });
+
+    tabInkCascade.addEventListener("click", function () {
+      selectTab("inkCascade");
+    });
+
+    tabInkBeat.addEventListener("click", function () {
+      selectTab("inkBeat");
+    });
+
+    tabBubbleInk.addEventListener("click", function () {
+      selectTab("bubbleInk");
+    });
+
+    tabGlyphEcho.addEventListener("click", function () {
+      selectTab("glyphEcho");
+    });
+
+    tabInkSlash.addEventListener("click", function () {
+      selectTab("inkSlash");
+    });
+
+    tabPegSplash.addEventListener("click", function () {
+      selectTab("pegSplash");
+    });
+
+    tabGlyphRaid.addEventListener("click", function () {
+      selectTab("glyphRaid");
+    });
+
+    tabGlyphLeap.addEventListener("click", function () {
+      selectTab("glyphLeap");
+    });
+
+    tabAuroraFlow.addEventListener("click", function () {
+      selectTab("auroraFlow");
+    });
+
+    tabCometGolf.addEventListener("click", function () {
+      selectTab("cometGolf");
+    });
+
+    tabPrismPath.addEventListener("click", function () {
+      selectTab("prismPath");
+    });
+
+    tabStarfall.addEventListener("click", function () {
+      selectTab("starfall");
+    });
+
+    tabInkSort.addEventListener("click", function () {
+      selectTab("inkSort");
+    });
+
+    tabGlyphCrossing.addEventListener("click", function () {
+      selectTab("glyphCrossing");
+    });
+
+    tabGlyphPusher.addEventListener("click", function () {
+      selectTab("glyphPusher");
+    });
+
+    tabGlyphNet.addEventListener("click", function () {
+      selectTab("glyphNet");
+    });
+
+    tabGlyphSketch.addEventListener("click", function () {
+      selectTab("glyphSketch");
+    });
+
+    tabGlyphFifteen.addEventListener("click", function () {
+      selectTab("glyphFifteen");
+    });
+
+    tabGlyphSudoku.addEventListener("click", function () {
+      selectTab("glyphSudoku");
+    });
+
+    tabGlyphReversi.addEventListener("click", function () {
+      selectTab("glyphReversi");
+    });
+
+    tabGlyphGlide.addEventListener("click", function () {
+      selectTab("glyphGlide");
+    });
+
+    tabGlyphFour.addEventListener("click", function () {
+      selectTab("glyphFour");
+    });
+
+    tabGlyphTower.addEventListener("click", function () {
+      selectTab("glyphTower");
+    });
+
+    tabGlyphFleet.addEventListener("click", function () {
+      selectTab("glyphFleet");
     });
 
     tabTyping.parentElement.addEventListener("keydown", function (event) {
@@ -625,6 +921,102 @@
 
       if (App.quietResetMines) {
         App.quietResetMines();
+      }
+
+      if (App.quietResetGlyphBlocks) {
+        App.quietResetGlyphBlocks();
+      }
+
+      if (App.quietResetInkBeat) {
+        App.quietResetInkBeat();
+      }
+
+      if (App.quietResetBubbleInk) {
+        App.quietResetBubbleInk();
+      }
+
+      if (App.quietResetGlyphEcho) {
+        App.quietResetGlyphEcho();
+      }
+
+      if (App.quietResetInkSlash) {
+        App.quietResetInkSlash();
+      }
+
+      if (App.quietResetPegSplash) {
+        App.quietResetPegSplash();
+      }
+
+      if (App.quietResetGlyphRaid) {
+        App.quietResetGlyphRaid();
+      }
+
+      if (App.quietResetGlyphLeap) {
+        App.quietResetGlyphLeap();
+      }
+
+      if (App.quietResetAuroraFlow) {
+        App.quietResetAuroraFlow();
+      }
+
+      if (App.quietResetCometGolf) {
+        App.quietResetCometGolf();
+      }
+
+      if (App.quietResetPrismPath) {
+        App.quietResetPrismPath();
+      }
+
+      if (App.quietResetStarfall) {
+        App.quietResetStarfall();
+      }
+
+      if (App.quietResetInkSort) {
+        App.quietResetInkSort();
+      }
+
+      if (App.quietResetGlyphCrossing) {
+        App.quietResetGlyphCrossing();
+      }
+
+      if (App.quietResetGlyphPusher) {
+        App.quietResetGlyphPusher();
+      }
+
+      if (App.quietResetGlyphNet) {
+        App.quietResetGlyphNet();
+      }
+
+      if (App.quietResetGlyphSketch) {
+        App.quietResetGlyphSketch();
+      }
+
+      if (App.quietResetGlyphFifteen) {
+        App.quietResetGlyphFifteen();
+      }
+
+      if (App.quietResetGlyphSudoku) {
+        App.quietResetGlyphSudoku();
+      }
+
+      if (App.quietResetGlyphReversi) {
+        App.quietResetGlyphReversi();
+      }
+
+      if (App.quietResetGlyphGlide) {
+        App.quietResetGlyphGlide();
+      }
+
+      if (App.quietResetGlyphFour) {
+        App.quietResetGlyphFour();
+      }
+
+      if (App.quietResetGlyphTower) {
+        App.quietResetGlyphTower();
+      }
+
+      if (App.quietResetGlyphFleet) {
+        App.quietResetGlyphFleet();
       }
 
       openBtn.focus();

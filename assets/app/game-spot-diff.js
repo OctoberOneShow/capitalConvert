@@ -17,6 +17,8 @@
     { diffs: 3, caseFlips: false, homoglyphs: false },
     { diffs: 4, caseFlips: true, homoglyphs: false },
     { diffs: 5, caseFlips: true, homoglyphs: true },
+    { diffs: 6, caseFlips: true, homoglyphs: true },
+    { diffs: 7, caseFlips: true, homoglyphs: true },
   ];
   /* Every mutation is one the site's own tools know how to undo, so the
    * planted damage is exactly the kind of noise the toolkit hunts. */

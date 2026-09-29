@@ -2,8 +2,8 @@
 /*
  * Static acceptance checks for the pet companion change.
  *
- *   1. the four pages still expose exactly 18 game tabs / 18 game panels
- *   2. both shared assets are requested with ?v=38 on all four pages
+ *   1. the four pages still expose exactly 43 game tabs / 43 game panels
+ *   2. both shared assets are requested with ?v=42 on all four pages
  *   3. only the cache-busting string changed on the asset lines of each page
  *   4. the pet markup is NOT present in any HTML file (it is JS-injected)
  *   5. UTF-8 / CJK integrity (BOM, no U+FFFD, no latin1 mojibake, sample strings)
@@ -126,6 +126,18 @@ const APP_MODULES = [
   "game-caret-dash", "game-spot-diff", "game-plumber", "game-stack",
   "game-color-code", "game-breakout", "game-ember-dice", "game-snake",
   "game-lights", "game-mines", "game-gomoku", "game-traffic", "game-vault",
+  "game-glyph-blocks", "game-ink-cascade", "game-ink-beat",
+  "game-bubble-ink", "game-glyph-echo", "game-ink-slash",
+  "game-peg-splash", "game-glyph-raid", "game-glyph-leap",
+  "game-aurora-flow", "game-comet-golf",
+  "game-prism-path", "game-starfall",
+  "game-ink-sort", "game-glyph-crossing",
+  "game-glyph-pusher", "game-glyph-net",
+  "game-glyph-sketch", "game-glyph-fifteen",
+  "game-glyph-sudoku", "game-glyph-reversi",
+  "game-glyph-glide", "game-glyph-four",
+  "game-glyph-tower", "game-glyph-fleet",
+  "game-guide",
   "main",
 ];
 const STYLE_MODULES = ["base", "games", "pet"];
@@ -133,52 +145,26 @@ PAGES.forEach((page) => {
   const html = read(page);
   const tabs = countOccurrences(html, 'class="game-tab"');
   const panels = countOccurrences(html, 'class="game-panel"');
-  check(`${page}: exactly 18 game-tab`, tabs === 18, `found ${tabs}`);
-  check(`${page}: exactly 18 game-panel`, panels === 18, `found ${panels}`);
+  check(`${page}: exactly 43 game-tab`, tabs === 43, `found ${tabs}`);
+  check(`${page}: exactly 43 game-panel`, panels === 43, `found ${panels}`);
   check(
-    `${page}: stylesheets requested as ?v=38`,
-    STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=38`)),
+    `${page}: stylesheets requested as ?v=42`,
+    STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=42`)),
   );
   check(
-    `${page}: scripts requested as ?v=38`,
-    APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=38`)),
+    `${page}: scripts requested as ?v=42`,
+    APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=42`)),
+  );
+  /* Collect every ?v= token on the page and require them all to equal
+   * the current cache-busting version, so single-digit versions cannot
+   * substring-match two-digit ones again. */
+  const pageVersions = Array.from(html.matchAll(/\?v=(\d+)/g)).map(
+    (match) => match[1],
   );
   check(
-    `${page}: no stale ?v=37 / ?v=36 / ?v=35 / ?v=34 / ?v=33 / ?v=32 / ?v=31 / ?v=30 / ?v=29 / ?v=28 / ?v=27 / ?v=26 / ?v=25 / ?v=24 / ?v=23 / ?v=22 / ?v=21 / ?v=20 / ?v=19 / ?v=18 / ?v=17 / ?v=16 / ?v=15 / ?v=14 / ?v=13 / ?v=12 / ?v=11 / ?v=10 / ?v=9 / ?v=8 / ?v=7 / ?v=6 / ?v=5 / ?v=4 left`,
-    !html.includes("?v=37") &&
-      !html.includes("?v=36") &&
-      !html.includes("?v=35") &&
-      !html.includes("?v=34") &&
-      !html.includes("?v=33") &&
-      !html.includes("?v=32") &&
-      !html.includes("?v=31") &&
-      !html.includes("?v=30") &&
-      !html.includes("?v=29") &&
-      !html.includes("?v=28") &&
-      !html.includes("?v=27") &&
-      !html.includes("?v=26") &&
-      !html.includes("?v=25") &&
-      !html.includes("?v=24") &&
-      !html.includes("?v=23") &&
-      !html.includes("?v=22") &&
-      !html.includes("?v=21") &&
-      !html.includes("?v=20") &&
-      !html.includes("?v=19") &&
-      !html.includes("?v=18") &&
-      !html.includes("?v=17") &&
-      !html.includes("?v=16") &&
-      !html.includes("?v=15") &&
-      !html.includes("?v=14") &&
-      !html.includes("?v=13") &&
-      !html.includes("?v=12") &&
-      !html.includes("?v=11") &&
-      !html.includes("?v=10") &&
-      !html.includes("?v=9") &&
-      !html.includes("?v=8") &&
-      !html.includes("?v=7") &&
-      !html.includes("?v=6") &&
-      !html.includes("?v=5") &&
-      !html.includes("?v=4"),
+    `${page}: every asset token is ?v=42 with no stale versions left`,
+    pageVersions.length > 0 && pageVersions.every((v) => v === "42"),
+    Array.from(new Set(pageVersions)).join(",") || "none found",
   );
 
   const assetLines = html
@@ -190,8 +176,8 @@ PAGES.forEach((page) => {
     `found ${assetLines.length}`,
   );
   check(
-    `${page}: all asset references are ?v=38`,
-    assetLines.every((line) => line.includes("?v=38")),
+    `${page}: all asset references are ?v=42`,
+    assetLines.every((line) => line.includes("?v=42")),
     assetLines.join(" | "),
   );
 
@@ -206,9 +192,9 @@ PAGES.forEach((page) => {
   // reference is versioned and every expected module is present.
   check(
     `${page}: asset lines are all versioned split modules`,
-    assetLines.every((line) => /\?v=38/.test(line)) &&
-      STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=38`)) &&
-      APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=38`)),
+    assetLines.every((line) => /\?v=42/.test(line)) &&
+      STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=42`)) &&
+      APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=42`)),
     "asset reference shape changed beyond version token",
   );
 });
@@ -1516,9 +1502,9 @@ check(
   })(),
 );
 const campaignGames = [
-  { file: "game-breakout", table: "brkLevels", count: 15, select: "brkLevelSel" },
-  { file: "game-snake", table: "snkLevels", count: 10, select: "snkLevelSel" },
-  { file: "game-ember-dice", table: "diceTables", count: 5, select: "diceTableSel" },
+  { file: "game-breakout", table: "brkLevels", count: 17, select: "brkLevelSel" },
+  { file: "game-snake", table: "snkLevels", count: 12, select: "snkLevelSel" },
+  { file: "game-ember-dice", table: "diceTables", count: 7, select: "diceTableSel" },
 ];
 campaignGames.forEach((game) => {
   const source = fs
@@ -2226,6 +2212,1549 @@ check(
     /setAttribute\("data-attention"/.test(petJs),
 );
 
+console.log("\n== 5j. Glyph Blocks, Ink Cascade and Ink Beat ==");
+const NEW_GAMES = [
+  { name: "glyphBlocks", tab: "gameTabGlyphBlocks", panel: "gamePanelGlyphBlocks", file: "game-glyph-blocks" },
+  { name: "inkCascade", tab: "gameTabInkCascade", panel: "gamePanelInkCascade", file: "game-ink-cascade" },
+  { name: "inkBeat", tab: "gameTabInkBeat", panel: "gamePanelInkBeat", file: "game-ink-beat" },
+];
+NEW_GAMES.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 8 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\.addEventListener\\("click"`).test(appJs),
+  );
+});
+check(
+  "the two loop-driven games of batch four are reset by the shell",
+  /App\.quietResetGlyphBlocks = null/.test(appJs) &&
+    /App\.quietResetInkBeat = null/.test(appJs) &&
+    countOccurrences(appJs, "quietResetGlyphBlocks()") === 2 &&
+    countOccurrences(appJs, "quietResetInkBeat()") === 2,
+);
+[
+  "tabGlyphBlocks", "blkFieldLabel", "blkPrompt", "blkGo", "blkPaused",
+  "blkOver", "blkRetry", "blkCleared", "blkNextFloor", "blkCampaignDone",
+  "blkNextLabel", "blkBtnLeft", "blkBtnTurn", "blkBtnRight", "blkBtnDrop",
+  "blkControlsLabel", "blkHint", "blkLevelSelectLabel", "blkL1", "blkL8",
+  "hudLines", "logBlk",
+  "tabInkCascade", "inkBoardLabel", "inkPrompt", "inkReady", "inkCleared",
+  "inkOut", "inkRetry", "inkNextPool", "inkCampaignDone", "inkCell",
+  "inkColor0", "inkColor5", "inkHint", "inkLevelSelectLabel", "inkL1", "inkL8",
+  "logInk",
+  "tabInkBeat", "beatFieldLabel", "beatPrompt", "beatReady", "beatGo",
+  "beatPaused", "beatFinished", "beatRetry", "beatNextTrack", "beatCampaignDone",
+  "beatLane0", "beatLane3", "beatPadsLabel", "beatHint",
+  "beatSongSelectLabel", "beatL1", "beatL6", "logBeat",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+
+console.log("\n== 5k. Bubble Ink, Glyph Echo and Ink Slash ==");
+const BATCH_FIVE = [
+  { name: "bubbleInk", tab: "gameTabBubbleInk", panel: "gamePanelBubbleInk", file: "game-bubble-ink" },
+  { name: "glyphEcho", tab: "gameTabGlyphEcho", panel: "gamePanelGlyphEcho", file: "game-glyph-echo" },
+  { name: "inkSlash", tab: "gameTabInkSlash", panel: "gamePanelInkSlash", file: "game-ink-slash" },
+];
+BATCH_FIVE.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 8 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\.addEventListener\\("click"`).test(appJs),
+  );
+});
+check(
+  "the three timer games of batch five are reset by the shell",
+  /App\.quietResetBubbleInk = null/.test(appJs) &&
+    /App\.quietResetGlyphEcho = null/.test(appJs) &&
+    /App\.quietResetInkSlash = null/.test(appJs) &&
+    countOccurrences(appJs, "quietResetBubbleInk()") === 2 &&
+    countOccurrences(appJs, "quietResetGlyphEcho()") === 2 &&
+    countOccurrences(appJs, "quietResetInkSlash()") === 2,
+);
+[
+  "tabBubbleInk", "bubFieldLabel", "bubPrompt", "bubReady", "bubGo",
+  "bubPaused", "bubOver", "bubOutShots", "bubRetry", "bubCleared",
+  "bubNextSpring", "bubCampaignDone", "hudShots", "hudPopped",
+  "bubHint", "bubLevelSelectLabel", "bubL1", "bubL8", "logBubbleInk",
+  "tabGlyphEcho", "echoFieldLabel", "echoPrompt", "echoReady", "echoWatch",
+  "echoYourTurn", "echoMistake", "echoOut", "echoRetry", "echoCleared",
+  "echoNextChime", "echoCampaignDone", "echoPaused", "echoPad0",
+  "echoPad3", "echoPadsLabel", "hudRound", "hudLongest", "echoHint",
+  "echoLevelSelectLabel", "echoL1", "echoL6", "logGlyphEcho",
+  "tabInkSlash", "slashFieldLabel", "slashPrompt", "slashReady", "slashGo",
+  "slashPaused", "slashOver", "slashTimeUp", "slashRetry", "slashCleared",
+  "slashNextStroke", "slashCampaignDone", "slashHint",
+  "slashLevelSelectLabel", "slashL1", "slashL6", "logInkSlash",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+
+console.log("\n== 5l. Peg Splash, Glyph Raid and Glyph Leap ==");
+const BATCH_SIX = [
+  { name: "pegSplash", tab: "gameTabPegSplash", panel: "gamePanelPegSplash", file: "game-peg-splash" },
+  { name: "glyphRaid", tab: "gameTabGlyphRaid", panel: "gamePanelGlyphRaid", file: "game-glyph-raid" },
+  { name: "glyphLeap", tab: "gameTabGlyphLeap", panel: "gamePanelGlyphLeap", file: "game-glyph-leap" },
+];
+BATCH_SIX.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 8 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\.addEventListener\\("click"`).test(appJs),
+  );
+});
+check(
+  "the three loop games of batch six are reset by the shell",
+  /App\.quietResetPegSplash = null/.test(appJs) &&
+    /App\.quietResetGlyphRaid = null/.test(appJs) &&
+    /App\.quietResetGlyphLeap = null/.test(appJs) &&
+    countOccurrences(appJs, "quietResetPegSplash()") === 2 &&
+    countOccurrences(appJs, "quietResetGlyphRaid()") === 2 &&
+    countOccurrences(appJs, "quietResetGlyphLeap()") === 2,
+);
+[
+  "tabPegSplash", "pegFieldLabel", "pegPrompt", "pegReady", "pegGo",
+  "pegPaused", "pegOut", "pegRetry", "pegCleared", "pegNextBoard",
+  "pegCampaignDone", "hudTargets", "hudBalls", "pegHint",
+  "pegLevelSelectLabel", "pegL1", "pegL6", "logPegSplash",
+  "tabGlyphRaid", "raidFieldLabel", "raidPrompt", "raidReady", "raidGo",
+  "raidPaused", "raidOver", "raidRetry", "raidCleared", "raidNextWave",
+  "raidCampaignDone", "raidHint", "raidLevelSelectLabel", "raidL1",
+  "raidL6", "logGlyphRaid",
+  "tabGlyphLeap", "leapFieldLabel", "leapPrompt", "leapReady", "leapGo",
+  "leapPaused", "leapOver", "leapRetry", "leapCleared", "leapNextAscent",
+  "leapCampaignDone", "hudJumps", "leapHint", "leapLevelSelectLabel",
+  "leapL1", "leapL6", "logGlyphLeap",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+
+console.log("\n== 5m. Aurora Flow and Comet Golf ==");
+const BATCH_SEVEN = [
+  { name: "auroraFlow", tab: "gameTabAuroraFlow", panel: "gamePanelAuroraFlow", file: "game-aurora-flow" },
+  { name: "cometGolf", tab: "gameTabCometGolf", panel: "gamePanelCometGolf", file: "game-comet-golf" },
+];
+BATCH_SEVEN.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 8 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\.addEventListener\\("click"`).test(appJs),
+  );
+});
+check(
+  "the two batch-seven games are reset by the shell",
+  /App\.quietResetAuroraFlow = null/.test(appJs) &&
+    /App\.quietResetCometGolf = null/.test(appJs) &&
+    countOccurrences(appJs, "quietResetAuroraFlow()") === 2 &&
+    countOccurrences(appJs, "quietResetCometGolf()") === 2,
+);
+check(
+  "every Aurora Flow pair set stays inside its own board and uses distinct cells",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-aurora-flow.js"),
+      "utf8",
+    );
+    const block = /var auroraLevels = \[([\s\S]*?)\n  \];/.exec(src);
+    if (!block) return false;
+    const sizes = Array.from(block[1].matchAll(/size:\s*(\d+)/g)).map((m) => Number(m[1]));
+    const pairSets = Array.from(block[1].matchAll(/pairs:\s*\[([\s\S]*?)\]/g)).map(
+      (m) => Array.from(m[1].matchAll(/\[(\d+), (\d+), (\d+), (\d+)\]/g)).map(
+        (p) => p.slice(1).map(Number),
+      ),
+    );
+    if (sizes.length !== 8 || pairSets.length !== 8) return false;
+    return pairSets.every((pairs, index) => {
+      const size = sizes[index];
+      const seen = new Set();
+      return pairs.every((pair) => {
+        const keys = [
+          pair[0] + ":" + pair[1],
+          pair[2] + ":" + pair[3],
+        ];
+        return keys.every((key) => {
+          const [x, y] = key.split(":").map(Number);
+          if (x >= size || y >= size || seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+      });
+    });
+  })(),
+);
+check(
+  "every Comet Golf target sits clear of its own wells",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-comet-golf.js"),
+      "utf8",
+    );
+    const block = /var cgfLevels = \[([\s\S]*?)\n  \];/.exec(src);
+    if (!block) return false;
+    const targets = Array.from(block[1].matchAll(/target:\s*\{\s*x:\s*(\d+),\s*y:\s*(\d+),\s*r:\s*(\d+)/g));
+    const wellSets = Array.from(block[1].matchAll(/wells:\s*\[([\s\S]*?)\]\s*,\s*\n\s*starShots/g)).map(
+      (m) => Array.from(m[1].matchAll(/x:\s*(\d+),\s*y:\s*(\d+),\s*m:\s*[\d.]+,\s*r:\s*(\d+)/g)).map(
+        (w) => w.slice(1).map(Number),
+      ),
+    );
+    if (targets.length !== 8 || wellSets.length !== 8) return false;
+    return targets.every((target, index) => {
+      const tx = Number(target[1]);
+      const ty = Number(target[2]);
+      const tr = Number(target[3]);
+      return wellSets[index].every(([wx, wy, wr]) => {
+        return Math.hypot(tx - wx, ty - wy) > tr + wr + 6;
+      });
+    });
+  })(),
+);
+[
+  "tabAuroraFlow", "auroLevelSelectLabel", "auroL1", "auroL6",
+  "auroFieldLabel", "auroPrompt", "auroReady", "auroPaused",
+  "auroCleared", "auroNextBoard", "auroCampaignDone", "auroHint",
+  "logAuroraFlow",
+  "tabCometGolf", "cgfLevelSelectLabel", "cgfL1", "cgfL6",
+  "cgfFieldLabel", "cgfPrompt", "cgfReady", "cgfPaused", "cgfCrash",
+  "cgfLost", "cgfAgain", "cgfCleared", "cgfNextCourse",
+  "cgfCampaignDone", "cgfHint", "logCometGolf",
+  "hudLaunches", "hudPar",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+
+console.log("\n== 5n. Prism Path and Starfall Lander ==");
+const BATCH_EIGHT = [
+  { name: "prismPath", tab: "gameTabPrismPath", panel: "gamePanelPrismPath", file: "game-prism-path" },
+  { name: "starfall", tab: "gameTabStarfall", panel: "gamePanelStarfall", file: "game-starfall" },
+];
+BATCH_EIGHT.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 8 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\.addEventListener\\("click"`).test(appJs),
+  );
+});
+check(
+  "the two batch-eight games are reset by the shell",
+  /App\.quietResetPrismPath = null/.test(appJs) &&
+    /App\.quietResetStarfall = null/.test(appJs) &&
+    countOccurrences(appJs, "quietResetPrismPath()") === 2 &&
+    countOccurrences(appJs, "quietResetStarfall()") === 2,
+);
+check(
+  "every Prism Path board carries an emitter, mirrors and targets inside its grid",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-prism-path.js"),
+      "utf8",
+    );
+    const block = /var prismLevels = \[([\s\S]*?)\n  \];/.exec(src);
+    if (!block) return false;
+    const grids = Array.from(block[1].matchAll(/w:\s*(\d+),\s*h:\s*(\d+)/g)).map(
+      (m) => [Number(m[1]), Number(m[2])],
+    );
+    const emitters = Array.from(block[1].matchAll(/emitter:\s*\{\s*x:\s*(\d+),\s*y:\s*(\d+),\s*dir:\s*(\d+)\s*\}/g));
+    const mirrorSets = Array.from(block[1].matchAll(/mirrors:\s*\[([\s\S]*?)\]\s*,\s*\n\s*starTimes/g)).map(
+      (m) => Array.from(m[1].matchAll(/x:\s*(\d+),\s*y:\s*(\d+)/g)),
+    );
+    const targetSets = Array.from(block[1].matchAll(/targets:\s*\[([\s\S]*?)\]\s*,\s*\n\s*walls/g)).map(
+      (m) => Array.from(m[1].matchAll(/\[\d+,\s*\d+\]/g)),
+    );
+    if (grids.length !== 8 || emitters.length !== 8 || mirrorSets.length !== 8 || targetSets.length !== 8) {
+      return false;
+    }
+    return grids.every(([w, h], index) => {
+      const ex = Number(emitters[index][1]);
+      const ey = Number(emitters[index][2]);
+      if (ex >= w || ey >= h) return false;
+      return mirrorSets[index].every(
+        (m) => Number(m[1]) < w && Number(m[2]) < h,
+      );
+    });
+  })(),
+);
+check(
+  "Starfall keeps thrust above every gravity and the fuels curve downward",
+  /var lantThrust = 235;/.test(
+    fs.readFileSync(path.join(root, "assets", "app", "game-starfall.js"), "utf8"),
+  ) &&
+    (() => {
+      const src = fs.readFileSync(
+        path.join(root, "assets", "app", "game-starfall.js"),
+        "utf8",
+      );
+      const block = /var lantLevels = \[([\s\S]*?)\n  \];/.exec(src);
+      if (!block) return false;
+      const gravities = Array.from(block[1].matchAll(/gravity:\s*(\d+)/g)).map((m) => Number(m[1]));
+      const fuels = Array.from(block[1].matchAll(/fuel:\s*(\d+)/g)).map((m) => Number(m[1]));
+      if (gravities.length !== 8 || fuels.length !== 8) return false;
+      return (
+        gravities.every((g) => g < 235) &&
+        gravities.every((g, i) => i === 0 || g > gravities[i - 1]) &&
+        fuels.every((f, i) => i === 0 || f <= fuels[i - 1])
+      );
+    })(),
+);
+[
+  "tabPrismPath", "prismLevelSelectLabel", "prismL1", "prismL6",
+  "prismFieldLabel", "prismPrompt", "prismReady", "prismPaused",
+  "prismCleared", "prismNextBoard", "prismCampaignDone", "prismHint",
+  "logPrismPath",
+  "tabStarfall", "lantLevelSelectLabel", "lantL1", "lantL6",
+  "lantFieldLabel", "lantPrompt", "lantReady", "lantPaused", "lantCrash",
+  "lantAgain", "lantCleared", "lantNextSector", "lantCampaignDone",
+  "lantBtnThrust", "lantBtnLeft", "lantBtnRight", "lantHint",
+  "logStarfall", "hudFuel",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+
+console.log("\n== 5o. Ink Sort and Glyph Crossing ==");
+const BATCH_NINE = [
+  { name: "inkSort", tab: "gameTabInkSort", panel: "gamePanelInkSort", file: "game-ink-sort" },
+  { name: "glyphCrossing", tab: "gameTabGlyphCrossing", panel: "gamePanelGlyphCrossing", file: "game-glyph-crossing" },
+];
+BATCH_NINE.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 8 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\.addEventListener\\("click"`).test(appJs),
+  );
+});
+check(
+  "the two batch-nine games are reset by the shell",
+  /App\.quietResetInkSort = null/.test(appJs) &&
+    /App\.quietResetGlyphCrossing = null/.test(appJs) &&
+    countOccurrences(appJs, "quietResetInkSort()") === 2 &&
+    countOccurrences(appJs, "quietResetGlyphCrossing()") === 2,
+);
+check(
+  "every Ink Sort deal replays its recorded walk back to a uniform state",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-ink-sort.js"),
+      "utf8",
+    );
+    const fnStart = src.indexOf("var SORT_CAP = 4;");
+    const fnEnd = src.indexOf("App.inkSortGenerate");
+    const factory = new Function(
+      src.slice(fnStart, fnEnd) + "\nreturn sortGenerate;",
+    )();
+    const configs = [
+      [3, 5, 8], [4, 6, 14], [4, 7, 20], [5, 8, 28], [6, 9, 38], [7, 10, 50],
+    ];
+    return configs.every(([colors, tubeCount, depth]) => {
+      for (var trial = 0; trial < 12; trial += 1) {
+        const deal = factory(colors, tubeCount, depth);
+        const replay = deal.tubes.map((tube) => tube.slice());
+        const cap = 4;
+        const topRun = (tubes, i) => {
+          if (!tubes[i].length) return null;
+          const color = tubes[i][tubes[i].length - 1];
+          let count = 1;
+          for (let j = tubes[i].length - 2; j >= 0; j -= 1) {
+            if (tubes[i][j] !== color) break;
+            count += 1;
+          }
+          return { color, count };
+        };
+        for (const [from, to] of deal.solution) {
+          if (!replay[from].length || replay[to].length >= cap) return false;
+          const run = topRun(replay, from);
+          if (replay[to].length && replay[to][replay[to].length - 1] !== run.color) {
+            return false;
+          }
+          const amount = Math.min(run.count, cap - replay[to].length);
+          for (let u = 0; u < amount; u += 1) {
+            replay[to].push(replay[from].pop());
+          }
+        }
+        const allUniform = replay.every(
+          (tube) =>
+            !tube.length ||
+            (tube.length === cap && tube.every((c) => c === tube[0])),
+        );
+        if (!allUniform) return false;
+      }
+      return true;
+    });
+  })(),
+);
+check(
+  "every Glyph Crossing lane set covers rows 1-3 and 5-7 with rising speeds",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-crossing.js"),
+      "utf8",
+    );
+    const block = /var croLevels = \[([\s\S]*?)\n  \];/.exec(src);
+    if (!block) return false;
+    const laneSets = Array.from(block[1].matchAll(/lanes:\s*\[([\s\S]*?)\]\s*,\s*\n\s*starTimes/g));
+    if (laneSets.length !== 6) return false;
+    const speeds = [];
+    const ok = laneSets.every((set) => {
+      const lanes = Array.from(set[1].matchAll(/row:\s*(\d+),\s*dir:\s*(-?\d+),\s*speed:\s*(\d+)/g));
+      if (lanes.length !== 6) return false;
+      const rows = lanes.map((l) => Number(l[1])).sort((a, b) => a - b).join(",");
+      if (rows !== "1,2,3,5,6,7") return false;
+      lanes.forEach((l) => speeds.push(Number(l[3])));
+      return true;
+    });
+    return ok && speeds[speeds.length - 1] > speeds[0];
+  })(),
+);
+[
+  "tabInkSort", "sorLevelSelectLabel", "sorL1", "sorL6",
+  "sorFieldLabel", "sorPrompt", "sorReady", "sorPaused", "sorCleared",
+  "sorNextVial", "sorCampaignDone", "sorHint", "logInkSort",
+  "tabGlyphCrossing", "croLevelSelectLabel", "croL1", "croL6",
+  "croFieldLabel", "croPrompt", "croReady", "croGo", "croPaused",
+  "croSplashed", "croSquashed", "croTryAgain", "croLost", "croRetryRun",
+  "croCleared", "croNextFord", "croCampaignDone", "croBtnUp", "croBtnDown",
+  "croBtnLeft", "croBtnRight", "croHint", "logGlyphCrossing",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+
+console.log("\n== 5p. Glyph Pusher and Glyph Net ==");
+const BATCH_TEN = [
+  { name: "glyphPusher", tab: "gameTabGlyphPusher", panel: "gamePanelGlyphPusher", file: "game-glyph-pusher" },
+  { name: "glyphNet", tab: "gameTabGlyphNet", panel: "gamePanelGlyphNet", file: "game-glyph-net" },
+];
+BATCH_TEN.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 8 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\\.addEventListener\\\("click"`).test(appJs),
+  );
+});
+check(
+  "the two batch-ten games are reset by the shell",
+  /App\.quietResetGlyphPusher = null/.test(appJs) &&
+    /App\.quietResetGlyphNet = null/.test(appJs) &&
+    countOccurrences(appJs, "quietResetGlyphPusher()") === 2 &&
+    countOccurrences(appJs, "quietResetGlyphNet()") === 2,
+);
+check(
+  "every Glyph Pusher board balances boxes with goals and stays BFS-solvable",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-pusher.js"),
+      "utf8",
+    );
+    const block = /var pushLevels = \[([\s\S]*?)\n  \];/.exec(src);
+    if (!block) return false;
+    const maps = Array.from(block[1].matchAll(/map:\s*\[([\s\S]*?)\]/g));
+    if (maps.length !== 8) return false;
+    const thresholds = Array.from(block[1].matchAll(/starMoves:\s*\[(\d+),\s*(\d+),\s*(\d+)\]/g)).map(
+      (m) => [Number(m[1]), Number(m[2]), Number(m[3])],
+    );
+    if (thresholds.length !== 8) return false;
+    return maps.every((m, index) => {
+      const rows = Array.from(m[1].matchAll(/"([^"]*)"/g)).map((x) => x[1]);
+      const H = rows.length;
+      const W = Math.max(...rows.map((r) => r.length));
+      const grid = rows.map((r) => r.padEnd(W, "#").split(""));
+      let player = null;
+      let boxes = [];
+      const goals = new Set();
+      const wall = (x, y) => grid[y][x] === "#";
+      for (let y = 0; y < H; y += 1) {
+        for (let x = 0; x < W; x += 1) {
+          const c = grid[y][x];
+          if (c === "@") player = [x, y];
+          if (c === "$") boxes.push(x + "," + y);
+          if (c === "o") goals.add(x + "," + y);
+        }
+      }
+      if (!player || boxes.length === 0 || boxes.length !== goals.size) return false;
+      const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+      const seen = new Set([player.join(",") + "|" + boxes.slice().sort().join(";")]);
+      let queue = [{ p: player, b: boxes, d: 0 }];
+      while (queue.length) {
+        const st = queue.shift();
+        if (st.b.every((b) => goals.has(b))) {
+          return st.d <= thresholds[index][0];
+        }
+        const boxSet = new Set(st.b);
+        const reach = {};
+        const walk = [st.p];
+        reach[st.p.join(",")] = true;
+        while (walk.length) {
+          const [x, y] = walk.shift();
+          for (const [dx, dy] of dirs) {
+            const nx = x + dx;
+            const ny = y + dy;
+            const k = nx + "," + ny;
+            if (wall(nx, ny) || boxSet.has(k) || reach[k]) continue;
+            reach[k] = true;
+            walk.push([nx, ny]);
+          }
+        }
+        for (const b of st.b) {
+          const [bx, by] = b.split(",").map(Number);
+          for (const [dx, dy] of dirs) {
+            if (!reach[bx - dx + "," + (by - dy)]) continue;
+            const nbx = bx + dx;
+            const nby = by + dy;
+            if (wall(nbx, nby) || boxSet.has(nbx + "," + nby)) continue;
+            const nb2 = st.b.map((x2) => (x2 === b ? nbx + "," + nby : x2));
+            const k3 = bx + "," + by + "|" + nb2.slice().sort().join(";");
+            if (seen.has(k3)) continue;
+            seen.add(k3);
+            queue.push({ p: [bx, by], b: nb2, d: st.d + 1 });
+          }
+        }
+      }
+      return false;
+    });
+  })(),
+);
+check(
+  "every Glyph Net deal is winnable at its base rotation and unsolved as dealt",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-net.js"),
+      "utf8",
+    );
+    const slice = src.slice(src.indexOf("var NET_DX"), src.indexOf("App.glyphNetGenerate"));
+    const api = new Function(
+      slice + "\nreturn { glyphNetGenerate: netGenerate, glyphNetWin: netWin };",
+    )();
+    const sizes = [4, 4, 5, 5, 6, 7];
+    return sizes.every((size) => {
+      for (let trial = 0; trial < 8; trial += 1) {
+        const deal = api.glyphNetGenerate(size);
+        if (!deal || deal.terminals.length < 3 || deal.opt < 3) return false;
+        if (!api.glyphNetWin(deal.size, deal.conns, deal.rot.map(() => 0))) {
+          return false;
+        }
+        if (api.glyphNetWin(deal.size, deal.conns, deal.rot)) {
+          return false;
+        }
+      }
+      return true;
+    });
+  })(),
+);
+[
+  "tabGlyphPusher", "sokLevelSelectLabel", "sokL1", "sokL6",
+  "sokFieldLabel", "sokPrompt", "sokReady", "sokPaused", "sokCleared",
+  "sokNextRoom", "sokCampaignDone", "sokUndo", "sokHint",
+  "logGlyphPusher",
+  "tabGlyphNet", "netLevelSelectLabel", "netL1", "netL6",
+  "netFieldLabel", "netPrompt", "netReady", "netPaused", "netCleared",
+  "netNextGrid", "netCampaignDone", "netHint", "logGlyphNet",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+console.log("\n== 5q. Glyph Sketch and Glyph Fifteen ==");
+const BATCH_ELEVEN = [
+  { name: "glyphSketch", tab: "gameTabGlyphSketch", panel: "gamePanelGlyphSketch", file: "game-glyph-sketch" },
+  { name: "glyphFifteen", tab: "gameTabGlyphFifteen", panel: "gamePanelGlyphFifteen", file: "game-glyph-fifteen" },
+];
+BATCH_ELEVEN.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 7 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\.addEventListener\\("click"`).test(appJs),
+  );
+});
+check(
+  "the two batch-eleven games are reset by the shell",
+  /App\.quietResetGlyphSketch = null/.test(appJs) &&
+    /App\.quietResetGlyphFifteen = null/.test(appJs) &&
+    countOccurrences(appJs, "quietResetGlyphSketch()") === 2 &&
+    countOccurrences(appJs, "quietResetGlyphFifteen()") === 2,
+);
+check(
+  "every Glyph Sketch picture is uniquely solvable by row and column logic",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-sketch.js"),
+      "utf8",
+    );
+    const block = /var sketchLevels = \[([\s\S]*?)\n  \];/.exec(src);
+    if (!block) return false;
+    const arts = Array.from(block[1].matchAll(/art:\s*\[([\s\S]*?)\]/g)).map((m) =>
+      Array.from(m[1].matchAll(/"([^"]*)"/g)).map((x) => x[1]),
+    );
+    if (arts.length !== 6) return false;
+    function lineOptions(line, clue) {
+      const n = line.length;
+      const out = [];
+      function go(pos, ci, cells) {
+        if (ci === clue.length) {
+          const cells2 = cells.slice();
+          let ok = true;
+          for (let k = pos; k < n; k++) {
+            if (line[k] === 1) {
+              ok = false;
+              break;
+            }
+            cells2.push(0);
+          }
+          if (ok) out.push(cells2);
+          return;
+        }
+        const len = clue[ci];
+        for (let start = pos; start + len <= n; start++) {
+          let ok = true;
+          for (let k = pos; k < start; k++) {
+            if (line[k] === 1) {
+              ok = false;
+              break;
+            }
+          }
+          if (!ok) continue;
+          for (let k = start; k < start + len; k++) {
+            if (line[k] === 0) {
+              ok = false;
+              break;
+            }
+          }
+          if (!ok) continue;
+          if (start + len < n && line[start + len] === 1) continue;
+          const cells2 = cells.slice();
+          for (let k = pos; k < start; k++) cells2.push(0);
+          for (let k = 0; k < len; k++) cells2.push(1);
+          let np = start + len;
+          if (np < n) {
+            cells2.push(0);
+            np++;
+          }
+          go(np, ci + 1, cells2);
+        }
+      }
+      go(0, 0, []);
+      return out;
+    }
+    return arts.every((art) => {
+      const R = art.length;
+      const C = art[0].length;
+      const grid = art.map((r) => [...r].map((c) => (c === "#" ? 1 : 0)));
+      const lineOf = (line) => {
+        const out = [];
+        let run = 0;
+        for (const v of line) {
+          if (v) run++;
+          else if (run) {
+            out.push(run);
+            run = 0;
+          }
+        }
+        if (run) out.push(run);
+        return out.length ? out : [0];
+      };
+      const rowClue = grid.map(lineOf);
+      const colClue = Array.from({ length: C }, (_, c) =>
+        lineOf(grid.map((r) => r[c])),
+      );
+      const known = Array.from({ length: R }, () => Array(C).fill(-1));
+      let changed = true;
+      let guard = 0;
+      while (changed && guard++ < 100) {
+        changed = false;
+        for (let r = 0; r < R; r++) {
+          const opts = lineOptions(
+            known[r].map((v) => (v === -1 ? 2 : v)),
+            rowClue[r],
+          );
+          if (!opts.length) return false;
+          for (let c = 0; c < C; c++) {
+            const vals = new Set(opts.map((o) => o[c]));
+            if (vals.size === 1 && known[r][c] === -1) {
+              known[r][c] = opts[0][c];
+              changed = true;
+            }
+          }
+        }
+        for (let c = 0; c < C; c++) {
+          const line = Array.from({ length: R }, (_, r) =>
+            known[r][c] === -1 ? 2 : known[r][c],
+          );
+          const opts = lineOptions(line, colClue[c]);
+          if (!opts.length) return false;
+          for (let r = 0; r < R; r++) {
+            const vals = new Set(opts.map((o) => o[r]));
+            if (vals.size === 1 && known[r][c] === -1) {
+              known[r][c] = opts[0][r];
+              changed = true;
+            }
+          }
+        }
+      }
+      return (
+        known.every((row) => row.every((v) => v !== -1)) &&
+        known.every((row, r) =>
+          row.every((v, c) => (v === 1) === (grid[r][c] === 1)),
+        )
+      );
+    });
+  })(),
+);
+check(
+  "every Glyph Fifteen deal passes the sliding-parity solvability rule",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-fifteen.js"),
+      "utf8",
+    );
+    const start = src.indexOf("function ftShuffle");
+    const end = src.indexOf("App.glyphFifteenShuffle");
+    const shuffle = new Function(
+      src.slice(start, end) + "\nreturn ftShuffle;",
+    )();
+    const configs = [
+      [3, 60], [3, 130], [3, 220], [4, 300], [4, 440], [4, 600],
+    ];
+    return configs.every(([n, walk]) => {
+      for (let trial = 0; trial < 12; trial += 1) {
+        const deal = shuffle(n, walk);
+        const arr = deal.board.filter((v) => v !== 0);
+        let inv = 0;
+        for (let i = 0; i < arr.length; i++) {
+          for (let j = i + 1; j < arr.length; j++) {
+            if (arr[i] > arr[j]) inv++;
+          }
+        }
+        if (n % 2 === 1) {
+          if (inv % 2 !== 0) return false;
+        } else {
+          const rowFromBottom = n - Math.floor(deal.board.indexOf(0) / n);
+          if ((inv + rowFromBottom) % 2 !== 1) return false;
+        }
+      }
+      return true;
+    });
+  })(),
+);
+check(
+  "every Glyph Leap ascent keeps its gaps inside the bounce apex",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-leap.js"),
+      "utf8",
+    );
+    const bounce = Number(/var leapBounce = (\d+);/.exec(src)[1]);
+    const gravity = Number(/var leapGravity = (\d+);/.exec(src)[1]);
+    const apex = (bounce * bounce) / (2 * gravity);
+    const block = /var leapLevels = \[([\s\S]*?)\n  \];/.exec(src);
+    if (!block) return false;
+    const gapMaxes = Array.from(block[1].matchAll(/gapMax:\s*(\d+)/g)).map((m) =>
+      Number(m[1]),
+    );
+    const goals = Array.from(block[1].matchAll(/goal:\s*(\d+)/g)).map((m) =>
+      Number(m[1]),
+    );
+    if (gapMaxes.length !== 10 || goals.length !== 10) return false;
+    return (
+      gapMaxes.every((g) => g <= apex - 4) &&
+      goals.every((g, i) => i === 0 || g > goals[i - 1])
+    );
+  })(),
+);
+check(
+  "every Bubble Ink spring asks for a score the wall can actually pay",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-bubble-ink.js"),
+      "utf8",
+    );
+    const block = /var bubLevels = \[([\s\S]*?)\n  \];/.exec(src);
+    if (!block) return false;
+    const rows = Array.from(block[1].matchAll(/rows:\s*(\d+)/g)).map((m) => Number(m[1]));
+    const targets = Array.from(block[1].matchAll(/target:\s*(\d+)/g)).map((m) => Number(m[1]));
+    if (rows.length !== 12 || targets.length !== 12) return false;
+    return rows.every((rowCount, i) => {
+      const bubbles = rowCount * 14;
+      return targets[i] * 1.4 <= bubbles * 12 && targets[i] >= 300;
+    });
+  })(),
+);
+[
+  "tabGlyphSketch", "skLevelSelectLabel", "skL1", "skL6",
+  "skFieldLabel", "skPrompt", "skReady", "skPaused", "skCleared",
+  "skNextBoard", "skCampaignDone", "skHint", "logGlyphSketch",
+  "tabGlyphFifteen", "ftLevelSelectLabel", "ftL1", "ftL6",
+  "ftFieldLabel", "ftPrompt", "ftReady", "ftPaused", "ftCleared",
+  "ftNextBoard", "ftCampaignDone", "ftHint", "logGlyphFifteen",
+  "leapL7", "leapL8", "inkL9", "inkL10", "bubL9", "bubL10",
+  "pegL7", "pegL8", "raidL7", "raidL8",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+
+console.log("\n== 5r. Glyph Sudoku and Glyph Reversi ==");
+const BATCH_TWELVE = [
+  { name: "glyphSudoku", tab: "gameTabGlyphSudoku", panel: "gamePanelGlyphSudoku", file: "game-glyph-sudoku" },
+  { name: "glyphReversi", tab: "gameTabGlyphReversi", panel: "gamePanelGlyphReversi", file: "game-glyph-reversi" },
+];
+BATCH_TWELVE.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 7 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\.addEventListener\\("click"`).test(appJs),
+  );
+});
+check(
+  "the two batch-twelve games are reset by the shell",
+  /App\.quietResetGlyphSudoku = null/.test(appJs) &&
+    /App\.quietResetGlyphReversi = null/.test(appJs) &&
+    countOccurrences(appJs, "quietResetGlyphSudoku()") === 2 &&
+    countOccurrences(appJs, "quietResetGlyphReversi()") === 2,
+);
+check(
+  "every Glyph Sudoku deal has a valid solution and exactly one answer",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-sudoku.js"),
+      "utf8",
+    );
+    const start = src.indexOf("function sudValid");
+    const end = src.indexOf("App.glyphSudokuGenerate");
+    const api = new Function(
+      src.slice(start, end) + "\nreturn { sudGenerate, sudValid, sudCountSolutions };",
+    )();
+    const configs = [
+      [4, 2, 2, 8], [4, 2, 2, 6], [6, 2, 3, 14], [6, 2, 3, 12], [9, 3, 3, 34], [9, 3, 3, 30],
+    ];
+    return configs.every(([size, bw, bh, clues]) => {
+      for (let trial = 0; trial < 3; trial += 1) {
+        const deal = api.sudGenerate(size, bw, bh, clues);
+        const rows = [];
+        for (let r = 0; r < size; r++) {
+          rows.push(deal.solution.slice(r * size, r * size + size));
+        }
+        if (!api.sudValid(rows, size, bw, bh)) return false;
+        if (api.sudCountSolutions(deal.puzzle.slice(), size, bw, bh, 2) !== 1) {
+          return false;
+        }
+      }
+      return true;
+    });
+  })(),
+);
+check(
+  "every Glyph Reversi rank finishes AI-vs-AI games without illegal moves",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-reversi.js"),
+      "utf8",
+    );
+    const start = src.indexOf("var REV_N = 8;");
+    const end = src.indexOf("App.glyphReversiMoves");
+    const api = new Function(
+      src.slice(start, end) +
+        "\nreturn { revMoves, revApply, revPick, revScore };",
+    )();
+    const startBoard = [];
+    for (let i = 0; i < 64; i++) startBoard.push(0);
+    startBoard[27] = 2;
+    startBoard[28] = 1;
+    startBoard[35] = 1;
+    startBoard[36] = 2;
+    const opening = api.revMoves(startBoard, 1).sort((a, b) => a - b).join(",");
+    if (opening !== "19,26,37,44") return false;
+    const depths = [0, 0, 1, 1, 2, 3];
+    return depths.every((depth, rank) => {
+      for (let game = 0; game < 6; game += 1) {
+        let board = startBoard.slice();
+        let player = 1;
+        let passes = 0;
+        let guard = 0;
+        while (guard++ < 200) {
+          const moves = api.revMoves(board, player);
+          if (!moves.length) {
+            passes++;
+            if (passes >= 2) break;
+            player = player === 1 ? 2 : 1;
+            continue;
+          }
+          passes = 0;
+          let index;
+          if (player === 1) {
+            let best = -1;
+            let bestIndex = -1;
+            for (const m of moves) {
+              const score = api.revScore(api.revApply(board, 1, m).board).player;
+              if (score > best) {
+                best = score;
+                bestIndex = m;
+              }
+            }
+            index = bestIndex;
+          } else {
+            index = api.revPick(board, { noise: 0, depth });
+            if (index === -1 || !moves.includes(index)) return false;
+          }
+          board = api.revApply(board, player, index).board;
+          player = player === 1 ? 2 : 1;
+        }
+        const score = api.revScore(board);
+        if (score.player + score.ai < 9) return false;
+      }
+      return true;
+    });
+  })(),
+);
+[
+  "tabGlyphSudoku", "sudLevelSelectLabel", "sudL1", "sudL6",
+  "sudPadLabel", "sudFieldLabel", "sudPrompt", "sudReady", "sudPaused",
+  "sudCleared", "sudNextGrid", "sudCampaignDone", "sudHint",
+  "logGlyphSudoku",
+  "tabGlyphReversi", "revLevelSelectLabel", "revL1", "revL6",
+  "revYouLabel", "revAiLabel", "revFieldLabel", "revPrompt", "revReady",
+  "revPaused", "revWin", "revLoss", "revDraw", "revRetry",
+  "revNextRank", "revCampaignDone", "revYouPassed", "revAiPassed",
+  "revHint", "logGlyphReversi",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+console.log("\n== 5s. Glyph Glide and Glyph Four ==");
+const BATCH_THIRTEEN = [
+  { name: "glyphGlide", tab: "gameTabGlyphGlide", panel: "gamePanelGlyphGlide", file: "game-glyph-glide" },
+  { name: "glyphFour", tab: "gameTabGlyphFour", panel: "gamePanelGlyphFour", file: "game-glyph-four" },
+];
+BATCH_THIRTEEN.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 7 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\.addEventListener\\("click"`).test(appJs),
+  );
+});
+check(
+  "the two batch-thirteen games are reset by the shell",
+  /App\.quietResetGlyphGlide = null/.test(appJs) &&
+    /App\.quietResetGlyphFour = null/.test(appJs) &&
+    countOccurrences(appJs, "quietResetGlyphGlide()") === 2 &&
+    countOccurrences(appJs, "quietResetGlyphFour()") === 2,
+);
+check(
+  "every Glyph Glide deal is solvable at the par the generator quotes",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-glide.js"),
+      "utf8",
+    );
+    const start = src.indexOf("var GLIDE_DIRS");
+    const end = src.indexOf("App.glyphGlideGenerate");
+    const api = new Function(
+      src.slice(start, end) + "\nreturn { glideGenerate: glideGenerate, glideSolve: glideSolve };",
+    )();
+    const configs = [
+      [8, 6, 0, 3, 5], [8, 6, 1, 4, 7], [9, 7, 2, 5, 9],
+      [9, 7, 2, 7, 11], [10, 8, 3, 7, 15], [10, 8, 3, 8, 18],
+      [11, 9, 4, 9, 19], [12, 9, 5, 10, 21],
+    ];
+    return configs.every(([w, h, stars, minPar, maxPar]) => {
+      for (let trial = 0; trial < 8; trial += 1) {
+        const deal = api.glideGenerate(w, h, stars, minPar, maxPar);
+        if (!deal) return false;
+        const solved = api.glideSolve(
+          deal.wall, w, h, deal.start, deal.goal, deal.stars,
+        );
+        /* The solver must confirm the quoted par on every deal, and the
+         * graceful fallback must never quote a trivial one-slide board. */
+        if (solved !== deal.par || solved < 2) {
+          return false;
+        }
+      }
+      return true;
+    });
+  })(),
+);
+check(
+  "every Glyph Four rank plays legal drops and finishes AI-vs-AI games",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-four.js"),
+      "utf8",
+    );
+    const start = src.indexOf("var C4_W = 7;");
+    const end = src.indexOf("App.glyphFourDropRow");
+    const api = new Function(
+      src.slice(start, end) +
+        "\nreturn { c4DropRow, c4WinLine, c4Pick, c4Full };",
+    )();
+    const depths = [0, 1, 2, 3, 4, 5];
+    const noises = [0.55, 0.3, 0.15, 0.05, 0, 0];
+    return depths.every((depth, rank) => {
+      for (let game = 0; game < 5; game += 1) {
+        let board = [];
+        for (let i = 0; i < 42; i++) board.push(0);
+        let player = 1;
+        let guard = 0;
+        while (guard++ < 60) {
+          if (api.c4Full(board)) break;
+          const col = api.c4Pick(board, {
+            depth,
+            noise: player === 2 ? noises[rank] : 0,
+          });
+          if (col === -1) break;
+          const row = api.c4DropRow(board, col);
+          if (row === -1) return false;
+          board[row * 7 + col] = player;
+          if (api.c4WinLine(board, player)) break;
+          player = player === 1 ? 2 : 1;
+        }
+      }
+      return true;
+    });
+  })(),
+);
+check(
+  "Glyph Four's AI never drops into a full column under repeated probes",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-four.js"),
+      "utf8",
+    );
+    const start = src.indexOf("var C4_W = 7;");
+    const end = src.indexOf("App.glyphFourDropRow");
+    const api = new Function(
+      src.slice(start, end) + "\nreturn { c4Pick };",
+    )();
+    const board = [];
+    for (let i = 0; i < 42; i++) board.push(i % 7 === 3 ? 1 : 0);
+    for (let trial = 0; trial < 40; trial += 1) {
+      const col = api.c4Pick(board, { depth: 3, noise: 0.5 });
+      if (col === 3) return false;
+    }
+    return true;
+  })(),
+);
+[
+  "tabGlyphGlide", "glLevelSelectLabel", "glL1", "glL6",
+  "glFieldLabel", "glPrompt", "glReady", "glPaused", "glCleared",
+  "glNextRink", "glCampaignDone", "glHint", "logGlyphGlide",
+  "tabGlyphFour", "c4LevelSelectLabel", "c4L1", "c4L6",
+  "c4FieldLabel", "c4Prompt", "c4Ready", "c4Paused", "c4Win", "c4Loss",
+  "c4Draw", "c4Retry", "c4NextBoard", "c4CampaignDone", "c4Hint",
+  "logGlyphFour",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
+console.log("\n== 5t. per-game visual guides ==");
+const guideSource = fs
+  .readFileSync(path.join(root, "assets", "app", "game-guide.js"), "utf8")
+  .replace(/^﻿/, "");
+const guidedPanels = Array.from(
+  guideSource.matchAll(/panel:\s*"([A-Za-z0-9]+)"/g),
+).map((m) => m[1]);
+check(
+  "the guide data covers every one of the 43 drawer panels",
+  guidedPanels.length === 43 && new Set(guidedPanels).size === 43,
+  "found " + guidedPanels.length + " unique " + new Set(guidedPanels).size,
+);
+check(
+  "every panel id referenced by the guide exists in all four pages",
+  PAGES.every((page) =>
+    guidedPanels.every((panel) => read(page).includes('id="' + panel + '"')),
+  ),
+);
+check(
+  "every guide entry carries a diagram and both step languages",
+  (() => {
+    const entries = guideSource.split('panel: "').slice(1);
+    return (
+      entries.length === 43 &&
+      entries.every(
+        (entry) =>
+          entry.includes("svg:") &&
+          entry.includes("en: [") &&
+          entry.includes("zh: [") &&
+          (entry.match(/svg:/g) || []).length === 1,
+      )
+    );
+  })(),
+);
+check(
+  "the guide renderer is wired into the shared bootstrap",
+  /initGameGuides\(\);/.test(appJs) &&
+    /App\.initGameGuides = initGameGuides;/.test(guideSource),
+);
+check(
+  "the guide toggle exists in both languages",
+  countOccurrences(appJs, '"gameGuideToggle":') === 2,
+  String(countOccurrences(appJs, '"gameGuideToggle":')),
+);
+check(
+  "the guide panel is styled",
+  stylesCss.includes(".game-guide") &&
+    stylesCss.includes(".game-guide-art svg") &&
+    stylesCss.includes(".game-guide-body ol"),
+);
+
+check(
+  "every guide entry carries at least five labeled steps in both languages",
+  (() => {
+    const entries = guideSource.split('panel: "').slice(1);
+    const stepsOf = (chunk, lang) => {
+      const m = new RegExp(lang + ": \\[" + "([\\s\\S]*?)\\],").exec(chunk);
+      if (!m) return 0;
+      return (m[1].match(/"/g) || []).length / 2;
+    };
+    return (
+      entries.length === 43 &&
+      entries.every(
+        (chunk) =>
+          stepsOf(chunk, "en") >= 5 &&
+          stepsOf(chunk, "zh") >= 5,
+      )
+    );
+  })(),
+);
+console.log("\n== 5u. Glyph Tower and Glyph Fleet ==");
+const BATCH_FIFTEEN = [
+  { name: "glyphTower", tab: "gameTabGlyphTower", panel: "gamePanelGlyphTower", file: "game-glyph-tower" },
+  { name: "glyphFleet", tab: "gameTabGlyphFleet", panel: "gamePanelGlyphFleet", file: "game-glyph-fleet" },
+];
+BATCH_FIFTEEN.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = fs
+    .readFileSync(path.join(root, "assets", "app", game.file + ".js"), "utf8")
+    .replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 7 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\.addEventListener\\("click"`).test(appJs),
+  );
+});
+check(
+  "the two batch-fifteen games are reset by the shell",
+  /App\.quietResetGlyphTower = null/.test(appJs) &&
+    /App\.quietResetGlyphFleet = null/.test(appJs) &&
+    countOccurrences(appJs, "quietResetGlyphTower()") === 2 &&
+    countOccurrences(appJs, "quietResetGlyphFleet()") === 2,
+);
+check(
+  "Glyph Tower star thresholds all sit above the 2^n - 1 optimum",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-tower.js"),
+      "utf8",
+    );
+    const minMoves = (n) => Math.pow(2, n) - 1;
+    const block = /var towLevels = \[([\s\S]*?)\n  \];/.exec(src);
+    if (!block) return false;
+    const discs = Array.from(block[1].matchAll(/discs:\s*(\d+)/g)).map((m) =>
+      Number(m[1]),
+    );
+    const thresholds = Array.from(block[1].matchAll(/starMoves:\s*\[(\d+),\s*(\d+),\s*(\d+)\]/g)).map(
+      (m) => [Number(m[1]), Number(m[2]), Number(m[3])],
+    );
+    if (discs.length !== 5 || thresholds.length !== 5) return false;
+    return discs.every((n, i) => {
+      const opt = minMoves(n);
+      return (
+        thresholds[i][0] >= opt &&
+        thresholds[i][1] > thresholds[i][0] &&
+        thresholds[i][2] > thresholds[i][1]
+      );
+    });
+  })(),
+);
+check(
+  "every Glyph Fleet placement is legal and every admiral duel terminates legally",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-fleet.js"),
+      "utf8",
+    );
+    const start = src.indexOf("var FLT_N = 8;");
+    const end = src.indexOf("App.glyphFleetPlace");
+    const api = new Function(
+      src.slice(start, end) +
+        "\nreturn { glyphFleetPlace: fltPlace, glyphFleetAiPick: fltAiPick, glyphFleetQueue: fltQueueAround };",
+    )();
+    for (let trial = 0; trial < 20; trial += 1) {
+      const fleet = api.glyphFleetPlace();
+      if (Object.keys(fleet.occupied).length !== 12) return false;
+      if (fleet.ships.length !== 4) return false;
+      const total = fleet.ships.reduce((sum, s) => sum + s.cells.length, 0);
+      if (total !== 12) return false;
+    }
+    const skills = [0, 1, 2, 3, 4, 5];
+    return skills.every((skill) => {
+      for (let game = 0; game < 8; game += 1) {
+        const A = api.glyphFleetPlace();
+        const B = api.glyphFleetPlace();
+        const boardA = [];
+        const boardB = [];
+        for (let i = 0; i < 64; i++) {
+          boardA.push(0);
+          boardB.push(0);
+        }
+        const stA = { queue: [] };
+        const stB = { queue: [] };
+        let turn = 0;
+        let guard = 0;
+        const alive = (F) => F.ships.every((s) => s.hits < s.size);
+        while (guard++ < 300 && alive(A) && alive(B)) {
+          const shooterA = turn % 2 === 0;
+          const board = shooterA ? boardB : boardA;
+          const target = shooterA ? B : A;
+          const state = shooterA ? stA : stB;
+          const index = api.glyphFleetAiPick(
+            board,
+            state,
+            shooterA ? 5 : skill,
+          );
+          if (index === -1) break;
+          if (board[index] !== 0) return false;
+          board[index] = target.occupied[index] ? 2 : 1;
+          if (target.occupied[index]) {
+            target.ships.forEach((s) => {
+              if (s.cells.includes(index)) s.hits += 1;
+            });
+            api.glyphFleetQueue(index, state);
+          }
+          turn += 1;
+        }
+        if (!alive(A) && !alive(B)) return false;
+      }
+      return true;
+    });
+  })(),
+);
+[
+  "tabGlyphTower", "towLevelSelectLabel", "towL1", "towL5",
+  "towFieldLabel", "towPrompt", "towReady", "towPaused", "towCleared",
+  "towNextTower", "towCampaignDone", "towHint", "logGlyphTower",
+  "tabGlyphFleet", "fltLevelSelectLabel", "fltL1", "fltL6",
+  "fltFieldLabel", "fltPrompt", "fltReady", "fltPaused", "fltHit",
+  "fltMiss", "fltAiHit", "fltTurn", "fltWin", "fltLoss", "fltRetry",
+  "fltNextFleet", "fltCampaignDone", "fltHint", "logGlyphFleet",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
 console.log("\n== summary ==");
 console.log(`passed: ${passed}`);
 console.log(`failed: ${failures.length}`);

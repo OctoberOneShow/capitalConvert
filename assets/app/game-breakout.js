@@ -59,6 +59,8 @@
     { id: "x3", world: 2, labelKey: "brkL13", speed: 2.7, rows: ["...x....", "........", "..xxx...", "........", "....x..."] },
     { id: "x4", world: 2, labelKey: "brkL14", speed: 2.75, rows: ["g.x.x.g.", "x.g.g.g.x", "g.x.n.x.g", "x.g.g.g.x", "g.x.x.g."] },
     { id: "x5", world: 2, labelKey: "brkL15", speed: 2.85, rows: ["t.gx.xgt", "g.x..x.g", "gx.nn.xg", "g.x..x.g", "tgx.x.gt"] },
+    { id: "x6", world: 2, labelKey: "brkL16", speed: 2.9, rows: ["x..n..x.", ".n.g.g.n", "x..t..x.", ".g.n.g.n", "x..n..x."] },
+    { id: "x7", world: 2, labelKey: "brkL17", speed: 2.95, rows: ["nnxnnxnn", "........", "gxnnnxng", "........", "nxn..nxn"] },
   ];
 
   function initBreakoutGame() {

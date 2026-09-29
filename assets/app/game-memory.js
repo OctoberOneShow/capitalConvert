@@ -19,6 +19,8 @@
     { pairs: 6, cols: 4 },
     { pairs: 8, cols: 4 },
     { pairs: 10, cols: 5 },
+    { pairs: 11, cols: 6 },
+    { pairs: 12, cols: 6 },
   ];
   /* Glyph pool: the first six are the original board's glyphs, the rest widen
    * the pool so the largest rung has enough distinct faces. */

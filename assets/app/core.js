@@ -16,6 +16,30 @@
   App.quietResetBreakout = null;
   App.quietResetSnake = null;
   App.quietResetMines = null;
+  App.quietResetGlyphBlocks = null;
+  App.quietResetInkBeat = null;
+  App.quietResetBubbleInk = null;
+  App.quietResetGlyphEcho = null;
+  App.quietResetInkSlash = null;
+  App.quietResetPegSplash = null;
+  App.quietResetGlyphRaid = null;
+  App.quietResetGlyphLeap = null;
+  App.quietResetAuroraFlow = null;
+  App.quietResetCometGolf = null;
+  App.quietResetPrismPath = null;
+  App.quietResetStarfall = null;
+  App.quietResetInkSort = null;
+  App.quietResetGlyphCrossing = null;
+  App.quietResetGlyphPusher = null;
+  App.quietResetGlyphNet = null;
+  App.quietResetGlyphSketch = null;
+  App.quietResetGlyphFifteen = null;
+  App.quietResetGlyphSudoku = null;
+  App.quietResetGlyphReversi = null;
+  App.quietResetGlyphGlide = null;
+  App.quietResetGlyphFour = null;
+  App.quietResetGlyphTower = null;
+  App.quietResetGlyphFleet = null;
   function getFileName(path) {
     try {
       return path.split("/").pop().split("\\").pop();

@@ -17,6 +17,8 @@
     { presses: 8 },
     { presses: 11 },
     { presses: 14 },
+    { presses: 16 },
+    { presses: 19 },
   ];
 
   function initLightsGame() {

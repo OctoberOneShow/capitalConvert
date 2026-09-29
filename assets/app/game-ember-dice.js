@@ -27,6 +27,8 @@
     { id: "t3", labelKey: "diceTable3", ruleKey: "diceRule3", target: 70, burn: [1], tax: 5, pairs: false },
     { id: "t4", labelKey: "diceTable4", ruleKey: "diceRule4", target: 90, burn: [1], tax: 0, pairs: true },
     { id: "t5", labelKey: "diceTable5", ruleKey: "diceRule5", target: 120, burn: [1, 6], tax: 5, pairs: true },
+    { id: "t6", labelKey: "diceTable6", ruleKey: "diceRule6", target: 140, burn: [1], tax: 5, pairs: true },
+    { id: "t7", labelKey: "diceTable7", ruleKey: "diceRule7", target: 160, burn: [1, 6], tax: 5, pairs: true },
   ];
 
   function initEmberDiceGame() {

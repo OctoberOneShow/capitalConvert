@@ -376,6 +376,14 @@ body.game-modal-open {
     grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.memory-grid[data-cols="6"] {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.memory-grid[data-cols="6"] .memory-card {
+    font-size: clamp(18px, 4.6vw, 30px);
+}
+
 .memory-grid[data-cols="5"] {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 6px;
@@ -2513,6 +2521,406 @@ button.ghost:hover {
     }
 }
 
+/* Glyph Blocks: the falling-glyph stacker. A portrait well with the
+ * next-piece preview and the touch controls stacked beside it. */
+.blk-stage {
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.blk-well {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.blk-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.85);
+    outline: none;
+    touch-action: none;
+}
+
+[data-theme="light"] .blk-canvas {
+    background: rgba(248, 250, 252, 0.95);
+}
+
+.blk-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.blk-side {
+    flex: 0 0 96px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.blk-next-label {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.blk-next {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.6);
+}
+
+[data-theme="light"] .blk-next {
+    background: rgba(241, 245, 249, 0.9);
+}
+
+.blk-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: auto;
+}
+
+.blk-control {
+    min-height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    font-weight: 800;
+    font-size: 0.82rem;
+    touch-action: manipulation;
+}
+
+.blk-control:hover {
+    border-color: rgba(255, 255, 255, 0.22);
+}
+
+.blk-control:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .blk-control {
+    background: rgba(248, 250, 252, 0.9);
+}
+
+/* Ink Cascade: an 8x8 grid of ink drops; one colour and one glyph each. */
+.ink-board {
+    display: grid;
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    gap: 5px;
+    margin-top: 12px;
+    touch-action: manipulation;
+}
+
+.ink-tile {
+    aspect-ratio: 1;
+    min-width: 0;
+    padding: 0;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    font-size: clamp(0.68rem, 2.6vw, 1.02rem);
+    line-height: 1;
+    color: #101426;
+    cursor: pointer;
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.ink-c0 { background: #22d3ee; }
+.ink-c1 { background: #fbbf24; }
+.ink-c2 { background: #f472b6; }
+.ink-c3 { background: #a3e635; }
+.ink-c4 { background: #a78bfa; }
+.ink-c5 { background: #e2e8f0; }
+
+.ink-tile:hover {
+    filter: brightness(1.08);
+}
+
+.ink-tile:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.ink-tile.is-selected {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.9);
+    transform: scale(1.05);
+}
+
+.ink-tile.is-popping {
+    animation: ink-pop 0.19s ease forwards;
+}
+
+@keyframes ink-pop {
+    to {
+        transform: scale(0.2);
+        opacity: 0.25;
+    }
+}
+
+.ink-tile.is-shake {
+    animation: ink-shake 0.28s ease;
+}
+
+@keyframes ink-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+}
+
+[data-theme="light"] .ink-tile {
+    border-color: rgba(15, 23, 42, 0.18);
+}
+
+[data-theme="light"] .ink-tile.is-selected {
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.75);
+}
+
+[data-motion="off"] .ink-tile.is-popping,
+[data-motion="off"] .ink-tile.is-shake {
+    animation: none !important;
+}
+
+/* Ink Beat: the falling-note stage and the four drum pads. */
+.beat-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.85);
+    outline: none;
+    touch-action: none;
+}
+
+[data-theme="light"] .beat-canvas {
+    background: rgba(248, 250, 252, 0.95);
+}
+
+.beat-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.beat-pads {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.beat-pad {
+    min-height: 56px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: #101426;
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 800;
+    font-size: 1rem;
+    touch-action: manipulation;
+    transition: transform 0.08s ease, filter 0.08s ease;
+}
+
+.beat-pad:hover {
+    filter: brightness(1.08);
+}
+
+.beat-pad:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+.beat-pad:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.beat-pad0 { background: #22d3ee; }
+.beat-pad1 { background: #fbbf24; }
+.beat-pad2 { background: #f472b6; }
+.beat-pad3 { background: #a3e635; }
+
+[data-theme="light"] .beat-pad {
+    border-color: rgba(15, 23, 42, 0.18);
+}
+
+@media (max-width: 480px) {
+    .blk-side {
+        flex-basis: 82px;
+    }
+
+    .beat-pad {
+        min-height: 48px;
+    }
+}
+
+/* Bubble Ink: the bubble-shooter well shares the canvas treatment of the
+ * other canvas games; the shooter, aim dots and deadline live on the canvas. */
+.bub-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.85);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+[data-theme="light"] .bub-canvas {
+    background: rgba(248, 250, 252, 0.95);
+}
+
+.bub-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+/* Glyph Echo: a two-by-two board of singing pads. */
+.echo-board {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.echo-pad {
+    aspect-ratio: 5 / 3;
+    min-height: 56px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    font-size: 1.5rem;
+    line-height: 1;
+    color: #101426;
+    cursor: pointer;
+    touch-action: manipulation;
+    transition: transform 0.1s ease, filter 0.1s ease;
+}
+
+.echo-pad:hover:enabled {
+    filter: brightness(1.1);
+}
+
+.echo-pad:active:enabled {
+    transform: scale(0.97);
+}
+
+.echo-pad:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.echo-pad:disabled {
+    cursor: default;
+}
+
+.echo-pad0 { background: #22d3ee; }
+.echo-pad1 { background: #fbbf24; }
+.echo-pad2 { background: #f472b6; }
+.echo-pad3 { background: #a3e635; }
+
+.echo-pad.is-lit {
+    filter: brightness(1.45);
+    transform: scale(1.04);
+    box-shadow: 0 0 18px rgba(255, 255, 255, 0.35);
+}
+
+.echo-pad.is-wrong {
+    filter: saturate(0.4) brightness(0.7);
+    animation: echo-shake 0.3s ease;
+}
+
+@keyframes echo-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-4px); }
+    75% { transform: translateX(4px); }
+}
+
+[data-theme="light"] .echo-pad {
+    border-color: rgba(15, 23, 42, 0.18);
+}
+
+[data-motion="off"] .echo-pad.is-wrong {
+    animation: none !important;
+}
+
+[data-motion="off"] .echo-pad.is-lit {
+    transition: none;
+    transform: none;
+}
+
+/* Ink Slash: the cutting sky, same canvas treatment; the trail and the
+ * splatter are drawn on the canvas. */
+.slash-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.85);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+[data-theme="light"] .slash-canvas {
+    background: rgba(248, 250, 252, 0.95);
+}
+
+.slash-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+/* Peg Splash, Glyph Raid and Glyph Leap share the standard canvas
+ * treatment; the boards themselves live entirely on their canvases. */
+.peg-canvas,
+.raid-canvas,
+.leap-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.85);
+    outline: none;
+    touch-action: none;
+}
+
+.peg-canvas,
+.leap-canvas {
+    cursor: crosshair;
+}
+
+[data-theme="light"] .peg-canvas,
+[data-theme="light"] .raid-canvas,
+[data-theme="light"] .leap-canvas {
+    background: rgba(248, 250, 252, 0.95);
+}
+
+.peg-canvas:focus-visible,
+.raid-canvas:focus-visible,
+.leap-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -2539,4 +2947,277 @@ button.ghost:hover {
     .click-ring {
         display: none !important;
     }
+}
+
+/* Aurora Flow and Comet Golf keep a night-sky canvas in both themes: the
+ * glowing ribbons and the starfield only read on dark. */
+.auro-canvas,
+.cgf-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background:
+        radial-gradient(120% 90% at 50% 110%, rgba(167, 139, 250, 0.16), transparent 60%),
+        rgba(8, 12, 20, 0.92);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.auro-canvas:focus-visible,
+.cgf-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+/* Prism Path and Starfall Lander share the night-sky canvas treatment;
+ * their glow effects only read on a dark board. */
+.pris-canvas,
+.lant-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background:
+        radial-gradient(120% 90% at 50% 110%, rgba(255, 107, 53, 0.12), transparent 60%),
+        rgba(8, 12, 20, 0.92);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.pris-canvas:focus-visible,
+.lant-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+/* Ink Sort and Glyph Crossing keep the night-sky canvas treatment. */
+.sor-canvas,
+.cro-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background:
+        radial-gradient(120% 90% at 50% 110%, rgba(74, 222, 128, 0.1), transparent 60%),
+        rgba(8, 12, 20, 0.92);
+    outline: none;
+    touch-action: none;
+    cursor: pointer;
+}
+
+.sor-canvas:focus-visible,
+.cro-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+/* Glyph Pusher and Glyph Net share the night-sky canvas treatment. */
+.sok-canvas,
+.net-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background:
+        radial-gradient(120% 90% at 50% 110%, rgba(251, 191, 36, 0.1), transparent 60%),
+        rgba(8, 12, 20, 0.92);
+    outline: none;
+    touch-action: none;
+    cursor: pointer;
+}
+
+.sok-canvas:focus-visible,
+.net-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+/* Glyph Sketch and Glyph Fifteen share the night-sky canvas treatment. */
+.sk-canvas,
+.ft-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background:
+        radial-gradient(120% 90% at 50% 110%, rgba(34, 211, 238, 0.12), transparent 60%),
+        rgba(8, 12, 20, 0.92);
+    outline: none;
+    touch-action: none;
+    cursor: pointer;
+}
+
+.sk-canvas:focus-visible,
+.ft-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+/* Glyph Sudoku and Glyph Reversi share the night-sky canvas treatment;
+ * the sudoku number pad reuses the shared button styles. */
+.sud-canvas,
+.rev-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background:
+        radial-gradient(120% 90% at 50% 110%, rgba(0, 242, 255, 0.1), transparent 60%),
+        rgba(8, 12, 20, 0.92);
+    outline: none;
+    touch-action: manipulation;
+    cursor: pointer;
+}
+
+.sud-canvas:focus-visible,
+.rev-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.sud-pad {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.sud-num {
+    min-width: 44px;
+    min-height: 44px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(30, 41, 59, 0.85);
+    color: inherit;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.sud-num:hover {
+    border-color: rgba(0, 242, 255, 0.6);
+}
+
+.sud-num-erase {
+    min-width: 52px;
+}
+
+/* Glyph Glide and Glyph Four share the night-sky canvas treatment. */
+.gl-canvas,
+.c4-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background:
+        radial-gradient(120% 90% at 50% 110%, rgba(34, 211, 238, 0.12), transparent 60%),
+        rgba(8, 12, 20, 0.92);
+    outline: none;
+    touch-action: manipulation;
+    cursor: pointer;
+}
+
+.gl-canvas:focus-visible,
+.c4-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+/* Per-game visual how-to: collapsible guide with a mechanic diagram. */
+.game-guide {
+    margin-top: 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: rgba(30, 41, 59, 0.45);
+}
+
+.game-guide summary {
+    cursor: pointer;
+    padding: 9px 12px;
+    font-weight: 600;
+    font-size: 0.92em;
+    color: rgba(226, 232, 240, 0.9);
+    user-select: none;
+}
+
+.game-guide summary:hover {
+    color: #22d3ee;
+}
+
+.game-guide-body {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 4px 12px 12px;
+}
+
+.game-guide-art {
+    flex: 0 0 120px;
+}
+
+.game-guide-art svg {
+    display: block;
+    width: 120px;
+    height: 76px;
+    border-radius: 8px;
+}
+
+.game-guide-body ol {
+    margin: 0;
+    padding-left: 18px;
+    display: grid;
+    gap: 6px;
+    font-size: 0.9em;
+    line-height: 1.45;
+    color: rgba(226, 232, 240, 0.85);
+}
+
+.game-guide-body li strong {
+    color: #22d3ee;
+    font-weight: 600;
+}
+
+[data-theme="light"] .game-guide-body li strong {
+    color: #00708a;
+}
+
+/* Glyph Tower and Glyph Fleet share the night-sky canvas treatment. */
+.tow-canvas,
+.flt-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background:
+        radial-gradient(120% 90% at 50% 110%, rgba(163, 230, 53, 0.1), transparent 60%),
+        rgba(8, 12, 20, 0.92);
+    outline: none;
+    touch-action: manipulation;
+    cursor: pointer;
+}
+
+.tow-canvas:focus-visible,
+.flt-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
 }
