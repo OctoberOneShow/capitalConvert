@@ -1,0 +1,2220 @@
+== 1/2. page structure and asset versions ==
+PASS  all 110 app modules on the manifest exist on disk
+PASS  index.html: exactly 49 game-tab
+PASS  index.html: exactly 49 game-panel
+PASS  index.html: stylesheets requested as ?v=58
+PASS  index.html: scripts requested as ?v=58
+PASS  index.html: every asset token is ?v=58 with no stale versions left
+PASS  index.html: all split assets referenced (3 css + 110 js)
+PASS  index.html: all asset references are ?v=58
+PASS  index.html: asset lines are all versioned split modules
+PASS  english_filter.html: exactly 49 game-tab
+PASS  english_filter.html: exactly 49 game-panel
+PASS  english_filter.html: stylesheets requested as ?v=58
+PASS  english_filter.html: scripts requested as ?v=58
+PASS  english_filter.html: every asset token is ?v=58 with no stale versions left
+PASS  english_filter.html: all split assets referenced (3 css + 110 js)
+PASS  english_filter.html: all asset references are ?v=58
+PASS  english_filter.html: asset lines are all versioned split modules
+PASS  chinese_punctuation.html: exactly 49 game-tab
+PASS  chinese_punctuation.html: exactly 49 game-panel
+PASS  chinese_punctuation.html: stylesheets requested as ?v=58
+PASS  chinese_punctuation.html: scripts requested as ?v=58
+PASS  chinese_punctuation.html: every asset token is ?v=58 with no stale versions left
+PASS  chinese_punctuation.html: all split assets referenced (3 css + 110 js)
+PASS  chinese_punctuation.html: all asset references are ?v=58
+PASS  chinese_punctuation.html: asset lines are all versioned split modules
+PASS  words_replacing.html: exactly 49 game-tab
+PASS  words_replacing.html: exactly 49 game-panel
+PASS  words_replacing.html: stylesheets requested as ?v=58
+PASS  words_replacing.html: scripts requested as ?v=58
+PASS  words_replacing.html: every asset token is ?v=58 with no stale versions left
+PASS  words_replacing.html: all split assets referenced (3 css + 110 js)
+PASS  words_replacing.html: all asset references are ?v=58
+PASS  words_replacing.html: asset lines are all versioned split modules
+
+== 4. pet markup stays out of the HTML files ==
+PASS  index.html: no injected pet markup in the page
+PASS  english_filter.html: no injected pet markup in the page
+PASS  chinese_punctuation.html: no injected pet markup in the page
+PASS  words_replacing.html: no injected pet markup in the page
+
+== 5. encoding / CJK integrity ==
+PASS  split app modules keep their UTF-8 BOM
+PASS  split app modules: no U+FFFD replacement characters
+PASS  split app modules: no latin1-read-as-utf8 mojibake runs
+PASS  split styles: no U+FFFD replacement characters
+PASS  split styles: no latin1-read-as-utf8 mojibake runs
+PASS  index.html: no U+FFFD replacement characters
+PASS  index.html: no latin1-read-as-utf8 mojibake runs
+PASS  english_filter.html: no U+FFFD replacement characters
+PASS  english_filter.html: no latin1-read-as-utf8 mojibake runs
+PASS  chinese_punctuation.html: no U+FFFD replacement characters
+PASS  chinese_punctuation.html: no latin1-read-as-utf8 mojibake runs
+PASS  words_replacing.html: no U+FFFD replacement characters
+PASS  words_replacing.html: no latin1-read-as-utf8 mojibake runs
+PASS  split app modules still contain "灵符配对"
+PASS  split app modules still contain "光标疾驰"
+PASS  split app modules still contain "游戏结束"
+PASS  split app modules still contain "括弧灵"
+PASS  split app modules still contain "笔尖灵"
+PASS  split app modules still contain "标签灵"
+
+== 5b. Glyph Match level ladder ==
+PASS  the level ladder is declared
+PASS  the ladder has at least 5 levels
+PASS  the pair count increases on every rung
+PASS  one rung reproduces the original 6-pair board
+PASS  the original board sits mid-ladder, not on the first rung
+PASS  no deck exceeds the glyph pool
+PASS  every glyph in the pool is distinct
+PASS  the original six glyphs still lead the pool
+PASS  CSS lays out the 3-pair rung in 3 columns
+PASS  CSS lays out the 4-pair rung in 4 columns
+PASS  CSS lays out the 6-pair rung in 4 columns
+PASS  CSS lays out the 8-pair rung in 4 columns
+PASS  CSS lays out the 10-pair rung in 5 columns
+PASS  CSS lays out the 11-pair rung in 6 columns
+PASS  CSS lays out the 12-pair rung in 6 columns
+PASS  app.js stamps the column count on the grid
+PASS  the level cell is injected, not hard-coded in the pages
+PASS  the legacy key name is unchanged
+PASS  the stored value is versioned so old scalars can migrate
+PASS  progress parsing is defensive (try/catch around getItem and JSON.parse)
+PASS  the result line stays a role=status live region
+PASS  the card buttons keep their aria-label wiring
+
+== 5c. Elements ==
+PASS  index.html: has the Elements tab wired to its panel
+PASS  index.html: has the Elements panel wired back to its tab
+PASS  index.html: the sandbox canvas keeps a name, a description and a tab stop
+PASS  index.html: the palette is seventeen real buttons with pressed states
+PASS  index.html: the expanded palette carries every new element
+PASS  index.html: the hand controls are real, labelled buttons
+PASS  index.html: the brush sizes are a labelled group of four
+PASS  index.html: the speed control is a labelled select of four ticks
+PASS  index.html: the HUD carries the paint allowance and the legend line
+PASS  index.html: the challenge picker is a labelled select
+PASS  index.html: the Elements result line is a role=status live region
+PASS  index.html: the goal is shown as its own text, not only announced
+PASS  index.html: the reset control is a real button
+PASS  index.html: the game drawer markup is balanced
+PASS  english_filter.html: has the Elements tab wired to its panel
+PASS  english_filter.html: has the Elements panel wired back to its tab
+PASS  english_filter.html: the sandbox canvas keeps a name, a description and a tab stop
+PASS  english_filter.html: the palette is seventeen real buttons with pressed states
+PASS  english_filter.html: the expanded palette carries every new element
+PASS  english_filter.html: the hand controls are real, labelled buttons
+PASS  english_filter.html: the brush sizes are a labelled group of four
+PASS  english_filter.html: the speed control is a labelled select of four ticks
+PASS  english_filter.html: the HUD carries the paint allowance and the legend line
+PASS  english_filter.html: the challenge picker is a labelled select
+PASS  english_filter.html: the Elements result line is a role=status live region
+PASS  english_filter.html: the goal is shown as its own text, not only announced
+PASS  english_filter.html: the reset control is a real button
+PASS  english_filter.html: the game drawer markup is balanced
+PASS  chinese_punctuation.html: has the Elements tab wired to its panel
+PASS  chinese_punctuation.html: has the Elements panel wired back to its tab
+PASS  chinese_punctuation.html: the sandbox canvas keeps a name, a description and a tab stop
+PASS  chinese_punctuation.html: the palette is seventeen real buttons with pressed states
+PASS  chinese_punctuation.html: the expanded palette carries every new element
+PASS  chinese_punctuation.html: the hand controls are real, labelled buttons
+PASS  chinese_punctuation.html: the brush sizes are a labelled group of four
+PASS  chinese_punctuation.html: the speed control is a labelled select of four ticks
+PASS  chinese_punctuation.html: the HUD carries the paint allowance and the legend line
+PASS  chinese_punctuation.html: the challenge picker is a labelled select
+PASS  chinese_punctuation.html: the Elements result line is a role=status live region
+PASS  chinese_punctuation.html: the goal is shown as its own text, not only announced
+PASS  chinese_punctuation.html: the reset control is a real button
+PASS  chinese_punctuation.html: the game drawer markup is balanced
+PASS  words_replacing.html: has the Elements tab wired to its panel
+PASS  words_replacing.html: has the Elements panel wired back to its tab
+PASS  words_replacing.html: the sandbox canvas keeps a name, a description and a tab stop
+PASS  words_replacing.html: the palette is seventeen real buttons with pressed states
+PASS  words_replacing.html: the expanded palette carries every new element
+PASS  words_replacing.html: the hand controls are real, labelled buttons
+PASS  words_replacing.html: the brush sizes are a labelled group of four
+PASS  words_replacing.html: the speed control is a labelled select of four ticks
+PASS  words_replacing.html: the HUD carries the paint allowance and the legend line
+PASS  words_replacing.html: the challenge picker is a labelled select
+PASS  words_replacing.html: the Elements result line is a role=status live region
+PASS  words_replacing.html: the goal is shown as its own text, not only announced
+PASS  words_replacing.html: the reset control is a real button
+PASS  words_replacing.html: the game drawer markup is balanced
+PASS  the sandbox is registered as the sixth tab
+PASS  the fail-closed guard covers both new elements
+PASS  the sandbox is initialised and reset by the shared shell
+PASS  no Fix-It Ladder code or styling is left behind
+PASS  the retired Fix-It Ladder keys stay in both dictionaries, unused
+PASS  app.js contains the Elements module
+PASS  every id the sandbox looks up exists in all four pages
+PASS  the palette names the module maps are the ones the markup carries
+PASS  the grid is a fixed 80 by 56 board
+PASS  the factory is self-contained and constructible on its own
+PASS  the element set is empty, stone, sand, water, plant and fire, plus the expansion ids
+PASS  sand falls, sinks through water and piles diagonally
+PASS  water falls and then spreads sideways so it levels out
+PASS  the expansion's powders, liquids and gases share those movers
+PASS  steam and smoke carry their own countdowns and acid its uses
+PASS  every fuel and every soluble solid is named in exactly one place
+PASS  lava is heat: it glasses sand, melts ice and boils water into stone
+PASS  the board can pour for itself and hand the brush an allowance
+PASS  a plant grows one cell upward into water and consumes it
+PASS  fire ignites plants, is doused by adjacent water and expires on its own
+PASS  the plant cadence is slower than the simulation
+PASS  the step is seeded and never calls Math.random
+PASS  out-of-bounds writes are refused, counted and hashed against
+PASS  twelve boards declare a goal, a limit, a par, a budget and a palette
+PASS  the campaign table is the design's eleven boards in teaching order
+PASS  the goals are the design's five descriptor kinds
+PASS  the eight campaign boards are builders inside the factory
+PASS  the campaign unlocks in order and derives the palette from it
+PASS  free play is the one board with no clock and every tool
+PASS  the three original win conditions keep their exact numbers
+PASS  the grow board is a walled shaft with a seed and a pool
+PASS  the extinguish board is a serpentine hedge with fire at its near end
+PASS  the flood board marks a target zone and pours only from above its rim
+PASS  the brush never overwrites a solid cell and the eraser clears anything
+PASS  a board's pour zone is enforced in the simulation, not in a DOM handler
+PASS  every timed board fences the brush in, and free play does not
+PASS  the pour zone is drawn as a theme-aware wash over the empty cells
+PASS  rendering is one grid-resolution ImageData, never per-cell DOM
+PASS  the CSS keeps the scaled-up pixels crisp and both themes legible
+PASS  the loop is a tracked interval, never rAF, and is cleared on every exit
+PASS  the loop only runs while its own panel and the document are visible
+PASS  an armed timed board freezes the world and cannot win or be charged
+PASS  pause, step and speed all go through the one tracked interval
+PASS  the keyboard path picks tools, moves a cursor and places elements
+PASS  pointer painting maps through the canvas rect and interpolates a drag
+PASS  a completed challenge tells the pet exactly once
+PASS  win, timeout, best and the log all go through t()
+PASS  the stored progress is versioned under its own key
+PASS  progress parsing is defensive (try/catch around getItem and JSON.parse)
+PASS  every Elements string is looked up through t() or data-i18n
+PASS  the "tabElements" key exists in both languages
+PASS  the "hudGoal" key exists in both languages
+PASS  the "elementsChallengeLabel" key exists in both languages
+PASS  the "elementsChallengeFree" key exists in both languages
+PASS  the "elementsChallengeGrow" key exists in both languages
+PASS  the "elementsChallengeExtinguish" key exists in both languages
+PASS  the "elementsChallengeFlood" key exists in both languages
+PASS  the "elementsGoalFree" key exists in both languages
+PASS  the "elementsGoalGrow" key exists in both languages
+PASS  the "elementsGoalExtinguish" key exists in both languages
+PASS  the "elementsGoalFlood" key exists in both languages
+PASS  the "elementsToolsLabel" key exists in both languages
+PASS  the "elementsEmpty" key exists in both languages
+PASS  the "elementsStone" key exists in both languages
+PASS  the "elementsSand" key exists in both languages
+PASS  the "elementsWater" key exists in both languages
+PASS  the "elementsPlant" key exists in both languages
+PASS  the "elementsFire" key exists in both languages
+PASS  the "elementsWood" key exists in both languages
+PASS  the "elementsAsh" key exists in both languages
+PASS  the "elementsOil" key exists in both languages
+PASS  the "elementsLava" key exists in both languages
+PASS  the "elementsIce" key exists in both languages
+PASS  the "elementsSteam" key exists in both languages
+PASS  the "elementsAcid" key exists in both languages
+PASS  the "elementsSeed" key exists in both languages
+PASS  the "elementsSmoke" key exists in both languages
+PASS  the "elementsGlass" key exists in both languages
+PASS  the "elementsVoid" key exists in both languages
+PASS  the "elementsReset" key exists in both languages
+PASS  the "elementsSpeedLabel" key exists in both languages
+PASS  the "elementsBrushLabel" key exists in both languages
+PASS  the "elementsPause" key exists in both languages
+PASS  the "elementsResume" key exists in both languages
+PASS  the "elementsStep" key exists in both languages
+PASS  the "elementsPick" key exists in both languages
+PASS  the "elementsUndo" key exists in both languages
+PASS  the "elementsBudgetLabel" key exists in both languages
+PASS  the "elementsBudgetUnlimited" key exists in both languages
+PASS  the "elementsLegend" key exists in both languages
+PASS  the "elementsClassStatic" key exists in both languages
+PASS  the "elementsClassPowder" key exists in both languages
+PASS  the "elementsClassLiquid" key exists in both languages
+PASS  the "elementsClassGas" key exists in both languages
+PASS  the "elementsPicked" key exists in both languages
+PASS  the "elementsPickHint" key exists in both languages
+PASS  the "elementsPickBlocked" key exists in both languages
+PASS  the "elementsPourHint" key exists in both languages
+PASS  the "elementsUndone" key exists in both languages
+PASS  the "elementsUndoEmpty" key exists in both languages
+PASS  the "elementsPaused" key exists in both languages
+PASS  the "elementsResumed" key exists in both languages
+PASS  the "elementsCanvasLabel" key exists in both languages
+PASS  the "elementsDescription" key exists in both languages
+PASS  the "elementsCountNone" key exists in both languages
+PASS  the "elementsGo" key exists in both languages
+PASS  the "elementsWin" key exists in both languages
+PASS  the "elementsTimeUp" key exists in both languages
+PASS  the "elementsLog" key exists in both languages
+PASS  the "elementsHint" key exists in both languages
+
+== 5d. Spot the Diff and Punctuation Plumber ==
+PASS  index.html: has both new tabs wired to their panels
+PASS  index.html: both new panels are wired back to their tabs
+PASS  english_filter.html: has both new tabs wired to their panels
+PASS  english_filter.html: both new panels are wired back to their tabs
+PASS  chinese_punctuation.html: has both new tabs wired to their panels
+PASS  chinese_punctuation.html: both new panels are wired back to their tabs
+PASS  words_replacing.html: has both new tabs wired to their panels
+PASS  words_replacing.html: both new panels are wired back to their tabs
+PASS  the two new games are registered as drawer tabs
+PASS  both new games are reset by the shared shell
+PASS  every id the new games look up exists in all four pages
+PASS  the Spot the Diff ladder grows its diffs rung by rung
+PASS  the Spot the Diff storage is versioned and migrates the v1 scalar best
+PASS  a missed click costs the Spot the Diff clock
+PASS  rung 3 plants homoglyph damage the easier rungs never use
+PASS  spot-the-diff character spans keep their spaces visible
+PASS  plumber scores ride the combo multiplier and a strike wipes it
+PASS  the slow drizzle halves fall speed inside a time-boxed window
+PASS  the "tabSpotDiff" key exists in both languages
+PASS  the "hudFound" key exists in both languages
+PASS  the "hudMisses" key exists in both languages
+PASS  the "spotPrompt" key exists in both languages
+PASS  the "spotGo" key exists in both languages
+PASS  the "spotWrong" key exists in both languages
+PASS  the "spotFound" key exists in both languages
+PASS  the "spotEditLabel" key exists in both languages
+PASS  the "spotHint" key exists in both languages
+PASS  the "logSpot" key exists in both languages
+PASS  the "spotPenalty" key exists in both languages
+PASS  the "spotLevelCleared" key exists in both languages
+PASS  the "spotNextLevel" key exists in both languages
+PASS  the "spotAllLevels" key exists in both languages
+PASS  the "tabPlumber" key exists in both languages
+PASS  the "plumberPrompt" key exists in both languages
+PASS  the "plumberGo" key exists in both languages
+PASS  the "plumberMissed" key exists in both languages
+PASS  the "plumberOver" key exists in both languages
+PASS  the "plumberBinFull" key exists in both languages
+PASS  the "plumberBinHalf" key exists in both languages
+PASS  the "plumberFieldLabel" key exists in both languages
+PASS  the "plumberHint" key exists in both languages
+PASS  the "logPlumber" key exists in both languages
+PASS  the "hudCombo" key exists in both languages
+PASS  the "plumberStreak" key exists in both languages
+PASS  the "plumberSlow" key exists in both languages
+
+== 5e. Stack, Color Code, Inkball and Ember Dice ==
+PASS  index.html: stack tab and panel are wired both ways
+PASS  english_filter.html: stack tab and panel are wired both ways
+PASS  chinese_punctuation.html: stack tab and panel are wired both ways
+PASS  words_replacing.html: stack tab and panel are wired both ways
+PASS  game-stack: every id it looks up exists in all four pages
+PASS  stack is registered as a drawer tab with a click listener
+PASS  index.html: colorCode tab and panel are wired both ways
+PASS  english_filter.html: colorCode tab and panel are wired both ways
+PASS  chinese_punctuation.html: colorCode tab and panel are wired both ways
+PASS  words_replacing.html: colorCode tab and panel are wired both ways
+PASS  game-color-code: every id it looks up exists in all four pages
+PASS  colorCode is registered as a drawer tab with a click listener
+PASS  index.html: breakout tab and panel are wired both ways
+PASS  english_filter.html: breakout tab and panel are wired both ways
+PASS  chinese_punctuation.html: breakout tab and panel are wired both ways
+PASS  words_replacing.html: breakout tab and panel are wired both ways
+PASS  game-breakout: every id it looks up exists in all four pages
+PASS  breakout is registered as a drawer tab with a click listener
+PASS  index.html: emberDice tab and panel are wired both ways
+PASS  english_filter.html: emberDice tab and panel are wired both ways
+PASS  chinese_punctuation.html: emberDice tab and panel are wired both ways
+PASS  words_replacing.html: emberDice tab and panel are wired both ways
+PASS  game-ember-dice: every id it looks up exists in all four pages
+PASS  emberDice is registered as a drawer tab with a click listener
+PASS  the two interval games are reset by the shared shell
+PASS  the "tabStack" key exists in both languages
+PASS  the "hudHeight" key exists in both languages
+PASS  the "hudPerfect" key exists in both languages
+PASS  the "stackFieldLabel" key exists in both languages
+PASS  the "stackPrompt" key exists in both languages
+PASS  the "stackGo" key exists in both languages
+PASS  the "stackPerfect" key exists in both languages
+PASS  the "stackOver" key exists in both languages
+PASS  the "stackHint" key exists in both languages
+PASS  the "logStack" key exists in both languages
+PASS  the "tabColorCode" key exists in both languages
+PASS  the "hudTry" key exists in both languages
+PASS  the "hudStreak" key exists in both languages
+PASS  the "ccPaletteLabel" key exists in both languages
+PASS  the "ccBoardLabel" key exists in both languages
+PASS  the "ccPrompt" key exists in both languages
+PASS  the "ccNoFill" key exists in both languages
+PASS  the "ccFeedback" key exists in both languages
+PASS  the "ccWin" key exists in both languages
+PASS  the "ccLost" key exists in both languages
+PASS  the "ccBestLine" key exists in both languages
+PASS  the "ccSlotLabel" key exists in both languages
+PASS  the "ccEmpty" key exists in both languages
+PASS  the "ccSecretLabel" key exists in both languages
+PASS  the "ccHint" key exists in both languages
+PASS  the "logCC" key exists in both languages
+PASS  the "ccColor0" key exists in both languages
+PASS  the "ccColor1" key exists in both languages
+PASS  the "ccColor2" key exists in both languages
+PASS  the "ccColor3" key exists in both languages
+PASS  the "ccColor4" key exists in both languages
+PASS  the "ccColor5" key exists in both languages
+PASS  the "tabBreakout" key exists in both languages
+PASS  the "hudLives" key exists in both languages
+PASS  the "brkCanvasLabel" key exists in both languages
+PASS  the "brkPrompt" key exists in both languages
+PASS  the "brkLaunch" key exists in both languages
+PASS  the "brkPlay" key exists in both languages
+PASS  the "brkLifeLost" key exists in both languages
+PASS  the "brkLevelUp" key exists in both languages
+PASS  the "brkOver" key exists in both languages
+PASS  the "brkHint" key exists in both languages
+PASS  the "logBrk" key exists in both languages
+PASS  the "tabEmberDice" key exists in both languages
+PASS  the "hudTurn" key exists in both languages
+PASS  the "hudBank" key exists in both languages
+PASS  the "diceAtStake" key exists in both languages
+PASS  the "diceRoll" key exists in both languages
+PASS  the "diceBankBtn" key exists in both languages
+PASS  the "dicePrompt" key exists in both languages
+PASS  the "diceGo" key exists in both languages
+PASS  the "diceRolled" key exists in both languages
+PASS  the "diceBurn" key exists in both languages
+PASS  the "diceBanked" key exists in both languages
+PASS  the "diceOver" key exists in both languages
+PASS  the "diceHint" key exists in both languages
+PASS  the "logDice" key exists in both languages
+
+== 5f. Serpent, Lights Out and Glyph Mines ==
+PASS  index.html: snake tab and panel are wired both ways
+PASS  english_filter.html: snake tab and panel are wired both ways
+PASS  chinese_punctuation.html: snake tab and panel are wired both ways
+PASS  words_replacing.html: snake tab and panel are wired both ways
+PASS  game-snake: every id it looks up exists in all four pages
+PASS  snake is registered as a drawer tab with a click listener
+PASS  index.html: lights tab and panel are wired both ways
+PASS  english_filter.html: lights tab and panel are wired both ways
+PASS  chinese_punctuation.html: lights tab and panel are wired both ways
+PASS  words_replacing.html: lights tab and panel are wired both ways
+PASS  game-lights: every id it looks up exists in all four pages
+PASS  lights is registered as a drawer tab with a click listener
+PASS  index.html: mines tab and panel are wired both ways
+PASS  english_filter.html: mines tab and panel are wired both ways
+PASS  chinese_punctuation.html: mines tab and panel are wired both ways
+PASS  words_replacing.html: mines tab and panel are wired both ways
+PASS  game-mines: every id it looks up exists in all four pages
+PASS  mines is registered as a drawer tab with a click listener
+PASS  the two interval games of batch three are reset by the shell
+PASS  the picker is a two-column grid, not a hidden carousel
+PASS  the collapsed grid names its hidden count
+PASS  mines places its field after the first dig
+PASS  lights boards start from darkness and get shuffled, so they are always solvable
+PASS  the "tabSnake" key exists in both languages
+PASS  the "hudLength" key exists in both languages
+PASS  the "snkFieldLabel" key exists in both languages
+PASS  the "snkPrompt" key exists in both languages
+PASS  the "snkGo" key exists in both languages
+PASS  the "snkOver" key exists in both languages
+PASS  the "snkHint" key exists in both languages
+PASS  the "logSnk" key exists in both languages
+PASS  the "tabLights" key exists in both languages
+PASS  the "litFieldLabel" key exists in both languages
+PASS  the "litPrompt" key exists in both languages
+PASS  the "litSolved" key exists in both languages
+PASS  the "litLevelUp" key exists in both languages
+PASS  the "litDone" key exists in both languages
+PASS  the "litBestLine" key exists in both languages
+PASS  the "litHint" key exists in both languages
+PASS  the "logLit" key exists in both languages
+PASS  the "litCell" key exists in both languages
+PASS  the "litOn" key exists in both languages
+PASS  the "litOff" key exists in both languages
+PASS  the "tabMines" key exists in both languages
+PASS  the "hudFlags" key exists in both languages
+PASS  the "hudMines" key exists in both languages
+PASS  the "mnFieldLabel" key exists in both languages
+PASS  the "mnPrompt" key exists in both languages
+PASS  the "mnGo" key exists in both languages
+PASS  the "mnBoom" key exists in both languages
+PASS  the "mnCleared" key exists in both languages
+PASS  the "mnFlagMode" key exists in both languages
+PASS  the "mnFlagOn" key exists in both languages
+PASS  the "mnFlagOff" key exists in both languages
+PASS  the "mnHint" key exists in both languages
+PASS  the "mnCell" key exists in both languages
+PASS  the "mnFlagged" key exists in both languages
+PASS  the "mnMine" key exists in both languages
+PASS  the "logMines" key exists in both languages
+
+== 5g. grid picker polish ==
+PASS  index.html: the More games toggle is wired to the tablist
+PASS  english_filter.html: the More games toggle is wired to the tablist
+PASS  chinese_punctuation.html: the More games toggle is wired to the tablist
+PASS  words_replacing.html: the More games toggle is wired to the tablist
+PASS  the toggle swaps its own i18n key and persists the mode
+PASS  tabs meet the 44px touch minimum
+PASS  tabs answer presses, and motion-off stills them
+PASS  the focus ring is one token defined for both themes
+PASS  the "tabsShowMore" key exists in both languages
+PASS  the "tabsShowLess" key exists in both languages
+
+== 5h. campaigns ==
+PASS  the campaign core runs headless and chains unlocks
+PASS  starsFor reads both directions against the 3/2/1 thresholds
+PASS  game-breakout: the brkLevels table has 17 distinct levels
+PASS  game-breakout: the campaign picker is wired in init
+PASS  index.html: brkLevelSel exists
+PASS  english_filter.html: brkLevelSel exists
+PASS  chinese_punctuation.html: brkLevelSel exists
+PASS  words_replacing.html: brkLevelSel exists
+PASS  game-snake: the snkLevels table has 12 distinct levels
+PASS  game-snake: the campaign picker is wired in init
+PASS  index.html: snkLevelSel exists
+PASS  english_filter.html: snkLevelSel exists
+PASS  chinese_punctuation.html: snkLevelSel exists
+PASS  words_replacing.html: snkLevelSel exists
+PASS  game-ember-dice: the diceTables table has 7 distinct levels
+PASS  game-ember-dice: the campaign picker is wired in init
+PASS  index.html: diceTableSel exists
+PASS  english_filter.html: diceTableSel exists
+PASS  chinese_punctuation.html: diceTableSel exists
+PASS  words_replacing.html: diceTableSel exists
+PASS  the "campaignStars" key exists in both languages
+PASS  the "brkLevelSelectLabel" key exists in both languages
+PASS  the "brkCleared" key exists in both languages
+PASS  the "brkNextLevel" key exists in both languages
+PASS  the "brkCampaignDone" key exists in both languages
+PASS  the "snkLevelSelectLabel" key exists in both languages
+PASS  the "snkGoal" key exists in both languages
+PASS  the "snkCleared" key exists in both languages
+PASS  the "snkNextHouse" key exists in both languages
+PASS  the "snkCampaignDone" key exists in both languages
+PASS  the "snkRetry" key exists in both languages
+PASS  the "diceTableSelectLabel" key exists in both languages
+PASS  the "diceCleared" key exists in both languages
+PASS  the "diceNextTable" key exists in both languages
+PASS  the "diceCampaignDone" key exists in both languages
+PASS  the "diceMissed" key exists in both languages
+PASS  the "diceTaxed" key exists in both languages
+PASS  the "brkL1" key exists in both languages
+PASS  the "brkL2" key exists in both languages
+PASS  the "brkL3" key exists in both languages
+PASS  the "brkL4" key exists in both languages
+PASS  the "brkL5" key exists in both languages
+PASS  the "brkL6" key exists in both languages
+PASS  the "brkL7" key exists in both languages
+PASS  the "brkL8" key exists in both languages
+PASS  the "brkL9" key exists in both languages
+PASS  the "brkL10" key exists in both languages
+PASS  the "brkL11" key exists in both languages
+PASS  the "brkL12" key exists in both languages
+PASS  the "brkL13" key exists in both languages
+PASS  the "brkL14" key exists in both languages
+PASS  the "brkL15" key exists in both languages
+PASS  the "snkL1" key exists in both languages
+PASS  the "snkL2" key exists in both languages
+PASS  the "snkL3" key exists in both languages
+PASS  the "snkL4" key exists in both languages
+PASS  the "snkL5" key exists in both languages
+PASS  the "snkL6" key exists in both languages
+PASS  the "snkL7" key exists in both languages
+PASS  the "snkL8" key exists in both languages
+PASS  the "snkL9" key exists in both languages
+PASS  the "snkL10" key exists in both languages
+PASS  the "snkL11" key exists in both languages
+PASS  the "snkL12" key exists in both languages
+PASS  the "diceTable1" key exists in both languages
+PASS  the "diceTable2" key exists in both languages
+PASS  the "diceTable3" key exists in both languages
+PASS  the "diceTable4" key exists in both languages
+PASS  the "diceTable5" key exists in both languages
+PASS  the "diceTable6" key exists in both languages
+PASS  the "diceTable7" key exists in both languages
+PASS  the "diceRule1" key exists in both languages
+PASS  the "diceRule2" key exists in both languages
+PASS  the "diceRule3" key exists in both languages
+PASS  the "diceRule4" key exists in both languages
+PASS  the "diceRule5" key exists in both languages
+PASS  the "diceRule6" key exists in both languages
+PASS  the "diceRule7" key exists in both languages
+
+== 5i. Gomoku, Traffic Jam and Letter Vault ==
+PASS  index.html: gomoku tab and panel are wired both ways
+PASS  english_filter.html: gomoku tab and panel are wired both ways
+PASS  chinese_punctuation.html: gomoku tab and panel are wired both ways
+PASS  words_replacing.html: gomoku tab and panel are wired both ways
+PASS  game-gomoku: every id it looks up exists in all four pages
+PASS  gomoku is registered as a drawer tab with a click listener
+PASS  index.html: traffic tab and panel are wired both ways
+PASS  english_filter.html: traffic tab and panel are wired both ways
+PASS  chinese_punctuation.html: traffic tab and panel are wired both ways
+PASS  words_replacing.html: traffic tab and panel are wired both ways
+PASS  game-traffic: every id it looks up exists in all four pages
+PASS  traffic is registered as a drawer tab with a click listener
+PASS  index.html: vault tab and panel are wired both ways
+PASS  english_filter.html: vault tab and panel are wired both ways
+PASS  chinese_punctuation.html: vault tab and panel are wired both ways
+PASS  words_replacing.html: vault tab and panel are wired both ways
+PASS  game-vault: every id it looks up exists in all four pages
+PASS  vault is registered as a drawer tab with a click listener
+PASS  gomoku's Undo unlocks from the move that creates the history
+PASS  Traffic Jam needs the taxi at the exit wall, not just a clear lane
+PASS  every Traffic Jam 3-star band is reachable (budgeted Dijkstra)
+PASS  every Traffic Jam board is provably solvable (BFS)
+PASS  the vault's letter feedback counts duplicates the Wordle way
+PASS  the "tabGomoku" key exists in both languages
+PASS  the "gomokuRankLabel" key exists in both languages
+PASS  the "gomokuRank1" key exists in both languages
+PASS  the "gomokuRank2" key exists in both languages
+PASS  the "gomokuRank3" key exists in both languages
+PASS  the "gomokuBoardLabel" key exists in both languages
+PASS  the "gomokuPrompt" key exists in both languages
+PASS  the "gomokuYourTurn" key exists in both languages
+PASS  the "gomokuAiTurn" key exists in both languages
+PASS  the "gomokuWin" key exists in both languages
+PASS  the "gomokuLoss" key exists in both languages
+PASS  the "gomokuDraw" key exists in both languages
+PASS  the "gomokuNextRank" key exists in both languages
+PASS  the "gomokuAllRanks" key exists in both languages
+PASS  the "gomokuCell" key exists in both languages
+PASS  the "gomokuBlack" key exists in both languages
+PASS  the "gomokuWhite" key exists in both languages
+PASS  the "gomokuUndo" key exists in both languages
+PASS  the "gomokuHint" key exists in both languages
+PASS  the "logGomoku" key exists in both languages
+PASS  the "tabTraffic" key exists in both languages
+PASS  the "trafLevelSelectLabel" key exists in both languages
+PASS  the "trafBoardLabel" key exists in both languages
+PASS  the "trafBoardLabelN" key exists in both languages
+PASS  the "trafPrompt" key exists in both languages
+PASS  the "trafWin" key exists in both languages
+PASS  the "trafNext" key exists in both languages
+PASS  the "trafAllBoards" key exists in both languages
+PASS  the "trafCar" key exists in both languages
+PASS  the "trafTaxi" key exists in both languages
+PASS  the "trafHint" key exists in both languages
+PASS  the "logTraf" key exists in both languages
+PASS  the "tabVault" key exists in both languages
+PASS  the "hudGuesses" key exists in both languages
+PASS  the "vaultBoardLabel" key exists in both languages
+PASS  the "vaultPromptDaily" key exists in both languages
+PASS  the "vaultPromptRandom" key exists in both languages
+PASS  the "vaultTooShort" key exists in both languages
+PASS  the "vaultWin" key exists in both languages
+PASS  the "vaultLoss" key exists in both languages
+PASS  the "vaultBestLine" key exists in both languages
+PASS  the "vaultEnter" key exists in both languages
+PASS  the "vaultBack" key exists in both languages
+PASS  the "vaultDailyBtn" key exists in both languages
+PASS  the "vaultRandomBtn" key exists in both languages
+PASS  the "vaultHint" key exists in both languages
+PASS  the "logVault" key exists in both languages
+
+== 6. pet CSS ==
+PASS  styles.css contains the pet companion block
+PASS  styles.css braces balance
+PASS  pet widget stacks below the game modal
+PASS  pet widget is fixed to a corner with safe-area insets
+PASS  motion-off disables idle/reaction animations
+PASS  motion-off hides particles
+PASS  reduced-motion media query also hides particles
+PASS  light theme variants exist for the pet
+PASS  idle motion and reactions use CSS keyframes
+PASS  no external assets referenced by the pet styles
+PASS  mobile safe-area breakpoint declared
+PASS  the widget is capped to the viewport
+PASS  the panel carries a max-height
+PASS  the panel scrolls internally
+PASS  the panel contains its overscroll (no scroll chaining)
+PASS  the panel cap and the widget cap share the same viewport budget
+PASS  every class the pet JS emits has a CSS rule
+PASS  colour-only art details inherit .pet-accent
+PASS  no var(--x) without fallback that is never defined
+PASS  CSS has a rendering rule for mood "happy"
+PASS  CSS has a rendering rule for mood "neutral"
+PASS  CSS has a rendering rule for mood "hungry"
+PASS  CSS has a rendering rule for mood "sleepy"
+PASS  mood mouth shapes are all defined
+
+== 7. pet JS ==
+PASS  app.js contains the pet module
+PASS  no window.prompt / window.confirm used
+PASS  DOM built with createElement / createElementNS
+PASS  only one storage key is used
+PASS  storage key is exactly "capitalconvert-pet"
+PASS  state is parsed defensively (try/catch around JSON.parse)
+PASS  no requestAnimationFrame loop in the pet module
+PASS  decay timer is an interval and is cleared
+PASS  visibilitychange handler is registered
+PASS  particle effects early-return when motion is off
+PASS  every pet string goes through t() or data-i18n
+PASS  no hard-coded visible sentences in the pet JS
+
+== 8. extended pet (progression / interactions / mini-games) ==
+PASS  mini-game timers are tracked and cleared
+PASS  visibilitychange stops the mini-game
+PASS  hiding the pet stops the mini-game
+PASS  game awareness hook exists and never calls into the games
+PASS  both mini-games are implemented
+PASS  progression is table-driven with 10 levels and 3 stages
+PASS  CSS reveals the "baby" evolution stage
+PASS  CSS reveals the "grown" evolution stage
+PASS  CSS reveals the "elder" evolution stage
+PASS  CSS reveals the "hat" accessory
+PASS  CSS reveals the "scarf" accessory
+PASS  CSS reveals the "glasses" accessory
+PASS  CSS reveals the "crown" accessory
+PASS  CSS reveals the "aura" accessory
+PASS  CSS positions the widget in corner "bl"
+PASS  CSS positions the widget in corner "tr"
+PASS  CSS positions the widget in corner "tl"
+PASS  motion-off disables the new cursor/combo/toast animations
+PASS  reduced-motion media query also stills the new effects
+PASS  richer idle animation (blink + antenna/plume wiggle) is declared
+PASS  mini-game boards fit the narrow panel (a dedicated wider width exists)
+
+== 9. care & return + personality ==
+PASS  CSS styles the attention chip
+PASS  CSS styles the idle emote bubble
+PASS  CSS styles the streak repair banner
+PASS  CSS styles the 7-day exclusive medal
+PASS  CSS reveals the exclusive medal accessory
+PASS  attention signal reacts to [data-attention]
+PASS  seasonal accent is driven by [data-season]
+PASS  motion-off stills the emote / attention animations
+PASS  reduced-motion also stills the emote
+PASS  emote pop is a CSS keyframe
+PASS  care grace window is a real constant
+PASS  attention episodes are evaluated with a one-shot logged latch
+PASS  care mistakes are counted, not spammed
+PASS  welcome-back reward is capped by the decay cap
+PASS  streak escalation is table-driven and has a day-7 exclusive
+PASS  streak repair spends treats and has its own controls
+PASS  the exclusive is applied, not merely flagged
+PASS  petting draws energy down with diminishing happiness
+PASS  the emote is throttled and tick-driven (no permanent timer)
+PASS  emote uses reduced-motion aware pop class
+PASS  tiered verbal words exist for hunger and mood
+PASS  seasonal + date lines use local date math only
+PASS  widget exposes data-season and data-attention
+
+== 5j. Glyph Blocks, Ink Cascade and Ink Beat ==
+PASS  index.html: glyphBlocks tab and panel are wired both ways
+PASS  english_filter.html: glyphBlocks tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphBlocks tab and panel are wired both ways
+PASS  words_replacing.html: glyphBlocks tab and panel are wired both ways
+PASS  game-glyph-blocks: every id it looks up exists in all four pages
+PASS  glyphBlocks is registered as a drawer tab with a click listener
+PASS  index.html: inkCascade tab and panel are wired both ways
+PASS  english_filter.html: inkCascade tab and panel are wired both ways
+PASS  chinese_punctuation.html: inkCascade tab and panel are wired both ways
+PASS  words_replacing.html: inkCascade tab and panel are wired both ways
+PASS  game-ink-cascade: every id it looks up exists in all four pages
+PASS  inkCascade is registered as a drawer tab with a click listener
+PASS  index.html: inkBeat tab and panel are wired both ways
+PASS  english_filter.html: inkBeat tab and panel are wired both ways
+PASS  chinese_punctuation.html: inkBeat tab and panel are wired both ways
+PASS  words_replacing.html: inkBeat tab and panel are wired both ways
+PASS  game-ink-beat: every id it looks up exists in all four pages
+PASS  inkBeat is registered as a drawer tab with a click listener
+PASS  the two loop-driven games of batch four are reset by the shell
+PASS  the "tabGlyphBlocks" key exists in both languages
+PASS  the "blkFieldLabel" key exists in both languages
+PASS  the "blkPrompt" key exists in both languages
+PASS  the "blkGo" key exists in both languages
+PASS  the "blkPaused" key exists in both languages
+PASS  the "blkOver" key exists in both languages
+PASS  the "blkRetry" key exists in both languages
+PASS  the "blkCleared" key exists in both languages
+PASS  the "blkNextFloor" key exists in both languages
+PASS  the "blkCampaignDone" key exists in both languages
+PASS  the "blkNextLabel" key exists in both languages
+PASS  the "blkBtnLeft" key exists in both languages
+PASS  the "blkBtnTurn" key exists in both languages
+PASS  the "blkBtnRight" key exists in both languages
+PASS  the "blkBtnDrop" key exists in both languages
+PASS  the "blkControlsLabel" key exists in both languages
+PASS  the "blkHint" key exists in both languages
+PASS  the "blkLevelSelectLabel" key exists in both languages
+PASS  the "blkL1" key exists in both languages
+PASS  the "blkL8" key exists in both languages
+PASS  the "hudLines" key exists in both languages
+PASS  the "logBlk" key exists in both languages
+PASS  the "tabInkCascade" key exists in both languages
+PASS  the "inkBoardLabel" key exists in both languages
+PASS  the "inkPrompt" key exists in both languages
+PASS  the "inkReady" key exists in both languages
+PASS  the "inkCleared" key exists in both languages
+PASS  the "inkOut" key exists in both languages
+PASS  the "inkRetry" key exists in both languages
+PASS  the "inkNextPool" key exists in both languages
+PASS  the "inkCampaignDone" key exists in both languages
+PASS  the "inkCell" key exists in both languages
+PASS  the "inkColor0" key exists in both languages
+PASS  the "inkColor5" key exists in both languages
+PASS  the "inkHint" key exists in both languages
+PASS  the "inkLevelSelectLabel" key exists in both languages
+PASS  the "inkL1" key exists in both languages
+PASS  the "inkL8" key exists in both languages
+PASS  the "logInk" key exists in both languages
+PASS  the "tabInkBeat" key exists in both languages
+PASS  the "beatFieldLabel" key exists in both languages
+PASS  the "beatPrompt" key exists in both languages
+PASS  the "beatReady" key exists in both languages
+PASS  the "beatGo" key exists in both languages
+PASS  the "beatPaused" key exists in both languages
+PASS  the "beatFinished" key exists in both languages
+PASS  the "beatRetry" key exists in both languages
+PASS  the "beatNextTrack" key exists in both languages
+PASS  the "beatCampaignDone" key exists in both languages
+PASS  the "beatLane0" key exists in both languages
+PASS  the "beatLane3" key exists in both languages
+PASS  the "beatPadsLabel" key exists in both languages
+PASS  the "beatHint" key exists in both languages
+PASS  the "beatSongSelectLabel" key exists in both languages
+PASS  the "beatL1" key exists in both languages
+PASS  the "beatL6" key exists in both languages
+PASS  the "logBeat" key exists in both languages
+
+== 5k. Bubble Ink, Glyph Echo and Ink Slash ==
+PASS  index.html: bubbleInk tab and panel are wired both ways
+PASS  english_filter.html: bubbleInk tab and panel are wired both ways
+PASS  chinese_punctuation.html: bubbleInk tab and panel are wired both ways
+PASS  words_replacing.html: bubbleInk tab and panel are wired both ways
+PASS  game-bubble-ink: every id it looks up exists in all four pages
+PASS  bubbleInk is registered as a drawer tab with a click listener
+PASS  index.html: glyphEcho tab and panel are wired both ways
+PASS  english_filter.html: glyphEcho tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphEcho tab and panel are wired both ways
+PASS  words_replacing.html: glyphEcho tab and panel are wired both ways
+PASS  game-glyph-echo: every id it looks up exists in all four pages
+PASS  glyphEcho is registered as a drawer tab with a click listener
+PASS  index.html: inkSlash tab and panel are wired both ways
+PASS  english_filter.html: inkSlash tab and panel are wired both ways
+PASS  chinese_punctuation.html: inkSlash tab and panel are wired both ways
+PASS  words_replacing.html: inkSlash tab and panel are wired both ways
+PASS  game-ink-slash: every id it looks up exists in all four pages
+PASS  inkSlash is registered as a drawer tab with a click listener
+PASS  the three timer games of batch five are reset by the shell
+PASS  the "tabBubbleInk" key exists in both languages
+PASS  the "bubFieldLabel" key exists in both languages
+PASS  the "bubPrompt" key exists in both languages
+PASS  the "bubReady" key exists in both languages
+PASS  the "bubGo" key exists in both languages
+PASS  the "bubPaused" key exists in both languages
+PASS  the "bubOver" key exists in both languages
+PASS  the "bubOutShots" key exists in both languages
+PASS  the "bubRetry" key exists in both languages
+PASS  the "bubCleared" key exists in both languages
+PASS  the "bubNextSpring" key exists in both languages
+PASS  the "bubCampaignDone" key exists in both languages
+PASS  the "hudShots" key exists in both languages
+PASS  the "hudPopped" key exists in both languages
+PASS  the "bubHint" key exists in both languages
+PASS  the "bubLevelSelectLabel" key exists in both languages
+PASS  the "bubL1" key exists in both languages
+PASS  the "bubL8" key exists in both languages
+PASS  the "logBubbleInk" key exists in both languages
+PASS  the "tabGlyphEcho" key exists in both languages
+PASS  the "echoFieldLabel" key exists in both languages
+PASS  the "echoPrompt" key exists in both languages
+PASS  the "echoReady" key exists in both languages
+PASS  the "echoWatch" key exists in both languages
+PASS  the "echoYourTurn" key exists in both languages
+PASS  the "echoMistake" key exists in both languages
+PASS  the "echoOut" key exists in both languages
+PASS  the "echoRetry" key exists in both languages
+PASS  the "echoCleared" key exists in both languages
+PASS  the "echoNextChime" key exists in both languages
+PASS  the "echoCampaignDone" key exists in both languages
+PASS  the "echoPaused" key exists in both languages
+PASS  the "echoPad0" key exists in both languages
+PASS  the "echoPad3" key exists in both languages
+PASS  the "echoPadsLabel" key exists in both languages
+PASS  the "hudRound" key exists in both languages
+PASS  the "hudLongest" key exists in both languages
+PASS  the "echoHint" key exists in both languages
+PASS  the "echoLevelSelectLabel" key exists in both languages
+PASS  the "echoL1" key exists in both languages
+PASS  the "echoL6" key exists in both languages
+PASS  the "logGlyphEcho" key exists in both languages
+PASS  the "tabInkSlash" key exists in both languages
+PASS  the "slashFieldLabel" key exists in both languages
+PASS  the "slashPrompt" key exists in both languages
+PASS  the "slashReady" key exists in both languages
+PASS  the "slashGo" key exists in both languages
+PASS  the "slashPaused" key exists in both languages
+PASS  the "slashOver" key exists in both languages
+PASS  the "slashTimeUp" key exists in both languages
+PASS  the "slashRetry" key exists in both languages
+PASS  the "slashCleared" key exists in both languages
+PASS  the "slashNextStroke" key exists in both languages
+PASS  the "slashCampaignDone" key exists in both languages
+PASS  the "slashHint" key exists in both languages
+PASS  the "slashLevelSelectLabel" key exists in both languages
+PASS  the "slashL1" key exists in both languages
+PASS  the "slashL6" key exists in both languages
+PASS  the "logInkSlash" key exists in both languages
+
+== 5l. Peg Splash, Glyph Raid and Glyph Leap ==
+PASS  index.html: pegSplash tab and panel are wired both ways
+PASS  english_filter.html: pegSplash tab and panel are wired both ways
+PASS  chinese_punctuation.html: pegSplash tab and panel are wired both ways
+PASS  words_replacing.html: pegSplash tab and panel are wired both ways
+PASS  game-peg-splash: every id it looks up exists in all four pages
+PASS  pegSplash is registered as a drawer tab with a click listener
+PASS  index.html: glyphRaid tab and panel are wired both ways
+PASS  english_filter.html: glyphRaid tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphRaid tab and panel are wired both ways
+PASS  words_replacing.html: glyphRaid tab and panel are wired both ways
+PASS  game-glyph-raid: every id it looks up exists in all four pages
+PASS  glyphRaid is registered as a drawer tab with a click listener
+PASS  index.html: glyphLeap tab and panel are wired both ways
+PASS  english_filter.html: glyphLeap tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphLeap tab and panel are wired both ways
+PASS  words_replacing.html: glyphLeap tab and panel are wired both ways
+PASS  game-glyph-leap: every id it looks up exists in all four pages
+PASS  glyphLeap is registered as a drawer tab with a click listener
+PASS  the three loop games of batch six are reset by the shell
+PASS  the "tabPegSplash" key exists in both languages
+PASS  the "pegFieldLabel" key exists in both languages
+PASS  the "pegPrompt" key exists in both languages
+PASS  the "pegReady" key exists in both languages
+PASS  the "pegGo" key exists in both languages
+PASS  the "pegPaused" key exists in both languages
+PASS  the "pegOut" key exists in both languages
+PASS  the "pegRetry" key exists in both languages
+PASS  the "pegCleared" key exists in both languages
+PASS  the "pegNextBoard" key exists in both languages
+PASS  the "pegCampaignDone" key exists in both languages
+PASS  the "hudTargets" key exists in both languages
+PASS  the "hudBalls" key exists in both languages
+PASS  the "pegHint" key exists in both languages
+PASS  the "pegLevelSelectLabel" key exists in both languages
+PASS  the "pegL1" key exists in both languages
+PASS  the "pegL6" key exists in both languages
+PASS  the "logPegSplash" key exists in both languages
+PASS  the "tabGlyphRaid" key exists in both languages
+PASS  the "raidFieldLabel" key exists in both languages
+PASS  the "raidPrompt" key exists in both languages
+PASS  the "raidReady" key exists in both languages
+PASS  the "raidGo" key exists in both languages
+PASS  the "raidPaused" key exists in both languages
+PASS  the "raidOver" key exists in both languages
+PASS  the "raidRetry" key exists in both languages
+PASS  the "raidCleared" key exists in both languages
+PASS  the "raidNextWave" key exists in both languages
+PASS  the "raidCampaignDone" key exists in both languages
+PASS  the "raidHint" key exists in both languages
+PASS  the "raidLevelSelectLabel" key exists in both languages
+PASS  the "raidL1" key exists in both languages
+PASS  the "raidL6" key exists in both languages
+PASS  the "logGlyphRaid" key exists in both languages
+PASS  the "tabGlyphLeap" key exists in both languages
+PASS  the "leapFieldLabel" key exists in both languages
+PASS  the "leapPrompt" key exists in both languages
+PASS  the "leapReady" key exists in both languages
+PASS  the "leapGo" key exists in both languages
+PASS  the "leapPaused" key exists in both languages
+PASS  the "leapOver" key exists in both languages
+PASS  the "leapRetry" key exists in both languages
+PASS  the "leapCleared" key exists in both languages
+PASS  the "leapNextAscent" key exists in both languages
+PASS  the "leapCampaignDone" key exists in both languages
+PASS  the "hudJumps" key exists in both languages
+PASS  the "leapHint" key exists in both languages
+PASS  the "leapLevelSelectLabel" key exists in both languages
+PASS  the "leapL1" key exists in both languages
+PASS  the "leapL6" key exists in both languages
+PASS  the "logGlyphLeap" key exists in both languages
+
+== 5m. Aurora Flow and Comet Golf ==
+PASS  index.html: auroraFlow tab and panel are wired both ways
+PASS  english_filter.html: auroraFlow tab and panel are wired both ways
+PASS  chinese_punctuation.html: auroraFlow tab and panel are wired both ways
+PASS  words_replacing.html: auroraFlow tab and panel are wired both ways
+PASS  game-aurora-flow: every id it looks up exists in all four pages
+PASS  auroraFlow is registered as a drawer tab with a click listener
+PASS  index.html: cometGolf tab and panel are wired both ways
+PASS  english_filter.html: cometGolf tab and panel are wired both ways
+PASS  chinese_punctuation.html: cometGolf tab and panel are wired both ways
+PASS  words_replacing.html: cometGolf tab and panel are wired both ways
+PASS  game-comet-golf: every id it looks up exists in all four pages
+PASS  cometGolf is registered as a drawer tab with a click listener
+PASS  the two batch-seven games are reset by the shell
+PASS  every Aurora Flow pair set stays inside its own board and uses distinct cells
+PASS  every Comet Golf target sits clear of its own wells
+PASS  the "tabAuroraFlow" key exists in both languages
+PASS  the "auroLevelSelectLabel" key exists in both languages
+PASS  the "auroL1" key exists in both languages
+PASS  the "auroL6" key exists in both languages
+PASS  the "auroFieldLabel" key exists in both languages
+PASS  the "auroPrompt" key exists in both languages
+PASS  the "auroReady" key exists in both languages
+PASS  the "auroPaused" key exists in both languages
+PASS  the "auroCleared" key exists in both languages
+PASS  the "auroNextBoard" key exists in both languages
+PASS  the "auroCampaignDone" key exists in both languages
+PASS  the "auroHint" key exists in both languages
+PASS  the "logAuroraFlow" key exists in both languages
+PASS  the "tabCometGolf" key exists in both languages
+PASS  the "cgfLevelSelectLabel" key exists in both languages
+PASS  the "cgfL1" key exists in both languages
+PASS  the "cgfL6" key exists in both languages
+PASS  the "cgfFieldLabel" key exists in both languages
+PASS  the "cgfPrompt" key exists in both languages
+PASS  the "cgfReady" key exists in both languages
+PASS  the "cgfPaused" key exists in both languages
+PASS  the "cgfCrash" key exists in both languages
+PASS  the "cgfLost" key exists in both languages
+PASS  the "cgfAgain" key exists in both languages
+PASS  the "cgfCleared" key exists in both languages
+PASS  the "cgfNextCourse" key exists in both languages
+PASS  the "cgfCampaignDone" key exists in both languages
+PASS  the "cgfHint" key exists in both languages
+PASS  the "logCometGolf" key exists in both languages
+PASS  the "hudLaunches" key exists in both languages
+PASS  the "hudPar" key exists in both languages
+
+== 5n. Prism Path and Starfall Lander ==
+PASS  index.html: prismPath tab and panel are wired both ways
+PASS  english_filter.html: prismPath tab and panel are wired both ways
+PASS  chinese_punctuation.html: prismPath tab and panel are wired both ways
+PASS  words_replacing.html: prismPath tab and panel are wired both ways
+PASS  game-prism-path: every id it looks up exists in all four pages
+PASS  prismPath is registered as a drawer tab with a click listener
+PASS  index.html: starfall tab and panel are wired both ways
+PASS  english_filter.html: starfall tab and panel are wired both ways
+PASS  chinese_punctuation.html: starfall tab and panel are wired both ways
+PASS  words_replacing.html: starfall tab and panel are wired both ways
+PASS  game-starfall: every id it looks up exists in all four pages
+PASS  starfall is registered as a drawer tab with a click listener
+PASS  the two batch-eight games are reset by the shell
+PASS  every Prism Path board carries an emitter, mirrors and targets inside its grid
+PASS  Starfall keeps thrust above every gravity and the fuels curve downward
+PASS  the "tabPrismPath" key exists in both languages
+PASS  the "prismLevelSelectLabel" key exists in both languages
+PASS  the "prismL1" key exists in both languages
+PASS  the "prismL6" key exists in both languages
+PASS  the "prismFieldLabel" key exists in both languages
+PASS  the "prismPrompt" key exists in both languages
+PASS  the "prismReady" key exists in both languages
+PASS  the "prismPaused" key exists in both languages
+PASS  the "prismCleared" key exists in both languages
+PASS  the "prismNextBoard" key exists in both languages
+PASS  the "prismCampaignDone" key exists in both languages
+PASS  the "prismHint" key exists in both languages
+PASS  the "logPrismPath" key exists in both languages
+PASS  the "tabStarfall" key exists in both languages
+PASS  the "lantLevelSelectLabel" key exists in both languages
+PASS  the "lantL1" key exists in both languages
+PASS  the "lantL6" key exists in both languages
+PASS  the "lantFieldLabel" key exists in both languages
+PASS  the "lantPrompt" key exists in both languages
+PASS  the "lantReady" key exists in both languages
+PASS  the "lantPaused" key exists in both languages
+PASS  the "lantCrash" key exists in both languages
+PASS  the "lantAgain" key exists in both languages
+PASS  the "lantCleared" key exists in both languages
+PASS  the "lantNextSector" key exists in both languages
+PASS  the "lantCampaignDone" key exists in both languages
+PASS  the "lantBtnThrust" key exists in both languages
+PASS  the "lantBtnLeft" key exists in both languages
+PASS  the "lantBtnRight" key exists in both languages
+PASS  the "lantHint" key exists in both languages
+PASS  the "logStarfall" key exists in both languages
+PASS  the "hudFuel" key exists in both languages
+
+== 5o. Ink Sort and Glyph Crossing ==
+PASS  index.html: inkSort tab and panel are wired both ways
+PASS  english_filter.html: inkSort tab and panel are wired both ways
+PASS  chinese_punctuation.html: inkSort tab and panel are wired both ways
+PASS  words_replacing.html: inkSort tab and panel are wired both ways
+PASS  game-ink-sort: every id it looks up exists in all four pages
+PASS  inkSort is registered as a drawer tab with a click listener
+PASS  index.html: glyphCrossing tab and panel are wired both ways
+PASS  english_filter.html: glyphCrossing tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphCrossing tab and panel are wired both ways
+PASS  words_replacing.html: glyphCrossing tab and panel are wired both ways
+PASS  game-glyph-crossing: every id it looks up exists in all four pages
+PASS  glyphCrossing is registered as a drawer tab with a click listener
+PASS  the two batch-nine games are reset by the shell
+PASS  every Ink Sort deal replays its recorded walk back to a uniform state
+PASS  every Glyph Crossing lane set covers rows 1-3 and 5-7 with rising speeds
+PASS  the "tabInkSort" key exists in both languages
+PASS  the "sorLevelSelectLabel" key exists in both languages
+PASS  the "sorL1" key exists in both languages
+PASS  the "sorL6" key exists in both languages
+PASS  the "sorFieldLabel" key exists in both languages
+PASS  the "sorPrompt" key exists in both languages
+PASS  the "sorReady" key exists in both languages
+PASS  the "sorPaused" key exists in both languages
+PASS  the "sorCleared" key exists in both languages
+PASS  the "sorNextVial" key exists in both languages
+PASS  the "sorCampaignDone" key exists in both languages
+PASS  the "sorHint" key exists in both languages
+PASS  the "logInkSort" key exists in both languages
+PASS  the "tabGlyphCrossing" key exists in both languages
+PASS  the "croLevelSelectLabel" key exists in both languages
+PASS  the "croL1" key exists in both languages
+PASS  the "croL6" key exists in both languages
+PASS  the "croFieldLabel" key exists in both languages
+PASS  the "croPrompt" key exists in both languages
+PASS  the "croReady" key exists in both languages
+PASS  the "croGo" key exists in both languages
+PASS  the "croPaused" key exists in both languages
+PASS  the "croSplashed" key exists in both languages
+PASS  the "croSquashed" key exists in both languages
+PASS  the "croTryAgain" key exists in both languages
+PASS  the "croLost" key exists in both languages
+PASS  the "croRetryRun" key exists in both languages
+PASS  the "croCleared" key exists in both languages
+PASS  the "croNextFord" key exists in both languages
+PASS  the "croCampaignDone" key exists in both languages
+PASS  the "croBtnUp" key exists in both languages
+PASS  the "croBtnDown" key exists in both languages
+PASS  the "croBtnLeft" key exists in both languages
+PASS  the "croBtnRight" key exists in both languages
+PASS  the "croHint" key exists in both languages
+PASS  the "logGlyphCrossing" key exists in both languages
+
+== 5p. Glyph Pusher and Glyph Net ==
+PASS  index.html: glyphPusher tab and panel are wired both ways
+PASS  english_filter.html: glyphPusher tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphPusher tab and panel are wired both ways
+PASS  words_replacing.html: glyphPusher tab and panel are wired both ways
+PASS  game-glyph-pusher: every id it looks up exists in all four pages
+PASS  glyphPusher is registered as a drawer tab with a click listener
+PASS  index.html: glyphNet tab and panel are wired both ways
+PASS  english_filter.html: glyphNet tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphNet tab and panel are wired both ways
+PASS  words_replacing.html: glyphNet tab and panel are wired both ways
+PASS  game-glyph-net: every id it looks up exists in all four pages
+PASS  glyphNet is registered as a drawer tab with a click listener
+PASS  the two batch-ten games are reset by the shell
+PASS  every Glyph Pusher board balances boxes with goals and stays BFS-solvable
+PASS  every Glyph Net deal is winnable at its base rotation and unsolved as dealt
+PASS  a Glyph Net board only wins with every bulb on the source's side
+PASS  the "tabGlyphPusher" key exists in both languages
+PASS  the "sokLevelSelectLabel" key exists in both languages
+PASS  the "sokL1" key exists in both languages
+PASS  the "sokL6" key exists in both languages
+PASS  the "sokFieldLabel" key exists in both languages
+PASS  the "sokPrompt" key exists in both languages
+PASS  the "sokReady" key exists in both languages
+PASS  the "sokPaused" key exists in both languages
+PASS  the "sokCleared" key exists in both languages
+PASS  the "sokNextRoom" key exists in both languages
+PASS  the "sokCampaignDone" key exists in both languages
+PASS  the "sokUndo" key exists in both languages
+PASS  the "sokHint" key exists in both languages
+PASS  the "logGlyphPusher" key exists in both languages
+PASS  the "tabGlyphNet" key exists in both languages
+PASS  the "netLevelSelectLabel" key exists in both languages
+PASS  the "netL1" key exists in both languages
+PASS  the "netL6" key exists in both languages
+PASS  the "netFieldLabel" key exists in both languages
+PASS  the "netPrompt" key exists in both languages
+PASS  the "netReady" key exists in both languages
+PASS  the "netPaused" key exists in both languages
+PASS  the "netCleared" key exists in both languages
+PASS  the "netNextGrid" key exists in both languages
+PASS  the "netCampaignDone" key exists in both languages
+PASS  the "netHint" key exists in both languages
+PASS  the "logGlyphNet" key exists in both languages
+
+== 5q. Glyph Sketch and Glyph Fifteen ==
+PASS  index.html: glyphSketch tab and panel are wired both ways
+PASS  english_filter.html: glyphSketch tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphSketch tab and panel are wired both ways
+PASS  words_replacing.html: glyphSketch tab and panel are wired both ways
+PASS  game-glyph-sketch: every id it looks up exists in all four pages
+PASS  glyphSketch is registered as a drawer tab with a click listener
+PASS  index.html: glyphFifteen tab and panel are wired both ways
+PASS  english_filter.html: glyphFifteen tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphFifteen tab and panel are wired both ways
+PASS  words_replacing.html: glyphFifteen tab and panel are wired both ways
+PASS  game-glyph-fifteen: every id it looks up exists in all four pages
+PASS  glyphFifteen is registered as a drawer tab with a click listener
+PASS  the two batch-eleven games are reset by the shell
+PASS  every Glyph Sketch picture is uniquely solvable by row and column logic
+PASS  every Glyph Fifteen deal passes the sliding-parity solvability rule
+PASS  every Glyph Leap ascent keeps its gaps inside the bounce apex
+PASS  every Bubble Ink spring asks for a score the wall can actually pay
+PASS  the "tabGlyphSketch" key exists in both languages
+PASS  the "skLevelSelectLabel" key exists in both languages
+PASS  the "skL1" key exists in both languages
+PASS  the "skL6" key exists in both languages
+PASS  the "skFieldLabel" key exists in both languages
+PASS  the "skPrompt" key exists in both languages
+PASS  the "skReady" key exists in both languages
+PASS  the "skPaused" key exists in both languages
+PASS  the "skCleared" key exists in both languages
+PASS  the "skNextBoard" key exists in both languages
+PASS  the "skCampaignDone" key exists in both languages
+PASS  the "skHint" key exists in both languages
+PASS  the "logGlyphSketch" key exists in both languages
+PASS  the "tabGlyphFifteen" key exists in both languages
+PASS  the "ftLevelSelectLabel" key exists in both languages
+PASS  the "ftL1" key exists in both languages
+PASS  the "ftL6" key exists in both languages
+PASS  the "ftFieldLabel" key exists in both languages
+PASS  the "ftPrompt" key exists in both languages
+PASS  the "ftReady" key exists in both languages
+PASS  the "ftPaused" key exists in both languages
+PASS  the "ftCleared" key exists in both languages
+PASS  the "ftNextBoard" key exists in both languages
+PASS  the "ftCampaignDone" key exists in both languages
+PASS  the "ftHint" key exists in both languages
+PASS  the "logGlyphFifteen" key exists in both languages
+PASS  the "leapL7" key exists in both languages
+PASS  the "leapL8" key exists in both languages
+PASS  the "inkL9" key exists in both languages
+PASS  the "inkL10" key exists in both languages
+PASS  the "bubL9" key exists in both languages
+PASS  the "bubL10" key exists in both languages
+PASS  the "pegL7" key exists in both languages
+PASS  the "pegL8" key exists in both languages
+PASS  the "raidL7" key exists in both languages
+PASS  the "raidL8" key exists in both languages
+
+== 5r. Glyph Sudoku and Glyph Reversi ==
+PASS  index.html: glyphSudoku tab and panel are wired both ways
+PASS  english_filter.html: glyphSudoku tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphSudoku tab and panel are wired both ways
+PASS  words_replacing.html: glyphSudoku tab and panel are wired both ways
+PASS  game-glyph-sudoku: every id it looks up exists in all four pages
+PASS  glyphSudoku is registered as a drawer tab with a click listener
+PASS  index.html: glyphReversi tab and panel are wired both ways
+PASS  english_filter.html: glyphReversi tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphReversi tab and panel are wired both ways
+PASS  words_replacing.html: glyphReversi tab and panel are wired both ways
+PASS  game-glyph-reversi: every id it looks up exists in all four pages
+PASS  glyphReversi is registered as a drawer tab with a click listener
+PASS  the two batch-twelve games are reset by the shell
+PASS  every Glyph Sudoku deal has a valid solution and exactly one answer
+PASS  a Glyph Sudoku grid clears only with no wrong digits left
+PASS  every Glyph Reversi rank finishes AI-vs-AI games without illegal moves
+PASS  the "tabGlyphSudoku" key exists in both languages
+PASS  the "sudLevelSelectLabel" key exists in both languages
+PASS  the "sudL1" key exists in both languages
+PASS  the "sudL6" key exists in both languages
+PASS  the "sudPadLabel" key exists in both languages
+PASS  the "sudFieldLabel" key exists in both languages
+PASS  the "sudPrompt" key exists in both languages
+PASS  the "sudReady" key exists in both languages
+PASS  the "sudPaused" key exists in both languages
+PASS  the "sudCleared" key exists in both languages
+PASS  the "sudNextGrid" key exists in both languages
+PASS  the "sudCampaignDone" key exists in both languages
+PASS  the "sudHint" key exists in both languages
+PASS  the "logGlyphSudoku" key exists in both languages
+PASS  the "tabGlyphReversi" key exists in both languages
+PASS  the "revLevelSelectLabel" key exists in both languages
+PASS  the "revL1" key exists in both languages
+PASS  the "revL6" key exists in both languages
+PASS  the "revYouLabel" key exists in both languages
+PASS  the "revAiLabel" key exists in both languages
+PASS  the "revFieldLabel" key exists in both languages
+PASS  the "revPrompt" key exists in both languages
+PASS  the "revReady" key exists in both languages
+PASS  the "revPaused" key exists in both languages
+PASS  the "revWin" key exists in both languages
+PASS  the "revLoss" key exists in both languages
+PASS  the "revDraw" key exists in both languages
+PASS  the "revRetry" key exists in both languages
+PASS  the "revNextRank" key exists in both languages
+PASS  the "revCampaignDone" key exists in both languages
+PASS  the "revYouPassed" key exists in both languages
+PASS  the "revAiPassed" key exists in both languages
+PASS  the "revHint" key exists in both languages
+PASS  the "logGlyphReversi" key exists in both languages
+
+== 5s. Glyph Glide and Glyph Four ==
+PASS  index.html: glyphGlide tab and panel are wired both ways
+PASS  english_filter.html: glyphGlide tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphGlide tab and panel are wired both ways
+PASS  words_replacing.html: glyphGlide tab and panel are wired both ways
+PASS  game-glyph-glide: every id it looks up exists in all four pages
+PASS  glyphGlide is registered as a drawer tab with a click listener
+PASS  index.html: glyphFour tab and panel are wired both ways
+PASS  english_filter.html: glyphFour tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphFour tab and panel are wired both ways
+PASS  words_replacing.html: glyphFour tab and panel are wired both ways
+PASS  game-glyph-four: every id it looks up exists in all four pages
+PASS  glyphFour is registered as a drawer tab with a click listener
+PASS  the two batch-thirteen games are reset by the shell
+PASS  every Glyph Glide deal is solvable at the par the generator quotes
+PASS  every Glyph Four rank plays legal drops and finishes AI-vs-AI games
+PASS  Glyph Four's AI never drops into a full column under repeated probes
+PASS  the "tabGlyphGlide" key exists in both languages
+PASS  the "glLevelSelectLabel" key exists in both languages
+PASS  the "glL1" key exists in both languages
+PASS  the "glL6" key exists in both languages
+PASS  the "glFieldLabel" key exists in both languages
+PASS  the "glPrompt" key exists in both languages
+PASS  the "glReady" key exists in both languages
+PASS  the "glPaused" key exists in both languages
+PASS  the "glCleared" key exists in both languages
+PASS  the "glNextRink" key exists in both languages
+PASS  the "glCampaignDone" key exists in both languages
+PASS  the "glHint" key exists in both languages
+PASS  the "logGlyphGlide" key exists in both languages
+PASS  the "tabGlyphFour" key exists in both languages
+PASS  the "c4LevelSelectLabel" key exists in both languages
+PASS  the "c4L1" key exists in both languages
+PASS  the "c4L6" key exists in both languages
+PASS  the "c4FieldLabel" key exists in both languages
+PASS  the "c4Prompt" key exists in both languages
+PASS  the "c4Ready" key exists in both languages
+PASS  the "c4Paused" key exists in both languages
+PASS  the "c4Win" key exists in both languages
+PASS  the "c4Loss" key exists in both languages
+PASS  the "c4Draw" key exists in both languages
+PASS  the "c4Retry" key exists in both languages
+PASS  the "c4NextBoard" key exists in both languages
+PASS  the "c4CampaignDone" key exists in both languages
+PASS  the "c4Hint" key exists in both languages
+PASS  the "logGlyphFour" key exists in both languages
+
+== 5t. per-game visual guides ==
+PASS  the guide data covers every one of the 49 drawer panels
+PASS  every panel id referenced by the guide exists in all four pages
+PASS  every guide entry carries a diagram and both step languages
+PASS  the guide renderer is wired into the shared bootstrap
+PASS  the guide toggle exists in both languages
+PASS  the guide panel is styled
+PASS  every guide entry carries at least five labeled steps in both languages
+
+== 5u. Glyph Tower and Glyph Fleet ==
+PASS  index.html: glyphTower tab and panel are wired both ways
+PASS  english_filter.html: glyphTower tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphTower tab and panel are wired both ways
+PASS  words_replacing.html: glyphTower tab and panel are wired both ways
+PASS  game-glyph-tower: every id it looks up exists in all four pages
+PASS  glyphTower is registered as a drawer tab with a click listener
+PASS  index.html: glyphFleet tab and panel are wired both ways
+PASS  english_filter.html: glyphFleet tab and panel are wired both ways
+PASS  chinese_punctuation.html: glyphFleet tab and panel are wired both ways
+PASS  words_replacing.html: glyphFleet tab and panel are wired both ways
+PASS  game-glyph-fleet: every id it looks up exists in all four pages
+PASS  glyphFleet is registered as a drawer tab with a click listener
+PASS  the two batch-fifteen games are reset by the shell
+PASS  Glyph Tower star thresholds all sit above the 2^n - 1 optimum
+PASS  every Glyph Fleet placement is legal and every admiral duel terminates legally
+PASS  the "tabGlyphTower" key exists in both languages
+PASS  the "towLevelSelectLabel" key exists in both languages
+PASS  the "towL1" key exists in both languages
+PASS  the "towL5" key exists in both languages
+PASS  the "towFieldLabel" key exists in both languages
+PASS  the "towPrompt" key exists in both languages
+PASS  the "towReady" key exists in both languages
+PASS  the "towPaused" key exists in both languages
+PASS  the "towCleared" key exists in both languages
+PASS  the "towNextTower" key exists in both languages
+PASS  the "towCampaignDone" key exists in both languages
+PASS  the "towHint" key exists in both languages
+PASS  the "logGlyphTower" key exists in both languages
+PASS  the "tabGlyphFleet" key exists in both languages
+PASS  the "fltLevelSelectLabel" key exists in both languages
+PASS  the "fltL1" key exists in both languages
+PASS  the "fltL6" key exists in both languages
+PASS  the "fltFieldLabel" key exists in both languages
+PASS  the "fltPrompt" key exists in both languages
+PASS  the "fltReady" key exists in both languages
+PASS  the "fltPaused" key exists in both languages
+PASS  the "fltHit" key exists in both languages
+PASS  the "fltMiss" key exists in both languages
+PASS  the "fltAiHit" key exists in both languages
+PASS  the "fltTurn" key exists in both languages
+PASS  the "fltWin" key exists in both languages
+PASS  the "fltLoss" key exists in both languages
+PASS  the "fltRetry" key exists in both languages
+PASS  the "fltNextFleet" key exists in both languages
+PASS  the "fltCampaignDone" key exists in both languages
+PASS  the "fltHint" key exists in both languages
+PASS  the "logGlyphFleet" key exists in both languages
+
+== 5w. Ember Sticks and Glyph Dots ==
+PASS  index.html: nim tab and panel are wired both ways
+PASS  english_filter.html: nim tab and panel are wired both ways
+PASS  chinese_punctuation.html: nim tab and panel are wired both ways
+PASS  words_replacing.html: nim tab and panel are wired both ways
+PASS  game-ember-sticks: every id it looks up exists in all four pages
+PASS  nim is registered as a drawer tab with a click listener
+PASS  index.html: dots tab and panel are wired both ways
+PASS  english_filter.html: dots tab and panel are wired both ways
+PASS  chinese_punctuation.html: dots tab and panel are wired both ways
+PASS  words_replacing.html: dots tab and panel are wired both ways
+PASS  game-glyph-dots: every id it looks up exists in all four pages
+PASS  dots is registered as a drawer tab with a click listener
+PASS  Ember Sticks: the perfect move always hands over a lost position
+PASS  Ember Sticks: every table can be won by the player who moves first
+PASS  Glyph Dots: AI self-play fills the plate and owns every box
+PASS  Glyph Dots: the AI never walks past a box it could close
+PASS  the newest game blocks theme their text and surfaces with tokens
+
+== 5x. Republic Rewind ==
+PASS  index.html: republic tab and panel are wired both ways
+PASS  english_filter.html: republic tab and panel are wired both ways
+PASS  chinese_punctuation.html: republic tab and panel are wired both ways
+PASS  words_replacing.html: republic tab and panel are wired both ways
+PASS  game-republic-quiz: every id it looks up exists in all four pages
+PASS  republic is registered as a drawer tab with a click listener
+PASS  every Republic Rewind card is bilingual, has four distinct options and a real answer
+
+== 5v. the drawer reset contract holds for every game ==
+PASS  all 67 reset hooks run on both the tab switch and the close path
+PASS  the shell never calls a reset hook no game exports
+PASS  every pointer capture is wrapped in a try so a stale pointer id cannot kill a drag
+
+== 5y. Kalah Row, Twenty-One Parlor and Roof Garden ==
+PASS  index.html: kalah tab and panel are wired both ways
+PASS  english_filter.html: kalah tab and panel are wired both ways
+PASS  chinese_punctuation.html: kalah tab and panel are wired both ways
+PASS  words_replacing.html: kalah tab and panel are wired both ways
+PASS  game-kalah-row: every id it looks up exists in all four pages
+PASS  kalah is registered as a drawer tab with a click listener
+PASS  index.html: blackjack tab and panel are wired both ways
+PASS  english_filter.html: blackjack tab and panel are wired both ways
+PASS  chinese_punctuation.html: blackjack tab and panel are wired both ways
+PASS  words_replacing.html: blackjack tab and panel are wired both ways
+PASS  game-blackjack: every id it looks up exists in all four pages
+PASS  blackjack is registered as a drawer tab with a click listener
+PASS  index.html: garden tab and panel are wired both ways
+PASS  english_filter.html: garden tab and panel are wired both ways
+PASS  chinese_punctuation.html: garden tab and panel are wired both ways
+PASS  words_replacing.html: garden tab and panel are wired both ways
+PASS  game-roof-garden: every id it looks up exists in all four pages
+PASS  garden is registered as a drawer tab with a click listener
+PASS  the shell's 49 drawer entries bind a real tab and panel from the markup
+PASS  all 2238 translation keys the games and the markup ask for exist in both dictionaries
+PASS  Kalah Row: sowing never feeds the rival store and always banks the pairing stone
+PASS  Kalah Row: every round conserves its 48 stones and always ends
+PASS  Kalah Row: the top bench plays without luck and the ranks unlock in order
+PASS  Twenty-One Parlor: aces drop to one only when the hand needs it
+PASS  Twenty-One Parlor: the house stands on 17, a broke player is restaked and a banked table clears the seat
+PASS  Twenty-One Parlor: every table is beatable and each star band is reachable
+PASS  Roof Garden: every bed can be sown and its three-star line beats the greedy run
+PASS  Roof Garden: ripening is drawn by CSS, so the bed needs no timer of its own
+
+== 5z. every star ladder can actually be climbed ==
+PASS  all 397 star band ladders run the direction their game scores
+
+== 6. registry games: injected, linked, bilingual, scoped ==
+PASS  all 45 registry games are mounted by the drawer
+PASS  the shell injects, pauses and documents registry games without a hand-written list
+PASS  the registry builds its panels with createElement, never innerHTML
+PASS  game-rooftop-radio: loads on all four pages at the current version
+PASS  game-rooftop-radio: registers exactly one descriptor
+PASS  game-rooftop-radio: declares a name and a tabKey
+PASS  game-rooftop-radio: name and tabKey follow the same convention
+PASS  game-rooftop-radio: the tab label key lives in its own pack
+PASS  game-rooftop-radio: ships a bilingual pack
+PASS  game-rooftop-radio: pack has both en and zh bodies
+PASS  game-rooftop-radio: en and zh packs are 1:1 (26 keys)
+PASS  game-rooftop-radio: no pack key is shadowed by the shared dictionary
+PASS  game-rooftop-radio: pack keys are quoted for the six-space key audit
+PASS  game-rooftop-radio: all 17 translation keys it asks for exist
+PASS  game-rooftop-radio: ships a how-to guide
+PASS  game-rooftop-radio: the guide gives the same number of steps in both languages
+PASS  game-rooftop-radio: keeps its listeners inside its own panel
+PASS  game-rooftop-radio: never writes markup through innerHTML
+PASS  game-rooftop-radio: no blocking dialog and no direct localStorage
+PASS  game-rooftop-radio: its stylesheet was merged into the game styles
+PASS  game-rooftop-radio: names its pause hook after its descriptor
+PASS  game-clockwork-dispatch: loads on all four pages at the current version
+PASS  game-clockwork-dispatch: registers exactly one descriptor
+PASS  game-clockwork-dispatch: declares a name and a tabKey
+PASS  game-clockwork-dispatch: name and tabKey follow the same convention
+PASS  game-clockwork-dispatch: the tab label key lives in its own pack
+PASS  game-clockwork-dispatch: ships a bilingual pack
+PASS  game-clockwork-dispatch: pack has both en and zh bodies
+PASS  game-clockwork-dispatch: en and zh packs are 1:1 (38 keys)
+PASS  game-clockwork-dispatch: no pack key is shadowed by the shared dictionary
+PASS  game-clockwork-dispatch: pack keys are quoted for the six-space key audit
+PASS  game-clockwork-dispatch: all 18 translation keys it asks for exist
+PASS  game-clockwork-dispatch: ships a how-to guide
+PASS  game-clockwork-dispatch: the guide gives the same number of steps in both languages
+PASS  game-clockwork-dispatch: keeps its listeners inside its own panel
+PASS  game-clockwork-dispatch: never writes markup through innerHTML
+PASS  game-clockwork-dispatch: no blocking dialog and no direct localStorage
+PASS  game-clockwork-dispatch: its stylesheet was merged into the game styles
+PASS  game-clockwork-dispatch: names its pause hook after its descriptor
+PASS  game-dream-orchestra: loads on all four pages at the current version
+PASS  game-dream-orchestra: registers exactly one descriptor
+PASS  game-dream-orchestra: declares a name and a tabKey
+PASS  game-dream-orchestra: name and tabKey follow the same convention
+PASS  game-dream-orchestra: the tab label key lives in its own pack
+PASS  game-dream-orchestra: ships a bilingual pack
+PASS  game-dream-orchestra: pack has both en and zh bodies
+PASS  game-dream-orchestra: en and zh packs are 1:1 (38 keys)
+PASS  game-dream-orchestra: no pack key is shadowed by the shared dictionary
+PASS  game-dream-orchestra: pack keys are quoted for the six-space key audit
+PASS  game-dream-orchestra: all 30 translation keys it asks for exist
+PASS  game-dream-orchestra: ships a how-to guide
+PASS  game-dream-orchestra: the guide gives the same number of steps in both languages
+PASS  game-dream-orchestra: keeps its listeners inside its own panel
+PASS  game-dream-orchestra: never writes markup through innerHTML
+PASS  game-dream-orchestra: no blocking dialog and no direct localStorage
+PASS  game-dream-orchestra: its stylesheet was merged into the game styles
+PASS  game-dream-orchestra: names its pause hook after its descriptor
+PASS  game-echo-cartographer: loads on all four pages at the current version
+PASS  game-echo-cartographer: registers exactly one descriptor
+PASS  game-echo-cartographer: declares a name and a tabKey
+PASS  game-echo-cartographer: name and tabKey follow the same convention
+PASS  game-echo-cartographer: the tab label key lives in its own pack
+PASS  game-echo-cartographer: ships a bilingual pack
+PASS  game-echo-cartographer: pack has both en and zh bodies
+PASS  game-echo-cartographer: en and zh packs are 1:1 (32 keys)
+PASS  game-echo-cartographer: no pack key is shadowed by the shared dictionary
+PASS  game-echo-cartographer: pack keys are quoted for the six-space key audit
+PASS  game-echo-cartographer: all 25 translation keys it asks for exist
+PASS  game-echo-cartographer: ships a how-to guide
+PASS  game-echo-cartographer: the guide gives the same number of steps in both languages
+PASS  game-echo-cartographer: keeps its listeners inside its own panel
+PASS  game-echo-cartographer: never writes markup through innerHTML
+PASS  game-echo-cartographer: no blocking dialog and no direct localStorage
+PASS  game-echo-cartographer: its stylesheet was merged into the game styles
+PASS  game-echo-cartographer: names its pause hook after its descriptor
+PASS  game-ember-delve: loads on all four pages at the current version
+PASS  game-ember-delve: registers exactly one descriptor
+PASS  game-ember-delve: declares a name and a tabKey
+PASS  game-ember-delve: name and tabKey follow the same convention
+PASS  game-ember-delve: the tab label key lives in its own pack
+PASS  game-ember-delve: ships a bilingual pack
+PASS  game-ember-delve: pack has both en and zh bodies
+PASS  game-ember-delve: en and zh packs are 1:1 (77 keys)
+PASS  game-ember-delve: no pack key is shadowed by the shared dictionary
+PASS  game-ember-delve: pack keys are quoted for the six-space key audit
+PASS  game-ember-delve: all 57 translation keys it asks for exist
+PASS  game-ember-delve: ships a how-to guide
+PASS  game-ember-delve: the guide gives the same number of steps in both languages
+PASS  game-ember-delve: keeps its listeners inside its own panel
+PASS  game-ember-delve: never writes markup through innerHTML
+PASS  game-ember-delve: no blocking dialog and no direct localStorage
+PASS  game-ember-delve: its stylesheet was merged into the game styles
+PASS  game-ember-delve: names its pause hook after its descriptor
+PASS  game-lantern-heist: loads on all four pages at the current version
+PASS  game-lantern-heist: registers exactly one descriptor
+PASS  game-lantern-heist: declares a name and a tabKey
+PASS  game-lantern-heist: name and tabKey follow the same convention
+PASS  game-lantern-heist: the tab label key lives in its own pack
+PASS  game-lantern-heist: ships a bilingual pack
+PASS  game-lantern-heist: pack has both en and zh bodies
+PASS  game-lantern-heist: en and zh packs are 1:1 (34 keys)
+PASS  game-lantern-heist: no pack key is shadowed by the shared dictionary
+PASS  game-lantern-heist: pack keys are quoted for the six-space key audit
+PASS  game-lantern-heist: all 29 translation keys it asks for exist
+PASS  game-lantern-heist: ships a how-to guide
+PASS  game-lantern-heist: the guide gives the same number of steps in both languages
+PASS  game-lantern-heist: keeps its listeners inside its own panel
+PASS  game-lantern-heist: never writes markup through innerHTML
+PASS  game-lantern-heist: no blocking dialog and no direct localStorage
+PASS  game-lantern-heist: its stylesheet was merged into the game styles
+PASS  game-lantern-heist: names its pause hook after its descriptor
+PASS  game-moon-market: loads on all four pages at the current version
+PASS  game-moon-market: registers exactly one descriptor
+PASS  game-moon-market: declares a name and a tabKey
+PASS  game-moon-market: name and tabKey follow the same convention
+PASS  game-moon-market: the tab label key lives in its own pack
+PASS  game-moon-market: ships a bilingual pack
+PASS  game-moon-market: pack has both en and zh bodies
+PASS  game-moon-market: en and zh packs are 1:1 (49 keys)
+PASS  game-moon-market: no pack key is shadowed by the shared dictionary
+PASS  game-moon-market: pack keys are quoted for the six-space key audit
+PASS  game-moon-market: all 39 translation keys it asks for exist
+PASS  game-moon-market: ships a how-to guide
+PASS  game-moon-market: the guide gives the same number of steps in both languages
+PASS  game-moon-market: keeps its listeners inside its own panel
+PASS  game-moon-market: never writes markup through innerHTML
+PASS  game-moon-market: no blocking dialog and no direct localStorage
+PASS  game-moon-market: its stylesheet was merged into the game styles
+PASS  game-moon-market: names its pause hook after its descriptor
+PASS  game-neon-drift: loads on all four pages at the current version
+PASS  game-neon-drift: registers exactly one descriptor
+PASS  game-neon-drift: declares a name and a tabKey
+PASS  game-neon-drift: name and tabKey follow the same convention
+PASS  game-neon-drift: the tab label key lives in its own pack
+PASS  game-neon-drift: ships a bilingual pack
+PASS  game-neon-drift: pack has both en and zh bodies
+PASS  game-neon-drift: en and zh packs are 1:1 (29 keys)
+PASS  game-neon-drift: no pack key is shadowed by the shared dictionary
+PASS  game-neon-drift: pack keys are quoted for the six-space key audit
+PASS  game-neon-drift: all 21 translation keys it asks for exist
+PASS  game-neon-drift: ships a how-to guide
+PASS  game-neon-drift: the guide gives the same number of steps in both languages
+PASS  game-neon-drift: keeps its listeners inside its own panel
+PASS  game-neon-drift: never writes markup through innerHTML
+PASS  game-neon-drift: no blocking dialog and no direct localStorage
+PASS  game-neon-drift: its stylesheet was merged into the game styles
+PASS  game-neon-drift: names its pause hook after its descriptor
+PASS  game-whisper-deck: loads on all four pages at the current version
+PASS  game-whisper-deck: registers exactly one descriptor
+PASS  game-whisper-deck: declares a name and a tabKey
+PASS  game-whisper-deck: name and tabKey follow the same convention
+PASS  game-whisper-deck: the tab label key lives in its own pack
+PASS  game-whisper-deck: ships a bilingual pack
+PASS  game-whisper-deck: pack has both en and zh bodies
+PASS  game-whisper-deck: en and zh packs are 1:1 (88 keys)
+PASS  game-whisper-deck: no pack key is shadowed by the shared dictionary
+PASS  game-whisper-deck: pack keys are quoted for the six-space key audit
+PASS  game-whisper-deck: all 65 translation keys it asks for exist
+PASS  game-whisper-deck: ships a how-to guide
+PASS  game-whisper-deck: the guide gives the same number of steps in both languages
+PASS  game-whisper-deck: keeps its listeners inside its own panel
+PASS  game-whisper-deck: never writes markup through innerHTML
+PASS  game-whisper-deck: no blocking dialog and no direct localStorage
+PASS  game-whisper-deck: its stylesheet was merged into the game styles
+PASS  game-whisper-deck: names its pause hook after its descriptor
+PASS  game-circuit-scribe: loads on all four pages at the current version
+PASS  game-circuit-scribe: registers exactly one descriptor
+PASS  game-circuit-scribe: declares a name and a tabKey
+PASS  game-circuit-scribe: name and tabKey follow the same convention
+PASS  game-circuit-scribe: the tab label key lives in its own pack
+PASS  game-circuit-scribe: ships a bilingual pack
+PASS  game-circuit-scribe: pack has both en and zh bodies
+PASS  game-circuit-scribe: en and zh packs are 1:1 (46 keys)
+PASS  game-circuit-scribe: no pack key is shadowed by the shared dictionary
+PASS  game-circuit-scribe: pack keys are quoted for the six-space key audit
+PASS  game-circuit-scribe: all 32 translation keys it asks for exist
+PASS  game-circuit-scribe: ships a how-to guide
+PASS  game-circuit-scribe: the guide gives the same number of steps in both languages
+PASS  game-circuit-scribe: keeps its listeners inside its own panel
+PASS  game-circuit-scribe: never writes markup through innerHTML
+PASS  game-circuit-scribe: no blocking dialog and no direct localStorage
+PASS  game-circuit-scribe: its stylesheet was merged into the game styles
+PASS  game-circuit-scribe: names its pause hook after its descriptor
+PASS  game-glyph-bastion: loads on all four pages at the current version
+PASS  game-glyph-bastion: registers exactly one descriptor
+PASS  game-glyph-bastion: declares a name and a tabKey
+PASS  game-glyph-bastion: name and tabKey follow the same convention
+PASS  game-glyph-bastion: the tab label key lives in its own pack
+PASS  game-glyph-bastion: ships a bilingual pack
+PASS  game-glyph-bastion: pack has both en and zh bodies
+PASS  game-glyph-bastion: en and zh packs are 1:1 (63 keys)
+PASS  game-glyph-bastion: no pack key is shadowed by the shared dictionary
+PASS  game-glyph-bastion: pack keys are quoted for the six-space key audit
+PASS  game-glyph-bastion: all 45 translation keys it asks for exist
+PASS  game-glyph-bastion: ships a how-to guide
+PASS  game-glyph-bastion: the guide gives the same number of steps in both languages
+PASS  game-glyph-bastion: keeps its listeners inside its own panel
+PASS  game-glyph-bastion: never writes markup through innerHTML
+PASS  game-glyph-bastion: no blocking dialog and no direct localStorage
+PASS  game-glyph-bastion: its stylesheet was merged into the game styles
+PASS  game-glyph-bastion: names its pause hook after its descriptor
+PASS  game-lantern-fishing: loads on all four pages at the current version
+PASS  game-lantern-fishing: registers exactly one descriptor
+PASS  game-lantern-fishing: declares a name and a tabKey
+PASS  game-lantern-fishing: name and tabKey follow the same convention
+PASS  game-lantern-fishing: the tab label key lives in its own pack
+PASS  game-lantern-fishing: ships a bilingual pack
+PASS  game-lantern-fishing: pack has both en and zh bodies
+PASS  game-lantern-fishing: en and zh packs are 1:1 (37 keys)
+PASS  game-lantern-fishing: no pack key is shadowed by the shared dictionary
+PASS  game-lantern-fishing: pack keys are quoted for the six-space key audit
+PASS  game-lantern-fishing: all 26 translation keys it asks for exist
+PASS  game-lantern-fishing: ships a how-to guide
+PASS  game-lantern-fishing: the guide gives the same number of steps in both languages
+PASS  game-lantern-fishing: keeps its listeners inside its own panel
+PASS  game-lantern-fishing: never writes markup through innerHTML
+PASS  game-lantern-fishing: no blocking dialog and no direct localStorage
+PASS  game-lantern-fishing: its stylesheet was merged into the game styles
+PASS  game-lantern-fishing: names its pause hook after its descriptor
+PASS  game-loopwright: loads on all four pages at the current version
+PASS  game-loopwright: registers exactly one descriptor
+PASS  game-loopwright: declares a name and a tabKey
+PASS  game-loopwright: name and tabKey follow the same convention
+PASS  game-loopwright: the tab label key lives in its own pack
+PASS  game-loopwright: ships a bilingual pack
+PASS  game-loopwright: pack has both en and zh bodies
+PASS  game-loopwright: en and zh packs are 1:1 (40 keys)
+PASS  game-loopwright: no pack key is shadowed by the shared dictionary
+PASS  game-loopwright: pack keys are quoted for the six-space key audit
+PASS  game-loopwright: all 20 translation keys it asks for exist
+PASS  game-loopwright: ships a how-to guide
+PASS  game-loopwright: the guide gives the same number of steps in both languages
+PASS  game-loopwright: keeps its listeners inside its own panel
+PASS  game-loopwright: never writes markup through innerHTML
+PASS  game-loopwright: no blocking dialog and no direct localStorage
+PASS  game-loopwright: its stylesheet was merged into the game styles
+PASS  game-loopwright: names its pause hook after its descriptor
+PASS  game-coral-architect: loads on all four pages at the current version
+PASS  game-coral-architect: registers exactly one descriptor
+PASS  game-coral-architect: declares a name and a tabKey
+PASS  game-coral-architect: name and tabKey follow the same convention
+PASS  game-coral-architect: the tab label key lives in its own pack
+PASS  game-coral-architect: ships a bilingual pack
+PASS  game-coral-architect: pack has both en and zh bodies
+PASS  game-coral-architect: en and zh packs are 1:1 (48 keys)
+PASS  game-coral-architect: no pack key is shadowed by the shared dictionary
+PASS  game-coral-architect: pack keys are quoted for the six-space key audit
+PASS  game-coral-architect: all 22 translation keys it asks for exist
+PASS  game-coral-architect: ships a how-to guide
+PASS  game-coral-architect: the guide gives the same number of steps in both languages
+PASS  game-coral-architect: keeps its listeners inside its own panel
+PASS  game-coral-architect: never writes markup through innerHTML
+PASS  game-coral-architect: no blocking dialog and no direct localStorage
+PASS  game-coral-architect: its stylesheet was merged into the game styles
+PASS  game-coral-architect: names its pause hook after its descriptor
+PASS  game-archive-escape: loads on all four pages at the current version
+PASS  game-archive-escape: registers exactly one descriptor
+PASS  game-archive-escape: declares a name and a tabKey
+PASS  game-archive-escape: name and tabKey follow the same convention
+PASS  game-archive-escape: the tab label key lives in its own pack
+PASS  game-archive-escape: ships a bilingual pack
+PASS  game-archive-escape: pack has both en and zh bodies
+PASS  game-archive-escape: en and zh packs are 1:1 (64 keys)
+PASS  game-archive-escape: no pack key is shadowed by the shared dictionary
+PASS  game-archive-escape: pack keys are quoted for the six-space key audit
+PASS  game-archive-escape: all 30 translation keys it asks for exist
+PASS  game-archive-escape: ships a how-to guide
+PASS  game-archive-escape: the guide gives the same number of steps in both languages
+PASS  game-archive-escape: keeps its listeners inside its own panel
+PASS  game-archive-escape: never writes markup through innerHTML
+PASS  game-archive-escape: no blocking dialog and no direct localStorage
+PASS  game-archive-escape: its stylesheet was merged into the game styles
+PASS  game-archive-escape: names its pause hook after its descriptor
+PASS  game-pocket-detective: loads on all four pages at the current version
+PASS  game-pocket-detective: registers exactly one descriptor
+PASS  game-pocket-detective: declares a name and a tabKey
+PASS  game-pocket-detective: name and tabKey follow the same convention
+PASS  game-pocket-detective: the tab label key lives in its own pack
+PASS  game-pocket-detective: ships a bilingual pack
+PASS  game-pocket-detective: pack has both en and zh bodies
+PASS  game-pocket-detective: en and zh packs are 1:1 (46 keys)
+PASS  game-pocket-detective: no pack key is shadowed by the shared dictionary
+PASS  game-pocket-detective: pack keys are quoted for the six-space key audit
+PASS  game-pocket-detective: all 29 translation keys it asks for exist
+PASS  game-pocket-detective: ships a how-to guide
+PASS  game-pocket-detective: the guide gives the same number of steps in both languages
+PASS  game-pocket-detective: keeps its listeners inside its own panel
+PASS  game-pocket-detective: never writes markup through innerHTML
+PASS  game-pocket-detective: no blocking dialog and no direct localStorage
+PASS  game-pocket-detective: its stylesheet was merged into the game styles
+PASS  game-pocket-detective: names its pause hook after its descriptor
+PASS  game-shadow-fold: loads on all four pages at the current version
+PASS  game-shadow-fold: registers exactly one descriptor
+PASS  game-shadow-fold: declares a name and a tabKey
+PASS  game-shadow-fold: name and tabKey follow the same convention
+PASS  game-shadow-fold: the tab label key lives in its own pack
+PASS  game-shadow-fold: ships a bilingual pack
+PASS  game-shadow-fold: pack has both en and zh bodies
+PASS  game-shadow-fold: en and zh packs are 1:1 (37 keys)
+PASS  game-shadow-fold: no pack key is shadowed by the shared dictionary
+PASS  game-shadow-fold: pack keys are quoted for the six-space key audit
+PASS  game-shadow-fold: all 32 translation keys it asks for exist
+PASS  game-shadow-fold: ships a how-to guide
+PASS  game-shadow-fold: the guide gives the same number of steps in both languages
+PASS  game-shadow-fold: keeps its listeners inside its own panel
+PASS  game-shadow-fold: never writes markup through innerHTML
+PASS  game-shadow-fold: no blocking dialog and no direct localStorage
+PASS  game-shadow-fold: its stylesheet was merged into the game styles
+PASS  game-shadow-fold: names its pause hook after its descriptor
+PASS  game-microbe-lab: loads on all four pages at the current version
+PASS  game-microbe-lab: registers exactly one descriptor
+PASS  game-microbe-lab: declares a name and a tabKey
+PASS  game-microbe-lab: name and tabKey follow the same convention
+PASS  game-microbe-lab: the tab label key lives in its own pack
+PASS  game-microbe-lab: ships a bilingual pack
+PASS  game-microbe-lab: pack has both en and zh bodies
+PASS  game-microbe-lab: en and zh packs are 1:1 (79 keys)
+PASS  game-microbe-lab: no pack key is shadowed by the shared dictionary
+PASS  game-microbe-lab: pack keys are quoted for the six-space key audit
+PASS  game-microbe-lab: all 39 translation keys it asks for exist
+PASS  game-microbe-lab: ships a how-to guide
+PASS  game-microbe-lab: the guide gives the same number of steps in both languages
+PASS  game-microbe-lab: keeps its listeners inside its own panel
+PASS  game-microbe-lab: never writes markup through innerHTML
+PASS  game-microbe-lab: no blocking dialog and no direct localStorage
+PASS  game-microbe-lab: its stylesheet was merged into the game styles
+PASS  game-microbe-lab: names its pause hook after its descriptor
+PASS  game-paper-bridge: loads on all four pages at the current version
+PASS  game-paper-bridge: registers exactly one descriptor
+PASS  game-paper-bridge: declares a name and a tabKey
+PASS  game-paper-bridge: name and tabKey follow the same convention
+PASS  game-paper-bridge: the tab label key lives in its own pack
+PASS  game-paper-bridge: ships a bilingual pack
+PASS  game-paper-bridge: pack has both en and zh bodies
+PASS  game-paper-bridge: en and zh packs are 1:1 (47 keys)
+PASS  game-paper-bridge: no pack key is shadowed by the shared dictionary
+PASS  game-paper-bridge: pack keys are quoted for the six-space key audit
+PASS  game-paper-bridge: all 28 translation keys it asks for exist
+PASS  game-paper-bridge: ships a how-to guide
+PASS  game-paper-bridge: the guide gives the same number of steps in both languages
+PASS  game-paper-bridge: keeps its listeners inside its own panel
+PASS  game-paper-bridge: never writes markup through innerHTML
+PASS  game-paper-bridge: no blocking dialog and no direct localStorage
+PASS  game-paper-bridge: its stylesheet was merged into the game styles
+PASS  game-paper-bridge: names its pause hook after its descriptor
+PASS  game-weather-loom: loads on all four pages at the current version
+PASS  game-weather-loom: registers exactly one descriptor
+PASS  game-weather-loom: declares a name and a tabKey
+PASS  game-weather-loom: name and tabKey follow the same convention
+PASS  game-weather-loom: the tab label key lives in its own pack
+PASS  game-weather-loom: ships a bilingual pack
+PASS  game-weather-loom: pack has both en and zh bodies
+PASS  game-weather-loom: en and zh packs are 1:1 (43 keys)
+PASS  game-weather-loom: no pack key is shadowed by the shared dictionary
+PASS  game-weather-loom: pack keys are quoted for the six-space key audit
+PASS  game-weather-loom: all 18 translation keys it asks for exist
+PASS  game-weather-loom: ships a how-to guide
+PASS  game-weather-loom: the guide gives the same number of steps in both languages
+PASS  game-weather-loom: keeps its listeners inside its own panel
+PASS  game-weather-loom: never writes markup through innerHTML
+PASS  game-weather-loom: no blocking dialog and no direct localStorage
+PASS  game-weather-loom: its stylesheet was merged into the game styles
+PASS  game-weather-loom: names its pause hook after its descriptor
+PASS  game-blind-sculptor: loads on all four pages at the current version
+PASS  game-blind-sculptor: registers exactly one descriptor
+PASS  game-blind-sculptor: declares a name and a tabKey
+PASS  game-blind-sculptor: name and tabKey follow the same convention
+PASS  game-blind-sculptor: the tab label key lives in its own pack
+PASS  game-blind-sculptor: ships a bilingual pack
+PASS  game-blind-sculptor: pack has both en and zh bodies
+PASS  game-blind-sculptor: en and zh packs are 1:1 (87 keys)
+PASS  game-blind-sculptor: no pack key is shadowed by the shared dictionary
+PASS  game-blind-sculptor: pack keys are quoted for the six-space key audit
+PASS  game-blind-sculptor: all 39 translation keys it asks for exist
+PASS  game-blind-sculptor: ships a how-to guide
+PASS  game-blind-sculptor: the guide gives the same number of steps in both languages
+PASS  game-blind-sculptor: keeps its listeners inside its own panel
+PASS  game-blind-sculptor: never writes markup through innerHTML
+PASS  game-blind-sculptor: no blocking dialog and no direct localStorage
+PASS  game-blind-sculptor: its stylesheet was merged into the game styles
+PASS  game-blind-sculptor: names its pause hook after its descriptor
+PASS  game-courtroom-of-animals: loads on all four pages at the current version
+PASS  game-courtroom-of-animals: registers exactly one descriptor
+PASS  game-courtroom-of-animals: declares a name and a tabKey
+PASS  game-courtroom-of-animals: name and tabKey follow the same convention
+PASS  game-courtroom-of-animals: the tab label key lives in its own pack
+PASS  game-courtroom-of-animals: ships a bilingual pack
+PASS  game-courtroom-of-animals: pack has both en and zh bodies
+PASS  game-courtroom-of-animals: en and zh packs are 1:1 (101 keys)
+PASS  game-courtroom-of-animals: no pack key is shadowed by the shared dictionary
+PASS  game-courtroom-of-animals: pack keys are quoted for the six-space key audit
+PASS  game-courtroom-of-animals: all 77 translation keys it asks for exist
+PASS  game-courtroom-of-animals: ships a how-to guide
+PASS  game-courtroom-of-animals: the guide gives the same number of steps in both languages
+PASS  game-courtroom-of-animals: keeps its listeners inside its own panel
+PASS  game-courtroom-of-animals: never writes markup through innerHTML
+PASS  game-courtroom-of-animals: no blocking dialog and no direct localStorage
+PASS  game-courtroom-of-animals: its stylesheet was merged into the game styles
+PASS  game-courtroom-of-animals: names its pause hook after its descriptor
+PASS  game-gravity-badminton: loads on all four pages at the current version
+PASS  game-gravity-badminton: registers exactly one descriptor
+PASS  game-gravity-badminton: declares a name and a tabKey
+PASS  game-gravity-badminton: name and tabKey follow the same convention
+PASS  game-gravity-badminton: the tab label key lives in its own pack
+PASS  game-gravity-badminton: ships a bilingual pack
+PASS  game-gravity-badminton: pack has both en and zh bodies
+PASS  game-gravity-badminton: en and zh packs are 1:1 (52 keys)
+PASS  game-gravity-badminton: no pack key is shadowed by the shared dictionary
+PASS  game-gravity-badminton: pack keys are quoted for the six-space key audit
+PASS  game-gravity-badminton: all 17 translation keys it asks for exist
+PASS  game-gravity-badminton: ships a how-to guide
+PASS  game-gravity-badminton: the guide gives the same number of steps in both languages
+PASS  game-gravity-badminton: keeps its listeners inside its own panel
+PASS  game-gravity-badminton: never writes markup through innerHTML
+PASS  game-gravity-badminton: no blocking dialog and no direct localStorage
+PASS  game-gravity-badminton: its stylesheet was merged into the game styles
+PASS  game-gravity-badminton: names its pause hook after its descriptor
+PASS  game-kitchen-relay: loads on all four pages at the current version
+PASS  game-kitchen-relay: registers exactly one descriptor
+PASS  game-kitchen-relay: declares a name and a tabKey
+PASS  game-kitchen-relay: name and tabKey follow the same convention
+PASS  game-kitchen-relay: the tab label key lives in its own pack
+PASS  game-kitchen-relay: ships a bilingual pack
+PASS  game-kitchen-relay: pack has both en and zh bodies
+PASS  game-kitchen-relay: en and zh packs are 1:1 (90 keys)
+PASS  game-kitchen-relay: no pack key is shadowed by the shared dictionary
+PASS  game-kitchen-relay: pack keys are quoted for the six-space key audit
+PASS  game-kitchen-relay: all 64 translation keys it asks for exist
+PASS  game-kitchen-relay: ships a how-to guide
+PASS  game-kitchen-relay: the guide gives the same number of steps in both languages
+PASS  game-kitchen-relay: keeps its listeners inside its own panel
+PASS  game-kitchen-relay: never writes markup through innerHTML
+PASS  game-kitchen-relay: no blocking dialog and no direct localStorage
+PASS  game-kitchen-relay: its stylesheet was merged into the game styles
+PASS  game-kitchen-relay: names its pause hook after its descriptor
+PASS  game-morse-rescue: loads on all four pages at the current version
+PASS  game-morse-rescue: registers exactly one descriptor
+PASS  game-morse-rescue: declares a name and a tabKey
+PASS  game-morse-rescue: name and tabKey follow the same convention
+PASS  game-morse-rescue: the tab label key lives in its own pack
+PASS  game-morse-rescue: ships a bilingual pack
+PASS  game-morse-rescue: pack has both en and zh bodies
+PASS  game-morse-rescue: en and zh packs are 1:1 (69 keys)
+PASS  game-morse-rescue: no pack key is shadowed by the shared dictionary
+PASS  game-morse-rescue: pack keys are quoted for the six-space key audit
+PASS  game-morse-rescue: all 49 translation keys it asks for exist
+PASS  game-morse-rescue: ships a how-to guide
+PASS  game-morse-rescue: the guide gives the same number of steps in both languages
+PASS  game-morse-rescue: keeps its listeners inside its own panel
+PASS  game-morse-rescue: never writes markup through innerHTML
+PASS  game-morse-rescue: no blocking dialog and no direct localStorage
+PASS  game-morse-rescue: its stylesheet was merged into the game styles
+PASS  game-morse-rescue: names its pause hook after its descriptor
+PASS  game-rule-thieves: loads on all four pages at the current version
+PASS  game-rule-thieves: registers exactly one descriptor
+PASS  game-rule-thieves: declares a name and a tabKey
+PASS  game-rule-thieves: name and tabKey follow the same convention
+PASS  game-rule-thieves: the tab label key lives in its own pack
+PASS  game-rule-thieves: ships a bilingual pack
+PASS  game-rule-thieves: pack has both en and zh bodies
+PASS  game-rule-thieves: en and zh packs are 1:1 (89 keys)
+PASS  game-rule-thieves: no pack key is shadowed by the shared dictionary
+PASS  game-rule-thieves: pack keys are quoted for the six-space key audit
+PASS  game-rule-thieves: all 48 translation keys it asks for exist
+PASS  game-rule-thieves: ships a how-to guide
+PASS  game-rule-thieves: the guide gives the same number of steps in both languages
+PASS  game-rule-thieves: keeps its listeners inside its own panel
+PASS  game-rule-thieves: never writes markup through innerHTML
+PASS  game-rule-thieves: no blocking dialog and no direct localStorage
+PASS  game-rule-thieves: its stylesheet was merged into the game styles
+PASS  game-rule-thieves: names its pause hook after its descriptor
+PASS  game-tiny-wrestlers: loads on all four pages at the current version
+PASS  game-tiny-wrestlers: registers exactly one descriptor
+PASS  game-tiny-wrestlers: declares a name and a tabKey
+PASS  game-tiny-wrestlers: name and tabKey follow the same convention
+PASS  game-tiny-wrestlers: the tab label key lives in its own pack
+PASS  game-tiny-wrestlers: ships a bilingual pack
+PASS  game-tiny-wrestlers: pack has both en and zh bodies
+PASS  game-tiny-wrestlers: en and zh packs are 1:1 (106 keys)
+PASS  game-tiny-wrestlers: no pack key is shadowed by the shared dictionary
+PASS  game-tiny-wrestlers: pack keys are quoted for the six-space key audit
+PASS  game-tiny-wrestlers: all 39 translation keys it asks for exist
+PASS  game-tiny-wrestlers: ships a how-to guide
+PASS  game-tiny-wrestlers: the guide gives the same number of steps in both languages
+PASS  game-tiny-wrestlers: keeps its listeners inside its own panel
+PASS  game-tiny-wrestlers: never writes markup through innerHTML
+PASS  game-tiny-wrestlers: no blocking dialog and no direct localStorage
+PASS  game-tiny-wrestlers: its stylesheet was merged into the game styles
+PASS  game-tiny-wrestlers: names its pause hook after its descriptor
+PASS  game-auction-dungeon: loads on all four pages at the current version
+PASS  game-auction-dungeon: registers exactly one descriptor
+PASS  game-auction-dungeon: declares a name and a tabKey
+PASS  game-auction-dungeon: name and tabKey follow the same convention
+PASS  game-auction-dungeon: the tab label key lives in its own pack
+PASS  game-auction-dungeon: ships a bilingual pack
+PASS  game-auction-dungeon: pack has both en and zh bodies
+PASS  game-auction-dungeon: en and zh packs are 1:1 (145 keys)
+PASS  game-auction-dungeon: no pack key is shadowed by the shared dictionary
+PASS  game-auction-dungeon: pack keys are quoted for the six-space key audit
+PASS  game-auction-dungeon: all 82 translation keys it asks for exist
+PASS  game-auction-dungeon: ships a how-to guide
+PASS  game-auction-dungeon: the guide gives the same number of steps in both languages
+PASS  game-auction-dungeon: keeps its listeners inside its own panel
+PASS  game-auction-dungeon: never writes markup through innerHTML
+PASS  game-auction-dungeon: no blocking dialog and no direct localStorage
+PASS  game-auction-dungeon: its stylesheet was merged into the game styles
+PASS  game-auction-dungeon: names its pause hook after its descriptor
+PASS  game-counterfeit-museum: loads on all four pages at the current version
+PASS  game-counterfeit-museum: registers exactly one descriptor
+PASS  game-counterfeit-museum: declares a name and a tabKey
+PASS  game-counterfeit-museum: name and tabKey follow the same convention
+PASS  game-counterfeit-museum: the tab label key lives in its own pack
+PASS  game-counterfeit-museum: ships a bilingual pack
+PASS  game-counterfeit-museum: pack has both en and zh bodies
+PASS  game-counterfeit-museum: en and zh packs are 1:1 (63 keys)
+PASS  game-counterfeit-museum: no pack key is shadowed by the shared dictionary
+PASS  game-counterfeit-museum: pack keys are quoted for the six-space key audit
+PASS  game-counterfeit-museum: all 31 translation keys it asks for exist
+PASS  game-counterfeit-museum: ships a how-to guide
+PASS  game-counterfeit-museum: the guide gives the same number of steps in both languages
+PASS  game-counterfeit-museum: keeps its listeners inside its own panel
+PASS  game-counterfeit-museum: never writes markup through innerHTML
+PASS  game-counterfeit-museum: no blocking dialog and no direct localStorage
+PASS  game-counterfeit-museum: its stylesheet was merged into the game styles
+PASS  game-counterfeit-museum: names its pause hook after its descriptor
+PASS  game-crosswind-kites: loads on all four pages at the current version
+PASS  game-crosswind-kites: registers exactly one descriptor
+PASS  game-crosswind-kites: declares a name and a tabKey
+PASS  game-crosswind-kites: name and tabKey follow the same convention
+PASS  game-crosswind-kites: the tab label key lives in its own pack
+PASS  game-crosswind-kites: ships a bilingual pack
+PASS  game-crosswind-kites: pack has both en and zh bodies
+PASS  game-crosswind-kites: en and zh packs are 1:1 (49 keys)
+PASS  game-crosswind-kites: no pack key is shadowed by the shared dictionary
+PASS  game-crosswind-kites: pack keys are quoted for the six-space key audit
+PASS  game-crosswind-kites: all 32 translation keys it asks for exist
+PASS  game-crosswind-kites: ships a how-to guide
+PASS  game-crosswind-kites: the guide gives the same number of steps in both languages
+PASS  game-crosswind-kites: keeps its listeners inside its own panel
+PASS  game-crosswind-kites: never writes markup through innerHTML
+PASS  game-crosswind-kites: no blocking dialog and no direct localStorage
+PASS  game-crosswind-kites: its stylesheet was merged into the game styles
+PASS  game-crosswind-kites: names its pause hook after its descriptor
+PASS  game-paradox-post: loads on all four pages at the current version
+PASS  game-paradox-post: registers exactly one descriptor
+PASS  game-paradox-post: declares a name and a tabKey
+PASS  game-paradox-post: name and tabKey follow the same convention
+PASS  game-paradox-post: the tab label key lives in its own pack
+PASS  game-paradox-post: ships a bilingual pack
+PASS  game-paradox-post: pack has both en and zh bodies
+PASS  game-paradox-post: en and zh packs are 1:1 (46 keys)
+PASS  game-paradox-post: no pack key is shadowed by the shared dictionary
+PASS  game-paradox-post: pack keys are quoted for the six-space key audit
+PASS  game-paradox-post: all 46 translation keys it asks for exist
+PASS  game-paradox-post: ships a how-to guide
+PASS  game-paradox-post: the guide gives the same number of steps in both languages
+PASS  game-paradox-post: keeps its listeners inside its own panel
+PASS  game-paradox-post: never writes markup through innerHTML
+PASS  game-paradox-post: no blocking dialog and no direct localStorage
+PASS  game-paradox-post: its stylesheet was merged into the game styles
+PASS  game-paradox-post: names its pause hook after its descriptor
+PASS  game-pocket-photographer: loads on all four pages at the current version
+PASS  game-pocket-photographer: registers exactly one descriptor
+PASS  game-pocket-photographer: declares a name and a tabKey
+PASS  game-pocket-photographer: name and tabKey follow the same convention
+PASS  game-pocket-photographer: the tab label key lives in its own pack
+PASS  game-pocket-photographer: ships a bilingual pack
+PASS  game-pocket-photographer: pack has both en and zh bodies
+PASS  game-pocket-photographer: en and zh packs are 1:1 (110 keys)
+PASS  game-pocket-photographer: no pack key is shadowed by the shared dictionary
+PASS  game-pocket-photographer: pack keys are quoted for the six-space key audit
+PASS  game-pocket-photographer: all 68 translation keys it asks for exist
+PASS  game-pocket-photographer: ships a how-to guide
+PASS  game-pocket-photographer: the guide gives the same number of steps in both languages
+PASS  game-pocket-photographer: keeps its listeners inside its own panel
+PASS  game-pocket-photographer: never writes markup through innerHTML
+PASS  game-pocket-photographer: no blocking dialog and no direct localStorage
+PASS  game-pocket-photographer: its stylesheet was merged into the game styles
+PASS  game-pocket-photographer: names its pause hook after its descriptor
+PASS  game-switchboard-duo: loads on all four pages at the current version
+PASS  game-switchboard-duo: registers exactly one descriptor
+PASS  game-switchboard-duo: declares a name and a tabKey
+PASS  game-switchboard-duo: name and tabKey follow the same convention
+PASS  game-switchboard-duo: the tab label key lives in its own pack
+PASS  game-switchboard-duo: ships a bilingual pack
+PASS  game-switchboard-duo: pack has both en and zh bodies
+PASS  game-switchboard-duo: en and zh packs are 1:1 (130 keys)
+PASS  game-switchboard-duo: no pack key is shadowed by the shared dictionary
+PASS  game-switchboard-duo: pack keys are quoted for the six-space key audit
+PASS  game-switchboard-duo: all 23 translation keys it asks for exist
+PASS  game-switchboard-duo: ships a how-to guide
+PASS  game-switchboard-duo: the guide gives the same number of steps in both languages
+PASS  game-switchboard-duo: keeps its listeners inside its own panel
+PASS  game-switchboard-duo: never writes markup through innerHTML
+PASS  game-switchboard-duo: no blocking dialog and no direct localStorage
+PASS  game-switchboard-duo: its stylesheet was merged into the game styles
+PASS  game-switchboard-duo: names its pause hook after its descriptor
+PASS  game-tether-salvage: loads on all four pages at the current version
+PASS  game-tether-salvage: registers exactly one descriptor
+PASS  game-tether-salvage: declares a name and a tabKey
+PASS  game-tether-salvage: name and tabKey follow the same convention
+PASS  game-tether-salvage: the tab label key lives in its own pack
+PASS  game-tether-salvage: ships a bilingual pack
+PASS  game-tether-salvage: pack has both en and zh bodies
+PASS  game-tether-salvage: en and zh packs are 1:1 (59 keys)
+PASS  game-tether-salvage: no pack key is shadowed by the shared dictionary
+PASS  game-tether-salvage: pack keys are quoted for the six-space key audit
+PASS  game-tether-salvage: all 22 translation keys it asks for exist
+PASS  game-tether-salvage: ships a how-to guide
+PASS  game-tether-salvage: the guide gives the same number of steps in both languages
+PASS  game-tether-salvage: keeps its listeners inside its own panel
+PASS  game-tether-salvage: never writes markup through innerHTML
+PASS  game-tether-salvage: no blocking dialog and no direct localStorage
+PASS  game-tether-salvage: its stylesheet was merged into the game styles
+PASS  game-tether-salvage: names its pause hook after its descriptor
+PASS  game-tiny-blacksmith: loads on all four pages at the current version
+PASS  game-tiny-blacksmith: registers exactly one descriptor
+PASS  game-tiny-blacksmith: declares a name and a tabKey
+PASS  game-tiny-blacksmith: name and tabKey follow the same convention
+PASS  game-tiny-blacksmith: the tab label key lives in its own pack
+PASS  game-tiny-blacksmith: ships a bilingual pack
+PASS  game-tiny-blacksmith: pack has both en and zh bodies
+PASS  game-tiny-blacksmith: en and zh packs are 1:1 (57 keys)
+PASS  game-tiny-blacksmith: no pack key is shadowed by the shared dictionary
+PASS  game-tiny-blacksmith: pack keys are quoted for the six-space key audit
+PASS  game-tiny-blacksmith: all 36 translation keys it asks for exist
+PASS  game-tiny-blacksmith: ships a how-to guide
+PASS  game-tiny-blacksmith: the guide gives the same number of steps in both languages
+PASS  game-tiny-blacksmith: keeps its listeners inside its own panel
+PASS  game-tiny-blacksmith: never writes markup through innerHTML
+PASS  game-tiny-blacksmith: no blocking dialog and no direct localStorage
+PASS  game-tiny-blacksmith: its stylesheet was merged into the game styles
+PASS  game-tiny-blacksmith: names its pause hook after its descriptor
+PASS  game-whale-parliament: loads on all four pages at the current version
+PASS  game-whale-parliament: registers exactly one descriptor
+PASS  game-whale-parliament: declares a name and a tabKey
+PASS  game-whale-parliament: name and tabKey follow the same convention
+PASS  game-whale-parliament: the tab label key lives in its own pack
+PASS  game-whale-parliament: ships a bilingual pack
+PASS  game-whale-parliament: pack has both en and zh bodies
+PASS  game-whale-parliament: en and zh packs are 1:1 (124 keys)
+PASS  game-whale-parliament: no pack key is shadowed by the shared dictionary
+PASS  game-whale-parliament: pack keys are quoted for the six-space key audit
+PASS  game-whale-parliament: all 51 translation keys it asks for exist
+PASS  game-whale-parliament: ships a how-to guide
+PASS  game-whale-parliament: the guide gives the same number of steps in both languages
+PASS  game-whale-parliament: keeps its listeners inside its own panel
+PASS  game-whale-parliament: never writes markup through innerHTML
+PASS  game-whale-parliament: no blocking dialog and no direct localStorage
+PASS  game-whale-parliament: its stylesheet was merged into the game styles
+PASS  game-whale-parliament: names its pause hook after its descriptor
+PASS  game-borrowed-bodies: loads on all four pages at the current version
+PASS  game-borrowed-bodies: registers exactly one descriptor
+PASS  game-borrowed-bodies: declares a name and a tabKey
+PASS  game-borrowed-bodies: name and tabKey follow the same convention
+PASS  game-borrowed-bodies: the tab label key lives in its own pack
+PASS  game-borrowed-bodies: ships a bilingual pack
+PASS  game-borrowed-bodies: pack has both en and zh bodies
+PASS  game-borrowed-bodies: en and zh packs are 1:1 (58 keys)
+PASS  game-borrowed-bodies: no pack key is shadowed by the shared dictionary
+PASS  game-borrowed-bodies: pack keys are quoted for the six-space key audit
+PASS  game-borrowed-bodies: all 36 translation keys it asks for exist
+PASS  game-borrowed-bodies: ships a how-to guide
+PASS  game-borrowed-bodies: the guide gives the same number of steps in both languages
+PASS  game-borrowed-bodies: keeps its listeners inside its own panel
+PASS  game-borrowed-bodies: never writes markup through innerHTML
+PASS  game-borrowed-bodies: no blocking dialog and no direct localStorage
+PASS  game-borrowed-bodies: its stylesheet was merged into the game styles
+PASS  game-borrowed-bodies: names its pause hook after its descriptor
+PASS  game-deep-freeze: loads on all four pages at the current version
+PASS  game-deep-freeze: registers exactly one descriptor
+PASS  game-deep-freeze: declares a name and a tabKey
+PASS  game-deep-freeze: name and tabKey follow the same convention
+PASS  game-deep-freeze: the tab label key lives in its own pack
+PASS  game-deep-freeze: ships a bilingual pack
+PASS  game-deep-freeze: pack has both en and zh bodies
+PASS  game-deep-freeze: en and zh packs are 1:1 (112 keys)
+PASS  game-deep-freeze: no pack key is shadowed by the shared dictionary
+PASS  game-deep-freeze: pack keys are quoted for the six-space key audit
+PASS  game-deep-freeze: all 44 translation keys it asks for exist
+PASS  game-deep-freeze: ships a how-to guide
+PASS  game-deep-freeze: the guide gives the same number of steps in both languages
+PASS  game-deep-freeze: keeps its listeners inside its own panel
+PASS  game-deep-freeze: never writes markup through innerHTML
+PASS  game-deep-freeze: no blocking dialog and no direct localStorage
+PASS  game-deep-freeze: its stylesheet was merged into the game styles
+PASS  game-deep-freeze: names its pause hook after its descriptor
+PASS  game-shadow-puppeteer: loads on all four pages at the current version
+PASS  game-shadow-puppeteer: registers exactly one descriptor
+PASS  game-shadow-puppeteer: declares a name and a tabKey
+PASS  game-shadow-puppeteer: name and tabKey follow the same convention
+PASS  game-shadow-puppeteer: the tab label key lives in its own pack
+PASS  game-shadow-puppeteer: ships a bilingual pack
+PASS  game-shadow-puppeteer: pack has both en and zh bodies
+PASS  game-shadow-puppeteer: en and zh packs are 1:1 (54 keys)
+PASS  game-shadow-puppeteer: no pack key is shadowed by the shared dictionary
+PASS  game-shadow-puppeteer: pack keys are quoted for the six-space key audit
+PASS  game-shadow-puppeteer: all 21 translation keys it asks for exist
+PASS  game-shadow-puppeteer: ships a how-to guide
+PASS  game-shadow-puppeteer: the guide gives the same number of steps in both languages
+PASS  game-shadow-puppeteer: keeps its listeners inside its own panel
+PASS  game-shadow-puppeteer: never writes markup through innerHTML
+PASS  game-shadow-puppeteer: no blocking dialog and no direct localStorage
+PASS  game-shadow-puppeteer: its stylesheet was merged into the game styles
+PASS  game-shadow-puppeteer: names its pause hook after its descriptor
+PASS  game-one-minute-mayor: loads on all four pages at the current version
+PASS  game-one-minute-mayor: registers exactly one descriptor
+PASS  game-one-minute-mayor: declares a name and a tabKey
+PASS  game-one-minute-mayor: name and tabKey follow the same convention
+PASS  game-one-minute-mayor: the tab label key lives in its own pack
+PASS  game-one-minute-mayor: ships a bilingual pack
+PASS  game-one-minute-mayor: pack has both en and zh bodies
+PASS  game-one-minute-mayor: en and zh packs are 1:1 (82 keys)
+PASS  game-one-minute-mayor: no pack key is shadowed by the shared dictionary
+PASS  game-one-minute-mayor: pack keys are quoted for the six-space key audit
+PASS  game-one-minute-mayor: all 34 translation keys it asks for exist
+PASS  game-one-minute-mayor: ships a how-to guide
+PASS  game-one-minute-mayor: the guide gives the same number of steps in both languages
+PASS  game-one-minute-mayor: keeps its listeners inside its own panel
+PASS  game-one-minute-mayor: never writes markup through innerHTML
+PASS  game-one-minute-mayor: no blocking dialog and no direct localStorage
+PASS  game-one-minute-mayor: its stylesheet was merged into the game styles
+PASS  game-one-minute-mayor: names its pause hook after its descriptor
+PASS  game-lost-language: loads on all four pages at the current version
+PASS  game-lost-language: registers exactly one descriptor
+PASS  game-lost-language: declares a name and a tabKey
+PASS  game-lost-language: name and tabKey follow the same convention
+PASS  game-lost-language: the tab label key lives in its own pack
+PASS  game-lost-language: ships a bilingual pack
+PASS  game-lost-language: pack has both en and zh bodies
+PASS  game-lost-language: en and zh packs are 1:1 (79 keys)
+PASS  game-lost-language: no pack key is shadowed by the shared dictionary
+PASS  game-lost-language: pack keys are quoted for the six-space key audit
+PASS  game-lost-language: all 45 translation keys it asks for exist
+PASS  game-lost-language: ships a how-to guide
+PASS  game-lost-language: the guide gives the same number of steps in both languages
+PASS  game-lost-language: keeps its listeners inside its own panel
+PASS  game-lost-language: never writes markup through innerHTML
+PASS  game-lost-language: no blocking dialog and no direct localStorage
+PASS  game-lost-language: its stylesheet was merged into the game styles
+PASS  game-lost-language: names its pause hook after its descriptor
+PASS  game-ocean-archaeologist: loads on all four pages at the current version
+PASS  game-ocean-archaeologist: registers exactly one descriptor
+PASS  game-ocean-archaeologist: declares a name and a tabKey
+PASS  game-ocean-archaeologist: name and tabKey follow the same convention
+PASS  game-ocean-archaeologist: the tab label key lives in its own pack
+PASS  game-ocean-archaeologist: ships a bilingual pack
+PASS  game-ocean-archaeologist: pack has both en and zh bodies
+PASS  game-ocean-archaeologist: en and zh packs are 1:1 (106 keys)
+PASS  game-ocean-archaeologist: no pack key is shadowed by the shared dictionary
+PASS  game-ocean-archaeologist: pack keys are quoted for the six-space key audit
+PASS  game-ocean-archaeologist: all 53 translation keys it asks for exist
+PASS  game-ocean-archaeologist: ships a how-to guide
+PASS  game-ocean-archaeologist: the guide gives the same number of steps in both languages
+PASS  game-ocean-archaeologist: keeps its listeners inside its own panel
+PASS  game-ocean-archaeologist: never writes markup through innerHTML
+PASS  game-ocean-archaeologist: no blocking dialog and no direct localStorage
+PASS  game-ocean-archaeologist: its stylesheet was merged into the game styles
+PASS  game-ocean-archaeologist: names its pause hook after its descriptor
+PASS  game-pinball-courier: loads on all four pages at the current version
+PASS  game-pinball-courier: registers exactly one descriptor
+PASS  game-pinball-courier: declares a name and a tabKey
+PASS  game-pinball-courier: name and tabKey follow the same convention
+PASS  game-pinball-courier: the tab label key lives in its own pack
+PASS  game-pinball-courier: ships a bilingual pack
+PASS  game-pinball-courier: pack has both en and zh bodies
+PASS  game-pinball-courier: en and zh packs are 1:1 (57 keys)
+PASS  game-pinball-courier: no pack key is shadowed by the shared dictionary
+PASS  game-pinball-courier: pack keys are quoted for the six-space key audit
+PASS  game-pinball-courier: all 47 translation keys it asks for exist
+PASS  game-pinball-courier: ships a how-to guide
+PASS  game-pinball-courier: the guide gives the same number of steps in both languages
+PASS  game-pinball-courier: keeps its listeners inside its own panel
+PASS  game-pinball-courier: never writes markup through innerHTML
+PASS  game-pinball-courier: no blocking dialog and no direct localStorage
+PASS  game-pinball-courier: its stylesheet was merged into the game styles
+PASS  game-pinball-courier: names its pause hook after its descriptor
+PASS  game-tea-house: loads on all four pages at the current version
+PASS  game-tea-house: registers exactly one descriptor
+PASS  game-tea-house: declares a name and a tabKey
+PASS  game-tea-house: name and tabKey follow the same convention
+PASS  game-tea-house: the tab label key lives in its own pack
+PASS  game-tea-house: ships a bilingual pack
+PASS  game-tea-house: pack has both en and zh bodies
+PASS  game-tea-house: en and zh packs are 1:1 (83 keys)
+PASS  game-tea-house: no pack key is shadowed by the shared dictionary
+PASS  game-tea-house: pack keys are quoted for the six-space key audit
+PASS  game-tea-house: all 21 translation keys it asks for exist
+PASS  game-tea-house: ships a how-to guide
+PASS  game-tea-house: the guide gives the same number of steps in both languages
+PASS  game-tea-house: keeps its listeners inside its own panel
+PASS  game-tea-house: never writes markup through innerHTML
+PASS  game-tea-house: no blocking dialog and no direct localStorage
+PASS  game-tea-house: its stylesheet was merged into the game styles
+PASS  game-tea-house: names its pause hook after its descriptor
+PASS  game-love-deepspace: loads on all four pages at the current version
+PASS  game-love-deepspace: registers exactly one descriptor
+PASS  game-love-deepspace: declares a name and a tabKey
+PASS  game-love-deepspace: name and tabKey follow the same convention
+PASS  game-love-deepspace: the tab label key lives in its own pack
+PASS  game-love-deepspace: ships a bilingual pack
+PASS  game-love-deepspace: pack has both en and zh bodies
+PASS  game-love-deepspace: en and zh packs are 1:1 (134 keys)
+PASS  game-love-deepspace: no pack key is shadowed by the shared dictionary
+PASS  game-love-deepspace: pack keys are quoted for the six-space key audit
+PASS  game-love-deepspace: all 43 translation keys it asks for exist
+PASS  game-love-deepspace: ships a how-to guide
+PASS  game-love-deepspace: the guide gives the same number of steps in both languages
+PASS  game-love-deepspace: keeps its listeners inside its own panel
+PASS  game-love-deepspace: never writes markup through innerHTML
+PASS  game-love-deepspace: no blocking dialog and no direct localStorage
+PASS  game-love-deepspace: its stylesheet was merged into the game styles
+PASS  game-love-deepspace: names its pause hook after its descriptor
+PASS  the drawer now serves 94 games while the pages still hand-wire 49
+
+== summary ==
+passed: 2151
+failed: 0

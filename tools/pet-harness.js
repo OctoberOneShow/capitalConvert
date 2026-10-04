@@ -19,6 +19,7 @@ require("./harness/cases-shell-regressions");
 require("./harness/cases-puzzle-regressions");
 require("./harness/cases-arcade-regressions");
 require("./harness/cases-registry-regressions");
+require("./harness/cases-love-deepspace");
 
 /* report ---------------------------------------------------------------- */
 console.log("pet companion harness");

@@ -1224,7 +1224,7 @@
       details.appendChild(body);
       var hint = panel.querySelector(".game-hint");
       if (hint) {
-        panel.insertBefore(details, hint);
+        hint.parentNode.insertBefore(details, hint);
       } else {
         panel.appendChild(details);
       }

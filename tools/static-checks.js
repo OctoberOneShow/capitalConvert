@@ -3,7 +3,7 @@
  * Static acceptance checks for the pet companion change.
  *
  *   1. the four pages still expose exactly 49 game tabs / 49 game panels
- *   2. both shared assets are requested with ?v=57 on all four pages
+ *   2. both shared assets are requested with ?v=58 on all four pages
  *   3. only the cache-busting string changed on the asset lines of each page
  *   4. the pet markup is NOT present in any HTML file (it is JS-injected)
  *   5. UTF-8 / CJK integrity (BOM, no U+FFFD, no latin1 mojibake, sample strings)
@@ -163,12 +163,12 @@ PAGES.forEach((page) => {
   check(`${page}: exactly 49 game-tab`, tabs === 49, `found ${tabs}`);
   check(`${page}: exactly 49 game-panel`, panels === 49, `found ${panels}`);
   check(
-    `${page}: stylesheets requested as ?v=57`,
-    STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=57`)),
+    `${page}: stylesheets requested as ?v=58`,
+    STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=58`)),
   );
   check(
-    `${page}: scripts requested as ?v=57`,
-    APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=57`)),
+    `${page}: scripts requested as ?v=58`,
+    APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=58`)),
   );
   /* Collect every ?v= token on the page and require them all to equal
    * the current cache-busting version, so single-digit versions cannot
@@ -177,8 +177,8 @@ PAGES.forEach((page) => {
     (match) => match[1],
   );
   check(
-    `${page}: every asset token is ?v=57 with no stale versions left`,
-    pageVersions.length > 0 && pageVersions.every((v) => v === "57"),
+    `${page}: every asset token is ?v=58 with no stale versions left`,
+    pageVersions.length > 0 && pageVersions.every((v) => v === "58"),
     Array.from(new Set(pageVersions)).join(",") || "none found",
   );
 
@@ -191,8 +191,8 @@ PAGES.forEach((page) => {
     `found ${assetLines.length}`,
   );
   check(
-    `${page}: all asset references are ?v=57`,
-    assetLines.every((line) => line.includes("?v=57")),
+    `${page}: all asset references are ?v=58`,
+    assetLines.every((line) => line.includes("?v=58")),
     assetLines.join(" | "),
   );
 
@@ -207,9 +207,9 @@ PAGES.forEach((page) => {
   // reference is versioned and every expected module is present.
   check(
     `${page}: asset lines are all versioned split modules`,
-    assetLines.every((line) => /\?v=57/.test(line)) &&
-      STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=57`)) &&
-      APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=57`)),
+    assetLines.every((line) => /\?v=58/.test(line)) &&
+      STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=58`)) &&
+      APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=58`)),
     "asset reference shape changed beyond version token",
   );
 });
@@ -4851,7 +4851,7 @@ console.log("\n== 6. registry games: injected, linked, bilingual, scoped ==");
     check(
       `${name}: loads on all four pages at the current version`,
       PAGES.every((page) =>
-        read(page).includes(`assets/app/${name}.js?v=57`),
+        read(page).includes(`assets/app/${name}.js?v=58`),
       ),
     );
     check(

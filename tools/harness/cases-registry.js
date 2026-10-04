@@ -188,9 +188,9 @@ run(CASE, () => {
     PAGES.every((page) => {
       const html = fs.readFileSync(path.join(root, page), "utf8");
       return (
-        html.includes("assets/app/game-registry.js?v=57") &&
+        html.includes("assets/app/game-registry.js?v=58") &&
         games.every((entry) =>
-          html.includes(`assets/app/${entry.name}.js?v=57`),
+          html.includes(`assets/app/${entry.name}.js?v=58`),
         )
       );
     }),
