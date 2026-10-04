@@ -61,7 +61,7 @@ ghost), Lantern Fishing (depth, bite windows and line tension), Archive Escape
 (a branching bilingual text adventure), Moon Market (seven seeded days of prices
 and events), Dream Orchestra (voice-limited step-sequencer puzzles), Loopwright
 (loop a program so your earlier runs hold the plates), and Love and Deepspace
-(a route-and-bond strategy run themed around 恋与深空). Campaign
+(an action arena and route-and-bond strategy game themed around 恋与深空). Campaign
 games share an unlock-chain core
 (game-campaign.js). Every game panel carries a collapsible "How to play"
 guide (game-guide.js) with a mechanic diagram and step-by-step instructions
@@ -72,6 +72,52 @@ a scroll gesture.
 ## Usage
 
 Open any `.html` file directly in a browser. No server required.
+
+### 恋与深空 / Love and Deepspace
+
+Open **Games → More games → Love and Deepspace** on any of the four pages.
+The fan-made Starbond Relay now features Xavier, Zayne, Rafayel, Sylus, and
+Caleb with locally bundled official portraits, optional muted character video
+loops, and original English/Chinese dialogue. Videos require an internet
+connection; portraits and gameplay work offline. Media sources are recorded in
+[CREDITS.md](assets/media/love-deepspace/CREDITS.md).
+
+**Action · Starbond Hunt** is the default mode. Move with WASD or the arrow keys,
+hold J to fire at the nearest enemy, press Space to dodge, and press E when the
+Evol gauge fills. You can also hold the mouse inside the arena to aim and fire.
+On touch screens, drag the movement joystick while holding Fire. Fight two
+enemy waves and a Wanderer boss within 65 seconds. Attack warnings, charging
+enemies, boss projectile fans, perfect-dodge slow motion, damage numbers, and
+partner skill cut-ins provide live feedback. Each partner has a different skill:
+lightblade, healing ice, lingering flame, energy siphon, or gravity control.
+Optional synthesized sound starts only when enabled.
+
+Press P or Escape to pause. Leaving the arena, closing the drawer, switching
+modes, and changing characters stop its animation loop. A hidden page pauses
+without advancing the mission clock; resume explicitly when you return.
+Winning earns route stars and the selected partner's memory. The best stars
+remain saved across both modes, and the original strategy turn records remain
+separate from the arena score.
+
+In **Strategy · Starbond Relay**, match the highlighted encounter counter to
+build a resonance streak and charge
+your partner's Evol skill. Three matches charge the skill; using it spends a
+turn. Recovery restores energy and also spends a turn. A quiet moment adds
+trust once per mission. Reach the route's resonance target with energy above
+zero and trust at least 24; switching partners restarts the current mission.
+
+Each of the five partners can earn four route memories, for 20 total. The
+memory album, affinity, selected partner, campaign unlocks, and best stars are
+saved in the browser. Missions themselves restart on page reload. Blocked
+browser storage falls back to session progress. The layout supports narrow
+screens and both themes, and respects the motion setting and reduced-motion
+preference. Closing or switching away from the game stops its video and combat.
+
+Run `node tools/harness/cases-love-deepspace.js` for the focused combat, turn,
+save, memory, and media lifecycle checks. These cover full arena clears for all
+five partners on all four routes, pause/resume, held inputs, and victory rewards.
+Run `node tools/verify-game.js --isolated game-love-deepspace` for its registry
+and translation checks.
 
 ## Game checks and future ideas
 

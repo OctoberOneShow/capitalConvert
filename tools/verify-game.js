@@ -39,6 +39,7 @@ const RUNTIME = [
   "i18n", "core", "tools",
   "pet-data", "pet-state", "pet-life", "pet-art", "pet-dom", "pet-render", "pet-games", "pet",
   "game-campaign", "game-registry", "game-guide",
+  "love-deepspace-combat",
 ];
 
 const extras = process.argv.slice(2).filter((name) => !name.startsWith("--"));

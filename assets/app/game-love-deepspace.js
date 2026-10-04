@@ -1,6 +1,7 @@
-/* Love and Deepspace: Starbond Relay - route-planning romance battles for
- * the shared game drawer. Each turn you pick one action card to balance
- * energy, trust and resonance before mission time runs out. */
+/* Love and Deepspace: Starbond Hunt and Relay - live combat, route battles, five partner
+ * scenes, and a persistent memory album in the shared game drawer.
+ * Official local portraits and optional remote videos are credited in
+ * assets/media/love-deepspace/CREDITS.md. Dialogue and gameplay are original. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
   var t = App.t;
@@ -190,7 +191,7 @@
     var partner = byId(ldsPartners, album.selected);
     var state, event, talked, missionLog = [], portraitPartner = "", watching = false;
     var dialogueMood = "Intro", effect = null, mediaEpoch = 0;
-    var rosterButtons = [], moveButtons = [], routeDots = [];
+    var rosterButtons = [], moveButtons = [], routeDots = [], combat = null, combatMode = "action";
 
     function node(tag, className, key, parent) {
       var el = document.createElement(tag);
@@ -340,12 +341,27 @@
     var memoryGrid = node("div", "lds-memory-grid", null, book);
     function switchView(memories) {
       stopVideo(); clearEffect();
+      if (combat) { combat.pause(); }
+      panelEl.classList.remove("lds-in-combat");
       mission.hidden = memories; book.hidden = !memories;
       missionBtn.setAttribute("aria-pressed", String(!memories));
       memoryBtn.setAttribute("aria-pressed", String(memories));
       if (memories) { syncAlbum(); }
     }
     function portraitPath(entry) { return "assets/media/love-deepspace/" + entry.id + ".webp"; }
+
+    var modeNav = node("div", "lds-mode-nav", null, mission);
+    var actionModeBtn = button("lds-mode-button", "ldsActionMode", modeNav, function () { switchMode("action"); });
+    var strategyModeBtn = button("lds-mode-button", "ldsStrategyMode", modeNav, function () { switchMode("strategy"); });
+    function switchMode(mode) {
+      combatMode = mode;
+      if (combat) { combat.pause(); combat.element.hidden = mode !== "action"; }
+      panelEl.classList.remove("lds-in-combat");
+      panelEl.classList.toggle("lds-action-mode", mode === "action");
+      strategy.hidden = mode !== "strategy";
+      actionModeBtn.setAttribute("aria-pressed", String(mode === "action"));
+      strategyModeBtn.setAttribute("aria-pressed", String(mode === "strategy"));
+    }
 
     var top = node("div", "lds-top", null, mission);
     function picker(id, key) {
@@ -370,7 +386,8 @@
       dot.setAttribute("aria-label", t(entry.labelKey));
       routeDots.push(dot);
     });
-    var hud = node("div", "lds-hud", null, mission);
+    var strategy = node("div", "lds-strategy", null, mission);
+    var hud = node("div", "lds-hud", null, strategy);
     function stat(key, kind, max) {
       var card = node("div", "lds-stat lds-bar-" + kind, null, hud);
       node("span", "lds-stat-label", key, card);
@@ -387,12 +404,12 @@
     var energyStat = stat("ldsEnergyLabel", "energy", 100);
     var trustStat = stat("ldsTrustLabel", "trust", 100);
     var resonanceStat = stat("ldsResonanceLabel", "resonance", route.target);
-    var eventCard = node("div", "lds-event", null, mission);
+    var eventCard = node("div", "lds-event", null, strategy);
     var eventTitle = node("strong", "", null, eventCard);
     var eventBody = node("p", "", null, eventCard);
     var eventCue = node("span", "lds-event-cue", null, eventCard);
     var perkLine = node("p", "lds-perk", null, eventCard);
-    var moves = node("div", "lds-moves", null, mission);
+    var moves = node("div", "lds-moves", null, strategy);
     ldsMoves.forEach(function (move) {
       var btn = button("lds-move", null, moves, function () { applyMove(move); });
       btn.setAttribute("data-move", move.id);
@@ -401,24 +418,45 @@
       var preview = node("span", "lds-move-preview", null, btn);
       moveButtons.push({ btn: btn, move: move, preview: preview });
     });
-    var skillBtn = button("lds-skill", null, mission, function () { applyMove({ id: "skill", labelKey: "ldsSkillName" }); });
+    var skillBtn = button("lds-skill", null, strategy, function () { applyMove({ id: "skill", labelKey: "ldsSkillName" }); });
     var skillLabel = node("strong", "", null, skillBtn);
     var skillDetail = node("span", "", null, skillBtn);
     var skillPips = node("span", "lds-charge-pips", null, skillBtn);
     skillPips.setAttribute("aria-hidden", "true");
-    var result = node("p", "game-result", null, mission);
+    var result = node("p", "game-result", null, strategy);
     result.setAttribute("role", "status");
-    var actions = node("div", "game-actions", null, mission);
+    var actions = node("div", "game-actions", null, strategy);
     var restartBtn = button("primary", "ldsRestart", actions, function () { startRoute(route); });
     var nextBtn = button("lds-small-button", "ldsNextRoute", actions, function () {
       var next = ldsRoutes[campaign.indexOf(route.id) + 1];
       if (next && campaign.isUnlocked(next.id)) { startRoute(next); }
     });
     var starsEl = node("p", "game-best", null, actions);
-    var logBox = node("details", "lds-log", null, mission);
+    var logBox = node("details", "lds-log", null, strategy);
     node("summary", "", "ldsLogLabel", logBox);
     var logList = node("ul", "", null, logBox);
-    node("p", "game-hint", "ldsHint", mission);
+    node("p", "game-hint", "ldsHint", strategy);
+    combat = App.mountLdsCombat(mission, {
+      routeLabel: function () { return route.labelKey; },
+      isHidden: function () { return panelEl.hidden || mission.hidden || combat.element.hidden || !!panelEl.closest("[hidden]"); },
+      onFocus: function (focused) {
+        panelEl.classList.toggle("lds-in-combat", focused);
+        if (focused) { stopVideo(); }
+      },
+      onMoment: say,
+      onFinish: function (battle, starsWon) {
+        if (battle.outcome !== "win") { say("Miss"); return ""; }
+        var reward = awardRoute(starsWon);
+        logAction(t("ldsLogBattle", { name: t(partner.nameKey), n: battle.score }));
+        syncRoutePicker(); syncCharacter(); syncAlbum();
+        return reward.message + (reward.outcome.unlockedNext ? " " + t("ldsUnlocked") : "");
+      },
+    });
+    mission.insertBefore(combat.element, strategy);
+    // Put active play ahead of the character gallery; each battle also carries
+    // the selected official portrait in its companion HUD and skill cut-in.
+    panelEl.insertBefore(mission, scene);
+    panelEl.insertBefore(viewNav, mission);
     var credit = node("p", "lds-credit", null, panelEl);
     node("span", "", "ldsCredit", credit);
     var creditLink = node("a", "", "ldsOfficialSite", credit);
@@ -519,6 +557,7 @@
     }
     function startRoute(def) {
       stopVideo(); clearEffect();
+      panelEl.classList.remove("lds-in-combat");
       route = def;
       state = { turn: 0, energy: 72, trust: 56, resonance: 0, charge: 0, chain: 0, done: false, outcome: "" };
       talked = false; missionLog = []; event = pickEvent(0);
@@ -528,6 +567,7 @@
       result.textContent = t("ldsMissionIntro", { route: t(route.labelKey), name: t(partner.nameKey), n: route.target });
       addLog("ldsLogStart", { route: t(route.labelKey), name: t(partner.nameKey) });
       syncRoutePicker(); syncHud(); syncAlbum();
+      if (combat) { combat.reset(campaign.indexOf(route.id), partner); }
     }
     function choosePartner(id) {
       if (partner.id === id) { return; }
@@ -537,6 +577,7 @@
       feedback.textContent = t("ldsPartnerRestart", { name: t(partner.nameKey) });
     }
     function applyMove(move) {
+      if (combatMode !== "strategy") { return; }
       var next = ldsAdvance(state, move, partner, event, route);
       if (next === state) { return; }
       state = next;
@@ -545,22 +586,17 @@
       addLog("ldsLogTurn", { n: state.turn, move: move.id === "skill" ? t("ldsSkillName", { evol: t(partner.evolKey) }) : t(move.labelKey), r: signed(state.gain.resonance), e: signed(state.gain.energy), t: signed(state.gain.trust) });
       if (state.outcome === "win") {
         var starsWon = starsFor(state.turn, route.stars, "low");
-        var outcome = campaign.record(route.id, { stars: starsWon, best: state.turn, better: "low" });
-        var memoryKey = partner.id + ":" + route.id;
-        var newMemory = !album.memories[memoryKey];
-        album.memories[memoryKey] = Math.max(album.memories[memoryKey] || 0, starsWon);
-        album.bonds[partner.id] = Math.min(999, (album.bonds[partner.id] || 0) + (newMemory ? 2 : 1));
-        saveAlbum(); say("Win");
+        var reward = awardRoute(starsWon, state.turn);
+        var outcome = reward.outcome;
         result.textContent = t("ldsWin", { name: t(partner.nameKey), n: state.turn, s: starsWon }) + " " +
-          (newMemory ? t("ldsMemoryEarned") : t("ldsBondEarned")) +
+          reward.message +
           (outcome.unlockedNext ? " " + t("ldsUnlocked") : campaign.clearedCount() === ldsRoutes.length ? " " + t("ldsAllClear") : "");
         logAction(t("logLoveDeepspace", { name: t(partner.nameKey), n: state.turn }));
         if (!motionOff()) {
           var rect = restartBtn.getBoundingClientRect();
           createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
         }
-        petNotifyGame(outcome.isBest || outcome.firstClear);
-        animate("win", newMemory ? t("ldsMemoryEarned") : t("ldsBondEarned")); syncAlbum();
+        animate("win", reward.message); syncAlbum();
       } else if (state.done) {
         result.textContent = state.outcome === "energy" ? t("ldsLoseEnergy") : state.outcome === "trust" ? t("ldsLoseTrust") :
           state.resonance >= route.target ? t("ldsLoseBond") : t("ldsLoseTurns", { n: route.target - state.resonance });
@@ -570,16 +606,28 @@
       }
       syncRoutePicker(); syncHud();
     }
+    function awardRoute(starsWon, turnsUsed) {
+      var record = { stars: starsWon };
+      if (typeof turnsUsed === "number") { record.best = turnsUsed; record.better = "low"; }
+      var outcome = campaign.record(route.id, record);
+      var memoryKey = partner.id + ":" + route.id;
+      var newMemory = !album.memories[memoryKey];
+      album.memories[memoryKey] = Math.max(album.memories[memoryKey] || 0, starsWon);
+      album.bonds[partner.id] = Math.min(999, (album.bonds[partner.id] || 0) + (newMemory ? 2 : 1));
+      saveAlbum(); say("Win"); petNotifyGame(outcome.isBest || outcome.firstClear);
+      return { outcome: outcome, message: t(newMemory ? "ldsMemoryEarned" : "ldsBondEarned") };
+    }
     routeSel.addEventListener("change", function () {
       if (campaign.isUnlocked(routeSel.value)) { startRoute(byId(ldsRoutes, routeSel.value)); }
       else { routeSel.value = route.id; }
     });
     partnerSel.addEventListener("change", function () { choosePartner(partnerSel.value); });
-    App.quietResetLoveDeepspace = function () { stopVideo(); clearEffect(); };
+    App.quietResetLoveDeepspace = function () { stopVideo(); clearEffect(); combat.pause(); };
     // Stop media when motion preferences change or the containing panel is hidden.
     if (typeof MutationObserver !== "undefined") {
       var observer = new MutationObserver(function () {
         if (watching && (motionOff() || panelEl.hidden || panelEl.closest("[hidden]"))) { stopVideo(); }
+        if (panelEl.hidden || panelEl.closest("[hidden]")) { combat.pause(); }
       });
       observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-motion"] });
       observer.observe(panelEl, { attributes: true, attributeFilter: ["hidden"] });
@@ -588,11 +636,53 @@
       var preference = window.matchMedia("(prefers-reduced-motion: reduce)");
       if (preference.addEventListener) { preference.addEventListener("change", function () { if (preference.matches) { stopVideo(); } }); }
     }
-    switchView(false); startRoute(route);
+    switchView(false); switchMode("action"); startRoute(route);
   }
 
   App.addStrings({
     en: {
+      "ldsActionMode": "Action · Starbond Hunt",
+      "ldsStrategyMode": "Strategy · Starbond Relay",
+      "ldsArenaTitle": "STARBOND HUNT",
+      "ldsArenaControls": "WASD / arrows: move · Hold J or the mouse to fire · Space: dodge · E: Evol · P / Esc: pause. Touch: drag the joystick and hold Fire. Keyboard fire aims at the nearest enemy.",
+      "ldsBattleReady": "Enter the Deepspace breach",
+      "ldsBattleIntro": "Fight two enemy waves, then defeat the Wanderer core. Keep moving while firing. Red lines and rings reveal the next attack; dodge just before impact for a perfect evade.",
+      "ldsBattleStart": "Start hunt",
+      "ldsBattlePause": "Pause",
+      "ldsBattleResume": "Resume",
+      "ldsBattlePaused": "Hunt paused",
+      "ldsBattlePauseHint": "Your hunt is waiting. Resume when you're ready; the mission clock is stopped.",
+      "ldsBattleVictory": "BREACH SEALED",
+      "ldsBattleDefeat": "SIGNAL LOST",
+      "ldsBattleAgain": "Hunt again",
+      "ldsBattleScore": "{s} stars · Score {n} · Best combo {c} · Perfect evades {d}",
+      "ldsBattleRetryHint": "Watch the attack warnings, keep moving, and use Evol when your bond gauge fills.",
+      "ldsBattleTimeout": "The breach outlasted the mission clock. Hold fire and use the boss's exposed-core window.",
+      "ldsReturnCharacter": "Return to character",
+      "ldsBattleFire": "Fire · J",
+      "ldsBattleDodge": "Dodge · Space",
+      "ldsBattleEvol": "Evol · E · {n}%",
+      "ldsJoystickLabel": "Movement joystick. Drag to move; WASD and arrow keys also work in the arena.",
+      "ldsHealth": "Health",
+      "ldsStamina": "Dodge stamina",
+      "ldsBattleTime": "Time",
+      "ldsWave": "Wave",
+      "ldsCombo": "Combo",
+      "ldsBossShort": "BOSS",
+      "ldsBossName": "WANDERER · CORE SHIELDED",
+      "ldsBossExposed": "CORE EXPOSED · ATTACK NOW",
+      "ldsBossWarning": "Wanderer incoming. Dodge the fan of bolts and the red impact ring.",
+      "ldsPerfectDodge": "PERFECT EVADE · Time slows · Evol +16",
+      "ldsEvolReleased": "EVOL LINK · Partner skill released",
+      "ldsSoundOff": "Sound off",
+      "ldsSoundOn": "Sound on",
+      "ldsAudioUnavailable": "Sound is unavailable here. You can still play using the visual cues.",
+      "ldsBattlePerkXavier": "Lightblade: strikes every enemy and exposes the boss core. Hold fire during the opening.",
+      "ldsBattlePerkZayne": "Frozen sanctuary: freezes enemies, clears incoming attacks, and restores 22 health.",
+      "ldsBattlePerkRafayel": "Ocean flame: hits every enemy and leaves a three-second burn.",
+      "ldsBattlePerkSylus": "Crimson siphon: strikes the enemy formation and restores 12 health.",
+      "ldsBattlePerkCaleb": "Gravity well: gathers smaller enemies, slows the formation, and exposes the core.",
+      "ldsLogBattle": "Sealed a Deepspace breach with {name} · Score {n}",
       "ldsFanEdition": "FAN-MADE · MINI ADVENTURE",
       "ldsPortraitAlt": "Official {name} character portrait",
       "ldsPartnerCaleb": "Caleb",
@@ -729,6 +819,48 @@
       "logLoveDeepspace": "Cleared Love and Deepspace route with {name} in {n} turns",
     },
     zh: {
+      "ldsActionMode": "动作 · 深空狩猎",
+      "ldsStrategyMode": "策略 · 星缘接力",
+      "ldsArenaTitle": "深空狩猎",
+      "ldsArenaControls": "WASD / 方向键移动 · 按住 J 或鼠标持续射击 · 空格闪避 · E 释放 Evol · P / Esc 暂停。触屏：拖动摇杆并按住射击。键盘射击自动瞄准最近的敌人。",
+      "ldsBattleReady": "进入深空裂隙",
+      "ldsBattleIntro": "击败两波敌人，再摧毁流浪体核心。边射击边移动，红线与圆环会预告下一次攻击；在命中前闪避可触发完美闪避。",
+      "ldsBattleStart": "开始狩猎",
+      "ldsBattlePause": "暂停",
+      "ldsBattleResume": "继续狩猎",
+      "ldsBattlePaused": "狩猎已暂停",
+      "ldsBattlePauseHint": "战斗正在等你。准备好后继续，任务计时已暂停。",
+      "ldsBattleVictory": "裂隙已封锁",
+      "ldsBattleDefeat": "信号中断",
+      "ldsBattleAgain": "再次狩猎",
+      "ldsBattleScore": "{s} 星 · 得分 {n} · 最高连击 {c} · 完美闪避 {d} 次",
+      "ldsBattleRetryHint": "留意攻击预警，保持移动，并在羁绊槽充满时释放 Evol。",
+      "ldsBattleTimeout": "任务时间已耗尽。持续射击，并抓住首领核心暴露的时机。",
+      "ldsReturnCharacter": "返回角色界面",
+      "ldsBattleFire": "射击 · J",
+      "ldsBattleDodge": "闪避 · 空格",
+      "ldsBattleEvol": "Evol · E · {n}%",
+      "ldsJoystickLabel": "移动摇杆。拖动移动，也可在战场使用 WASD 或方向键。",
+      "ldsHealth": "生命",
+      "ldsStamina": "闪避体力",
+      "ldsBattleTime": "时间",
+      "ldsWave": "波次",
+      "ldsCombo": "连击",
+      "ldsBossShort": "首领",
+      "ldsBossName": "流浪体 · 核心护盾",
+      "ldsBossExposed": "核心暴露 · 全力攻击",
+      "ldsBossWarning": "流浪体出现！闪避扇形弹幕与红色冲击圆环。",
+      "ldsPerfectDodge": "完美闪避 · 时间减缓 · Evol +16",
+      "ldsEvolReleased": "Evol 联结 · 搭档技能已释放",
+      "ldsSoundOff": "音效关闭",
+      "ldsSoundOn": "音效开启",
+      "ldsAudioUnavailable": "当前无法播放音效，仍可通过视觉提示继续战斗。",
+      "ldsBattlePerkXavier": "光刃：攻击所有敌人并暴露首领核心，抓住时机持续射击。",
+      "ldsBattlePerkZayne": "冰封庇护：冻结敌人、清除来袭攻击，并恢复 22 点生命。",
+      "ldsBattlePerkRafayel": "海焰：攻击所有敌人，并留下持续三秒的灼烧。",
+      "ldsBattlePerkSylus": "绯红汲取：打击敌方阵列，并恢复 12 点生命。",
+      "ldsBattlePerkCaleb": "引力场：聚拢小型敌人、减缓敌方行动，并暴露核心。",
+      "ldsLogBattle": "与 {name} 封锁深空裂隙 · 得分 {n}",
       "ldsFanEdition": "同人制作 · 迷你冒险",
       "ldsPortraitAlt": "{name} 的官方角色肖像",
       "ldsPartnerCaleb": "夏以昼",
@@ -880,7 +1012,10 @@
         '<rect x="14" y="14" width="36" height="12" rx="6" fill="rgba(96,165,250,.2)" stroke="#60a5fa"/>' +
         '<text x="32" y="22" text-anchor="middle" font-size="7" fill="#bfdbfe">R 82</text></svg>',
       en: [
-        "Aim: clear each route by reaching its resonance target before turns run out.",
+        "Action: Starbond Hunt is the default mode. Move with WASD or arrows, hold J to auto-aim and fire, or hold the mouse to aim manually. On touch screens, drag the joystick and hold Fire.",
+        "Dodge: press Space just before a bolt or impact ring hits. A perfect evade slows enemy time and charges Evol. Press E at 100% for your partner's skill. P or Escape pauses; resume manually after closing the drawer.",
+        "Boss: defeat two enemy waves, then the Wanderer. Attack during its exposed-core window. A win saves a route memory and unlocks the next route; clear in 40 seconds with at least 75 health for three stars.",
+        "Strategy mode: clear each route by reaching its resonance target before turns run out.",
         "Pick one of five partners. Each has a unique perk, Evol skill, and dialogue. Changing partners restarts the current mission.",
         "Every encounter prefers one action card. Matching it grants a combo boost; mismatching costs extra trust and energy.",
         "Keep all three meters alive: zero energy retreats, zero trust breaks the link, and low resonance misses the mission.",
@@ -889,7 +1024,10 @@
         "Animate character plays an optional muted official video online. Local portraits work offline; motion settings and closing the drawer pause the video.",
       ],
       zh: [
-        "目标：在回合耗尽前达到该航线的共鸣目标并通关。",
+        "动作模式：默认进入深空狩猎。WASD 或方向键移动，按住 J 自动瞄准射击，也可按住鼠标手动瞄准。触屏可拖动摇杆并按住射击。",
+        "闪避：弹幕或冲击圆环命中前按空格。完美闪避可减缓敌人并为 Evol 充能，充满后按 E 释放搭档技能。P 或 Esc 暂停，关闭面板后须手动继续。",
+        "首领：击败两波敌人后挑战流浪体，抓住核心暴露的时机攻击。胜利可收藏回忆并解锁新航线；40 秒内通关且剩余至少 75 点生命可获得三星。",
+        "策略模式：在回合耗尽前达到该航线的共鸣目标并通关。",
         "选择五位搭档之一；每位都有独特特性、Evol 技能和对白。切换搭档会重开当前任务。",
         "每次遭遇都有偏好的行动卡，匹配会连锁加成，不匹配会额外消耗默契与能量。",
         "三条数值都要守住：能量归零会撤退，默契归零会断联，共鸣不足会超时失败。",

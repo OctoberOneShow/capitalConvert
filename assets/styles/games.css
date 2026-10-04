@@ -11874,6 +11874,8 @@ button.ghost:hover {
 .lds-stage[hidden], .lds-stage [hidden] { display: none !important; }
 .lds-scene {
   position: relative;
+  width: 100%;
+  min-width: 0;
   min-height: 280px;
   aspect-ratio: 2.25 / 1;
   overflow: hidden;
@@ -11902,6 +11904,8 @@ button.ghost:hover {
   animation: lds-twinkle 4s ease-in-out infinite;
 }
 .lds-scene-portrait, .lds-scene-video { object-fit: cover; object-position: 65% center; }
+.lds-scene[data-partner="rafayel"] .lds-scene-portrait,
+.lds-scene[data-partner="rafayel"] .lds-scene-video { object-position: 32% center; }
 .lds-scene-portrait { animation: lds-breathe 10s ease-in-out infinite; }
 .lds-scene-video { z-index: 1; }
 .lds-scene-veil {
@@ -11957,6 +11961,7 @@ button.ghost:hover {
 }
 .lds-partner-card img { width: 100%; height: 100%; object-fit: cover; object-position: 68% center; transition: transform .25s; }
 .lds-partner-card[data-partner="sylus"] img, .lds-partner-card[data-partner="caleb"] img { object-position: 55% center; }
+.lds-partner-card[data-partner="rafayel"] img { object-position: 32% center; }
 .lds-partner-card > span {
   position: absolute; bottom: 0; left: 0; right: 0;
   padding: 18px 2px 7px; background: linear-gradient(transparent, #080a18e8);
@@ -12059,6 +12064,7 @@ button.ghost:hover {
 [data-motion="off"] .lds-stage *, [data-motion="off"] .lds-stage *::before, [data-motion="off"] .lds-stage *::after { animation: none !important; transition: none !important; }
 [data-motion="off"] .lds-effect, [data-motion="off"] .lds-scene-video { display: none; }
 .lds-stage[hidden] * { animation-play-state: paused !important; }
+.game-modal[hidden] .lds-stage * { animation-play-state: paused !important; }
 @media (prefers-reduced-motion: reduce) {
   .lds-stage *, .lds-stage *::before, .lds-stage *::after { animation: none !important; transition: none !important; }
   .lds-effect, .lds-scene-video { display: none; }
@@ -12082,4 +12088,102 @@ button.ghost:hover {
 @media (max-width: 360px) {
   .lds-moves, .lds-memory-grid { grid-template-columns: 1fr; }
   .lds-edition { display: none; }
+}
+
+/* Starbond Hunt: a compact arena with simultaneous movement and fire controls. */
+.game-dialog:has(.lds-action-mode:not([hidden])) { width: min(920px, calc(100vw - 24px)); }
+.lds-strategy { display: grid; gap: 14px; }
+.lds-mode-nav { display: flex; flex-wrap: wrap; gap: 8px; }
+.lds-stage .lds-mode-button {
+  padding: 9px 14px; border: 1px solid var(--border); border-radius: 24px;
+  background: var(--surface-soft); color: var(--text-secondary); font-size: .75rem;
+}
+.lds-mode-button[aria-pressed="true"] { border-color: var(--lds-accent); color: var(--text); background: #9580c41c; }
+.lds-combat {
+  --lds-battle-accent: #c2b9ff; display: grid; gap: 10px; min-width: 0;
+  padding: 14px; border: 1px solid #535b85; border-radius: 16px;
+  background: #101529; color: #eef0ff; box-shadow: inset 0 0 50px #25263c66;
+}
+.lds-combat-header { display: flex; gap: 8px; align-items: center; }
+.lds-combat-identity { display: flex; gap: 10px; align-items: center; flex: 1; min-width: 0; }
+.lds-combat-avatar { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; object-position: 62% center; border: 2px solid var(--lds-battle-accent); }
+.lds-combat[data-partner="rafayel"] .lds-combat-avatar { object-position: 34% center; }
+.lds-combat-identity strong { display: block; font-size: .85rem; }
+.lds-combat-subtitle { display: block; margin-top: 3px; color: #b7bfdc; font-size: .67rem; }
+.lds-combat .lds-small-button { background: #232a45; color: #eef0ff; border-color: #566080; }
+.lds-combat-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.lds-combat-stats > div { display: flex; gap: 6px; justify-content: space-between; align-items: center; padding: 8px 10px; border-radius: 7px; background: #202640; }
+.lds-combat-stats span { color: #b8c1df; font-size: .65rem; }
+.lds-combat-stats strong { color: #e3e8ff; font-size: .85rem; font-variant-numeric: tabular-nums; }
+.lds-combat-stats > div:first-child strong { color: #99e1cf; }
+.lds-arena-field { position: relative; overflow: hidden; border-radius: 10px; border: 1px solid #4b5279; background: #12162a; }
+.lds-arena-canvas { display: block; width: 100%; height: auto; aspect-ratio: 800 / 440; touch-action: none; cursor: crosshair; }
+.lds-arena-canvas:focus-visible { outline: 2px solid #a5dfff; outline-offset: -3px; }
+.lds-arena-overlay {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 20px; gap: 12px; text-align: center; color: #f5f2ff;
+  background: linear-gradient(135deg, #11152be8, #242540d9); backdrop-filter: blur(3px);
+  overflow-y: auto; justify-content: safe center;
+}
+.lds-arena-overlay > * { flex-shrink: 0; }
+.lds-arena-overlay h4 { margin: 0; font-size: clamp(1.1rem, 3vw, 1.8rem); font-weight: 500; letter-spacing: .06em; }
+.lds-arena-overlay p { max-width: 480px; margin: 0; font-size: .8rem; line-height: 1.7; color: #d5d8eb; }
+.lds-stage .lds-battle-start { padding: 12px 24px; border-radius: 8px; border: 1px solid #d9cbff; background: #c7b6f3; color: #19132f; font-weight: 700; }
+.lds-combat-notice { margin: 0; min-height: 17px; font-size: .7rem; text-align: center; color: #ffe2ad; }
+.lds-battle-controls { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.lds-joystick { position: relative; width: 80px; height: 80px; flex: 0 0 80px; touch-action: none; border: 1px solid #69749d; border-radius: 50%; background: radial-gradient(circle, #38466b, #222942 60%, #161d35); }
+.lds-joystick::before, .lds-joystick::after { content: ""; position: absolute; background: #64739455; }
+.lds-joystick::before { width: 1px; height: 70%; top: 15%; left: 50%; }
+.lds-joystick::after { height: 1px; width: 70%; left: 15%; top: 50%; }
+.lds-joystick-knob { position: absolute; z-index: 1; left: 24px; top: 24px; width: 30px; height: 30px; border-radius: 50%; border: 1px solid #b2d3f1; background: #7297c2; box-shadow: 0 0 18px #a7cfff33; pointer-events: none; }
+.lds-joystick:focus-visible { outline: 2px solid #a5dfff; outline-offset: 3px; }
+.lds-combat-buttons { display: flex; gap: 10px; flex: 1; justify-content: flex-end; }
+.lds-stage .lds-combat-buttons button {
+  min-height: 62px; min-width: 84px; padding: 10px 16px; border: 1px solid #68769f;
+  border-radius: 12px; background: #29334f; color: #e4eeff; font-size: .75rem; touch-action: none; user-select: none;
+}
+.lds-stage .lds-combat-buttons .lds-battle-fire { background: #2c4662; border-color: #89cfea; }
+.lds-stage .lds-combat-buttons .lds-battle-dodge { background: #373348; border-color: #ada0cf; }
+.lds-stage .lds-combat-buttons .lds-battle-dodge[data-ready="false"] { opacity: .55; }
+.lds-stage .lds-combat-buttons .lds-battle-evol { min-width: 145px; border-color: var(--lds-battle-accent); background: #493a67; }
+.lds-combat-buttons button:active:not(:disabled) { filter: brightness(1.3); }
+.lds-battle-evol strong { font-size: .75rem; }
+.lds-combat-charge { display: block; margin-top: 8px; height: 4px; border-radius: 4px; background: #ffffff22; overflow: hidden; }
+.lds-combat-charge i { display: block; height: 100%; background: var(--lds-battle-accent); }
+.lds-combat-instructions, .lds-combat-perk { margin: 0; font-size: .66rem; line-height: 1.6; color: #b4bfdc; }
+.lds-combat-perk { color: var(--lds-battle-accent); }
+.lds-battle-cutin { position: absolute; right: 0; bottom: 12px; width: 240px; height: 100px; padding: 18px 12px 12px 115px; border: 1px solid var(--lds-battle-accent); border-right: 0; background: #1c2039eb; box-shadow: 0 0 35px #b4a0e84d; pointer-events: none; animation: lds-cutin .25s ease-out both; }
+.lds-battle-cutin img { position: absolute; inset: 0 auto 0 0; width: 105px; height: 100%; object-fit: cover; object-position: 62% center; }
+.lds-combat[data-partner="rafayel"] .lds-battle-cutin img { object-position: 34% center; }
+.lds-battle-cutin strong, .lds-battle-cutin span { display: block; font-size: .85rem; margin: 6px 0; }
+.lds-battle-cutin span { font-size: .68rem; color: var(--lds-battle-accent); }
+.lds-in-combat > :not(.lds-mission), .lds-in-combat .lds-mode-nav, .lds-in-combat .lds-top, .lds-in-combat .lds-route-map { display: none; }
+.game-dialog:has(.lds-in-combat) .game-tabs, .game-dialog:has(.lds-in-combat) #gameTabsToggle { display: none; }
+.lds-in-combat .lds-combat { gap: 8px; }
+@keyframes lds-cutin { from { transform: translateX(70px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@media (max-width: 560px) {
+  .lds-combat { padding: 9px; gap: 8px; }
+  .lds-combat:not([data-state="running"]) .lds-arena-field { min-height: 220px; }
+  .lds-combat-header { flex-wrap: wrap; }
+  .lds-combat-identity { flex-basis: 100%; }
+  .lds-combat-header .lds-small-button { min-height: 32px; padding: 6px 9px; }
+  .lds-combat-stats { gap: 4px; }
+  .lds-combat-stats > div { flex-direction: column; padding: 6px 3px; gap: 3px; }
+  .lds-arena-overlay { gap: 8px; padding: 10px; }
+  .lds-arena-overlay p { font-size: .65rem; line-height: 1.45; }
+  .lds-stage .lds-battle-start { padding: 8px 14px; }
+  .lds-battle-controls { gap: 8px; }
+  .lds-joystick { width: 70px; height: 70px; flex-basis: 70px; }
+  .lds-joystick-knob { left: 19px; top: 19px; }
+  .lds-combat-buttons { gap: 5px; }
+  .lds-stage .lds-combat-buttons button { padding: 8px 5px; min-width: 48px; min-height: 56px; font-size: .62rem; }
+  .lds-stage .lds-combat-buttons .lds-battle-evol { min-width: 90px; }
+  .lds-battle-evol strong { font-size: .62rem; }
+  .lds-battle-cutin { width: 180px; height: 80px; padding: 10px 8px 8px 85px; }
+  .lds-battle-cutin img { width: 78px; }
+}
+@media (max-width: 380px) {
+  .lds-combat-buttons { flex-wrap: wrap; }
+  .lds-stage .lds-combat-buttons .lds-battle-evol { flex-basis: 100%; }
+  .lds-stage .lds-combat-buttons button { min-height: 44px; }
 }
