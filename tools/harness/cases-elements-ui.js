@@ -8,6 +8,27 @@
 const { createEnvironment, appSource, check, boot, adopt, seedToolDom, run, notes } = require("./lib");
 const { ELEMENTS_KEY, newSim, ELEMENT_TOOLS, seedElementsDom, bootElements, elementsStore, elementsRecord, bootElementsWith, ELEMENTS_ORDER, ELEMENTS_PARS, unlockedRecord, selectChallenge, challengeOption, clickTool, pressKey, clickBrush, setSpeedTo, clickHand, paintCell, paintAcross, renderedImage, pixelAt, looksLikeFire, looksLikeWater, looksLikeEmpty, looksLikeStone, won, frameSnapshot, frameDiff, pourFlood, pourGrow, douseHedge, bootDrawer, pocket, basin } = require("./cases-elements-sim");
 
+run("elements abandon resets world", () => {
+  const env = bootDrawer({});
+  env.byId("gameToggleBtn").click();
+  env.byId("gameTabElements").click();
+  selectChallenge(env, "grow");
+  const opening = frameSnapshot(env);
+  env.byId("elementsStartBtn").click();
+  env.timers.advance(1500);
+  check("elements abandon resets world", "the attempted run has advanced its goal",
+    env.byId("elementsProgress").textContent !== "2/56");
+  env.byId("gameTabMemory").click();
+  env.byId("gameTabElements").click();
+  check("elements abandon resets world", "switching games restores the world along with its clock",
+    env.byId("elementsProgress").textContent === "2/56" &&
+    env.byId("elementsTime").textContent === "60.0s" &&
+    frameDiff(opening, frameSnapshot(env)) === 0);
+  env.timers.advance(1500);
+  check("elements abandon resets world", "the abandoned attempt cannot finish on a fresh clock",
+    env.byId("elementsProgress").textContent === "2/56" && !won(env));
+});
+
 /* Every timed board's fence, exactly as the campaign declares it. Free play is
  * the one board with an empty list: the sandbox stays completely open. No
  * timed board's fence overlaps the place its goal is scored in, which is what

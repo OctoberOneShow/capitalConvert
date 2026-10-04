@@ -1,0 +1,130 @@
+/* Shadow Puppeteer - the wall canvas, the lever row and the fit readout.
+   Every number the player chases is printed as a digit, so no rule here
+   leans on hue alone; the is-low tag only rides next to the fit figure. */
+.shp-canvas {
+    display: block;
+    width: 100%;
+    max-width: 340px;
+    height: auto;
+    margin: 0 auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--panel-bg);
+    outline: none;
+    touch-action: none;
+}
+
+.shp-canvas:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .shp-canvas {
+    background: var(--panel-strong);
+    border-color: var(--surface-soft);
+}
+
+/* The lever picker: four small mono buttons, one per control. */
+.shp-levers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.shp-lever {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+
+.shp-lever:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* The picked lever wears a box and a weight, not just a tint. */
+.shp-lever.is-on {
+    border-color: var(--accent);
+    border-width: 2px;
+    background: var(--panel-strong);
+    color: var(--accent-2);
+    font-weight: 700;
+}
+
+[data-theme="light"] .shp-lever {
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .shp-lever.is-on {
+    background: var(--panel-strong);
+}
+
+/* The fit readout: fit percent, the two shadow segment lengths and the
+   shear angle - digits first, colour never alone. */
+.shp-readout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+    gap: 6px 12px;
+    margin-top: 12px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .shp-readout {
+    background: var(--panel-strong);
+    border-color: var(--surface-soft);
+}
+
+.shp-stat {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 0;
+}
+
+.shp-cap {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.shp-val {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.86rem;
+    color: var(--text);
+}
+
+.shp-fit {
+    font-size: 1rem;
+    color: var(--accent-2);
+}
+
+/* Below the lock bar the fit figure also drops to the danger ink; the
+   number itself changes too, so the news is never colour-only. */
+.shp-fit.is-low {
+    color: var(--danger-text);
+    border-bottom: 1px dashed var(--danger-text);
+}
+
+@media (max-width: 480px) {
+    .shp-readout {
+        grid-template-columns: 1fr;
+    }
+}
+
+[data-motion="off"] .shp-lever,
+[data-motion="off"] .shp-canvas {
+    transition: none;
+}

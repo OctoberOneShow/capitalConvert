@@ -1,0 +1,278 @@
+/* game-switchboard-duo (registry game) */
+/* Switchboard Duo - two control desks side by side. Only "swb-" classes, and only
+ * the shared tokens: the machine has to read in either theme, from either stool. */
+.swb-desks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.swb-desk {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+    padding: 10px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+    outline: none;
+}
+
+[data-theme="light"] .swb-desk {
+    background: #f8fafc;
+}
+
+/* A desk is a tab stop: once it has focus, its own key cluster is live. */
+.swb-desk:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* The seated stool is the one that may give orders when a single operator works
+ * both desks, and it is marked with more than colour. */
+.swb-desk.is-seated {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.swb-desk-a {
+    border-top: 3px solid var(--accent);
+}
+
+.swb-desk-b {
+    border-top: 3px solid var(--accent-2);
+}
+
+.swb-desk-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--border);
+}
+
+.swb-desk-name {
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+}
+
+/* Both key clusters are printed on the desk they belong to, not only in the
+ * guide: whoever sits down can see at a glance which letters are theirs. */
+.swb-desk-keys {
+    display: block;
+    width: 100%;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.64rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.swb-dials {
+    display: grid;
+    gap: 4px;
+}
+
+.swb-dial {
+    display: grid;
+    grid-template-columns: minmax(52px, auto) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px;
+}
+
+.swb-dial-name {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.swb-dial-value {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    color: var(--text);
+}
+
+.swb-bar {
+    display: block;
+    height: 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    overflow: hidden;
+}
+
+.swb-bar-fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.16s ease;
+}
+
+.swb-dial.is-hot .swb-bar-fill {
+    background: var(--danger-text);
+}
+
+.swb-dial.is-hot .swb-dial-value {
+    color: var(--danger-text);
+    font-weight: 800;
+}
+
+/* The arc lamp is an instrument, so it reads as a lamp and as a word. */
+.swb-dial.is-lit .swb-dial-value {
+    color: var(--accent-2);
+    font-weight: 800;
+}
+
+.swb-dial.is-lit .swb-bar {
+    border-color: var(--accent-2);
+}
+
+.swb-reading,
+.swb-order {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    line-height: 1.6;
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+/* The desk's half of the work order: the one line the other operator needs. */
+.swb-order {
+    padding: 6px 8px;
+    border-radius: 10px;
+    border-left: 3px solid var(--accent-2);
+    background: var(--panel-bg);
+    color: var(--text);
+    font-family: var(--font-main);
+    font-size: 0.72rem;
+}
+
+[data-theme="light"] .swb-order {
+    background: #eef2f7;
+}
+
+.swb-rack {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.swb-key {
+    display: grid;
+    gap: 1px;
+    place-items: center;
+    min-height: 46px;
+    padding: 5px 4px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--panel-bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+[data-theme="light"] .swb-key {
+    background: #ffffff;
+}
+
+.swb-key:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.swb-key-cap {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+}
+
+.swb-key-name {
+    line-height: 1.15;
+    text-align: center;
+}
+
+.swb-key-state {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    color: var(--text-secondary);
+}
+
+/* The rack finger the arrows walk: outline as well as colour. */
+.swb-key.is-pointed {
+    border-color: var(--accent);
+    border-width: 2px;
+    box-shadow: var(--focus-ring);
+}
+
+.swb-key.is-pointed .swb-key-cap {
+    color: var(--accent-text);
+}
+
+.swb-key-hold {
+    grid-column: 1 / -1;
+    border-style: dashed;
+    font-weight: 600;
+}
+
+.swb-page-title {
+    margin: 2px 0 0;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.swb-page {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 0.68rem;
+    line-height: 1.55;
+    color: var(--text);
+}
+
+.swb-page li + li {
+    margin-top: 3px;
+}
+
+.swb-btn-swap {
+    min-height: 44px;
+    padding: 10px 12px;
+}
+
+.swb-btn-swap:disabled {
+    color: var(--text-secondary);
+    cursor: not-allowed;
+}
+
+@media (max-width: 720px) {
+    .swb-desks {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+[data-motion="off"] .swb-bar-fill {
+    transition: none;
+}
+
+[data-motion="off"] .swb-key.is-pointed,
+[data-motion="off"] .swb-desk.is-seated,
+[data-motion="off"] .swb-key:focus-visible {
+    box-shadow: none;
+    border-color: var(--accent);
+}

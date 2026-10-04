@@ -1,6 +1,7 @@
 /* Glyph Mines - The minesweeper mini-game in the shared game drawer. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
+  var localStorage = App.storage;
   var t = App.t;
   var getElement = App.getElement;
   var logAction = App.logAction;
@@ -54,6 +55,7 @@
     var timerId = null;
     var revealedCount = 0;
     var flagCount = 0;
+    var boomIndex = -1;
 
     function readBest() {
       var value = parseInt(localStorage.getItem(mnBestKey), 10);
@@ -117,6 +119,9 @@
       var button = buttons[index];
       button.textContent = "";
       button.className = "mn-cell";
+      if (index === boomIndex) {
+        button.classList.add("is-boom");
+      }
       button.style.color = "";
       if (cell.flagged) {
         button.classList.add("is-flagged");
@@ -176,6 +181,7 @@
       over = false;
       revealedCount = 0;
       flagCount = 0;
+      boomIndex = -1;
       timeEl.textContent = "0.0s";
       renderAll();
       renderBest();
@@ -184,6 +190,7 @@
 
     function boom(index) {
       over = true;
+      boomIndex = index;
       if (timerId !== null) {
         window.clearInterval(timerId);
         timerId = null;
@@ -193,7 +200,6 @@
           cell.revealed = true;
         }
       });
-      buttons[index].classList.add("is-boom");
       renderAll();
       resultEl.textContent = t("mnBoom");
       logAction(t("logMines", { s: "\u2014" }));
@@ -263,15 +269,18 @@
       if (over || cells[index].revealed) {
         return;
       }
+      if (flagMode) {
+        toggleFlag(index);
+        return;
+      }
+      if (cells[index].flagged) {
+        return;
+      }
       if (!started) {
         placeMines(index);
         started = true;
         startTimer();
         resultEl.textContent = t("mnGo");
-      }
-      if (flagMode) {
-        toggleFlag(index);
-        return;
       }
       reveal(index);
       renderAll();

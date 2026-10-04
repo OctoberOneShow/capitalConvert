@@ -5,7 +5,7 @@
  */
 "use strict";
 
-const { createEnvironment, appSource, check, near, boot, seedToolDom, run } = require("./lib");
+const { createEnvironment, appSource, check, near, boot, seedToolDom, run, drawerTabPairs } = require("./lib");
 
 const ELEMENTS_KEY = "elements-best";
 
@@ -592,8 +592,9 @@ function douseHedge(env, rounds) {
 }
 
 /* The whole drawer, so tab switching / closing really runs the shared shell
- * (initTypingGame owns those listeners and its fail-closed guard needs all
- * eighteen tabs and panels). Only the typing and ladder panels need their bodies:
+ * (initTypingGame owns those listeners and its fail-closed guard needs every
+ * tab and panel). The pairs come from index.html so the fixture cannot fall
+ * behind the page. Only the typing and ladder panels need their bodies:
  * the other games return early without theirs. */
 function seedDrawerDom(env) {
   const doc = env.document;
@@ -627,33 +628,14 @@ function seedDrawerDom(env) {
   tabs.id = "gameTabs";
   tabs.setAttribute("role", "tablist");
   dialog.appendChild(tabs);
-  [
-    ["gameTabTyping", "gamePanelTyping", true],
-    ["gameTabMemory", "gamePanelMemory", false],
-    ["gameTab2048", "gamePanel2048", false],
-    ["gameTabReflex", "gamePanelReflex", false],
-    ["gameTabCaretDash", "gamePanelCaretDash", false],
-    ["gameTabElements", "gamePanelElements", false],
-    ["gameTabSpotDiff", "gamePanelSpotDiff", false],
-    ["gameTabPlumber", "gamePanelPlumber", false],
-    ["gameTabStack", "gamePanelStack", false],
-    ["gameTabColorCode", "gamePanelColorCode", false],
-    ["gameTabBreakout", "gamePanelBreakout", false],
-    ["gameTabEmberDice", "gamePanelEmberDice", false],
-    ["gameTabSnake", "gamePanelSnake", false],
-    ["gameTabLights", "gamePanelLights", false],
-    ["gameTabMines", "gamePanelMines", false],
-    ["gameTabGomoku", "gamePanelGomoku", false],
-    ["gameTabTraffic", "gamePanelTraffic", false],
-    ["gameTabVault", "gamePanelVault", false],
-  ].forEach(([tabId, panelId, first]) => {
+  drawerTabPairs().forEach(([tabId, panelId], index) => {
     const tab = doc.createElement("button");
     tab.className = "game-tab";
     tab.id = tabId;
     tab.setAttribute("role", "tab");
-    tab.setAttribute("aria-selected", first ? "true" : "false");
+    tab.setAttribute("aria-selected", index === 0 ? "true" : "false");
     tab.setAttribute("aria-controls", panelId);
-    tab.tabIndex = first ? 0 : -1;
+    tab.tabIndex = index === 0 ? 0 : -1;
     tabs.appendChild(tab);
   });
 
@@ -671,18 +653,16 @@ function seedDrawerDom(env) {
   pickerToggle.appendChild(pickerCount);
   dialog.appendChild(pickerToggle);
 
-  ["gamePanelTyping", "gamePanelMemory", "gamePanel2048", "gamePanelReflex",
-    "gamePanelCaretDash", "gamePanelSpotDiff", "gamePanelPlumber",
-    "gamePanelStack", "gamePanelColorCode", "gamePanelBreakout",
-    "gamePanelEmberDice", "gamePanelSnake", "gamePanelLights",
-    "gamePanelMines", "gamePanelGomoku", "gamePanelTraffic",
-    "gamePanelVault"].forEach((panelId, index) => {
-    const panel = doc.createElement("div");
-    panel.className = "game-panel";
-    panel.id = panelId;
-    panel.hidden = index !== 0;
-    dialog.appendChild(panel);
-  });
+  drawerTabPairs()
+    .map(([, panelId]) => panelId)
+    .filter((panelId) => panelId !== "gamePanelElements")
+    .forEach((panelId, index) => {
+      const panel = doc.createElement("div");
+      panel.className = "game-panel";
+      panel.id = panelId;
+      panel.hidden = index !== 0;
+      dialog.appendChild(panel);
+    });
   dialog.appendChild(buildElementsPanel(env));
 
   /* Typing panel body; the sandbox body comes from buildElementsPanel above.

@@ -1,6 +1,7 @@
-﻿/* 2048 - The sliding-tile mini-game in the shared game drawer. */
+/* 2048 - The sliding-tile mini-game in the shared game drawer. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
+  var localStorage = App.storage;
   var t = App.t;
   var getElement = App.getElement;
   var petNotifyGame = App.petNotifyGame;
@@ -213,6 +214,16 @@
       saveState();
     }
 
+    function endGame() {
+      over = true;
+      resultEl.textContent =
+        t("g2048OverResult", { n: score }) +
+        (score > 0 && score > bestAtStart ? " " + t("newBest") : "");
+      showOverlay(t("g2048Over", { n: score }), false);
+      petNotifyGame(score > 0 && score > bestAtStart);
+      saveState();
+    }
+
     function move(direction) {
       if (over) {
         return;
@@ -286,6 +297,9 @@
       });
 
       if (!moved) {
+        if (!canMove()) {
+          endGame();
+        }
         return;
       }
 
@@ -322,12 +336,7 @@
         resultEl.textContent = t("g2048WinContinue");
         showOverlay(t("g2048Win"), true);
       } else if (!canMove()) {
-        over = true;
-        resultEl.textContent =
-          t("g2048OverResult", { n: score }) +
-          (score > 0 && score > bestAtStart ? " " + t("newBest") : "");
-        showOverlay(t("g2048Over", { n: score }), false);
-        petNotifyGame(score > 0 && score > bestAtStart);
+        endGame();
       }
 
       saveState();
@@ -376,6 +385,10 @@
     retryBtn.addEventListener("click", newGame);
     keepBtn.addEventListener("click", function () {
       overlayEl.hidden = true;
+      if (!canMove()) {
+        endGame();
+        return;
+      }
       boardEl.focus();
     });
     newBtn.addEventListener("click", function () {

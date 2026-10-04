@@ -1,0 +1,423 @@
+/* Tiny Wrestlers */
+.twr-arena {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+    outline: none;
+}
+
+[data-theme="light"] .twr-arena {
+    background: #f8fafc;
+}
+
+.twr-arena:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* The mat is a strip seen from above: rim on the left, rim on the right, and
+ * the numbered space written where the two wrestlers measure each other. */
+.twr-mat {
+    position: relative;
+    height: 124px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    overflow: hidden;
+}
+
+[data-theme="light"] .twr-mat {
+    background: #eaf0f7;
+}
+
+.twr-rim {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 13%;
+    display: grid;
+    place-items: center;
+    border: 1px dashed var(--danger-text);
+    background: var(--panel-bg);
+}
+
+.twr-rim-left {
+    left: 0;
+    border-radius: 14px 0 0 14px;
+    border-right: none;
+}
+
+.twr-rim-right {
+    right: 0;
+    border-radius: 0 14px 14px 0;
+    border-left: none;
+}
+
+[data-theme="light"] .twr-rim {
+    background: #ffffff;
+}
+
+.twr-rim-word {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--danger-text);
+    writing-mode: vertical-rl;
+}
+
+.twr-wrestler {
+    position: absolute;
+    top: 50%;
+    width: 34px;
+    height: 34px;
+    margin-top: -17px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: var(--panel-strong);
+    display: grid;
+    place-items: center;
+    z-index: 2;
+    transition: left 0.22s ease;
+    animation: twrBob 1.6s ease-in-out infinite;
+}
+
+[data-theme="light"] .twr-wrestler {
+    background: #ffffff;
+}
+
+.twr-head {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+.twr-red {
+    border-color: var(--accent-2);
+}
+
+.twr-red .twr-head {
+    background: var(--accent-2);
+}
+
+/* Rim steps 0 to 2, and 3 is the wrestler already over the edge. */
+.twr-blue.twr-foot-0 {
+    left: 41%;
+}
+
+.twr-blue.twr-foot-1 {
+    left: 27%;
+}
+
+.twr-blue.twr-foot-2 {
+    left: 13%;
+}
+
+.twr-blue.twr-foot-3 {
+    left: 1%;
+}
+
+.twr-red.twr-foot-0 {
+    left: 52%;
+}
+
+.twr-red.twr-foot-1 {
+    left: 66%;
+}
+
+.twr-red.twr-foot-2 {
+    left: 80%;
+}
+
+.twr-red.twr-foot-3 {
+    left: 92%;
+}
+
+.twr-wrestler.is-locked {
+    box-shadow: var(--focus-ring);
+}
+
+.twr-wrestler.is-exposed {
+    border-style: dashed;
+    animation: twrExpose 0.9s ease-in-out infinite;
+}
+
+.twr-wrestler.is-down {
+    border-style: dashed;
+    opacity: 0.55;
+    transform: rotate(24deg) scale(0.82);
+    animation: none;
+}
+
+.twr-space-tag {
+    position: absolute;
+    left: 50%;
+    top: 8px;
+    transform: translateX(-50%);
+    padding: 2px 9px;
+    border-radius: 999px;
+    border: 1px dashed var(--border);
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    white-space: nowrap;
+    z-index: 3;
+}
+
+[data-theme="light"] .twr-space-tag {
+    background: #ffffff;
+}
+
+/* The beat window: six ticks, so the time left is countable at a glance. */
+.twr-window {
+    display: flex;
+    gap: 4px;
+}
+
+.twr-tick {
+    flex: 1;
+    height: 7px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+}
+
+.twr-tick.is-on {
+    border-color: var(--accent);
+    background: var(--accent);
+}
+
+[data-theme="light"] .twr-tick.is-on {
+    border-color: var(--accent-text);
+    background: #7dd3e8;
+}
+
+.twr-call {
+    min-height: 2.4em;
+    color: var(--text);
+    font-size: 0.82rem;
+    line-height: 1.45;
+    text-align: center;
+}
+
+.twr-pads {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+}
+
+.twr-pads-duo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.twr-pads-single .twr-pad {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.twr-pad {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    padding: 8px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+}
+
+[data-theme="light"] .twr-pad {
+    background: #ffffff;
+}
+
+.twr-pad-blue {
+    box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.twr-pad-red {
+    box-shadow: inset 3px 0 0 var(--accent-2);
+}
+
+.twr-pad-head,
+.twr-keys,
+.twr-side-state,
+.twr-pad-state {
+    grid-column: 1 / -1;
+}
+
+.twr-pad-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.twr-pad-title {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.twr-pips {
+    display: flex;
+    gap: 3px;
+}
+
+.twr-pip {
+    width: 13px;
+    height: 13px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--panel-bg);
+}
+
+.twr-pip.is-on {
+    border-color: var(--accent);
+    background: var(--accent);
+}
+
+.twr-pad-red .twr-pip.is-on {
+    border-color: var(--accent-2);
+    background: var(--accent-2);
+}
+
+[data-theme="light"] .twr-pip {
+    background: #e2e8f0;
+}
+
+.twr-keys {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.twr-side-state {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--text);
+}
+
+.twr-pad-state {
+    margin: 0;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.twr-order {
+    display: grid;
+    gap: 2px;
+    place-items: center;
+    min-height: 44px;
+    padding: 6px 4px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--panel-bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.74rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+[data-theme="light"] .twr-order {
+    background: #f8fafc;
+}
+
+.twr-order:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.twr-order-name {
+    line-height: 1.2;
+    text-align: center;
+}
+
+.twr-order-key {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+}
+
+.twr-order.is-pick {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.twr-order.is-locked {
+    border-color: var(--accent-text);
+}
+
+.twr-order.is-blocked {
+    opacity: 0.45;
+    border-style: dashed;
+    cursor: not-allowed;
+}
+
+.twr-keys-alias {
+    padding-top: 6px;
+    border-top: 1px dashed var(--border);
+    text-align: center;
+}
+
+.twr-plain {
+    min-height: 44px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.84rem;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+@keyframes twrBob {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+@keyframes twrExpose {
+    0%,
+    100% {
+        box-shadow: none;
+    }
+    50% {
+        box-shadow: var(--focus-ring);
+    }
+}
+
+[data-motion="off"] .twr-wrestler,
+[data-motion="off"] .twr-wrestler.is-exposed {
+    animation: none !important;
+    transition: none;
+}
+
+[data-motion="off"] .twr-order.is-pick,
+[data-motion="off"] .twr-wrestler.is-locked,
+[data-motion="off"] .twr-order:focus-visible {
+    box-shadow: none;
+    border-color: var(--accent);
+}
+
+[data-motion="off"] .twr-tick.is-on {
+    border-style: solid;
+}

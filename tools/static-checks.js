@@ -2,8 +2,8 @@
 /*
  * Static acceptance checks for the pet companion change.
  *
- *   1. the four pages still expose exactly 43 game tabs / 43 game panels
- *   2. both shared assets are requested with ?v=42 on all four pages
+ *   1. the four pages still expose exactly 49 game tabs / 49 game panels
+ *   2. both shared assets are requested with ?v=56 on all four pages
  *   3. only the cache-busting string changed on the asset lines of each page
  *   4. the pet markup is NOT present in any HTML file (it is JS-injected)
  *   5. UTF-8 / CJK integrity (BOM, no U+FFFD, no latin1 mojibake, sample strings)
@@ -108,6 +108,26 @@ function countOccurrences(haystack, needle) {
   return haystack.split(needle).length - 1;
 }
 
+/* Registry games ship their copy inside their own module, and a pack may put two
+ * keys on one line, which the six-space shape the shipped dictionary uses cannot
+ * see. Parse the addStrings bodies directly instead of guessing by indentation. */
+function collectPackKeys(source) {
+  const pack = /App\.addStrings\(\{([\s\S]*?)\n {2}\}\);/.exec(source);
+  const out = { en: [], zh: [] };
+  if (!pack) {
+    return out;
+  }
+  ["en", "zh"].forEach((lang) => {
+    const body = new RegExp(`\\b${lang}:\\s*\\{([\\s\\S]*?)\\n {4}\\}`).exec(pack[1]);
+    if (body) {
+      Array.from(body[1].matchAll(/"([A-Za-z0-9]+)"\s*:/g)).forEach((match) =>
+        out[lang].push(match[1]),
+      );
+    }
+  });
+  return out;
+}
+
 /* The Glyph Match pool is written as \uXXXX escapes so the source stays pure
  * ASCII; read the array back as glyph strings for counting. */
 function memoryGlyphPool(source) {
@@ -118,42 +138,37 @@ function memoryGlyphPool(source) {
 }
 
 console.log("== 1/2. page structure and asset versions ==");
-const APP_MODULES = [
-  "i18n", "core", "tools", "pet-data", "pet-state", "pet-life", "pet-art",
-  "pet-dom", "pet-render", "pet-games", "pet", "game-campaign",
-  "game-elements-core", "game-elements",
-  "game-typing", "game-memory", "game-2048", "game-reflex",
-  "game-caret-dash", "game-spot-diff", "game-plumber", "game-stack",
-  "game-color-code", "game-breakout", "game-ember-dice", "game-snake",
-  "game-lights", "game-mines", "game-gomoku", "game-traffic", "game-vault",
-  "game-glyph-blocks", "game-ink-cascade", "game-ink-beat",
-  "game-bubble-ink", "game-glyph-echo", "game-ink-slash",
-  "game-peg-splash", "game-glyph-raid", "game-glyph-leap",
-  "game-aurora-flow", "game-comet-golf",
-  "game-prism-path", "game-starfall",
-  "game-ink-sort", "game-glyph-crossing",
-  "game-glyph-pusher", "game-glyph-net",
-  "game-glyph-sketch", "game-glyph-fifteen",
-  "game-glyph-sudoku", "game-glyph-reversi",
-  "game-glyph-glide", "game-glyph-four",
-  "game-glyph-tower", "game-glyph-fleet",
-  "game-guide",
-  "main",
-];
+/* index.html is the manifest: the script tags it carries are the modules the
+ * app boots, in load order. Deriving the list here means a new game module
+ * cannot drift from this suite, and the check below still catches a tag that
+ * points at a file which was never written. */
+const APP_MODULES = Array.from(
+  read("index.html").matchAll(/assets\/app\/([a-z0-9-]+)\.js\?v=\d+/g),
+).map((match) => match[1]);
+check(
+  `all ${APP_MODULES.length} app modules on the manifest exist on disk`,
+  APP_MODULES.length >= 60 &&
+    APP_MODULES.every((name) =>
+      fs.existsSync(path.join(root, "assets", "app", name + ".js")),
+    ),
+  APP_MODULES.filter(
+    (name) => !fs.existsSync(path.join(root, "assets", "app", name + ".js")),
+  ).join(","),
+);
 const STYLE_MODULES = ["base", "games", "pet"];
 PAGES.forEach((page) => {
   const html = read(page);
   const tabs = countOccurrences(html, 'class="game-tab"');
   const panels = countOccurrences(html, 'class="game-panel"');
-  check(`${page}: exactly 43 game-tab`, tabs === 43, `found ${tabs}`);
-  check(`${page}: exactly 43 game-panel`, panels === 43, `found ${panels}`);
+  check(`${page}: exactly 49 game-tab`, tabs === 49, `found ${tabs}`);
+  check(`${page}: exactly 49 game-panel`, panels === 49, `found ${panels}`);
   check(
-    `${page}: stylesheets requested as ?v=42`,
-    STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=42`)),
+    `${page}: stylesheets requested as ?v=56`,
+    STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=56`)),
   );
   check(
-    `${page}: scripts requested as ?v=42`,
-    APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=42`)),
+    `${page}: scripts requested as ?v=56`,
+    APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=56`)),
   );
   /* Collect every ?v= token on the page and require them all to equal
    * the current cache-busting version, so single-digit versions cannot
@@ -162,8 +177,8 @@ PAGES.forEach((page) => {
     (match) => match[1],
   );
   check(
-    `${page}: every asset token is ?v=42 with no stale versions left`,
-    pageVersions.length > 0 && pageVersions.every((v) => v === "42"),
+    `${page}: every asset token is ?v=56 with no stale versions left`,
+    pageVersions.length > 0 && pageVersions.every((v) => v === "56"),
     Array.from(new Set(pageVersions)).join(",") || "none found",
   );
 
@@ -176,8 +191,8 @@ PAGES.forEach((page) => {
     `found ${assetLines.length}`,
   );
   check(
-    `${page}: all asset references are ?v=42`,
-    assetLines.every((line) => line.includes("?v=42")),
+    `${page}: all asset references are ?v=56`,
+    assetLines.every((line) => line.includes("?v=56")),
     assetLines.join(" | "),
   );
 
@@ -192,9 +207,9 @@ PAGES.forEach((page) => {
   // reference is versioned and every expected module is present.
   check(
     `${page}: asset lines are all versioned split modules`,
-    assetLines.every((line) => /\?v=42/.test(line)) &&
-      STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=42`)) &&
-      APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=42`)),
+    assetLines.every((line) => /\?v=56/.test(line)) &&
+      STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=56`)) &&
+      APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=56`)),
     "asset reference shape changed beyond version token",
   );
 });
@@ -653,14 +668,24 @@ check(
 );
 check(
   "twelve boards declare a goal, a limit, a par, a budget and a palette",
-  countOccurrences(appJs, 'labelKey: "elementsChallenge') === 12 &&
-    countOccurrences(appJs, "goalKey:") === 12 &&
-    countOccurrences(appJs, "tools: [") === 12 &&
-    countOccurrences(appJs, "stars: [") === 12 &&
-    countOccurrences(appJs, "budget:") === 12 &&
-    /limit: 60/.test(appJs) &&
-    /limit: 20/.test(appJs) &&
-    /limit: 90/.test(appJs),
+  (() => {
+    /* Count inside the Elements table only: these field names belong to other
+     * games too, and a global count broke every time one was added. */
+    const table = appJs.slice(
+      appJs.indexOf("var elementsChallenges = ["),
+      appJs.indexOf("var elementsBasePalette"),
+    );
+    return (
+      countOccurrences(table, 'labelKey: "elementsChallenge') === 12 &&
+      countOccurrences(table, "goalKey:") === 12 &&
+      countOccurrences(table, "tools: [") === 12 &&
+      countOccurrences(table, "stars: [") === 12 &&
+      countOccurrences(table, "budget:") === 12 &&
+      /limit: 60/.test(table) &&
+      /limit: 20/.test(table) &&
+      /limit: 90/.test(table)
+    );
+  })(),
 );
 check(
   "the campaign table is the design's eleven boards in teaching order",
@@ -1734,7 +1759,7 @@ check(
       const probe = new Function(
         code + "\nreturn trafLevels.map((l) => trafficSolvable(l, 30000));",
       )();
-      return probe.length === 16 && probe.every(Boolean);
+      return probe.length >= 16 && probe.every(Boolean);
     } catch (error) {
       return false;
     }
@@ -2851,11 +2876,13 @@ check(
     const block = /var pushLevels = \[([\s\S]*?)\n  \];/.exec(src);
     if (!block) return false;
     const maps = Array.from(block[1].matchAll(/map:\s*\[([\s\S]*?)\]/g));
-    if (maps.length !== 8) return false;
+    const roomIds = Array.from(block[1].matchAll(/id:\s*"([a-z0-9]+)"/g)).map((m) => m[1]);
+    /* Room count comes from the table so the ladder can keep growing. */
+    if (roomIds.length < 8 || maps.length !== roomIds.length) return false;
     const thresholds = Array.from(block[1].matchAll(/starMoves:\s*\[(\d+),\s*(\d+),\s*(\d+)\]/g)).map(
       (m) => [Number(m[1]), Number(m[2]), Number(m[3])],
     );
-    if (thresholds.length !== 8) return false;
+    if (thresholds.length !== roomIds.length) return false;
     return maps.every((m, index) => {
       const rows = Array.from(m[1].matchAll(/"([^"]*)"/g)).map((x) => x[1]);
       const H = rows.length;
@@ -2941,6 +2968,60 @@ check(
       }
       return true;
     });
+  })(),
+);
+check(
+  "a Glyph Net board only wins with every bulb on the source's side",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-net.js"),
+      "utf8",
+    );
+    const slice = src.slice(
+      src.indexOf("var NET_DX"),
+      src.indexOf("App.glyphNetGenerate"),
+    );
+    const netWin = new Function(slice + "\nreturn netWin;")();
+    const F = false;
+    const T = true;
+    const none = [F, F, F, F];
+    /* [north, east, south, west]. Every arm below has a matching partner, so
+     * only reachability from the source tells these two boards apart. */
+    const oneLoop = [
+      [F, T, T, F],
+      [F, F, T, T],
+      [T, T, F, F],
+      [T, F, F, T],
+    ];
+    const twoLoops = [
+      [F, T, T, F],
+      [F, F, T, T],
+      none,
+      none,
+      [T, T, F, F],
+      [T, F, F, T],
+      none,
+      none,
+      none,
+      none,
+      [F, T, T, F],
+      [F, F, T, T],
+      none,
+      none,
+      [T, T, F, F],
+      [T, F, F, T],
+    ];
+    const zeros = (count) => {
+      const out = [];
+      for (let i = 0; i < count; i += 1) {
+        out.push(0);
+      }
+      return out;
+    };
+    return (
+      netWin(2, oneLoop, zeros(4)) === true &&
+      netWin(4, twoLoops, zeros(16)) === false
+    );
   })(),
 );
 [
@@ -3183,7 +3264,11 @@ check(
     const goals = Array.from(block[1].matchAll(/goal:\s*(\d+)/g)).map((m) =>
       Number(m[1]),
     );
-    if (gapMaxes.length !== 10 || goals.length !== 10) return false;
+    const ids = Array.from(block[1].matchAll(/id:\s*"([a-z0-9]+)"/g)).map((m) => m[1]);
+    /* Length comes from the table, so extending the ladder is not a failure. */
+    if (ids.length < 10 || gapMaxes.length !== ids.length || goals.length !== ids.length) {
+      return false;
+    }
     return (
       gapMaxes.every((g) => g <= apex - 4) &&
       goals.every((g, i) => i === 0 || g > goals[i - 1])
@@ -3201,7 +3286,13 @@ check(
     if (!block) return false;
     const rows = Array.from(block[1].matchAll(/rows:\s*(\d+)/g)).map((m) => Number(m[1]));
     const targets = Array.from(block[1].matchAll(/target:\s*(\d+)/g)).map((m) => Number(m[1]));
-    if (rows.length !== 12 || targets.length !== 12) return false;
+    const ids = Array.from(block[1].matchAll(/id:\s*"([a-z0-9]+)"/g)).map((m) => m[1]);
+    /* Targets are capped by how many bubbles the wall holds, so this ladder
+     * cannot be lengthened by raising targets alone; derive the length from
+     * the table rather than pinning it. */
+    if (ids.length < 8 || rows.length !== ids.length || targets.length !== ids.length) {
+      return false;
+    }
     return rows.every((rowCount, i) => {
       const bubbles = rowCount * 14;
       return targets[i] * 1.4 <= bubbles * 12 && targets[i] >= 300;
@@ -3299,6 +3390,24 @@ check(
       }
       return true;
     });
+  })(),
+);
+check(
+  "a Glyph Sudoku grid clears only with no wrong digits left",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-sudoku.js"),
+      "utf8",
+    );
+    const start = src.indexOf("function checkCleared()");
+    const end = src.indexOf("solved = true", start);
+    const body = src.slice(start, end);
+    return (
+      start !== -1 &&
+      end !== -1 &&
+      body.includes("!board[i] || wrong[i]") &&
+      !/if \(!board\[i\]\)/.test(body)
+    );
   })(),
 );
 check(
@@ -3543,8 +3652,8 @@ const guidedPanels = Array.from(
   guideSource.matchAll(/panel:\s*"([A-Za-z0-9]+)"/g),
 ).map((m) => m[1]);
 check(
-  "the guide data covers every one of the 43 drawer panels",
-  guidedPanels.length === 43 && new Set(guidedPanels).size === 43,
+  "the guide data covers every one of the 49 drawer panels",
+  guidedPanels.length === 49 && new Set(guidedPanels).size === 49,
   "found " + guidedPanels.length + " unique " + new Set(guidedPanels).size,
 );
 check(
@@ -3558,7 +3667,7 @@ check(
   (() => {
     const entries = guideSource.split('panel: "').slice(1);
     return (
-      entries.length === 43 &&
+      entries.length === 49 &&
       entries.every(
         (entry) =>
           entry.includes("svg:") &&
@@ -3596,7 +3705,7 @@ check(
       return (m[1].match(/"/g) || []).length / 2;
     };
     return (
-      entries.length === 43 &&
+      entries.length === 49 &&
       entries.every(
         (chunk) =>
           stepsOf(chunk, "en") >= 5 &&
@@ -3666,7 +3775,11 @@ check(
     const thresholds = Array.from(block[1].matchAll(/starMoves:\s*\[(\d+),\s*(\d+),\s*(\d+)\]/g)).map(
       (m) => [Number(m[1]), Number(m[2]), Number(m[3])],
     );
-    if (discs.length !== 5 || thresholds.length !== 5) return false;
+    const ids = Array.from(block[1].matchAll(/id:\s*"([a-z0-9]+)"/g)).map((m) => m[1]);
+    /* Length comes from the table; the invariant is the optimum, not the size. */
+    if (ids.length < 5 || discs.length !== ids.length || thresholds.length !== ids.length) {
+      return false;
+    }
     return discs.every((n, i) => {
       const opt = minMoves(n);
       return (
@@ -3755,6 +3868,1140 @@ check(
     String(countOccurrences(appJs, `"${key}":`)),
   );
 });
+console.log("\n== 5w. Ember Sticks and Glyph Dots ==");
+const PAIR_GAMES = [
+  { name: "nim", tab: "gameTabNim", panel: "gamePanelNim", file: "game-ember-sticks" },
+  { name: "dots", tab: "gameTabDots", panel: "gamePanelDots", file: "game-glyph-dots" },
+];
+PAIR_GAMES.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = read("assets/app/" + game.file + ".js").replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 7 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\.addEventListener\\("click"`).test(appJs),
+  );
+});
+check(
+  "Ember Sticks: the perfect move always hands over a lost position",
+  (() => {
+    try {
+      const src = read("assets/app/game-ember-sticks.js").replace(/^﻿/, "");
+      const slice = src.slice(
+        src.indexOf("function nimTotal"),
+        src.indexOf("function initNimGame"),
+      );
+      const api = new Function(slice + "\nreturn { nimBestMove, nimTotal };")();
+      const { nimBestMove, nimTotal } = api;
+      const wins = (rows, misere, memo) => {
+        const total = nimTotal(rows);
+        if (total === 0) {
+          return misere;
+        }
+        const key = rows.join(",") + (misere ? "m" : "n");
+        if (memo[key] !== undefined) {
+          return memo[key];
+        }
+        let result = false;
+        for (let row = 0; row < rows.length && !result; row += 1) {
+          for (let keep = 0; keep < rows[row] && !result; keep += 1) {
+            const next = rows.slice();
+            next[row] = keep;
+            if (!wins(next, misere, memo)) {
+              result = true;
+            }
+          }
+        }
+        memo[key] = result;
+        return result;
+      };
+      for (const misere of [false, true]) {
+        const memo = {};
+        for (let a = 0; a <= 4; a += 1) {
+          for (let b = 0; b <= 4; b += 1) {
+            for (let c = 0; c <= 4; c += 1) {
+              const rows = [a, b, c];
+              if (nimTotal(rows) === 0) {
+                continue;
+              }
+              const move = nimBestMove(rows, misere);
+              const after = rows.slice();
+              after[move[0]] = move[1];
+              /* A move that lifts nothing would quietly stall a table. */
+              if (nimTotal(after) >= nimTotal(rows)) {
+                return false;
+              }
+              if (wins(rows, misere, memo) && wins(after, misere, memo)) {
+                return false;
+              }
+            }
+          }
+        }
+      }
+      return true;
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+check(
+  "Ember Sticks: every table can be won by the player who moves first",
+  (() => {
+    try {
+      const src = read("assets/app/game-ember-sticks.js").replace(/^﻿/, "");
+      const slice = src.slice(
+        src.indexOf("var nimLevels"),
+        src.indexOf("function initNimGame"),
+      );
+      const api = new Function(
+        slice + "\nreturn { nimBestMove, nimTotal, nimLevels };",
+      )();
+      const { nimBestMove, nimTotal, nimLevels } = api;
+      const wins = (rows, misere, memo) => {
+        if (nimTotal(rows) === 0) {
+          return misere;
+        }
+        const key = rows.join(",") + (misere ? "m" : "n");
+        if (memo[key] !== undefined) {
+          return memo[key];
+        }
+        let result = false;
+        for (let row = 0; row < rows.length && !result; row += 1) {
+          for (let keep = 0; keep < rows[row] && !result; keep += 1) {
+            const next = rows.slice();
+            next[row] = keep;
+            if (!wins(next, misere, memo)) {
+              result = true;
+            }
+          }
+        }
+        memo[key] = result;
+        return result;
+      };
+      /* Walking the AI's own replies has to end with the player holding the
+       * win, which is the same as saying the opening rows are a first-player
+       * win under that table's rule. */
+      return nimLevels.every((level) => {
+        const memo = {};
+        if (!wins(level.rows.slice(), level.misere, memo)) {
+          return false;
+        }
+        let rows = level.rows.slice();
+        let mine = 0;
+        let guard = 0;
+        while (nimTotal(rows) && guard < 60) {
+          const move = nimBestMove(rows, level.misere);
+          const after = rows.slice();
+          after[move[0]] = move[1];
+          if (wins(after, level.misere, memo)) {
+            return false;
+          }
+          mine += 1;
+          rows = after;
+          if (!nimTotal(rows)) {
+            break;
+          }
+          const reply = nimBestMove(rows, level.misere);
+          const back = rows.slice();
+          back[reply[0]] = reply[1];
+          if (!wins(back, level.misere, memo)) {
+            return false;
+          }
+          rows = back;
+          guard += 1;
+        }
+        return mine > 0 && nimTotal(rows) === 0;
+      });
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+check(
+  "Glyph Dots: AI self-play fills the plate and owns every box",
+  (() => {
+    try {
+      const src = read("assets/app/game-glyph-dots.js").replace(/^﻿/, "");
+      const slice = src.slice(
+        src.indexOf("function dotsIndex"),
+        src.indexOf("function initDotsGame"),
+      );
+      const api = new Function(
+        slice +
+          "\nreturn { dotsAiMove, dotsLegal, dotsApply, dotsCount, dotsYou: 1, dotsAi: 2 };",
+      )();
+      const blank = (boxes) => ({
+        boxes,
+        h: new Array(boxes * (boxes + 1)).fill(0),
+        v: new Array(boxes * (boxes + 1)).fill(0),
+        owner: new Array(boxes * boxes).fill(0),
+      });
+      return [3, 4, 5].every((boxes) => {
+        const state = blank(boxes);
+        let who = api.dotsYou;
+        let guard = 0;
+        while (api.dotsLegal(state).length && guard < 400) {
+          const move = api.dotsAiMove(state, who, 0);
+          if (!move) {
+            return false;
+          }
+          const closed = api.dotsApply(state, move, who);
+          if (!closed.length) {
+            who = who === api.dotsYou ? api.dotsAi : api.dotsYou;
+          }
+          guard += 1;
+        }
+        const yours = api.dotsCount(state, api.dotsYou);
+        const theirs = api.dotsCount(state, api.dotsAi);
+        const laid = (who) =>
+          state.h.filter((owner) => owner === who).length +
+          state.v.filter((owner) => owner === who).length;
+        return (
+          api.dotsLegal(state).length === 0 &&
+          yours + theirs === boxes * boxes &&
+          /* A sweep is legal in this game, so require sticks, not boxes. */
+          laid(api.dotsYou) > 0 &&
+          laid(api.dotsAi) > 0
+        );
+      });
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+check(
+  "Glyph Dots: the AI never walks past a box it could close",
+  (() => {
+    try {
+      const src = read("assets/app/game-glyph-dots.js").replace(/^﻿/, "");
+      const slice = src.slice(
+        src.indexOf("function dotsIndex"),
+        src.indexOf("function initDotsGame"),
+      );
+      const api = new Function(
+        slice + "\nreturn { dotsAiMove, dotsLegal, dotsApply };",
+      )();
+      for (let trial = 0; trial < 300; trial += 1) {
+        const boxes = 3;
+        const state = {
+          boxes,
+          h: new Array(boxes * (boxes + 1)).fill(0),
+          v: new Array(boxes * (boxes + 1)).fill(0),
+          owner: new Array(boxes * boxes).fill(0),
+        };
+        /* Randomly seed legal positions, then look for one with a free box. */
+        for (let step = 0; step < 8; step += 1) {
+          const legal = api.dotsLegal(state);
+          if (!legal.length) {
+            break;
+          }
+          const pick = legal[Math.floor(Math.random() * legal.length)];
+          const who = 1 + (step % 2);
+          api.dotsApply(state, pick, who);
+        }
+        const legal = api.dotsLegal(state);
+        if (!legal.length) {
+          continue;
+        }
+        let completing = legal.some((move) => {
+          const probe = JSON.parse(JSON.stringify(state));
+          return api.dotsApply(probe, move, 2).length > 0;
+        });
+        if (!completing) {
+          continue;
+        }
+        const chosen = api.dotsAiMove(state, 2, 0);
+        const taken = api.dotsApply(state, chosen, 2).length;
+        if (!taken) {
+          return false;
+        }
+      }
+      return true;
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+check(
+  "the newest game blocks theme their text and surfaces with tokens",
+  (() => {
+    const gamesCss = read("assets/styles/games.css");
+    const start = gamesCss.indexOf("/* Ember Sticks -");
+    if (start === -1) {
+      return false;
+    }
+    const region = gamesCss.slice(start);
+    /* Hardcoded near-white text measured 1.1:1 on the light theme, which made
+     * the quiz note unreadable; tokens flip with the theme. Anchored to the
+     * start of a declaration so accent borders are not swept up with it. */
+    return (
+      !/^\s*color:\s*rgba\(/m.test(region) &&
+      !/background:\s*rgba\(15,\s*23,\s*42/.test(region) &&
+      region.includes("var(--text-secondary)") &&
+      region.includes("var(--panel-bg)")
+    );
+  })(),
+);
+console.log("\n== 5x. Republic Rewind ==");
+PAGES.forEach((page) => {
+  const html = read(page);
+  check(
+    `${page}: republic tab and panel are wired both ways`,
+    html.includes('id="gameTabRepublic"') &&
+      html.includes('aria-controls="gamePanelRepublic"') &&
+      html.includes('id="gamePanelRepublic"') &&
+      html.includes('aria-labelledby="gameTabRepublic"'),
+  );
+});
+check(
+  "game-republic-quiz: every id it looks up exists in all four pages",
+  (() => {
+    const source = read("assets/app/game-republic-quiz.js").replace(/^﻿/, "");
+    const lookups = Array.from(
+      source.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+    ).map((match) => match[1]);
+    return (
+      lookups.length >= 7 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      })
+    );
+  })(),
+);
+check(
+  "republic is registered as a drawer tab with a click listener",
+  /\{ name: "republic", tab: tabRepublic, panel: panelRepublic \}/.test(appJs) &&
+    /tabRepublic\.addEventListener\("click"/.test(appJs),
+);
+check(
+  "every Republic Rewind card is bilingual, has four distinct options and a real answer",
+  (() => {
+    const source = read("assets/app/game-republic-quiz.js").replace(/^﻿/, "");
+    const decks = new Function(
+      source.slice(source.indexOf("var rqDecks"), source.indexOf("function rqText")) +
+        "\nreturn rqDecks;",
+    )();
+    const hasHan = (text) => /[㐀-鿿]/.test(text);
+    if (decks.length !== 7) {
+      return false;
+    }
+    return decks.every((deck) =>
+      deck.cards.every((card) => {
+        const questionBoth =
+          typeof card.q.en === "string" &&
+          card.q.en.length > 8 &&
+          hasHan(card.q.zh);
+        const noteBoth =
+          typeof card.note.en === "string" &&
+          card.note.en.length > 8 &&
+          hasHan(card.note.zh);
+        const optionsOk =
+          card.o.length === 4 &&
+          card.o.every(
+            (option) =>
+              typeof option.en === "string" &&
+              option.en.length > 0 &&
+              typeof option.zh === "string" &&
+              option.zh.length > 0,
+          );
+        /* Two options with the same text would make the card unfair. */
+        const english = card.o.map((option) => option.en.toLowerCase());
+        const chinese = card.o.map((option) => option.zh);
+        const distinct =
+          new Set(english).size === 4 && new Set(chinese).size === 4;
+        const answerOk =
+          Number.isInteger(card.a) && card.a >= 0 && card.a < card.o.length;
+        return questionBoth && noteBoth && optionsOk && distinct && answerOk;
+      }) &&
+        /* The three-star band must be reachable with the deck's own size. */
+        deck.stars[0] <= deck.cards.length &&
+        deck.stars[0] > deck.stars[1] &&
+        deck.stars[1] > deck.stars[2],
+    );
+  })(),
+);
+console.log("\n== 5v. the drawer reset contract holds for every game ==");
+(() => {
+  const exported = new Set();
+  APP_MODULES.forEach((name) => {
+    const src = read("assets/app/" + name + ".js").replace(/^﻿/, "");
+    Array.from(
+      src.matchAll(/App\.(quietReset[A-Za-z0-9]+) = ([^\n]*)/g),
+    ).forEach((match) => {
+      /* core.js pre-declares each hook as null; only a real assignment is an
+       * export, and some games assign a named function instead of a literal. */
+      if (match[2].trim() !== "null;") {
+        exported.add(match[1]);
+      }
+    });
+  });
+  const called = new Set(
+    Array.from(appJs.matchAll(/App\.(quietReset[A-Za-z0-9]+)\(\)/g)).map(
+      (match) => match[1],
+    ),
+  );
+  /* Registry games are paused through one fan-out instead of a hand-written
+   * call pair per game, so their hooks are covered by resetRegistryGames().
+   * The name comes from the descriptor block: a module's own data rows can hold
+   * a `name:` field too, and matching that first would invent a bogus hook. */
+  const registryHooks = new Set(
+    APP_MODULES.filter((name) => /^game-/.test(name) && name !== "game-registry")
+      .map((name) => read("assets/app/" + name + ".js").replace(/^﻿/, ""))
+      .map((src) =>
+        /App\.registerGame\(\s*\{[\s\S]{0,400}?name:\s*"([A-Za-z0-9]+)"/.exec(src),
+      )
+      .filter(Boolean)
+      .map((match) =>
+        `quietReset${match[1].charAt(0).toUpperCase()}${match[1].slice(1)}`,
+      ),
+  );
+  const halfWired = Array.from(exported).filter(
+    (hook) =>
+      !registryHooks.has(hook) && countOccurrences(appJs, hook + "()") !== 2,
+  );
+  const fanOut = countOccurrences(
+    read("assets/app/game-typing.js"),
+    "App.resetRegistryGames()",
+  );
+  const unpaused = Array.from(exported).filter(
+    (hook) => registryHooks.has(hook) && fanOut !== 2,
+  );
+  const orphanCalls = Array.from(called).filter(
+    (hook) => !exported.has(hook) && !registryHooks.has(hook),
+  );
+  check(
+    `all ${exported.size} reset hooks run on both the tab switch and the close path`,
+    exported.size >= 30 && halfWired.length === 0 && unpaused.length === 0,
+    halfWired.concat(unpaused).join(","),
+  );
+  check(
+    "the shell never calls a reset hook no game exports",
+    orphanCalls.length === 0,
+    orphanCalls.join(","),
+  );
+})();
+/* A pointer id the browser has released makes setPointerCapture throw, and the
+ * exception escapes the pointerdown handler before the drag is set up - so the
+ * player's drag dies instead of merely losing its edge extension. */
+(() => {
+  const offenders = [];
+  APP_MODULES.filter((name) => /^game-/.test(name)).forEach((name) => {
+    const source = read("assets/app/" + name + ".js");
+    Array.from(source.matchAll(/\.setPointerCapture\(/g)).forEach((match) => {
+      if (!/try\s*\{/.test(source.slice(Math.max(0, match.index - 200), match.index))) {
+        offenders.push(name);
+      }
+    });
+  });
+  check(
+    "every pointer capture is wrapped in a try so a stale pointer id cannot kill a drag",
+    offenders.length === 0,
+    offenders.join(","),
+  );
+})();
+console.log("\n== 5y. Kalah Row, Twenty-One Parlor and Roof Garden ==");
+const DRAWER_TRIO = [
+  { name: "kalah", tab: "gameTabKalah", panel: "gamePanelKalah", file: "game-kalah-row" },
+  { name: "blackjack", tab: "gameTabBlackjack", panel: "gamePanelBlackjack", file: "game-blackjack" },
+  { name: "garden", tab: "gameTabGarden", panel: "gamePanelGarden", file: "game-roof-garden" },
+];
+DRAWER_TRIO.forEach((game) => {
+  PAGES.forEach((page) => {
+    const html = read(page);
+    check(
+      `${page}: ${game.name} tab and panel are wired both ways`,
+      html.includes(`id="${game.tab}"`) &&
+        html.includes(`aria-controls="${game.panel}"`) &&
+        html.includes(`id="${game.panel}"`) &&
+        html.includes(`aria-labelledby="${game.tab}"`),
+    );
+  });
+  const gameSource = read("assets/app/" + game.file + ".js").replace(/^﻿/, "");
+  const lookups = Array.from(
+    gameSource.matchAll(/getElement\("([A-Za-z0-9]+)"\)/g),
+  ).map((match) => match[1]);
+  const pascal = game.name.charAt(0).toUpperCase() + game.name.slice(1);
+  check(
+    `${game.file}: every id it looks up exists in all four pages`,
+    lookups.length >= 7 &&
+      PAGES.every((page) => {
+        const html = read(page);
+        return lookups.every((id) => html.includes('id="' + id + '"'));
+      }),
+    lookups.join(","),
+  );
+  check(
+    `${game.name} is registered as a drawer tab with a click listener`,
+    new RegExp(`\\{ name: "${game.name}", tab: tab${pascal}, panel: panel${pascal} \\}`).test(appJs) &&
+      new RegExp(`tab${pascal}\\.addEventListener\\("click"`).test(appJs),
+  );
+});
+/* The shell walks its own entry list to show, hide and label the drawer, so a
+ * tab in the markup that is missing from that list is dead furniture. */
+(() => {
+  const markupIds = new Set(
+    Array.from(read("index.html").matchAll(/id="(gameTab[A-Za-z0-9]+|gamePanel[A-Za-z0-9]+)"/g))
+      .map((match) => match[1]),
+  );
+  const markupTabs = Array.from(
+    read("index.html").matchAll(/<button class="game-tab" id="(gameTab[A-Za-z0-9]+)"/g),
+  ).map((match) => match[1]);
+  const entries = Array.from(
+    appJs.matchAll(/\{ name: "([A-Za-z0-9]+)", tab: ([A-Za-z0-9]+), panel: ([A-Za-z0-9]+) \}/g),
+  );
+  const bound = (variable) => {
+    const declaration = new RegExp(`var ${variable} = getElement\\("([A-Za-z0-9]+)"\\);`).exec(appJs);
+    return declaration ? declaration[1] : "";
+  };
+  const dangling = entries
+    .map((match) => [bound(match[2]), bound(match[3])])
+    .filter(([tabId, panelId]) => !markupIds.has(tabId) || !markupIds.has(panelId));
+  check(
+    `the shell's ${entries.length} drawer entries bind a real tab and panel from the markup`,
+    entries.length === markupTabs.length && dangling.length === 0,
+    `entries ${entries.length}, tabs ${markupTabs.length}, dangling ${dangling.length}`,
+  );
+})();
+/* A t("key") that no dictionary carries renders as an empty label, which is
+ * how a shipped game ends up with a blank button. */
+(() => {
+  const dictionary = new Set(
+    Array.from(appJs.matchAll(/^\s{6}"([A-Za-z0-9]+)":/gm)).map((match) => match[1]),
+  );
+  const used = new Set();
+  APP_MODULES.filter((name) => /^game-/.test(name)).forEach((name) => {
+    const source = read("assets/app/" + name + ".js");
+    Array.from(source.matchAll(/\bt\("([A-Za-z0-9]+)"\s*[,)]/g)).forEach((match) =>
+      used.add(match[1]),
+    );
+    /* A registry game carries its own copy; those keys are as real as the ones
+     * in i18n.js, and the six-space pattern above cannot see two per line. */
+    const pack = collectPackKeys(source);
+    pack.en.concat(pack.zh).forEach((key) => dictionary.add(key));
+  });
+  PAGES.forEach((page) => {
+    Array.from(
+      read(page).matchAll(/data-i18n(?:-aria)?="([A-Za-z0-9]+)"/g),
+    ).forEach((match) => used.add(match[1]));
+  });
+  const absent = Array.from(used).filter((key) => !dictionary.has(key));
+  check(
+    `all ${used.size} translation keys the games and the markup ask for exist in both dictionaries`,
+    used.size >= 300 && absent.length === 0,
+    absent.join(","),
+  );
+})();
+check(
+  "Kalah Row: sowing never feeds the rival store and always banks the pairing stone",
+  (() => {
+    try {
+      const src = read("assets/app/game-kalah-row.js").replace(/^﻿/, "");
+      const slice = src.slice(
+        src.indexOf("var malPits"),
+        src.indexOf("function initMancalaGame"),
+      );
+      const api = new Function(
+        slice + "\nreturn { malFresh, malSow, malLegal, malTally, malOver };",
+      )();
+      const total = (cells) => cells.reduce((sum, n) => sum + n, 0);
+      /* one stone from pit 6 steps over the shut rival store into pit 8 */
+      const lone = [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0];
+      const skip = api.malSow(lone, 6, "you");
+      if (skip.extra !== false || skip.cells[7] !== 0 || skip.cells[8] !== 1) {
+        return false;
+      }
+      /* a seven-stone lap lands back in the player's store and frees another sow */
+      const lap = api.malSow([0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0], 6, "you");
+      if (
+        lap.extra !== true ||
+        lap.cells[0] !== 1 ||
+        lap.cells[7] !== 0 ||
+        total(lap.cells) !== 7
+      ) {
+        return false;
+      }
+      /* a full board still adds up after a sow, and the rival store stays shut */
+      const open = api.malSow(api.malFresh(), 1, "you");
+      if (total(open.cells) !== 48 || open.cells[7] !== 0 || open.cells[1] !== 0 ||
+        open.cells[5] !== 5) {
+        return false;
+      }
+      /* a last stone in a vacant home pit takes the facing stones with it */
+      const board = [0, 0, 0, 3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0];
+      const step = api.malSow(board, 3, "you");
+      if (step.captured !== 2 || step.cells[0] !== 3 || step.cells[6] !== 0 ||
+        step.cells[8] !== 0 || total(step.cells) !== 5) {
+        return false;
+      }
+      /* the same shape played by the rival must feed their store, not ours */
+      const mirror = [0, 0, 2, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0];
+      const back = api.malSow(mirror, 9, "ai");
+      if (back.captured !== 2 || back.cells[7] !== 3 || back.cells[0] !== 0 ||
+        back.cells[2] !== 0 || total(back.cells) !== 5) {
+        return false;
+      }
+      return api.malLegal(board, "you").join() === "3";
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+check(
+  "Kalah Row: every round conserves its 48 stones and always ends",
+  (() => {
+    try {
+      const src = read("assets/app/game-kalah-row.js").replace(/^﻿/, "");
+      const slice = src.slice(
+        src.indexOf("var malPits"),
+        src.indexOf("function initMancalaGame"),
+      );
+      const api = new Function(
+        slice +
+          "\nreturn { malFresh, malSow, malLegal, malTally, malOver, malBestMove };",
+      )();
+      const total = (cells) => cells.reduce((sum, n) => sum + n, 0);
+      const sum = (cells) => api.malTally(cells);
+      for (let game = 0; game < 40; game += 1) {
+        let cells = api.malFresh();
+        let who = "you";
+        let sows = 0;
+        while (!api.malOver(cells) && sows < 400) {
+          const legal = api.malLegal(cells, who);
+          /* a side with stones always has a legal sow, or the round stalls */
+          if (!legal.length) {
+            return false;
+          }
+          const index = Math.random() < 0.5 ? legal[0] : legal[legal.length - 1];
+          const step = api.malSow(cells, index, who);
+          cells = step.cells;
+          if (total(cells) !== 48) {
+            return false;
+          }
+          if (!step.extra) {
+            who = who === "you" ? "ai" : "you";
+          }
+          sows += 1;
+        }
+        if (!api.malOver(cells)) {
+          return false;
+        }
+        const tally = sum(cells);
+        if (tally.you + tally.ai !== 48) {
+          return false;
+        }
+      }
+      return true;
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+check(
+  "Kalah Row: the top bench plays without luck and the ranks unlock in order",
+  (() => {
+    try {
+      const src = read("assets/app/game-kalah-row.js").replace(/^﻿/, "");
+      const slice = src.slice(
+        src.indexOf("var malPits"),
+        src.indexOf("function initMancalaGame"),
+      );
+      const api = new Function(slice + "\nreturn { malRanks, malFresh, malBestMove, malSow };")();
+      const { malRanks } = api;
+      if (
+        malRanks.length !== 4 ||
+        !malRanks.every(
+          (rank, index) =>
+            index === 0 ||
+            (rank.depth >= malRanks[index - 1].depth &&
+              rank.margin[0] > malRanks[index - 1].margin[0]),
+        ) ||
+        malRanks.some((rank) => rank.depth < 1 || rank.noise > 0 && rank.depth === 3)
+      ) {
+        return false;
+      }
+      /* the master bench has to pick a legal pit out of a real board */
+      const pick = api.malBestMove(api.malFresh(), "ai", 3, 0);
+      return pick !== null && pick > 7;
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+check(
+  "Twenty-One Parlor: aces drop to one only when the hand needs it",
+  (() => {
+    try {
+      const src = read("assets/app/game-blackjack.js").replace(/^﻿/, "");
+      const slice = src.slice(
+        src.indexOf("var bjSuits"),
+        src.indexOf("function initBlackjackGame"),
+      );
+      const api = new Function(slice + "\nreturn { bjCount, bjNatural, bjTables };")();
+      const hand = (...faces) =>
+        api.bjCount(faces.map((face) => ({ face, suit: "\u2660" })));
+      const cases = [
+        ["A", 11, true],
+        ["A", "A", 12, true],
+        ["A", "A", "A", 13, true],
+        ["A", "A", "A", "A", "A", 15, true],
+        ["A", "6", 17, true],
+        ["A", "K", 21, true],
+        ["A", "7", "5", 13, false],
+        ["K", "Q", "J", 30, false],
+        ["10", "6", "A", 17, false],
+      ];
+      for (const spec of cases) {
+        const faces = spec.slice(0, spec.length - 2);
+        const got = hand(...faces);
+        if (got.total !== spec[spec.length - 2] || got.soft !== spec[spec.length - 1]) {
+          return false;
+        }
+      }
+      /* a 21 built from three cards is a total, not a natural */
+      if (!api.bjNatural([{ face: "A" }, { face: "K" }])) {
+        return false;
+      }
+      if (api.bjNatural([{ face: "A" }, { face: "K" }, { face: "A" }])) {
+        return false;
+      }
+      if (api.bjNatural([{ face: "7" }, { face: "7" }, { face: "7" }])) {
+        return false;
+      }
+      return api.bjTables.every(
+        (table) =>
+          table.bets.length === 3 &&
+          table.bets[0] < table.bets[1] &&
+          table.bets[1] < table.bets[2] &&
+          table.bets[2] * 4 === table.start &&
+          table.target === Math.round(table.start * 1.5) &&
+          table.starHands[0] < table.starHands[1] &&
+          table.starHands[1] < table.starHands[2] &&
+          table.decks >= 1,
+      );
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+check(
+  "Twenty-One Parlor: the house stands on 17, a broke player is restaked and a banked table clears the seat",
+  /while \(bjCount\(dealer\)\.total < 17\)/.test(
+    read("assets/app/game-blackjack.js"),
+  ) &&
+    /if \(chips < table\.bets\[0\]\) \{/.test(read("assets/app/game-blackjack.js")) &&
+    /if \(chips < table\.bets\[0\]\) \{[\s\S]{0,240}?chips = table\.start;/.test(
+      read("assets/app/game-blackjack.js"),
+    ) &&
+    /table\.bets\.forEach/.test(read("assets/app/game-blackjack.js")) &&
+    /function clearTable\([\s\S]*?loadTable\(advance \|\| table\)/.test(
+      read("assets/app/game-blackjack.js"),
+    ),
+);
+const parlorStats = [];
+check(
+  "Twenty-One Parlor: every table is beatable and each star band is reachable",
+  (() => {
+    try {
+      const src = read("assets/app/game-blackjack.js").replace(/^﻿/, "");
+      const slice = src.slice(
+        src.indexOf("var bjSuits"),
+        src.indexOf("function initBlackjackGame"),
+      );
+      const realRandom = Math.random;
+      let seed = 20261002;
+      Math.random = () => {
+        seed = (seed * 1103515245 + 12345) % 2147483648;
+        return seed / 2147483648;
+      };
+      try {
+        const api = new Function(slice + "\nreturn { bjShoe, bjCount, bjNatural, bjTables };")();
+        const settle = (player, dealer, bet) => {
+          const you = api.bjCount(player).total;
+          const house = api.bjCount(dealer).total;
+          const youNatural = api.bjNatural(player);
+          const houseNatural = api.bjNatural(dealer);
+          if (you > 21) return -bet;
+          if (youNatural && !houseNatural) return Math.round(bet * 1.5);
+          if (houseNatural && !youNatural) return -bet;
+          if (house > 21) return bet;
+          if (you > house) return bet;
+          if (you < house) return -bet;
+          return 0;
+        };
+        return api.bjTables.every((table) => {
+          const bet = table.bets[2];
+          let reached = 0;
+          let three = 0;
+          let two = 0;
+          let one = 0;
+          for (let trial = 0; trial < 160; trial += 1) {
+            let shoe = api.bjShoe(table.decks);
+            const draw = () => {
+              if (!shoe.length) shoe = api.bjShoe(table.decks);
+              return shoe.pop();
+            };
+            let chips = table.start;
+            let hands = 0;
+            while (chips < table.target && hands < 300) {
+              const player = [draw(), draw()];
+              const dealer = [draw(), draw()];
+              if (!api.bjNatural(player) && !api.bjNatural(dealer)) {
+                while (api.bjCount(player).total < 18) player.push(draw());
+                while (api.bjCount(dealer).total < 17) dealer.push(draw());
+              }
+              chips += settle(player, dealer, bet);
+              hands += 1;
+              if (chips < table.bets[0]) chips = table.start;
+            }
+            if (chips >= table.target) {
+              reached += 1;
+              if (hands <= table.starHands[0]) three += 1;
+              if (hands <= table.starHands[1]) two += 1;
+              if (hands <= table.starHands[2]) one += 1;
+            }
+          }
+          parlorStats.push(
+            `${table.id} cleared ${reached}/160, 3★ ${three}, 2★ ${two}, 1★ ${one}`,
+          );
+          /* the one-star line has to be the ordinary outcome of a win, the
+           * three-star line rare but real, and no table a pure coin flip */
+          return (
+            reached >= 140 &&
+            one >= reached * 0.7 &&
+            two >= reached * 0.4 &&
+            three >= 2 &&
+            three <= reached * 0.65
+          );
+        });
+      } finally {
+        Math.random = realRandom;
+      }
+    } catch (error) {
+      return false;
+    }
+  })(),
+  parlorStats.join(" | ") || "seeded 160-run sweep per table at the top bet",
+);
+check(
+  "Roof Garden: every bed can be sown and its three-star line beats the greedy run",
+  (() => {
+    try {
+      const src = read("assets/app/game-roof-garden.js").replace(/^﻿/, "");
+      const slice = src.slice(
+        src.indexOf("var gdnPlots"),
+        src.indexOf("function initRoofGardenGame"),
+      );
+      const api = new Function(
+        slice + "\nreturn { gdnBeds, gdnRipe, gdnSecondsToGoal, gdnPlots };",
+      )();
+      const { gdnBeds, gdnRipe, gdnSecondsToGoal } = api;
+      return gdnBeds.every((bed, index) => {
+        const greedy = gdnSecondsToGoal(bed);
+        if (bed.start < bed.cost || greedy < 0 || greedy > bed.starTimes[0]) {
+          return false;
+        }
+        if (bed.goal <= bed.start || bed.starTimes[0] >= bed.starTimes[1] ||
+          bed.starTimes[1] >= bed.starTimes[2]) {
+          return false;
+        }
+        if (index > 0) {
+          const prior = gdnBeds[index - 1];
+          if (bed.cost <= prior.cost || bed.goal <= prior.goal) return false;
+        }
+        const planted = bed.growMs;
+        const beds = [planted, 0, 0, 0];
+        return (
+          gdnRipe(beds, 0, planted + bed.growMs, bed) === true &&
+          gdnRipe(beds, 0, planted + bed.growMs - 1, bed) === false &&
+          gdnRipe(beds, 1, planted + bed.growMs, bed) === false
+        );
+      });
+    } catch (error) {
+      return false;
+    }
+  })(),
+);
+check(
+  "Roof Garden: ripening is drawn by CSS, so the bed needs no timer of its own",
+  (() => {
+    const source = read("assets/app/game-roof-garden.js");
+    const css = stylesCss;
+    return (
+      !/setInterval\(|setTimeout\(/.test(source) &&
+      /if \(isMotionOff\(\)\)/.test(source) &&
+      /classList\.add\("is-ripening"\)/.test(source) &&
+      css.includes(".gdn-plot.is-ripening .gdn-bar") &&
+      css.includes("@keyframes gdnRipen") &&
+      css.includes("@keyframes gdnBloom") &&
+      /@keyframes gdnBloom \{[\s\S]*?99\.5%[\s\S]*?opacity: 1/.test(css) &&
+      css.includes("@keyframes gdnWilt") &&
+      css.includes("[data-motion=\"off\"] .gdn-plot.is-ripening") &&
+      /--gdn-run/.test(css)
+    );
+  })(),
+);
+console.log("\n== 5z. every star ladder can actually be climbed ==");
+/* starsFor() returns on the first band the value clears, so a ladder aimed at
+ * "high" has to fall and one aimed at "low" has to rise. An inverted list
+ * leaves the middle and bottom bands unreachable and nobody notices until a
+ * player cannot explain their own stars. */
+(() => {
+  const offenders = [];
+  let ladders = 0;
+  APP_MODULES.filter((name) => /^game-/.test(name)).forEach((name) => {
+    const source = read("assets/app/" + name + ".js").replace(/^﻿/, "");
+    const directions = Array.from(
+      source.matchAll(/starsFor\([\s\S]{0,120}?,\s*"(low|high)"/g),
+    ).map((match) => match[1]);
+    if (!directions.length) {
+      return;
+    }
+    const high = directions.includes("high");
+    const low = directions.includes("low");
+    Array.from(
+      source.matchAll(/\b([A-Za-z0-9]*(?:star|margin|par|pad|gain|fuel|band)[A-Za-z0-9]*):\s*\[([\s\S]*?)\]/gi),
+    ).forEach((match) => {
+      const values = match[2]
+        .split(",")
+        .map((part) => Number(part.trim()))
+        .filter((n) => !isNaN(n));
+      if (values.length !== 3) {
+        return;
+      }
+      ladders += 1;
+      const rising = values[0] <= values[1] && values[1] <= values[2];
+      const falling = values[0] >= values[1] && values[1] >= values[2];
+      /* a module that scores both ways needs a ladder that reads either way,
+       * which is only possible when all three bands match */
+      const ok = high && low ? rising && falling : high ? falling : rising;
+      if (!ok) {
+        offenders.push(`${name}.${match[1]}=${values.join(",")} for "${high ? "high" : "low"}"`);
+      }
+    });
+  });
+  check(
+    `all ${ladders} star band ladders run the direction their game scores`,
+    ladders >= 20 && offenders.length === 0,
+    offenders.join(" | "),
+  );
+})();
+console.log("\n== 6. registry games: injected, linked, bilingual, scoped ==");
+(() => {
+  const registryModules = APP_MODULES.filter(
+    (name) => /^game-/.test(name) && name !== "game-registry",
+  ).filter((name) =>
+    read("assets/app/" + name + ".js").includes("App.registerGame("),
+  );
+
+  check(
+    `all ${registryModules.length} registry games are mounted by the drawer`,
+    registryModules.length >= 20 &&
+      APP_MODULES.includes("game-registry") &&
+      APP_MODULES.indexOf("game-registry") <
+        registryModules.reduce(
+          (earliest, name) => Math.min(earliest, APP_MODULES.indexOf(name)),
+          APP_MODULES.length,
+        ),
+    `modules ${registryModules.length}, registry at ${APP_MODULES.indexOf("game-registry")}`,
+  );
+
+  const typingSource = read("assets/app/game-typing.js");
+  const guideSource = read("assets/app/game-guide.js");
+  const bootstrapSource = read("assets/app/main.js");
+  const registrySource = read("assets/app/game-registry.js");
+  check(
+    "the shell injects, pauses and documents registry games without a hand-written list",
+    /App\.buildRegistryTabs\(/.test(typingSource) &&
+      countOccurrences(typingSource, "App.resetRegistryGames()") === 2 &&
+      /initRegistryGames\(\);/.test(bootstrapSource) &&
+      /App\.getRegistryGuides\(\)/.test(guideSource) &&
+      /App\.registerGame = registerGame;/.test(registrySource),
+  );
+  check(
+    "the registry builds its panels with createElement, never innerHTML",
+    !/\.innerHTML\s*=/.test(registrySource),
+  );
+
+  registryModules.forEach((name) => {
+    const source = read("assets/app/" + name + ".js").replace(/^﻿/, "");
+
+    check(
+      `${name}: loads on all four pages at the current version`,
+      PAGES.every((page) =>
+        read(page).includes(`assets/app/${name}.js?v=56`),
+      ),
+    );
+    check(
+      `${name}: registers exactly one descriptor`,
+      countOccurrences(source, "App.registerGame(") === 1,
+      String(countOccurrences(source, "App.registerGame(")),
+    );
+
+    const desc = /App\.registerGame\(\s*\{[\s\S]{0,400}?name:\s*"([A-Za-z0-9]+)"[\s\S]{0,200}?tabKey:\s*"([A-Za-z0-9]+)"/.exec(
+      source,
+    );
+    if (!check(`${name}: declares a name and a tabKey`, !!desc)) {
+      return;
+    }
+    const gameName = desc[1];
+    const tabKey = desc[2];
+    const pascal = gameName.charAt(0).toUpperCase() + gameName.slice(1);
+    check(
+      `${name}: name and tabKey follow the same convention`,
+      tabKey === "tab" + pascal,
+      `${tabKey} vs tab${pascal}`,
+    );
+    check(
+      `${name}: the tab label key lives in its own pack`,
+      new RegExp(`^      "${tabKey}":`, "m").test(source),
+    );
+
+    const pack = /App\.addStrings\(\{([\s\S]*?)\n  \}\);/.exec(source);
+    if (!check(`${name}: ships a bilingual pack`, !!pack)) {
+      return;
+    }
+    const enBlock = /\ben:\s*\{([\s\S]*?)\n\s{4}\}/.exec(pack[1]);
+    const zhBlock = /\bzh:\s*\{([\s\S]*?)\n\s{4}\}/.exec(pack[1]);
+    if (!check(`${name}: pack has both en and zh bodies`, !!enBlock && !!zhBlock)) {
+      return;
+    }
+    const grab = (body) =>
+      Array.from(body.matchAll(/"([A-Za-z0-9]+)":/g)).map((match) => match[1]);
+    const enKeys = grab(enBlock[1]);
+    const zhKeys = grab(zhBlock[1]);
+    check(
+      `${name}: en and zh packs are 1:1 (${enKeys.length} keys)`,
+      enKeys.length === zhKeys.length &&
+        enKeys.length === new Set(enKeys).size &&
+        enKeys.every((key) => zhKeys.includes(key)),
+      `en ${enKeys.length} zh ${zhKeys.length}`,
+    );
+    /* addStrings keeps the shared dictionary authoritative, so a pack key that
+     * i18n.js already owns would silently render someone else's wording. */
+    const sharedDict = new Set(
+      Array.from(
+        read("assets/app/i18n.js").matchAll(/^\s{6}"([A-Za-z0-9]+)":/gm),
+      ).map((match) => match[1]),
+    );
+    const shadowed = enKeys.filter((key) => sharedDict.has(key));
+    check(
+      `${name}: no pack key is shadowed by the shared dictionary`,
+      shadowed.length === 0,
+      shadowed.join(","),
+    );
+    const bare = Array.from(
+      pack[1].matchAll(/^\s{6}([A-Za-z][A-Za-z0-9]*):/gm),
+    ).map((match) => match[1]);
+    check(
+      `${name}: pack keys are quoted for the six-space key audit`,
+      bare.length === 0,
+      bare.join(","),
+    );
+
+    /* Every t("key") the module can reach must be carried by the dictionary. */
+    const used = Array.from(
+      source.matchAll(/\bt\("([A-Za-z0-9]+)"\s*[,)]/g),
+    ).map((match) => match[1]);
+    const shared = [
+      "campaignStars",
+      "newBest",
+      "elementsLocked",
+      "gameGuideToggle",
+      "noBest",
+      "btnNewRound",
+    ];
+    const dictionary = new Set(
+      Array.from(appJs.matchAll(/^\s{6}"([A-Za-z0-9]+)":/gm)).map(
+        (match) => match[1],
+      ),
+    );
+    enKeys.concat(zhKeys).forEach((key) => dictionary.add(key));
+    const missing = used.filter(
+      (key) => !dictionary.has(key) && !shared.includes(key),
+    );
+    check(
+      `${name}: all ${used.length} translation keys it asks for exist`,
+      missing.length === 0,
+      missing.join(","),
+    );
+
+    const guide = /guide:\s*\{[\s\S]*?\ben:\s*\[([\s\S]*?)\],[\s\S]*?\bzh:\s*\[([\s\S]*?)\]/.exec(
+      source,
+    );
+    if (check(`${name}: ships a how-to guide`, !!guide)) {
+      const count = (body) => (body.match(/"/g) || []).length / 2;
+      const enSteps = count(guide[1]);
+      const zhSteps = count(guide[2]);
+      check(
+        `${name}: the guide gives the same number of steps in both languages`,
+        enSteps >= 4 && enSteps === zhSteps,
+        `en ${enSteps}, zh ${zhSteps}`,
+      );
+    }
+
+    check(
+      `${name}: keeps its listeners inside its own panel`,
+      !/document\.addEventListener\(/.test(source) &&
+        !/window\.addEventListener\(/.test(source),
+    );
+    check(
+      `${name}: never writes markup through innerHTML`,
+      !/\.innerHTML\s*=/.test(source),
+    );
+    check(
+      `${name}: no blocking dialog and no direct localStorage`,
+      !/window\.prompt|window\.confirm|localStorage/.test(source),
+    );
+    check(
+      `${name}: its stylesheet was merged into the game styles`,
+      stylesCss.includes(`/* ${name} (registry game) */`),
+    );
+
+    const hooks = Array.from(
+      source.matchAll(/App\.quietReset([A-Za-z0-9]+)\s*=/g),
+    ).map((match) => match[1]);
+    check(
+      `${name}: names its pause hook after its descriptor`,
+      hooks.length <= 1 && (hooks.length === 0 || hooks[0] === pascal),
+      hooks.join(","),
+    );
+  });
+
+  const total = registryModules.length + 49;
+  check(
+    `the drawer now serves ${total} games while the pages still hand-wire 49`,
+    total >= 69 &&
+      PAGES.every(
+        (page) =>
+          countOccurrences(read(page), 'class="game-tab"') === 49 &&
+          countOccurrences(read(page), 'class="game-panel"') === 49,
+      ),
+    `registry ${registryModules.length}`,
+  );
+})();
 console.log("\n== summary ==");
 console.log(`passed: ${passed}`);
 console.log(`failed: ${failures.length}`);

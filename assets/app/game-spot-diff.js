@@ -1,6 +1,7 @@
 /* Spot the Diff - The find-the-broken-edit mini-game in the shared game drawer. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
+  var localStorage = App.storage;
   var t = App.t;
   var getElement = App.getElement;
   var logAction = App.logAction;
@@ -182,6 +183,7 @@
     var penaltyMs = 0;
     var timerId = null;
     var flashId = null;
+    var wrongNode = null;
     var foundSet = [];
     var misses = 0;
     var cursorIndex = 0;
@@ -284,6 +286,9 @@
 
     function buildIdleRound(playedLevel) {
       window.clearInterval(timerId);
+      window.clearTimeout(flashId);
+      flashId = null;
+      wrongNode = null;
       timerId = null;
       roundActive = false;
       level = clampLevel(playedLevel);
@@ -333,9 +338,9 @@
       var isBest = !previousBest || finishMs < previousBest;
       if (isBest) {
         progress.bests[String(level)] = finishMs;
-        nextLevel = clampLevel(level + 1);
-        saveProgress();
       }
+      nextLevel = clampLevel(level + 1);
+      saveProgress();
 
       var cleared = t("spotFound", {
         n: pair.diffIndexes.length,
@@ -386,9 +391,15 @@
       missesEl.textContent = String(misses);
       timeEl.textContent = (elapsedMs() / 1000).toFixed(1) + "s";
       window.clearTimeout(flashId);
-      editEl.children[index].classList.add("is-wrong");
+      if (wrongNode) {
+        wrongNode.classList.remove("is-wrong");
+      }
+      wrongNode = editEl.children[index];
+      wrongNode.classList.add("is-wrong");
       flashId = window.setTimeout(function () {
-        editEl.children[index].classList.remove("is-wrong");
+        wrongNode.classList.remove("is-wrong");
+        wrongNode = null;
+        flashId = null;
       }, 450);
       resultEl.textContent =
         t("spotWrong") + " " + t("spotPenalty", { s: spotPenaltyMs / 1000 });

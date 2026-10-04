@@ -1,0 +1,236 @@
+/* Courtroom of Animals - the bench, the shelf and the argument. Everything the
+ * player reads is text, so the surfaces stay quiet and the two numbers - claim
+ * strength and witness trust - are the loudest things on the panel. */
+.cta-wrap {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.cta-row-label {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.cta-bench,
+.cta-shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 8px;
+}
+
+.cta-shelf {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.cta-card {
+  display: grid;
+  gap: 4px;
+  min-height: 62px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel-bg);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.16s ease, background 0.16s ease;
+}
+
+.cta-card:hover:not([disabled]) {
+  border-color: var(--accent);
+  background: var(--panel-strong);
+}
+
+.cta-card:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.cta-card[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.cta-card-on,
+.cta-option.cta-sel {
+  border-color: var(--accent);
+}
+
+.cta-card-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.cta-card-meta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+}
+
+.cta-exhibit .cta-card-name {
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.cta-focus {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--panel-strong);
+}
+
+.cta-focus-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.cta-focus-body {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.62;
+  color: var(--text-secondary);
+}
+
+.cta-options {
+  display: grid;
+  gap: 8px;
+}
+
+.cta-option {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 2px 10px;
+  min-height: 46px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-soft);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.16s ease, background 0.16s ease;
+}
+
+.cta-option:hover:not([disabled]) {
+  border-color: var(--accent);
+  background: var(--panel-bg);
+}
+
+.cta-option:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.cta-option[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.cta-option-key {
+  grid-row: span 2;
+  align-self: center;
+  min-width: 20px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.cta-option-label {
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.cta-option-note {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+}
+
+.cta-record,
+.cta-why {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px dashed var(--border);
+  background: var(--surface-soft);
+}
+
+.cta-why {
+  border-style: solid;
+  border-color: var(--accent-2);
+}
+
+.cta-record-row {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.cta-why-line {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.cta-why-line:first-child {
+  font-weight: 700;
+}
+
+/* Light theme: the ink-and-paper side of the same courtroom. Surfaces and text
+ * come from the tokens so the two themes never disagree about contrast. */
+[data-theme="light"] .cta-card {
+  background: var(--panel-bg);
+  border-color: var(--border);
+}
+
+[data-theme="light"] .cta-card:hover:not([disabled]) {
+  background: var(--panel-strong);
+  border-color: var(--accent);
+}
+
+[data-theme="light"] .cta-focus {
+  background: var(--panel-strong);
+}
+
+[data-theme="light"] .cta-focus-title {
+  color: var(--text);
+}
+
+[data-theme="light"] .cta-option {
+  background: var(--surface-soft);
+}
+
+[data-theme="light"] .cta-option-key {
+  color: var(--accent-2);
+}
+
+[data-theme="light"] .cta-why {
+  background: var(--surface-soft);
+  border-color: var(--accent-2);
+}
+
+[data-theme="light"] .cta-why-line {
+  color: var(--text);
+}
+
+[data-motion="off"] .cta-card,
+[data-motion="off"] .cta-option {
+  transition: none !important;
+}

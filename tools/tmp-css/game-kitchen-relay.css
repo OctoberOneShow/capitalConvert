@@ -1,0 +1,235 @@
+/* Kitchen Relay */
+.kch-stage {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+}
+
+.kch-railtitle {
+    margin: 0;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.kch-rail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-height: 168px;
+    overflow-y: auto;
+}
+
+.kch-ticket {
+    min-width: 116px;
+    padding: 7px 9px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.kch-ticket:hover {
+    border-color: var(--accent);
+}
+
+.kch-ticket.is-focus {
+    color: var(--text);
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.kch-ticket.is-urgent {
+    color: var(--danger-text);
+    border-color: var(--danger-text);
+}
+
+.kch-ticket.is-paid,
+.kch-ticket.is-gone {
+    opacity: 0.55;
+    text-decoration: line-through;
+}
+
+.kch-ticket:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.kch-bands,
+.kch-rack {
+    margin: 6px 0 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+}
+
+.kch-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.kch-calm {
+    min-height: 34px;
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.kch-calm.is-on {
+    color: var(--text);
+    border-color: var(--accent-2);
+    background: var(--panel-bg);
+}
+
+.kch-calm:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.kch-stations {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.kch-station {
+    display: grid;
+    align-content: start;
+    gap: 7px;
+    min-height: 116px;
+    padding: 10px 11px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--panel-bg);
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kch-station.is-picked {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.kch-station.is-holding {
+    border-style: solid;
+    border-color: var(--accent-2);
+}
+
+.kch-station.is-jam {
+    border-style: dashed;
+    border-color: var(--danger-text);
+}
+
+.kch-station:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.kch-st-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.kch-st-name {
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+.kch-st-key {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 5px;
+}
+
+.kch-bar {
+    position: relative;
+    height: 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-soft);
+    overflow: hidden;
+}
+
+.kch-fill {
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: var(--accent);
+    transition: width 0.12s linear;
+}
+
+.kch-station.is-holding .kch-fill {
+    background: var(--accent-2);
+}
+
+.kch-station.is-jam .kch-fill {
+    background: var(--danger-text);
+}
+
+.kch-word {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.kch-detail {
+    margin: 0;
+    font-size: 0.72rem;
+    line-height: 1.35;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .kch-stage,
+[data-theme="light"] .kch-station,
+[data-theme="light"] .kch-ticket,
+[data-theme="light"] .kch-calm {
+    background: rgba(255, 255, 255, 0.72);
+}
+
+[data-theme="light"] .kch-bar {
+    background: rgba(148, 163, 184, 0.24);
+}
+
+[data-motion="off"] .kch-station,
+[data-motion="off"] .kch-ticket,
+[data-motion="off"] .kch-fill {
+    transition: none !important;
+    animation: none !important;
+}
+
+@media (max-width: 720px) {
+    .kch-stations {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

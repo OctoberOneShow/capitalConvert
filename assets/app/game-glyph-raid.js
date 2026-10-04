@@ -32,6 +32,9 @@
     { id: "v8", labelKey: "raidL8", rows: 6, cols: 10, stepMs: 350, dropMs: 720, starTimes: [96, 126, 160] },
     { id: "v9", labelKey: "raidL9", rows: 6, cols: 10, stepMs: 320, dropMs: 650, starTimes: [104, 136, 172] },
     { id: "v10", labelKey: "raidL10", rows: 6, cols: 10, stepMs: 290, dropMs: 580, starTimes: [112, 146, 184] },
+    { id: "v11", labelKey: "lvlNum11", rows: 6, cols: 10, stepMs: 272, dropMs: 555, starTimes: [119, 155, 195] },
+    { id: "v12", labelKey: "lvlNum12", rows: 6, cols: 10, stepMs: 254, dropMs: 530, starTimes: [126, 164, 207] },
+    { id: "v13", labelKey: "lvlNum13", rows: 6, cols: 10, stepMs: 236, dropMs: 505, starTimes: [134, 174, 219] },
   ];
 
   function initGlyphRaidGame() {

@@ -33,7 +33,9 @@
     var version = options.version || 1;
     /* Node (the static checks) has no localStorage: the campaign then runs
      * in memory, which is exactly the headless-test mode. */
-    var store = typeof localStorage !== "undefined" ? localStorage : null;
+    var store = typeof App !== "undefined" && App.storage
+      ? App.storage
+      : typeof localStorage !== "undefined" ? localStorage : null;
     var progress = read();
 
     function read() {
@@ -156,6 +158,11 @@
       current.stars = Math.max(current.stars || 0, result.stars || 0);
       progress.cleared[id] = current;
       save();
+      livePickers.forEach(function (row) {
+        if (row.campaign === campaignApi) {
+          paintPicker(row);
+        }
+      });
       var index = indexOf(id);
       return {
         isBest: isBest,
@@ -167,7 +174,7 @@
       };
     }
 
-    return {
+    var campaignApi = {
       levels: levels,
       indexOf: indexOf,
       isCleared: isCleared,
@@ -180,6 +187,32 @@
       nextLevelId: nextLevelId,
       record: record,
     };
+    return campaignApi;
+  }
+
+  /* Every select handed to fillCampaignPicker is remembered so record() can
+   * repaint its stars the moment a rung is cleared, without a reload. */
+  var livePickers = [];
+
+  function paintPicker(row) {
+    var select = row.select;
+    if (!select) {
+      return;
+    }
+    var previous = select.value;
+    select.textContent = "";
+    row.campaign.levels.forEach(function (level) {
+      var option = document.createElement("option");
+      option.value = level.id;
+      option.textContent = row.campaign.isUnlocked(level.id)
+        ? row.labelFor(level) + " \u00b7 " + starDots(row.campaign, level.id)
+        : row.labelFor(level) + " \u00b7 " + row.lockedText;
+      option.disabled = !row.campaign.isUnlocked(level.id);
+      select.appendChild(option);
+    });
+    if (previous) {
+      select.value = previous;
+    }
   }
 
   /* Shared picker filler: every campaign select reads the same way -
@@ -197,16 +230,17 @@
     if (!select || !campaign) {
       return;
     }
-    select.textContent = "";
-    campaign.levels.forEach(function (level) {
-      var option = document.createElement("option");
-      option.value = level.id;
-      option.textContent = campaign.isUnlocked(level.id)
-        ? labelFor(level) + " \u00b7 " + starDots(campaign, level.id)
-        : labelFor(level) + " \u00b7 " + lockedText;
-      option.disabled = !campaign.isUnlocked(level.id);
-      select.appendChild(option);
+    livePickers = livePickers.filter(function (row) {
+      return row.select !== select;
     });
+    var row = {
+      select: select,
+      campaign: campaign,
+      labelFor: labelFor,
+      lockedText: lockedText,
+    };
+    livePickers.push(row);
+    paintPicker(row);
   }
 
   /* Exported for the other modules. */

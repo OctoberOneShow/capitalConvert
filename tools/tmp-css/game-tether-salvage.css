@@ -1,0 +1,59 @@
+/* game-tether-salvage (registry game) */
+/* Tether Salvage - the salvage yard and its tow line. */
+.tts-canvas {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    margin-top: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.tts-canvas:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* The yard keeps a night-sky plate in both themes: the dashed rings and the
+ * tension digits only read on dark. */
+[data-theme="light"] .tts-canvas {
+    border-color: var(--surface-soft);
+    background: var(--panel-bg);
+}
+
+.tts-meter-fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.12s linear;
+}
+
+.tts-meter-fill.is-red {
+    background: linear-gradient(90deg, var(--accent-2), var(--danger-text));
+}
+
+.tts-tools {
+    align-items: center;
+    gap: 8px;
+}
+
+.tts-tools button:disabled {
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+[data-theme="light"] .tts-tools button:disabled {
+    background: var(--surface-soft);
+}
+
+[data-motion="off"] .tts-canvas {
+    cursor: default;
+}

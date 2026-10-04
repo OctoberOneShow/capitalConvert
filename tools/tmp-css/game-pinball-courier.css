@@ -1,0 +1,77 @@
+/* game-pinball-courier (registry game) */
+/* Pinball Courier - the table and the route read-out. */
+.pbc-canvas {
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    margin-top: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+    outline: none;
+    touch-action: none;
+    cursor: pointer;
+}
+
+.pbc-canvas:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* The table keeps a night plate in both themes: the rail, the shafts and the
+ * open gate only read against a dark felt. */
+[data-theme="light"] .pbc-canvas {
+    border-color: var(--surface-soft);
+    background: var(--panel-bg);
+}
+
+[data-motion="off"] .pbc-canvas {
+    cursor: default;
+}
+
+/* The route panel is the puzzle's status line, so it is words and digits only
+ * and never a colour the player has to decode. */
+.pbc-route {
+    display: grid;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+}
+
+.pbc-route-line {
+    margin: 0;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.pbc-route-gate {
+    color: var(--text);
+    font-weight: 700;
+}
+
+.pbc-route-stops {
+    color: var(--accent-text);
+}
+
+.pbc-route-event {
+    padding-top: 6px;
+    border-top: 1px dashed var(--border);
+    color: var(--text);
+}
+
+[data-theme="light"] .pbc-route {
+    background: var(--panel-bg);
+}
+
+@media (max-width: 360px) {
+    .pbc-route-line {
+        font-size: 0.66rem;
+    }
+}

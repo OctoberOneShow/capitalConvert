@@ -28,6 +28,10 @@
     { id: "p10", labelKey: "inkL10", target: 2300, moves: 14 },
     { id: "p11", labelKey: "inkL11", target: 2450, moves: 13 },
     { id: "p12", labelKey: "inkL12", target: 2600, moves: 13 },
+    { id: "p13", labelKey: "lvlNum13", target: 3000, moves: 15 },
+    { id: "p14", labelKey: "lvlNum14", target: 3400, moves: 17 },
+    { id: "p15", labelKey: "lvlNum15", target: 3800, moves: 19 },
+    { id: "p16", labelKey: "lvlNum16", target: 4200, moves: 21 },
   ];
 
   function indexAt(x, y) {
@@ -73,6 +77,9 @@
     var score = 0;
     var movesLeft = 0;
     var combo = 0;
+    var cascadeId = null;
+    var pendingMatches = [];
+    var shakeTimers = [];
 
     function colorAt(index) {
       return board[index];
@@ -223,6 +230,7 @@
     }
 
     function resolveCascades() {
+      cascadeId = null;
       var matches = findMatches();
       if (!matches.length) {
         finishCascade();
@@ -234,14 +242,30 @@
       matches.forEach(function (index) {
         tiles[index].classList.add("is-popping");
       });
-      window.setTimeout(function () {
-        matches.forEach(function (index) {
-          board[index] = -1;
-        });
-        collapseAndRefill();
+      pendingMatches = matches;
+      cascadeId = window.setTimeout(function () {
+        cascadeId = null;
+        popPendingMatches();
         render();
-        window.setTimeout(resolveCascades, 230);
+        cascadeId = window.setTimeout(resolveCascades, 230);
       }, 190);
+    }
+
+    function popPendingMatches() {
+      pendingMatches.forEach(function (index) {
+        board[index] = -1;
+      });
+      pendingMatches = [];
+      collapseAndRefill();
+    }
+
+    function stopAnimations() {
+      window.clearTimeout(cascadeId);
+      cascadeId = null;
+      shakeTimers.forEach(function (id) {
+        window.clearTimeout(id);
+      });
+      shakeTimers = [];
     }
 
     function finishCascade() {
@@ -267,11 +291,11 @@
         swapColors(a, b);
         tiles[a].classList.add("is-shake");
         tiles[b].classList.add("is-shake");
-        window.setTimeout(function () {
+        shakeTimers.push(window.setTimeout(function () {
           tiles[a].classList.remove("is-shake");
           tiles[b].classList.remove("is-shake");
           render();
-        }, 280);
+        }, 280));
         return;
       }
       movesLeft -= 1;
@@ -279,11 +303,11 @@
       busy = true;
       renderHud();
       render();
-      window.setTimeout(resolveCascades, 190);
+      cascadeId = window.setTimeout(resolveCascades, 190);
     }
 
     function tapTile(index) {
-      if (busy) {
+      if (busy || movesLeft <= 0) {
         return;
       }
       if (selected === -1) {
@@ -340,6 +364,8 @@
     }
 
     function loadLevel(levelDef) {
+      stopAnimations();
+      pendingMatches = [];
       busy = false;
       level = levelDef;
       selected = -1;
@@ -402,6 +428,38 @@
     newBtn.addEventListener("click", function () {
       loadLevel(level);
     });
+
+    /* The drawer calls this on tab switch and on close: no timer may outlive
+     * the panel, and the tiles have to come back whole rather than frozen
+     * mid-pop. The swap was already spent, so its matches are resolved here
+     * without the animation delays rather than dropped. */
+    App.quietResetInkCascade = function () {
+      stopAnimations();
+      if (!busy) {
+        render();
+        return;
+      }
+      /* A popping match has already earned its points; finish its removal
+       * before looking for the next chain reaction. */
+      if (pendingMatches.length) {
+        popPendingMatches();
+      }
+      var guard = 0;
+      var matches = findMatches();
+      while (matches.length && guard < 200) {
+        combo += 1;
+        score += matches.length * 10 * combo;
+        matches.forEach(function (index) {
+          board[index] = -1;
+        });
+        collapseAndRefill();
+        matches = findMatches();
+        guard += 1;
+      }
+      render();
+      renderHud();
+      finishCascade();
+    };
 
     buildBoard();
     loadLevel(inkLevels[campaign.indexOf(campaign.nextLevelId())]);

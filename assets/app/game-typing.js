@@ -1,5 +1,6 @@
 ﻿/* Typing Sprint - The timed typing mini-game in the shared game drawer. */
 (function (App) {
+  var localStorage = App.storage;
   /* Shared names from the other modules (see window.CapitalConvert). */
   var t = App.t;
   var getElement = App.getElement;
@@ -88,6 +89,12 @@
     var tabGlyphFour = getElement("gameTabGlyphFour");
     var tabGlyphTower = getElement("gameTabGlyphTower");
     var tabGlyphFleet = getElement("gameTabGlyphFleet");
+    var tabNim = getElement("gameTabNim");
+    var tabDots = getElement("gameTabDots");
+    var tabRepublic = getElement("gameTabRepublic");
+    var tabKalah = getElement("gameTabKalah");
+    var tabBlackjack = getElement("gameTabBlackjack");
+    var tabGarden = getElement("gameTabGarden");
     var panelTyping = getElement("gamePanelTyping");
     var panelMemory = getElement("gamePanelMemory");
     var panel2048 = getElement("gamePanel2048");
@@ -131,6 +138,12 @@
     var panelGlyphFour = getElement("gamePanelGlyphFour");
     var panelGlyphTower = getElement("gamePanelGlyphTower");
     var panelGlyphFleet = getElement("gamePanelGlyphFleet");
+    var panelNim = getElement("gamePanelNim");
+    var panelDots = getElement("gamePanelDots");
+    var panelRepublic = getElement("gamePanelRepublic");
+    var panelKalah = getElement("gamePanelKalah");
+    var panelBlackjack = getElement("gamePanelBlackjack");
+    var panelGarden = getElement("gamePanelGarden");
     var tabsGrid = getElement("gameTabs");
     var pickerToggle = getElement("gameTabsToggle");
     var pickerLabel = getElement("gameTabsLabel");
@@ -161,6 +174,12 @@
       !tabGomoku ||
       !tabTraffic ||
       !tabVault ||
+      !tabNim ||
+      !tabDots ||
+      !tabRepublic ||
+      !tabKalah ||
+      !tabBlackjack ||
+      !tabGarden ||
       !panelTyping ||
       !panelMemory ||
       !panel2048 ||
@@ -203,7 +222,13 @@
       !panelGlyphGlide ||
       !panelGlyphFour ||
       !panelGlyphTower ||
-      !panelGlyphFleet
+      !panelGlyphFleet ||
+      !panelNim ||
+      !panelDots ||
+      !panelRepublic ||
+      !panelKalah ||
+      !panelBlackjack ||
+      !panelGarden
     ) {
       return;
     }
@@ -370,10 +395,10 @@
       setCharClasses();
       var stats = updateHud();
 
-      if (input.value.length >= phrase.length) {
-        endRound(true);
-      } else if (roundStarted && stats.elapsed >= typingRoundSeconds) {
+      if (roundStarted && stats.elapsed >= typingRoundSeconds) {
         endRound(false);
+      } else if (input.value.length >= phrase.length) {
+        endRound(true);
       }
     });
 
@@ -435,7 +460,23 @@
       { name: "glyphFour", tab: tabGlyphFour, panel: panelGlyphFour },
       { name: "glyphTower", tab: tabGlyphTower, panel: panelGlyphTower },
       { name: "glyphFleet", tab: tabGlyphFleet, panel: panelGlyphFleet },
+      { name: "nim", tab: tabNim, panel: panelNim },
+      { name: "dots", tab: tabDots, panel: panelDots },
+      { name: "republic", tab: tabRepublic, panel: panelRepublic },
+      { name: "kalah", tab: tabKalah, panel: panelKalah },
+      { name: "blackjack", tab: tabBlackjack, panel: panelBlackjack },
+      { name: "garden", tab: tabGarden, panel: panelGarden },
     ];
+    /* Registry games bring their own tab and panel: the picker grid and the
+     * panel row grow from the registry, so the shipped entries above stay the
+     * only hand-written list and a new game never needs an HTML edit. */
+    gameTabEntries = gameTabEntries.concat(
+      App.buildRegistryTabs
+        ? App.buildRegistryTabs(tabsGrid, dialog, function (name) {
+            selectTab(name);
+          })
+        : [],
+    );
     var activeTabName = "typing";
     var pickerVisibleCount = 6;
     var pickerExpanded = readPickerExpanded();
@@ -535,6 +576,10 @@
         App.quietResetGlyphBlocks();
       }
 
+      if (App.quietResetInkCascade) {
+        App.quietResetInkCascade();
+      }
+
       if (App.quietResetInkBeat) {
         App.quietResetInkBeat();
       }
@@ -625,6 +670,10 @@
 
       if (App.quietResetGlyphFleet) {
         App.quietResetGlyphFleet();
+      }
+
+      if (App.resetRegistryGames) {
+        App.resetRegistryGames();
       }
 
       if (shouldFocus) {
@@ -808,6 +857,31 @@
       selectTab("glyphFleet");
     });
 
+    tabNim.addEventListener("click", function () {
+      selectTab("nim");
+    });
+
+    tabDots.addEventListener("click", function () {
+      selectTab("dots");
+    });
+
+    tabRepublic.addEventListener("click", function () {
+      selectTab("republic");
+    });
+
+    tabKalah.addEventListener("click", function () {
+      selectTab("kalah");
+    });
+
+    tabBlackjack.addEventListener("click", function () {
+      selectTab("blackjack");
+    });
+
+    tabGarden.addEventListener("click", function () {
+      selectTab("garden");
+    });
+
+
     tabTyping.parentElement.addEventListener("keydown", function (event) {
       var nextName = null;
       var count = gameTabEntries.length;
@@ -887,6 +961,10 @@
         App.quietResetMemory();
       }
 
+      if (App.quietReset2048) {
+        App.quietReset2048();
+      }
+
       if (App.quietResetReflex) {
         App.quietResetReflex();
       }
@@ -925,6 +1003,10 @@
 
       if (App.quietResetGlyphBlocks) {
         App.quietResetGlyphBlocks();
+      }
+
+      if (App.quietResetInkCascade) {
+        App.quietResetInkCascade();
       }
 
       if (App.quietResetInkBeat) {
@@ -1017,6 +1099,10 @@
 
       if (App.quietResetGlyphFleet) {
         App.quietResetGlyphFleet();
+      }
+
+      if (App.resetRegistryGames) {
+        App.resetRegistryGames();
       }
 
       openBtn.focus();

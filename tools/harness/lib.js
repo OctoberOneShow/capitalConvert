@@ -13,16 +13,26 @@ const { createEnvironment } = require("../stub-dom");
 /* The app ships as ordered plain scripts (see assets/app/); concatenating
  * them in page order reproduces the old single-file assets/app.js exactly,
  * so the harness keeps driving the real code the pages run. */
-const APP_MODULES = [
-  "i18n", "core", "tools", "pet-data", "pet-state", "pet-life", "pet-art",
-  "pet-dom", "pet-render", "pet-games", "pet", "game-campaign",
-  "game-elements-core", "game-elements",
-  "game-typing", "game-memory", "game-2048", "game-reflex",
-  "game-caret-dash", "game-spot-diff", "game-plumber", "game-stack",
-  "game-color-code", "game-breakout", "game-ember-dice", "game-snake",
-  "game-lights", "game-mines", "game-gomoku", "game-traffic", "game-vault",
-  "main",
-];
+const pageHtml = fs.readFileSync(
+  path.join(__dirname, "..", "..", "index.html"),
+  "utf8",
+);
+
+/* Order comes off the page itself. A second hand-kept list here went stale
+ * when main.js grew games, and the boot chain then threw halfway through and
+ * left every later case driving a half-built app. */
+const APP_MODULES = Array.from(
+  pageHtml.matchAll(/assets\/app\/([a-z0-9-]+)\.js\?v=\d+/g),
+).map((match) => match[1]);
+
+/* Tab/panel pairs in page order, for fixtures that mirror the real drawer. */
+function drawerTabPairs() {
+  return Array.from(
+    pageHtml.matchAll(
+      /<button class="game-tab" id="([^"]+)"[^>]*aria-controls="([^"]+)"/g,
+    ),
+  ).map((match) => [match[1], match[2]]);
+}
 
 const appSource = APP_MODULES.map((name) =>
   fs
@@ -190,6 +200,7 @@ module.exports = {
   statValue,
   fxCount,
   seedToolDom,
+  drawerTabPairs,
   run,
   savedPet,
   storeWith,

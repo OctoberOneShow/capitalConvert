@@ -1,0 +1,216 @@
+/* Ocean Archaeologist - the survey plate, the tray and the wreck plan.
+ * Every hook here is an ocn- class the module builds with createElement, and
+ * every colour is a theme token, so the dark plate, the berth chips and the
+ * verdict borders read the same in the dark drawer and in the light one. The
+ * dive is turn-driven and the plan is a form, so nothing on this sheet animates
+ * on a timer: only state changes move. */
+
+/* The plate stays dark in both themes: the survey marks, the lift line and the
+ * metre ruler are drawn in pale colours and only read on the wet dark. */
+.ocn-canvas {
+    display: block;
+    width: 100%;
+    max-width: 460px;
+    height: auto;
+    margin: 12px auto 0;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.ocn-canvas:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .ocn-canvas {
+    border-color: var(--surface-soft);
+}
+
+[data-motion="off"] .ocn-canvas {
+    cursor: default;
+}
+
+/* --- the second act: tray, berths, and the evidence line ----------------- */
+.ocn-build {
+    width: 100%;
+    max-width: 460px;
+    margin: 12px auto 0;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .ocn-build {
+    background: var(--surface-soft);
+}
+
+.ocn-build[hidden] {
+    display: none;
+}
+
+.ocn-head {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.86rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.ocn-sub {
+    margin: 10px 0 4px;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.ocn-list {
+    display: grid;
+    gap: 6px;
+}
+
+/* A chip is a real button, so the whole second act is reachable with Tab and
+ * Enter. The state rides on the border style as well as the colour, and the chip
+ * text already names it in words. */
+.ocn-chip {
+    display: block;
+    min-height: 40px;
+    padding: 7px 9px;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: left;
+    cursor: pointer;
+}
+
+[data-theme="light"] .ocn-chip {
+    background: var(--panel-bg);
+}
+
+.ocn-chip:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.ocn-chip:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* In hand: solid edge plus the accent, so the selected fragment is told apart by
+ * shape before colour. */
+.ocn-chip-sel {
+    border-style: solid;
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+/* Set on the plan: a closed solid join, empty berths stay dashed. */
+.ocn-chip-set {
+    border-style: solid;
+    border-color: var(--border);
+    color: var(--text);
+}
+
+.ocn-chip-empty {
+    border-style: dashed;
+}
+
+/* Recovered with a record: a double edge, the strongest shape on the sheet. */
+.ocn-chip-doc {
+    border-style: double;
+    border-width: 3px;
+    border-color: var(--accent-2);
+    color: var(--text);
+}
+
+.ocn-chip-bare {
+    border-style: dashed;
+}
+
+/* Verdicts after filing. Each one also changes the border style, and the chip
+ * text names the verdict, so nothing here is colour-only. */
+.ocn-chip-ok {
+    border-style: double;
+    border-width: 3px;
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.ocn-chip-mid {
+    border-style: solid;
+    border-color: var(--accent-2);
+    color: var(--text);
+}
+
+.ocn-chip-soft {
+    border-style: solid;
+    border-color: var(--border);
+    color: var(--text-secondary);
+}
+
+.ocn-chip-bad {
+    border-style: dotted;
+    border-color: var(--danger-text);
+    color: var(--danger-text);
+}
+
+/* The evidence line: what the reading fits, and what it cannot prove. */
+.ocn-note {
+    margin: 10px 0 0;
+    padding: 7px 9px;
+    border-left: 3px solid var(--accent-2);
+    border-radius: 8px;
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    line-height: 1.5;
+}
+
+[data-theme="light"] .ocn-note {
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+}
+
+/* --- action row: four dive tools under the plate, then the file button --- */
+.ocn-actions {
+    flex-wrap: wrap;
+}
+
+.ocn-tool {
+    flex: 1 1 84px;
+    min-height: 40px;
+    padding: 8px 10px;
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.ocn-tool:disabled {
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.ocn-primary {
+    white-space: normal;
+}
+
+[data-motion="off"] .ocn-tool,
+[data-motion="off"] .ocn-chip {
+    transition: none !important;
+}

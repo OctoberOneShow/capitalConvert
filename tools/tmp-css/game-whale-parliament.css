@@ -1,0 +1,320 @@
+/* game-whale-parliament (registry game) */
+/* Whale Parliament: the hall, the corridor board and the offer cards. Every
+ * stance, wish and debt prints as a word plus a number, so nothing here carries
+ * meaning by colour alone - the accents only group related rows. */
+.whp-board {
+    margin-top: 12px;
+    padding: 10px;
+    display: grid;
+    gap: 10px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+    outline: none;
+}
+
+.whp-board:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .whp-board {
+    background: var(--panel-bg);
+    border-color: var(--surface-soft);
+}
+
+.whp-sec {
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-soft);
+}
+
+[data-theme="light"] .whp-sec {
+    background: var(--panel-bg);
+}
+
+.whp-title {
+    margin: 0 0 6px;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.whp-body {
+    display: grid;
+    gap: 4px;
+}
+
+/* Layout per section: the floor, corridors and hall are lists; the offers wrap. */
+.whp-floor .whp-body,
+.whp-lanes .whp-body,
+.whp-hall .whp-body {
+    gap: 3px;
+}
+
+.whp-hand .whp-body {
+    grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+    gap: 6px;
+}
+
+.whp-floor-hall {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+.whp-floor-line {
+    margin: 0;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    line-height: 1.5;
+}
+
+[data-theme="light"] .whp-floor-line {
+    color: var(--text-secondary);
+}
+
+/* Corridors: the water itself, then who may pass it. */
+.whp-lane {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
+    padding: 4px 6px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    line-height: 1.45;
+}
+
+[data-theme="light"] .whp-lane {
+    background: var(--surface-soft);
+}
+
+.whp-lane-name {
+    color: var(--text);
+    font-weight: 700;
+}
+
+.whp-lane-state {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.whp-lane-fits {
+    color: var(--text-secondary);
+}
+
+/* The hall: one row per pod, with its trust drawn as a bar next to its number. */
+.whp-fac {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: 6px;
+    align-items: center;
+    padding: 6px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-bg);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    line-height: 1.4;
+}
+
+[data-theme="light"] .whp-fac {
+    background: var(--surface-soft);
+}
+
+.whp-fac.is-out {
+    border-style: dashed;
+    color: var(--danger-text);
+}
+
+.whp-fac-name {
+    color: var(--text);
+    font-weight: 800;
+}
+
+.whp-fac-stance {
+    color: var(--accent-2);
+    font-weight: 700;
+}
+
+.whp-fac-trust,
+.whp-fac-owed,
+.whp-fac-pledge,
+.whp-fac-grudge {
+    color: var(--text-secondary);
+}
+
+.whp-fac-grudge {
+    color: var(--danger-text);
+}
+
+.whp-bar {
+    grid-column: 1 / -1;
+    display: block;
+    height: 5px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    overflow: hidden;
+}
+
+[data-theme="light"] .whp-bar {
+    background: var(--panel-strong);
+}
+
+.whp-bar-fill {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.15s linear;
+}
+
+.whp-prio {
+    margin: 0 0 4px;
+    padding-left: 6px;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    line-height: 1.5;
+}
+
+/* Offers: fixed cards, chosen with the mouse or the number keys. */
+.whp-card {
+    display: grid;
+    gap: 2px;
+    padding: 7px 8px;
+    text-align: left;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-bg);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    cursor: pointer;
+}
+
+[data-theme="light"] .whp-card {
+    background: var(--surface-soft);
+}
+
+.whp-card:hover {
+    border-color: var(--accent);
+}
+
+.whp-card:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.whp-card.is-cursor {
+    border-color: var(--accent);
+}
+
+.whp-card.is-chosen {
+    border-color: var(--accent-2);
+    background: var(--panel-strong);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .whp-card.is-chosen {
+    background: var(--surface-soft);
+}
+
+.whp-card.is-blocked,
+.whp-card:disabled {
+    cursor: not-allowed;
+    color: var(--text-secondary);
+    border-style: dashed;
+    opacity: 0.7;
+}
+
+[data-theme="light"] .whp-card:disabled {
+    background: var(--panel-bg);
+}
+
+.whp-card-key {
+    color: var(--accent);
+    font-weight: 800;
+}
+
+.whp-card-text {
+    color: var(--text);
+}
+
+.whp-card-cost {
+    color: var(--text-secondary);
+    font-size: 0.6rem;
+}
+
+.whp-card.is-blocked .whp-card-cost {
+    color: var(--danger-text);
+}
+
+.whp-side {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.whp-btn {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-bg);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    cursor: pointer;
+}
+
+[data-theme="light"] .whp-btn {
+    background: var(--surface-soft);
+}
+
+.whp-btn:hover {
+    border-color: var(--accent);
+}
+
+.whp-btn:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.whp-clear:hover {
+    background: var(--surface-soft);
+}
+
+/* Restarting throws away the session, so it is dressed as the risky action. */
+.whp-restart {
+    border-color: var(--danger-text);
+}
+
+.whp-restart:hover {
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .whp-restart:hover {
+    background: var(--surface-soft);
+}
+
+/* Motion off: the hall stops leaning on the bar animation and keeps the numbers. */
+[data-motion="off"] .whp-bar-fill {
+    transition: none;
+}

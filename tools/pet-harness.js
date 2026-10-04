@@ -14,6 +14,11 @@ require("./harness/cases-progression");
 require("./harness/cases-glyph");
 require("./harness/cases-elements-sim");
 require("./harness/cases-elements-ui");
+require("./harness/cases-registry");
+require("./harness/cases-shell-regressions");
+require("./harness/cases-puzzle-regressions");
+require("./harness/cases-arcade-regressions");
+require("./harness/cases-registry-regressions");
 
 /* report ---------------------------------------------------------------- */
 console.log("pet companion harness");

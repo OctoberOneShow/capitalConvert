@@ -304,6 +304,7 @@
     var falling = null;
     var cleared = false;
     var busy = false;
+    var aiTimer = null;
     var winLine = null;
     var hoverCol = -1;
     var playerMoves = 0;
@@ -353,6 +354,8 @@
     }
 
     function loadLevel(levelDef) {
+      window.clearTimeout(aiTimer);
+      aiTimer = null;
       level = levelDef;
       newBoard();
       cleared = false;
@@ -459,7 +462,8 @@
           }
           if (playerJustMoved && !cleared) {
             busy = true;
-            window.setTimeout(function () {
+            aiTimer = window.setTimeout(function () {
+              aiTimer = null;
               busy = false;
               if (cleared) {
                 return;
@@ -607,10 +611,6 @@
     });
 
     App.quietResetGlyphFour = function () {
-      if (busy) {
-        busy = false;
-        falling = null;
-      }
       clockRunning = false;
       resultEl.textContent = t("c4Paused");
     };

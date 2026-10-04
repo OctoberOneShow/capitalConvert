@@ -1,0 +1,396 @@
+/* Morse Rescue (registry game) */
+/* The receiver console: lamp, mark bar, answer slots and the mission legend.
+ * Every clue the lamp or the sound carries is also printed here as a glyph or a
+ * word, so the sheet never lets colour be the only channel. */
+.mrs-stage {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--panel-bg);
+}
+
+.mrs-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* The lamp is the timed channel; dark between elements, lit inside one. */
+.mrs-lamp {
+    width: 26px;
+    height: 26px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    transition: background 90ms linear, box-shadow 90ms linear;
+}
+
+.mrs-lamp.is-on {
+    background: var(--accent);
+    box-shadow: 0 0 14px var(--accent);
+}
+
+.mrs-lamp-text {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .mrs-lamp {
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .mrs-lamp.is-on {
+    background: var(--accent);
+}
+
+/* The window meter is the same countdown the HUD prints in seconds. */
+.mrs-meter {
+    position: relative;
+    height: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-soft);
+}
+
+.mrs-meter-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 120ms linear;
+}
+
+[data-theme="light"] .mrs-meter {
+    background: var(--panel-strong);
+}
+
+.mrs-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mrs-group {
+    position: relative;
+    display: grid;
+    gap: 4px;
+    justify-items: start;
+    min-width: 96px;
+    padding: 8px 10px 11px;
+    text-align: left;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    transition: border-color 120ms ease;
+}
+
+/* A group that came through whole is drawn with a solid rule; a damaged one is
+ * dashed, and the mark itself reads "?" - not only a different colour. */
+.mrs-group.is-whole {
+    border-style: solid;
+}
+
+.mrs-group.is-cursor {
+    border-color: var(--accent);
+    background: var(--panel-strong);
+}
+
+.mrs-group:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.mrs-group-tag {
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.mrs-marks {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text);
+}
+
+.mrs-mark {
+    display: inline-block;
+    color: var(--text);
+}
+
+.mrs-mark.is-dot {
+    font-size: 1.15rem;
+}
+
+.mrs-mark.is-dash {
+    color: var(--accent);
+}
+
+.mrs-mark.is-void {
+    padding: 0 2px;
+    border: 1px dashed var(--danger-text);
+    border-radius: 4px;
+    color: var(--danger-text);
+    font-size: 0.78rem;
+    animation: mrsGrain 1.1s steps(2, end) infinite;
+}
+
+.mrs-mark.is-live {
+    transform: scale(1.4);
+}
+
+.mrs-head {
+    position: absolute;
+    left: 10px;
+    bottom: 4px;
+    width: 0;
+    height: 3px;
+    border-radius: 999px;
+    background: transparent;
+}
+
+.mrs-head.is-moving {
+    background: var(--accent-2);
+    transition: width 100ms linear;
+    animation: mrsSearch 1.2s ease-in-out infinite;
+}
+
+.mrs-fits {
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .mrs-group {
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .mrs-group.is-cursor {
+    border-color: var(--accent);
+    background: var(--panel-strong);
+}
+
+.mrs-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mrs-slot {
+    display: grid;
+    gap: 2px;
+    justify-items: center;
+    width: 56px;
+    padding: 6px 4px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--panel-strong);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    transition: border-color 120ms ease;
+}
+
+.mrs-slot.is-cursor {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.mrs-slot.is-wrong,
+.mrs-slot.is-wrong .mrs-slot-char {
+    border-color: var(--danger-text);
+    border-style: dashed;
+    color: var(--danger-text);
+}
+
+.mrs-slot.is-right,
+.mrs-slot.is-right .mrs-slot-char {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+}
+
+.mrs-slot:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.mrs-slot-char {
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--text);
+}
+
+.mrs-slot-flag {
+    min-height: 0.72rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .mrs-slot {
+    background: var(--panel-strong);
+}
+
+.mrs-reading {
+    margin: 0;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+}
+
+.mrs-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.mrs-key {
+    display: grid;
+    gap: 2px;
+    justify-items: center;
+    padding: 5px 8px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    transition: border-color 120ms ease;
+}
+
+.mrs-key:hover {
+    border-color: var(--accent);
+}
+
+.mrs-key:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.mrs-key-char {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.mrs-key-code {
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .mrs-key {
+    background: var(--panel-strong);
+}
+
+.mrs-tools {
+    gap: 8px;
+}
+
+.mrs-btn {
+    min-height: 38px;
+    padding: 0 14px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.82rem;
+    touch-action: manipulation;
+    transition: border-color 120ms ease;
+}
+
+.mrs-btn:hover {
+    border-color: var(--accent);
+}
+
+.mrs-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.mrs-btn[aria-pressed="false"] {
+    border-style: dashed;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .mrs-btn {
+    background: var(--panel-strong);
+}
+
+@keyframes mrsGrain {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes mrsSearch {
+    0% {
+        opacity: 0.55;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.55;
+    }
+}
+
+/* Motion off: the lamp still lights and the playhead still measures progress,
+ * but nothing blinks, pulses or slides on its own. */
+[data-motion="off"] .mrs-lamp,
+[data-motion="off"] .mrs-meter-fill,
+[data-motion="off"] .mrs-group,
+[data-motion="off"] .mrs-slot,
+[data-motion="off"] .mrs-key,
+[data-motion="off"] .mrs-btn,
+[data-motion="off"] .mrs-head.is-moving {
+    animation: none !important;
+    transition: none !important;
+}
+
+[data-motion="off"] .mrs-mark.is-void {
+    animation: none !important;
+    opacity: 1;
+}
+
+[data-motion="off"] .mrs-mark.is-live {
+    transform: none;
+    border-bottom: 2px solid var(--accent);
+}
+
+@media (max-width: 560px) {
+    .mrs-group {
+        min-width: 78px;
+    }
+
+    .mrs-slot {
+        width: 46px;
+    }
+}

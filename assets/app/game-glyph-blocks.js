@@ -47,6 +47,10 @@
     { id: "f6", labelKey: "blkL6", goal: 10, garbage: 6, startMs: 520, starTimes: [62, 95, 140] },
     { id: "f7", labelKey: "blkL7", goal: 12, garbage: 7, startMs: 460, starTimes: [72, 110, 160] },
     { id: "f8", labelKey: "blkL8", goal: 14, garbage: 8, startMs: 400, starTimes: [85, 130, 190] },
+    { id: "f9", labelKey: "lvlNum9", goal: 17, garbage: 9, startMs: 375, starTimes: [93, 142, 207] },
+    { id: "f10", labelKey: "lvlNum10", goal: 20, garbage: 10, startMs: 350, starTimes: [101, 155, 226] },
+    { id: "f11", labelKey: "lvlNum11", goal: 23, garbage: 11, startMs: 325, starTimes: [110, 169, 246] },
+    { id: "f12", labelKey: "lvlNum12", goal: 26, garbage: 12, startMs: 300, starTimes: [120, 184, 268] },
   ];
 
   function rotateMatrix(matrix) {

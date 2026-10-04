@@ -1,0 +1,324 @@
+/* Lost Language: the decipherment bench. The rubbings, the notebook and every
+ * verdict are words, glyphs and digits in the DOM - the ✓ mark, the dashed edge of
+ * an unchecked guess and the sentence itself all say the same thing - so these
+ * rules only add emphasis, and the light theme swaps the token variables and
+ * nothing else. */
+.lng-legend {
+    margin: 12px 0 0;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-2);
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    line-height: 1.55;
+}
+
+.lng-scenes {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.lng-slot {
+    padding: 8px 10px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+}
+
+/* Sealed chips keep a dashed edge, read chips a solid one: the state is in the
+ * button words too, so the border is a marker and never the message. */
+.lng-chip {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px dashed var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: left;
+    cursor: pointer;
+}
+
+.lng-chip:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.lng-chip:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.lng-chip.lng-chip-open {
+    border-style: solid;
+    border-color: var(--accent);
+    background: var(--panel-bg);
+    color: var(--text);
+    cursor: default;
+}
+
+[data-theme="light"] .lng-chip.lng-chip-open {
+    background: var(--panel-strong);
+}
+
+.lng-scene {
+    margin-top: 8px;
+}
+
+.lng-scene-text {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.76rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+/* The inscription is the carved side of a rubbing, so it is set in the script
+ * face and in the second accent - the picture line above it stays plain. */
+.lng-scene-mark {
+    margin: 6px 0 0;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--accent-2);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+}
+
+[data-theme="light"] .lng-scene-mark {
+    background: var(--panel-bg);
+}
+
+.lng-note {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .lng-note {
+    background: var(--panel-bg);
+}
+
+.lng-note-title {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.lng-section {
+    margin: 12px 0 6px;
+    color: var(--accent-2);
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.lng-glosses {
+    display: grid;
+    gap: 6px;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+.lng-word-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 6px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+}
+
+.lng-word {
+    flex: 0 0 auto;
+    min-width: 54px;
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.lng-gloss {
+    flex: 1 1 96px;
+    min-height: 34px;
+    padding: 4px 6px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--panel-bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.7rem;
+    line-height: 1.4;
+}
+
+.lng-gloss:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.lng-grammar {
+    display: grid;
+    gap: 10px;
+}
+
+.lng-rule {
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .lng-rule {
+    background: var(--surface-soft);
+}
+
+.lng-rule-title {
+    margin: 0 0 6px;
+    color: var(--text);
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.lng-ruleopts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.lng-ruleopt {
+    flex: 1 1 210px;
+    min-height: 44px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px dashed var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: left;
+    cursor: pointer;
+}
+
+.lng-ruleopt:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.lng-ruleopt:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.lng-ruleopt.lng-ruleopt-on {
+    border-style: solid;
+    border-color: var(--accent);
+    background: var(--panel-strong);
+    color: var(--text);
+}
+
+[data-theme="light"] .lng-ruleopt.lng-ruleopt-on {
+    background: var(--panel-bg);
+}
+
+.lng-test {
+    display: grid;
+    gap: 10px;
+}
+
+.lng-item {
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+}
+
+.lng-item-text {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.76rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.lng-itemopts {
+    display: grid;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.lng-itemopt {
+    min-height: 40px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px dashed var(--border);
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.45;
+    text-align: left;
+    cursor: pointer;
+}
+
+.lng-itemopt:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.lng-itemopt:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.lng-itemopt.lng-itemopt-on {
+    border-style: solid;
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+/* Every verdict is spelled out in words first; the border style and colour only
+ * echo what the line already says. */
+.lng-why {
+    min-height: 1.1em;
+    margin: 6px 0 0;
+    color: var(--text-secondary);
+    font-size: 0.66rem;
+    line-height: 1.55;
+}
+
+.lng-why.lng-why-ok {
+    color: var(--accent);
+}
+
+.lng-why.lng-why-bad {
+    padding-left: 8px;
+    border-left: 3px solid var(--danger-text);
+    color: var(--danger-text);
+}

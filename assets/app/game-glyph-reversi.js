@@ -207,6 +207,7 @@
     var board = [];
     var cleared = false;
     var busy = false;
+    var aiTimer = null;
     var ripple = [];
     var rafId = null;
     var startedAt = 0;
@@ -250,11 +251,14 @@
     }
 
     function loadLevel(levelDef) {
+      window.clearTimeout(aiTimer);
+      aiTimer = null;
       level = levelDef;
       newBoard();
       cleared = false;
       busy = false;
       ripple = [];
+      passCount = 0;
       clockRunning = false;
       startedAt = Date.now();
       renderHud();
@@ -328,17 +332,16 @@
     }
 
     function playTurn() {
-      if (revMoves(board, REV_PLAYER).length) {
-        return;
+      /* Resolve consecutive forced passes until the player can act. */
+      while (!cleared && !revMoves(board, REV_PLAYER).length) {
+        passCount += 1;
+        if (passCount >= 2) {
+          finish();
+          return;
+        }
+        resultEl.textContent = t("revYouPassed");
+        aiTurn();
       }
-      /* Player must pass; hand the turn to the AI. */
-      passCount += 1;
-      if (passCount >= 2) {
-        finish();
-        return;
-      }
-      resultEl.textContent = t("revYouPassed");
-      aiTurn();
     }
 
     function playerMove(index) {
@@ -365,7 +368,8 @@
         return;
       }
       busy = true;
-      window.setTimeout(function () {
+      aiTimer = window.setTimeout(function () {
+        aiTimer = null;
         busy = false;
         if (cleared) {
           return;
@@ -516,9 +520,6 @@
     });
 
     App.quietResetGlyphReversi = function () {
-      if (!cleared && busy) {
-        busy = false;
-      }
       clockRunning = false;
       resultEl.textContent = t("revPaused");
     };

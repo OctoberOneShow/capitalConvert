@@ -138,6 +138,7 @@
     var rafId = null;
     var lastFrame = 0;
     var startedAt = 0;
+    var respawnId = null;
 
     function renderHud() {
       livesEl.textContent = "\u2665".repeat(Math.max(0, lives));
@@ -178,6 +179,7 @@
             dir: lane.dir,
             speed: lane.speed,
             len: lane.len,
+            cycle: count * span,
             x: index * span + (laneIndex * 53) % span,
             color: STREAK_COLORS[(laneIndex + index) % STREAK_COLORS.length],
           });
@@ -186,6 +188,9 @@
     }
 
     function loadLevel(levelDef) {
+      stopLoop();
+      window.clearTimeout(respawnId);
+      respawnId = null;
       level = levelDef;
       pads = {};
       lives = 3;
@@ -195,7 +200,6 @@
       spawnProps();
       renderHud();
       refreshPicker();
-      startLoop();
       draw();
       resultEl.textContent = t("croReady", { n: PAD_COLS.length });
     }
@@ -204,6 +208,8 @@
       if (flying) {
         return;
       }
+      window.clearTimeout(respawnId);
+      respawnId = null;
       pads = {};
       lives = 3;
       dead = false;
@@ -214,6 +220,7 @@
       resultEl.textContent = t("croGo");
       renderHud();
       canvas.focus();
+      startLoop();
     }
 
     function resetFrog() {
@@ -234,8 +241,9 @@
         return;
       }
       dead = true;
-      window.setTimeout(function () {
-        if (dead && !flying) {
+      respawnId = window.setTimeout(function () {
+        respawnId = null;
+        if (!dead || !flying) {
           return;
         }
         dead = false;
@@ -312,11 +320,12 @@
             return;
           }
           prop.x += prop.dir * prop.speed * dt;
-          var span = prop.len + lane.gap;
-          if (prop.dir > 0 && prop.x - prop.len > croWidth + 20) {
-            prop.x -= span * Math.ceil((prop.x - prop.len + 20) / span);
-          } else if (prop.dir < 0 && prop.x < -20) {
-            prop.x += span * Math.ceil((-prop.x + 20) / span);
+          /* Wrap the whole train, preserving the gap between neighbouring
+           * vehicles/logs instead of piling each one onto the next. */
+          if (prop.dir > 0 && prop.x > croWidth + 20) {
+            prop.x -= prop.cycle;
+          } else if (prop.dir < 0 && prop.x + prop.len < -20) {
+            prop.x += prop.cycle;
           }
         });
       });
@@ -482,6 +491,7 @@
       if (rafId === null) {
         return;
       }
+      rafId = null;
       var dt = Math.min(0.032, (now - lastFrame) / 1000 || 0.016);
       lastFrame = now;
       if (document.getElementById("gamePanelGlyphCrossing").hidden || document.hidden) {
@@ -493,7 +503,16 @@
       if (flying) {
         renderHud();
       }
-      rafId = window.requestAnimationFrame(frame);
+      if (flying) {
+        rafId = window.requestAnimationFrame(frame);
+      }
+    }
+
+    function stopLoop() {
+      if (rafId !== null) {
+        window.cancelAnimationFrame(rafId);
+        rafId = null;
+      }
     }
 
     function startLoop() {
@@ -540,6 +559,9 @@
     startBtn.addEventListener("click", startRun);
 
     App.quietResetGlyphCrossing = function () {
+      stopLoop();
+      window.clearTimeout(respawnId);
+      respawnId = null;
       if (flying) {
         flying = false;
         resultEl.textContent = t("croPaused");

@@ -1,0 +1,329 @@
+/* game-one-minute-mayor (registry game) */
+/* One-Minute Mayor - the six-by-six town plate, the blueprint table and the
+ * transparent ledger. Every state the plate can be in also prints a character
+ * (lot name, H W T R G, ~ for water, diamond for the landmark, dagger for foul
+ * ground), so no cell relies on a colour alone to explain itself. */
+.omv-board {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 3px;
+    margin-top: 12px;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+}
+
+.omv-cell {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    align-items: center;
+    justify-items: center;
+    aspect-ratio: 1;
+    min-height: 44px;
+    padding: 2px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.14s ease;
+}
+
+.omv-cell:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.omv-cell-tag {
+    align-self: start;
+    font-size: 0.55rem;
+    color: var(--text-secondary);
+}
+
+.omv-cell-mark {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.omv-cell-num {
+    align-self: end;
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+}
+
+/* The cursor is the keyboard player's cell: a ring plus the accent rule, and the
+ * lot name is printed whether or not the ring is visible. */
+.omv-cell.is-cursor {
+    border-color: var(--accent);
+    background: var(--panel-bg);
+    box-shadow: var(--focus-ring);
+}
+
+/* Water and the listed landmark cannot be built on, and both say so in a glyph. */
+.omv-cell.is-blocked {
+    border-style: dashed;
+    background: var(--panel-bg);
+    cursor: not-allowed;
+}
+
+.omv-cell.is-blocked .omv-cell-mark {
+    color: var(--accent);
+}
+
+.omv-cell.is-land {
+    border-style: double;
+    border-width: 3px;
+    cursor: not-allowed;
+}
+
+.omv-cell.is-land .omv-cell-mark {
+    color: var(--accent-2);
+}
+
+/* Foul ground is a dashed rule plus the dagger, never only a shade of red. */
+.omv-cell.is-foul {
+    border-color: var(--danger-text);
+    border-style: dashed;
+}
+
+.omv-cell.is-foul .omv-cell-mark {
+    color: var(--danger-text);
+}
+
+/* Zoning stripes: each blueprint gets its own edge mark as well as its letter. */
+.omv-cell.is-work {
+    border-left: 4px solid var(--danger-text);
+}
+
+.omv-cell.is-tap {
+    border-left: 4px dotted var(--accent);
+}
+
+.omv-cell.is-stop {
+    border-left: 4px dashed var(--accent-2);
+}
+
+.omv-cell.is-green {
+    border-left: 4px solid var(--accent-2);
+}
+
+.omv-cell.is-home {
+    border-left: 4px solid var(--accent);
+}
+
+/* The blueprint table doubles as the rules legend: name, letter, and the exact
+ * help and hurt the ledger will charge for it. */
+.omv-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.omv-tools-label {
+    width: 100%;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.omv-blue,
+.omv-undo {
+    display: grid;
+    gap: 3px;
+    padding: 7px 9px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.14s ease;
+}
+
+.omv-blue {
+    flex: 1 1 148px;
+}
+
+.omv-blue:hover,
+.omv-undo:hover {
+    border-color: var(--accent);
+}
+
+.omv-blue:focus-visible,
+.omv-undo:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.omv-blue.is-on {
+    border-color: var(--accent);
+    background: var(--panel-bg);
+    box-shadow: var(--focus-ring);
+}
+
+.omv-blue-glyph {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.omv-blue-name {
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: var(--text);
+}
+
+.omv-blue-rule {
+    font-size: 0.58rem;
+    line-height: 1.4;
+    color: var(--text-secondary);
+}
+
+.omv-blue:disabled,
+.omv-undo:disabled {
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.omv-undo {
+    flex: 0 0 auto;
+    align-self: start;
+    font-weight: 700;
+    font-size: 0.78rem;
+}
+
+/* The ledger is the score with its working shown: one line per component, the
+ * sentence on the left, its digits on the right. */
+.omv-ledger {
+    display: grid;
+    gap: 3px;
+    margin-top: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+    font-family: "JetBrains Mono", monospace;
+}
+
+.omv-ledger-head {
+    margin: 0;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.omv-line {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: baseline;
+    margin: 0;
+    font-size: 0.66rem;
+    line-height: 1.45;
+}
+
+.omv-line-text {
+    color: var(--text-secondary);
+}
+
+.omv-line-sum {
+    min-width: 3.2rem;
+    font-weight: 800;
+    text-align: right;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+}
+
+.omv-needs {
+    font-weight: 700;
+    color: var(--text);
+}
+
+.omv-preview {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 4px 0 4px 8px;
+    border-left: 2px dashed var(--accent);
+}
+
+.omv-line.is-quiet {
+    opacity: 0.82;
+    font-style: italic;
+}
+
+.omv-lines {
+    display: grid;
+    gap: 2px;
+}
+
+.omv-total {
+    margin: 4px 0 0;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    font-weight: 800;
+    color: var(--text);
+}
+
+[data-theme="light"] .omv-board {
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .omv-cell {
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .omv-cell.is-cursor,
+[data-theme="light"] .omv-cell.is-blocked {
+    background: var(--surface-soft);
+}
+
+[data-theme="light"] .omv-blue,
+[data-theme="light"] .omv-undo {
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .omv-blue.is-on {
+    background: var(--surface-soft);
+}
+
+[data-theme="light"] .omv-ledger {
+    background: var(--panel-strong);
+}
+
+[data-motion="off"] .omv-cell,
+[data-motion="off"] .omv-blue,
+[data-motion="off"] .omv-undo {
+    transition: none;
+}
+
+@media (max-width: 560px) {
+    .omv-cell {
+        min-height: 38px;
+    }
+
+    .omv-cell-mark {
+        font-size: 0.9rem;
+    }
+
+    .omv-blue {
+        flex: 1 1 120px;
+    }
+
+    .omv-line {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .omv-line-sum {
+        text-align: left;
+    }
+}

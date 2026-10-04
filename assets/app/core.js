@@ -1,5 +1,55 @@
 ﻿/* Shared runtime - I18n lookups, theme and motion controls, status/history plumbing, the draggable layout, background scenery and page cursor decorations. */
 (function (App) {
+  /* Saving scores is optional: blocked storage must not interrupt a round or
+   * the shared bootstrap. Failed writes remain available for this session. */
+  var browserStorage = null;
+  var sessionStorage = Object.create(null);
+  try {
+    browserStorage = window.localStorage;
+  } catch (error) {
+    /* Some browsers deny access to the storage property itself. */
+  }
+  var localStorage = {
+    getItem: function (key) {
+      key = String(key);
+      if (Object.prototype.hasOwnProperty.call(sessionStorage, key)) {
+        return sessionStorage[key];
+      }
+      try {
+        return browserStorage ? browserStorage.getItem(key) : null;
+      } catch (error) {
+        return null;
+      }
+    },
+    setItem: function (key, value) {
+      key = String(key);
+      value = String(value);
+      try {
+        if (browserStorage) {
+          browserStorage.setItem(key, value);
+          delete sessionStorage[key];
+          return;
+        }
+      } catch (error) {
+        /* Quotas and privacy settings can reject a write mid-session. */
+      }
+      sessionStorage[key] = value;
+    },
+    removeItem: function (key) {
+      key = String(key);
+      try {
+        if (browserStorage) {
+          browserStorage.removeItem(key);
+          delete sessionStorage[key];
+          return;
+        }
+      } catch (error) {
+        /* A null override also hides an old record that cannot be removed. */
+      }
+      sessionStorage[key] = null;
+    },
+  };
+  App.storage = localStorage;
   /* Shared names from the other modules (see window.CapitalConvert). */
   var I18N = App.I18N;
   /* Quiet-reset hooks: every timer-driven game registers its reset here so
@@ -98,6 +148,27 @@
       });
     }
     return text;
+  }
+
+  /* Registry games carry their own copy in their own file: a pack fills only
+   * the keys the shared dictionary does not already hold, so i18n.js stays the
+   * authority for the pages and the drawer chrome. */
+  function addStrings(pack) {
+    if (!pack) {
+      return;
+    }
+    ["en", "zh"].forEach(function (lang) {
+      var source = pack[lang];
+      var dict = I18N[lang];
+      if (!source || !dict) {
+        return;
+      }
+      Object.keys(source).forEach(function (key) {
+        if (dict[key] == null) {
+          dict[key] = source[key];
+        }
+      });
+    });
   }
 
   function applyI18nDom() {
@@ -238,7 +309,10 @@
 
   function readActionHistory() {
     try {
-      return JSON.parse(localStorage.getItem(getHistoryStorageKey()) || "[]");
+      var history = JSON.parse(localStorage.getItem(getHistoryStorageKey()) || "[]");
+      return Array.isArray(history)
+        ? history.filter(function (entry) { return typeof entry === "string"; }).slice(0, 8)
+        : [];
     } catch (error) {
       return [];
     }
@@ -1797,6 +1871,7 @@
   /* Exported for the other modules. */
   App.getFileName = getFileName;
   App.t = t;
+  App.addStrings = addStrings;
   App.applyI18nDom = applyI18nDom;
   App.initLanguagePicker = initLanguagePicker;
   App.getElement = getElement;

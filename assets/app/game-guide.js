@@ -1006,6 +1006,161 @@
         "小心：你每开一炮对手都会还击——军衔越高，对手瞄得越准。",
         "计分：炮数越少星越多；命中后先搜邻居再换位。"],
     },
+    nim: {
+      panel: "gamePanelNim",
+      svg: '<svg viewBox="0 0 120 76" xmlns="http://www.w3.org/2000/svg">' + board() +
+        '<rect x="20" y="20" width="6" height="22" rx="3" fill="#fbbf24"/>' +
+        '<rect x="30" y="20" width="6" height="22" rx="3" fill="#fbbf24"/>' +
+        '<rect x="44" y="20" width="6" height="22" rx="3" fill="#f97316"/>' +
+        '<rect x="54" y="20" width="6" height="22" rx="3" fill="#f97316"/>' +
+        '<rect x="64" y="20" width="6" height="22" rx="3" fill="#f97316"/>' +
+        '<rect x="74" y="20" width="6" height="22" rx="3" fill="#94a3b8"/>' +
+        '<rect x="84" y="20" width="6" height="22" rx="3" fill="#94a3b8"/>' +
+        '<rect x="94" y="20" width="6" height="22" rx="3" fill="#94a3b8"/>' +
+        '<path d="M44 52h32" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/>' +
+        '<path d="M70 47l7 5-7 5" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      en: [
+        "Aim: lift the last stick - or dodge it, when the table is played under misere rules.",
+        "Controls: click any stick; it and everything to its right in that row are taken at once.",
+        "Rules: one row per turn, any number of sticks, and the rival answers straight away.",
+        "Watch out: the rival reads every row in binary - only a move that leaves the rows cancelling can beat it.",
+        "Scoring: fewer of your own turns earn more stars.",
+      ],
+      zh: [
+        "目标：拿走最后一根筹——若是反玩法牌桌，则要避开它。",
+        "操作：点任意一根筹，它和该行右侧全部一次取走。",
+        "规则：每回合只能动一行，可取任意根，对手会立刻回手。",
+        "小心：对手按二进制读每一行——只有让各行异或归零的走法能赢它。",
+        "计分：你自己用的回合越少，星越多。",
+      ],
+    },
+    republic: {
+      panel: "gamePanelRepublic",
+      svg: '<svg viewBox="0 0 120 76" xmlns="http://www.w3.org/2000/svg">' + board() +
+        '<rect x="16" y="12" width="88" height="20" rx="4" fill="rgba(226,232,240,.14)" stroke="rgba(148,163,184,.45)"/>' +
+        '<path d="M24 22h58" stroke="rgba(226,232,240,.6)" stroke-width="3" stroke-linecap="round"/>' +
+        '<rect x="16" y="38" width="42" height="12" rx="3" fill="rgba(34,211,238,.24)" stroke="#22d3ee"/>' +
+        '<rect x="62" y="38" width="42" height="12" rx="3" fill="rgba(148,163,184,.14)" stroke="rgba(148,163,184,.4)"/>' +
+        '<rect x="16" y="54" width="42" height="12" rx="3" fill="rgba(148,163,184,.14)" stroke="rgba(148,163,184,.4)"/>' +
+        '<rect x="62" y="54" width="42" height="12" rx="3" fill="rgba(251,107,53,.2)" stroke="rgba(251,107,53,.7)"/></svg>',
+      en: [
+        "Aim: answer every card in a deck of history and culture about the Republic of China.",
+        "Controls: click one of the four choices, then press Next card to turn over.",
+        "Rules: every card reveals a short note once answered, so a miss still teaches the fact.",
+        "Watch out: choices are shuffled each round, so memorising the order does not help.",
+        "Scoring: correct cards set your stars - four out of four is the three-star line, and clearing a deck opens the next.",
+      ],
+      zh: [
+        "目标：答完一整套关于中华民国的历史与文化题卡。",
+        "操作：从四个选项中点击其一，再按“下一题”翻卡。",
+        "规则：每题答完都会显示一条注解，答错也能学到史实。",
+        "小心：每轮的题序与选项都会重新洗牌，死记顺序没有用。",
+        "计分：答对题数决定星级——四题全对即三星，答毕一套就解锁下一套。",
+      ],
+    },
+    dots: {
+      panel: "gamePanelDots",
+      svg: '<svg viewBox="0 0 120 76" xmlns="http://www.w3.org/2000/svg">' + board() +
+        '<rect x="28" y="20" width="32" height="34" fill="rgba(34,211,238,.16)"/>' +
+        '<g stroke="#22d3ee" stroke-width="4" stroke-linecap="round">' +
+        '<path d="M28 20h32"/><path d="M28 54h32"/><path d="M28 20v34"/><path d="M60 20v34"/></g>' +
+        '<g stroke="#94a3b8" stroke-width="3" stroke-linecap="round">' +
+        '<path d="M60 37h32"/><path d="M76 20v34"/><path d="M92 20v17"/></g>' +
+        '<g fill="#e2e8f0"><circle cx="28" cy="20" r="3"/><circle cx="60" cy="20" r="3"/>' +
+        '<circle cx="92" cy="20" r="3"/><circle cx="28" cy="37" r="3"/><circle cx="60" cy="37" r="3"/>' +
+        '<circle cx="92" cy="37" r="3"/><circle cx="28" cy="54" r="3"/><circle cx="60" cy="54" r="3"/>' +
+        '<circle cx="92" cy="54" r="3"/></g></svg>',
+      en: [
+        "Aim: close more boxes than the rival by drawing the sticks between the dots.",
+        "Controls: click a gap between two neighbouring dots to claim that stick.",
+        "Rules: whoever draws a box's fourth side keeps it and must draw another stick at once.",
+        "Watch out: laying a box's third side hands its fourth one to the rival for nothing.",
+        "Scoring: your winning margin sets the stars, and the top ranks never blunder.",
+      ],
+      zh: [
+        "目标：在点之间画边，封住比对手更多的格子。",
+        "操作：点击相邻两点之间的空隙即可占据那条边。",
+        "规则：谁画出格子的第四条边，这格归他，并且必须立刻再画一条。",
+        "小心：给某个格子画第三条边，等于把第四条边白白送给对手。",
+        "计分：领先格数决定星级，越高段位越不失误。",
+      ],
+    },
+    kalah: {
+      panel: "gamePanelKalah",
+      svg: '<svg viewBox="0 0 120 76" xmlns="http://www.w3.org/2000/svg">' + board() +
+        '<rect x="12" y="24" width="10" height="26" rx="4" fill="rgba(34,211,238,.22)" stroke="#22d3ee"/>' +
+        '<rect x="98" y="24" width="10" height="26" rx="4" fill="rgba(251,107,53,.2)" stroke="rgba(251,107,53,.7)"/>' +
+        '<g fill="none" stroke="rgba(148,163,184,.5)"><circle cx="34" cy="37" r="7"/><circle cx="52" cy="37" r="7"/><circle cx="70" cy="37" r="7"/><circle cx="88" cy="37" r="7"/></g>' +
+        '<g fill="#e2e8f0"><circle cx="34" cy="34" r="2"/><circle cx="34" cy="40" r="2"/><circle cx="52" cy="37" r="2"/><circle cx="70" cy="34" r="2"/><circle cx="88" cy="37" r="2"/></g>' +
+        '<path d="M34 56h34" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/>' +
+        '<path d="M62 51l7 5-7 5" fill="none" stroke="#22d3ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      en: [
+        "Aim: bank more stones in your store than the rival banks in theirs.",
+        "Controls: click one of your six pits - its stones scatter anticlockwise, one per hole.",
+        "Rules: sowing skips the rival's store, and a last stone dropped in your own store frees another sow.",
+        "Watch out: a last stone in an empty pit on your side captures the stones facing it, so never leave that gap standing for the rival.",
+        "Scoring: the winning margin sets the stars, and every bench you clear opens a stronger one.",
+      ],
+      zh: [
+        "目标：自家仓收下的棋子比对手仓多。",
+        "操作：点你这一侧的任意一穴，棋子逆时针每格一粒播下去。",
+        "规则：播子会跳过对手的仓；最后一粒落进自家仓，可以再播一次。",
+        "小心：最后一粒落在你这一侧的空穴，就能吃掉对面那一穴——别把这样的空穴留给对手。",
+        "计分：获胜差距决定星级，赢下一档就开启更难的一档。",
+      ],
+    },
+    blackjack: {
+      panel: "gamePanelBlackjack",
+      svg: '<svg viewBox="0 0 120 76" xmlns="http://www.w3.org/2000/svg">' + board() +
+        '<rect x="16" y="12" width="19" height="27" rx="3" fill="rgba(226,232,240,.14)" stroke="rgba(148,163,184,.5)"/>' +
+        '<rect x="38" y="12" width="19" height="27" rx="3" fill="rgba(251,107,53,.2)" stroke="rgba(251,107,53,.7)"/>' +
+        '<text x="25" y="30" font-size="12" fill="#e2e8f0" text-anchor="middle">A</text>' +
+        '<text x="47" y="30" font-size="12" fill="#fbbf24" text-anchor="middle">K</text>' +
+        '<rect x="16" y="45" width="19" height="20" rx="3" fill="rgba(34,211,238,.18)" stroke="#22d3ee"/>' +
+        '<text x="25" y="59" font-size="11" fill="#22d3ee" text-anchor="middle">10</text>' +
+        '<rect x="38" y="45" width="19" height="20" rx="3" fill="rgba(148,163,184,.16)" stroke="rgba(148,163,184,.45)" stroke-dasharray="3 3"/>' +
+        '<circle cx="80" cy="30" r="9" fill="rgba(251,191,36,.22)" stroke="#fbbf24"/>' +
+        '<circle cx="92" cy="44" r="9" fill="rgba(251,191,36,.14)" stroke="rgba(251,191,36,.6)"/>' +
+        '<text x="97" y="24" font-size="12" fill="#a3e635" text-anchor="middle">21</text></svg>',
+      en: [
+        "Aim: bank the table's chip target before your own stack runs dry.",
+        "Controls: set a bet, press Deal, then choose Hit, Stand or Double on your two cards.",
+        "Rules: the house hides one card and must take every card up to 17; an ace counts 11 unless that would bust.",
+        "Watch out: doubling doubles the stake for exactly one more card, so keep it for a hard 9 to 11.",
+        "Scoring: blackjack pays three for two, and the fewer hands you need to reach the target, the more stars.",
+      ],
+      zh: [
+        "目标：在自己的筹码耗尽之前，攒够这张桌子的目标筹码。",
+        "操作：选好注额按发牌，两张牌之后决定要牌、停牌还是加倍。",
+        "规则：庄家一张明一张暗，不到 17 点必须继续要牌；A 算 11 点，除非那样会爆牌。",
+        "小心：加倍会把赌注翻倍，但只再多发一张牌——留给硬 9 到 11 点再用。",
+        "计分：黑杰克按 3:2 派彩，达到目标所用局数越少，星级越高。",
+      ],
+    },
+    garden: {
+      panel: "gamePanelGarden",
+      svg: '<svg viewBox="0 0 120 76" xmlns="http://www.w3.org/2000/svg">' + board() +
+        '<g fill="none" stroke="rgba(148,163,184,.45)"><rect x="14" y="18" width="20" height="34" rx="4"/><rect x="38" y="18" width="20" height="34" rx="4"/><rect x="62" y="18" width="20" height="34" rx="4"/><rect x="86" y="18" width="20" height="34" rx="4"/></g>' +
+        '<g stroke="#a3e635" stroke-width="2.5" stroke-linecap="round" fill="none"><path d="M24 48v-9"/><path d="M48 48v-11"/></g>' +
+        '<circle cx="68" cy="34" r="5" fill="#fbbf24"/><circle cx="68" cy="34" r="2" fill="#fde68a"/>' +
+        '<text x="96" y="40" font-size="12" fill="rgba(148,163,184,.6)" text-anchor="middle">·</text>' +
+        '<g fill="rgba(148,163,184,.35)"><rect x="14" y="57" width="20" height="3" rx="1.5"/><rect x="62" y="57" width="20" height="3" rx="1.5"/><rect x="86" y="57" width="20" height="3" rx="1.5"/></g>' +
+        '<rect x="38" y="57" width="13" height="3" rx="1.5" fill="#a3e635"/></svg>',
+      en: [
+        "Aim: keep sowing and harvesting until the bed's coin target is banked.",
+        "Controls: click an empty plot to sow it, then click again once the crop turns gold.",
+        "Rules: growth runs on the wall clock, so plots ripen even with the drawer closed - and all four share one purse.",
+        "Watch out: only coins in hand count, so a ripe crop left standing wastes a whole growing cycle.",
+        "Scoring: the seconds from your first sow to the target set the stars, and clearing a bed opens the next.",
+      ],
+      zh: [
+        "目标：不断播种、收获，把这块地的目标钱币攒满。",
+        "操作：点空白的畦播种，作物变金黄后再点一次收获。",
+        "规则：生长看的是系统时间，收起抽屉也照样成熟——四块畦共用同一个钱袋。",
+        "小心：只有拿到手上的钱才算数，熟透的作物停在地里就是不涨一分钱。",
+        "计分：从第一次播种到攒够目标的用时决定星级，完成一畦解锁下一畦。",
+      ],
+    },
 
   };
 
@@ -1013,8 +1168,20 @@
     if (!t) {
       return;
     }
+    /* Registry games ship their guide inside their own module, so the table is
+     * merged rather than duplicated: one builder covers the hand-written panels
+     * and the JS-injected ones alike. */
+    var guides = {};
     Object.keys(guideData).forEach(function (id) {
-      var g = guideData[id];
+      guides[id] = guideData[id];
+    });
+    if (App.getRegistryGuides) {
+      App.getRegistryGuides().forEach(function (entry) {
+        guides[entry.id] = entry;
+      });
+    }
+    Object.keys(guides).forEach(function (id) {
+      var g = guides[id];
       var panel = getElement(g.panel);
       if (!panel || panel.querySelector(".game-guide")) {
         return;

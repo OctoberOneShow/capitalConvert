@@ -1,0 +1,277 @@
+/* Blind Sculptor - the probe bench, the digit grids and the 3-layer build rig.
+   Every state the player reads is a class pair plus a glyph, so no rule here
+   leans on a hue alone: is-on, is-picked, is-read and is-cursor all arrive next
+   to a text change the panel already prints. Light theme swaps the surfaces. */
+.bld-probe {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+    outline: none;
+}
+
+.bld-build {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+    margin-top: 12px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+    outline: none;
+}
+
+.bld-probe:focus-visible,
+.bld-build:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .bld-probe,
+[data-theme="light"] .bld-build {
+    background: var(--panel-strong);
+    border-color: var(--surface-soft);
+}
+
+.bld-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.bld-cap {
+    min-width: 42px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.bld-btn {
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    cursor: pointer;
+}
+
+.bld-btn:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .bld-btn {
+    background: var(--panel-bg);
+}
+
+.bld-axis,
+.bld-index {
+    min-width: 44px;
+}
+
+/* A picked control carries a box and a bold border, not just a tint. */
+.bld-axis.is-picked,
+.bld-index.is-picked {
+    border-color: var(--accent);
+    border-width: 2px;
+    background: var(--panel-strong);
+    color: var(--text);
+    font-weight: 700;
+}
+
+.bld-index.is-read {
+    border-style: dashed;
+    color: var(--text-secondary);
+}
+
+.bld-idx-num {
+    font-weight: 700;
+}
+
+.bld-go.is-spent {
+    border-color: var(--danger-text);
+    color: var(--danger-text);
+}
+
+.bld-readout {
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+}
+
+.bld-read {
+    margin: 0 0 6px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text);
+}
+
+.bld-gridcap,
+.bld-forecast,
+.bld-note-empty {
+    margin: 6px 0 0;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.bld-forecast {
+    font-family: "JetBrains Mono", monospace;
+}
+
+.bld-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 26px);
+    grid-auto-rows: 26px;
+    gap: 3px;
+    width: max-content;
+}
+
+.bld-grid-mini-box {
+    grid-template-columns: repeat(3, 18px);
+    grid-auto-rows: 18px;
+    gap: 2px;
+}
+
+.bld-digit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.8rem;
+    line-height: 1;
+}
+
+.bld-digit-mini {
+    font-size: 0.68rem;
+}
+
+/* The filled digits read bolder and boxed, so the grid works without colour. */
+.bld-digit.is-on {
+    background: var(--panel-strong);
+    border-color: var(--accent);
+    border-width: 2px;
+    color: var(--accent-2);
+    font-weight: 700;
+}
+
+[data-theme="light"] .bld-digit.is-on {
+    background: var(--accent);
+    color: var(--panel-strong);
+}
+
+.bld-notebook {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+}
+
+.bld-note-cap {
+    margin: 0 0 6px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.bld-notes {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bld-entry {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-bg);
+}
+
+.bld-entry.is-pinned {
+    border-color: var(--accent);
+    border-width: 2px;
+    background: var(--surface-soft);
+}
+
+.bld-entry-line {
+    flex: 1 1 200px;
+    margin: 0;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.bld-entry-hint {
+    display: block;
+    border-style: dashed;
+    color: var(--text);
+}
+
+.bld-lock {
+    padding: 3px 9px;
+    font-size: 0.7rem;
+}
+
+.bld-layer-cap {
+    margin: 0 0 6px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+}
+
+.bld-cells {
+    display: grid;
+    grid-template-columns: repeat(3, 34px);
+    grid-auto-rows: 34px;
+    gap: 4px;
+}
+
+.bld-cell {
+    padding: 0;
+    min-width: 0;
+    min-height: 0;
+    font-size: 1.05rem;
+    line-height: 1;
+    color: var(--text-secondary);
+}
+
+.bld-cell.is-on {
+    background: var(--panel-strong);
+    border-color: var(--accent);
+    border-width: 2px;
+    color: var(--accent-2);
+}
+
+.bld-cell.is-cursor {
+    border-color: var(--accent-2);
+    border-style: solid;
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .bld-cell.is-on {
+    background: var(--accent);
+    color: var(--panel-strong);
+}
+
+[data-motion="off"] .bld-btn,
+[data-motion="off"] .bld-cell {
+    transition: none;
+}

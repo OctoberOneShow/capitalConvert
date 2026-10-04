@@ -1,0 +1,194 @@
+/* game-pocket-photographer (registry game) */
+/* Pocket Photographer - the viewfinder plate and the contact sheet.
+ * Every state the player reads is a word or a digit, so nothing here leans on a
+ * hue alone: a filed frame carries a box, a bolder border and the words "in the
+ * album", an empty sheet is dashed and italic, and the rerouted line is labelled
+ * on the canvas itself. The pond keeps a night-water plate in both themes. */
+.pph-canvas {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    margin-top: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.pph-canvas:focus-visible {
+    border-color: var(--accent);
+    border-width: 2px;
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .pph-canvas {
+    border-color: var(--surface-soft);
+    background: var(--panel-bg);
+}
+
+[data-motion="off"] .pph-canvas {
+    cursor: default;
+}
+
+/* The state line is the screen-reader path into the pond, so it gets its own
+ * row inside the HUD rather than a fourth of a narrow stat. */
+.pph-hud {
+    flex-wrap: wrap;
+}
+
+.pph-wide {
+    flex: 1 1 100%;
+    text-align: left;
+}
+
+.pph-state {
+    display: block;
+    margin-top: 4px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    line-height: 1.55;
+    color: var(--text);
+}
+
+[data-theme="light"] .pph-state {
+    color: var(--text);
+}
+
+.pph-sheet {
+    display: block;
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+}
+
+.pph-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+    padding: 4px 6px;
+    border-left: 3px solid var(--border);
+    font-size: 0.74rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+}
+
+.pph-row + .pph-row {
+    margin-top: 3px;
+}
+
+.pph-row-n {
+    min-width: 18px;
+    font-family: "JetBrains Mono", monospace;
+    color: var(--text-secondary);
+}
+
+.pph-row-who {
+    font-weight: 700;
+    color: var(--text);
+}
+
+.pph-row-nums {
+    font-family: "JetBrains Mono", monospace;
+    color: var(--accent-2);
+    letter-spacing: 0.02em;
+}
+
+.pph-row-why {
+    flex: 1 1 170px;
+    color: var(--text-secondary);
+}
+
+.pph-row-flag {
+    padding: 1px 7px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+/* A kept frame is boxed, ruled and worded - the tint is only the third cue. */
+.pph-row.is-kept {
+    border-left-color: var(--accent);
+    border-left-width: 4px;
+    background: var(--surface-soft);
+}
+
+.pph-row-flag.is-filed {
+    border-color: var(--accent);
+    border-width: 2px;
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.pph-row.is-empty {
+    border-left-style: dashed;
+    font-style: italic;
+}
+
+/* The words already say "not enough"; the tint is the third cue, not the cue. */
+.pph-row-flag:not(.is-filed) {
+    color: var(--danger-text);
+}
+
+[data-theme="light"] .pph-row-nums {
+    color: var(--text);
+}
+
+[data-theme="light"] .pph-row.is-kept {
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .pph-row-flag.is-filed {
+    color: var(--text);
+}
+
+.pph-btn-again {
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.pph-btn-again:hover {
+    border-color: var(--accent);
+}
+
+.pph-btn-again:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .pph-btn-again {
+    background: var(--panel-bg);
+}
+
+.pph-shutter:disabled {
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+[data-theme="light"] .pph-shutter:disabled {
+    color: var(--text-secondary);
+}
+
+[data-motion="off"] .pph-shutter {
+    animation: none !important;
+    transition: none;
+}
+
+[data-motion="off"] .pph-btn-again,
+[data-motion="off"] .pph-row,
+[data-motion="off"] .pph-row-flag {
+    transition: none;
+}

@@ -26,6 +26,10 @@
     { id: "s6", labelKey: "slashL6", target: 1800, timeS: 35, spawnMs: 600, bomb: 0.2 },
     { id: "s7", labelKey: "slashL7", target: 2200, timeS: 32, spawnMs: 540, bomb: 0.22 },
     { id: "s8", labelKey: "slashL8", target: 2600, timeS: 30, spawnMs: 500, bomb: 0.24 },
+    { id: "s9", labelKey: "lvlNum9", target: 3100, timeS: 30, spawnMs: 470, bomb: 0.26 },
+    { id: "s10", labelKey: "lvlNum10", target: 3600, timeS: 30, spawnMs: 440, bomb: 0.28 },
+    { id: "s11", labelKey: "lvlNum11", target: 4100, timeS: 30, spawnMs: 410, bomb: 0.3 },
+    { id: "s12", labelKey: "lvlNum12", target: 4600, timeS: 30, spawnMs: 400, bomb: 0.32 },
   ];
 
   function initInkSlashGame() {

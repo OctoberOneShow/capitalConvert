@@ -32,6 +32,9 @@
     { id: "t6", labelKey: "beatL6", bpm: 152, bars: 18, seed: 97, density: [0.105, 0.07, 0.11, 0.045] },
     { id: "t7", labelKey: "beatL7", bpm: 164, bars: 18, seed: 113, density: [0.11, 0.075, 0.12, 0.05] },
     { id: "t8", labelKey: "beatL8", bpm: 176, bars: 20, seed: 131, density: [0.115, 0.08, 0.13, 0.055] },
+    { id: "t9", labelKey: "lvlNum9", bpm: 184, bars: 22, seed: 138, density: [0.115, 0.08, 0.13, 0.055] },
+    { id: "t10", labelKey: "lvlNum10", bpm: 190, bars: 24, seed: 145, density: [0.115, 0.08, 0.13, 0.055] },
+    { id: "t11", labelKey: "lvlNum11", bpm: 190, bars: 26, seed: 152, density: [0.115, 0.08, 0.13, 0.055] },
   ];
 
   function mulberry32(seed) {
@@ -243,18 +246,18 @@
     function judgeMisses(songTime) {
       for (var lane = 0; lane < beatLanes; lane += 1) {
         var list = notes[lane];
-        while (
-          lanePointers[lane] < list.length &&
-          list[lanePointers[lane]].judged
-        ) {
+        while (lanePointers[lane] < list.length) {
+          var next = list[lanePointers[lane]];
+          if (!next.judged && songTime - next.time <= beatMissMs / 1000) {
+            break;
+          }
+          if (!next.judged) {
+            next.judged = true;
+            missCount += 1;
+            combo = 0;
+            renderHud();
+          }
           lanePointers[lane] += 1;
-        }
-        var next = list[lanePointers[lane]];
-        if (next && !next.judged && songTime - next.time > beatMissMs / 1000) {
-          next.judged = true;
-          missCount += 1;
-          combo = 0;
-          renderHud();
         }
       }
     }
@@ -264,6 +267,7 @@
         return;
       }
       var songTime = nowSec() - startAt;
+      judgeMisses(songTime);
       var list = notes[lane];
       var hit = null;
       for (var index = lanePointers[lane]; index < list.length; index += 1) {
@@ -453,6 +457,7 @@
     }
 
     function startSong() {
+      stopSong();
       ensureAudio();
       resetStats();
       buildNotes();

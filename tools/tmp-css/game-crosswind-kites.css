@@ -1,0 +1,206 @@
+/* game-crosswind-kites (registry game) */
+/* Crosswind Kites - the sky plate, the two line gauges and the two hold
+ * switches. Only "kct-" classes, and only the shared tokens, so the instruments
+ * read the same in either theme as every other panel in the drawer. */
+.kct-canvas {
+    display: block;
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    margin-top: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+/* The sky keeps a night plate in both themes: the three wind bands, the dashed
+ * rooftop line and the printed wind numbers only read against dark. */
+[data-theme="light"] .kct-canvas {
+    border-color: var(--surface-soft);
+}
+
+.kct-canvas:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* The instrument pair under the sky: line strength and the breeze on the wing. */
+.kct-gauges {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.kct-gauge {
+    display: grid;
+    grid-template-columns: minmax(34px, auto) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 9px 10px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .kct-gauge {
+    background: var(--panel-bg);
+}
+
+.kct-gauge-name {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.kct-bar {
+    display: block;
+    height: 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-soft);
+    overflow: hidden;
+}
+
+.kct-bar-fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.12s linear;
+}
+
+.kct-gauge-value {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    color: var(--text);
+}
+
+/* An empty line is an alarm, and it is said with shape as well as colour. */
+.kct-gauge.is-low .kct-bar {
+    border-style: dashed;
+    border-color: var(--danger-text);
+}
+
+.kct-gauge.is-low .kct-bar-fill {
+    background: var(--danger-text);
+}
+
+.kct-gauge.is-low .kct-gauge-value {
+    color: var(--danger-text);
+    font-weight: 800;
+}
+
+/* The one-line answer to "what just happened": hooked, stolen, or dipped. */
+.kct-line {
+    min-height: 1.6em;
+    margin-top: 10px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    overflow-wrap: anywhere;
+}
+
+/* Pump and Demo Line are hold-or-off switches, so they sit on their own row
+ * beside the gauges rather than in the shared action row. */
+.kct-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.kct-pump-btn,
+.kct-auto-btn {
+    flex: 1 1 150px;
+    min-height: 44px;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Both tools read as dashed until they are engaged. */
+.kct-pump-btn,
+.kct-auto-btn {
+    border-style: dashed;
+}
+
+.kct-pump-btn:hover,
+.kct-auto-btn:hover {
+    border-color: var(--accent);
+    background: var(--panel-bg);
+}
+
+.kct-pump-btn:focus-visible,
+.kct-auto-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+/* Engaged: the border goes solid and the state word changes, so the switch is
+ * legible without relying on the accent alone. */
+.kct-pump-btn.is-on,
+.kct-auto-btn.is-on {
+    border-style: solid;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.kct-pump-btn.is-on .kct-toggle-state,
+.kct-auto-btn.is-on .kct-toggle-state {
+    color: var(--accent-text);
+    font-weight: 800;
+}
+
+.kct-toggle-state {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 720px) {
+    .kct-gauges {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kct-pump-btn,
+    .kct-auto-btn {
+        flex: 1 1 100%;
+    }
+}
+
+[data-motion="off"] .kct-bar-fill,
+[data-motion="off"] .kct-pump-btn,
+[data-motion="off"] .kct-auto-btn {
+    transition: none !important;
+}
+
+[data-motion="off"] .kct-canvas {
+    cursor: default;
+}
+
+[data-motion="off"] .kct-pump-btn.is-on,
+[data-motion="off"] .kct-auto-btn.is-on,
+[data-motion="off"] .kct-canvas:focus-visible {
+    box-shadow: none;
+    border-color: var(--accent);
+}

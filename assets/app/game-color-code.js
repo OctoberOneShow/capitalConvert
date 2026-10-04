@@ -1,6 +1,7 @@
 /* Color Code - The Mastermind-style deduction mini-game in the shared game drawer. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
+  var localStorage = App.storage;
   var t = App.t;
   var getElement = App.getElement;
   var logAction = App.logAction;

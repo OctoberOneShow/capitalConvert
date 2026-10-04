@@ -115,6 +115,7 @@
     var lastFrame = 0;
     var startedAt = 0;
     var attempts = 0;
+    var respawnId = null;
 
     /* Fixed starfield */
     var stars = [];
@@ -199,6 +200,12 @@
     }
 
     function loadLevel(levelDef) {
+      stopLoop();
+      window.clearTimeout(respawnId);
+      respawnId = null;
+      keyThrust = false;
+      keyTurn = 0;
+      padTurn = 0;
       level = levelDef;
       landed = false;
       flying = false;
@@ -207,7 +214,6 @@
       spawn();
       renderHud();
       refreshPicker();
-      startLoop();
       draw();
       resultEl.textContent = t("lantReady", { n: level.fuel });
     }
@@ -216,11 +222,15 @@
       if (flying || landed) {
         return;
       }
+      window.clearTimeout(respawnId);
+      respawnId = null;
+      explosion = [];
       spawn();
       attempts += 1;
       flying = true;
       startedAt = Date.now();
       resultEl.textContent = t("lantGo");
+      startLoop();
       canvas.focus();
     }
 
@@ -268,7 +278,8 @@
         });
       }
       resultEl.textContent = t("lantCrash") + " " + t("lantAgain");
-      window.setTimeout(function () {
+      respawnId = window.setTimeout(function () {
+        respawnId = null;
         if (!flying && !landed && explosion.length) {
           spawn();
         }
@@ -437,6 +448,7 @@
       if (rafId === null) {
         return;
       }
+      rafId = null;
       var dt = Math.min(0.032, (now - lastFrame) / 1000 || 0.016);
       lastFrame = now;
       /* The lander only flies on its own panel. */
@@ -446,7 +458,9 @@
       }
       update(dt);
       draw();
-      rafId = window.requestAnimationFrame(frame);
+      if (flying || explosion.length || flame.length) {
+        rafId = window.requestAnimationFrame(frame);
+      }
     }
 
     function startLoop() {
@@ -527,6 +541,15 @@
     startBtn.addEventListener("click", startRun);
 
     App.quietResetStarfall = function () {
+      stopLoop();
+      window.clearTimeout(respawnId);
+      respawnId = null;
+      keyThrust = false;
+      keyTurn = 0;
+      padTurn = 0;
+      thrusting = false;
+      explosion = [];
+      flame = [];
       if (flying) {
         flying = false;
         spawn();

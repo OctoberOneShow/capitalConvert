@@ -1,0 +1,118 @@
+/* Gravity Badminton - the panel chrome for the rotating-court rally game.
+ * Every hook is a gbm- class the module builds with createElement, and every
+ * colour is a theme token so the court reads the same in light and in dark. */
+.gbm-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--panel-strong);
+  outline: none;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.gbm-canvas:focus-visible {
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+/* The opponent's telegraph, printed as words under the painted arrow. */
+.gbm-line {
+  min-height: 1.5em;
+  margin-top: 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.gbm-line.is-flash {
+  animation: gbm-flash 420ms ease-out 1;
+}
+
+@keyframes gbm-flash {
+  from {
+    opacity: 0.35;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The two accessibility switches: real buttons, so they are reachable by
+ * keyboard and screen reader, and marked as on/off by shape and wording. */
+.gbm-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.gbm-toggle {
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.gbm-toggle:hover {
+  border-color: var(--accent-2);
+}
+
+.gbm-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.gbm-toggle.is-on {
+  border-style: solid;
+  border-color: var(--accent);
+  background: var(--panel-bg);
+  color: var(--accent);
+}
+
+/* A conceded point is printed in the warning colour as well as in words. */
+.game-result.gbm-lost {
+  color: var(--danger-text);
+}
+
+[data-theme="light"] .gbm-canvas,
+[data-theme="light"] .gbm-options {
+  background: var(--panel-bg);
+}
+
+[data-theme="light"] .gbm-canvas {
+  border-color: var(--border);
+}
+
+[data-theme="light"] .gbm-toggle,
+[data-theme="light"] .gbm-toggle.is-on {
+  background: var(--panel-strong);
+}
+
+[data-theme="light"] .gbm-line {
+  color: var(--text);
+}
+
+[data-motion="off"] .gbm-line.is-flash {
+  animation: none !important;
+}
+
+[data-motion="off"] .gbm-toggle,
+[data-motion="off"] .gbm-canvas {
+  transition: none !important;
+}

@@ -25,6 +25,7 @@
     --text-secondary: #b9c1cc;
     --panel-bg: rgba(20, 20, 20, 0.68);
     --panel-strong: rgba(8, 13, 20, 0.82);
+    --surface-soft: rgba(255, 255, 255, 0.05);
     --border: rgba(255, 255, 255, 0.14);
     --shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     --accent: #00f2ff;
@@ -58,6 +59,7 @@
     --text-secondary: #445164;
     --panel-bg: rgba(255, 255, 255, 0.76);
     --panel-strong: rgba(247, 250, 252, 0.95);
+    --surface-soft: rgba(15, 23, 42, 0.06);
     --border: rgba(17, 24, 39, 0.1);
     --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
     --glass-border: 1px solid rgba(148, 163, 184, 0.22);

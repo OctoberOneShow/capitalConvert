@@ -1,0 +1,155 @@
+/* Rule Thieves: the 5x5 board of collectible laws. Every colour a player reads
+ * is paired with a glyph in the cell text, so the states survive without colour
+ * and survive the light theme by swapping only the token variables. */
+.rlt-board {
+    margin-top: 12px;
+    padding: 8px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+    outline: none;
+}
+
+[data-theme="light"] .rlt-board {
+    background: var(--panel-bg);
+}
+
+.rlt-board:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.rlt-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+}
+
+.rlt-cell {
+    aspect-ratio: 1 / 1;
+    min-height: 42px;
+    padding: 1px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    line-height: 1.1;
+    cursor: default;
+    overflow: hidden;
+}
+
+[data-theme="light"] .rlt-cell {
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+}
+
+.rlt-cell:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.rlt-cell.rlt-one {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.rlt-cell.rlt-two {
+    color: var(--accent-2);
+    border-color: var(--accent-2);
+}
+
+.rlt-cell.rlt-wall {
+    background: var(--panel-strong);
+    border-style: dashed;
+    color: var(--text-secondary);
+    cursor: not-allowed;
+}
+
+[data-theme="light"] .rlt-cell.rlt-wall {
+    background: var(--surface-soft);
+}
+
+.rlt-cell.rlt-flag {
+    color: var(--accent);
+    border-color: var(--accent);
+    font-weight: 800;
+}
+
+.rlt-cell.rlt-token {
+    border-style: dashed;
+    color: var(--text-secondary);
+}
+
+.rlt-cell.rlt-held1 {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.rlt-cell.rlt-held2 {
+    color: var(--accent-2);
+    border-color: var(--accent-2);
+}
+
+/* A piece that may legally act: colour plus the "+" glyph in the cell text. */
+.rlt-cell.rlt-can {
+    background: var(--panel-bg);
+    border-color: var(--accent);
+    color: var(--text);
+    cursor: pointer;
+    box-shadow: var(--focus-ring);
+}
+
+/* A legal destination: colour plus its move glyph (step, diagonal, jump, swap). */
+.rlt-cell.rlt-to {
+    background: var(--panel-bg);
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.rlt-cell.rlt-to:hover {
+    background: var(--panel-strong);
+    color: var(--text);
+}
+
+.rlt-cell.rlt-sel {
+    background: var(--panel-strong);
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+[data-theme="light"] .rlt-cell.rlt-sel {
+    background: var(--surface-soft);
+}
+
+/* Frozen ground reads as an error, never as a legal cell. */
+.rlt-cell.rlt-lock {
+    color: var(--danger-text);
+    border-color: var(--danger-text);
+    cursor: not-allowed;
+}
+
+.rlt-cell.rlt-cursor {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
+.rlt-legend {
+    margin: 8px 0 0;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    line-height: 1.5;
+}
+
+.rlt-keys {
+    margin: 4px 0 0;
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    line-height: 1.5;
+}

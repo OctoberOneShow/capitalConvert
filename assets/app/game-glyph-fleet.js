@@ -179,6 +179,7 @@
     var playerShots = 0;
     var aiState = { queue: [] };
     var busy = false;
+    var aiTimer = null;
     var cleared = false;
     var splash = [];
     var sweep = 0;
@@ -222,6 +223,8 @@
     }
 
     function loadLevel(levelDef) {
+      window.clearTimeout(aiTimer);
+      aiTimer = null;
       level = levelDef;
       playerFleet = fltPlace();
       aiFleet = fltPlace();
@@ -313,7 +316,8 @@
         return;
       }
       busy = true;
-      window.setTimeout(function () {
+      aiTimer = window.setTimeout(function () {
+        aiTimer = null;
         busy = false;
         if (cleared) {
           return;
@@ -537,9 +541,6 @@
     });
 
     App.quietResetGlyphFleet = function () {
-      if (busy) {
-        busy = false;
-      }
       clockRunning = false;
       resultEl.textContent = t("fltPaused");
     };

@@ -179,6 +179,7 @@
     }
 
     function loadLevel(levelDef) {
+      stopLoop();
       level = levelDef;
       cleared = false;
       launches = 0;
@@ -190,7 +191,6 @@
       resetComet();
       renderHud();
       refreshPicker();
-      startLoop();
       draw();
       resultEl.textContent = t("cgfReady", { n: level.starShots[2] });
     }
@@ -215,6 +215,7 @@
         startedAt = Date.now();
       }
       renderHud();
+      startLoop();
     }
 
     function courseCleared() {
@@ -413,6 +414,7 @@
       if (rafId === null) {
         return;
       }
+      rafId = null;
       var dt = Math.min(0.032, (now - lastFrame) / 1000 || 0.016);
       lastFrame = now;
       /* The comet only flies on its own panel; hidden panels skip the work
@@ -423,7 +425,9 @@
       }
       update(dt);
       draw();
-      rafId = window.requestAnimationFrame(frame);
+      if (comet.live || clockRunning || trail.length) {
+        rafId = window.requestAnimationFrame(frame);
+      }
     }
 
     function startLoop() {
@@ -448,7 +452,15 @@
       event.preventDefault();
       aiming = true;
       aimFromEvent(event);
-      canvas.setPointerCapture(event.pointerId);
+      /* Capture merely keeps the aim alive past the canvas edge; a stale
+       * pointer id must not abort the whole pointerdown handler. */
+      if (canvas.setPointerCapture && event.pointerId !== undefined) {
+        try {
+          canvas.setPointerCapture(event.pointerId);
+        } catch (error) {
+          /* no capture this time; the canvas listeners still fire */
+        }
+      }
     });
 
     function aimFromEvent(event) {
@@ -520,6 +532,7 @@
     });
 
     App.quietResetCometGolf = function () {
+      stopLoop();
       if (comet.live || aiming) {
         aiming = false;
         resetComet();

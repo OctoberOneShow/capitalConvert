@@ -1,4 +1,4 @@
-/* Game drawer styles - the shared game modal and the eighteen mini-games. */
+/* Game drawer styles - the shared game modal and every game panel in it. */
 :root {
     --focus-ring:
         0 0 0 3px rgba(255, 107, 53, 0.28),
@@ -3221,3 +3221,8642 @@ button.ghost:hover {
     border-color: rgba(0, 242, 255, 0.5);
     box-shadow: var(--focus-ring);
 }
+
+/* Ember Sticks - Nim rows and their grabbable sticks. */
+.nim-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+    border: var(--glass-border);
+    border-radius: 16px;
+    background: var(--panel-bg);
+}
+
+.nim-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.nim-row-label {
+    min-width: 62px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.nim-stick {
+    width: 13px;
+    height: 34px;
+    padding: 0;
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+    background: linear-gradient(180deg, #fbbf24, #f97316);
+    box-shadow: 0 0 12px rgba(251, 191, 36, 0.3);
+    transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.nim-stick:hover:not(:disabled) {
+    transform: translateY(-3px);
+    filter: brightness(1.12);
+}
+
+.nim-stick:active:not(:disabled) {
+    transform: translateY(1px) scale(0.96);
+}
+
+.nim-stick:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+[data-motion="off"] .nim-stick {
+    transition: none;
+}
+
+/* Glyph Dots - the plate, its claimable sticks and the boxes they close. */
+.dots-board {
+    --dots-cell: 34px;
+    display: grid;
+    justify-content: center;
+    padding: 10px;
+}
+
+.dots-dot {
+    width: 9px;
+    height: 9px;
+    margin: auto;
+    border-radius: 50%;
+    background: var(--text);
+}
+
+.dots-edge {
+    position: relative;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.dots-edge::after {
+    content: "";
+    position: absolute;
+    border-radius: 4px;
+    background: var(--border);
+    transition: background 0.12s ease, box-shadow 0.12s ease;
+}
+
+.dots-edge.is-h::after {
+    left: 3px;
+    right: 3px;
+    top: 50%;
+    height: 6px;
+    transform: translateY(-50%);
+}
+
+.dots-edge.is-v::after {
+    top: 3px;
+    bottom: 3px;
+    left: 50%;
+    width: 6px;
+    transform: translateX(-50%);
+}
+
+.dots-edge:hover:not(:disabled)::after {
+    background: var(--text-secondary);
+}
+
+.dots-edge.is-you::after {
+    background: #22d3ee;
+    box-shadow: 0 0 10px rgba(34, 211, 238, 0.45);
+}
+
+.dots-edge.is-ai::after {
+    background: #f97316;
+    box-shadow: 0 0 10px rgba(249, 115, 22, 0.45);
+}
+
+.dots-edge:focus-visible {
+    outline: none;
+}
+
+.dots-edge:focus-visible::after {
+    box-shadow: var(--focus-ring);
+}
+
+.dots-edge:disabled {
+    cursor: default;
+}
+
+.dots-box {
+    width: 24px;
+    height: 24px;
+    margin: auto;
+    display: grid;
+    place-items: center;
+    border-radius: 7px;
+    font-size: 13px;
+    line-height: 1;
+}
+
+.dots-box.is-you {
+    background: rgba(34, 211, 238, 0.16);
+    color: #22d3ee;
+}
+
+.dots-box.is-ai {
+    background: rgba(249, 115, 22, 0.16);
+    color: #f97316;
+}
+
+/* Kalah Row - two rows of six pits with a store at each end. */
+.mal-board {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 7px;
+    padding: 12px;
+    border: var(--glass-border);
+    border-radius: 18px;
+    background: var(--panel-bg);
+}
+
+.mal-pit {
+    display: grid;
+    gap: 2px;
+    place-items: center;
+    min-height: 58px;
+    padding: 6px 2px;
+    border: var(--glass-border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.12s ease;
+}
+
+.mal-pit:hover:not(:disabled) {
+    border-color: rgba(0, 242, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.mal-pit:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.mal-pit:disabled {
+    cursor: default;
+    opacity: 0.72;
+}
+
+.mal-pit.is-store {
+    background: rgba(34, 211, 238, 0.12);
+}
+
+.mal-pit.is-rival {
+    background: rgba(249, 115, 22, 0.12);
+}
+
+.mal-label {
+    font-size: 10px;
+    color: var(--text-secondary);
+}
+
+.mal-count {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+[data-motion="off"] .mal-pit {
+    transition: none;
+}
+
+/* Twenty-One Parlor - the two ranks of cards. */
+.bj-board {
+    display: grid;
+    gap: 10px;
+    padding: 14px;
+    border: var(--glass-border);
+    border-radius: 18px;
+    background: var(--panel-bg);
+}
+
+.bj-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.bj-row-label {
+    min-width: 52px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.bj-card {
+    display: grid;
+    place-items: center;
+    min-width: 46px;
+    height: 62px;
+    padding: 0 6px;
+    border: var(--glass-border);
+    border-radius: 9px;
+    background: var(--panel-strong);
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.bj-card.is-red {
+    color: #ff6b6b;
+}
+
+/* Roof Garden - plots that ripen on the wall clock. */
+.gdn-plots {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 9px;
+    padding: 12px;
+    border: var(--glass-border);
+    border-radius: 18px;
+    background: var(--panel-bg);
+}
+
+.gdn-plot {
+    display: grid;
+    gap: 4px;
+    place-items: center;
+    min-height: 72px;
+    border: var(--glass-border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.12s ease;
+}
+
+.gdn-plot:hover {
+    border-color: rgba(163, 230, 53, 0.55);
+    transform: translateY(-2px);
+}
+
+.gdn-plot:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.gdn-plot.is-empty {
+    opacity: 0.66;
+}
+
+.gdn-plot.is-ripe {
+    border-color: rgba(163, 230, 53, 0.7);
+    background: rgba(163, 230, 53, 0.14);
+}
+
+.gdn-sprite {
+    font-size: 26px;
+    line-height: 1;
+}
+
+[data-motion="off"] .gdn-plot {
+    transition: none;
+}
+
+/* Ripening is drawn rather than polled: the bar fills across the grow window
+ * and the bloom takes the sprout's place exactly when the crop is ready, so
+ * the plot stays truthful with no timer of ours touching the clock. */
+.gdn-sprite,
+.gdn-bloom {
+    grid-area: 1 / 1;
+}
+
+.gdn-bloom {
+    font-size: 26px;
+    line-height: 1;
+    opacity: 0;
+}
+
+.gdn-bar {
+    grid-area: 2 / 1;
+    width: 74%;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--border);
+    transform: scaleX(0);
+    transform-origin: left center;
+}
+
+.gdn-plot.is-ripening .gdn-bar {
+    background: rgba(163, 230, 53, 0.75);
+    animation: gdnRipen var(--gdn-run, 12000ms) linear forwards;
+}
+
+.gdn-plot.is-ripening .gdn-sprite {
+    animation: gdnWilt var(--gdn-run, 12000ms) linear forwards;
+}
+
+.gdn-plot.is-ripening .gdn-bloom {
+    animation: gdnBloom var(--gdn-run, 12000ms) linear forwards;
+}
+
+.gdn-plot.is-ripe .gdn-bar {
+    background: rgba(163, 230, 53, 0.75);
+    transform: scaleX(1);
+}
+
+@keyframes gdnRipen {
+    to {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes gdnBloom {
+    0%,
+    99.5% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes gdnWilt {
+    0%,
+    99.5% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+[data-motion="off"] .gdn-plot.is-ripening .gdn-bar,
+[data-motion="off"] .gdn-plot.is-ripening .gdn-bloom,
+[data-motion="off"] .gdn-plot.is-ripening .gdn-sprite {
+    animation: none;
+}
+
+/* Republic Rewind - the question card, its choices and the note. */
+.rq-card {
+    min-height: 62px;
+    padding: 16px;
+    border: var(--glass-border);
+    border-radius: 16px;
+    background: var(--panel-strong);
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.rq-options {
+    display: grid;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.rq-option {
+    padding: 11px 14px;
+    border: var(--glass-border);
+    border-radius: 12px;
+    background: var(--panel-bg);
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.12s ease, border-color 0.12s ease,
+        background 0.12s ease;
+}
+
+.rq-option:hover:not(:disabled) {
+    border-color: rgba(0, 242, 255, 0.5);
+    transform: translateX(2px);
+}
+
+.rq-option:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.rq-option.is-right {
+    border-color: rgba(34, 211, 238, 0.75);
+    background: rgba(34, 211, 238, 0.16);
+}
+
+.rq-option.is-wrong {
+    border-color: rgba(251, 107, 53, 0.8);
+    background: rgba(251, 107, 53, 0.16);
+}
+
+.rq-option:disabled {
+    cursor: default;
+}
+
+.rq-note {
+    min-height: 20px;
+    margin: 10px 2px 0;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+[data-motion="off"] .rq-option {
+    transition: none;
+}
+
+/* game-rooftop-radio (registry game) */
+/* Rooftop Radio */
+.rr-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.85);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+[data-theme="light"] .rr-canvas {
+    background: rgba(248, 250, 252, 0.95);
+}
+
+.rr-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.rr-legend {
+    margin-top: 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* game-echo-cartographer (registry game) */
+/* Echo Cartographer */
+.ech-canvas {
+    display: block;
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    margin: 12px auto 0;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: #070b14;
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+[data-theme="light"] .ech-canvas {
+    background: #e8edf6;
+    border-color: rgba(17, 24, 39, 0.18);
+}
+
+.ech-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.55);
+    box-shadow: var(--focus-ring);
+}
+
+/* The echo read-out is a spoken line, so it is typed, not painted. */
+.ech-echo {
+    min-height: 1.6em;
+    margin-top: 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    line-height: 1.4;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+[data-theme="light"] .ech-echo {
+    color: #3c4757;
+}
+
+/* game-ember-delve (registry game) */
+/* Ember Delve */
+.edl-stage {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.72);
+    outline: none;
+}
+
+[data-theme="light"] .edl-stage {
+    background: rgba(248, 250, 252, 0.92);
+}
+
+.edl-stage:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.edl-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+}
+
+.edl-room {
+    min-height: 62px;
+    padding: 4px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.84rem;
+    font-weight: 700;
+    line-height: 1.15;
+    cursor: pointer;
+}
+
+[data-theme="light"] .edl-room {
+    background: var(--surface-soft);
+}
+
+.edl-room:hover {
+    border-color: var(--accent);
+}
+
+.edl-room:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.edl-dark {
+    color: var(--text-secondary);
+    background: rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="light"] .edl-dark {
+    background: var(--surface-soft);
+}
+
+.edl-rubble {
+    color: var(--text-secondary);
+    cursor: not-allowed;
+}
+
+.edl-here {
+    border-color: var(--accent);
+    color: var(--accent-text);
+    background: rgba(0, 242, 255, 0.14);
+}
+
+[data-theme="light"] .edl-here {
+    background: rgba(0, 112, 138, 0.16);
+}
+
+.edl-beast {
+    border-color: rgba(251, 113, 133, 0.6);
+    color: #fb7185;
+}
+
+[data-theme="light"] .edl-beast {
+    color: #b3263e;
+}
+
+.edl-stair {
+    border-color: rgba(163, 230, 53, 0.6);
+    color: #a3e635;
+}
+
+[data-theme="light"] .edl-stair {
+    color: #2f6b12;
+}
+
+.edl-cursor {
+    border-style: dashed;
+    border-color: var(--accent-2);
+}
+
+.edl-locked {
+    opacity: 0.5;
+}
+
+.edl-over {
+    opacity: 0.65;
+}
+
+.edl-legend {
+    margin-top: 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.edl-foes {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.edl-foe {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 7px 9px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] .edl-foe {
+    background: var(--surface-soft);
+}
+
+.edl-foe strong {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.8rem;
+    color: var(--text);
+}
+
+.edl-foe span {
+    font-size: 0.76rem;
+    color: var(--accent-2);
+    text-align: right;
+}
+
+.edl-shake {
+    animation: edl-jolt 0.24s ease-out 1;
+}
+
+@keyframes edl-jolt {
+    0% {
+        transform: translateX(0);
+    }
+    30% {
+        transform: translateX(-3px);
+    }
+    70% {
+        transform: translateX(3px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+[data-motion="off"] .edl-shake {
+    animation: none !important;
+}
+
+.edl-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.edl-btn {
+    min-height: 40px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+}
+
+[data-theme="light"] .edl-btn {
+    background: var(--surface-soft);
+}
+
+.edl-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+}
+
+.edl-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.edl-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.edl-go {
+    border-color: rgba(255, 107, 53, 0.55);
+    color: var(--accent-text);
+}
+
+.edl-slots {
+    flex: 1 1 100%;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+}
+
+.edl-log {
+    margin-top: 10px;
+    min-height: 2.4em;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+/* game-lantern-heist (registry game) */
+/* Lantern Heist */
+.lhe-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.88);
+    outline: none;
+    touch-action: none;
+    cursor: pointer;
+}
+
+[data-theme="light"] .lhe-canvas {
+    background: rgba(241, 245, 249, 0.96);
+}
+
+.lhe-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+/* The room lamp breathes while you are inside it; the motion dial stills it. */
+.lhe-frame {
+    animation: lheLamp 3.2s ease-in-out infinite;
+}
+
+@keyframes lheLamp {
+    0%,
+    100% {
+        box-shadow: inset 0 0 0 rgba(251, 191, 36, 0);
+    }
+    50% {
+        box-shadow: inset 0 0 22px rgba(251, 191, 36, 0.16);
+    }
+}
+
+[data-motion="off"] .lhe-frame {
+    animation: none !important;
+}
+
+[data-motion="calm"] .lhe-frame {
+    animation: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lhe-frame {
+        animation: none !important;
+    }
+}
+
+.lhe-legend {
+    margin-top: 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* game-clockwork-dispatch (registry game) */
+/* Clockwork Dispatch */
+.cwk-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.88);
+    outline: none;
+    touch-action: none;
+    cursor: pointer;
+}
+
+[data-theme="light"] .cwk-canvas {
+    background: rgba(241, 245, 249, 0.96);
+}
+
+.cwk-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.cwk-legend {
+    margin-top: 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+[data-theme="light"] .cwk-legend {
+    color: #445164;
+}
+
+/* game-neon-drift (registry game) */
+/* Neon Drift */
+.nir-canvas {
+    display: block;
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    margin: 12px auto 0;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: #080d17;
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+[data-theme="light"] .nir-canvas {
+    background: #dfe6f1;
+    border-color: rgba(17, 24, 39, 0.2);
+}
+
+.nir-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.55);
+    box-shadow: var(--focus-ring);
+}
+
+/* Commentary strip: the telemetry a driver reads while their eyes are on the
+ * gates, so it stays monospaced and quiet. */
+.nir-line {
+    min-height: 1.6em;
+    margin-top: 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+[data-theme="light"] .nir-line {
+    color: #35415a;
+}
+
+.nir-canvas + .nir-line {
+    text-transform: uppercase;
+}
+
+/* game-circuit-scribe (registry game) */
+/* Circuit Scribe */
+.cir-board {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-width: 440px;
+    margin: 12px auto 0;
+    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(10, 16, 26, 0.72);
+    outline: none;
+}
+
+[data-theme="light"] .cir-board {
+    background: rgba(248, 250, 252, 0.94);
+}
+
+.cir-board:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.cir-rail {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.cir-rail-label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.cir-pin {
+    min-width: 54px;
+    min-height: 34px;
+    padding: 4px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+[data-theme="light"] .cir-pin {
+    background: var(--surface-soft);
+}
+
+/* A high pin carries a bar as well as a hue, so the bit survives greyscale. */
+.cir-pin.is-high {
+    border-color: rgba(0, 242, 255, 0.6);
+    background: rgba(0, 242, 255, 0.18);
+    color: var(--accent);
+}
+
+.cir-pin:focus-visible,
+.cir-slot:focus-visible,
+.cir-chip:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.cir-row {
+    display: grid;
+    grid-template-columns: 26% minmax(0, 1fr) 18%;
+    gap: 6px;
+    align-items: center;
+}
+
+.cir-wires,
+.cir-live {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+}
+
+.cir-live {
+    text-align: right;
+    color: var(--text);
+}
+
+.cir-slot {
+    min-height: 40px;
+    padding: 6px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+}
+
+[data-theme="light"] .cir-slot {
+    background: var(--surface-soft);
+}
+
+.cir-slot.is-set {
+    border-color: rgba(163, 230, 53, 0.5);
+    background: rgba(163, 230, 53, 0.14);
+}
+
+.cir-slot.is-picked {
+    border-style: dashed;
+    border-width: 2px;
+    border-color: var(--accent);
+}
+
+.cir-out {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding-top: 4px;
+    border-top: 1px dashed var(--border);
+}
+
+.cir-out-label {
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.cir-out-value {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 1rem;
+    color: var(--accent-2);
+}
+
+.cir-palette {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-width: 440px;
+    margin: 10px auto 0;
+}
+
+.cir-chip {
+    min-height: 36px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+[data-theme="light"] .cir-chip {
+    background: var(--surface-soft);
+}
+
+.cir-chip:hover {
+    border-color: rgba(0, 242, 255, 0.5);
+    color: var(--accent);
+}
+
+.cir-table {
+    max-width: 440px;
+    margin: 10px auto 0;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] .cir-table {
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.cir-score {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+}
+
+.cir-line {
+    margin-top: 3px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+}
+
+.cir-line.is-pass {
+    color: var(--text);
+}
+
+.cir-line.is-fail {
+    color: var(--accent-2);
+}
+
+/* game-dream-orchestra (registry game) */
+/* Dream Orchestra */
+.drm-target {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-top: 10px;
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+}
+
+.drm-targetline {
+    display: grid;
+    grid-template-columns: repeat(16, 1fr);
+    gap: 2px;
+    width: 100%;
+    max-width: 440px;
+}
+
+.drm-tcell {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    text-align: center;
+    color: var(--accent-2);
+    border-bottom: 2px solid transparent;
+}
+
+.drm-voices {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.drm-voicebtn {
+    padding: 4px 10px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--text);
+    background: rgba(148, 163, 184, 0.16);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.drm-voicebtn[aria-pressed="true"] {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.drm-voicebtn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.drm-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+    max-width: 440px;
+    margin: 10px auto 0;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--panel-strong);
+    outline: none;
+}
+
+[data-theme="light"] .drm-grid {
+    background: rgba(248, 250, 252, 0.92);
+}
+
+.drm-grid:focus-visible {
+    box-shadow: var(--focus-ring);
+}
+
+.drm-line {
+    display: grid;
+    grid-template-columns: 20px repeat(16, 1fr);
+    gap: 3px;
+    align-items: stretch;
+}
+
+.drm-rowname {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.drm-cell {
+    min-height: 26px;
+    padding: 2px 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    color: var(--text-secondary);
+    background: rgba(148, 163, 184, 0.08);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.drm-cell.is-strong {
+    border-left-color: var(--accent);
+}
+
+.drm-cell.has-note {
+    color: #0b1020;
+    background: var(--accent);
+    font-weight: 700;
+}
+
+[data-theme="light"] .drm-cell.has-note {
+    background: var(--accent-2);
+}
+
+.drm-cell.is-target {
+    color: var(--accent-2);
+    border-style: dashed;
+}
+
+.drm-cell.is-cursor {
+    outline: 2px dashed var(--focus-ring, var(--accent));
+    outline-offset: 1px;
+}
+
+.drm-cell.is-caret {
+    box-shadow: inset 0 0 0 2px var(--accent-2);
+}
+
+.drm-cell:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.drm-transport {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.drm-transport button {
+    padding: 5px 12px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--text);
+    background: rgba(148, 163, 184, 0.16);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.drm-transport button[aria-pressed="true"] {
+    border-color: var(--accent);
+}
+
+.drm-transport button:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+/* game-glyph-bastion (registry game) */
+/* Glyph Bastion */
+.gst-board {
+    margin-top: 12px;
+    padding: 8px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.72);
+    outline: none;
+}
+
+[data-theme="light"] .gst-board {
+    background: rgba(248, 250, 252, 0.92);
+}
+
+.gst-board:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.gst-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 3px;
+}
+
+.gst-cell {
+    aspect-ratio: 1 / 1;
+    min-height: 34px;
+    padding: 1px;
+    border-radius: 6px;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.56rem;
+    font-weight: 700;
+    line-height: 1.05;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+[data-theme="light"] .gst-cell {
+    background: var(--surface-soft);
+}
+
+.gst-cell:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.gst-path {
+    background: rgba(148, 163, 184, 0.16);
+    border-color: rgba(148, 163, 184, 0.32);
+}
+
+[data-theme="light"] .gst-path {
+    background: var(--surface-soft);
+}
+
+.gst-tower {
+    border-color: var(--accent);
+    color: var(--accent-text);
+    background: rgba(0, 242, 255, 0.14);
+}
+
+[data-theme="light"] .gst-tower {
+    background: rgba(0, 112, 138, 0.16);
+}
+
+.gst-tsmoulder {
+    border-color: rgba(255, 107, 53, 0.8);
+    color: #ff6b35;
+    background: rgba(255, 107, 53, 0.14);
+}
+
+[data-theme="light"] .gst-tsmoulder {
+    color: #a83a12;
+    background: rgba(255, 107, 53, 0.2);
+}
+
+.gst-tsnare {
+    border-color: rgba(163, 230, 53, 0.7);
+    color: #a3e635;
+    background: rgba(163, 230, 53, 0.12);
+}
+
+[data-theme="light"] .gst-tsnare {
+    color: #2f6b12;
+    background: rgba(163, 230, 53, 0.22);
+}
+
+.gst-mob {
+    border-color: rgba(251, 113, 133, 0.6);
+    color: #fb7185;
+}
+
+[data-theme="light"] .gst-mob {
+    color: #b3263e;
+}
+
+.gst-cursor {
+    border-style: dashed;
+    border-color: var(--accent-2);
+}
+
+.gst-legend {
+    margin-top: 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.gst-palette {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.gst-kind {
+    min-height: 44px;
+    padding: 6px 4px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+
+[data-theme="light"] .gst-kind {
+    background: var(--surface-soft);
+}
+
+.gst-kind:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.gst-picked {
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+.gst-info {
+    margin-top: 8px;
+    min-height: 2em;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+.gst-controls {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.gst-btn {
+    min-height: 40px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+}
+
+[data-theme="light"] .gst-btn {
+    background: var(--surface-soft);
+}
+
+.gst-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+}
+
+.gst-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.gst-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.gst-log {
+    margin-top: 10px;
+    min-height: 2.4em;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+/* game-lantern-fishing (registry game) */
+/* Lantern Fishing */
+.lfs-canvas {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    margin: 12px auto 0;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: #0a1122;
+    outline: none;
+    touch-action: none;
+    cursor: ns-resize;
+}
+
+[data-theme="light"] .lfs-canvas {
+    background: #d7e2f0;
+    border-color: rgba(17, 24, 39, 0.2);
+}
+
+.lfs-canvas:focus-visible {
+    border-color: rgba(255, 209, 102, 0.6);
+    box-shadow: var(--focus-ring);
+}
+
+/* The bite, the steal and the runs are narrated here so nothing important is
+ * only ever drawn inside the water. */
+.lfs-call {
+    min-height: 1.6em;
+    margin-top: 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.76rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+[data-theme="light"] .lfs-call {
+    color: #33415a;
+}
+
+/* game-loopwright (registry game) */
+/* Loopwright */
+.lpw-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 440px;
+    margin: 12px auto 0;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.85);
+    outline: none;
+    touch-action: none;
+}
+
+[data-theme="light"] .lpw-canvas {
+    background: rgba(248, 250, 252, 0.95);
+}
+
+.lpw-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.lpw-caption {
+    margin: 8px 0 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.lpw-chips {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.lpw-chip {
+    min-width: 34px;
+    padding: 4px 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text);
+    background: rgba(148, 163, 184, 0.16);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.lpw-chip[aria-pressed="true"] {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.lpw-chip:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.lpw-queue {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    width: 100%;
+    max-width: 440px;
+    margin: 10px auto 0;
+}
+
+.lpw-slot {
+    padding: 6px 4px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--text);
+    background: var(--panel-strong);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+[data-theme="light"] .lpw-slot {
+    background: rgba(248, 250, 252, 0.92);
+}
+
+.lpw-slot.is-cursor {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.lpw-slot:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+/* game-moon-market (registry game) */
+/* Moon Market */
+.mkt-event {
+    margin: 8px 0 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    color: var(--accent);
+    text-align: center;
+}
+
+.mkt-ledger {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    max-width: 440px;
+    margin: 12px auto 0;
+    outline: none;
+}
+
+.mkt-ledger:focus-visible {
+    box-shadow: var(--focus-ring);
+    border-radius: 10px;
+}
+
+.mkt-row {
+    display: grid;
+    grid-template-columns: 1.6fr 0.7fr 0.7fr 0.7fr 0.7fr 0.7fr;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 8px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-strong);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+[data-theme="light"] .mkt-row {
+    background: rgba(248, 250, 252, 0.92);
+}
+
+.mkt-row.is-picked {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.mkt-good {
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+.mkt-price {
+    color: var(--text);
+    text-align: right;
+}
+
+.mkt-delta {
+    color: var(--text-secondary);
+    text-align: right;
+}
+
+.mkt-hold {
+    color: var(--text-secondary);
+    text-align: right;
+}
+
+.mkt-dealbtn {
+    padding: 4px 8px;
+    font-size: 0.76rem;
+    font-family: "JetBrains Mono", monospace;
+    color: var(--text);
+    background: rgba(148, 163, 184, 0.16);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.mkt-dealbtn:hover {
+    border-color: var(--accent);
+}
+
+.mkt-dealbtn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.mkt-lotrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.mkt-lotbtn {
+    width: 34px;
+    height: 30px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 1rem;
+    color: var(--text);
+    background: rgba(148, 163, 184, 0.16);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.mkt-lotbtn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.mkt-lottext {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    min-width: 72px;
+    text-align: center;
+}
+
+.mkt-history {
+    margin-top: 10px;
+    max-height: 96px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.mkt-ledgerline {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+}
+
+/* game-pocket-detective (registry game) */
+/* Pocket Detective */
+.pdk-board {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-width: 440px;
+    margin: 12px auto 0;
+    padding: 8px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(10, 16, 26, 0.72);
+    outline: none;
+}
+
+[data-theme="light"] .pdk-board {
+    background: rgba(248, 250, 252, 0.94);
+}
+
+.pdk-board:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.pdk-row {
+    display: grid;
+    gap: 3px;
+    align-items: stretch;
+}
+
+/* The rung decides how many name columns fit; the row label shrinks so the
+    boxes stay tappable instead of collapsing to a sliver. */
+.pdk-board[data-cols="3"] .pdk-row {
+    grid-template-columns: 34% repeat(3, minmax(0, 1fr));
+}
+
+.pdk-board[data-cols="4"] .pdk-row {
+    grid-template-columns: 30% repeat(4, minmax(0, 1fr));
+}
+
+.pdk-board[data-cols="5"] .pdk-row {
+    grid-template-columns: 26% repeat(5, minmax(0, 1fr));
+}
+
+.pdk-head .pdk-name {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--text);
+    padding: 4px 2px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="light"] .pdk-head .pdk-name {
+    background: var(--surface-soft);
+}
+
+.pdk-corner {
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    align-self: center;
+    padding-left: 4px;
+}
+
+.pdk-group {
+    margin-top: 6px;
+    font-size: 0.66rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+}
+
+.pdk-item {
+    font-size: 0.7rem;
+    line-height: 1.2;
+    color: var(--text-secondary);
+    align-self: center;
+    padding-right: 4px;
+    overflow-wrap: anywhere;
+}
+
+.pdk-cell {
+    min-height: 32px;
+    padding: 0;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.1s ease, transform 0.1s ease;
+}
+
+[data-theme="light"] .pdk-cell {
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.pdk-cell:hover {
+    border-color: rgba(0, 242, 255, 0.45);
+}
+
+.pdk-cell:active {
+    transform: scale(0.94);
+}
+
+.pdk-cell.is-yes {
+    background: rgba(163, 230, 53, 0.22);
+    color: #a3e635;
+    border-color: rgba(163, 230, 53, 0.55);
+}
+
+[data-theme="light"] .pdk-cell.is-yes {
+    background: rgba(21, 128, 61, 0.16);
+    color: #15803d;
+}
+
+.pdk-cell.is-no {
+    background: rgba(251, 113, 133, 0.16);
+    color: #fb7185;
+    border-color: rgba(251, 113, 133, 0.45);
+}
+
+[data-theme="light"] .pdk-cell.is-no {
+    background: rgba(190, 18, 60, 0.12);
+    color: #be123c;
+}
+
+/* The keyboard cursor is a shape, not a hue, so it survives greyscale. */
+.pdk-cell.is-cursor {
+    border-style: dashed;
+    border-width: 2px;
+    border-color: var(--accent);
+}
+
+.pdk-cell:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.pdk-brief {
+    max-width: 440px;
+    margin: 10px auto 0;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] .pdk-brief {
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.pdk-page {
+    min-height: 30px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--accent);
+    font: inherit;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+}
+
+.pdk-page:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.pdk-clue {
+    margin-top: 6px;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    color: var(--text);
+}
+
+.pdk-clue:empty {
+    display: none;
+}
+
+[data-motion="off"] .pdk-cell,
+[data-motion="calm"] .pdk-cell {
+    transition: none !important;
+}
+
+[data-motion="off"] .pdk-cell:active {
+    transform: none !important;
+}
+
+/* game-whisper-deck (registry game) */
+/* Whisper Deck */
+.wsd-stage {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.72);
+    outline: none;
+}
+
+[data-theme="light"] .wsd-stage {
+    background: rgba(248, 250, 252, 0.92);
+}
+
+.wsd-stage:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.wsd-turn {
+    animation: wsd-breathe 0.32s ease-out 1;
+}
+
+@keyframes wsd-breathe {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.012);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+[data-motion="off"] .wsd-turn {
+    animation: none !important;
+}
+
+.wsd-foe {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    color: var(--text);
+    text-align: center;
+}
+
+.wsd-lanes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.wsd-lane {
+    min-height: 46px;
+    padding: 6px 4px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    cursor: pointer;
+}
+
+[data-theme="light"] .wsd-lane {
+    background: var(--surface-soft);
+}
+
+.wsd-lane:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.wsd-here {
+    border-color: var(--accent);
+    background: rgba(0, 242, 255, 0.12);
+}
+
+[data-theme="light"] .wsd-here {
+    background: rgba(0, 112, 138, 0.14);
+}
+
+.wsd-aimed {
+    border-color: rgba(251, 113, 133, 0.75);
+}
+
+.wsd-zones {
+    margin-top: 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.wsd-hand {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.wsd-card {
+    min-height: 68px;
+    padding: 6px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    line-height: 1.3;
+    text-align: left;
+    cursor: pointer;
+}
+
+[data-theme="light"] .wsd-card {
+    background: var(--surface-soft);
+}
+
+.wsd-card:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.wsd-strike {
+    border-left: 3px solid #fb7185;
+}
+
+.wsd-guard {
+    border-left: 3px solid #22d3ee;
+}
+
+.wsd-flow {
+    border-left: 3px solid #a3e635;
+}
+
+.wsd-armed {
+    box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.6);
+}
+
+.wsd-dud {
+    opacity: 0.5;
+}
+
+.wsd-empty {
+    cursor: default;
+    opacity: 0.35;
+}
+
+.wsd-echo {
+    margin-top: 8px;
+    font-size: 0.76rem;
+    color: var(--text-secondary);
+}
+
+.wsd-controls {
+    display: flex;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.wsd-btn {
+    min-height: 40px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.82rem;
+    cursor: pointer;
+}
+
+[data-theme="light"] .wsd-btn {
+    background: var(--surface-soft);
+}
+
+.wsd-btn:hover {
+    border-color: var(--accent);
+}
+
+.wsd-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.wsd-log {
+    margin-top: 10px;
+    min-height: 2.6em;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+/* game-coral-architect (registry game) */
+/* Coral Architect */
+.cor-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(6, 20, 30, 0.92);
+    outline: none;
+    touch-action: none;
+    cursor: pointer;
+}
+
+[data-theme="light"] .cor-canvas {
+    background: rgba(236, 248, 252, 0.96);
+}
+
+.cor-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.cor-draft {
+    align-items: center;
+    justify-content: center;
+}
+
+.cor-draft-btn {
+    min-height: 40px;
+    padding: 6px 10px;
+    border-radius: 11px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.82rem;
+    font-family: "JetBrains Mono", monospace;
+}
+
+[data-theme="light"] .cor-draft-btn {
+    background: rgba(255, 255, 255, 0.75);
+}
+
+.cor-draft-btn:disabled {
+    opacity: 0.45;
+}
+
+.cor-draft-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.cor-draft-btn.is-on {
+    border-color: rgba(0, 242, 255, 0.7);
+    background: rgba(0, 242, 255, 0.16);
+    box-shadow: inset 0 0 0 1px rgba(0, 242, 255, 0.35);
+}
+
+[data-theme="light"] .cor-draft-btn.is-on {
+    background: rgba(0, 180, 200, 0.18);
+}
+
+.cor-dirlabel {
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.cor-legend {
+    display: grid;
+    gap: 4px;
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="light"] .cor-legend {
+    background: rgba(255, 255, 255, 0.6);
+}
+
+.cor-rule {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+    margin: 0;
+    font-size: 0.76rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+}
+
+.cor-glyph {
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 700;
+    text-align: center;
+    line-height: 18px;
+    color: var(--text);
+    background: rgba(0, 242, 255, 0.12);
+}
+
+[data-theme="light"] .cor-glyph {
+    background: rgba(0, 180, 200, 0.14);
+}
+
+.cor-name {
+    font-weight: 700;
+    color: var(--text);
+}
+
+/* game-shadow-fold (registry game) */
+/* Shadow Fold */
+.shf-sheetbox {
+    max-width: 360px;
+    margin: 12px auto 0;
+}
+
+.shf-sheet {
+    display: grid;
+    aspect-ratio: 1 / 1;
+    gap: 2px;
+    padding: 8px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(10, 16, 26, 0.72);
+    outline: none;
+}
+
+[data-theme="light"] .shf-sheet {
+    background: rgba(248, 250, 252, 0.94);
+}
+
+.shf-sheet:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+/* Odd tracks hold the crease buttons, even tracks the paper cells. */
+.shf-sheet[data-side="4"] {
+    grid-template-columns: 1fr 18px 1fr 18px 1fr 18px 1fr;
+    grid-template-rows: 1fr 18px 1fr 18px 1fr 18px 1fr;
+}
+
+.shf-sheet[data-side="5"] {
+    grid-template-columns: 1fr 16px 1fr 16px 1fr 16px 1fr 16px 1fr;
+    grid-template-rows: 1fr 16px 1fr 16px 1fr 16px 1fr 16px 1fr;
+}
+
+.shf-sheet[data-side="6"] {
+    grid-template-columns: 1fr 14px 1fr 14px 1fr 14px 1fr 14px 1fr 14px 1fr;
+    grid-template-rows: 1fr 14px 1fr 14px 1fr 14px 1fr 14px 1fr 14px 1fr;
+}
+
+.shf-cell {
+    min-width: 0;
+    min-height: 0;
+    padding: 0;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.12s ease, transform 0.12s ease;
+}
+
+[data-theme="light"] .shf-cell {
+    background: var(--surface-soft);
+}
+
+/* Wanted-but-empty cells are drawn as a hollow square, so the target is
+   readable before any ink lands and without leaning on a hue. */
+.shf-cell.is-want {
+    border-color: rgba(148, 163, 184, 0.55);
+}
+
+.shf-cell.is-ink {
+    background: rgba(226, 232, 240, 0.88);
+    color: #101426;
+    border-color: rgba(226, 232, 240, 0.9);
+}
+
+[data-theme="light"] .shf-cell.is-ink {
+    background: var(--panel-strong);
+    color: #f8fafc;
+}
+
+.shf-cell.is-spill {
+    background: rgba(251, 113, 133, 0.55);
+    color: #1a1026;
+    border-color: rgba(251, 113, 133, 0.9);
+}
+
+.shf-cell.is-covered {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: repeating-linear-gradient(
+        135deg,
+        rgba(148, 163, 184, 0.16),
+        rgba(148, 163, 184, 0.16) 4px,
+        transparent 4px,
+        transparent 8px
+    );
+}
+
+.shf-cell.is-cursor {
+    border-style: dashed;
+    border-width: 2px;
+    border-color: var(--accent);
+}
+
+.shf-cell:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.shf-fold {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px dashed transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.5rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.shf-fold:hover {
+    border-color: rgba(251, 191, 36, 0.6);
+    color: var(--text);
+}
+
+.shf-fold:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.shf-fold.is-on {
+    border-style: solid;
+    border-color: rgba(251, 191, 36, 0.85);
+    background: rgba(251, 191, 36, 0.22);
+    color: #fbbf24;
+    font-weight: 700;
+}
+
+[data-theme="light"] .shf-fold.is-on {
+    background: rgba(180, 83, 9, 0.18);
+    color: #92400e;
+}
+
+.shf-legend {
+    max-width: 360px;
+    margin: 8px auto 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+[data-motion="off"] .shf-cell {
+    transition: none !important;
+}
+
+[data-motion="calm"] .shf-cell {
+    transition: none !important;
+}
+
+/* game-weather-loom (registry game) */
+/* Weather Loom */
+.wlk-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.9);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+[data-theme="light"] .wlk-canvas {
+    background: rgba(241, 245, 249, 0.96);
+}
+
+.wlk-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.wlk-legend {
+    margin-top: 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+[data-theme="light"] .wlk-legend {
+    color: #445164;
+}
+
+.wlk-tools {
+    align-items: center;
+}
+
+.wlk-tool,
+.wlk-dir,
+.wlk-clear {
+    min-height: 38px;
+    padding: 6px 12px;
+    border-radius: 11px;
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.84rem;
+}
+
+[data-theme="light"] .wlk-tool,
+[data-theme="light"] .wlk-dir,
+[data-theme="light"] .wlk-clear {
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.wlk-tool:focus-visible,
+.wlk-dir:focus-visible,
+.wlk-clear:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.wlk-dir {
+    min-width: 42px;
+    font-size: 1rem;
+}
+
+.wlk-tool.is-on,
+.wlk-dir.is-on {
+    border-color: rgba(0, 242, 255, 0.65);
+    background: rgba(0, 242, 255, 0.16);
+    box-shadow: inset 0 0 0 1px rgba(0, 242, 255, 0.35);
+}
+
+[data-theme="light"] .wlk-tool.is-on,
+[data-theme="light"] .wlk-dir.is-on {
+    background: rgba(0, 180, 200, 0.18);
+}
+
+.wlk-dirlabel {
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+/* game-archive-escape (registry game) */
+/* Archive Escape */
+.arc-wrap {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.arc-stage {
+    display: grid;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+    outline: none;
+}
+
+.arc-stage:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.arc-room {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.arc-prose {
+    min-height: 4.8em;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.arc-choices {
+    display: grid;
+    gap: 8px;
+}
+
+.arc-choice {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    gap: 4px 8px;
+    min-height: 44px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition:
+        border-color 0.16s ease,
+        background 0.16s ease;
+}
+
+.arc-choice:hover:not([disabled]) {
+    border-color: rgba(0, 242, 255, 0.45);
+}
+
+.arc-choice:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.arc-choice[disabled] {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+.arc-choice-key {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--accent);
+}
+
+.arc-choice-text {
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.arc-choice-need {
+    grid-column: 2;
+    font-size: 0.76rem;
+    color: var(--danger-text);
+}
+
+.arc-ledger {
+    display: grid;
+    gap: 6px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px dashed var(--border);
+    background: var(--surface-soft);
+}
+
+.arc-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 0.8rem;
+}
+
+.arc-row-label {
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.arc-row-body {
+    color: var(--text);
+}
+
+[data-motion="off"] .arc-choice {
+    transition: none !important;
+}
+
+/* game-paper-bridge (registry game) */
+/* Paper Bridge */
+.pbr-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: rgba(8, 12, 20, 0.9);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+[data-theme="light"] .pbr-canvas {
+    background: rgba(241, 245, 249, 0.96);
+}
+
+.pbr-canvas:focus-visible {
+    border-color: rgba(0, 242, 255, 0.5);
+    box-shadow: var(--focus-ring);
+}
+
+.pbr-legend {
+    margin-top: 8px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+[data-theme="light"] .pbr-legend {
+    color: #445164;
+}
+
+/* game-microbe-lab (registry game) */
+/* Microbe Lab */
+.mcb-stage {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+}
+
+.mcb-card {
+    display: grid;
+    gap: 6px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px dashed var(--border);
+    background: var(--surface-soft);
+}
+
+.mcb-clause,
+.mcb-peek {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+.mcb-peek {
+    color: var(--accent-text);
+}
+
+.mcb-dish {
+    display: grid;
+    gap: 6px;
+}
+
+.mcb-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    align-items: stretch;
+}
+
+.mcb-strain {
+    min-height: 40px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+}
+
+.mcb-strain.mcb-fit {
+    border-style: solid;
+    border-color: rgba(109, 226, 122, 0.55);
+}
+
+.mcb-strain.mcb-unfit {
+    border-style: dashed;
+}
+
+.mcb-strain.mcb-picked {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.mcb-strain:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.mcb-trait {
+    display: grid;
+    place-items: center;
+    min-height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+.mcb-trait.mcb-focus {
+    color: var(--text);
+    border-color: var(--accent);
+}
+
+.mcb-trait.mcb-maxed {
+    color: var(--accent-2);
+    border-style: dashed;
+}
+
+.mcb-controls {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.mcb-btn {
+    min-height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.mcb-btn:hover {
+    border-color: rgba(0, 242, 255, 0.45);
+}
+
+.mcb-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.mcb-info,
+.mcb-log {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .mcb-strain,
+[data-theme="light"] .mcb-trait,
+[data-theme="light"] .mcb-btn {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+[data-motion="off"] .mcb-strain,
+[data-motion="off"] .mcb-btn {
+    transition: none !important;
+}
+
+/* game-blind-sculptor (registry game) */
+/* Blind Sculptor - the probe bench, the digit grids and the 3-layer build rig.
+   Every state the player reads is a class pair plus a glyph, so no rule here
+   leans on a hue alone: is-on, is-picked, is-read and is-cursor all arrive next
+   to a text change the panel already prints. Light theme swaps the surfaces. */
+.bld-probe {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+    outline: none;
+}
+
+.bld-build {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
+    margin-top: 12px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+    outline: none;
+}
+
+.bld-probe:focus-visible,
+.bld-build:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .bld-probe,
+[data-theme="light"] .bld-build {
+    background: var(--panel-strong);
+    border-color: var(--surface-soft);
+}
+
+.bld-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.bld-cap {
+    min-width: 42px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.bld-btn {
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    cursor: pointer;
+}
+
+.bld-btn:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .bld-btn {
+    background: var(--panel-bg);
+}
+
+.bld-axis,
+.bld-index {
+    min-width: 44px;
+}
+
+/* A picked control carries a box and a bold border, not just a tint. */
+.bld-axis.is-picked,
+.bld-index.is-picked {
+    border-color: var(--accent);
+    border-width: 2px;
+    background: var(--panel-strong);
+    color: var(--text);
+    font-weight: 700;
+}
+
+.bld-index.is-read {
+    border-style: dashed;
+    color: var(--text-secondary);
+}
+
+.bld-idx-num {
+    font-weight: 700;
+}
+
+.bld-go.is-spent {
+    border-color: var(--danger-text);
+    color: var(--danger-text);
+}
+
+.bld-readout {
+    margin-top: 4px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+}
+
+.bld-read {
+    margin: 0 0 6px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text);
+}
+
+.bld-gridcap,
+.bld-forecast,
+.bld-note-empty {
+    margin: 6px 0 0;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.bld-forecast {
+    font-family: "JetBrains Mono", monospace;
+}
+
+.bld-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 26px);
+    grid-auto-rows: 26px;
+    gap: 3px;
+    width: max-content;
+}
+
+.bld-grid-mini-box {
+    grid-template-columns: repeat(3, 18px);
+    grid-auto-rows: 18px;
+    gap: 2px;
+}
+
+.bld-digit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.8rem;
+    line-height: 1;
+}
+
+.bld-digit-mini {
+    font-size: 0.68rem;
+}
+
+/* The filled digits read bolder and boxed, so the grid works without colour. */
+.bld-digit.is-on {
+    background: var(--panel-strong);
+    border-color: var(--accent);
+    border-width: 2px;
+    color: var(--accent-2);
+    font-weight: 700;
+}
+
+[data-theme="light"] .bld-digit.is-on {
+    background: var(--accent);
+    color: var(--panel-strong);
+}
+
+.bld-notebook {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+}
+
+.bld-note-cap {
+    margin: 0 0 6px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.bld-notes {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bld-entry {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-bg);
+}
+
+.bld-entry.is-pinned {
+    border-color: var(--accent);
+    border-width: 2px;
+    background: var(--surface-soft);
+}
+
+.bld-entry-line {
+    flex: 1 1 200px;
+    margin: 0;
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.bld-entry-hint {
+    display: block;
+    border-style: dashed;
+    color: var(--text);
+}
+
+.bld-lock {
+    padding: 3px 9px;
+    font-size: 0.7rem;
+}
+
+.bld-layer-cap {
+    margin: 0 0 6px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+}
+
+.bld-cells {
+    display: grid;
+    grid-template-columns: repeat(3, 34px);
+    grid-auto-rows: 34px;
+    gap: 4px;
+}
+
+.bld-cell {
+    padding: 0;
+    min-width: 0;
+    min-height: 0;
+    font-size: 1.05rem;
+    line-height: 1;
+    color: var(--text-secondary);
+}
+
+.bld-cell.is-on {
+    background: var(--panel-strong);
+    border-color: var(--accent);
+    border-width: 2px;
+    color: var(--accent-2);
+}
+
+.bld-cell.is-cursor {
+    border-color: var(--accent-2);
+    border-style: solid;
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .bld-cell.is-on {
+    background: var(--accent);
+    color: var(--panel-strong);
+}
+
+[data-motion="off"] .bld-btn,
+[data-motion="off"] .bld-cell {
+    transition: none;
+}
+
+/* game-courtroom-of-animals (registry game) */
+/* Courtroom of Animals - the bench, the shelf and the argument. Everything the
+ * player reads is text, so the surfaces stay quiet and the two numbers - claim
+ * strength and witness trust - are the loudest things on the panel. */
+.cta-wrap {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.cta-row-label {
+  margin: 0;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.cta-bench,
+.cta-shelf {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 8px;
+}
+
+.cta-shelf {
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+}
+
+.cta-card {
+  display: grid;
+  gap: 4px;
+  min-height: 62px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--panel-bg);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.16s ease, background 0.16s ease;
+}
+
+.cta-card:hover:not([disabled]) {
+  border-color: var(--accent);
+  background: var(--panel-strong);
+}
+
+.cta-card:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.cta-card[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.cta-card-on,
+.cta-option.cta-sel {
+  border-color: var(--accent);
+}
+
+.cta-card-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text);
+}
+
+.cta-card-meta {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+}
+
+.cta-exhibit .cta-card-name {
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+.cta-focus {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--panel-strong);
+}
+
+.cta-focus-title {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: var(--text);
+}
+
+.cta-focus-body {
+  margin: 0;
+  font-size: 0.86rem;
+  line-height: 1.62;
+  color: var(--text-secondary);
+}
+
+.cta-options {
+  display: grid;
+  gap: 8px;
+}
+
+.cta-option {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 2px 10px;
+  min-height: 46px;
+  padding: 9px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-soft);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.16s ease, background 0.16s ease;
+}
+
+.cta-option:hover:not([disabled]) {
+  border-color: var(--accent);
+  background: var(--panel-bg);
+}
+
+.cta-option:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.cta-option[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.cta-option-key {
+  grid-row: span 2;
+  align-self: center;
+  min-width: 20px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.cta-option-label {
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.cta-option-note {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+}
+
+.cta-record,
+.cta-why {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px dashed var(--border);
+  background: var(--surface-soft);
+}
+
+.cta-why {
+  border-style: solid;
+  border-color: var(--accent-2);
+}
+
+.cta-record-row {
+  margin: 0;
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.cta-why-line {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  color: var(--text);
+}
+
+.cta-why-line:first-child {
+  font-weight: 700;
+}
+
+/* Light theme: the ink-and-paper side of the same courtroom. Surfaces and text
+ * come from the tokens so the two themes never disagree about contrast. */
+[data-theme="light"] .cta-card {
+  background: var(--panel-bg);
+  border-color: var(--border);
+}
+
+[data-theme="light"] .cta-card:hover:not([disabled]) {
+  background: var(--panel-strong);
+  border-color: var(--accent);
+}
+
+[data-theme="light"] .cta-focus {
+  background: var(--panel-strong);
+}
+
+[data-theme="light"] .cta-focus-title {
+  color: var(--text);
+}
+
+[data-theme="light"] .cta-option {
+  background: var(--surface-soft);
+}
+
+[data-theme="light"] .cta-option-key {
+  color: var(--accent-2);
+}
+
+[data-theme="light"] .cta-why {
+  background: var(--surface-soft);
+  border-color: var(--accent-2);
+}
+
+[data-theme="light"] .cta-why-line {
+  color: var(--text);
+}
+
+[data-motion="off"] .cta-card,
+[data-motion="off"] .cta-option {
+  transition: none !important;
+}
+
+/* game-gravity-badminton (registry game) */
+/* Gravity Badminton - the panel chrome for the rotating-court rally game.
+ * Every hook is a gbm- class the module builds with createElement, and every
+ * colour is a theme token so the court reads the same in light and in dark. */
+.gbm-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 12px;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--panel-strong);
+  outline: none;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.gbm-canvas:focus-visible {
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+/* The opponent's telegraph, printed as words under the painted arrow. */
+.gbm-line {
+  min-height: 1.5em;
+  margin-top: 8px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.gbm-line.is-flash {
+  animation: gbm-flash 420ms ease-out 1;
+}
+
+@keyframes gbm-flash {
+  from {
+    opacity: 0.35;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* The two accessibility switches: real buttons, so they are reachable by
+ * keyboard and screen reader, and marked as on/off by shape and wording. */
+.gbm-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.gbm-toggle {
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px dashed var(--border);
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.gbm-toggle:hover {
+  border-color: var(--accent-2);
+}
+
+.gbm-toggle:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.gbm-toggle.is-on {
+  border-style: solid;
+  border-color: var(--accent);
+  background: var(--panel-bg);
+  color: var(--accent);
+}
+
+/* A conceded point is printed in the warning colour as well as in words. */
+.game-result.gbm-lost {
+  color: var(--danger-text);
+}
+
+[data-theme="light"] .gbm-canvas,
+[data-theme="light"] .gbm-options {
+  background: var(--panel-bg);
+}
+
+[data-theme="light"] .gbm-canvas {
+  border-color: var(--border);
+}
+
+[data-theme="light"] .gbm-toggle,
+[data-theme="light"] .gbm-toggle.is-on {
+  background: var(--panel-strong);
+}
+
+[data-theme="light"] .gbm-line {
+  color: var(--text);
+}
+
+[data-motion="off"] .gbm-line.is-flash {
+  animation: none !important;
+}
+
+[data-motion="off"] .gbm-toggle,
+[data-motion="off"] .gbm-canvas {
+  transition: none !important;
+}
+
+/* game-kitchen-relay (registry game) */
+/* Kitchen Relay */
+.kch-stage {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+}
+
+.kch-railtitle {
+    margin: 0;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.kch-rail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    max-height: 168px;
+    overflow-y: auto;
+}
+
+.kch-ticket {
+    min-width: 116px;
+    padding: 7px 9px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.kch-ticket:hover {
+    border-color: var(--accent);
+}
+
+.kch-ticket.is-focus {
+    color: var(--text);
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.kch-ticket.is-urgent {
+    color: var(--danger-text);
+    border-color: var(--danger-text);
+}
+
+.kch-ticket.is-paid,
+.kch-ticket.is-gone {
+    opacity: 0.55;
+    text-decoration: line-through;
+}
+
+.kch-ticket:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.kch-bands,
+.kch-rack {
+    margin: 6px 0 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+}
+
+.kch-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.kch-calm {
+    min-height: 34px;
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.kch-calm.is-on {
+    color: var(--text);
+    border-color: var(--accent-2);
+    background: var(--panel-bg);
+}
+
+.kch-calm:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.kch-stations {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.kch-station {
+    display: grid;
+    align-content: start;
+    gap: 7px;
+    min-height: 116px;
+    padding: 10px 11px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--panel-bg);
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kch-station.is-picked {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.kch-station.is-holding {
+    border-style: solid;
+    border-color: var(--accent-2);
+}
+
+.kch-station.is-jam {
+    border-style: dashed;
+    border-color: var(--danger-text);
+}
+
+.kch-station:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.kch-st-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.kch-st-name {
+    font-size: 0.86rem;
+    font-weight: 800;
+}
+
+.kch-st-key {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 5px;
+}
+
+.kch-bar {
+    position: relative;
+    height: 10px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-soft);
+    overflow: hidden;
+}
+
+.kch-fill {
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: var(--accent);
+    transition: width 0.12s linear;
+}
+
+.kch-station.is-holding .kch-fill {
+    background: var(--accent-2);
+}
+
+.kch-station.is-jam .kch-fill {
+    background: var(--danger-text);
+}
+
+.kch-word {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.kch-detail {
+    margin: 0;
+    font-size: 0.72rem;
+    line-height: 1.35;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .kch-stage,
+[data-theme="light"] .kch-station,
+[data-theme="light"] .kch-ticket,
+[data-theme="light"] .kch-calm {
+    background: rgba(255, 255, 255, 0.72);
+}
+
+[data-theme="light"] .kch-bar {
+    background: rgba(148, 163, 184, 0.24);
+}
+
+[data-motion="off"] .kch-station,
+[data-motion="off"] .kch-ticket,
+[data-motion="off"] .kch-fill {
+    transition: none !important;
+    animation: none !important;
+}
+
+@media (max-width: 720px) {
+    .kch-stations {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* game-morse-rescue (registry game) */
+/* The receiver console: lamp, mark bar, answer slots and the mission legend.
+ * Every clue the lamp or the sound carries is also printed here as a glyph or a
+ * word, so the sheet never lets colour be the only channel. */
+.mrs-stage {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--panel-bg);
+}
+
+.mrs-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* The lamp is the timed channel; dark between elements, lit inside one. */
+.mrs-lamp {
+    width: 26px;
+    height: 26px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    transition: background 90ms linear, box-shadow 90ms linear;
+}
+
+.mrs-lamp.is-on {
+    background: var(--accent);
+    box-shadow: 0 0 14px var(--accent);
+}
+
+.mrs-lamp-text {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .mrs-lamp {
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .mrs-lamp.is-on {
+    background: var(--accent);
+}
+
+/* The window meter is the same countdown the HUD prints in seconds. */
+.mrs-meter {
+    position: relative;
+    height: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-soft);
+}
+
+.mrs-meter-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 120ms linear;
+}
+
+[data-theme="light"] .mrs-meter {
+    background: var(--panel-strong);
+}
+
+.mrs-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mrs-group {
+    position: relative;
+    display: grid;
+    gap: 4px;
+    justify-items: start;
+    min-width: 96px;
+    padding: 8px 10px 11px;
+    text-align: left;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    transition: border-color 120ms ease;
+}
+
+/* A group that came through whole is drawn with a solid rule; a damaged one is
+ * dashed, and the mark itself reads "?" - not only a different colour. */
+.mrs-group.is-whole {
+    border-style: solid;
+}
+
+.mrs-group.is-cursor {
+    border-color: var(--accent);
+    background: var(--panel-strong);
+}
+
+.mrs-group:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.mrs-group-tag {
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.mrs-marks {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 1.05rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text);
+}
+
+.mrs-mark {
+    display: inline-block;
+    color: var(--text);
+}
+
+.mrs-mark.is-dot {
+    font-size: 1.15rem;
+}
+
+.mrs-mark.is-dash {
+    color: var(--accent);
+}
+
+.mrs-mark.is-void {
+    padding: 0 2px;
+    border: 1px dashed var(--danger-text);
+    border-radius: 4px;
+    color: var(--danger-text);
+    font-size: 0.78rem;
+    animation: mrsGrain 1.1s steps(2, end) infinite;
+}
+
+.mrs-mark.is-live {
+    transform: scale(1.4);
+}
+
+.mrs-head {
+    position: absolute;
+    left: 10px;
+    bottom: 4px;
+    width: 0;
+    height: 3px;
+    border-radius: 999px;
+    background: transparent;
+}
+
+.mrs-head.is-moving {
+    background: var(--accent-2);
+    transition: width 100ms linear;
+    animation: mrsSearch 1.2s ease-in-out infinite;
+}
+
+.mrs-fits {
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .mrs-group {
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .mrs-group.is-cursor {
+    border-color: var(--accent);
+    background: var(--panel-strong);
+}
+
+.mrs-slots {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.mrs-slot {
+    display: grid;
+    gap: 2px;
+    justify-items: center;
+    width: 56px;
+    padding: 6px 4px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--panel-strong);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    transition: border-color 120ms ease;
+}
+
+.mrs-slot.is-cursor {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.mrs-slot.is-wrong,
+.mrs-slot.is-wrong .mrs-slot-char {
+    border-color: var(--danger-text);
+    border-style: dashed;
+    color: var(--danger-text);
+}
+
+.mrs-slot.is-right,
+.mrs-slot.is-right .mrs-slot-char {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+}
+
+.mrs-slot:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.mrs-slot-char {
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--text);
+}
+
+.mrs-slot-flag {
+    min-height: 0.72rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .mrs-slot {
+    background: var(--panel-strong);
+}
+
+.mrs-reading {
+    margin: 0;
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+}
+
+.mrs-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.mrs-key {
+    display: grid;
+    gap: 2px;
+    justify-items: center;
+    padding: 5px 8px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    transition: border-color 120ms ease;
+}
+
+.mrs-key:hover {
+    border-color: var(--accent);
+}
+
+.mrs-key:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.mrs-key-char {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.mrs-key-code {
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .mrs-key {
+    background: var(--panel-strong);
+}
+
+.mrs-tools {
+    gap: 8px;
+}
+
+.mrs-btn {
+    min-height: 38px;
+    padding: 0 14px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.82rem;
+    touch-action: manipulation;
+    transition: border-color 120ms ease;
+}
+
+.mrs-btn:hover {
+    border-color: var(--accent);
+}
+
+.mrs-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.mrs-btn[aria-pressed="false"] {
+    border-style: dashed;
+    color: var(--text-secondary);
+}
+
+[data-theme="light"] .mrs-btn {
+    background: var(--panel-strong);
+}
+
+@keyframes mrsGrain {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes mrsSearch {
+    0% {
+        opacity: 0.55;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.55;
+    }
+}
+
+/* Motion off: the lamp still lights and the playhead still measures progress,
+ * but nothing blinks, pulses or slides on its own. */
+[data-motion="off"] .mrs-lamp,
+[data-motion="off"] .mrs-meter-fill,
+[data-motion="off"] .mrs-group,
+[data-motion="off"] .mrs-slot,
+[data-motion="off"] .mrs-key,
+[data-motion="off"] .mrs-btn,
+[data-motion="off"] .mrs-head.is-moving {
+    animation: none !important;
+    transition: none !important;
+}
+
+[data-motion="off"] .mrs-mark.is-void {
+    animation: none !important;
+    opacity: 1;
+}
+
+[data-motion="off"] .mrs-mark.is-live {
+    transform: none;
+    border-bottom: 2px solid var(--accent);
+}
+
+@media (max-width: 560px) {
+    .mrs-group {
+        min-width: 78px;
+    }
+
+    .mrs-slot {
+        width: 46px;
+    }
+}
+
+/* game-rule-thieves (registry game) */
+/* Rule Thieves: the 5x5 board of collectible laws. Every colour a player reads
+ * is paired with a glyph in the cell text, so the states survive without colour
+ * and survive the light theme by swapping only the token variables. */
+.rlt-board {
+    margin-top: 12px;
+    padding: 8px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+    outline: none;
+}
+
+[data-theme="light"] .rlt-board {
+    background: var(--panel-bg);
+}
+
+.rlt-board:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.rlt-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 4px;
+}
+
+.rlt-cell {
+    aspect-ratio: 1 / 1;
+    min-height: 42px;
+    padding: 1px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    font-weight: 700;
+    line-height: 1.1;
+    cursor: default;
+    overflow: hidden;
+}
+
+[data-theme="light"] .rlt-cell {
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+}
+
+.rlt-cell:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.rlt-cell.rlt-one {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.rlt-cell.rlt-two {
+    color: var(--accent-2);
+    border-color: var(--accent-2);
+}
+
+.rlt-cell.rlt-wall {
+    background: var(--panel-strong);
+    border-style: dashed;
+    color: var(--text-secondary);
+    cursor: not-allowed;
+}
+
+[data-theme="light"] .rlt-cell.rlt-wall {
+    background: var(--surface-soft);
+}
+
+.rlt-cell.rlt-flag {
+    color: var(--accent);
+    border-color: var(--accent);
+    font-weight: 800;
+}
+
+.rlt-cell.rlt-token {
+    border-style: dashed;
+    color: var(--text-secondary);
+}
+
+.rlt-cell.rlt-held1 {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.rlt-cell.rlt-held2 {
+    color: var(--accent-2);
+    border-color: var(--accent-2);
+}
+
+/* A piece that may legally act: colour plus the "+" glyph in the cell text. */
+.rlt-cell.rlt-can {
+    background: var(--panel-bg);
+    border-color: var(--accent);
+    color: var(--text);
+    cursor: pointer;
+    box-shadow: var(--focus-ring);
+}
+
+/* A legal destination: colour plus its move glyph (step, diagonal, jump, swap). */
+.rlt-cell.rlt-to {
+    background: var(--panel-bg);
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.rlt-cell.rlt-to:hover {
+    background: var(--panel-strong);
+    color: var(--text);
+}
+
+.rlt-cell.rlt-sel {
+    background: var(--panel-strong);
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+[data-theme="light"] .rlt-cell.rlt-sel {
+    background: var(--surface-soft);
+}
+
+/* Frozen ground reads as an error, never as a legal cell. */
+.rlt-cell.rlt-lock {
+    color: var(--danger-text);
+    border-color: var(--danger-text);
+    cursor: not-allowed;
+}
+
+.rlt-cell.rlt-cursor {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
+.rlt-legend {
+    margin: 8px 0 0;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    line-height: 1.5;
+}
+
+.rlt-keys {
+    margin: 4px 0 0;
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    line-height: 1.5;
+}
+
+/* game-tether-salvage (registry game) */
+/* Tether Salvage - the salvage yard and its tow line. */
+.tts-canvas {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    margin-top: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.tts-canvas:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* The yard keeps a night-sky plate in both themes: the dashed rings and the
+ * tension digits only read on dark. */
+[data-theme="light"] .tts-canvas {
+    border-color: var(--surface-soft);
+    background: var(--panel-bg);
+}
+
+.tts-meter-fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.12s linear;
+}
+
+.tts-meter-fill.is-red {
+    background: linear-gradient(90deg, var(--accent-2), var(--danger-text));
+}
+
+.tts-tools {
+    align-items: center;
+    gap: 8px;
+}
+
+.tts-tools button:disabled {
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+[data-theme="light"] .tts-tools button:disabled {
+    background: var(--surface-soft);
+}
+
+[data-motion="off"] .tts-canvas {
+    cursor: default;
+}
+
+/* game-tiny-wrestlers (registry game) */
+/* Tiny Wrestlers */
+.twr-arena {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+    outline: none;
+}
+
+[data-theme="light"] .twr-arena {
+    background: #f8fafc;
+}
+
+.twr-arena:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* The mat is a strip seen from above: rim on the left, rim on the right, and
+ * the numbered space written where the two wrestlers measure each other. */
+.twr-mat {
+    position: relative;
+    height: 124px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    overflow: hidden;
+}
+
+[data-theme="light"] .twr-mat {
+    background: #eaf0f7;
+}
+
+.twr-rim {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 13%;
+    display: grid;
+    place-items: center;
+    border: 1px dashed var(--danger-text);
+    background: var(--panel-bg);
+}
+
+.twr-rim-left {
+    left: 0;
+    border-radius: 14px 0 0 14px;
+    border-right: none;
+}
+
+.twr-rim-right {
+    right: 0;
+    border-radius: 0 14px 14px 0;
+    border-left: none;
+}
+
+[data-theme="light"] .twr-rim {
+    background: #ffffff;
+}
+
+.twr-rim-word {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--danger-text);
+    writing-mode: vertical-rl;
+}
+
+.twr-wrestler {
+    position: absolute;
+    top: 50%;
+    width: 34px;
+    height: 34px;
+    margin-top: -17px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: var(--panel-strong);
+    display: grid;
+    place-items: center;
+    z-index: 2;
+    transition: left 0.22s ease;
+    animation: twrBob 1.6s ease-in-out infinite;
+}
+
+[data-theme="light"] .twr-wrestler {
+    background: #ffffff;
+}
+
+.twr-head {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+
+.twr-red {
+    border-color: var(--accent-2);
+}
+
+.twr-red .twr-head {
+    background: var(--accent-2);
+}
+
+/* Rim steps 0 to 2, and 3 is the wrestler already over the edge. */
+.twr-blue.twr-foot-0 {
+    left: 41%;
+}
+
+.twr-blue.twr-foot-1 {
+    left: 27%;
+}
+
+.twr-blue.twr-foot-2 {
+    left: 13%;
+}
+
+.twr-blue.twr-foot-3 {
+    left: 1%;
+}
+
+.twr-red.twr-foot-0 {
+    left: 52%;
+}
+
+.twr-red.twr-foot-1 {
+    left: 66%;
+}
+
+.twr-red.twr-foot-2 {
+    left: 80%;
+}
+
+.twr-red.twr-foot-3 {
+    left: 92%;
+}
+
+.twr-wrestler.is-locked {
+    box-shadow: var(--focus-ring);
+}
+
+.twr-wrestler.is-exposed {
+    border-style: dashed;
+    animation: twrExpose 0.9s ease-in-out infinite;
+}
+
+.twr-wrestler.is-down {
+    border-style: dashed;
+    opacity: 0.55;
+    transform: rotate(24deg) scale(0.82);
+    animation: none;
+}
+
+.twr-space-tag {
+    position: absolute;
+    left: 50%;
+    top: 8px;
+    transform: translateX(-50%);
+    padding: 2px 9px;
+    border-radius: 999px;
+    border: 1px dashed var(--border);
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    white-space: nowrap;
+    z-index: 3;
+}
+
+[data-theme="light"] .twr-space-tag {
+    background: #ffffff;
+}
+
+/* The beat window: six ticks, so the time left is countable at a glance. */
+.twr-window {
+    display: flex;
+    gap: 4px;
+}
+
+.twr-tick {
+    flex: 1;
+    height: 7px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+}
+
+.twr-tick.is-on {
+    border-color: var(--accent);
+    background: var(--accent);
+}
+
+[data-theme="light"] .twr-tick.is-on {
+    border-color: var(--accent-text);
+    background: #7dd3e8;
+}
+
+.twr-call {
+    min-height: 2.4em;
+    color: var(--text);
+    font-size: 0.82rem;
+    line-height: 1.45;
+    text-align: center;
+}
+
+.twr-pads {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+}
+
+.twr-pads-duo {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.twr-pads-single .twr-pad {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.twr-pad {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    padding: 8px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+}
+
+[data-theme="light"] .twr-pad {
+    background: #ffffff;
+}
+
+.twr-pad-blue {
+    box-shadow: inset 3px 0 0 var(--accent);
+}
+
+.twr-pad-red {
+    box-shadow: inset 3px 0 0 var(--accent-2);
+}
+
+.twr-pad-head,
+.twr-keys,
+.twr-side-state,
+.twr-pad-state {
+    grid-column: 1 / -1;
+}
+
+.twr-pad-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.twr-pad-title {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.twr-pips {
+    display: flex;
+    gap: 3px;
+}
+
+.twr-pip {
+    width: 13px;
+    height: 13px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--panel-bg);
+}
+
+.twr-pip.is-on {
+    border-color: var(--accent);
+    background: var(--accent);
+}
+
+.twr-pad-red .twr-pip.is-on {
+    border-color: var(--accent-2);
+    background: var(--accent-2);
+}
+
+[data-theme="light"] .twr-pip {
+    background: #e2e8f0;
+}
+
+.twr-keys {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.twr-side-state {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--text);
+}
+
+.twr-pad-state {
+    margin: 0;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+}
+
+.twr-order {
+    display: grid;
+    gap: 2px;
+    place-items: center;
+    min-height: 44px;
+    padding: 6px 4px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--panel-bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.74rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+[data-theme="light"] .twr-order {
+    background: #f8fafc;
+}
+
+.twr-order:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.twr-order-name {
+    line-height: 1.2;
+    text-align: center;
+}
+
+.twr-order-key {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 800;
+    color: var(--text-secondary);
+}
+
+.twr-order.is-pick {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.twr-order.is-locked {
+    border-color: var(--accent-text);
+}
+
+.twr-order.is-blocked {
+    opacity: 0.45;
+    border-style: dashed;
+    cursor: not-allowed;
+}
+
+.twr-keys-alias {
+    padding-top: 6px;
+    border-top: 1px dashed var(--border);
+    text-align: center;
+}
+
+.twr-plain {
+    min-height: 44px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.84rem;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+@keyframes twrBob {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+@keyframes twrExpose {
+    0%,
+    100% {
+        box-shadow: none;
+    }
+    50% {
+        box-shadow: var(--focus-ring);
+    }
+}
+
+[data-motion="off"] .twr-wrestler,
+[data-motion="off"] .twr-wrestler.is-exposed {
+    animation: none !important;
+    transition: none;
+}
+
+[data-motion="off"] .twr-order.is-pick,
+[data-motion="off"] .twr-wrestler.is-locked,
+[data-motion="off"] .twr-order:focus-visible {
+    box-shadow: none;
+    border-color: var(--accent);
+}
+
+[data-motion="off"] .twr-tick.is-on {
+    border-style: solid;
+}
+
+/* game-auction-dungeon (registry game) */
+/* Auction Dungeon: the counter, the four named bidder seats and the door.
+ * Every state a player must read (in or out, over the band, still standing) is
+ * carried by a word in the row's own text, so the classes below only add
+ * emphasis. Colour comes from the token set and swaps wholesale in the light
+ * theme; no colour is ever the only signal. */
+.aud-lot {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+    outline: none;
+}
+
+.aud-lot:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .aud-lot {
+    background: var(--panel-bg);
+}
+
+.aud-lothead {
+    margin: 0;
+    color: var(--text);
+    font-weight: 700;
+}
+
+.aud-loteffect,
+.aud-lotband,
+.aud-price,
+.aud-kits,
+.aud-camphead,
+.aud-stagehead,
+.aud-queue,
+.aud-log {
+    margin: 4px 0;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    line-height: 1.5;
+}
+
+.aud-price {
+    color: var(--text);
+    font-weight: 700;
+}
+
+.aud-kits {
+    color: var(--accent);
+}
+
+.aud-sale {
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 10px;
+    border: 1px dashed var(--border);
+    background: var(--surface-soft);
+}
+
+.aud-salerow {
+    margin: 3px 0;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    line-height: 1.5;
+}
+
+.aud-salerow.aud-is-win {
+    color: var(--text);
+    font-weight: 700;
+}
+
+/* An over-bid is printed as a sentence; the colour only secondments it. */
+.aud-salerow.aud-is-over {
+    color: var(--danger-text);
+    font-weight: 700;
+}
+
+[data-theme="light"] .aud-salerow.aud-is-over {
+    color: var(--danger-text);
+}
+
+[data-theme="light"] .aud-sale {
+    background: var(--panel-bg);
+}
+
+.aud-bidrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.aud-btn {
+    min-height: 34px;
+    padding: 4px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.aud-btn:hover:not(:disabled) {
+    border-color: var(--accent);
+    background: var(--panel-bg);
+}
+
+.aud-btn:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.aud-btn:disabled {
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.aud-btn.aud-is-sel {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--panel-strong);
+}
+
+.aud-btn.aud-bid {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.aud-btn.aud-go {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+}
+
+[data-theme="light"] .aud-btn.aud-is-sel {
+    background: var(--surface-soft);
+}
+
+.aud-bidders {
+    margin-top: 10px;
+    padding: 8px 10px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .aud-bidders {
+    background: var(--panel-bg);
+}
+
+.aud-bidder {
+    display: grid;
+    grid-template-columns: minmax(76px, 1fr) 2fr 1fr;
+    gap: 2px 10px;
+    padding: 6px 4px;
+    border-bottom: 1px solid var(--border);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.64rem;
+    line-height: 1.45;
+}
+
+.aud-bidder:last-child {
+    border-bottom: none;
+}
+
+.aud-bidname {
+    color: var(--text);
+    font-weight: 800;
+}
+
+.aud-bidplan,
+.aud-bidkit {
+    color: var(--text-secondary);
+}
+
+.aud-bidstate {
+    color: var(--text);
+}
+
+.aud-bidpurse {
+    color: var(--accent);
+}
+
+/* In or out is printed in the row text as well as coloured here. */
+.aud-bidder.aud-is-in {
+    border-left: 3px solid var(--accent);
+}
+
+.aud-bidder.aud-is-out {
+    border-left: 3px solid var(--border);
+    opacity: 0.72;
+}
+
+.aud-bidder.aud-is-you {
+    background: var(--surface-soft);
+}
+
+.aud-stage {
+    margin-top: 10px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+    outline: none;
+}
+
+.aud-stage:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .aud-stage {
+    background: var(--panel-bg);
+}
+
+.aud-stagehead {
+    color: var(--text);
+    font-weight: 700;
+}
+
+.aud-foes {
+    margin-top: 6px;
+}
+
+.aud-foe {
+    display: grid;
+    grid-template-columns: minmax(84px, 1fr) 2fr;
+    gap: 2px 8px;
+    padding: 5px 4px;
+    border-bottom: 1px dashed var(--border);
+}
+
+.aud-foe:last-child {
+    border-bottom: none;
+}
+
+.aud-foename {
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+}
+
+.aud-foestate {
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+}
+
+/* The telegraph is a sentence with a number in it, never a colour chip. */
+.aud-intent {
+    grid-column: 1 / -1;
+    color: var(--accent-2);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+}
+
+.aud-commands {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.aud-camp {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.aud-camphead {
+    flex-basis: 100%;
+}
+
+.aud-log {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    color: var(--text);
+}
+
+.aud-queue {
+    color: var(--accent);
+}
+
+@media (max-width: 640px) {
+    .aud-bidder,
+    .aud-foe {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* game-counterfeit-museum (registry game) */
+/* Counterfeit Museum: the audit bench. Every verdict and every contradiction is
+ * carried by words and digits in the DOM, so these rules only add emphasis - the
+ * light theme swaps the token variables and nothing else. */
+.cfm-rules {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .cfm-rules {
+    background: var(--surface-soft);
+}
+
+.cfm-rule {
+    margin: 0 0 6px;
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    line-height: 1.5;
+}
+
+.cfm-rule:last-child {
+    margin-bottom: 0;
+}
+
+.cfm-rule-clue {
+    padding: 6px 8px;
+    border-left: 3px solid var(--accent-2);
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 700;
+}
+
+[data-theme="light"] .cfm-rule-clue {
+    background: var(--panel-bg);
+}
+
+.cfm-cards {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.cfm-card {
+    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .cfm-card {
+    background: var(--panel-bg);
+}
+
+/* Right and wrong read differently without colour alone: a wrong card keeps a
+ * dashed edge, and the card text already names the disagreeing line. */
+.cfm-card.cfm-card-ok {
+    border-color: var(--accent);
+    border-style: solid;
+}
+
+.cfm-card.cfm-card-bad {
+    border-color: var(--danger-text);
+    border-style: dashed;
+}
+
+.cfm-card-name {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.84rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.cfm-record {
+    margin: 6px 0 0;
+    padding: 6px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    line-height: 1.5;
+}
+
+[data-theme="light"] .cfm-record {
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+}
+
+.cfm-twin {
+    margin: 6px 0 0;
+    color: var(--accent-2);
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+.cfm-lines {
+    display: grid;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.cfm-row {
+    min-height: 38px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px dashed var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: left;
+    cursor: pointer;
+}
+
+.cfm-row:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.cfm-row:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.cfm-row.cfm-row-open {
+    border-style: solid;
+    border-color: var(--accent);
+    background: var(--panel-bg);
+    color: var(--text);
+    cursor: default;
+}
+
+[data-theme="light"] .cfm-row.cfm-row-open {
+    background: var(--panel-strong);
+}
+
+.cfm-marks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.cfm-mark {
+    flex: 1 1 88px;
+    min-height: 40px;
+    padding: 8px 6px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.cfm-mark:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.cfm-mark:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+/* The tick glyph and the "marked:" line under the buttons carry the state, so the
+ * accent border is decoration rather than the only signal. */
+.cfm-mark.cfm-mark-on {
+    border-color: var(--accent);
+    background: var(--panel-bg);
+    color: var(--accent);
+}
+
+[data-theme="light"] .cfm-mark.cfm-mark-on {
+    background: var(--panel-strong);
+    color: var(--accent);
+}
+
+.cfm-mark-state {
+    margin: 6px 0 0;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.64rem;
+}
+
+.cfm-check {
+    min-height: 1.2em;
+    margin: 6px 0 0;
+    color: var(--text-secondary);
+    font-size: 0.68rem;
+    line-height: 1.5;
+}
+
+.cfm-check.cfm-check-ok {
+    color: var(--accent);
+}
+
+.cfm-check.cfm-check-bad {
+    color: var(--danger-text);
+}
+
+.cfm-sheet {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .cfm-sheet {
+    background: var(--panel-bg);
+}
+
+.cfm-sheet-title {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.cfm-sheet-need {
+    margin: 4px 0 8px;
+    color: var(--accent-2);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 700;
+}
+
+.cfm-sheet-list {
+    display: grid;
+    gap: 2px;
+}
+
+.cfm-sheet-row {
+    display: flex;
+    gap: 6px;
+    margin: 0;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.66rem;
+    line-height: 1.45;
+}
+
+.cfm-sheet-row:last-child {
+    border-bottom: none;
+}
+
+.cfm-sheet-tag {
+    flex: 0 0 auto;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.cfm-sheet-text {
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+}
+
+.cfm-sheet-text.cfm-sheet-text-read {
+    color: var(--text);
+    font-weight: 700;
+}
+
+/* game-crosswind-kites (registry game) */
+/* Crosswind Kites - the sky plate, the two line gauges and the two hold
+ * switches. Only "kct-" classes, and only the shared tokens, so the instruments
+ * read the same in either theme as every other panel in the drawer. */
+.kct-canvas {
+    display: block;
+    width: 100%;
+    max-width: 440px;
+    height: auto;
+    margin-top: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+/* The sky keeps a night plate in both themes: the three wind bands, the dashed
+ * rooftop line and the printed wind numbers only read against dark. */
+[data-theme="light"] .kct-canvas {
+    border-color: var(--surface-soft);
+}
+
+.kct-canvas:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* The instrument pair under the sky: line strength and the breeze on the wing. */
+.kct-gauges {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.kct-gauge {
+    display: grid;
+    grid-template-columns: minmax(34px, auto) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    padding: 9px 10px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .kct-gauge {
+    background: var(--panel-bg);
+}
+
+.kct-gauge-name {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.kct-bar {
+    display: block;
+    height: 8px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-soft);
+    overflow: hidden;
+}
+
+.kct-bar-fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.12s linear;
+}
+
+.kct-gauge-value {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    color: var(--text);
+}
+
+/* An empty line is an alarm, and it is said with shape as well as colour. */
+.kct-gauge.is-low .kct-bar {
+    border-style: dashed;
+    border-color: var(--danger-text);
+}
+
+.kct-gauge.is-low .kct-bar-fill {
+    background: var(--danger-text);
+}
+
+.kct-gauge.is-low .kct-gauge-value {
+    color: var(--danger-text);
+    font-weight: 800;
+}
+
+/* The one-line answer to "what just happened": hooked, stolen, or dipped. */
+.kct-line {
+    min-height: 1.6em;
+    margin-top: 10px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    color: var(--text-secondary);
+    overflow-wrap: anywhere;
+}
+
+/* Pump and Demo Line are hold-or-off switches, so they sit on their own row
+ * beside the gauges rather than in the shared action row. */
+.kct-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.kct-pump-btn,
+.kct-auto-btn {
+    flex: 1 1 150px;
+    min-height: 44px;
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Both tools read as dashed until they are engaged. */
+.kct-pump-btn,
+.kct-auto-btn {
+    border-style: dashed;
+}
+
+.kct-pump-btn:hover,
+.kct-auto-btn:hover {
+    border-color: var(--accent);
+    background: var(--panel-bg);
+}
+
+.kct-pump-btn:focus-visible,
+.kct-auto-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+/* Engaged: the border goes solid and the state word changes, so the switch is
+ * legible without relying on the accent alone. */
+.kct-pump-btn.is-on,
+.kct-auto-btn.is-on {
+    border-style: solid;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.kct-pump-btn.is-on .kct-toggle-state,
+.kct-auto-btn.is-on .kct-toggle-state {
+    color: var(--accent-text);
+    font-weight: 800;
+}
+
+.kct-toggle-state {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 720px) {
+    .kct-gauges {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kct-pump-btn,
+    .kct-auto-btn {
+        flex: 1 1 100%;
+    }
+}
+
+[data-motion="off"] .kct-bar-fill,
+[data-motion="off"] .kct-pump-btn,
+[data-motion="off"] .kct-auto-btn {
+    transition: none !important;
+}
+
+[data-motion="off"] .kct-canvas {
+    cursor: default;
+}
+
+[data-motion="off"] .kct-pump-btn.is-on,
+[data-motion="off"] .kct-auto-btn.is-on,
+[data-motion="off"] .kct-canvas:focus-visible {
+    box-shadow: none;
+    border-color: var(--accent);
+}
+
+/* game-deep-freeze (registry game) */
+/* Deep Freeze Expedition - the panel chrome for the frozen crossing.
+ * Every hook is a dfz- class the module builds with createElement, and every
+ * colour is a theme token, so the map, the pack bench and the forecast cards
+ * read the same in the dark drawer and in the light one. The board is
+ * turn-based, so nothing here animates on a timer: only state changes move. */
+
+/* The map plate stays dark in both themes: the route lines and the small
+ * distance digits are drawn in pale colours and only read on the cold plate. */
+.dfz-canvas {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  margin: 12px auto 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel-strong);
+  outline: none;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.dfz-canvas:focus-visible {
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .dfz-canvas {
+  border-color: var(--surface-soft);
+  background: var(--panel-bg);
+}
+
+/* The sentence under the map: where the party stands and what it is walking to.
+ * It repeats in words what the painted ring says in colour. */
+.dfz-trail {
+  margin: 8px 0 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .dfz-trail {
+  color: var(--text);
+}
+
+/* --- pack bench: six rows, each a real toggle button plus its plain-words note */
+.dfz-pack {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
+  gap: 6px;
+  width: 100%;
+  max-width: 460px;
+  margin: 12px auto 0;
+}
+
+.dfz-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-soft);
+}
+
+.dfz-itembtn {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 34px;
+  padding: 4px 8px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  color: var(--text);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.dfz-itembtn:hover:not(:disabled) {
+  border-color: var(--accent-2);
+}
+
+.dfz-itembtn:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+/* Packed is marked by shape and weight of type as well as by colour, so the
+ * state survives a screen that renders both accents the same. */
+.dfz-itembtn.is-on {
+  border-style: solid;
+  border-color: var(--accent);
+  background: var(--panel-strong);
+}
+
+.dfz-itembtn.is-on strong {
+  color: var(--accent);
+}
+
+.dfz-itembtn:disabled {
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.dfz-kg,
+.dfz-flag {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.dfz-itembtn.is-on .dfz-flag {
+  color: var(--accent-2);
+}
+
+.dfz-note {
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+[data-theme="light"] .dfz-item {
+  background: var(--panel-bg);
+}
+
+[data-theme="light"] .dfz-itembtn,
+[data-theme="light"] .dfz-itembtn.is-on {
+  background: var(--panel-strong);
+}
+
+/* --- forecast: the cards the pack can see, and the blank ones it cannot --- */
+.dfz-forecast {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  width: 100%;
+  max-width: 460px;
+  margin: 12px auto 0;
+}
+
+.dfz-card {
+  flex: 1 1 108px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.dfz-card.is-now {
+  border-left-color: var(--accent);
+}
+
+/* The unknown is spelled out rather than left as an empty box. */
+.dfz-card.is-blind {
+  border-left-style: dashed;
+  border-left-color: var(--text-secondary);
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .dfz-card,
+[data-theme="light"] .dfz-card.is-blind {
+  background: var(--panel-strong);
+}
+
+/* --- ways out of camp: one labelled button per edge, plus making camp --- */
+.dfz-routes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-width: 460px;
+  margin: 12px auto 0;
+  outline: none;
+}
+
+.dfz-routes:focus-visible {
+  border-radius: 10px;
+  box-shadow: var(--focus-ring);
+}
+
+.dfz-route {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-bg);
+  color: var(--text);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.8rem;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.dfz-route:hover:not(:disabled) {
+  border-color: var(--accent-2);
+}
+
+.dfz-route:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+.dfz-route.is-picked {
+  border-color: var(--accent);
+  background: var(--panel-strong);
+  box-shadow: var(--focus-ring);
+}
+
+.dfz-route:disabled {
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* The way's own numbers: distance, exposure, ground and pack limit in words. */
+.dfz-routedetail {
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.dfz-drink {
+  align-self: flex-start;
+  min-height: 32px;
+  padding: 4px 12px;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.74rem;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.dfz-drink:hover {
+  border-color: var(--accent-2);
+}
+
+.dfz-drink:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.dfz-drink.is-on {
+  border-style: solid;
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+}
+
+[data-theme="light"] .dfz-route,
+[data-theme="light"] .dfz-route.is-picked,
+[data-theme="light"] .dfz-drink {
+  background: var(--panel-strong);
+}
+
+/* --- the day diary: one plain sentence per day the expedition has spent --- */
+.dfz-log {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  max-width: 460px;
+  margin: 12px auto 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-soft);
+}
+
+.dfz-logline {
+  margin: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+[data-theme="light"] .dfz-log {
+  background: var(--panel-bg);
+}
+
+/* A failed crossing is named in words in the result line; the colour only
+ * echoes that, and never carries the message on its own. */
+.game-result.dfz-lost {
+  color: var(--danger-text);
+}
+
+[data-motion="off"] .dfz-canvas {
+  cursor: default;
+}
+
+[data-motion="off"] .dfz-itembtn,
+[data-motion="off"] .dfz-route,
+[data-motion="off"] .dfz-drink {
+  transition: none !important;
+}
+
+@media (max-width: 520px) {
+  .dfz-pack {
+    grid-template-columns: 1fr;
+  }
+
+  .dfz-card {
+    flex: 1 1 92px;
+  }
+}
+
+/* game-paradox-post (registry game) */
+/* Paradox Post - the building, its doorways and the route notebook. */
+.pdx-map {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+}
+
+/* The room the courier is standing in. */
+.pdx-room {
+    grid-column: 1 / -1;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+}
+
+.pdx-room-name {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: var(--text);
+}
+
+.pdx-room-copy {
+    margin: 6px 0 0;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+}
+
+.pdx-room-side {
+    margin: 8px 0 0;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.pdx-brief {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 10px 12px;
+    border-left: 3px solid var(--accent-2);
+    border-radius: 0 10px 10px 0;
+    background: var(--surface-soft);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+/* Manifest: one line per parcel, all of it text. */
+.pdx-jobs {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+}
+
+.pdx-head {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.pdx-job {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text);
+}
+
+.pdx-job-order {
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    font-weight: 600;
+    color: var(--accent-2);
+}
+
+/* Doorways. A button is a real button: Tab, Enter and Space all work. */
+.pdx-doors {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+}
+
+.pdx-door-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.5;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.12s ease, transform 0.12s ease;
+}
+
+.pdx-door-btn:hover {
+    border-color: var(--accent);
+    transform: translateX(2px);
+}
+
+.pdx-door-btn:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.pdx-door-btn:active {
+    transform: translateX(0);
+}
+
+/* The notebook is the memory of the run: verified directed edges, in text. */
+.pdx-note {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+}
+
+.pdx-note-empty,
+.pdx-note-line,
+.pdx-index-line {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+}
+
+.pdx-note-line {
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+}
+
+.pdx-note-carry {
+    font-weight: 600;
+}
+
+.pdx-index {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 6px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+}
+
+.pdx-log {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 10px;
+    min-height: 44px;
+}
+
+.pdx-log-line {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.pdx-log-line:first-child {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.pdx-btn-undo {
+    opacity: 0.92;
+}
+
+/* The one place colour carries a verdict: the result line, which also says
+ * so in words. */
+.pdx-lost {
+    border-color: var(--danger-text);
+    color: var(--danger-text);
+}
+
+[data-theme="light"] .pdx-room,
+[data-theme="light"] .pdx-note {
+    border-color: var(--surface-soft);
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .pdx-jobs,
+[data-theme="light"] .pdx-doors {
+    background: var(--surface-soft);
+}
+
+[data-theme="light"] .pdx-door-btn {
+    border-color: var(--panel-strong);
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .pdx-door-btn:hover {
+    border-color: var(--accent);
+    background: var(--surface-soft);
+}
+
+[data-theme="light"] .pdx-lost {
+    border-color: var(--danger-text);
+}
+
+@media (max-width: 720px) {
+    .pdx-map {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* game-pocket-photographer (registry game) */
+/* Pocket Photographer - the viewfinder plate and the contact sheet.
+ * Every state the player reads is a word or a digit, so nothing here leans on a
+ * hue alone: a filed frame carries a box, a bolder border and the words "in the
+ * album", an empty sheet is dashed and italic, and the rerouted line is labelled
+ * on the canvas itself. The pond keeps a night-water plate in both themes. */
+.pph-canvas {
+    display: block;
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    margin-top: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.pph-canvas:focus-visible {
+    border-color: var(--accent);
+    border-width: 2px;
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .pph-canvas {
+    border-color: var(--surface-soft);
+    background: var(--panel-bg);
+}
+
+[data-motion="off"] .pph-canvas {
+    cursor: default;
+}
+
+/* The state line is the screen-reader path into the pond, so it gets its own
+ * row inside the HUD rather than a fourth of a narrow stat. */
+.pph-hud {
+    flex-wrap: wrap;
+}
+
+.pph-wide {
+    flex: 1 1 100%;
+    text-align: left;
+}
+
+.pph-state {
+    display: block;
+    margin-top: 4px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    line-height: 1.55;
+    color: var(--text);
+}
+
+[data-theme="light"] .pph-state {
+    color: var(--text);
+}
+
+.pph-sheet {
+    display: block;
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+}
+
+.pph-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 8px;
+    padding: 4px 6px;
+    border-left: 3px solid var(--border);
+    font-size: 0.74rem;
+    line-height: 1.45;
+    color: var(--text-secondary);
+}
+
+.pph-row + .pph-row {
+    margin-top: 3px;
+}
+
+.pph-row-n {
+    min-width: 18px;
+    font-family: "JetBrains Mono", monospace;
+    color: var(--text-secondary);
+}
+
+.pph-row-who {
+    font-weight: 700;
+    color: var(--text);
+}
+
+.pph-row-nums {
+    font-family: "JetBrains Mono", monospace;
+    color: var(--accent-2);
+    letter-spacing: 0.02em;
+}
+
+.pph-row-why {
+    flex: 1 1 170px;
+    color: var(--text-secondary);
+}
+
+.pph-row-flag {
+    padding: 1px 7px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+/* A kept frame is boxed, ruled and worded - the tint is only the third cue. */
+.pph-row.is-kept {
+    border-left-color: var(--accent);
+    border-left-width: 4px;
+    background: var(--surface-soft);
+}
+
+.pph-row-flag.is-filed {
+    border-color: var(--accent);
+    border-width: 2px;
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.pph-row.is-empty {
+    border-left-style: dashed;
+    font-style: italic;
+}
+
+/* The words already say "not enough"; the tint is the third cue, not the cue. */
+.pph-row-flag:not(.is-filed) {
+    color: var(--danger-text);
+}
+
+[data-theme="light"] .pph-row-nums {
+    color: var(--text);
+}
+
+[data-theme="light"] .pph-row.is-kept {
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .pph-row-flag.is-filed {
+    color: var(--text);
+}
+
+.pph-btn-again {
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.pph-btn-again:hover {
+    border-color: var(--accent);
+}
+
+.pph-btn-again:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .pph-btn-again {
+    background: var(--panel-bg);
+}
+
+.pph-shutter:disabled {
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+[data-theme="light"] .pph-shutter:disabled {
+    color: var(--text-secondary);
+}
+
+[data-motion="off"] .pph-shutter {
+    animation: none !important;
+    transition: none;
+}
+
+[data-motion="off"] .pph-btn-again,
+[data-motion="off"] .pph-row,
+[data-motion="off"] .pph-row-flag {
+    transition: none;
+}
+
+/* game-switchboard-duo (registry game) */
+/* Switchboard Duo - two control desks side by side. Only "swb-" classes, and only
+ * the shared tokens: the machine has to read in either theme, from either stool. */
+.swb-desks {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.swb-desk {
+    display: grid;
+    gap: 8px;
+    min-width: 0;
+    padding: 10px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+    outline: none;
+}
+
+[data-theme="light"] .swb-desk {
+    background: #f8fafc;
+}
+
+/* A desk is a tab stop: once it has focus, its own key cluster is live. */
+.swb-desk:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* The seated stool is the one that may give orders when a single operator works
+ * both desks, and it is marked with more than colour. */
+.swb-desk.is-seated {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.swb-desk-a {
+    border-top: 3px solid var(--accent);
+}
+
+.swb-desk-b {
+    border-top: 3px solid var(--accent-2);
+}
+
+.swb-desk-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed var(--border);
+}
+
+.swb-desk-name {
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+}
+
+/* Both key clusters are printed on the desk they belong to, not only in the
+ * guide: whoever sits down can see at a glance which letters are theirs. */
+.swb-desk-keys {
+    display: block;
+    width: 100%;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.64rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.swb-dials {
+    display: grid;
+    gap: 4px;
+}
+
+.swb-dial {
+    display: grid;
+    grid-template-columns: minmax(52px, auto) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 6px;
+}
+
+.swb-dial-name {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.swb-dial-value {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    white-space: nowrap;
+    color: var(--text);
+}
+
+.swb-bar {
+    display: block;
+    height: 8px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    overflow: hidden;
+}
+
+.swb-bar-fill {
+    display: block;
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.16s ease;
+}
+
+.swb-dial.is-hot .swb-bar-fill {
+    background: var(--danger-text);
+}
+
+.swb-dial.is-hot .swb-dial-value {
+    color: var(--danger-text);
+    font-weight: 800;
+}
+
+/* The arc lamp is an instrument, so it reads as a lamp and as a word. */
+.swb-dial.is-lit .swb-dial-value {
+    color: var(--accent-2);
+    font-weight: 800;
+}
+
+.swb-dial.is-lit .swb-bar {
+    border-color: var(--accent-2);
+}
+
+.swb-reading,
+.swb-order {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    line-height: 1.6;
+    color: var(--text);
+    overflow-wrap: anywhere;
+}
+
+/* The desk's half of the work order: the one line the other operator needs. */
+.swb-order {
+    padding: 6px 8px;
+    border-radius: 10px;
+    border-left: 3px solid var(--accent-2);
+    background: var(--panel-bg);
+    color: var(--text);
+    font-family: var(--font-main);
+    font-size: 0.72rem;
+}
+
+[data-theme="light"] .swb-order {
+    background: #eef2f7;
+}
+
+.swb-rack {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+}
+
+.swb-key {
+    display: grid;
+    gap: 1px;
+    place-items: center;
+    min-height: 46px;
+    padding: 5px 4px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--panel-bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.72rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+[data-theme="light"] .swb-key {
+    background: #ffffff;
+}
+
+.swb-key:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.swb-key-cap {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+}
+
+.swb-key-name {
+    line-height: 1.15;
+    text-align: center;
+}
+
+.swb-key-state {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    color: var(--text-secondary);
+}
+
+/* The rack finger the arrows walk: outline as well as colour. */
+.swb-key.is-pointed {
+    border-color: var(--accent);
+    border-width: 2px;
+    box-shadow: var(--focus-ring);
+}
+
+.swb-key.is-pointed .swb-key-cap {
+    color: var(--accent-text);
+}
+
+.swb-key-hold {
+    grid-column: 1 / -1;
+    border-style: dashed;
+    font-weight: 600;
+}
+
+.swb-page-title {
+    margin: 2px 0 0;
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.swb-page {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 0.68rem;
+    line-height: 1.55;
+    color: var(--text);
+}
+
+.swb-page li + li {
+    margin-top: 3px;
+}
+
+.swb-btn-swap {
+    min-height: 44px;
+    padding: 10px 12px;
+}
+
+.swb-btn-swap:disabled {
+    color: var(--text-secondary);
+    cursor: not-allowed;
+}
+
+@media (max-width: 720px) {
+    .swb-desks {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+[data-motion="off"] .swb-bar-fill {
+    transition: none;
+}
+
+[data-motion="off"] .swb-key.is-pointed,
+[data-motion="off"] .swb-desk.is-seated,
+[data-motion="off"] .swb-key:focus-visible {
+    box-shadow: none;
+    border-color: var(--accent);
+}
+
+/* game-tiny-blacksmith (registry game) */
+/* Tiny Blacksmith - the forge rail the hammer times itself against, and the
+ * anvil that shows how far each position still has to come down. */
+.tbs-forge {
+    display: grid;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+}
+
+.tbs-railtitle {
+    margin: 0;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+/* The pyrometer. Every window is positioned in percent of the 0-100 scale by
+ * the module, so the rail only has to keep the slots stacked in one order. */
+.tbs-rail {
+    position: relative;
+    height: 30px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-soft);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tbs-rail.is-open {
+    border-color: var(--accent-2);
+    box-shadow: var(--focus-ring);
+}
+
+.tbs-rail.is-burn {
+    border-color: var(--danger-text);
+}
+
+.tbs-rail.is-cold {
+    border-color: var(--accent);
+}
+
+.tbs-cold,
+.tbs-burn,
+.tbs-band,
+.tbs-sweet,
+.tbs-quench {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+.tbs-cold {
+    background: var(--accent);
+    opacity: 0.08;
+}
+
+.tbs-burn {
+    background: var(--danger-text);
+    opacity: 0.16;
+}
+
+.tbs-band {
+    border-left: 1px solid var(--accent-2);
+    border-right: 1px solid var(--accent-2);
+}
+
+/* The wash is the soft part and the edges are the sharp part, so the window
+ * stays readable even when it is only a handful of units wide. */
+.tbs-band::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--accent-2);
+    opacity: 0.18;
+}
+
+.tbs-sweet {
+    background: var(--accent-2);
+    opacity: 0.5;
+}
+
+.tbs-quench {
+    top: 4px;
+    bottom: 4px;
+    border: 1px dashed var(--accent);
+    border-radius: 6px;
+}
+
+.tbs-needle {
+    position: absolute;
+    top: -2px;
+    bottom: -2px;
+    width: 3px;
+    margin-left: -1.5px;
+    border-radius: 2px;
+    background: var(--text);
+    box-shadow: 0 0 10px var(--accent-2);
+    pointer-events: none;
+}
+
+.tbs-lines {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 12px;
+}
+
+/* The word is the timing answer in words, so the band is never colour alone. */
+.tbs-word {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.tbs-legend {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+}
+
+/* Five hammer positions: a bar of metal with its target drawn across it. */
+.tbs-anvil {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.tbs-spot {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 9px 8px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--panel-bg);
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tbs-spot:hover {
+    border-color: var(--accent);
+}
+
+.tbs-spot:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.tbs-spot.is-selected {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.tbs-spot.is-true {
+    border-color: var(--accent-2);
+}
+
+.tbs-spot.is-over {
+    border-style: dashed;
+    border-color: var(--danger-text);
+}
+
+.tbs-spot-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.tbs-spot-name {
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.tbs-hot {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 5px;
+}
+
+.tbs-gauge {
+    position: relative;
+    height: 52px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-soft);
+    overflow: hidden;
+}
+
+.tbs-stock {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0;
+    border-radius: 0 0 7px 7px;
+    background: linear-gradient(180deg, var(--accent-2), var(--accent));
+    opacity: 0.85;
+    transition: height 0.12s linear;
+}
+
+.tbs-spot.is-true .tbs-stock {
+    background: var(--accent);
+}
+
+.tbs-spot.is-over .tbs-stock {
+    background: var(--danger-text);
+}
+
+.tbs-mark {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-top: 2px dashed var(--text);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.tbs-read {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.tbs-spot.is-true .tbs-read {
+    color: var(--text);
+}
+
+/* The two secondary actions are the quiet pair beside the hammer, built on the
+ * shared chip recipe. The quench keeps the same dashed cyan cue as its window
+ * on the rail, so the button and the rule it obeys read as one thing. */
+.tbs-quench-btn,
+.tbs-new-btn {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font: inherit;
+    white-space: nowrap;
+}
+
+.tbs-quench-btn {
+    border-style: dashed;
+    border-color: var(--accent);
+}
+
+.tbs-quench-btn:hover,
+.tbs-new-btn:hover {
+    background: var(--panel-bg);
+    border-color: var(--accent);
+}
+
+.tbs-quench-btn:focus-visible,
+.tbs-new-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+/* One press, one blow: the hammer keeps the shared primary paint and only pins
+ * its label so the row does not jump while the blow count changes. */
+.tbs-strike {
+    white-space: nowrap;
+}
+
+/* Light theme: the panels lift off the page, so the forge plate and the cards
+ * take the softer surface instead of the dark one. */
+[data-theme="light"] .tbs-forge {
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .tbs-spot {
+    background: var(--panel-bg);
+}
+
+[data-motion="off"] .tbs-rail,
+[data-motion="off"] .tbs-spot,
+[data-motion="off"] .tbs-stock {
+    transition: none !important;
+}
+
+@media (max-width: 720px) {
+    .tbs-anvil {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .tbs-gauge {
+        height: 44px;
+    }
+}
+
+/* game-whale-parliament (registry game) */
+/* Whale Parliament: the hall, the corridor board and the offer cards. Every
+ * stance, wish and debt prints as a word plus a number, so nothing here carries
+ * meaning by colour alone - the accents only group related rows. */
+.whp-board {
+    margin-top: 12px;
+    padding: 10px;
+    display: grid;
+    gap: 10px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+    outline: none;
+}
+
+.whp-board:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .whp-board {
+    background: var(--panel-bg);
+    border-color: var(--surface-soft);
+}
+
+.whp-sec {
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-soft);
+}
+
+[data-theme="light"] .whp-sec {
+    background: var(--panel-bg);
+}
+
+.whp-title {
+    margin: 0 0 6px;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.whp-body {
+    display: grid;
+    gap: 4px;
+}
+
+/* Layout per section: the floor, corridors and hall are lists; the offers wrap. */
+.whp-floor .whp-body,
+.whp-lanes .whp-body,
+.whp-hall .whp-body {
+    gap: 3px;
+}
+
+.whp-hand .whp-body {
+    grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+    gap: 6px;
+}
+
+.whp-floor-hall {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+.whp-floor-line {
+    margin: 0;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    line-height: 1.5;
+}
+
+[data-theme="light"] .whp-floor-line {
+    color: var(--text-secondary);
+}
+
+/* Corridors: the water itself, then who may pass it. */
+.whp-lane {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 6px;
+    padding: 4px 6px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    line-height: 1.45;
+}
+
+[data-theme="light"] .whp-lane {
+    background: var(--surface-soft);
+}
+
+.whp-lane-name {
+    color: var(--text);
+    font-weight: 700;
+}
+
+.whp-lane-state {
+    color: var(--accent);
+    font-weight: 700;
+}
+
+.whp-lane-fits {
+    color: var(--text-secondary);
+}
+
+/* The hall: one row per pod, with its trust drawn as a bar next to its number. */
+.whp-fac {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+    gap: 6px;
+    align-items: center;
+    padding: 6px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-bg);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    line-height: 1.4;
+}
+
+[data-theme="light"] .whp-fac {
+    background: var(--surface-soft);
+}
+
+.whp-fac.is-out {
+    border-style: dashed;
+    color: var(--danger-text);
+}
+
+.whp-fac-name {
+    color: var(--text);
+    font-weight: 800;
+}
+
+.whp-fac-stance {
+    color: var(--accent-2);
+    font-weight: 700;
+}
+
+.whp-fac-trust,
+.whp-fac-owed,
+.whp-fac-pledge,
+.whp-fac-grudge {
+    color: var(--text-secondary);
+}
+
+.whp-fac-grudge {
+    color: var(--danger-text);
+}
+
+.whp-bar {
+    grid-column: 1 / -1;
+    display: block;
+    height: 5px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    overflow: hidden;
+}
+
+[data-theme="light"] .whp-bar {
+    background: var(--panel-strong);
+}
+
+.whp-bar-fill {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.15s linear;
+}
+
+.whp-prio {
+    margin: 0 0 4px;
+    padding-left: 6px;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.62rem;
+    line-height: 1.5;
+}
+
+/* Offers: fixed cards, chosen with the mouse or the number keys. */
+.whp-card {
+    display: grid;
+    gap: 2px;
+    padding: 7px 8px;
+    text-align: left;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-bg);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    cursor: pointer;
+}
+
+[data-theme="light"] .whp-card {
+    background: var(--surface-soft);
+}
+
+.whp-card:hover {
+    border-color: var(--accent);
+}
+
+.whp-card:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.whp-card.is-cursor {
+    border-color: var(--accent);
+}
+
+.whp-card.is-chosen {
+    border-color: var(--accent-2);
+    background: var(--panel-strong);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .whp-card.is-chosen {
+    background: var(--surface-soft);
+}
+
+.whp-card.is-blocked,
+.whp-card:disabled {
+    cursor: not-allowed;
+    color: var(--text-secondary);
+    border-style: dashed;
+    opacity: 0.7;
+}
+
+[data-theme="light"] .whp-card:disabled {
+    background: var(--panel-bg);
+}
+
+.whp-card-key {
+    color: var(--accent);
+    font-weight: 800;
+}
+
+.whp-card-text {
+    color: var(--text);
+}
+
+.whp-card-cost {
+    color: var(--text-secondary);
+    font-size: 0.6rem;
+}
+
+.whp-card.is-blocked .whp-card-cost {
+    color: var(--danger-text);
+}
+
+.whp-side {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.whp-btn {
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-bg);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    cursor: pointer;
+}
+
+[data-theme="light"] .whp-btn {
+    background: var(--surface-soft);
+}
+
+.whp-btn:hover {
+    border-color: var(--accent);
+}
+
+.whp-btn:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.whp-clear:hover {
+    background: var(--surface-soft);
+}
+
+/* Restarting throws away the session, so it is dressed as the risky action. */
+.whp-restart {
+    border-color: var(--danger-text);
+}
+
+.whp-restart:hover {
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .whp-restart:hover {
+    background: var(--surface-soft);
+}
+
+/* Motion off: the hall stops leaning on the bar animation and keeps the numbers. */
+[data-motion="off"] .whp-bar-fill {
+    transition: none;
+}
+
+/* game-borrowed-bodies (registry game) */
+/* Borrowed Bodies */
+.brb-grid {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 3px;
+    margin-top: 12px;
+    padding: 8px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+}
+
+.brb-cell {
+    aspect-ratio: 1;
+    min-height: 28px;
+    padding: 0;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+        border-color 0.16s ease,
+        transform 0.16s ease;
+}
+
+.brb-cell.is-wall {
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+    cursor: default;
+}
+
+.brb-cell.is-gap {
+    border-style: dashed;
+    border-color: var(--danger-text);
+    color: var(--danger-text);
+}
+
+.brb-cell.is-water {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.brb-cell.is-pipe,
+.brb-cell.is-perch {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+}
+
+.brb-cell.is-latch {
+    border-style: dashed;
+    border-color: var(--text-secondary);
+    color: var(--text-secondary);
+}
+
+.brb-cell.is-open {
+    border-color: var(--success-text, var(--accent));
+    color: var(--accent);
+}
+
+.brb-cell.brb-crate {
+    background: var(--panel-bg);
+    color: var(--text);
+}
+
+.brb-cell.brb-exit {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+    font-weight: 800;
+}
+
+.brb-cell.brb-here {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+    color: var(--text);
+    font-weight: 800;
+}
+
+.brb-cell:hover:not(.is-wall) {
+    transform: translateY(-1px);
+}
+
+.brb-cell:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.brb-rules {
+    display: grid;
+    gap: 4px;
+    margin-top: 10px;
+}
+
+.brb-rule {
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px dashed var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-size: 0.76rem;
+    line-height: 1.4;
+}
+
+.brb-rule.brb-active {
+    border-style: solid;
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.brb-preview {
+    min-height: 2.6em;
+    margin-top: 8px;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.brb-btn {
+    min-height: 40px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.brb-btn:hover {
+    border-color: rgba(0, 242, 255, 0.45);
+}
+
+.brb-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.brb-body-moth,
+.brb-body-crab,
+.brb-body-eel {
+    color: var(--text);
+    font-weight: 800;
+}
+
+[data-theme="light"] .brb-grid,
+[data-theme="light"] .brb-rule,
+[data-theme="light"] .brb-btn {
+    background: rgba(255, 255, 255, 0.72);
+}
+
+[data-motion="off"] .brb-cell {
+    transition: none !important;
+}
+
+[data-motion="off"] .brb-cell:hover:not(.is-wall) {
+    transform: none !important;
+}
+
+@media (max-width: 360px) {
+    .brb-cell {
+        font-size: 0.7rem;
+    }
+}
+
+/* game-one-minute-mayor (registry game) */
+/* One-Minute Mayor - the six-by-six town plate, the blueprint table and the
+ * transparent ledger. Every state the plate can be in also prints a character
+ * (lot name, H W T R G, ~ for water, diamond for the landmark, dagger for foul
+ * ground), so no cell relies on a colour alone to explain itself. */
+.omv-board {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 3px;
+    margin-top: 12px;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+}
+
+.omv-cell {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    align-items: center;
+    justify-items: center;
+    aspect-ratio: 1;
+    min-height: 44px;
+    padding: 2px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    line-height: 1;
+    cursor: pointer;
+    transition: border-color 0.14s ease;
+}
+
+.omv-cell:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.omv-cell-tag {
+    align-self: start;
+    font-size: 0.55rem;
+    color: var(--text-secondary);
+}
+
+.omv-cell-mark {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.omv-cell-num {
+    align-self: end;
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+}
+
+/* The cursor is the keyboard player's cell: a ring plus the accent rule, and the
+ * lot name is printed whether or not the ring is visible. */
+.omv-cell.is-cursor {
+    border-color: var(--accent);
+    background: var(--panel-bg);
+    box-shadow: var(--focus-ring);
+}
+
+/* Water and the listed landmark cannot be built on, and both say so in a glyph. */
+.omv-cell.is-blocked {
+    border-style: dashed;
+    background: var(--panel-bg);
+    cursor: not-allowed;
+}
+
+.omv-cell.is-blocked .omv-cell-mark {
+    color: var(--accent);
+}
+
+.omv-cell.is-land {
+    border-style: double;
+    border-width: 3px;
+    cursor: not-allowed;
+}
+
+.omv-cell.is-land .omv-cell-mark {
+    color: var(--accent-2);
+}
+
+/* Foul ground is a dashed rule plus the dagger, never only a shade of red. */
+.omv-cell.is-foul {
+    border-color: var(--danger-text);
+    border-style: dashed;
+}
+
+.omv-cell.is-foul .omv-cell-mark {
+    color: var(--danger-text);
+}
+
+/* Zoning stripes: each blueprint gets its own edge mark as well as its letter. */
+.omv-cell.is-work {
+    border-left: 4px solid var(--danger-text);
+}
+
+.omv-cell.is-tap {
+    border-left: 4px dotted var(--accent);
+}
+
+.omv-cell.is-stop {
+    border-left: 4px dashed var(--accent-2);
+}
+
+.omv-cell.is-green {
+    border-left: 4px solid var(--accent-2);
+}
+
+.omv-cell.is-home {
+    border-left: 4px solid var(--accent);
+}
+
+/* The blueprint table doubles as the rules legend: name, letter, and the exact
+ * help and hurt the ledger will charge for it. */
+.omv-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.omv-tools-label {
+    width: 100%;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.omv-blue,
+.omv-undo {
+    display: grid;
+    gap: 3px;
+    padding: 7px 9px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.14s ease;
+}
+
+.omv-blue {
+    flex: 1 1 148px;
+}
+
+.omv-blue:hover,
+.omv-undo:hover {
+    border-color: var(--accent);
+}
+
+.omv-blue:focus-visible,
+.omv-undo:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.omv-blue.is-on {
+    border-color: var(--accent);
+    background: var(--panel-bg);
+    box-shadow: var(--focus-ring);
+}
+
+.omv-blue-glyph {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.omv-blue-name {
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: var(--text);
+}
+
+.omv-blue-rule {
+    font-size: 0.58rem;
+    line-height: 1.4;
+    color: var(--text-secondary);
+}
+
+.omv-blue:disabled,
+.omv-undo:disabled {
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.omv-undo {
+    flex: 0 0 auto;
+    align-self: start;
+    font-weight: 700;
+    font-size: 0.78rem;
+}
+
+/* The ledger is the score with its working shown: one line per component, the
+ * sentence on the left, its digits on the right. */
+.omv-ledger {
+    display: grid;
+    gap: 3px;
+    margin-top: 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+    font-family: "JetBrains Mono", monospace;
+}
+
+.omv-ledger-head {
+    margin: 0;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.omv-line {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 8px;
+    align-items: baseline;
+    margin: 0;
+    font-size: 0.66rem;
+    line-height: 1.45;
+}
+
+.omv-line-text {
+    color: var(--text-secondary);
+}
+
+.omv-line-sum {
+    min-width: 3.2rem;
+    font-weight: 800;
+    text-align: right;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+}
+
+.omv-needs {
+    font-weight: 700;
+    color: var(--text);
+}
+
+.omv-preview {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 4px 0 4px 8px;
+    border-left: 2px dashed var(--accent);
+}
+
+.omv-line.is-quiet {
+    opacity: 0.82;
+    font-style: italic;
+}
+
+.omv-lines {
+    display: grid;
+    gap: 2px;
+}
+
+.omv-total {
+    margin: 4px 0 0;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    font-weight: 800;
+    color: var(--text);
+}
+
+[data-theme="light"] .omv-board {
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .omv-cell {
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .omv-cell.is-cursor,
+[data-theme="light"] .omv-cell.is-blocked {
+    background: var(--surface-soft);
+}
+
+[data-theme="light"] .omv-blue,
+[data-theme="light"] .omv-undo {
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .omv-blue.is-on {
+    background: var(--surface-soft);
+}
+
+[data-theme="light"] .omv-ledger {
+    background: var(--panel-strong);
+}
+
+[data-motion="off"] .omv-cell,
+[data-motion="off"] .omv-blue,
+[data-motion="off"] .omv-undo {
+    transition: none;
+}
+
+@media (max-width: 560px) {
+    .omv-cell {
+        min-height: 38px;
+    }
+
+    .omv-cell-mark {
+        font-size: 0.9rem;
+    }
+
+    .omv-blue {
+        flex: 1 1 120px;
+    }
+
+    .omv-line {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .omv-line-sum {
+        text-align: left;
+    }
+}
+
+/* game-shadow-puppeteer (registry game) */
+/* Shadow Puppeteer - the wall canvas, the lever row and the fit readout.
+   Every number the player chases is printed as a digit, so no rule here
+   leans on hue alone; the is-low tag only rides next to the fit figure. */
+.shp-canvas {
+    display: block;
+    width: 100%;
+    max-width: 340px;
+    height: auto;
+    margin: 0 auto;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--panel-bg);
+    outline: none;
+    touch-action: none;
+}
+
+.shp-canvas:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .shp-canvas {
+    background: var(--panel-strong);
+    border-color: var(--surface-soft);
+}
+
+/* The lever picker: four small mono buttons, one per control. */
+.shp-levers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.shp-lever {
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    cursor: pointer;
+}
+
+.shp-lever:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* The picked lever wears a box and a weight, not just a tint. */
+.shp-lever.is-on {
+    border-color: var(--accent);
+    border-width: 2px;
+    background: var(--panel-strong);
+    color: var(--accent-2);
+    font-weight: 700;
+}
+
+[data-theme="light"] .shp-lever {
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .shp-lever.is-on {
+    background: var(--panel-strong);
+}
+
+/* The fit readout: fit percent, the two shadow segment lengths and the
+   shear angle - digits first, colour never alone. */
+.shp-readout {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(140px, 1fr));
+    gap: 6px 12px;
+    margin-top: 12px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .shp-readout {
+    background: var(--panel-strong);
+    border-color: var(--surface-soft);
+}
+
+.shp-stat {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 0;
+}
+
+.shp-cap {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.shp-val {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.86rem;
+    color: var(--text);
+}
+
+.shp-fit {
+    font-size: 1rem;
+    color: var(--accent-2);
+}
+
+/* Below the lock bar the fit figure also drops to the danger ink; the
+   number itself changes too, so the news is never colour-only. */
+.shp-fit.is-low {
+    color: var(--danger-text);
+    border-bottom: 1px dashed var(--danger-text);
+}
+
+@media (max-width: 480px) {
+    .shp-readout {
+        grid-template-columns: 1fr;
+    }
+}
+
+[data-motion="off"] .shp-lever,
+[data-motion="off"] .shp-canvas {
+    transition: none;
+}
+
+/* game-ocean-archaeologist (registry game) */
+/* Ocean Archaeologist - the survey plate, the tray and the wreck plan.
+ * Every hook here is an ocn- class the module builds with createElement, and
+ * every colour is a theme token, so the dark plate, the berth chips and the
+ * verdict borders read the same in the dark drawer and in the light one. The
+ * dive is turn-driven and the plan is a form, so nothing on this sheet animates
+ * on a timer: only state changes move. */
+
+/* The plate stays dark in both themes: the survey marks, the lift line and the
+ * metre ruler are drawn in pale colours and only read on the wet dark. */
+.ocn-canvas {
+    display: block;
+    width: 100%;
+    max-width: 460px;
+    height: auto;
+    margin: 12px auto 0;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+    outline: none;
+    touch-action: none;
+    cursor: crosshair;
+}
+
+.ocn-canvas:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .ocn-canvas {
+    border-color: var(--surface-soft);
+}
+
+[data-motion="off"] .ocn-canvas {
+    cursor: default;
+}
+
+/* --- the second act: tray, berths, and the evidence line ----------------- */
+.ocn-build {
+    width: 100%;
+    max-width: 460px;
+    margin: 12px auto 0;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .ocn-build {
+    background: var(--surface-soft);
+}
+
+.ocn-build[hidden] {
+    display: none;
+}
+
+.ocn-head {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.86rem;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.ocn-sub {
+    margin: 10px 0 4px;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.ocn-list {
+    display: grid;
+    gap: 6px;
+}
+
+/* A chip is a real button, so the whole second act is reachable with Tab and
+ * Enter. The state rides on the border style as well as the colour, and the chip
+ * text already names it in words. */
+.ocn-chip {
+    display: block;
+    min-height: 40px;
+    padding: 7px 9px;
+    border: 1px dashed var(--border);
+    border-radius: 10px;
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: left;
+    cursor: pointer;
+}
+
+[data-theme="light"] .ocn-chip {
+    background: var(--panel-bg);
+}
+
+.ocn-chip:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.ocn-chip:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* In hand: solid edge plus the accent, so the selected fragment is told apart by
+ * shape before colour. */
+.ocn-chip-sel {
+    border-style: solid;
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+/* Set on the plan: a closed solid join, empty berths stay dashed. */
+.ocn-chip-set {
+    border-style: solid;
+    border-color: var(--border);
+    color: var(--text);
+}
+
+.ocn-chip-empty {
+    border-style: dashed;
+}
+
+/* Recovered with a record: a double edge, the strongest shape on the sheet. */
+.ocn-chip-doc {
+    border-style: double;
+    border-width: 3px;
+    border-color: var(--accent-2);
+    color: var(--text);
+}
+
+.ocn-chip-bare {
+    border-style: dashed;
+}
+
+/* Verdicts after filing. Each one also changes the border style, and the chip
+ * text names the verdict, so nothing here is colour-only. */
+.ocn-chip-ok {
+    border-style: double;
+    border-width: 3px;
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.ocn-chip-mid {
+    border-style: solid;
+    border-color: var(--accent-2);
+    color: var(--text);
+}
+
+.ocn-chip-soft {
+    border-style: solid;
+    border-color: var(--border);
+    color: var(--text-secondary);
+}
+
+.ocn-chip-bad {
+    border-style: dotted;
+    border-color: var(--danger-text);
+    color: var(--danger-text);
+}
+
+/* The evidence line: what the reading fits, and what it cannot prove. */
+.ocn-note {
+    margin: 10px 0 0;
+    padding: 7px 9px;
+    border-left: 3px solid var(--accent-2);
+    border-radius: 8px;
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    line-height: 1.5;
+}
+
+[data-theme="light"] .ocn-note {
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+}
+
+/* --- action row: four dive tools under the plate, then the file button --- */
+.ocn-actions {
+    flex-wrap: wrap;
+}
+
+.ocn-tool {
+    flex: 1 1 84px;
+    min-height: 40px;
+    padding: 8px 10px;
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.ocn-tool:disabled {
+    color: var(--text-secondary);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.ocn-primary {
+    white-space: normal;
+}
+
+[data-motion="off"] .ocn-tool,
+[data-motion="off"] .ocn-chip {
+    transition: none !important;
+}
+
+/* game-lost-language (registry game) */
+/* Lost Language: the decipherment bench. The rubbings, the notebook and every
+ * verdict are words, glyphs and digits in the DOM - the ✓ mark, the dashed edge of
+ * an unchecked guess and the sentence itself all say the same thing - so these
+ * rules only add emphasis, and the light theme swaps the token variables and
+ * nothing else. */
+.lng-legend {
+    margin: 12px 0 0;
+    padding: 8px 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-2);
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    line-height: 1.55;
+}
+
+.lng-scenes {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.lng-slot {
+    padding: 8px 10px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+}
+
+/* Sealed chips keep a dashed edge, read chips a solid one: the state is in the
+ * button words too, so the border is a marker and never the message. */
+.lng-chip {
+    width: 100%;
+    min-height: 40px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px dashed var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: left;
+    cursor: pointer;
+}
+
+.lng-chip:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.lng-chip:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.lng-chip.lng-chip-open {
+    border-style: solid;
+    border-color: var(--accent);
+    background: var(--panel-bg);
+    color: var(--text);
+    cursor: default;
+}
+
+[data-theme="light"] .lng-chip.lng-chip-open {
+    background: var(--panel-strong);
+}
+
+.lng-scene {
+    margin-top: 8px;
+}
+
+.lng-scene-text {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.76rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+/* The inscription is the carved side of a rubbing, so it is set in the script
+ * face and in the second accent - the picture line above it stays plain. */
+.lng-scene-mark {
+    margin: 6px 0 0;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--accent-2);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1.5;
+}
+
+[data-theme="light"] .lng-scene-mark {
+    background: var(--panel-bg);
+}
+
+.lng-note {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .lng-note {
+    background: var(--panel-bg);
+}
+
+.lng-note-title {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.lng-section {
+    margin: 12px 0 6px;
+    color: var(--accent-2);
+    font-size: 0.66rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.lng-glosses {
+    display: grid;
+    gap: 6px;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+
+.lng-word-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    padding: 6px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+}
+
+.lng-word {
+    flex: 0 0 auto;
+    min-width: 54px;
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+}
+
+.lng-gloss {
+    flex: 1 1 96px;
+    min-height: 34px;
+    padding: 4px 6px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--panel-bg);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.7rem;
+    line-height: 1.4;
+}
+
+.lng-gloss:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.lng-grammar {
+    display: grid;
+    gap: 10px;
+}
+
+.lng-rule {
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .lng-rule {
+    background: var(--surface-soft);
+}
+
+.lng-rule-title {
+    margin: 0 0 6px;
+    color: var(--text);
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.lng-ruleopts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.lng-ruleopt {
+    flex: 1 1 210px;
+    min-height: 44px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px dashed var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: left;
+    cursor: pointer;
+}
+
+.lng-ruleopt:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.lng-ruleopt:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.lng-ruleopt.lng-ruleopt-on {
+    border-style: solid;
+    border-color: var(--accent);
+    background: var(--panel-strong);
+    color: var(--text);
+}
+
+[data-theme="light"] .lng-ruleopt.lng-ruleopt-on {
+    background: var(--panel-bg);
+}
+
+.lng-test {
+    display: grid;
+    gap: 10px;
+}
+
+.lng-item {
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+}
+
+.lng-item-text {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.76rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.lng-itemopts {
+    display: grid;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.lng-itemopt {
+    min-height: 40px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px dashed var(--border);
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.45;
+    text-align: left;
+    cursor: pointer;
+}
+
+.lng-itemopt:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.lng-itemopt:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.lng-itemopt.lng-itemopt-on {
+    border-style: solid;
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+/* Every verdict is spelled out in words first; the border style and colour only
+ * echo what the line already says. */
+.lng-why {
+    min-height: 1.1em;
+    margin: 6px 0 0;
+    color: var(--text-secondary);
+    font-size: 0.66rem;
+    line-height: 1.55;
+}
+
+.lng-why.lng-why-ok {
+    color: var(--accent);
+}
+
+.lng-why.lng-why-bad {
+    padding-left: 8px;
+    border-left: 3px solid var(--danger-text);
+    color: var(--danger-text);
+}
+
+/* game-pinball-courier (registry game) */
+/* Pinball Courier - the table and the route read-out. */
+.pbc-canvas {
+    display: block;
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+    margin-top: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+    outline: none;
+    touch-action: none;
+    cursor: pointer;
+}
+
+.pbc-canvas:focus-visible {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+/* The table keeps a night plate in both themes: the rail, the shafts and the
+ * open gate only read against a dark felt. */
+[data-theme="light"] .pbc-canvas {
+    border-color: var(--surface-soft);
+    background: var(--panel-bg);
+}
+
+[data-motion="off"] .pbc-canvas {
+    cursor: default;
+}
+
+/* The route panel is the puzzle's status line, so it is words and digits only
+ * and never a colour the player has to decode. */
+.pbc-route {
+    display: grid;
+    gap: 6px;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+}
+
+.pbc-route-line {
+    margin: 0;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.pbc-route-gate {
+    color: var(--text);
+    font-weight: 700;
+}
+
+.pbc-route-stops {
+    color: var(--accent-text);
+}
+
+.pbc-route-event {
+    padding-top: 6px;
+    border-top: 1px dashed var(--border);
+    color: var(--text);
+}
+
+[data-theme="light"] .pbc-route {
+    background: var(--panel-bg);
+}
+
+@media (max-width: 360px) {
+    .pbc-route-line {
+        font-size: 0.66rem;
+    }
+}
+
+/* game-tea-house (registry game) */
+/* Tea House at Midnight - the three-window counter: the chair, the pot shelf
+ * and the guest notebook. Everything is read as words and digits first, so no
+ * state is carried by colour alone. */
+.tea-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.tea-guest,
+.tea-counter,
+.tea-tray,
+.tea-note {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-soft);
+}
+
+.tea-guest {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+}
+
+.tea-counter {
+    display: grid;
+    gap: 4px;
+    align-content: start;
+}
+
+.tea-head {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.tea-guest-name {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--accent);
+}
+
+.tea-guest-rap,
+.tea-counter-line,
+.tea-log-line,
+.tea-note-line,
+.tea-note-sub,
+.tea-guest-sub,
+.tea-guest-mood,
+.tea-chair,
+.tea-note-empty {
+    margin: 0;
+    font-size: 0.76rem;
+    line-height: 1.4;
+    color: var(--text);
+}
+
+.tea-guest-mood {
+    color: var(--accent-2);
+}
+
+.tea-mood-hush,
+.tea-chair,
+.tea-note-empty {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.tea-guest-sub,
+.tea-note-sub {
+    color: var(--text-secondary);
+}
+
+.tea-note-sub.tea-note-grudge {
+    color: var(--accent-2);
+}
+
+/* The notebook reads as one card per guest; the proofed rumour stands out
+ * with a left rule, never with colour alone. */
+.tea-note {
+    display: grid;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.tea-note-guest {
+    display: grid;
+    gap: 3px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-strong);
+}
+
+.tea-note-line {
+    font-weight: 700;
+}
+
+.tea-note-line.tea-note-proof {
+    border-left: 3px solid var(--success-text);
+    padding-left: 8px;
+}
+
+.tea-note-line.tea-note-rumour,
+.tea-note-line.tea-note-second {
+    border-left: 3px solid var(--accent-2);
+    padding-left: 8px;
+}
+
+/* The tray is the one place a real tea colour appears: a filled cup keeps its
+ * warm rim, a poured one is struck through and dimmed. */
+.tea-tray {
+    display: grid;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.tea-cup {
+    justify-content: flex-start;
+    padding: 8px 10px;
+    text-align: left;
+    font-size: 0.76rem;
+    font-weight: 700;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-strong);
+    color: var(--text);
+}
+
+.tea-cup:hover {
+    border-color: var(--accent);
+}
+
+.tea-cup:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.tea-cup.tea-cup-done {
+    color: var(--text-secondary);
+    text-decoration: line-through;
+    background: var(--surface-soft);
+}
+
+.tea-btn {
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--panel-strong);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.tea-btn:hover {
+    border-color: var(--accent);
+}
+
+.tea-btn:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.tea-guest .tea-btn {
+    justify-self: start;
+    margin-top: 2px;
+}
+
+.tea-btn[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: default;
+}
+
+.tea-btn-seat {
+    border-color: var(--accent);
+}
+
+.tea-btn-listen {
+    border-color: var(--accent-2);
+}
+
+[data-theme="light"] .tea-cup,
+[data-theme="light"] .tea-btn,
+[data-theme="light"] .tea-note-guest {
+    background: rgba(255, 255, 255, 0.72);
+}
+
+[data-motion="off"] .tea-btn,
+[data-motion="off"] .tea-cup {
+    transition: none !important;
+}
+
+@media (max-width: 720px) {
+    .tea-stage {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+

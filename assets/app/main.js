@@ -76,7 +76,14 @@
   var initGlyphFourGame = App.initGlyphFourGame;
   var initGlyphTowerGame = App.initGlyphTowerGame;
   var initGlyphFleetGame = App.initGlyphFleetGame;
+  var initNimGame = App.initNimGame;
+  var initDotsGame = App.initDotsGame;
+  var initRepublicQuizGame = App.initRepublicQuizGame;
+  var initMancalaGame = App.initMancalaGame;
+  var initBlackjackGame = App.initBlackjackGame;
+  var initRoofGardenGame = App.initRoofGardenGame;
   var initGameGuides = App.initGameGuides;
+  var initRegistryGames = App.initRegistryGames;
   var initPet = App.initPet;
   document.addEventListener("DOMContentLoaded", function () {
     applyI18nDom();
@@ -131,6 +138,13 @@
     initGlyphFourGame();
     initGlyphTowerGame();
     initGlyphFleetGame();
+    initNimGame();
+    initDotsGame();
+    initRepublicQuizGame();
+    initMancalaGame();
+    initBlackjackGame();
+    initRoofGardenGame();
+    initRegistryGames();
     initGameGuides();
     initCounters();
     initUtilityActions();

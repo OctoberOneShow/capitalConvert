@@ -30,9 +30,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/styles/base.css?v=42">
-    <link rel="stylesheet" href="assets/styles/games.css?v=42">
-    <link rel="stylesheet" href="assets/styles/pet.css?v=42">
+    <link rel="stylesheet" href="assets/styles/base.css?v=56">
+    <link rel="stylesheet" href="assets/styles/games.css?v=56">
+    <link rel="stylesheet" href="assets/styles/pet.css?v=56">
 </head>
 <body>
     <div class="topbar" role="banner">
@@ -287,6 +287,12 @@
                 <button class="game-tab" id="gameTabGlyphGlide" role="tab" aria-selected="false" aria-controls="gamePanelGlyphGlide" tabindex="-1" type="button" data-i18n="tabGlyphGlide">Glyph Glide</button>
                 <button class="game-tab" id="gameTabGlyphFour" role="tab" aria-selected="false" aria-controls="gamePanelGlyphFour" tabindex="-1" type="button" data-i18n="tabGlyphFour">Glyph Four</button>
                 <button class="game-tab" id="gameTabGlyphTower" role="tab" aria-selected="false" aria-controls="gamePanelGlyphTower" tabindex="-1" type="button" data-i18n="tabGlyphTower">Glyph Tower</button>
+                <button class="game-tab" id="gameTabNim" role="tab" aria-selected="false" aria-controls="gamePanelNim" tabindex="-1" type="button" data-i18n="tabNim">Ember Sticks</button>
+                <button class="game-tab" id="gameTabKalah" role="tab" aria-selected="false" aria-controls="gamePanelKalah" tabindex="-1" type="button" data-i18n="tabKalah">Kalah Row</button>
+                <button class="game-tab" id="gameTabBlackjack" role="tab" aria-selected="false" aria-controls="gamePanelBlackjack" tabindex="-1" type="button" data-i18n="tabBlackjack">Twenty-One Parlor</button>
+                <button class="game-tab" id="gameTabGarden" role="tab" aria-selected="false" aria-controls="gamePanelGarden" tabindex="-1" type="button" data-i18n="tabGarden">Roof Garden</button>
+                <button class="game-tab" id="gameTabRepublic" role="tab" aria-selected="false" aria-controls="gamePanelRepublic" tabindex="-1" type="button" data-i18n="tabRepublic">Republic Rewind</button>
+                <button class="game-tab" id="gameTabDots" role="tab" aria-selected="false" aria-controls="gamePanelDots" tabindex="-1" type="button" data-i18n="tabDots">Glyph Dots</button>
                 <button class="game-tab" id="gameTabGlyphFleet" role="tab" aria-selected="false" aria-controls="gamePanelGlyphFleet" tabindex="-1" type="button" data-i18n="tabGlyphFleet">Glyph Fleet</button>
             </div>
             <button class="game-tabs-more" id="gameTabsToggle" type="button" aria-expanded="false" aria-controls="gameTabs">
@@ -295,7 +301,7 @@
                         <path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
                     </svg>
                     <span id="gameTabsLabel" data-i18n="tabsShowMore">More games</span>
-                    <span id="gameTabsCount">+21</span>
+                    <span id="gameTabsCount">+63</span>
                 </span>
             </button>
             <div class="game-panel" id="gamePanelTyping" role="tabpanel" aria-labelledby="gameTabTyping">
@@ -748,7 +754,7 @@
             <div class="game-panel" id="gamePanelTraffic" role="tabpanel" aria-labelledby="gameTabTraffic" hidden>
                 <div class="game-hud">
                     <div class="game-stat"><span data-i18n="hudMoves">Moves</span><strong id="trafMoves">0</strong></div>
-                    <div class="game-stat"><span data-i18n="hudLevel">Level</span><strong id="trafBoardStat">1/16</strong></div>
+                    <div class="game-stat"><span data-i18n="hudLevel">Level</span><strong id="trafBoardStat">1/24</strong></div>
                 </div>
                 <div class="elements-row">
                     <label class="elements-label" for="trafLevelSel" data-i18n="trafLevelSelectLabel">Block</label>
@@ -1414,6 +1420,121 @@
                 </div>
                 <p class="game-hint" data-i18n="towHint">To move n discs, move n-1 aside first - peg keys 1, 2, 3 work too.</p>
             </div>
+            <div class="game-panel" id="gamePanelNim" role="tabpanel" aria-labelledby="gameTabNim" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="hudTurns">Turns</span><strong id="nimTurnStat">0</strong></div>
+                    <div class="game-stat"><span data-i18n="nimRule">Rule</span><strong id="nimMode">Last wins</strong></div>
+                </div>
+                <div class="elements-row">
+                    <label class="elements-label" for="nimLevelSel" data-i18n="nimLevelSelectLabel">Table</label>
+                    <select class="elements-select" id="nimLevelSel"></select>
+                </div>
+                <div class="nim-rows" id="nimRows" role="group" aria-label="Ember Sticks rows." data-i18n-aria="nimBoardLabel" aria-describedby="nimResult"></div>
+                <p class="game-result" id="nimResult" role="status" data-i18n="nimPrompt">Take any number from one row.</p>
+                <div class="game-actions">
+                    <button class="primary" id="nimNewBtn" type="button"><span class="button-content"><span data-i18n="btnNewGame">New Game</span></span></button>
+                    <p class="game-best" id="nimBest"></p>
+                </div>
+                <p class="game-hint" data-i18n="nimHint">Click a stick to take it plus everything right of it in that row.</p>
+            </div>
+            <div class="game-panel" id="gamePanelKalah" role="tabpanel" aria-labelledby="gameTabKalah" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="malYouStore">Your store</span><strong id="malYouStat">0</strong></div>
+                    <div class="game-stat"><span data-i18n="malAiStore">Rival store</span><strong id="malAiStat">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudTurn">Turn</span><strong id="malTurnStat">Your sow</strong></div>
+                </div>
+                <div class="elements-row">
+                    <label class="elements-label" for="malRankSel" data-i18n="malRankLabel">Bench</label>
+                    <select class="elements-select" id="malRankSel"></select>
+                </div>
+                <div class="mal-board" id="malBoard" role="group" aria-label="Kalah row." data-i18n-aria="malBoardLabel" aria-describedby="malResult"></div>
+                <p class="game-result" id="malResult" role="status" data-i18n="malPrompt">Sow against the bench.</p>
+                <div class="game-actions">
+                    <button class="primary" id="malNewBtn" type="button"><span class="button-content"><span data-i18n="btnNewGame">New Game</span></span></button>
+                    <button class="ghost" id="malUndoBtn" type="button" disabled><span class="button-content"><span data-i18n="malUndo">Undo</span></span></button>
+                    <p class="game-best" id="malBest"></p>
+                </div>
+                <p class="game-hint" data-i18n="malHint">Spread a pit anticlockwise, one stone each.</p>
+            </div>
+            <div class="game-panel" id="gamePanelBlackjack" role="tabpanel" aria-labelledby="gameTabBlackjack" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="bjChipsLabel">Chips</span><strong id="bjChipsStat">100</strong></div>
+                    <div class="game-stat"><span data-i18n="bjTotalLabel">Total</span><strong id="bjHandStat">0</strong></div>
+                    <div class="game-stat"><span data-i18n="bjBetLabel">Bet</span><strong id="bjBetStat">10</strong></div>
+                </div>
+                <div class="elements-row">
+                    <label class="elements-label" for="bjTableSel" data-i18n="bjTableLabel">Table</label>
+                    <select class="elements-select" id="bjTableSel"></select>
+                    <label class="elements-label" for="bjBetSel" data-i18n="bjBetLabel">Bet</label>
+                    <select class="elements-select" id="bjBetSel"></select>
+                </div>
+                <div class="bj-board" id="bjBoard" role="group" aria-label="Twenty-One Parlor table." data-i18n-aria="bjBoardLabel" aria-describedby="bjResult"></div>
+                <p class="game-result" id="bjResult" role="status" data-i18n="bjPrompt">Take a seat.</p>
+                <div class="game-actions">
+                    <button class="primary" id="bjDealBtn" type="button"><span class="button-content"><span data-i18n="bjDeal">Deal</span></span></button>
+                    <button class="ghost" id="bjHitBtn" type="button" disabled><span class="button-content"><span data-i18n="bjHit">Hit</span></span></button>
+                    <button class="ghost" id="bjStandBtn" type="button" disabled><span class="button-content"><span data-i18n="bjStand">Stand</span></span></button>
+                    <button class="ghost" id="bjDoubleBtn" type="button" disabled><span class="button-content"><span data-i18n="bjDouble">Double</span></span></button>
+                    <p class="game-best" id="bjBest"></p>
+                </div>
+                <p class="game-hint" data-i18n="bjHint">The house takes every card to 17.</p>
+            </div>
+            <div class="game-panel" id="gamePanelGarden" role="tabpanel" aria-labelledby="gameTabGarden" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="gdnCoinsLabel">Coins</span><strong id="gdnCoinsStat">12</strong></div>
+                    <div class="game-stat"><span data-i18n="gdnBusyLabel">In the ground</span><strong id="gdnBusyStat">0</strong></div>
+                </div>
+                <div class="elements-row">
+                    <label class="elements-label" for="gdnBedSel" data-i18n="gdnBedLabel">Bed</label>
+                    <select class="elements-select" id="gdnBedSel"></select>
+                </div>
+                <div class="gdn-plots" id="gdnPlots" role="group" aria-label="Roof Garden plots." data-i18n-aria="gdnBoardLabel" aria-describedby="gdnResult"></div>
+                <p class="game-result" id="gdnResult" role="status" data-i18n="gdnPrompt">Sow and harvest.</p>
+                <div class="game-actions">
+                    <button class="primary" id="gdnResetBtn" type="button"><span class="button-content"><span data-i18n="btnNewRound">New Round</span></span></button>
+                    <p class="game-best" id="gdnBest"></p>
+                </div>
+                <p class="game-hint" data-i18n="gdnHint">Growth runs on the clock, not the page.</p>
+            </div>
+            <div class="game-panel" id="gamePanelRepublic" role="tabpanel" aria-labelledby="gameTabRepublic" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="rqCard">Card</span><strong id="rqProgress">1/4</strong></div>
+                    <div class="game-stat"><span data-i18n="hudScore">Score</span><strong id="rqScore">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudStreak">Streak</span><strong id="rqStreak">0</strong></div>
+                </div>
+                <div class="elements-row">
+                    <label class="elements-label" for="rqDeckSel" data-i18n="rqDeckLabel">Deck</label>
+                    <select class="elements-select" id="rqDeckSel"></select>
+                </div>
+                <p class="rq-card" id="rqQuestion"></p>
+                <div class="rq-options" id="rqOptions" role="group" aria-label="Republic Rewind answer choices." data-i18n-aria="rqBoardLabel" aria-describedby="rqResult"></div>
+                <p class="rq-note" id="rqNote" role="status"></p>
+                <p class="game-result" id="rqResult" role="status" data-i18n="rqPrompt">Deal through a deck of history and culture cards.</p>
+                <div class="game-actions">
+                    <button class="primary" id="rqNextBtn" type="button" disabled><span class="button-content"><span data-i18n="rqNext">Next card</span></span></button>
+                    <button class="ghost" id="rqNewBtn" type="button"><span class="button-content"><span data-i18n="btnNewRound">New Round</span></span></button>
+                    <p class="game-best" id="rqBest"></p>
+                </div>
+                <p class="game-hint" data-i18n="rqHint">Read the note after every card - the wrong options carry facts too.</p>
+            </div>
+            <div class="game-panel" id="gamePanelDots" role="tabpanel" aria-labelledby="gameTabDots" hidden>
+                <div class="game-hud">
+                    <div class="game-stat"><span data-i18n="dotsYou">You</span><strong id="dotsYouStat">0</strong></div>
+                    <div class="game-stat"><span data-i18n="dotsFoe">Rival</span><strong id="dotsAiStat">0</strong></div>
+                    <div class="game-stat"><span data-i18n="hudTurn">Turn</span><strong id="dotsTurnStat">Your stick</strong></div>
+                </div>
+                <div class="elements-row">
+                    <label class="elements-label" for="dotsRankSel" data-i18n="dotsRankLabel">Rank</label>
+                    <select class="elements-select" id="dotsRankSel"></select>
+                </div>
+                <div class="dots-board" id="dotsBoard" role="group" aria-label="Glyph Dots plate." data-i18n-aria="dotsBoardLabel" aria-describedby="dotsResult"></div>
+                <p class="game-result" id="dotsResult" role="status" data-i18n="dotsPrompt">Face a rank.</p>
+                <div class="game-actions">
+                    <button class="primary" id="dotsNewBtn" type="button"><span class="button-content"><span data-i18n="btnNewGame">New Game</span></span></button>
+                    <p class="game-best" id="dotsBest"></p>
+                </div>
+                <p class="game-hint" data-i18n="dotsHint">Never lay the third side of a box you cannot take back.</p>
+            </div>
             <div class="game-panel" id="gamePanelGlyphFleet" role="tabpanel" aria-labelledby="gameTabGlyphFleet" hidden>
                 <div class="game-hud">
                     <div class="game-stat"><span data-i18n="hudShots">Shots</span><strong id="fltShots">0</strong></div>
@@ -1442,63 +1563,114 @@
         </div>
     </div>
 
-    <script src="assets/app/i18n.js?v=42"></script>
-    <script src="assets/app/core.js?v=42"></script>
-    <script src="assets/app/tools.js?v=42"></script>
-    <script src="assets/app/pet-data.js?v=42"></script>
-    <script src="assets/app/pet-state.js?v=42"></script>
-    <script src="assets/app/pet-life.js?v=42"></script>
-    <script src="assets/app/pet-art.js?v=42"></script>
-    <script src="assets/app/pet-dom.js?v=42"></script>
-    <script src="assets/app/pet-render.js?v=42"></script>
-    <script src="assets/app/pet-games.js?v=42"></script>
-    <script src="assets/app/pet.js?v=42"></script>
-    <script src="assets/app/game-campaign.js?v=42"></script>
-    <script src="assets/app/game-elements-core.js?v=42"></script>
-    <script src="assets/app/game-elements.js?v=42"></script>
-    <script src="assets/app/game-typing.js?v=42"></script>
-    <script src="assets/app/game-memory.js?v=42"></script>
-    <script src="assets/app/game-2048.js?v=42"></script>
-    <script src="assets/app/game-reflex.js?v=42"></script>
-    <script src="assets/app/game-caret-dash.js?v=42"></script>
-    <script src="assets/app/game-spot-diff.js?v=42"></script>
-    <script src="assets/app/game-plumber.js?v=42"></script>
-    <script src="assets/app/game-stack.js?v=42"></script>
-    <script src="assets/app/game-color-code.js?v=42"></script>
-    <script src="assets/app/game-breakout.js?v=42"></script>
-    <script src="assets/app/game-ember-dice.js?v=42"></script>
-    <script src="assets/app/game-snake.js?v=42"></script>
-    <script src="assets/app/game-lights.js?v=42"></script>
-    <script src="assets/app/game-mines.js?v=42"></script>
-    <script src="assets/app/game-gomoku.js?v=42"></script>
-    <script src="assets/app/game-traffic.js?v=42"></script>
-    <script src="assets/app/game-vault.js?v=42"></script>
-    <script src="assets/app/game-glyph-blocks.js?v=42"></script>
-    <script src="assets/app/game-ink-cascade.js?v=42"></script>
-    <script src="assets/app/game-ink-beat.js?v=42"></script>
-    <script src="assets/app/game-bubble-ink.js?v=42"></script>
-    <script src="assets/app/game-glyph-echo.js?v=42"></script>
-    <script src="assets/app/game-ink-slash.js?v=42"></script>
-    <script src="assets/app/game-peg-splash.js?v=42"></script>
-    <script src="assets/app/game-glyph-raid.js?v=42"></script>
-    <script src="assets/app/game-glyph-leap.js?v=42"></script>
-    <script src="assets/app/game-aurora-flow.js?v=42"></script>
-    <script src="assets/app/game-comet-golf.js?v=42"></script>
-    <script src="assets/app/game-prism-path.js?v=42"></script>
-    <script src="assets/app/game-starfall.js?v=42"></script>
-    <script src="assets/app/game-ink-sort.js?v=42"></script>
-    <script src="assets/app/game-glyph-crossing.js?v=42"></script>
-    <script src="assets/app/game-glyph-pusher.js?v=42"></script>
-    <script src="assets/app/game-glyph-net.js?v=42"></script>
-    <script src="assets/app/game-glyph-sketch.js?v=42"></script>
-    <script src="assets/app/game-glyph-fifteen.js?v=42"></script>
-    <script src="assets/app/game-glyph-sudoku.js?v=42"></script>
-    <script src="assets/app/game-glyph-reversi.js?v=42"></script>
-    <script src="assets/app/game-glyph-glide.js?v=42"></script>
-    <script src="assets/app/game-glyph-four.js?v=42"></script>
-        <script src="assets/app/game-glyph-fleet.js?v=42"></script>
-    <script src="assets/app/game-glyph-tower.js?v=42"></script>
-<script src="assets/app/game-guide.js?v=42"></script>
-    <script src="assets/app/main.js?v=42"></script>
+    <script src="assets/app/i18n.js?v=56"></script>
+    <script src="assets/app/core.js?v=56"></script>
+    <script src="assets/app/tools.js?v=56"></script>
+    <script src="assets/app/pet-data.js?v=56"></script>
+    <script src="assets/app/pet-state.js?v=56"></script>
+    <script src="assets/app/pet-life.js?v=56"></script>
+    <script src="assets/app/pet-art.js?v=56"></script>
+    <script src="assets/app/pet-dom.js?v=56"></script>
+    <script src="assets/app/pet-render.js?v=56"></script>
+    <script src="assets/app/pet-games.js?v=56"></script>
+    <script src="assets/app/pet.js?v=56"></script>
+    <script src="assets/app/game-campaign.js?v=56"></script>
+    <script src="assets/app/game-registry.js?v=56"></script>
+    <script src="assets/app/game-elements-core.js?v=56"></script>
+    <script src="assets/app/game-elements.js?v=56"></script>
+    <script src="assets/app/game-typing.js?v=56"></script>
+    <script src="assets/app/game-memory.js?v=56"></script>
+    <script src="assets/app/game-2048.js?v=56"></script>
+    <script src="assets/app/game-reflex.js?v=56"></script>
+    <script src="assets/app/game-caret-dash.js?v=56"></script>
+    <script src="assets/app/game-spot-diff.js?v=56"></script>
+    <script src="assets/app/game-plumber.js?v=56"></script>
+    <script src="assets/app/game-stack.js?v=56"></script>
+    <script src="assets/app/game-color-code.js?v=56"></script>
+    <script src="assets/app/game-breakout.js?v=56"></script>
+    <script src="assets/app/game-ember-dice.js?v=56"></script>
+    <script src="assets/app/game-snake.js?v=56"></script>
+    <script src="assets/app/game-lights.js?v=56"></script>
+    <script src="assets/app/game-mines.js?v=56"></script>
+    <script src="assets/app/game-gomoku.js?v=56"></script>
+    <script src="assets/app/game-traffic.js?v=56"></script>
+    <script src="assets/app/game-vault.js?v=56"></script>
+    <script src="assets/app/game-glyph-blocks.js?v=56"></script>
+    <script src="assets/app/game-ink-cascade.js?v=56"></script>
+    <script src="assets/app/game-ink-beat.js?v=56"></script>
+    <script src="assets/app/game-bubble-ink.js?v=56"></script>
+    <script src="assets/app/game-glyph-echo.js?v=56"></script>
+    <script src="assets/app/game-ink-slash.js?v=56"></script>
+    <script src="assets/app/game-peg-splash.js?v=56"></script>
+    <script src="assets/app/game-glyph-raid.js?v=56"></script>
+    <script src="assets/app/game-glyph-leap.js?v=56"></script>
+    <script src="assets/app/game-aurora-flow.js?v=56"></script>
+    <script src="assets/app/game-comet-golf.js?v=56"></script>
+    <script src="assets/app/game-prism-path.js?v=56"></script>
+    <script src="assets/app/game-starfall.js?v=56"></script>
+    <script src="assets/app/game-ink-sort.js?v=56"></script>
+    <script src="assets/app/game-glyph-crossing.js?v=56"></script>
+    <script src="assets/app/game-glyph-pusher.js?v=56"></script>
+    <script src="assets/app/game-glyph-net.js?v=56"></script>
+    <script src="assets/app/game-glyph-sketch.js?v=56"></script>
+    <script src="assets/app/game-glyph-fifteen.js?v=56"></script>
+    <script src="assets/app/game-glyph-sudoku.js?v=56"></script>
+    <script src="assets/app/game-glyph-reversi.js?v=56"></script>
+    <script src="assets/app/game-glyph-glide.js?v=56"></script>
+    <script src="assets/app/game-glyph-four.js?v=56"></script>
+    <script src="assets/app/game-ember-sticks.js?v=56"></script>
+    <script src="assets/app/game-kalah-row.js?v=56"></script>
+    <script src="assets/app/game-blackjack.js?v=56"></script>
+    <script src="assets/app/game-roof-garden.js?v=56"></script>
+    <script src="assets/app/game-republic-quiz.js?v=56"></script>
+    <script src="assets/app/game-glyph-dots.js?v=56"></script>
+        <script src="assets/app/game-glyph-fleet.js?v=56"></script>
+    <script src="assets/app/game-glyph-tower.js?v=56"></script>
+    <script src="assets/app/game-rooftop-radio.js?v=56"></script>
+    <script src="assets/app/game-clockwork-dispatch.js?v=56"></script>
+    <script src="assets/app/game-dream-orchestra.js?v=56"></script>
+    <script src="assets/app/game-echo-cartographer.js?v=56"></script>
+    <script src="assets/app/game-ember-delve.js?v=56"></script>
+    <script src="assets/app/game-lantern-heist.js?v=56"></script>
+    <script src="assets/app/game-moon-market.js?v=56"></script>
+    <script src="assets/app/game-neon-drift.js?v=56"></script>
+    <script src="assets/app/game-whisper-deck.js?v=56"></script>
+    <script src="assets/app/game-circuit-scribe.js?v=56"></script>
+    <script src="assets/app/game-glyph-bastion.js?v=56"></script>
+    <script src="assets/app/game-lantern-fishing.js?v=56"></script>
+    <script src="assets/app/game-loopwright.js?v=56"></script>
+    <script src="assets/app/game-coral-architect.js?v=56"></script>
+    <script src="assets/app/game-archive-escape.js?v=56"></script>
+    <script src="assets/app/game-pocket-detective.js?v=56"></script>
+    <script src="assets/app/game-shadow-fold.js?v=56"></script>
+    <script src="assets/app/game-microbe-lab.js?v=56"></script>
+    <script src="assets/app/game-paper-bridge.js?v=56"></script>
+    <script src="assets/app/game-weather-loom.js?v=56"></script>
+    <script src="assets/app/game-blind-sculptor.js?v=56"></script>
+    <script src="assets/app/game-courtroom-of-animals.js?v=56"></script>
+    <script src="assets/app/game-gravity-badminton.js?v=56"></script>
+    <script src="assets/app/game-kitchen-relay.js?v=56"></script>
+    <script src="assets/app/game-morse-rescue.js?v=56"></script>
+    <script src="assets/app/game-rule-thieves.js?v=56"></script>
+    <script src="assets/app/game-tiny-wrestlers.js?v=56"></script>
+    <script src="assets/app/game-auction-dungeon.js?v=56"></script>
+    <script src="assets/app/game-counterfeit-museum.js?v=56"></script>
+    <script src="assets/app/game-crosswind-kites.js?v=56"></script>
+    <script src="assets/app/game-paradox-post.js?v=56"></script>
+    <script src="assets/app/game-pocket-photographer.js?v=56"></script>
+    <script src="assets/app/game-switchboard-duo.js?v=56"></script>
+    <script src="assets/app/game-tether-salvage.js?v=56"></script>
+    <script src="assets/app/game-tiny-blacksmith.js?v=56"></script>
+    <script src="assets/app/game-whale-parliament.js?v=56"></script>
+    <script src="assets/app/game-borrowed-bodies.js?v=56"></script>
+    <script src="assets/app/game-deep-freeze.js?v=56"></script>
+    <script src="assets/app/game-shadow-puppeteer.js?v=56"></script>
+    <script src="assets/app/game-one-minute-mayor.js?v=56"></script>
+    <script src="assets/app/game-lost-language.js?v=56"></script>
+    <script src="assets/app/game-ocean-archaeologist.js?v=56"></script>
+    <script src="assets/app/game-pinball-courier.js?v=56"></script>
+    <script src="assets/app/game-tea-house.js?v=56"></script>
+<script src="assets/app/game-guide.js?v=56"></script>
+    <script src="assets/app/main.js?v=56"></script>
 </body>
 </html>

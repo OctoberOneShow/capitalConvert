@@ -30,6 +30,10 @@
     { id: "h8", labelKey: "leapL8", goal: 5600, gapMin: 74, gapMax: 92, moving: 0.4, spring: 0.15, starTimes: [70, 98, 130] },
     { id: "h9", labelKey: "leapL9", goal: 6200, gapMin: 76, gapMax: 92, moving: 0.42, spring: 0.15, starTimes: [76, 106, 140] },
     { id: "h10", labelKey: "leapL10", goal: 6800, gapMin: 78, gapMax: 92, moving: 0.44, spring: 0.16, starTimes: [82, 114, 150] },
+    { id: "h11", labelKey: "lvlNum11", goal: 7700, gapMin: 78, gapMax: 92, moving: 0.44, spring: 0.16, starTimes: [88, 122, 161] },
+    { id: "h12", labelKey: "lvlNum12", goal: 8600, gapMin: 78, gapMax: 92, moving: 0.44, spring: 0.16, starTimes: [94, 131, 172] },
+    { id: "h13", labelKey: "lvlNum13", goal: 9500, gapMin: 78, gapMax: 92, moving: 0.44, spring: 0.16, starTimes: [101, 140, 184] },
+    { id: "h14", labelKey: "lvlNum14", goal: 10400, gapMin: 78, gapMax: 92, moving: 0.44, spring: 0.16, starTimes: [108, 150, 197] },
   ];
 
   function initGlyphLeapGame() {
@@ -197,7 +201,6 @@
           if (
             prevY + player.r <= p.y + 4 &&
             player.y + player.r >= p.y &&
-            player.y + player.r <= p.y + 14 &&
             player.x > p.x - player.r &&
             player.x < p.x + p.w + player.r
           ) {
@@ -213,6 +216,12 @@
       if (player.y - camY < leapHeight * 0.42) {
         camY = player.y - leapHeight * 0.42;
       }
+      /* Keep building the ascent as the camera climbs, then discard ledges
+       * the player can no longer reach below the screen. */
+      generateAbove(platforms[platforms.length - 1].y);
+      platforms = platforms.filter(function (platform) {
+        return platform.y <= camY + leapHeight + 40;
+      });
       var climbed = Math.floor(leapGroundY - player.y);
       if (climbed > height) {
         height = climbed;

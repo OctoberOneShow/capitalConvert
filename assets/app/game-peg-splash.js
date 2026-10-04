@@ -36,6 +36,10 @@
     { id: "b8", labelKey: "pegL8", balls: 7, orange: 18, bucketSpeed: 180, seed: 173 },
     { id: "b9", labelKey: "pegL9", balls: 7, orange: 19, bucketSpeed: 190, seed: 191 },
     { id: "b10", labelKey: "pegL10", balls: 6, orange: 20, bucketSpeed: 200, seed: 197 },
+    { id: "b11", labelKey: "lvlNum11", balls: 6, orange: 22, bucketSpeed: 230, seed: 211 },
+    { id: "b12", labelKey: "lvlNum12", balls: 6, orange: 24, bucketSpeed: 260, seed: 223 },
+    { id: "b13", labelKey: "lvlNum13", balls: 6, orange: 26, bucketSpeed: 290, seed: 233 },
+    { id: "b14", labelKey: "lvlNum14", balls: 6, orange: 28, bucketSpeed: 320, seed: 241 },
   ];
 
   function mulberry32(seed) {
@@ -362,7 +366,11 @@
       lastFrame = now;
       update(dt);
       draw();
-      rafId = window.requestAnimationFrame(frame);
+      if (alive) {
+        rafId = window.requestAnimationFrame(frame);
+      } else {
+        rafId = null;
+      }
     }
 
     function startLoop() {
@@ -385,8 +393,8 @@
         return;
       }
       var rect = canvas.getBoundingClientRect();
-      var x = clientX - rect.left;
-      var y = clientY - rect.top;
+      var x = (clientX - rect.left) * pegWidth / (rect.width || pegWidth);
+      var y = (clientY - rect.top) * pegHeight / (rect.height || pegHeight);
       var angle = Math.atan2(y - pegCannonY, x - pegCannonX);
       aim = Math.max(0.26, Math.min(Math.PI - 0.26, angle));
     }

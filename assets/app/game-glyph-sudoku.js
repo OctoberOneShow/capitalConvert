@@ -26,6 +26,9 @@
     { id: "u6", labelKey: "sudL6", size: 9, bw: 3, bh: 3, clues: 30, starTimes: [210, 340, 540] },
     { id: "u7", labelKey: "sudL7", size: 9, bw: 3, bh: 3, clues: 26, starTimes: [240, 380, 600] },
     { id: "u8", labelKey: "sudL8", size: 9, bw: 3, bh: 3, clues: 24, starTimes: [270, 420, 660] },
+    { id: "u9", labelKey: "lvlNum9", size: 9, bw: 3, bh: 3, clues: 22, starTimes: [324, 504, 792] },
+    { id: "u10", labelKey: "lvlNum10", size: 9, bw: 3, bh: 3, clues: 21, starTimes: [389, 605, 950] },
+    { id: "u11", labelKey: "lvlNum11", size: 9, bw: 3, bh: 3, clues: 21, starTimes: [467, 726, 1140] },
   ];
 
   /* Pure generator + checker, exported for the static checks. */
@@ -408,7 +411,9 @@
         return;
       }
       for (var i = 0; i < board.length; i += 1) {
-        if (!board[i]) {
+        /* Filling the grid is not solving it: placeDigit flags any digit
+         * that disagrees with the solution. */
+        if (!board[i] || wrong[i]) {
           return;
         }
       }

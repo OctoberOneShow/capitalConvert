@@ -1,0 +1,225 @@
+/* game-paradox-post (registry game) */
+/* Paradox Post - the building, its doorways and the route notebook. */
+.pdx-map {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    gap: 12px;
+    margin-top: 12px;
+}
+
+/* The room the courier is standing in. */
+.pdx-room {
+    grid-column: 1 / -1;
+    padding: 14px 16px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+}
+
+.pdx-room-name {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: var(--text);
+}
+
+.pdx-room-copy {
+    margin: 6px 0 0;
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--text-secondary);
+}
+
+.pdx-room-side {
+    margin: 8px 0 0;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.pdx-brief {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 10px 12px;
+    border-left: 3px solid var(--accent-2);
+    border-radius: 0 10px 10px 0;
+    background: var(--surface-soft);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+/* Manifest: one line per parcel, all of it text. */
+.pdx-jobs {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+}
+
+.pdx-head {
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.pdx-job {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text);
+}
+
+.pdx-job-order {
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+    font-weight: 600;
+    color: var(--accent-2);
+}
+
+/* Doorways. A button is a real button: Tab, Enter and Space all work. */
+.pdx-doors {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-bg);
+}
+
+.pdx-door-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.5;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.12s ease, transform 0.12s ease;
+}
+
+.pdx-door-btn:hover {
+    border-color: var(--accent);
+    transform: translateX(2px);
+}
+
+.pdx-door-btn:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.pdx-door-btn:active {
+    transform: translateX(0);
+}
+
+/* The notebook is the memory of the run: verified directed edges, in text. */
+.pdx-note {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+}
+
+.pdx-note-empty,
+.pdx-note-line,
+.pdx-index-line {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+}
+
+.pdx-note-line {
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+}
+
+.pdx-note-carry {
+    font-weight: 600;
+}
+
+.pdx-index {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 6px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+}
+
+.pdx-log {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin-top: 10px;
+    min-height: 44px;
+}
+
+.pdx-log-line {
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.pdx-log-line:first-child {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.pdx-btn-undo {
+    opacity: 0.92;
+}
+
+/* The one place colour carries a verdict: the result line, which also says
+ * so in words. */
+.pdx-lost {
+    border-color: var(--danger-text);
+    color: var(--danger-text);
+}
+
+[data-theme="light"] .pdx-room,
+[data-theme="light"] .pdx-note {
+    border-color: var(--surface-soft);
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .pdx-jobs,
+[data-theme="light"] .pdx-doors {
+    background: var(--surface-soft);
+}
+
+[data-theme="light"] .pdx-door-btn {
+    border-color: var(--panel-strong);
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .pdx-door-btn:hover {
+    border-color: var(--accent);
+    background: var(--surface-soft);
+}
+
+[data-theme="light"] .pdx-lost {
+    border-color: var(--danger-text);
+}
+
+@media (max-width: 720px) {
+    .pdx-map {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

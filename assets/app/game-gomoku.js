@@ -1,6 +1,7 @@
 /* Gomoku - The five-in-a-row duel against the reading AI in the shared game drawer. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
+  var localStorage = App.storage;
   var t = App.t;
   var getElement = App.getElement;
   var logAction = App.logAction;
@@ -19,6 +20,9 @@
     { id: "r1", labelKey: "gomokuRank1", noise: 260, defense: 0.55, starMoves: [14, 20, 30] },
     { id: "r2", labelKey: "gomokuRank2", noise: 60, defense: 0.95, starMoves: [18, 26, 38] },
     { id: "r3", labelKey: "gomokuRank3", noise: 0, defense: 1.1, starMoves: [24, 34, 48] },
+    { id: "r4", labelKey: "gomokuRank4", noise: 0, defense: 1.7, starMoves: [26, 38, 54] },
+    { id: "r5", labelKey: "gomokuRank5", noise: 0, defense: 2.6, starMoves: [30, 44, 62] },
+    { id: "r6", labelKey: "gomokuRank6", noise: 0, defense: 4, starMoves: [34, 50, 70] },
   ];
   var gmDirs = [[1, 0], [0, 1], [1, 1], [1, -1]];
 
@@ -266,7 +270,7 @@
     }
 
     function playHuman(index) {
-      if (over || board[index] !== gmEmpty) {
+      if (over || aiTimer !== null || board[index] !== gmEmpty) {
         return;
       }
       var won = place(index, gmHuman);

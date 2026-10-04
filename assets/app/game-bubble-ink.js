@@ -448,7 +448,11 @@
       lastFrame = now;
       update(dt);
       draw();
-      rafId = window.requestAnimationFrame(frame);
+      if (alive) {
+        rafId = window.requestAnimationFrame(frame);
+      } else {
+        rafId = null;
+      }
     }
 
     function startLoop() {
@@ -471,8 +475,8 @@
         return;
       }
       var rect = canvas.getBoundingClientRect();
-      var x = clientX - rect.left;
-      var y = clientY - rect.top;
+      var x = (clientX - rect.left) * bubWidth / (rect.width || bubWidth);
+      var y = (clientY - rect.top) * bubHeight / (rect.height || bubHeight);
       var angle = Math.atan2(y - bubShooterY, x - bubShooterX);
       /* Keep the aim in the upper half-plane; a pointer below the shooter
        * picks the nearer side wall instead of firing into the floor. */

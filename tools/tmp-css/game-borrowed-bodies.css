@@ -1,0 +1,168 @@
+/* Borrowed Bodies */
+.brb-grid {
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 3px;
+    margin-top: 12px;
+    padding: 8px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+}
+
+.brb-cell {
+    aspect-ratio: 1;
+    min-height: 28px;
+    padding: 0;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.82rem;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+        border-color 0.16s ease,
+        transform 0.16s ease;
+}
+
+.brb-cell.is-wall {
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+    cursor: default;
+}
+
+.brb-cell.is-gap {
+    border-style: dashed;
+    border-color: var(--danger-text);
+    color: var(--danger-text);
+}
+
+.brb-cell.is-water {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.brb-cell.is-pipe,
+.brb-cell.is-perch {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+}
+
+.brb-cell.is-latch {
+    border-style: dashed;
+    border-color: var(--text-secondary);
+    color: var(--text-secondary);
+}
+
+.brb-cell.is-open {
+    border-color: var(--success-text, var(--accent));
+    color: var(--accent);
+}
+
+.brb-cell.brb-crate {
+    background: var(--panel-bg);
+    color: var(--text);
+}
+
+.brb-cell.brb-exit {
+    border-color: var(--accent-2);
+    color: var(--accent-2);
+    font-weight: 800;
+}
+
+.brb-cell.brb-here {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+    color: var(--text);
+    font-weight: 800;
+}
+
+.brb-cell:hover:not(.is-wall) {
+    transform: translateY(-1px);
+}
+
+.brb-cell:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.brb-rules {
+    display: grid;
+    gap: 4px;
+    margin-top: 10px;
+}
+
+.brb-rule {
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: 1px dashed var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-size: 0.76rem;
+    line-height: 1.4;
+}
+
+.brb-rule.brb-active {
+    border-style: solid;
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.brb-preview {
+    min-height: 2.6em;
+    margin-top: 8px;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    line-height: 1.4;
+}
+
+.brb-btn {
+    min-height: 40px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text);
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.brb-btn:hover {
+    border-color: rgba(0, 242, 255, 0.45);
+}
+
+.brb-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.brb-body-moth,
+.brb-body-crab,
+.brb-body-eel {
+    color: var(--text);
+    font-weight: 800;
+}
+
+[data-theme="light"] .brb-grid,
+[data-theme="light"] .brb-rule,
+[data-theme="light"] .brb-btn {
+    background: rgba(255, 255, 255, 0.72);
+}
+
+[data-motion="off"] .brb-cell {
+    transition: none !important;
+}
+
+[data-motion="off"] .brb-cell:hover:not(.is-wall) {
+    transform: none !important;
+}
+
+@media (max-width: 360px) {
+    .brb-cell {
+        font-size: 0.7rem;
+    }
+}

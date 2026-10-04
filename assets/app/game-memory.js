@@ -1,6 +1,7 @@
-﻿/* Glyph Match - The memory-pair mini-game in the shared game drawer. */
+/* Glyph Match - The memory-pair mini-game in the shared game drawer. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
+  var localStorage = App.storage;
   var t = App.t;
   var getElement = App.getElement;
   var logAction = App.logAction;
@@ -80,6 +81,7 @@
     var roundStarted = false;
     var startedAt = 0;
     var timerId = null;
+    var mismatchTimer = null;
 
     var primaryLabel = startBtn.querySelector("[data-i18n]");
     var levelStat = buildLevelStat();
@@ -378,7 +380,8 @@
       }
 
       lockBoard = true;
-      window.setTimeout(function () {
+      mismatchTimer = window.setTimeout(function () {
+        mismatchTimer = null;
         pair.classList.remove("flipped");
         card.classList.remove("flipped");
         setCardFace(pair, false);
@@ -448,6 +451,8 @@
     }
 
     function resetBoard() {
+      window.clearTimeout(mismatchTimer);
+      mismatchTimer = null;
       window.clearInterval(timerId);
       timerId = null;
       roundStarted = false;

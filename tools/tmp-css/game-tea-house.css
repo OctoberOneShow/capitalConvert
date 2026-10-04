@@ -1,0 +1,205 @@
+/* game-tea-house (registry game) */
+/* Tea House at Midnight - the three-window counter: the chair, the pot shelf
+ * and the guest notebook. Everything is read as words and digits first, so no
+ * state is carried by colour alone. */
+.tea-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.tea-guest,
+.tea-counter,
+.tea-tray,
+.tea-note {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface-soft);
+}
+
+.tea-guest {
+    display: grid;
+    gap: 6px;
+    align-content: start;
+}
+
+.tea-counter {
+    display: grid;
+    gap: 4px;
+    align-content: start;
+}
+
+.tea-head {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.tea-guest-name {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--accent);
+}
+
+.tea-guest-rap,
+.tea-counter-line,
+.tea-log-line,
+.tea-note-line,
+.tea-note-sub,
+.tea-guest-sub,
+.tea-guest-mood,
+.tea-chair,
+.tea-note-empty {
+    margin: 0;
+    font-size: 0.76rem;
+    line-height: 1.4;
+    color: var(--text);
+}
+
+.tea-guest-mood {
+    color: var(--accent-2);
+}
+
+.tea-mood-hush,
+.tea-chair,
+.tea-note-empty {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.tea-guest-sub,
+.tea-note-sub {
+    color: var(--text-secondary);
+}
+
+.tea-note-sub.tea-note-grudge {
+    color: var(--accent-2);
+}
+
+/* The notebook reads as one card per guest; the proofed rumour stands out
+ * with a left rule, never with colour alone. */
+.tea-note {
+    display: grid;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.tea-note-guest {
+    display: grid;
+    gap: 3px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-strong);
+}
+
+.tea-note-line {
+    font-weight: 700;
+}
+
+.tea-note-line.tea-note-proof {
+    border-left: 3px solid var(--success-text);
+    padding-left: 8px;
+}
+
+.tea-note-line.tea-note-rumour,
+.tea-note-line.tea-note-second {
+    border-left: 3px solid var(--accent-2);
+    padding-left: 8px;
+}
+
+/* The tray is the one place a real tea colour appears: a filled cup keeps its
+ * warm rim, a poured one is struck through and dimmed. */
+.tea-tray {
+    display: grid;
+    gap: 6px;
+    margin-top: 10px;
+}
+
+.tea-cup {
+    justify-content: flex-start;
+    padding: 8px 10px;
+    text-align: left;
+    font-size: 0.76rem;
+    font-weight: 700;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--panel-strong);
+    color: var(--text);
+}
+
+.tea-cup:hover {
+    border-color: var(--accent);
+}
+
+.tea-cup:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.tea-cup.tea-cup-done {
+    color: var(--text-secondary);
+    text-decoration: line-through;
+    background: var(--surface-soft);
+}
+
+.tea-btn {
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--panel-strong);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.tea-btn:hover {
+    border-color: var(--accent);
+}
+
+.tea-btn:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.tea-guest .tea-btn {
+    justify-self: start;
+    margin-top: 2px;
+}
+
+.tea-btn[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: default;
+}
+
+.tea-btn-seat {
+    border-color: var(--accent);
+}
+
+.tea-btn-listen {
+    border-color: var(--accent-2);
+}
+
+[data-theme="light"] .tea-cup,
+[data-theme="light"] .tea-btn,
+[data-theme="light"] .tea-note-guest {
+    background: rgba(255, 255, 255, 0.72);
+}
+
+[data-motion="off"] .tea-btn,
+[data-motion="off"] .tea-cup {
+    transition: none !important;
+}
+
+@media (max-width: 720px) {
+    .tea-stage {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

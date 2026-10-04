@@ -1,6 +1,7 @@
 /* Lights Out - The flip-the-cross logic mini-game in the shared game drawer. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
+  var localStorage = App.storage;
   var t = App.t;
   var getElement = App.getElement;
   var logAction = App.logAction;
@@ -195,6 +196,7 @@
       }
       flipCross(index);
       moves += 1;
+      renderCells();
 
       if (isSolved()) {
         solved = true;
@@ -225,7 +227,6 @@
         return;
       }
 
-      renderCells();
       renderStats();
     }
 

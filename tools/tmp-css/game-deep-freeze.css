@@ -1,0 +1,329 @@
+/* Deep Freeze Expedition - the panel chrome for the frozen crossing.
+ * Every hook is a dfz- class the module builds with createElement, and every
+ * colour is a theme token, so the map, the pack bench and the forecast cards
+ * read the same in the dark drawer and in the light one. The board is
+ * turn-based, so nothing here animates on a timer: only state changes move. */
+
+/* The map plate stays dark in both themes: the route lines and the small
+ * distance digits are drawn in pale colours and only read on the cold plate. */
+.dfz-canvas {
+  display: block;
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+  margin: 12px auto 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--panel-strong);
+  outline: none;
+  touch-action: none;
+  cursor: crosshair;
+}
+
+.dfz-canvas:focus-visible {
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .dfz-canvas {
+  border-color: var(--surface-soft);
+  background: var(--panel-bg);
+}
+
+/* The sentence under the map: where the party stands and what it is walking to.
+ * It repeats in words what the painted ring says in colour. */
+.dfz-trail {
+  margin: 8px 0 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .dfz-trail {
+  color: var(--text);
+}
+
+/* --- pack bench: six rows, each a real toggle button plus its plain-words note */
+.dfz-pack {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(196px, 1fr));
+  gap: 6px;
+  width: 100%;
+  max-width: 460px;
+  margin: 12px auto 0;
+}
+
+.dfz-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-soft);
+}
+
+.dfz-itembtn {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 34px;
+  padding: 4px 8px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  color: var(--text);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.78rem;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.dfz-itembtn:hover:not(:disabled) {
+  border-color: var(--accent-2);
+}
+
+.dfz-itembtn:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+/* Packed is marked by shape and weight of type as well as by colour, so the
+ * state survives a screen that renders both accents the same. */
+.dfz-itembtn.is-on {
+  border-style: solid;
+  border-color: var(--accent);
+  background: var(--panel-strong);
+}
+
+.dfz-itembtn.is-on strong {
+  color: var(--accent);
+}
+
+.dfz-itembtn:disabled {
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.dfz-kg,
+.dfz-flag {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.dfz-itembtn.is-on .dfz-flag {
+  color: var(--accent-2);
+}
+
+.dfz-note {
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+[data-theme="light"] .dfz-item {
+  background: var(--panel-bg);
+}
+
+[data-theme="light"] .dfz-itembtn,
+[data-theme="light"] .dfz-itembtn.is-on {
+  background: var(--panel-strong);
+}
+
+/* --- forecast: the cards the pack can see, and the blank ones it cannot --- */
+.dfz-forecast {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  width: 100%;
+  max-width: 460px;
+  margin: 12px auto 0;
+}
+
+.dfz-card {
+  flex: 1 1 108px;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--border);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.dfz-card.is-now {
+  border-left-color: var(--accent);
+}
+
+/* The unknown is spelled out rather than left as an empty box. */
+.dfz-card.is-blind {
+  border-left-style: dashed;
+  border-left-color: var(--text-secondary);
+  color: var(--text-secondary);
+}
+
+[data-theme="light"] .dfz-card,
+[data-theme="light"] .dfz-card.is-blind {
+  background: var(--panel-strong);
+}
+
+/* --- ways out of camp: one labelled button per edge, plus making camp --- */
+.dfz-routes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  max-width: 460px;
+  margin: 12px auto 0;
+  outline: none;
+}
+
+.dfz-routes:focus-visible {
+  border-radius: 10px;
+  box-shadow: var(--focus-ring);
+}
+
+.dfz-route {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel-bg);
+  color: var(--text);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.8rem;
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.dfz-route:hover:not(:disabled) {
+  border-color: var(--accent-2);
+}
+
+.dfz-route:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: var(--focus-ring);
+}
+
+.dfz-route.is-picked {
+  border-color: var(--accent);
+  background: var(--panel-strong);
+  box-shadow: var(--focus-ring);
+}
+
+.dfz-route:disabled {
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* The way's own numbers: distance, exposure, ground and pack limit in words. */
+.dfz-routedetail {
+  font-size: 0.7rem;
+  line-height: 1.4;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.dfz-drink {
+  align-self: flex-start;
+  min-height: 32px;
+  padding: 4px 12px;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.74rem;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.dfz-drink:hover {
+  border-color: var(--accent-2);
+}
+
+.dfz-drink:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.dfz-drink.is-on {
+  border-style: solid;
+  border-color: var(--accent-2);
+  color: var(--accent-2);
+}
+
+[data-theme="light"] .dfz-route,
+[data-theme="light"] .dfz-route.is-picked,
+[data-theme="light"] .dfz-drink {
+  background: var(--panel-strong);
+}
+
+/* --- the day diary: one plain sentence per day the expedition has spent --- */
+.dfz-log {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 100%;
+  max-width: 460px;
+  margin: 12px auto 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-soft);
+}
+
+.dfz-logline {
+  margin: 0;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+[data-theme="light"] .dfz-log {
+  background: var(--panel-bg);
+}
+
+/* A failed crossing is named in words in the result line; the colour only
+ * echoes that, and never carries the message on its own. */
+.game-result.dfz-lost {
+  color: var(--danger-text);
+}
+
+[data-motion="off"] .dfz-canvas {
+  cursor: default;
+}
+
+[data-motion="off"] .dfz-itembtn,
+[data-motion="off"] .dfz-route,
+[data-motion="off"] .dfz-drink {
+  transition: none !important;
+}
+
+@media (max-width: 520px) {
+  .dfz-pack {
+    grid-template-columns: 1fr;
+  }
+
+  .dfz-card {
+    flex: 1 1 92px;
+  }
+}

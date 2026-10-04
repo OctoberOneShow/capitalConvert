@@ -6,6 +6,22 @@
 
 const { createEnvironment, appSource, GLYPH_KEY, check, run } = require("./lib");
 
+/* The ladder is read out of the game source, so these cases cannot fall behind
+ * it the way a hard-coded "/5" did. */
+const LADDER_START = appSource.indexOf("var memoryLevels = [");
+const MEMORY_LADDER = appSource
+  .slice(LADDER_START, appSource.indexOf("]", LADDER_START))
+  .split(/\},/)
+  .map((chunk) => chunk.match(/pairs:\s*(\d+),\s*cols:\s*(\d+)/))
+  .filter(Boolean)
+  .map((match) => ({ pairs: Number(match[1]), cols: Number(match[2]) }));
+const RUNGS = MEMORY_LADDER.length;
+if (LADDER_START === -1 || RUNGS === 0) {
+  throw new Error("cases-glyph: the memory ladder is not readable from the app source");
+}
+const WIDEST = MEMORY_LADDER[RUNGS - 1];
+const rungText = (level) => `${level}/${RUNGS}`;
+
 /* --- Glyph Match level ladder ----------------------------------------- */
 
 /* The memory panel markup lives in the four HTML pages; seed the same shape so
@@ -110,13 +126,12 @@ function playRung(env, seconds) {
   return pairs.length;
 }
 
-const MEMORY_RUNGS = [
-  { level: 1, pairs: 3, cols: "3", cards: 6 },
-  { level: 2, pairs: 4, cols: "4", cards: 8 },
-  { level: 3, pairs: 6, cols: "4", cards: 12 },
-  { level: 4, pairs: 8, cols: "4", cards: 16 },
-  { level: 5, pairs: 10, cols: "5", cards: 20 },
-];
+const MEMORY_RUNGS = MEMORY_LADDER.map((info, index) => ({
+  level: index + 1,
+  pairs: info.pairs,
+  cols: String(info.cols),
+  cards: info.pairs * 2,
+}));
 
 /* 38. deck shape of every rung ----------------------------------------- */
 run("glyph-levels", () => {
@@ -138,19 +153,19 @@ run("glyph-levels", () => {
     check("glyph-levels", `${name}: the pair counter targets ${rung.pairs}`,
       env.byId("memoryPairs").textContent === "0/" + rung.pairs,
       env.byId("memoryPairs").textContent);
-    check("glyph-levels", `${name}: the level indicator reads ${rung.level}/5`,
-      env.byId("memoryLevel").textContent === rung.level + "/5",
+    check("glyph-levels", `${name}: the level indicator reads ${rungText(rung.level)}`,
+      env.byId("memoryLevel").textContent === rungText(rung.level),
       env.byId("memoryLevel").textContent);
     check("glyph-levels", `${name}: the grid asks for ${rung.cols} columns`,
       env.byId("memoryGrid").getAttribute("data-cols") === rung.cols,
       env.byId("memoryGrid").getAttribute("data-cols"));
     check("glyph-levels", `${name}: the grid's name carries the level`,
       (env.byId("memoryGrid").getAttribute("aria-label") || "").includes(
-        `Level ${rung.level} of 5`),
+        `Level ${rung.level} of ${RUNGS}`),
       env.byId("memoryGrid").getAttribute("aria-label"));
     check("glyph-levels", `${name}: the level cell exposes the level`,
       env.byId("memoryLevel").parentNode.getAttribute("aria-label") ===
-        `Level ${rung.level} of 5`,
+        `Level ${rung.level} of ${RUNGS}`,
       env.byId("memoryLevel").parentNode.getAttribute("aria-label"));
     check("glyph-levels", `${name}: every card is a labelled button`,
       cards.every((card) =>
@@ -161,10 +176,10 @@ run("glyph-levels", () => {
 
 /* 39. glyph pool depth + no intra-level repeats ------------------------- */
 run("glyph-pool", () => {
-  const env = bootMemoryAtLevel(5);
+  const env = bootMemoryAtLevel(RUNGS);
   const glyphs = boardGlyphs(env);
-  check("glyph-pool", "the widest rung draws 10 distinct glyphs",
-    new Set(glyphs).size === 10, `${new Set(glyphs).size}`);
+  check("glyph-pool", `the widest rung draws ${WIDEST.pairs} distinct glyphs`,
+    new Set(glyphs).size === WIDEST.pairs, `${new Set(glyphs).size}`);
   check("glyph-pool", "the pool is therefore larger than the original six",
     new Set(glyphs).size > 6, `${new Set(glyphs).size}`);
 
@@ -173,7 +188,7 @@ run("glyph-pool", () => {
   for (let round = 0; round < 25; round += 1) {
     env.byId("memoryStartBtn").click();
     const next = boardGlyphs(env);
-    if (new Set(next).size !== 10 || next.length !== 20) repeats += 1;
+    if (new Set(next).size !== WIDEST.pairs || next.length !== WIDEST.pairs * 2) repeats += 1;
     sequences.add(next.join(""));
   }
   check("glyph-pool", "25 reshuffles of the widest rung never repeat a glyph",
@@ -192,7 +207,7 @@ run("glyph-reset", () => {
   playRung(env, 4);
   env.byId("memoryStartBtn").click(); // "Next Level"
   check("glyph-reset", "advancing moves to the next rung",
-    env.byId("memoryLevel").textContent === "2/5",
+    env.byId("memoryLevel").textContent === rungText(2),
     env.byId("memoryLevel").textContent);
   check("glyph-reset", "advancing resets moves", env.byId("memoryMoves").textContent === "0",
     env.byId("memoryMoves").textContent);
@@ -220,7 +235,7 @@ run("glyph-reset", () => {
 
   env.byId("memoryStartBtn").click(); // "New Shuffle"
   check("glyph-reset", "New Shuffle keeps the current rung",
-    env.byId("memoryLevel").textContent === "2/5" &&
+    env.byId("memoryLevel").textContent === rungText(2) &&
       boardCards(env).length === 8,
     `${env.byId("memoryLevel").textContent} / ${boardCards(env).length}`);
   check("glyph-reset", "New Shuffle resets the counters",
@@ -238,11 +253,11 @@ run("glyph-progression", () => {
   playRung(env, 4);
   const cleared = env.byId("memoryResult").textContent;
   check("glyph-progression", "the result announces the cleared rung",
-    cleared.includes("Level 1/5 cleared!"), cleared);
+    cleared.includes(`Level ${rungText(1)} cleared!`), cleared);
   check("glyph-progression", "the result carries the time and moves",
     cleared.includes("4.0s") && cleared.includes("3 moves"), cleared);
   check("glyph-progression", "the result offers the next level",
-    cleared.includes("Next up: level 2/5"), cleared);
+    cleared.includes(`Next up: level ${rungText(2)}`), cleared);
   check("glyph-progression", "the first clear was a personal best",
     cleared.includes("New best!"), cleared);
   check("glyph-progression", "the primary button becomes Next Level",
@@ -254,13 +269,17 @@ run("glyph-progression", () => {
     env.byId("memoryBest").textContent === "Best 4.0s",
     env.byId("memoryBest").textContent);
 
-  const final = bootMemoryAtLevel(5, { 1: 4, 2: 6, 3: 9, 4: 12 });
+  const priorBests = {};
+  for (let level = 1; level < RUNGS; level += 1) {
+    priorBests[level] = level * 3;
+  }
+  const final = bootMemoryAtLevel(RUNGS, priorBests);
   playRung(final, 30);
   const done = final.byId("memoryResult").textContent;
   check("glyph-progression", "clearing the last rung announces the completion",
-    done.includes("All 5 levels cleared"), done);
+    done.includes(`All ${RUNGS} levels cleared`), done);
   check("glyph-progression", "the completion keeps the rung's own result line",
-    done.includes("Level 5/5 cleared!"), done);
+    done.includes(`Level ${rungText(RUNGS)} cleared!`), done);
   check("glyph-progression", "the primary button becomes Play Again",
     final.byId("memoryStartBtn").querySelector("[data-i18n]").textContent === "Play Again",
     final.byId("memoryStartBtn").querySelector("[data-i18n]").textContent);
@@ -268,17 +287,17 @@ run("glyph-progression", () => {
     final.byId("memoryBest").textContent === "Best 30.0s",
     final.byId("memoryBest").textContent);
   check("glyph-progression", "every rung's best is kept after completion",
-    JSON.parse(final.store.get(GLYPH_KEY)).bests["4"] === 12,
+    JSON.parse(final.store.get(GLYPH_KEY)).bests[String(RUNGS - 1)] === (RUNGS - 1) * 3,
     final.store.get(GLYPH_KEY));
 
   final.byId("memoryStartBtn").click();
   check("glyph-progression", "Play Again restarts the ladder at rung 1",
-    final.byId("memoryLevel").textContent === "1/5" &&
+    final.byId("memoryLevel").textContent === rungText(1) &&
       boardCards(final).length === 6,
     `${final.byId("memoryLevel").textContent} / ${boardCards(final).length}`);
   check("glyph-progression", "the restarted ladder keeps the old bests",
     final.byId("memoryStartBtn").querySelector("[data-i18n]").textContent === "New Shuffle" &&
-      JSON.parse(final.store.get(GLYPH_KEY)).bests["5"] === 30,
+      JSON.parse(final.store.get(GLYPH_KEY)).bests[String(RUNGS)] === 30,
     final.store.get(GLYPH_KEY));
 });
 
@@ -292,7 +311,7 @@ run("glyph-persistence", () => {
 
   const resumed = bootMemory({ store });
   check("glyph-persistence", "a reload resumes on the remembered rung",
-    resumed.byId("memoryLevel").textContent === "2/5",
+    resumed.byId("memoryLevel").textContent === rungText(2),
     resumed.byId("memoryLevel").textContent);
   check("glyph-persistence", "the resumed rung has no best of its own yet",
     resumed.byId("memoryBest").textContent === "No best yet",
@@ -328,7 +347,7 @@ run("glyph-migration", () => {
   const migrated = bootMemory({ store: legacyStore });
   const rewritten = JSON.parse(legacyStore.get(GLYPH_KEY));
   check("glyph-migration", "an old scalar best does not throw",
-    migrated.byId("memoryLevel").textContent === "1/5",
+    migrated.byId("memoryLevel").textContent === rungText(1),
     migrated.byId("memoryLevel").textContent);
   check("glyph-migration", "the old scalar lands on the 6-pair rung",
     rewritten.bests["3"] === 12.34, JSON.stringify(rewritten.bests));
@@ -356,7 +375,7 @@ run("glyph-migration", () => {
       threw = error;
     }
     check("glyph-migration", `${label} falls back to defaults`,
-      !threw && !!env && env.byId("memoryLevel").textContent === "1/5" &&
+      !threw && !!env && env.byId("memoryLevel").textContent === rungText(1) &&
         env.byId("memoryBest").textContent === "No best yet" &&
         boardCards(env).length === 6,
       threw ? threw.message : env && env.byId("memoryLevel").textContent);
@@ -366,7 +385,7 @@ run("glyph-migration", () => {
   const v1 = bootMemory({ store: v1Store });
   const upgraded = JSON.parse(v1Store.get(GLYPH_KEY));
   check("glyph-migration", "an unversioned record is upgraded in place",
-    upgraded.v === 2 && upgraded.bests["3"] === 7 && v1.byId("memoryLevel").textContent === "2/5",
+    upgraded.v === 2 && upgraded.bests["3"] === 7 && v1.byId("memoryLevel").textContent === rungText(2),
     v1Store.get(GLYPH_KEY));
 
   const junk = bootMemoryAtLevel(99, {
@@ -379,7 +398,7 @@ run("glyph-migration", () => {
     x: 2,
   });
   check("glyph-migration", "a level beyond the ladder clamps to the last rung",
-    junk.byId("memoryLevel").textContent === "5/5",
+    junk.byId("memoryLevel").textContent === rungText(RUNGS),
     junk.byId("memoryLevel").textContent);
   check("glyph-migration", "out-of-range bests are dropped, valid ones survive",
     junk.byId("memoryBest").textContent === "No best yet" &&
@@ -403,7 +422,7 @@ run("glyph-migration", () => {
     readThrew = error;
   }
   check("glyph-migration", "a throwing storage read falls back to rung 1",
-    !readThrew && blockedRead.byId("memoryLevel").textContent === "1/5" &&
+    !readThrew && blockedRead.byId("memoryLevel").textContent === rungText(1) &&
       boardCards(blockedRead).length === 6,
     readThrew ? readThrew.message : String(blockedRead.byId("memoryLevel").textContent));
 
@@ -421,7 +440,7 @@ run("glyph-migration", () => {
   }
   check("glyph-migration", "a throwing storage write still clears the rung",
     !writeThrew &&
-      blockedWrite.byId("memoryResult").textContent.includes("Level 1/5 cleared!") &&
-      blockedWrite.byId("memoryLevel").textContent === "1/5",
+      blockedWrite.byId("memoryResult").textContent.includes(`Level ${rungText(1)} cleared!`) &&
+      blockedWrite.byId("memoryLevel").textContent === rungText(1),
     writeThrew ? writeThrew.message : blockedWrite.byId("memoryResult").textContent);
 });

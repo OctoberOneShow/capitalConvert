@@ -1,5 +1,6 @@
 ﻿/* Elements panel - The Elements drawer UI: challenge campaign, palette, canvas rendering, pointer and keyboard painting on top of the sim factory. */
 (function (App) {
+  var localStorage = App.storage;
   /* Shared names from the other modules (see window.CapitalConvert). */
   var t = App.t;
   var getElement = App.getElement;
@@ -1135,6 +1136,7 @@
       elapsedMs = 0;
       tickCount = 0;
       pick = false;
+      painting = false;
       strokePainted = 0;
       lastCell = null;
       cursorX = Math.floor(sim.cols / 2);
@@ -1341,7 +1343,11 @@
       event.preventDefault();
       lastCell = cellAt(event.clientX, event.clientY);
       if (typeof canvas.setPointerCapture === "function" && event.pointerId !== undefined) {
-        canvas.setPointerCapture(event.pointerId);
+        try {
+          canvas.setPointerCapture(event.pointerId);
+        } catch (error) {
+          /* capture is a nicety; the canvas listeners still paint */
+        }
       }
       /* The eyedropper paints nothing, so it neither starts nor charges a run. */
       if (pick) {
@@ -1543,6 +1549,10 @@
         paused = false;
         pick = false;
         elapsedMs = 0;
+        painting = false;
+        if (challenge.limit > 0) {
+          loadBoard();
+        }
         resultEl.textContent = boardGoalText();
         renderStatic();
         renderHud();

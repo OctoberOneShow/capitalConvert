@@ -27,6 +27,10 @@
     { id: "n6", labelKey: "netL6", size: 7, starPad: [0, 5, 10] },
     { id: "n7", labelKey: "netL7", size: 8, starPad: [0, 5, 10] },
     { id: "n8", labelKey: "netL8", size: 8, starPad: [0, 6, 11] },
+    { id: "n9", labelKey: "lvlNum9", size: 8, starPad: [0, 5, 9] },
+    { id: "n10", labelKey: "lvlNum10", size: 8, starPad: [0, 4, 8] },
+    { id: "n11", labelKey: "lvlNum11", size: 8, starPad: [0, 3, 7] },
+    { id: "n12", labelKey: "lvlNum12", size: 8, starPad: [0, 2, 6] },
   ];
 
   /* Pure generator + checker, exported for the static checks. Returns
@@ -83,6 +87,21 @@
           seen[next] = true;
           queue.push(next);
         }
+      }
+    }
+    /* Every armed tile has to hang off the source. Pairwise-matched arms
+     * alone are not a network: two leaf tiles can face each other and close
+     * a loop the bulbs never see. */
+    for (var tile = 0; tile < size * size; tile += 1) {
+      var armed = false;
+      for (var arm = 0; arm < 4; arm += 1) {
+        if (turned[tile][arm]) {
+          armed = true;
+          break;
+        }
+      }
+      if (armed && !seen[tile]) {
+        return false;
       }
     }
     return true;

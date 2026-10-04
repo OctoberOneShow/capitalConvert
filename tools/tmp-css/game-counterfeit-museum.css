@@ -1,0 +1,276 @@
+/* Counterfeit Museum: the audit bench. Every verdict and every contradiction is
+ * carried by words and digits in the DOM, so these rules only add emphasis - the
+ * light theme swaps the token variables and nothing else. */
+.cfm-rules {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .cfm-rules {
+    background: var(--surface-soft);
+}
+
+.cfm-rule {
+    margin: 0 0 6px;
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    line-height: 1.5;
+}
+
+.cfm-rule:last-child {
+    margin-bottom: 0;
+}
+
+.cfm-rule-clue {
+    padding: 6px 8px;
+    border-left: 3px solid var(--accent-2);
+    background: var(--surface-soft);
+    color: var(--text);
+    font-family: "JetBrains Mono", monospace;
+    font-weight: 700;
+}
+
+[data-theme="light"] .cfm-rule-clue {
+    background: var(--panel-bg);
+}
+
+.cfm-cards {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.cfm-card {
+    padding: 10px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .cfm-card {
+    background: var(--panel-bg);
+}
+
+/* Right and wrong read differently without colour alone: a wrong card keeps a
+ * dashed edge, and the card text already names the disagreeing line. */
+.cfm-card.cfm-card-ok {
+    border-color: var(--accent);
+    border-style: solid;
+}
+
+.cfm-card.cfm-card-bad {
+    border-color: var(--danger-text);
+    border-style: dashed;
+}
+
+.cfm-card-name {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.84rem;
+    font-weight: 700;
+    line-height: 1.35;
+}
+
+.cfm-record {
+    margin: 6px 0 0;
+    padding: 6px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    line-height: 1.5;
+}
+
+[data-theme="light"] .cfm-record {
+    background: var(--panel-bg);
+    color: var(--text-secondary);
+}
+
+.cfm-twin {
+    margin: 6px 0 0;
+    color: var(--accent-2);
+    font-size: 0.68rem;
+    font-weight: 700;
+}
+
+.cfm-lines {
+    display: grid;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.cfm-row {
+    min-height: 38px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px dashed var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.45;
+    text-align: left;
+    cursor: pointer;
+}
+
+.cfm-row:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.cfm-row:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.cfm-row.cfm-row-open {
+    border-style: solid;
+    border-color: var(--accent);
+    background: var(--panel-bg);
+    color: var(--text);
+    cursor: default;
+}
+
+[data-theme="light"] .cfm-row.cfm-row-open {
+    background: var(--panel-strong);
+}
+
+.cfm-marks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.cfm-mark {
+    flex: 1 1 88px;
+    min-height: 40px;
+    padding: 8px 6px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-soft);
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.cfm-mark:hover {
+    border-color: var(--accent);
+    color: var(--text);
+}
+
+.cfm-mark:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+/* The tick glyph and the "marked:" line under the buttons carry the state, so the
+ * accent border is decoration rather than the only signal. */
+.cfm-mark.cfm-mark-on {
+    border-color: var(--accent);
+    background: var(--panel-bg);
+    color: var(--accent);
+}
+
+[data-theme="light"] .cfm-mark.cfm-mark-on {
+    background: var(--panel-strong);
+    color: var(--accent);
+}
+
+.cfm-mark-state {
+    margin: 6px 0 0;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.64rem;
+}
+
+.cfm-check {
+    min-height: 1.2em;
+    margin: 6px 0 0;
+    color: var(--text-secondary);
+    font-size: 0.68rem;
+    line-height: 1.5;
+}
+
+.cfm-check.cfm-check-ok {
+    color: var(--accent);
+}
+
+.cfm-check.cfm-check-bad {
+    color: var(--danger-text);
+}
+
+.cfm-sheet {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--panel-strong);
+}
+
+[data-theme="light"] .cfm-sheet {
+    background: var(--panel-bg);
+}
+
+.cfm-sheet-title {
+    margin: 0;
+    color: var(--text);
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.cfm-sheet-need {
+    margin: 4px 0 8px;
+    color: var(--accent-2);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.66rem;
+    font-weight: 700;
+}
+
+.cfm-sheet-list {
+    display: grid;
+    gap: 2px;
+}
+
+.cfm-sheet-row {
+    display: flex;
+    gap: 6px;
+    margin: 0;
+    padding: 3px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.66rem;
+    line-height: 1.45;
+}
+
+.cfm-sheet-row:last-child {
+    border-bottom: none;
+}
+
+.cfm-sheet-tag {
+    flex: 0 0 auto;
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.cfm-sheet-text {
+    color: var(--text-secondary);
+    font-family: "JetBrains Mono", monospace;
+}
+
+.cfm-sheet-text.cfm-sheet-text-read {
+    color: var(--text);
+    font-weight: 700;
+}

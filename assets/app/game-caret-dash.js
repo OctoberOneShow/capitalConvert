@@ -1,5 +1,6 @@
 ﻿/* Caret Dash - The falling-obstacle mini-game in the shared game drawer. */
 (function (App) {
+  var localStorage = App.storage;
   /* Shared names from the other modules (see window.CapitalConvert). */
   var t = App.t;
   var getElement = App.getElement;

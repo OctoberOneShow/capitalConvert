@@ -22,6 +22,10 @@
     { id: "c6", labelKey: "echoL6", goal: 9, stepMs: 320 },
     { id: "c7", labelKey: "echoL7", goal: 10, stepMs: 280 },
     { id: "c8", labelKey: "echoL8", goal: 11, stepMs: 250 },
+    { id: "c9", labelKey: "lvlNum9", goal: 13, stepMs: 240 },
+    { id: "c10", labelKey: "lvlNum10", goal: 15, stepMs: 230 },
+    { id: "c11", labelKey: "lvlNum11", goal: 17, stepMs: 220 },
+    { id: "c12", labelKey: "lvlNum12", goal: 19, stepMs: 210 },
   ];
 
   function initGlyphEchoGame() {
@@ -154,6 +158,10 @@
     }
 
     function startGame() {
+      clearTimers();
+      pads.forEach(function (pad) {
+        pad.classList.remove("is-lit", "is-wrong");
+      });
       ensureAudio();
       lives = 3;
       mistakes = 0;

@@ -1,0 +1,311 @@
+/* game-tiny-blacksmith (registry game) */
+/* Tiny Blacksmith - the forge rail the hammer times itself against, and the
+ * anvil that shows how far each position still has to come down. */
+.tbs-forge {
+    display: grid;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--panel-strong);
+}
+
+.tbs-railtitle {
+    margin: 0;
+    font-size: 0.74rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+/* The pyrometer. Every window is positioned in percent of the 0-100 scale by
+ * the module, so the rail only has to keep the slots stacked in one order. */
+.tbs-rail {
+    position: relative;
+    height: 30px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--surface-soft);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tbs-rail.is-open {
+    border-color: var(--accent-2);
+    box-shadow: var(--focus-ring);
+}
+
+.tbs-rail.is-burn {
+    border-color: var(--danger-text);
+}
+
+.tbs-rail.is-cold {
+    border-color: var(--accent);
+}
+
+.tbs-cold,
+.tbs-burn,
+.tbs-band,
+.tbs-sweet,
+.tbs-quench {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+}
+
+.tbs-cold {
+    background: var(--accent);
+    opacity: 0.08;
+}
+
+.tbs-burn {
+    background: var(--danger-text);
+    opacity: 0.16;
+}
+
+.tbs-band {
+    border-left: 1px solid var(--accent-2);
+    border-right: 1px solid var(--accent-2);
+}
+
+/* The wash is the soft part and the edges are the sharp part, so the window
+ * stays readable even when it is only a handful of units wide. */
+.tbs-band::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--accent-2);
+    opacity: 0.18;
+}
+
+.tbs-sweet {
+    background: var(--accent-2);
+    opacity: 0.5;
+}
+
+.tbs-quench {
+    top: 4px;
+    bottom: 4px;
+    border: 1px dashed var(--accent);
+    border-radius: 6px;
+}
+
+.tbs-needle {
+    position: absolute;
+    top: -2px;
+    bottom: -2px;
+    width: 3px;
+    margin-left: -1.5px;
+    border-radius: 2px;
+    background: var(--text);
+    box-shadow: 0 0 10px var(--accent-2);
+    pointer-events: none;
+}
+
+.tbs-lines {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px 12px;
+}
+
+/* The word is the timing answer in words, so the band is never colour alone. */
+.tbs-word {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--text);
+}
+
+.tbs-legend {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+}
+
+/* Five hammer positions: a bar of metal with its target drawn across it. */
+.tbs-anvil {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.tbs-spot {
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 9px 8px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--panel-bg);
+    color: var(--text);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tbs-spot:hover {
+    border-color: var(--accent);
+}
+
+.tbs-spot:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.tbs-spot.is-selected {
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.tbs-spot.is-true {
+    border-color: var(--accent-2);
+}
+
+.tbs-spot.is-over {
+    border-style: dashed;
+    border-color: var(--danger-text);
+}
+
+.tbs-spot-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 6px;
+}
+
+.tbs-spot-name {
+    font-size: 0.78rem;
+    font-weight: 800;
+}
+
+.tbs-hot {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0 5px;
+}
+
+.tbs-gauge {
+    position: relative;
+    height: 52px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface-soft);
+    overflow: hidden;
+}
+
+.tbs-stock {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0;
+    border-radius: 0 0 7px 7px;
+    background: linear-gradient(180deg, var(--accent-2), var(--accent));
+    opacity: 0.85;
+    transition: height 0.12s linear;
+}
+
+.tbs-spot.is-true .tbs-stock {
+    background: var(--accent);
+}
+
+.tbs-spot.is-over .tbs-stock {
+    background: var(--danger-text);
+}
+
+.tbs-mark {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-top: 2px dashed var(--text);
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.tbs-read {
+    margin: 0;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+.tbs-spot.is-true .tbs-read {
+    color: var(--text);
+}
+
+/* The two secondary actions are the quiet pair beside the hammer, built on the
+ * shared chip recipe. The quench keeps the same dashed cyan cue as its window
+ * on the rail, so the button and the rule it obeys read as one thing. */
+.tbs-quench-btn,
+.tbs-new-btn {
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: var(--surface-soft);
+    color: var(--text);
+    font: inherit;
+    white-space: nowrap;
+}
+
+.tbs-quench-btn {
+    border-style: dashed;
+    border-color: var(--accent);
+}
+
+.tbs-quench-btn:hover,
+.tbs-new-btn:hover {
+    background: var(--panel-bg);
+    border-color: var(--accent);
+}
+
+.tbs-quench-btn:focus-visible,
+.tbs-new-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+/* One press, one blow: the hammer keeps the shared primary paint and only pins
+ * its label so the row does not jump while the blow count changes. */
+.tbs-strike {
+    white-space: nowrap;
+}
+
+/* Light theme: the panels lift off the page, so the forge plate and the cards
+ * take the softer surface instead of the dark one. */
+[data-theme="light"] .tbs-forge {
+    background: var(--panel-bg);
+}
+
+[data-theme="light"] .tbs-spot {
+    background: var(--panel-bg);
+}
+
+[data-motion="off"] .tbs-rail,
+[data-motion="off"] .tbs-spot,
+[data-motion="off"] .tbs-stock {
+    transition: none !important;
+}
+
+@media (max-width: 720px) {
+    .tbs-anvil {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .tbs-gauge {
+        height: 44px;
+    }
+}

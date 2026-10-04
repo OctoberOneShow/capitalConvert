@@ -222,7 +222,9 @@
       }
       var owner = ribbonAtCell(cell);
       var isOwnEnd = cell === ribbon.end;
-      if (owner !== -1 && owner !== pairIndex && !isOwnEnd) {
+      var endpoint = endpointAtCell(cell);
+      if ((owner !== -1 && owner !== pairIndex) ||
+          (endpoint && endpoint.pair !== pairIndex)) {
         return;
       }
       if (isOwnEnd) {
@@ -422,7 +424,7 @@
       var tail = ribbon.cells[ribbon.cells.length - 1];
       /* Grabbing either twin starts the ribbon fresh from that dot; the
        * far twin becomes the goal. */
-      if (cell !== tail) {
+      if (ribbon.done || cell !== tail) {
         ribbon.cells = [cell];
         ribbon.end = partnerCell(dragPair, cell);
         ribbon.done = false;
@@ -441,7 +443,15 @@
         return;
       }
       beginDrag(cell);
-      canvas.setPointerCapture(event.pointerId);
+      /* Capture merely keeps a drag alive past the canvas edge, so a pointer id
+       * the browser no longer tracks must not cost the player the whole drag. */
+      if (canvas.setPointerCapture && event.pointerId !== undefined) {
+        try {
+          canvas.setPointerCapture(event.pointerId);
+        } catch (error) {
+          /* no capture this time; the canvas listeners still fire */
+        }
+      }
     });
 
     canvas.addEventListener("pointermove", function (event) {

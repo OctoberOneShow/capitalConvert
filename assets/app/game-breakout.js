@@ -250,7 +250,7 @@
         message += " " + t("newBest");
       }
       if (outcome.unlockedNext) {
-        message += " " + t("brkNextStreet");
+        message += " " + t("brkNextLevel");
       } else if (campaign.clearedCount() === brkLevels.length) {
         message += " " + t("brkCampaignDone");
       }
@@ -366,10 +366,18 @@
           var pushLeft = ball.x + brkBallR - brick.x;
           var pushRight = brick.x + brkBrickW - (ball.x - brkBallR);
           var minPush = Math.min(pushUp, pushDown, pushLeft, pushRight);
-          if (minPush === pushUp || minPush === pushDown) {
-            ball.vy = -ball.vy;
+          if (minPush === pushUp) {
+            ball.y = brick.y - brkBallR;
+            ball.vy = -Math.abs(ball.vy);
+          } else if (minPush === pushDown) {
+            ball.y = brick.y + brkBrickH + brkBallR;
+            ball.vy = Math.abs(ball.vy);
+          } else if (minPush === pushLeft) {
+            ball.x = brick.x - brkBallR;
+            ball.vx = -Math.abs(ball.vx);
           } else {
-            ball.vx = -ball.vx;
+            ball.x = brick.x + brkBrickW + brkBallR;
+            ball.vx = Math.abs(ball.vx);
           }
           if (brick.hp > 1) {
             brick.hp -= 1;
