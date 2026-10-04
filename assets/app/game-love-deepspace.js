@@ -112,9 +112,6 @@
     var done = false;
     var missionLog = [];
 
-    var stage = document.createElement("div");
-    stage.className = "lds-stage";
-
     var topRow = document.createElement("div");
     topRow.className = "lds-top";
 
@@ -235,9 +232,8 @@
     hint.textContent = t("ldsHint");
 
     [topRow, hud, bars, eventCard, moves, result, actions, logBox, hint].forEach(function (node) {
-      stage.appendChild(node);
+      panelEl.appendChild(node);
     });
-    panelEl.appendChild(stage);
 
     ldsPartners.forEach(function (entry) {
       var option = document.createElement("option");

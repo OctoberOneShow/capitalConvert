@@ -11900,7 +11900,7 @@ button.ghost:hover {
     height: 8px;
     border-radius: 999px;
     border: 1px solid var(--border);
-    background: rgba(15, 23, 42, 0.32);
+    background: var(--surface-soft);
     overflow: hidden;
 }
 
@@ -12005,7 +12005,7 @@ button.ghost:hover {
 .lds-log {
     border-radius: 12px;
     border: 1px solid var(--border);
-    background: rgba(15, 23, 42, 0.22);
+    background: var(--panel-bg);
     padding: 9px 10px;
 }
 
