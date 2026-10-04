@@ -8,7 +8,7 @@ A small web-based text toolkit (pure HTML/CSS/JS, no build step) for cleaning an
 - `words_replacing.html` – batch find-and-replace words
 - `assets/` – shared scripts and styles
 
-Each page also includes a shared mini-game drawer with sixty-nine games:
+Each page also includes a shared mini-game drawer with seventy games:
 Typing Sprint, Glyph Match, 2048, Reflex Tap, Caret Dash, Elements
 (falling-sand sandbox), Spot the Diff (mutation-hunting ladder), Punctuation
 Plumber (width sorting with combos), Stack! (drop-and-trim tower), Color Code
@@ -43,7 +43,7 @@ Fleet (battleship duels against ranked hunt/target admirals), Ember Sticks
 Rewind (a bilingual history-and-culture card quiz with per-card notes), Kalah
 Row (a mancala sow against a bench that reads the ring two hands deep),
 Twenty-One Parlor (blackjack tables that race a bankroll to its target) and
-Roof Garden (an idle planting bed that ripens on the wall clock), plus twenty
+Roof Garden (an idle planting bed that ripens on the wall clock), plus twenty-one
 games the drawer injects from a registry (game-registry.js) instead of page
 markup: Rooftop Radio (triangulate a hidden transmitter from signal readings),
 Lantern Heist (turn-based stealth past guard vision cones), Pocket Detective
@@ -59,13 +59,14 @@ mutation points to outlast the environment cards), Echo Cartographer (map a cave
 from fading sonar pings), Neon Drift (momentum time trials against your own
 ghost), Lantern Fishing (depth, bite windows and line tension), Archive Escape
 (a branching bilingual text adventure), Moon Market (seven seeded days of prices
-and events), Dream Orchestra (voice-limited step-sequencer puzzles) and
-Loopwright (loop a program so your earlier runs hold the plates). Campaign
+and events), Dream Orchestra (voice-limited step-sequencer puzzles), Loopwright
+(loop a program so your earlier runs hold the plates), and Love and Deepspace
+(a route-and-bond strategy run themed around 恋与深空). Campaign
 games share an unlock-chain core
 (game-campaign.js). Every game panel carries a collapsible "How to play"
 guide (game-guide.js) with a mechanic diagram and step-by-step instructions
 in both languages. The picker is a two-column grid that shows six games and
-states the hidden count ("More games +63") instead of hiding the rest behind
+states the hidden count ("More games +64") instead of hiding the rest behind
 a scroll gesture.
 
 ## Usage
