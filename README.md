@@ -8,7 +8,7 @@ A small web-based text toolkit (pure HTML/CSS/JS, no build step) for cleaning an
 - `words_replacing.html` – batch find-and-replace words
 - `assets/` – shared scripts and styles
 
-Each page also includes a shared mini-game drawer with seventy games:
+Each page also includes a shared mini-game drawer with ninety-eight games:
 Typing Sprint, Glyph Match, 2048, Reflex Tap, Caret Dash, Elements
 (falling-sand sandbox), Spot the Diff (mutation-hunting ladder), Punctuation
 Plumber (width sorting with combos), Stack! (drop-and-trim tower), Color Code
@@ -60,7 +60,13 @@ from fading sonar pings), Neon Drift (momentum time trials against your own
 ghost), Lantern Fishing (depth, bite windows and line tension), Archive Escape
 (a branching bilingual text adventure), Moon Market (seven seeded days of prices
 and events), Dream Orchestra (voice-limited step-sequencer puzzles), Loopwright
-(loop a program so your earlier runs hold the plates), and Love and Deepspace
+(loop a program so your earlier runs hold the plates), Hue Hunter (hunt the one
+tile whose colour is a shade off, across a fifty-level ladder), Snapshot
+Sleuth (find the one tampered photo on a wall of hand-painted scenes, across
+a fifty-level ladder), Double Take (the classic two-photo
+find-the-difference hunt over a fifteen-scene hand-painted deck, across a
+fifty-level ladder), Item Quest (hunt the items listed in the tray through
+six dense hand-painted rooms), and Love and Deepspace
 (an action arena and route-and-bond strategy game themed around 恋与深空). Campaign
 games share an unlock-chain core
 (game-campaign.js). Every game panel carries a collapsible "How to play"

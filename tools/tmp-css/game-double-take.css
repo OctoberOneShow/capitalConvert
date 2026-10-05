@@ -1,0 +1,249 @@
+/* game-double-take (registry game) */
+/* Double Take - two near-identical photos, one wall of small lies. Each
+ * round develops a pair of painted scenes and marks found differences with
+ * rings on both prints. State is never carried by colour alone: hearts are
+ * glyphs, the find counter speaks in words, and the result line names what
+ * happened. */
+.dt-stage {
+    margin-top: 12px;
+}
+
+.dt-board {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    max-width: 360px;
+    margin: 0 auto;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface-soft);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* A streak of three lights the frame from the inside - the streak also
+ * speaks in the result line, so the glow is decoration, not state. */
+.dt-board.is-hot {
+    border-color: var(--accent-2);
+    box-shadow: 0 0 18px rgba(251, 146, 60, 0.28);
+}
+
+.dt-copy {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    background: var(--panel-strong);
+}
+
+.dt-copy:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    z-index: 1;
+}
+
+/* The pair deals in with a soft rise; the delay is inline per print. */
+.dt-copy.dt-in {
+    animation: dt-deal 0.4s cubic-bezier(0.2, 0.8, 0.3, 1.1) backwards;
+}
+
+@keyframes dt-deal {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.dt-scene {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.dt-rings {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* Found forgeries get a solid ring on both prints; hints and end-of-run
+ * reveals pulse in amber instead, so a pulse never means "found". */
+.dt-ring {
+    position: absolute;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.dt-ring.is-found {
+    border: 2.5px solid var(--success-text);
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.45);
+    animation: dt-ring-pop 0.35s ease;
+}
+
+@keyframes dt-ring-pop {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.6);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.dt-ring.is-hint,
+.dt-ring.is-reveal {
+    border: 2.5px solid var(--accent-2);
+    animation: dt-ring-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes dt-ring-pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(251, 146, 60, 0.35);
+    }
+
+    50% {
+        box-shadow: 0 0 0 5px rgba(251, 146, 60, 0.45);
+    }
+}
+
+/* The keyboard probe: a dashed puck that rides the arrows, visible only
+ * while its photo holds focus. */
+.dt-cursor {
+    position: absolute;
+    width: 11%;
+    aspect-ratio: 1 / 1;
+    border: 1.5px dashed var(--accent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+}
+
+.dt-copy:focus-visible .dt-cursor {
+    opacity: 1;
+}
+
+.dt-board.is-shaking {
+    animation: dt-shake 0.4s ease;
+}
+
+@keyframes dt-shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-5px);
+    }
+
+    40% {
+        transform: translateX(5px);
+    }
+
+    60% {
+        transform: translateX(-3px);
+    }
+
+    80% {
+        transform: translateX(3px);
+    }
+}
+
+/* The point award floats up from the spot it was earned on. */
+.dt-float {
+    position: absolute;
+    z-index: 2;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    font-weight: 800;
+    color: var(--success-text);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: dt-float 0.9s ease forwards;
+}
+
+@keyframes dt-float {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, calc(-50% - 24px));
+    }
+}
+
+.dt-btn {
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--panel-strong);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.dt-btn:hover {
+    border-color: var(--accent);
+}
+
+.dt-btn:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.dt-btn[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: default;
+}
+
+[data-theme="light"] .dt-btn {
+    background: rgba(255, 255, 255, 0.72);
+}
+
+[data-theme="light"] .dt-float {
+    text-shadow: none;
+}
+
+[data-motion="off"] .dt-copy,
+[data-motion="off"] .dt-board,
+[data-motion="off"] .dt-ring,
+[data-motion="off"] .dt-float {
+    animation: none !important;
+    transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dt-copy,
+    .dt-board,
+    .dt-ring,
+    .dt-float {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .dt-board {
+        max-width: 100%;
+    }
+}

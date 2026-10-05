@@ -1,0 +1,222 @@
+/* game-snapshot-sleuth (registry game) */
+/* Snapshot Sleuth - a wall of photos, one forgery. Every tile shows the same
+ * painted scene and the odd print carries the treatment: a colour cast, a
+ * mirror flip, a crooked tripod or a faded lamp. State is never carried by
+ * colour alone: hearts are glyphs, the streak speaks in words, and the
+ * result line names what happened. */
+.snap-stage {
+    position: relative;
+    margin-top: 12px;
+}
+
+.snap-board {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--snap-side, 4), 1fr);
+    gap: 6px;
+    max-width: 340px;
+    margin: 0 auto;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface-soft);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* A streak of three lights the frame from the inside - the streak also
+ * speaks in the result line, so the glow is decoration, not state. */
+.snap-board.is-hot {
+    border-color: var(--accent-2);
+    box-shadow: 0 0 18px rgba(251, 146, 60, 0.28);
+}
+
+.snap-tile {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    min-height: 36px;
+    padding: 0;
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--panel-strong);
+    transition: transform 0.16s ease;
+}
+
+.snap-tile:hover {
+    transform: translateY(-1px) scale(1.04);
+    z-index: 1;
+}
+
+.snap-tile:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    z-index: 1;
+}
+
+/* The print sits oversized inside its frame so a tilted forgery never
+ * exposes bare corners; the frame crops it like a mounted photo. */
+.snap-art {
+    position: absolute;
+    left: -14%;
+    top: -14%;
+    width: 128%;
+    height: 128%;
+    display: block;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Photos deal in with a staggered rise; the delay is inline per tile. */
+.snap-tile.snap-in {
+    animation: snap-deal 0.34s cubic-bezier(0.2, 0.8, 0.3, 1.1) backwards;
+}
+
+@keyframes snap-deal {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Judgement marks: the found forgery blooms, a wrong tap shakes in place,
+ * and on a failed run the forgery pulses so the miss becomes a lesson. */
+.snap-tile.is-hit {
+    animation: snap-pop 0.42s ease;
+    box-shadow: 0 0 0 3px var(--success-text), 0 0 14px rgba(74, 222, 128, 0.5);
+    z-index: 1;
+}
+
+@keyframes snap-pop {
+    0% {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.14);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.snap-tile.is-miss {
+    animation: snap-miss 0.4s ease;
+    box-shadow: 0 0 0 3px #fb7185;
+}
+
+@keyframes snap-miss {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    75% {
+        transform: translateX(4px);
+    }
+}
+
+.snap-tile.is-reveal {
+    animation: snap-reveal 1.2s ease-in-out infinite;
+    box-shadow: 0 0 0 3px var(--accent-2);
+}
+
+@keyframes snap-reveal {
+    0%,
+    100% {
+        box-shadow: 0 0 0 3px var(--accent-2);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px var(--accent-2), 0 0 18px rgba(251, 146, 60, 0.5);
+    }
+}
+
+.snap-board.is-shaking {
+    animation: snap-shake 0.4s ease;
+}
+
+@keyframes snap-shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-5px);
+    }
+
+    40% {
+        transform: translateX(5px);
+    }
+
+    60% {
+        transform: translateX(-3px);
+    }
+
+    80% {
+        transform: translateX(3px);
+    }
+}
+
+/* The point award floats up from the photo it was earned on. */
+.snap-float {
+    position: absolute;
+    z-index: 2;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--success-text);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: snap-float 0.9s ease forwards;
+}
+
+@keyframes snap-float {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, calc(-50% - 26px));
+    }
+}
+
+[data-theme="light"] .snap-float {
+    text-shadow: none;
+}
+
+[data-motion="off"] .snap-tile,
+[data-motion="off"] .snap-board,
+[data-motion="off"] .snap-float {
+    animation: none !important;
+    transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .snap-tile,
+    .snap-board,
+    .snap-float {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .snap-board {
+        max-width: 100%;
+    }
+}

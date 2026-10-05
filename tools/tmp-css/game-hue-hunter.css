@@ -1,0 +1,205 @@
+/* game-hue-hunter (registry game) */
+/* Hue Hunter - one board, one impostor: every tile is mixed from the same
+ * colour and exactly one is a shade off. State is never carried by colour
+ * alone: hearts are glyphs, the streak speaks in words, and the result line
+ * names what happened. */
+.hh-stage {
+    position: relative;
+    margin-top: 12px;
+}
+
+.hh-board {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--hh-side, 4), 1fr);
+    gap: 6px;
+    max-width: 340px;
+    margin: 0 auto;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface-soft);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* A streak of three lights the frame from the inside - the streak also
+ * speaks in the result line, so the glow is decoration, not state. */
+.hh-board.is-hot {
+    border-color: var(--accent-2);
+    box-shadow: 0 0 18px rgba(251, 146, 60, 0.28);
+}
+
+.hh-tile {
+    aspect-ratio: 1 / 1;
+    min-height: 36px;
+    padding: 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.16s ease;
+}
+
+.hh-tile:hover {
+    transform: translateY(-1px) scale(1.04);
+    z-index: 1;
+}
+
+.hh-tile:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    z-index: 1;
+}
+
+/* Tiles deal in with a staggered rise; the delay is inline per tile. */
+.hh-tile.hh-in {
+    animation: hh-deal 0.34s cubic-bezier(0.2, 0.8, 0.3, 1.1) backwards;
+}
+
+@keyframes hh-deal {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Judgement marks: the found impostor blooms, a wrong tap shakes in place,
+ * and on a failed run the impostor pulses so the miss becomes a lesson. */
+.hh-tile.is-hit {
+    animation: hh-pop 0.42s ease;
+    box-shadow: 0 0 0 3px var(--success-text), 0 0 14px rgba(74, 222, 128, 0.5);
+    z-index: 1;
+}
+
+@keyframes hh-pop {
+    0% {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.14);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.hh-tile.is-miss {
+    animation: hh-miss 0.4s ease;
+    box-shadow: 0 0 0 3px #fb7185;
+}
+
+@keyframes hh-miss {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    75% {
+        transform: translateX(4px);
+    }
+}
+
+.hh-tile.is-reveal {
+    animation: hh-reveal 1.2s ease-in-out infinite;
+    box-shadow: 0 0 0 3px var(--accent-2);
+}
+
+@keyframes hh-reveal {
+    0%,
+    100% {
+        box-shadow: 0 0 0 3px var(--accent-2);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px var(--accent-2), 0 0 18px rgba(251, 146, 60, 0.5);
+    }
+}
+
+.hh-board.is-shaking {
+    animation: hh-shake 0.4s ease;
+}
+
+@keyframes hh-shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-5px);
+    }
+
+    40% {
+        transform: translateX(5px);
+    }
+
+    60% {
+        transform: translateX(-3px);
+    }
+
+    80% {
+        transform: translateX(3px);
+    }
+}
+
+/* The point award floats up from the tile it was earned on. */
+.hh-float {
+    position: absolute;
+    z-index: 2;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--success-text);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: hh-float 0.9s ease forwards;
+}
+
+@keyframes hh-float {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, calc(-50% - 26px));
+    }
+}
+
+[data-theme="light"] .hh-float {
+    text-shadow: none;
+}
+
+[data-motion="off"] .hh-tile,
+[data-motion="off"] .hh-board,
+[data-motion="off"] .hh-float {
+    animation: none !important;
+    transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hh-tile,
+    .hh-board,
+    .hh-float {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .hh-board {
+        max-width: 100%;
+    }
+}

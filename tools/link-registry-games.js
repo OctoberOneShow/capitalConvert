@@ -23,7 +23,7 @@ const PAGES = [
   "chinese_punctuation.html",
   "words_replacing.html",
 ];
-const VERSION = 56;
+const VERSION = 61;
 const APP_DIR = path.join(root, "assets", "app");
 const CSS_DIR = path.join(root, "tools", "tmp-css");
 const GAMES_CSS = path.join(root, "assets", "styles", "games.css");

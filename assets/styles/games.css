@@ -12332,3 +12332,1175 @@ button.ghost:hover {
   .lds-stage[data-view="dates"] .lds-eyebrow { font-size: .57rem; letter-spacing: .08em; }
   .lds-stage[data-view="dates"] .lds-edition { font-size: .45rem; padding: 4px; }
 }
+
+/* game-hue-hunter (registry game) */
+/* Hue Hunter - one board, one impostor: every tile is mixed from the same
+ * colour and exactly one is a shade off. State is never carried by colour
+ * alone: hearts are glyphs, the streak speaks in words, and the result line
+ * names what happened. */
+.hh-stage {
+    position: relative;
+    margin-top: 12px;
+}
+
+.hh-board {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--hh-side, 4), 1fr);
+    gap: 6px;
+    max-width: 340px;
+    margin: 0 auto;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface-soft);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* A streak of three lights the frame from the inside - the streak also
+ * speaks in the result line, so the glow is decoration, not state. */
+.hh-board.is-hot {
+    border-color: var(--accent-2);
+    box-shadow: 0 0 18px rgba(251, 146, 60, 0.28);
+}
+
+.hh-tile {
+    aspect-ratio: 1 / 1;
+    min-height: 36px;
+    padding: 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.16s ease;
+}
+
+.hh-tile:hover {
+    transform: translateY(-1px) scale(1.04);
+    z-index: 1;
+}
+
+.hh-tile:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    z-index: 1;
+}
+
+/* Tiles deal in with a staggered rise; the delay is inline per tile. */
+.hh-tile.hh-in {
+    animation: hh-deal 0.34s cubic-bezier(0.2, 0.8, 0.3, 1.1) backwards;
+}
+
+@keyframes hh-deal {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Judgement marks: the found impostor blooms, a wrong tap shakes in place,
+ * and on a failed run the impostor pulses so the miss becomes a lesson. */
+.hh-tile.is-hit {
+    animation: hh-pop 0.42s ease;
+    box-shadow: 0 0 0 3px var(--success-text), 0 0 14px rgba(74, 222, 128, 0.5);
+    z-index: 1;
+}
+
+@keyframes hh-pop {
+    0% {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.14);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.hh-tile.is-miss {
+    animation: hh-miss 0.4s ease;
+    box-shadow: 0 0 0 3px #fb7185;
+}
+
+@keyframes hh-miss {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    75% {
+        transform: translateX(4px);
+    }
+}
+
+.hh-tile.is-reveal {
+    animation: hh-reveal 1.2s ease-in-out infinite;
+    box-shadow: 0 0 0 3px var(--accent-2);
+}
+
+@keyframes hh-reveal {
+    0%,
+    100% {
+        box-shadow: 0 0 0 3px var(--accent-2);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px var(--accent-2), 0 0 18px rgba(251, 146, 60, 0.5);
+    }
+}
+
+.hh-board.is-shaking {
+    animation: hh-shake 0.4s ease;
+}
+
+@keyframes hh-shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-5px);
+    }
+
+    40% {
+        transform: translateX(5px);
+    }
+
+    60% {
+        transform: translateX(-3px);
+    }
+
+    80% {
+        transform: translateX(3px);
+    }
+}
+
+/* The point award floats up from the tile it was earned on. */
+.hh-float {
+    position: absolute;
+    z-index: 2;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--success-text);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: hh-float 0.9s ease forwards;
+}
+
+@keyframes hh-float {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, calc(-50% - 26px));
+    }
+}
+
+[data-theme="light"] .hh-float {
+    text-shadow: none;
+}
+
+[data-motion="off"] .hh-tile,
+[data-motion="off"] .hh-board,
+[data-motion="off"] .hh-float {
+    animation: none !important;
+    transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hh-tile,
+    .hh-board,
+    .hh-float {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .hh-board {
+        max-width: 100%;
+    }
+}
+
+/* game-snapshot-sleuth (registry game) */
+/* Snapshot Sleuth - a wall of photos, one forgery. Every tile shows the same
+ * painted scene and the odd print carries the treatment: a colour cast, a
+ * mirror flip, a crooked tripod or a faded lamp. State is never carried by
+ * colour alone: hearts are glyphs, the streak speaks in words, and the
+ * result line names what happened. */
+.snap-stage {
+    position: relative;
+    margin-top: 12px;
+}
+
+.snap-board {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--snap-side, 4), 1fr);
+    gap: 6px;
+    max-width: 340px;
+    margin: 0 auto;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface-soft);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* A streak of three lights the frame from the inside - the streak also
+ * speaks in the result line, so the glow is decoration, not state. */
+.snap-board.is-hot {
+    border-color: var(--accent-2);
+    box-shadow: 0 0 18px rgba(251, 146, 60, 0.28);
+}
+
+.snap-tile {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    min-height: 36px;
+    padding: 0;
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--panel-strong);
+    transition: transform 0.16s ease;
+}
+
+.snap-tile:hover {
+    transform: translateY(-1px) scale(1.04);
+    z-index: 1;
+}
+
+.snap-tile:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    z-index: 1;
+}
+
+/* The print sits oversized inside its frame so a tilted forgery never
+ * exposes bare corners; the frame crops it like a mounted photo. */
+.snap-art {
+    position: absolute;
+    left: -14%;
+    top: -14%;
+    width: 128%;
+    height: 128%;
+    display: block;
+    background-size: cover;
+    background-position: center;
+}
+
+/* Photos deal in with a staggered rise; the delay is inline per tile. */
+.snap-tile.snap-in {
+    animation: snap-deal 0.34s cubic-bezier(0.2, 0.8, 0.3, 1.1) backwards;
+}
+
+@keyframes snap-deal {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Judgement marks: the found forgery blooms, a wrong tap shakes in place,
+ * and on a failed run the forgery pulses so the miss becomes a lesson. */
+.snap-tile.is-hit {
+    animation: snap-pop 0.42s ease;
+    box-shadow: 0 0 0 3px var(--success-text), 0 0 14px rgba(74, 222, 128, 0.5);
+    z-index: 1;
+}
+
+@keyframes snap-pop {
+    0% {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.14);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.snap-tile.is-miss {
+    animation: snap-miss 0.4s ease;
+    box-shadow: 0 0 0 3px #fb7185;
+}
+
+@keyframes snap-miss {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-4px);
+    }
+
+    75% {
+        transform: translateX(4px);
+    }
+}
+
+.snap-tile.is-reveal {
+    animation: snap-reveal 1.2s ease-in-out infinite;
+    box-shadow: 0 0 0 3px var(--accent-2);
+}
+
+@keyframes snap-reveal {
+    0%,
+    100% {
+        box-shadow: 0 0 0 3px var(--accent-2);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px var(--accent-2), 0 0 18px rgba(251, 146, 60, 0.5);
+    }
+}
+
+.snap-board.is-shaking {
+    animation: snap-shake 0.4s ease;
+}
+
+@keyframes snap-shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-5px);
+    }
+
+    40% {
+        transform: translateX(5px);
+    }
+
+    60% {
+        transform: translateX(-3px);
+    }
+
+    80% {
+        transform: translateX(3px);
+    }
+}
+
+/* The point award floats up from the photo it was earned on. */
+.snap-float {
+    position: absolute;
+    z-index: 2;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--success-text);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: snap-float 0.9s ease forwards;
+}
+
+@keyframes snap-float {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, calc(-50% - 26px));
+    }
+}
+
+[data-theme="light"] .snap-float {
+    text-shadow: none;
+}
+
+[data-motion="off"] .snap-tile,
+[data-motion="off"] .snap-board,
+[data-motion="off"] .snap-float {
+    animation: none !important;
+    transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .snap-tile,
+    .snap-board,
+    .snap-float {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .snap-board {
+        max-width: 100%;
+    }
+}
+
+/* game-double-take (registry game) */
+/* Double Take - two near-identical photos, one wall of small lies. Each
+ * round develops a pair of painted scenes and marks found differences with
+ * rings on both prints. State is never carried by colour alone: hearts are
+ * glyphs, the find counter speaks in words, and the result line names what
+ * happened. */
+.dt-stage {
+    margin-top: 12px;
+}
+
+.dt-board {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    max-width: 360px;
+    margin: 0 auto;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: var(--surface-soft);
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+/* A streak of three lights the frame from the inside - the streak also
+ * speaks in the result line, so the glow is decoration, not state. */
+.dt-board.is-hot {
+    border-color: var(--accent-2);
+    box-shadow: 0 0 18px rgba(251, 146, 60, 0.28);
+}
+
+.dt-copy {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    background: var(--panel-strong);
+}
+
+.dt-copy:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    z-index: 1;
+}
+
+/* The pair deals in with a soft rise; the delay is inline per print. */
+.dt-copy.dt-in {
+    animation: dt-deal 0.4s cubic-bezier(0.2, 0.8, 0.3, 1.1) backwards;
+}
+
+@keyframes dt-deal {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.94);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.dt-scene {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.dt-rings {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* Found forgeries get a solid ring on both prints; hints and end-of-run
+ * reveals pulse in amber instead, so a pulse never means "found". */
+.dt-ring {
+    position: absolute;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.dt-ring.is-found {
+    border: 2.5px solid var(--success-text);
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.45);
+    animation: dt-ring-pop 0.35s ease;
+}
+
+@keyframes dt-ring-pop {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.6);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.dt-ring.is-hint,
+.dt-ring.is-reveal {
+    border: 2.5px solid var(--accent-2);
+    animation: dt-ring-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes dt-ring-pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(251, 146, 60, 0.35);
+    }
+
+    50% {
+        box-shadow: 0 0 0 5px rgba(251, 146, 60, 0.45);
+    }
+}
+
+/* The keyboard probe: a dashed puck that rides the arrows, visible only
+ * while its photo holds focus. */
+.dt-cursor {
+    position: absolute;
+    width: 11%;
+    aspect-ratio: 1 / 1;
+    border: 1.5px dashed var(--accent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+}
+
+.dt-copy:focus-visible .dt-cursor {
+    opacity: 1;
+}
+
+.dt-board.is-shaking {
+    animation: dt-shake 0.4s ease;
+}
+
+@keyframes dt-shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-5px);
+    }
+
+    40% {
+        transform: translateX(5px);
+    }
+
+    60% {
+        transform: translateX(-3px);
+    }
+
+    80% {
+        transform: translateX(3px);
+    }
+}
+
+/* The point award floats up from the spot it was earned on. */
+.dt-float {
+    position: absolute;
+    z-index: 2;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    font-weight: 800;
+    color: var(--success-text);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: dt-float 0.9s ease forwards;
+}
+
+@keyframes dt-float {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, calc(-50% - 24px));
+    }
+}
+
+.dt-btn {
+    padding: 8px 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--panel-strong);
+    color: var(--text);
+    cursor: pointer;
+}
+
+.dt-btn:hover {
+    border-color: var(--accent);
+}
+
+.dt-btn:focus-visible {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: var(--focus-ring);
+}
+
+.dt-btn[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: default;
+}
+
+[data-theme="light"] .dt-btn {
+    background: rgba(255, 255, 255, 0.72);
+}
+
+[data-theme="light"] .dt-float {
+    text-shadow: none;
+}
+
+[data-motion="off"] .dt-copy,
+[data-motion="off"] .dt-board,
+[data-motion="off"] .dt-ring,
+[data-motion="off"] .dt-float {
+    animation: none !important;
+    transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dt-copy,
+    .dt-board,
+    .dt-ring,
+    .dt-float {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .dt-board {
+        max-width: 100%;
+    }
+}
+
+/* game-item-quest (registry game) */
+/* Item Quest - a standalone-feeling hidden-object room: the panel wears a
+ * lavender skin, the scene sits in a thick framed card, the HUD reads as
+ * pills, the tray holds item cards, and finds ring the picture while a
+ * progress bar fills. State is never carried by colour alone: hearts are
+ * glyphs, the progress line counts in words, and the tray marks finds with
+ * a check, not a tint. */
+.game-panel.iq-panel {
+    background:
+        radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.12), transparent 42%),
+        radial-gradient(circle at 85% 100%, rgba(255, 255, 255, 0.07), transparent 40%),
+        linear-gradient(180deg, hsl(256, 38%, 28%), hsl(251, 34%, 17%));
+    border-radius: 18px;
+    padding: 12px 12px 10px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="light"] .game-panel.iq-panel {
+    background:
+        radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.9), transparent 42%),
+        radial-gradient(circle at 85% 100%, rgba(255, 255, 255, 0.5), transparent 40%),
+        linear-gradient(180deg, hsl(256, 60%, 94%), hsl(250, 45%, 87%));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+/* App-style top bar: hearts pill, score pill, level badge. */
+.iq-topbar {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.iq-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 58px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 0.95rem;
+    letter-spacing: 0.04em;
+}
+
+.iq-pill strong {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.95rem;
+}
+
+.iq-pill-hearts {
+    background: linear-gradient(180deg, hsl(350, 65%, 46%), hsl(350, 70%, 36%));
+    color: hsl(0, 0%, 98%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.3);
+}
+
+.iq-pill-score {
+    background: linear-gradient(180deg, hsl(45, 85%, 58%), hsl(40, 80%, 46%));
+    color: hsl(35, 60%, 18%);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.3);
+}
+
+.iq-badge {
+    flex: 1;
+    min-width: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: hsl(222, 30%, 18%);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.iq-badge strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.82rem;
+    color: hsl(0, 0%, 97%);
+}
+
+[data-theme="light"] .iq-badge {
+    background: hsl(222, 30%, 14%);
+    border-color: rgba(15, 23, 42, 0.2);
+}
+
+/* HUD pills inside the themed panel are replaced by the top bar above;
+ * the scene keeps its thick cream mount like a real game board. */
+.iq-stage {
+    margin-top: 10px;
+}
+
+.iq-board {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    max-width: 340px;
+    margin: 0 auto;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 6px solid hsl(45, 40%, 92%);
+    box-shadow:
+        0 0 0 1.5px rgba(15, 23, 42, 0.35),
+        0 12px 30px rgba(15, 23, 42, 0.4),
+        0 2px 6px rgba(15, 23, 42, 0.25);
+    background: var(--panel-strong);
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.iq-art {
+    box-shadow: inset 0 0 0 2px rgba(15, 23, 42, 0.28);
+}
+
+.iq-board:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+/* A streak of three lights the frame from the inside - the streak also
+ * speaks in the result line, so the glow is decoration, not state. */
+.iq-board.is-hot {
+    border-color: var(--accent-2);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.35), 0 0 22px rgba(251, 146, 60, 0.4);
+}
+
+.iq-board.is-shaking {
+    animation: iq-shake 0.4s ease;
+}
+
+@keyframes iq-shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(-5px);
+    }
+
+    40% {
+        transform: translateX(5px);
+    }
+
+    60% {
+        transform: translateX(-3px);
+    }
+
+    80% {
+        transform: translateX(3px);
+    }
+}
+
+.iq-art {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.iq-rings {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* Found items get a solid ring in place; hints and end-of-run reveals
+ * pulse in amber instead, so a pulse never means "found". */
+.iq-ring {
+    position: absolute;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+
+.iq-ring.is-found {
+    border: 2.5px solid var(--success-text);
+    box-shadow: 0 0 10px rgba(74, 222, 128, 0.5);
+    animation: iq-ring-pop 0.35s ease;
+}
+
+@keyframes iq-ring-pop {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.6);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+.iq-ring.is-hint,
+.iq-ring.is-reveal {
+    border: 2.5px solid var(--accent-2);
+    animation: iq-ring-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes iq-ring-pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(251, 146, 60, 0.35);
+    }
+
+    50% {
+        box-shadow: 0 0 0 5px rgba(251, 146, 60, 0.45);
+    }
+}
+
+/* The keyboard probe: a dashed puck that rides the arrows, visible only
+ * while the scene holds focus. */
+.iq-cursor {
+    position: absolute;
+    width: 9%;
+    aspect-ratio: 1 / 1;
+    border: 1.5px dashed var(--accent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    opacity: 0;
+}
+
+.iq-board:focus-visible .iq-cursor {
+    opacity: 1;
+}
+
+.iq-float {
+    position: absolute;
+    z-index: 2;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.74rem;
+    font-weight: 800;
+    color: var(--success-text);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    animation: iq-float 0.9s ease forwards;
+}
+
+@keyframes iq-float {
+    from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, calc(-50% - 24px));
+    }
+}
+
+/* HUD pills inside the themed panel. */
+.iq-panel .game-hud {
+    gap: 8px;
+}
+
+.iq-panel .game-stat {
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 7px 6px 6px;
+}
+
+[data-theme="light"] .iq-panel .game-stat {
+    background: rgba(255, 255, 255, 0.65);
+    border-color: rgba(15, 23, 42, 0.12);
+}
+
+/* Result banner. */
+.iq-panel .game-result {
+    margin: 10px 0 0;
+    padding: 8px 12px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="light"] .iq-panel .game-result {
+    background: rgba(255, 255, 255, 0.6);
+    border-color: rgba(15, 23, 42, 0.12);
+}
+
+/* Progress: counted in words plus a thin fill bar. */
+.iq-progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px auto 0;
+    max-width: 340px;
+}
+
+.iq-progress-text {
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.iq-bar {
+    flex: 1;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--panel-strong);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    overflow: hidden;
+}
+
+[data-theme="light"] .iq-bar {
+    background: var(--surface-soft);
+    border-color: rgba(15, 23, 42, 0.12);
+}
+
+.iq-bar-fill {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.35s ease;
+}
+
+/* The tray: a titled shelf of item cards drawn from the same 24x24 art
+ * the scene uses. A found chip bounces, greys out and gains a check. */
+.iq-tray-box {
+    margin-top: 8px;
+    padding: 8px 9px 9px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="light"] .iq-tray-box {
+    background: rgba(255, 255, 255, 0.55);
+    border-color: rgba(15, 23, 42, 0.12);
+}
+
+.iq-tray-title {
+    display: block;
+    margin: 0 0 7px 2px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.iq-tray {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    justify-content: center;
+}
+
+.iq-chip {
+    position: relative;
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: var(--panel-strong);
+    background-size: 76%;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 2px 5px rgba(15, 23, 42, 0.25);
+    transition: transform 0.2s ease, opacity 0.2s ease, filter 0.2s ease;
+}
+
+[data-theme="light"] .iq-chip {
+    border-color: rgba(15, 23, 42, 0.14);
+    box-shadow: 0 2px 5px rgba(15, 23, 42, 0.12);
+}
+
+.iq-chip.is-done {
+    opacity: 0.5;
+    filter: grayscale(1);
+    transform: scale(0.92);
+    animation: iq-chip-pop 0.4s ease;
+}
+
+@keyframes iq-chip-pop {
+    0% {
+        transform: scale(1);
+    }
+
+    40% {
+        transform: scale(1.16) rotate(-5deg);
+    }
+
+    100% {
+        transform: scale(0.92);
+    }
+}
+
+.iq-chip.is-done::after {
+    content: "\2713";
+    position: absolute;
+    right: 3px;
+    bottom: 1px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--success-text);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* The hint button: a big round lamp with a count badge, like the apps. */
+.iq-round-btn {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: linear-gradient(180deg, hsl(45, 92%, 62%), hsl(38, 88%, 50%));
+    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    font-size: 1.3rem;
+    line-height: 1;
+    transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.iq-round-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+}
+
+.iq-round-btn:active {
+    transform: translateY(1px) scale(0.97);
+}
+
+.iq-round-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.iq-round-btn[aria-disabled="true"] {
+    filter: grayscale(0.7);
+    opacity: 0.55;
+    cursor: default;
+}
+
+.iq-btn-glyph {
+    display: block;
+    filter: drop-shadow(0 1px 1px rgba(15, 23, 42, 0.35));
+}
+
+.iq-btn-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, hsl(350, 70%, 52%), hsl(350, 75%, 42%));
+    border: 1.5px solid hsl(0, 0%, 98%);
+    color: hsl(0, 0%, 98%);
+    font-size: 0.7rem;
+    font-weight: 800;
+    line-height: 17px;
+    text-align: center;
+    font-family: "JetBrains Mono", monospace;
+}
+
+[data-motion="off"] .iq-board,
+[data-motion="off"] .iq-ring,
+[data-motion="off"] .iq-float,
+[data-motion="off"] .iq-chip,
+[data-motion="off"] .iq-bar-fill {
+    animation: none !important;
+    transition: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .iq-board,
+    .iq-ring,
+    .iq-float,
+    .iq-chip,
+    .iq-bar-fill {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+@media (max-width: 720px) {
+    .iq-board {
+        max-width: 100%;
+    }
+}
+
