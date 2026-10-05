@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const { createEnvironment, check, run } = require("./lib");
-const source = ["i18n", "core", "game-campaign", "game-registry", "love-deepspace-combat", "game-love-deepspace", "game-guide"]
+const source = ["i18n", "core", "game-campaign", "game-registry", "love-deepspace-combat", "love-deepspace-dates", "game-love-deepspace", "game-guide"]
   .map(name => fs.readFileSync(path.join(__dirname, "../../assets/app", name + ".js"), "utf8")).join("\n");
 function boot(options, live) {
   const env = createEnvironment(options);
@@ -23,6 +23,8 @@ function boot(options, live) {
   if (live) {
     const mount = env.window.CapitalConvert.mountLdsCombat;
     env.window.CapitalConvert.mountLdsCombat = (host, settings) => { env.combat = mount(host, settings); return env.combat; };
+    const mountDates = env.window.CapitalConvert.mountLdsDates;
+    env.window.CapitalConvert.mountLdsDates = (host, settings) => { env.dates = mountDates(host, settings); return env.dates; };
   }
   env.window.CapitalConvert.initRegistryGames();
   env.window.CapitalConvert.initGameGuides();
@@ -81,6 +83,7 @@ run("Love and Deepspace mission and media lifecycle", () => {
   const App = env.window.CapitalConvert;
   const panel = env.byId("gamePanelLoveDeepspace");
   check("Love and Deepspace mission and media lifecycle", "shared guide mounts beside a nested hint", panel.querySelector(".game-guide").parentNode === panel.querySelector(".lds-strategy"));
+  panel.querySelectorAll(".lds-view-button")[0].click();
   panel.querySelectorAll(".lds-mode-button")[1].click();
   const hud = () => Array.from(panel.querySelectorAll(".lds-stat strong")).map(el => el.textContent);
   const talk = panel.querySelector(".lds-scene-actions button");
@@ -187,6 +190,7 @@ run("Love and Deepspace arena rules", () => {
 run("Love and Deepspace arena lifecycle", () => {
   const env = boot({}, true), combat = env.combat, root = combat.element;
   const panel = env.byId("gamePanelLoveDeepspace"); panel.hidden = false;
+  panel.querySelectorAll(".lds-view-button")[0].click();
   const keys = (type, key) => env.dispatch(root, type, { key, target: root });
   check("Love and Deepspace arena lifecycle", "action is the default and waits for explicit start", !root.hidden && panel.querySelector(".lds-strategy").hidden && env.frames.size === 0);
   root.querySelector(".lds-battle-start").click();
@@ -266,6 +270,254 @@ run("Love and Deepspace arena translations", () => {
   for (const language of ["en-US", "zh-CN"]) {
     const App = boot({ language }).window.CapitalConvert;
     for (const key of keys) check("Love and Deepspace arena translations", language + " resolves " + key, App.t(key) !== key && !App.t(key).includes("undefined"));
+  }
+});
+
+run("Love and Deepspace date saves", () => {
+  const App = boot().window.CapitalConvert;
+  for (const raw of [null, "{bad", "null", "[]", '{"version":99}']) {
+    const save = App.ldsReadDates(raw);
+    check("Love and Deepspace date saves", "invalid save recovers every partner", App.ldsPartners.every(p => save.plushies[p.id].length === 0 && save.focus[p.id] === 0));
+  }
+  const save = App.ldsReadDates(JSON.stringify({ version: 1, plushies: { xavier: ["rabbit", "rabbit", "unknown"], zayne: "cat" }, badges: { xavier: true, zayne: "true" },
+    focus: { xavier: 99999, zayne: -8, caleb: "5" }, stories: { xavier: ["quiet", "unknown", "quiet"] }, snapshots: { caleb: true },
+    photos: [{ partner: "xavier", scene: "night", frame: "stars", zoom: 999, pan: -9 }, { partner: "unknown", scene: "night", frame: "stars" }, { partner: "zayne", scene: "bad", frame: "stars" }] }));
+  check("Love and Deepspace date saves", "plushies and endings are known, deduplicated IDs", save.plushies.xavier.join() === "rabbit" && save.stories.xavier.join() === "quiet" && !save.plushies.zayne.length);
+  check("Love and Deepspace date saves", "counts and flags are validated", save.focus.xavier === 999 && save.focus.zayne === 0 && save.focus.caleb === 0 && save.badges.xavier && !save.badges.zayne);
+  check("Love and Deepspace date saves", "photographs are bounded and validated", save.photos.length === 1 && save.photos[0].zoom === 1.8 && save.photos[0].pan === 0 && save.snapshots.xavier && save.snapshots.caleb);
+});
+
+run("Love and Deepspace claw rules", () => {
+  const App = boot().window.CapitalConvert;
+  const step = (s, input, frames = 1) => { for (let i = 0; i < frames; i++) App.ldsStepClaw(s, 1 / 60, input); };
+  for (const partner of App.ldsPartners) {
+    const s = App.ldsCreateClaw(partner.id); let events = [];
+    for (let i = 0; i < 5; i++) {
+      // Anticipate the conveyor position when the descending claw reaches it.
+      const x = 100 + i * 100 + Math.sin((s.elapsed + .84) * (1.2 + i * .1) + i) * 32;
+      step(s, { aim: x, drop: true });
+      check("Love and Deepspace claw rules", "a drop uses an attempt before delivering its reward", s.attempts === 4 - i && s.phase === "drop" && s.caught.length === i);
+      for (let f = 0; f < 160 && !s.done; f++) { step(s, {}); events.push(...s.events); }
+    }
+    check("Love and Deepspace claw rules", partner.id + " can collect every moving plushie with legal timing", s.done && new Set(s.caught).size === 5 && s.attempts === 0);
+    check("Love and Deepspace claw rules", "each delivery emits one collection event", events.filter(e => e.kind === "catch").length === 5);
+    const snapshot = JSON.stringify(s); step(s, { x: 1, drop: true, help: true }, 100);
+    check("Love and Deepspace claw rules", "a completed claw session ignores extra actions", JSON.stringify(s) === snapshot);
+  }
+  const helped = App.ldsCreateClaw("zayne"); step(helped, { help: true });
+  const positions = helped.toys.map(toy => toy.x).join(); step(helped, { help: true }, 60);
+  check("Love and Deepspace claw rules", "assist freezes plushies without repeated extension", positions === helped.toys.map(toy => toy.x).join() && helped.help < 1.1 && helped.helped);
+  step(helped, { help: true }, 120);
+  check("Love and Deepspace claw rules", "the conveyor resumes after the one-use assist", helped.help === 0 && positions !== helped.toys.map(toy => toy.x).join());
+  step(helped, { x: -1 }, 300);
+  check("Love and Deepspace claw rules", "claw movement is constrained to its rail", helped.x === 50);
+  const missed = App.ldsCreateClaw("caleb"); step(missed, { aim: 50, drop: true });
+  for (let f = 0; f < 160; f++) step(missed, {});
+  check("Love and Deepspace claw rules", "misaligned drops consume attempts without a reward", missed.attempts === 4 && missed.caught.length === 0 && missed.phase === "aim");
+});
+
+function bestKitty(App, state) {
+  let best = { value: -1 };
+  state.cups.forEach((cup, ci) => { if (cup.owner !== null) return; state.hand.forEach((card, hi) => {
+    const value = card.value * (card.color === cup.color ? 2 : 1);
+    if (value > best.value) best = { value, ci, hi };
+  }); });
+  state.selected = best.hi;
+  return best.ci;
+}
+run("Love and Deepspace Kitty Cards", () => {
+  const App = boot().window.CapitalConvert;
+  const s = App.ldsCreateKitty("sylus", true);
+  s.hand[0] = { value: 6, color: 0 }; s.selected = 0;
+  check("Love and Deepspace Kitty Cards", "matching card colour doubles the score", App.ldsKittyPlay(s, 0, true) && s.score[0] === 12 && s.cups[0].shield && !s.assist[0]);
+  const before = JSON.stringify(s);
+  check("Love and Deepspace Kitty Cards", "a player cannot act during the opponent turn", !App.ldsKittyPlay(s, 1) && JSON.stringify(s) === before);
+  App.ldsKittyPartner(s);
+  check("Love and Deepspace Kitty Cards", "a shield protects a high-value card from the partner assist", s.cups[0].card.value === 6 && s.assist[1]);
+  check("Love and Deepspace Kitty Cards", "occupied cups cannot be overwritten and shields cannot be repeated", !App.ldsKittyPlay(s, 0) && !App.ldsKittyAssist(s, 0));
+  s.hand[0] = { value: 5, color: 1 }; s.selected = 0;
+  const empty = s.cups.findIndex(cup => cup.owner === null); App.ldsKittyPlay(s, empty); App.ldsKittyPartner(s);
+  check("Love and Deepspace Kitty Cards", "the partner uses its nudge once on an unshielded card", !s.assist[1] && s.cups[empty].card.value === 3 && s.cups[0].card.value === 6);
+  for (const advanced of [false, true]) {
+    let wins = 0;
+    for (let seed = 1; seed <= 20; seed++) {
+      const match = App.ldsCreateKitty("rafayel", advanced, seed);
+      for (let turn = 0; turn < 6 && !match.done; turn++) {
+        App.ldsKittyPlay(match, bestKitty(App, match), advanced && turn === 0);
+        if (!match.done) App.ldsKittyPartner(match);
+      }
+      if (match.winner === "you") wins++;
+      check("Love and Deepspace Kitty Cards", "all seeded matches complete with 12 occupied cups", match.done && match.cups.filter(c => c.owner === "you").length === 6 && match.cups.filter(c => c.owner === "partner").length === 6);
+      const snapshot = JSON.stringify(match); App.ldsKittyPlay(match, 0); App.ldsKittyPartner(match);
+      check("Love and Deepspace Kitty Cards", "finished card matches cannot change score", JSON.stringify(match) === snapshot);
+    }
+    check("Love and Deepspace Kitty Cards", "player strategy can win " + (advanced ? "advanced" : "normal") + " matches", wins > 0);
+  }
+});
+
+run("Love and Deepspace date native focus", () => {
+  const env = boot({}, true), dates = env.dates, root = dates.element;
+  env.byId("gamePanelLoveDeepspace").hidden = false;
+  let focusStayed = 0; root.focus = () => { focusStayed++; };
+  dates.select("kitty");
+  root.querySelector(".lds-kitty-cup").click();
+  check("Love and Deepspace date native focus", "placing a card keeps focus inside before disabling cups", focusStayed === 1 && dates.inspect().active && dates.inspect().kitty.turn === "partner");
+  for (let i = 0; i < 45; i++) env.tick();
+  check("Love and Deepspace date native focus", "the partner automatically replies and returns enabled cups", dates.inspect().kitty.turn === "you" && dates.inspect().kitty.cups.filter(c => c.owner === "partner").length === 1 && root.querySelectorAll(".lds-kitty-cup").some(c => !c.disabled));
+  dates.pause(); dates.select("claw"); dates.start();
+  let machineFocus = 0; root.querySelector(".lds-claw-machine").focus = () => { machineFocus++; };
+  root.querySelector(".lds-claw-controls").querySelectorAll("button")[1].click(); env.tick();
+  check("Love and Deepspace date native focus", "the drop button transfers focus before becoming disabled", machineFocus === 1 && dates.inspect().active && dates.inspect().claw.phase === "drop");
+});
+
+run("Love and Deepspace date activities", () => {
+  const env = boot({}, true), App = env.window.CapitalConvert, dates = env.dates, root = dates.element;
+  const panel = env.byId("gamePanelLoveDeepspace"); panel.hidden = false;
+  const bonds = () => JSON.parse(env.store.get("love-deepspace-album-v1") || '{"bonds":{}}').bonds.xavier || 0;
+  const key = (type, value) => env.dispatch(root, type, { key: value, target: root });
+  check("Love and Deepspace date activities", "landing view foregrounds character and dates without starting any loop", panel.getAttribute("data-view") === "dates" && !root.hidden && env.frames.size === 0 && panel.classList.contains("lds-character-focus"));
+  panel.querySelector(".lds-game-picker-button").click();
+  check("Love and Deepspace date activities", "the player can restore the shared game picker", !panel.classList.contains("lds-character-focus"));
+  dates.start(); key("keydown", "d"); for (let i = 0; i < 30; i++) env.tick();
+  check("Love and Deepspace date activities", "held movement moves the real claw", dates.inspect().claw.x > 390 && env.frames.size === 1);
+  key("keydown", "p"); const x = dates.inspect().claw.x, elapsed = dates.inspect().claw.elapsed; env.tick(500);
+  check("Love and Deepspace date activities", "pausing cancels the loop and stops the conveyor clock", dates.inspect().paused && env.frames.size === 0 && dates.inspect().claw.elapsed === elapsed);
+  dates.start(); env.tick();
+  check("Love and Deepspace date activities", "resume clears held movement", dates.inspect().claw.x === x);
+  dates.pause(); root.querySelector(".lds-date-toolbar").querySelectorAll("button")[1].click();
+  dates.start(); const machine = root.querySelector(".lds-claw-machine"); machine.getBoundingClientRect = () => ({ left: 0, top: 0, width: 600, height: 320 });
+  env.dispatch(machine, "pointerdown", { pointerId: 1, clientX: 300 }); env.dispatch(machine, "pointerup", { pointerId: 1 }); key("keydown", "e"); key("keydown", " ");
+  for (let i = 0; i < 165; i++) env.tick();
+  check("Love and Deepspace date activities", "a successful animated drop saves a plushie and affection", dates.inspect().progress.plushies.xavier.includes("fox") && bonds() === 2);
+  dates.select("story");
+  check("Love and Deepspace date activities", "switching activities stops the old simulation", env.frames.size === 0);
+  for (let i = 0; i < 3; i++) root.querySelector(".lds-story-choice").click();
+  check("Love and Deepspace date activities", "three story choices save one ending and affection", dates.inspect().progress.stories.xavier.includes("quiet") && bonds() === 4);
+  check("Love and Deepspace date activities", "a completed story exposes its replay control", !root.querySelector(".lds-date-toolbar").hidden);
+  root.querySelector(".lds-date-toolbar").querySelectorAll("button")[1].click();
+  for (let i = 0; i < 3; i++) root.querySelector(".lds-story-choice").click();
+  check("Love and Deepspace date activities", "replaying an ending cannot farm affinity", bonds() === 4);
+  root.querySelector(".lds-date-toolbar").querySelectorAll("button")[1].click();
+  for (let i = 0; i < 3; i++) root.querySelectorAll(".lds-story-choice")[1].click();
+  check("Love and Deepspace date activities", "both branches can be collected", dates.inspect().progress.stories.xavier.length === 2 && bonds() === 6);
+  dates.select("photo"); const photoSave = root.querySelector(".lds-photo-actions button");
+  for (let i = 0; i < 15; i++) photoSave.click();
+  check("Love and Deepspace date activities", "photo gallery stays capped and rewards the first snapshot once", dates.inspect().progress.photos.length === 12 && bonds() === 8 && root.querySelectorAll(".lds-photo-thumb").length === 12);
+  const canvas = root.querySelector(".lds-photo-canvas"); canvas.getBoundingClientRect = () => ({ width: 400, height: 400 });
+  env.dispatch(canvas, "pointerdown", { pointerId: 2, clientX: 100 }); env.dispatch(canvas, "pointermove", { pointerId: 2, clientX: 200 }); env.dispatch(canvas, "pointerup", { pointerId: 2 });
+  photoSave.click();
+  check("Love and Deepspace date activities", "dragging actually changes the saved photo composition", dates.inspect().progress.photos[0].pan < .62 && bonds() === 8);
+  const modeNames = ["claw", "kitty", "story", "photo", "focus"];
+  modeNames.forEach(mode => { dates.select(mode); check("Love and Deepspace date activities", "only the chosen activity is visible: " + mode, root.querySelectorAll(".lds-date-page").filter(p => !p.hidden).length === 1); });
+  dates.start(); env.tick(1001);
+  check("Love and Deepspace date activities", "a background gap pauses quality time", dates.inspect().focusElapsed === 0 && dates.inspect().paused && !env.frames.size);
+  dates.start(); env.tick(500);
+  check("Love and Deepspace date activities", "quality time measures visible wall time even when frames are slow", dates.inspect().focusElapsed === .5);
+  env.dispatch(root, "focusout", { relatedTarget: panel.querySelectorAll(".lds-scene-actions button")[1] });
+  check("Love and Deepspace date activities", "character animation controls can be used during quality time", dates.inspect().active && env.frames.size === 1);
+  for (let i = 0; i < 3755; i++) env.tick();
+  check("Love and Deepspace date activities", "completing one minute saves a focus session and stops its loop", dates.inspect().progress.focus.xavier === 1 && bonds() === 10 && env.frames.size === 0);
+  const reloaded = boot({ store: env.store }, true);
+  check("Love and Deepspace date activities", "date keepsakes, snapshots and bonds survive reload", reloaded.dates.inspect().progress.plushies.xavier.includes("fox") && reloaded.dates.inspect().progress.stories.xavier.length === 2 && reloaded.dates.inspect().progress.photos.length === 12 && reloaded.dates.inspect().progress.snapshots.xavier && JSON.parse(reloaded.store.get("love-deepspace-album-v1")).bonds.xavier === 10);
+  dates.select("claw"); dates.start(); App.quietResetLoveDeepspace();
+  check("Love and Deepspace date activities", "drawer close cancels date animations", dates.inspect().paused && !env.frames.size);
+  panel.querySelectorAll(".lds-partner-card")[4].click();
+  check("Love and Deepspace date activities", "changing partner clears live input and selects the correct collection", dates.inspect().claw.partner === "caleb" && !dates.inspect().progress.plushies.caleb.length && !env.frames.size);
+  App.applyI18nDom();
+  check("Love and Deepspace date activities", "translation refresh preserves nested photo and timer controls", root.querySelectorAll(".lds-photo-settings select").length === 4 && root.querySelector(".lds-focus-duration select") !== null);
+  for (const storageMode of ["absent", "readwrite-throw"]) {
+    const blocked = boot({ storageMode }, true); blocked.dates.select("story");
+    for (let i = 0; i < 3; i++) blocked.dates.element.querySelector(".lds-story-choice").click();
+    check("Love and Deepspace date activities", "blocked storage still allows date completion: " + storageMode, blocked.dates.inspect().progress.stories.xavier.includes("quiet"));
+  }
+});
+
+run("Love and Deepspace advanced claw", () => {
+  const App = boot().window.CapitalConvert;
+  for (const partner of App.ldsPartners) {
+    const state = App.ldsCreateClaw(partner.id, true);
+    for (let prize = 0; prize < 5; prize++) {
+      const x = 100 + prize * 100 + Math.sin((state.elapsed + .84) * 1.7 * (1.2 + prize * .1) + prize) * 42;
+      App.ldsStepClaw(state, 1 / 60, { aim: x, drop: true });
+      let guard = 0;
+      while (!state.done && state.phase !== "aim" && guard++ < 300) App.ldsStepClaw(state, 1 / 60, { grip: state.phase === "grip" && state.phaseTime >= .4 });
+    }
+    check("Love and Deepspace advanced claw", partner.id + " has a winnable precision challenge with five perfect catches", state.done && state.caught.length === 5 && state.score === 1125 && state.combo === 5);
+  }
+  const miss = App.ldsCreateClaw("xavier", true);
+  App.ldsStepClaw(miss, .05, { aim: 300, help: true, drop: true });
+  while (miss.phase !== "grip") App.ldsStepClaw(miss, .05);
+  App.ldsStepClaw(miss, .05, { grip: true });
+  while (miss.phase !== "aim") App.ldsStepClaw(miss, .05);
+  check("Love and Deepspace advanced claw", "an early grip misses without collecting or scoring", !miss.caught.length && miss.score === 0 && miss.combo === 0 && miss.toys.every(t => !t.taken));
+  const timeout = App.ldsCreateClaw("xavier", true);
+  App.ldsStepClaw(timeout, .05, { aim: 300, help: true, drop: true });
+  while (timeout.phase !== "grip") App.ldsStepClaw(timeout, .05);
+  timeout.phaseTime = .4; App.ldsStepClaw(timeout, .05, { grip: true }); timeout.remaining = .01;
+  App.ldsStepClaw(timeout, .05);
+  check("Love and Deepspace advanced claw", "timeout releases an undelivered prize and awards nothing", timeout.done && !timeout.caught.length && timeout.score === 0 && timeout.toys.every(t => !t.taken));
+  const env = boot({}, true), dates = env.dates, root = dates.element;
+  env.byId("gamePanelLoveDeepspace").hidden = false;
+  const checkbox = root.querySelector(".lds-date-claw input"); checkbox.checked = true; env.dispatch(checkbox, "change"); dates.start();
+  const state = dates.inspect().claw; state.score = 450; state.remaining = .001; env.tick();
+  check("Love and Deepspace advanced claw", "challenge completion persists the best record and stops frames", !env.frames.size && dates.inspect().progress.clawBest.xavier === 450 && JSON.parse(env.store.get("love-deepspace-dates-v1")).clawBest.xavier === 450);
+  root.querySelector(".lds-date-toolbar").querySelectorAll("button")[1].click(); dates.start(); dates.inspect().claw.remaining = .001; env.tick();
+  check("Love and Deepspace advanced claw", "weaker results preserve the existing record", dates.inspect().progress.clawBest.xavier === 450);
+});
+
+run("Love and Deepspace card tactics", () => {
+  const App = boot().window.CapitalConvert, state = App.ldsCreateKitty("xavier", true, 7321);
+  state.assist[1] = false; state.tactics[1] = 0; state.hand[0] = { value: 4, color: 0 };
+  App.ldsKittyPlay(state, 0); App.ldsKittyPartner(state);
+  check("Love and Deepspace card tactics", "boost changes the score but keeps the player's placement turn", App.ldsKittyTactic(state, "boost", 0) && state.score[0] === 12 && state.turn === "you" && state.tactics[0] === 1);
+  const snapshot = JSON.stringify(state);
+  check("Love and Deepspace card tactics", "an illegal boost consumes no charge", !App.ldsKittyTactic(state, "boost", 11) && JSON.stringify(state) === snapshot);
+  check("Love and Deepspace card tactics", "rotating colour changes the matching multiplier", App.ldsKittyTactic(state, "repaint", 0) && state.score[0] === 6 && !state.tactics[0]);
+  check("Love and Deepspace card tactics", "tactics cannot be used after charges run out", !App.ldsKittyTactic(state, "redraw"));
+  const fresh = App.ldsCreateKitty("xavier", true, 21), before = JSON.stringify(fresh.hand);
+  check("Love and Deepspace card tactics", "redraw replaces the selected card and spends one action", App.ldsKittyTactic(fresh, "redraw") && fresh.tactics[0] === 1 && JSON.stringify(fresh.hand) !== before && fresh.turn === "you");
+  fresh.cups[0] = { owner: "partner", color: 0, card: { value: 6, color: 0 }, shield: true };
+  check("Love and Deepspace card tactics", "shielded opponent cups block colour sabotage", !App.ldsKittyTactic(fresh, "repaint", 0) && fresh.tactics[0] === 1);
+  const opponent = App.ldsCreateKitty("zayne", true, 11); App.ldsKittyPlay(opponent, 0); App.ldsKittyPartner(opponent);
+  check("Love and Deepspace card tactics", "the partner uses a beneficial tactic and spends its own budget", opponent.tactics[1] === 1 && opponent.events.some(e => ["boost", "repaint"].includes(e.kind)));
+  const env = boot({}, true), dates = env.dates, root = dates.element; env.byId("gamePanelLoveDeepspace").hidden = false;
+  const advanced = root.querySelector(".lds-date-kitty input"); advanced.checked = true; env.dispatch(advanced, "change"); dates.select("kitty");
+  root.querySelector(".lds-kitty-tactics button").click();
+  check("Love and Deepspace card tactics", "the real redraw control updates the match without starting a background loop", dates.inspect().kitty.tactics[0] === 1 && !env.frames.size);
+});
+
+run("Love and Deepspace character gallery", () => {
+  const env = boot({}, true), App = env.window.CapitalConvert, panel = env.byId("gamePanelLoveDeepspace"); panel.hidden = false;
+  const hashes = new Set(), crypto = require("crypto");
+  for (const partner of App.ldsPartners) {
+    panel.querySelectorAll(".lds-partner-card").find(p => p.getAttribute("data-partner") === partner.id).click();
+    for (let index = 0; index < 5; index++) {
+      const art = App.ldsSceneArt(partner.id, index), file = path.join(__dirname, "../..", art.src);
+      const pixels = fs.readFileSync(file); hashes.add(crypto.createHash("sha256").update(pixels).digest("hex"));
+      check("Love and Deepspace character gallery", partner.id + " scene " + index + " exists with actual image bytes", pixels.length > 10000 && (index ? pixels.subarray(0, 2).toString("hex") === "ffd8" : pixels.subarray(0, 4).toString() === "RIFF"));
+      panel.querySelectorAll(".lds-art-thumb")[index].click();
+      check("Love and Deepspace character gallery", partner.id + " scene " + index + " switches both hero and photograph", panel.querySelector(".lds-scene-portrait").src === art.src && panel.querySelector(".lds-photo-source").src === art.src && panel.querySelectorAll('.lds-art-thumb[aria-pressed="true"]').length === 1);
+    }
+  }
+  check("Love and Deepspace character gallery", "all 25 portraits and artworks are distinct images", hashes.size === 25);
+  const reloaded = boot({ store: env.store }, true);
+  check("Love and Deepspace character gallery", "scene choices are restored per partner", Object.values(App.ldsReadLooks(env.store.get("love-deepspace-looks-v1")).scenes).every(i => i === 4) && reloaded.byId("gamePanelLoveDeepspace").querySelector(".lds-scene").getAttribute("data-art") === "4");
+  const parsed = App.ldsReadLooks('{"version":1,"auto":false,"scenes":{"xavier":999,"zayne":2}}');
+  check("Love and Deepspace character gallery", "appearance saves validate indexes and the reaction preference", parsed.scenes.xavier === 3 && parsed.scenes.zayne === 2 && !parsed.auto);
+  const auto = panel.querySelector(".lds-art-auto input"); auto.checked = false; env.dispatch(auto, "change"); env.dates.select("story"); const root = env.dates.element;
+  root.querySelector(".lds-story-choice").click();
+  check("Love and Deepspace character gallery", "disabling reactions preserves the chosen scene during play", panel.querySelector(".lds-scene").getAttribute("data-art") === "4");
+  env.dates.select("photo"); root.querySelector(".lds-photo-actions button").click();
+  check("Love and Deepspace character gallery", "saved snapshots include the selected character artwork", env.dates.inspect().progress.photos[0].art === 4);
+});
+
+run("Love and Deepspace date translations", () => {
+  const helper = fs.readFileSync(path.join(__dirname, "../../assets/app/love-deepspace-dates.js"), "utf8");
+  const keys = new Set(Array.from(helper.matchAll(/"(lds[A-Z][a-zA-Z0-9]+)"/g), match => match[1]));
+  for (const prefix of ["ldsDate", "ldsToy", "ldsKittyColor", "ldsStoryReply", "ldsStoryScene", "ldsStoryChoice", "ldsPhoto", "ldsPartner", "ldsDateLine", "ldsTactic"]) keys.delete(prefix);
+  for (const language of ["en-US", "zh-CN"]) {
+    const App = boot({ language }).window.CapitalConvert;
+    for (const key of keys) check("Love and Deepspace date translations", language + " resolves " + key, App.t(key) !== key && !App.t(key).includes("undefined"));
   }
 });
 

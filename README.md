@@ -76,13 +76,63 @@ Open any `.html` file directly in a browser. No server required.
 ### 恋与深空 / Love and Deepspace
 
 Open **Games → More games → Love and Deepspace** on any of the four pages.
-The fan-made Starbond Relay now features Xavier, Zayne, Rafayel, Sylus, and
+The fan-made mini-adventure features Xavier, Zayne, Rafayel, Sylus, and
 Caleb with locally bundled official portraits, optional muted character video
 loops, and original English/Chinese dialogue. Videos require an internet
 connection; portraits and gameplay work offline. Media sources are recorded in
 [CREDITS.md](assets/media/love-deepspace/CREDITS.md).
 
-**Action · Starbond Hunt** is the default mode. Move with WASD or the arrow keys,
+**Together / 陪伴** is the landing view, with a large official character portrait,
+gentle viewpoint movement, original character dialogue, and an optional official
+character video. **Say hello** starts the muted video when motion is enabled;
+**Animate character** also lets you start or stop it explicitly. On wider screens,
+the character stays beside the date activity. **All games** restores the shared
+picker, and **Missions** opens the existing combat and strategy modes.
+
+Each partner has **five distinct images**: the original portrait plus four
+official gallery artworks. The scene strip switches images, remembers a separate
+selection for each partner, and can change scenes in response to play. Turn off
+**Scenes react to play** to keep your chosen image. All 25 images are bundled
+locally, and every scene is also available in the photo studio.
+
+The date activities are simplified fan adaptations inspired by the official
+[feature list](https://apps.apple.com/us/app/love-and-deepspace/id6443467666):
+
+- **Claw machine / 抓娃娃:** hold A/D or arrows, use touch movement buttons,
+  or drag to aim. Predict the moving plushies and press Space to drop. Each
+  session has five attempts and one Evol assist that steadies prizes for two
+  seconds. The claw descends, lifts, and delivers the prize before awarding it.
+  **Challenge** adds a 60-second limit, faster movement, and a second Space press
+  to grip in the mint timing zone. Centre hits earn Perfect bonuses, consecutive
+  catches grow a combo, and each partner's best challenge score is saved.
+- **Kitty Cards / 喵喵牌:** play number cards into coloured cups, doubling
+  points for a matching colour. The partner replies with its strongest available
+  move. Advanced mode adds a one-use shield and an opponent nudge. All twelve
+  cups must be filled before scoring the match.
+  Advanced play gives each side two tactic charges: redraw a selected hand card,
+  boost an owned cup by two (cap eight), or rotate an occupied cup's colour.
+  Use them before number-card placement. Shields stop enemy colour changes;
+  the partner chooses tactics that improve its score advantage.
+- **Date story / 约会故事:** three choices lead to two original endings, with
+  different partner dialogue. Replay from **New session** to collect both endings.
+- **Photo studio / 拍照馆:** choose any of the partner's five artworks, then adjust
+  lighting, frame, sticker, close-up, and
+  portrait crop by dragging or using the arrow keys. Save up to twelve snapshots;
+  thumbnails recreate their settings and **Download PNG** exports a local portrait
+  composition with attribution. Export requires a loaded portrait and browser
+  permission to read its pixels; a local server supports this reliably.
+- **Quality time / 专属陪伴:** a 1-, 5-, or 15-minute visible-page timer for
+  studying, working, or taking a break together. It can run beside the optional
+  character video and pauses when the page or date view is hidden.
+
+Date keepsakes are saved per partner: five plushies, one Kitty badge, two story
+endings, and completed focus sessions. A newly collected keepsake, the first
+snapshot, or the first focus session awards two affinity points. Repeating the
+same collection does not award affinity again. These records use
+`love-deepspace-dates-v1` and share the existing character affinity. Live sessions
+restart on reload; collections remain saved, or stay in memory if storage is blocked.
+
+Under **Missions**, **Action · Starbond Hunt** is the default mode. Move with WASD or the arrow keys,
 hold J to fire at the nearest enemy, press Space to dodge, and press E when the
 Evol gauge fills. You can also hold the mouse inside the arena to aim and fire.
 On touch screens, drag the movement joystick while holding Fire. Fight two
@@ -113,9 +163,10 @@ browser storage falls back to session progress. The layout supports narrow
 screens and both themes, and respects the motion setting and reduced-motion
 preference. Closing or switching away from the game stops its video and combat.
 
-Run `node tools/harness/cases-love-deepspace.js` for the focused combat, turn,
+Run `node tools/harness/cases-love-deepspace.js` for the focused dates, combat, turn,
 save, memory, and media lifecycle checks. These cover full arena clears for all
-five partners on all four routes, pause/resume, held inputs, and victory rewards.
+five partners on all four routes, claw timing, seeded card matches, saved photos,
+both story branches, pause/resume, held inputs, and collection rewards.
 Run `node tools/verify-game.js --isolated game-love-deepspace` for its registry
 and translation checks.
 

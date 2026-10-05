@@ -12187,3 +12187,148 @@ button.ghost:hover {
   .lds-stage .lds-combat-buttons .lds-battle-evol { flex-basis: 100%; }
   .lds-stage .lds-combat-buttons button { min-height: 44px; }
 }
+
+/* Character-led Together view and five interactive date activities. */
+.lds-together-tab { order: -1; }
+.game-dialog:has(.lds-character-focus:not([hidden])) .game-tabs,
+.game-dialog:has(.lds-character-focus:not([hidden])) #gameTabsToggle { display: none; }
+.lds-stage .lds-game-picker-button { margin-left: auto; background: none; border: 0; color: var(--text-secondary); padding: 8px 0; font-size: .65rem; }
+.game-dialog:has(.lds-stage:not([hidden])) .game-tabs:not(.is-collapsed) { max-height: 150px; overflow-y: auto; }
+.lds-stage[data-view="dates"] .lds-scene { min-height: 350px; aspect-ratio: 1.7 / 1; }
+.lds-stage[data-view="dates"] .lds-scene-portrait { translate: var(--lds-look-x, 0px) var(--lds-look-y, 0px); scale: 1.04; }
+.lds-stage[data-view="dates"] .lds-identity { bottom: 25px; max-width: 48%; }
+.lds-stage[data-view="dates"] .lds-dialogue { margin-top: -4px; }
+.lds-stage[data-view="missions"] > .lds-scene { min-height: 180px; max-height: 220px; }
+.lds-stage[data-view="missions"] .lds-name { font-size: 1.5rem; }
+.lds-stage[data-view="missions"] .lds-role { display: none; }
+.lds-stage:not([data-view="dates"]) .lds-greeting-button { display: none; }
+.lds-dates { display: grid; gap: 14px; min-width: 0; }
+.lds-date-intro strong { font-size: 1.1rem; font-weight: 500; color: var(--text); }
+.lds-date-intro p { margin: 6px 0 0; font-size: .75rem; line-height: 1.6; color: var(--text-secondary); }
+.lds-date-nav { display: flex; gap: 7px; flex-wrap: wrap; }
+.lds-stage .lds-date-tab { padding: 9px 12px; border-radius: 8px; background: var(--surface-soft); color: var(--text-secondary); border: 1px solid var(--border); font-size: .72rem; }
+.lds-date-tab[aria-pressed="true"] { border-color: var(--lds-accent); background: #a78cc725; color: var(--text); }
+.lds-date-page { display: grid; gap: 12px; min-width: 0; padding: 16px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface-soft); }
+.lds-date-hint { margin: 0; font-size: .71rem; line-height: 1.7; color: var(--text-secondary); }
+.lds-date-score { font-size: .8rem; font-variant-numeric: tabular-nums; color: var(--text); }
+.lds-date-toolbar, .lds-claw-controls, .lds-photo-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.lds-date-toolbar { justify-content: center; }
+.lds-date-toolbar .lds-small-button { min-width: 100px; }
+.lds-date-status { margin: 0; font-size: .75rem; line-height: 1.6; min-height: 24px; color: var(--text); text-align: center; }
+.lds-date-shelf { padding: 14px; border-top: 1px solid var(--border); }
+.lds-date-shelf > strong { font-size: .8rem; }
+.lds-date-shelf p { margin: 8px 0 0; font-size: .67rem; color: var(--text-secondary); line-height: 1.7; }
+.lds-date-collection { display: flex; gap: 12px; margin-top: 12px; }
+.lds-date-collected { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px dashed var(--border); color: var(--text-secondary); font-size: 1.3rem; }
+.lds-date-collected[data-owned="true"] { border-style: solid; background: #b697d025; border-color: var(--lds-accent); }
+.lds-claw-machine {
+  --claw-x: 50%; --claw-y: 20%; position: relative; width: 100%; aspect-ratio: 600 / 320; overflow: hidden;
+  border: 8px solid #8189c3; border-bottom-width: 24px; border-radius: 15px;
+  background: radial-gradient(ellipse at 50% 45%, #ebc4df, #aabce6 60%, #929fd0);
+  box-shadow: inset 0 0 0 5px #ffffff48, inset 0 -40px 30px #68679177; touch-action: none;
+}
+.lds-claw-machine::before { content: ""; position: absolute; left: 5%; right: 5%; top: 15%; height: 3px; background: #eee8ff; box-shadow: 0 4px 10px #56517355; }
+.lds-claw-machine::after { content: ""; position: absolute; left: 0; right: 0; bottom: 9%; height: 8px; background: repeating-linear-gradient(90deg, #7e78a9 0 10px, #a6a6d2 10px 24px); box-shadow: 0 4px 6px #555477; }
+.lds-claw-sign { position: absolute; top: 4%; left: 0; right: 0; text-align: center; font-size: .65rem; letter-spacing: .17em; color: #403658; }
+.lds-claw-rope { position: absolute; left: var(--claw-x); top: 15%; height: calc(var(--claw-y) - 15%); width: 3px; background: #505474; z-index: 2; }
+.lds-claw-arm { position: absolute; top: var(--claw-y); left: var(--claw-x); translate: -50% -35%; width: 36px; height: 27px; font-size: 44px; line-height: .5; color: #383858; z-index: 4; }
+.lds-claw-arm::before, .lds-claw-arm::after { content: ""; position: absolute; top: 4px; height: 24px; width: 10px; border: 3px solid #4b4c72; border-top: 0; }
+.lds-claw-arm::before { left: 0; border-right: 0; border-radius: 0 0 0 12px; rotate: 15deg; }
+.lds-claw-arm::after { right: 0; border-left: 0; border-radius: 0 0 12px 0; rotate: -15deg; }
+.lds-claw-lifted { position: absolute; left: var(--claw-x); top: calc(var(--claw-y) + 5%); translate: -50% -25%; font-size: clamp(20px, 5vw, 36px); z-index: 3; }
+.lds-claw-toy { position: absolute; top: 77%; translate: -50% -50%; font-size: clamp(23px, 5vw, 38px); z-index: 1; filter: drop-shadow(0 6px 2px #54507c55); }
+.lds-claw-chute { position: absolute; left: 3%; bottom: 11%; width: 65px; height: 35px; border: 2px solid #666487; border-radius: 7px 7px 0 0; background: #817baf99; font-size: .6rem; display: grid; place-items: center; color: #eee9ff; z-index: 2; }
+.lds-claw-machine[data-help="true"] { box-shadow: inset 0 0 30px #fff7c5, 0 0 18px #b8adff66; }
+.lds-claw-machine:focus-visible { outline: 2px solid var(--lds-accent); outline-offset: 4px; }
+.lds-claw-controls { justify-content: center; }
+.lds-claw-controls button { min-height: 40px; touch-action: none; user-select: none; }
+.lds-stage .lds-claw-controls .primary, .lds-stage .lds-photo-actions .primary { padding: 10px 16px; border: 1px solid var(--lds-accent); border-radius: 8px; color: var(--text); background: #b89ddb33; font-size: .75rem; }
+.lds-kitty-mode { display: flex; gap: 8px; font-size: .68rem; align-items: center; color: var(--text-secondary); }
+.lds-kitty-mode input { accent-color: #a186bc; }
+.lds-kitty-cups { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
+.lds-stage .lds-kitty-cup { min-width: 0; min-height: 65px; padding: 12px 4px; background: color-mix(in srgb, var(--cup-color) 28%, var(--surface-soft)); color: var(--text); border: 2px solid var(--cup-color); border-radius: 7px 7px 18px 18px; font-size: 1rem; }
+.lds-kitty-cup[data-owner="you"] { box-shadow: inset 0 -5px 0 #b297d588; }
+.lds-kitty-cup[data-owner="partner"] { box-shadow: inset 0 -5px 0 #7aacc888; }
+.lds-kitty-cup[data-last="true"] { animation: lds-card-place .35s ease-out; }
+.lds-kitty-hand { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+.lds-stage .lds-kitty-card { min-height: 65px; border: 1px solid var(--cup-color); border-radius: 8px; background: color-mix(in srgb, var(--cup-color) 15%, var(--surface-soft)); color: var(--text); font-size: .76rem; padding: 10px 4px; }
+.lds-kitty-card[aria-pressed="true"] { outline: 2px solid var(--lds-accent); outline-offset: 2px; transform: translateY(-3px); }
+.lds-date-story h4 { font-size: .95rem; margin: 2px 0; }
+.lds-story-text { font-size: .86rem; line-height: 1.9; color: var(--text); margin: 0; animation: lds-story-in .45s ease-out; }
+.lds-story-choices { display: grid; gap: 8px; }
+.lds-stage .lds-story-choice { padding: 13px 16px; text-align: left; border: 1px solid var(--border); border-radius: 8px; background: #a78dc015; color: var(--text); font-size: .8rem; }
+.lds-story-choice:hover { border-color: var(--lds-accent); }
+.lds-scene-gallery { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+.lds-gallery-label { font-size: .63rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.lds-scene-portrait.lds-art-reveal { animation: lds-art-reveal .6s ease-out, lds-breathe 10s ease-in-out infinite; }
+@keyframes lds-art-reveal { from { opacity: .25; filter: brightness(1.35); } to { opacity: 1; filter: brightness(1); } }
+.lds-gallery-count { font-size: .7rem; line-height: 1.5; margin: 6px 0 10px; }
+.lds-scene-thumbs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+.lds-stage .lds-art-thumb { padding: 0; height: 65px; min-width: 0; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; background: #131322; }
+.lds-art-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+.lds-art-thumb:hover img { transform: scale(1.1); }
+.lds-art-thumb[aria-pressed="true"] { border-color: var(--lds-accent); box-shadow: 0 0 0 2px var(--lds-accent); }
+.lds-gallery-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.lds-art-auto { display: flex; align-items: center; gap: 6px; font-size: .65rem; color: var(--muted); }
+.lds-art-auto input { accent-color: var(--lds-accent); }
+.lds-grip-meter { height: 22px; position: relative; background: #282940; border-radius: 12px; overflow: hidden; margin: 12px 0 3px; }
+.lds-grip-zone { position: absolute; left: 28%; width: 44%; height: 100%; background: #75d6ba66; border-inline: 1px solid #a1ffe3; }
+.lds-grip-zone::after { content: ''; position: absolute; left: 30%; width: 40%; height: 100%; background: #a1ffe377; }
+.lds-grip-meter i { position: absolute; width: 4px; height: 100%; background: #fff; box-shadow: 0 0 12px #fff; }
+.lds-claw-machine[data-phase="grip"] { box-shadow: 0 0 20px #82ddc955; border-color: #a1ffe3; }
+.lds-kitty-tactics { display: flex; flex-wrap: wrap; gap: 7px; }
+.lds-kitty-tactics p { flex-basis: 100%; margin: 8px 0; }
+.lds-kitty-tactics button[aria-pressed="true"] { border-color: var(--lds-accent); background: #9ed7ef25; }
+.lds-challenge-record { color: var(--lds-accent); }
+.lds-photo-settings { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 9px; }
+.lds-photo-settings label { display: grid; align-content: start; gap: 6px; font-size: .65rem; color: var(--text-secondary); min-width: 0; }
+.lds-photo-settings select { width: 100%; min-width: 0; font-size: .72rem; }
+.lds-photo-settings input { width: 100%; accent-color: #a186bc; }
+.lds-photo-canvas { width: min(100%, 420px); height: auto; justify-self: center; border-radius: 8px; touch-action: none; box-shadow: 0 8px 28px #13132133; }
+.lds-photo-canvas:focus-visible { outline: 2px solid var(--lds-accent); outline-offset: 3px; }
+.lds-date-photo { position: relative; }
+.lds-date-photo[data-flash="true"]::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: #fff; pointer-events: none; animation: lds-shutter .4s ease-out both; }
+.lds-photo-actions { justify-content: center; }
+.lds-photo-gallery { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.lds-stage .lds-photo-thumb { padding: 0; overflow: hidden; border: 1px solid var(--border); border-radius: 7px; background: var(--surface-soft); color: var(--text); }
+.lds-photo-thumb img { width: 100%; height: 60px; object-fit: cover; }
+.lds-photo-thumb span { display: block; padding: 5px; font-size: .58rem; }
+.lds-focus-duration { display: flex; align-items: center; justify-content: center; gap: 12px; font-size: .75rem; color: var(--text-secondary); }
+.lds-focus-clock { aspect-ratio: 1; width: min(260px, 80%); justify-self: center; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 12px; padding: 24px; border: 1px solid var(--lds-accent); border-radius: 50%; background: radial-gradient(circle, #b797d922, transparent 65%); box-shadow: 0 0 35px #b797d922; }
+.lds-focus-clock strong { font-size: 3rem; font-weight: 400; letter-spacing: .04em; font-variant-numeric: tabular-nums; color: var(--text); }
+.lds-focus-clock span { max-width: 180px; font-size: .7rem; text-align: center; line-height: 1.6; color: var(--text-secondary); }
+.lds-focus-progress { height: 4px; border-radius: 6px; background: #9f88c133; }
+.lds-focus-progress i { display: block; height: 100%; border-radius: inherit; background: var(--lds-accent); }
+@keyframes lds-card-place { from { transform: translateY(-8px) rotate(-3deg); opacity: .6; } to { transform: translateY(0); opacity: 1; } }
+@keyframes lds-story-in { from { opacity: .3; translate: 0 6px; } to { opacity: 1; translate: 0 0; } }
+@keyframes lds-shutter { from { opacity: .9; } to { opacity: 0; } }
+[data-motion="off"] .lds-date-photo::after { display: none; }
+@media (prefers-reduced-motion: reduce) { .lds-date-photo::after { display: none; } .lds-stage[data-view="dates"] .lds-scene-portrait { translate: 0 0; } }
+@media (max-width: 560px) {
+  .lds-stage[data-view="dates"] .lds-scene { min-height: 300px; aspect-ratio: 1.1 / 1; }
+  .lds-stage[data-view="dates"] .lds-identity { max-width: 65%; bottom: 20px; }
+  .lds-date-page { padding: 10px; }
+  .lds-date-nav { gap: 5px; }
+  .lds-stage .lds-date-tab { font-size: .64rem; padding: 8px; }
+  .lds-claw-machine { border-width: 5px; border-bottom-width: 18px; }
+  .lds-claw-sign { font-size: .48rem; }
+  .lds-claw-chute { width: 42px; height: 22px; font-size: .45rem; }
+  .lds-kitty-cups, .lds-kitty-hand { gap: 6px; }
+  .lds-stage .lds-kitty-cup { font-size: .8rem; min-height: 54px; }
+  .lds-stage .lds-kitty-card { font-size: .62rem; }
+  .lds-photo-settings { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lds-date-collection { gap: 8px; }
+  .lds-date-collected { width: 36px; height: 36px; }
+}
+@media (min-width: 960px) {
+  .lds-stage[data-view="dates"] { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 14px 20px; }
+  .lds-stage[data-view="dates"] .lds-view-nav, .lds-stage[data-view="dates"] .lds-credit { grid-column: 1 / -1; }
+  .lds-stage[data-view="dates"] .lds-scene { grid-column: 1; min-height: 330px; aspect-ratio: 1.1 / 1; }
+  .lds-stage[data-view="dates"] .lds-dialogue, .lds-stage[data-view="dates"] .lds-feedback, .lds-stage[data-view="dates"] .lds-roster { grid-column: 1; }
+  .lds-stage[data-view="dates"] .lds-dates { grid-column: 2; grid-row: 2 / span 4; align-content: start; }
+  .lds-stage[data-view="dates"] .lds-identity { max-width: 65%; left: 16px; bottom: 18px; }
+  .lds-stage[data-view="dates"] .lds-role { font-size: .65rem; }
+  .lds-stage[data-view="dates"] .lds-name { font-size: 1.9rem; }
+  .lds-stage[data-view="dates"] .lds-eyebrow { font-size: .57rem; letter-spacing: .08em; }
+  .lds-stage[data-view="dates"] .lds-edition { font-size: .45rem; padding: 4px; }
+}

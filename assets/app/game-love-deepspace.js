@@ -182,16 +182,23 @@
     return album;
   }
 
+  function ldsReadLooks(raw) {
+    var looks = { version: 1, auto: true, scenes: {} }, saved;
+    try { saved = JSON.parse(raw || "null"); } catch (error) { saved = null; }
+    ldsPartners.forEach(function (partner) { var index = saved && saved.version === 1 && saved.scenes && saved.scenes[partner.id]; looks.scenes[partner.id] = Number.isInteger(index) && index >= 0 && index <= 4 ? index : partner.id === "zayne" ? 4 : 3; });
+    if (saved && saved.version === 1 && typeof saved.auto === "boolean") { looks.auto = saved.auto; } return looks;
+  }
   function initLoveDeepspaceGame(panelEl) {
     if (!panelEl) { return; }
     var campaign = createCampaign({ key: "love-deepspace-campaign", levels: ldsRoutes });
     var albumKey = "love-deepspace-album-v1";
     var album = ldsReadAlbum(App.storage.getItem(albumKey));
+    var looks = ldsReadLooks(App.storage.getItem("love-deepspace-looks-v1"));
     var route = ldsRoutes[campaign.indexOf(campaign.nextLevelId())];
     var partner = byId(ldsPartners, album.selected);
     var state, event, talked, missionLog = [], portraitPartner = "", watching = false;
     var dialogueMood = "Intro", effect = null, mediaEpoch = 0;
-    var rosterButtons = [], moveButtons = [], routeDots = [], combat = null, combatMode = "action";
+    var rosterButtons = [], moveButtons = [], routeDots = [], combat = null, combatMode = "action", dates = null, viewMode = "dates";
 
     function node(tag, className, key, parent) {
       var el = document.createElement(tag);
@@ -246,7 +253,16 @@
     }
 
     panelEl.classList.add("lds-stage");
+    panelEl.classList.add("lds-character-focus");
     var scene = node("div", "lds-scene", null, panelEl);
+    scene.setAttribute("aria-label", t("ldsCompanionHint"));
+    scene.addEventListener("pointermove", function (ev) {
+      if (motionOff() || viewMode !== "dates") { return; }
+      var rect = scene.getBoundingClientRect();
+      scene.style.setProperty("--lds-look-x", ((ev.clientX - rect.left) / rect.width - .5) * 10 + "px");
+      scene.style.setProperty("--lds-look-y", ((ev.clientY - rect.top) / rect.height - .5) * 6 + "px");
+    });
+    scene.addEventListener("pointerleave", function () { scene.style.setProperty("--lds-look-x", "0px"); scene.style.setProperty("--lds-look-y", "0px"); });
     var fallback = node("div", "lds-scene-fallback", null, scene);
     fallback.setAttribute("aria-hidden", "true");
     for (var s = 0; s < 14; s += 1) {
@@ -257,6 +273,8 @@
     }
     var portrait = node("img", "lds-scene-portrait", null, scene);
     portrait.decoding = "async";
+    portrait.addEventListener("load", function () { if (!motionOff()) { portrait.classList.remove("lds-art-reveal"); void portrait.offsetWidth; portrait.classList.add("lds-art-reveal"); } });
+    portrait.addEventListener("animationend", function (event) { if (event.animationName === "lds-art-reveal") { portrait.classList.remove("lds-art-reveal"); } });
     portrait.addEventListener("error", function () { portrait.hidden = true; });
     var video = node("video", "lds-scene-video", null, scene);
     video.hidden = true;
@@ -311,6 +329,30 @@
     });
     watchBtn.setAttribute("aria-pressed", "false");
     var mediaStatus = node("span", "lds-media-status", null, sceneActions);
+    button("lds-small-button lds-greeting-button", "ldsGreet", sceneActions, function () {
+      if (viewMode !== "dates") { return; }
+      dialogue.textContent = t("ldsDateLine" + partner.id.charAt(0).toUpperCase() + partner.id.slice(1));
+      if (!motionOff()) {
+        animate("heart", "");
+        if (!watching && typeof video.play === "function") { watchBtn.click(); }
+      }
+    });
+    var gallery = node("div", "lds-scene-gallery", null, dialogueBox);
+    node("span", "lds-gallery-label", "ldsGalleryTitle", gallery);
+    var galleryCount = node("p", "lds-gallery-count", null, gallery);
+    var galleryThumbs = node("div", "lds-scene-thumbs", null, gallery), artButtons = [];
+    for (var artIndex = 0; artIndex < 5; artIndex++) {
+      (function (index) {
+        var thumb = button("lds-art-thumb", null, galleryThumbs, function () { chooseArt(index, true); });
+        thumb.setAttribute("data-art", String(index)); node("img", "", null, thumb).alt = ""; artButtons.push(thumb);
+      })(artIndex);
+    }
+    var galleryTools = node("div", "lds-gallery-tools", null, gallery);
+    button("lds-small-button", "ldsGalleryPrev", galleryTools, function () { chooseArt((looks.scenes[partner.id] + 4) % 5, true); });
+    button("lds-small-button", "ldsGalleryNext", galleryTools, function () { chooseArt((looks.scenes[partner.id] + 1) % 5, true); });
+    var reactionLabel = node("label", "lds-art-auto", null, galleryTools), reactionToggle = node("input", "", null, reactionLabel);
+    reactionToggle.type = "checkbox"; reactionToggle.checked = looks.auto; node("span", "", "ldsGalleryAuto", reactionLabel);
+    reactionToggle.addEventListener("change", function () { looks.auto = reactionToggle.checked; saveLooks(); });
     var feedback = node("p", "lds-feedback", null, panelEl);
     feedback.setAttribute("role", "status");
 
@@ -333,6 +375,13 @@
     var viewNav = node("div", "lds-view-nav", null, panelEl);
     var missionBtn = button("lds-view-button", "ldsMissionTab", viewNav, function () { switchView(false); });
     var memoryBtn = button("lds-view-button", "ldsMemoryTab", viewNav, function () { switchView(true); });
+    var dateBtn = button("lds-view-button lds-together-tab", "ldsDateTab", viewNav, function () { switchView("dates"); });
+    var gamesListBtn = button("lds-game-picker-button", "ldsOtherGames", viewNav, function () {
+      var focused = panelEl.classList.toggle("lds-character-focus");
+      gamesListBtn.textContent = t(focused ? "ldsOtherGames" : "ldsHideGameList");
+      gamesListBtn.setAttribute("aria-expanded", String(!focused));
+    });
+    gamesListBtn.setAttribute("aria-expanded", "false");
     var mission = node("div", "lds-mission", null, panelEl);
     var book = node("div", "lds-album", null, panelEl);
     book.hidden = true;
@@ -342,11 +391,16 @@
     function switchView(memories) {
       stopVideo(); clearEffect();
       if (combat) { combat.pause(); }
+      if (dates) { dates.pause(); }
       panelEl.classList.remove("lds-in-combat");
-      mission.hidden = memories; book.hidden = !memories;
-      missionBtn.setAttribute("aria-pressed", String(!memories));
-      memoryBtn.setAttribute("aria-pressed", String(memories));
-      if (memories) { syncAlbum(); }
+      viewMode = memories === "dates" ? "dates" : memories ? "memories" : "missions";
+      panelEl.setAttribute("data-view", viewMode);
+      mission.hidden = viewMode !== "missions"; book.hidden = viewMode !== "memories";
+      if (dates) { dates.element.hidden = viewMode !== "dates"; }
+      missionBtn.setAttribute("aria-pressed", String(viewMode === "missions"));
+      memoryBtn.setAttribute("aria-pressed", String(viewMode === "memories"));
+      dateBtn.setAttribute("aria-pressed", String(viewMode === "dates"));
+      if (viewMode === "memories") { syncAlbum(); }
     }
     function portraitPath(entry) { return "assets/media/love-deepspace/" + entry.id + ".webp"; }
 
@@ -453,10 +507,23 @@
       },
     });
     mission.insertBefore(combat.element, strategy);
-    // Put active play ahead of the character gallery; each battle also carries
-    // the selected official portrait in its companion HUD and skill cut-in.
-    panelEl.insertBefore(mission, scene);
-    panelEl.insertBefore(viewNav, mission);
+    // The landing screen foregrounds the official character scene and its dates.
+    panelEl.insertBefore(viewNav, scene);
+    dates = App.mountLdsDates(panelEl, {
+      isHidden: function () { return panelEl.hidden || dates.element.hidden || !!panelEl.closest("[hidden]"); },
+      isCompanionTarget: function (target) { return scene.contains(target) || dialogueBox.contains(target); },
+      onRunning: function (running) { panelEl.classList.toggle("lds-date-running", running); },
+      onPartner: choosePartner,
+      onMoment: function (mood) { say(mood); if (looks.auto) { chooseArt(mood === "Win" ? 2 : mood === "Skill" ? 4 : mood === "Miss" ? 0 : partner.id === "zayne" ? 4 : 3, false); } if (!motionOff()) { animate(mood === "Win" ? "win" : mood === "Skill" ? "skill" : "heart", feedback.textContent); } },
+      getArt: function (id) { return looks.scenes[id]; },
+      onArt: function (index) { chooseArt(index, false); },
+      onReward: function (kind) {
+        album.bonds[partner.id] = Math.min(999, (album.bonds[partner.id] || 0) + 2);
+        saveAlbum(); syncCharacter(); petNotifyGame(true);
+        feedback.textContent = t(kind === "photo" ? "ldsDatePhotoReward" : "ldsDateReward");
+      },
+    });
+    panelEl.insertBefore(dates.element, mission);
     var credit = node("p", "lds-credit", null, panelEl);
     node("span", "", "ldsCredit", credit);
     var creditLink = node("a", "", "ldsOfficialSite", credit);
@@ -472,8 +539,7 @@
         stopVideo();
         portraitPartner = partner.id;
         portrait.hidden = false;
-        portrait.src = portraitPath(partner);
-        portrait.alt = t("ldsPortraitAlt", { name: t(partner.nameKey) });
+        applyArt();
         mediaStatus.textContent = "";
       }
       evol.textContent = partner.symbol + " " + t(partner.evolKey);
@@ -486,6 +552,19 @@
         btn.setAttribute("aria-pressed", String(btn.getAttribute("data-partner") === partner.id));
       });
       say(dialogueMood);
+    }
+    function saveLooks() { App.storage.setItem("love-deepspace-looks-v1", JSON.stringify(looks)); }
+    function applyArt() {
+      var art = App.ldsSceneArt(partner.id, looks.scenes[partner.id]);
+      portrait.hidden = false; portrait.src = art.src; portrait.alt = t("ldsPortraitAlt", { name: t(partner.nameKey) }) + " · " + art.title;
+      portrait.style.objectPosition = art.x * 100 + "% " + art.y * 100 + "%";
+      scene.setAttribute("data-art", String(art.index)); galleryCount.textContent = t("ldsGalleryCount", { n: art.index + 1, title: art.title });
+      artButtons.forEach(function (button, index) { var preview = App.ldsSceneArt(partner.id, index), image = button.querySelector("img"); image.src = preview.src; image.loading = "lazy"; image.style.objectPosition = preview.x * 100 + "% " + preview.y * 100 + "%"; button.setAttribute("aria-label", preview.title); button.setAttribute("aria-pressed", String(index === art.index)); });
+    }
+    function chooseArt(index, manual) {
+      if (!Number.isInteger(index) || index < 0 || index > 4) { return; }
+      if (looks.scenes[partner.id] !== index || watching) { stopVideo(); looks.scenes[partner.id] = index; applyArt(); saveLooks(); }
+      if (manual && dates && dates.setArt) { dates.setArt(index); }
     }
     function syncAlbum() {
       while (memoryGrid.firstChild) { memoryGrid.removeChild(memoryGrid.firstChild); }
@@ -568,6 +647,7 @@
       addLog("ldsLogStart", { route: t(route.labelKey), name: t(partner.nameKey) });
       syncRoutePicker(); syncHud(); syncAlbum();
       if (combat) { combat.reset(campaign.indexOf(route.id), partner); }
+      if (dates) { dates.setPartner(partner); }
     }
     function choosePartner(id) {
       if (partner.id === id) { return; }
@@ -622,12 +702,15 @@
       else { routeSel.value = route.id; }
     });
     partnerSel.addEventListener("change", function () { choosePartner(partnerSel.value); });
-    App.quietResetLoveDeepspace = function () { stopVideo(); clearEffect(); combat.pause(); };
+    App.quietResetLoveDeepspace = function () { stopVideo(); clearEffect(); combat.pause(); dates.pause(); };
     // Stop media when motion preferences change or the containing panel is hidden.
     if (typeof MutationObserver !== "undefined") {
-      var observer = new MutationObserver(function () {
+      var observer = new MutationObserver(function (records) {
         if (watching && (motionOff() || panelEl.hidden || panelEl.closest("[hidden]"))) { stopVideo(); }
-        if (panelEl.hidden || panelEl.closest("[hidden]")) { combat.pause(); }
+        if (panelEl.hidden || panelEl.closest("[hidden]")) { combat.pause(); dates.pause(); }
+        if (!panelEl.hidden && records.some(function (record) { return record.target === panelEl && record.attributeName === "hidden"; })) {
+          var gameDialog = panelEl.closest(".game-dialog"); if (gameDialog) { gameDialog.scrollTop = 0; }
+        }
       });
       observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-motion"] });
       observer.observe(panelEl, { attributes: true, attributeFilter: ["hidden"] });
@@ -636,11 +719,14 @@
       var preference = window.matchMedia("(prefers-reduced-motion: reduce)");
       if (preference.addEventListener) { preference.addEventListener("change", function () { if (preference.matches) { stopVideo(); } }); }
     }
-    switchView(false); switchMode("action"); startRoute(route);
+    switchView("dates"); switchMode("action"); startRoute(route);
   }
 
   App.addStrings({
     en: {
+      "ldsOtherGames": "All games ↗",
+      "ldsHideGameList": "Hide game list",
+      "ldsGreet": "♡ Say hello",
       "ldsActionMode": "Action · Starbond Hunt",
       "ldsStrategyMode": "Strategy · Starbond Relay",
       "ldsArenaTitle": "STARBOND HUNT",
@@ -764,7 +850,7 @@
       "ldsLineCalebWin": "Touchdown. Come on, there's dinner waiting for us.",
       "tabLoveDeepspace": "Love and Deepspace",
       "ldsBannerTitle": "Love and Deepspace",
-      "ldsBannerTag": "Starbond Relay",
+      "ldsBannerTag": "Love and Deepspace",
       "ldsBannerAlt": "A nebula cradling two bonded planets linked by a glowing thread",
       "ldsCharAlt": "An illustrated spacefarer companion glowing softly among the stars",
       "ldsRouteLabel": "Mission route",
@@ -819,6 +905,9 @@
       "logLoveDeepspace": "Cleared Love and Deepspace route with {name} in {n} turns",
     },
     zh: {
+      "ldsOtherGames": "所有游戏 ↗",
+      "ldsHideGameList": "收起游戏列表",
+      "ldsGreet": "♡ 和他打个招呼",
       "ldsActionMode": "动作 · 深空狩猎",
       "ldsStrategyMode": "策略 · 星缘接力",
       "ldsArenaTitle": "深空狩猎",
@@ -942,7 +1031,7 @@
       "ldsLineCalebWin": "平安降落。走吧，晚饭还等着我们呢。",
       "tabLoveDeepspace": "恋与深空",
       "ldsBannerTitle": "恋与深空",
-      "ldsBannerTag": "星缘接力",
+      "ldsBannerTag": "恋与深空",
       "ldsBannerAlt": "星云中两颗以光丝相连的行星",
       "ldsCharAlt": "一位在星海中散发柔光的太空旅人插画",
       "ldsRouteLabel": "任务航线",
@@ -1012,6 +1101,11 @@
         '<rect x="14" y="14" width="36" height="12" rx="6" fill="rgba(96,165,250,.2)" stroke="#60a5fa"/>' +
         '<text x="32" y="22" text-anchor="middle" font-size="7" fill="#bfdbfe">R 82</text></svg>',
       en: [
+        "Together: each partner has five local images. Switch the scene thumbnails, or enable scene reactions to change artwork during play. Photo studio saves the selected artwork. Say hello optionally plays a muted official character video.",
+        "Playtime: aim the moving claw with A/D, arrows or touch, then drop with Space. Kitty Cards doubles colour matches and lets you shield a card in Advanced mode. Collected plushies and your first win badge raise affinity.",
+        "Claw Challenge: collect prizes in 60 seconds. Press Space again in the mint grip zone; centre hits earn Perfect bonuses. Consecutive catches add combo points, and each partner's best record is saved.",
+        "Advanced Kitty Cards: both sides get two tactics. Redraw a hand card, boost your cup by two up to eight, or rotate a filled cup's colour before placing a number card. Shields protect against enemy colour changes.",
+        "Dates: three story choices lead to two saved endings. Reframe a portrait in Photo studio, save a snapshot, or download a PNG. Quality time offers a visible-page timer; your first completed session with each partner raises affinity.",
         "Action: Starbond Hunt is the default mode. Move with WASD or arrows, hold J to auto-aim and fire, or hold the mouse to aim manually. On touch screens, drag the joystick and hold Fire.",
         "Dodge: press Space just before a bolt or impact ring hits. A perfect evade slows enemy time and charges Evol. Press E at 100% for your partner's skill. P or Escape pauses; resume manually after closing the drawer.",
         "Boss: defeat two enemy waves, then the Wanderer. Attack during its exposed-core window. A win saves a route memory and unlocks the next route; clear in 40 seconds with at least 75 health for three stars.",
@@ -1024,6 +1118,11 @@
         "Animate character plays an optional muted official video online. Local portraits work offline; motion settings and closing the drawer pause the video.",
       ],
       zh: [
+        "陪伴：每位搭档都有五张本地画面，可点缩略图切换或启用游玩画面反应，拍照馆也会保存所选画面。打招呼可播放静音官方角色视频。",
+        "游玩：A/D、方向键或触屏瞄准移动中的娃娃，空格下爪。喵喵牌同色翻倍，进阶模式可用护盾保护一张牌。收藏新娃娃及首次获胜徽章会增加羁绊。",
+        "抓娃娃挑战：60 秒内抓取娃娃，在薄荷色握爪区再按空格，命中中心可获完美加分。连续抓取积累连击，每位搭档的最佳纪录都会保存。",
+        "进阶喵喵牌：双方各有两次战术，可重抽手牌、给己方杯中牌加二分（上限八），或轮换已有牌杯子的颜色，然后照常放牌。护盾会阻挡对方改色。",
+        "约会：三次选择通向两个可收藏结局；拍照馆可调整构图、保存快照或下载 PNG。专属陪伴仅在页面可见时计时，与每位搭档首次完成陪伴会增加羁绊。",
         "动作模式：默认进入深空狩猎。WASD 或方向键移动，按住 J 自动瞄准射击，也可按住鼠标手动瞄准。触屏可拖动摇杆并按住射击。",
         "闪避：弹幕或冲击圆环命中前按空格。完美闪避可减缓敌人并为 Evol 充能，充满后按 E 释放搭档技能。P 或 Esc 暂停，关闭面板后须手动继续。",
         "首领：击败两波敌人后挑战流浪体，抓住核心暴露的时机攻击。胜利可收藏回忆并解锁新航线；40 秒内通关且剩余至少 75 点生命可获得三星。",
@@ -1042,6 +1141,7 @@
   App.initLoveDeepspaceGame = initLoveDeepspaceGame;
   App.ldsAdvance = ldsAdvance;
   App.ldsReadAlbum = ldsReadAlbum;
+  App.ldsReadLooks = ldsReadLooks;
   App.ldsPartners = ldsPartners;
   App.ldsRoutes = ldsRoutes;
   App.ldsMoves = ldsMoves;
