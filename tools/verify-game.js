@@ -40,6 +40,9 @@ const RUNTIME = [
   "pet-data", "pet-state", "pet-life", "pet-art", "pet-dom", "pet-render", "pet-games", "pet",
   "game-campaign", "game-registry", "game-guide",
   "love-deepspace-combat",
+  "love-deepspace-home",
+  "love-deepspace-release",
+  "love-deepspace-starpath",
   "love-deepspace-dates",
 ];
 

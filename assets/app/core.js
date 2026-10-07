@@ -10,6 +10,14 @@
     /* Some browsers deny access to the storage property itself. */
   }
   var localStorage = {
+    isPersistent: function () {
+      try {
+        if (!browserStorage) { return false; }
+        var probe = "capitalconvert-storage-check";
+        browserStorage.setItem(probe, "1"); browserStorage.removeItem(probe);
+        return !Object.keys(sessionStorage).some(function (key) { return sessionStorage[key] !== null; });
+      } catch (error) { return false; }
+    },
     getItem: function (key) {
       key = String(key);
       if (Object.prototype.hasOwnProperty.call(sessionStorage, key)) {
@@ -50,6 +58,11 @@
     },
   };
   App.storage = localStorage;
+  var hiddenCallbacks = [];
+  App.onDocumentHidden = function (callback) { if (typeof callback === "function") { hiddenCallbacks.push(callback); } };
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) { hiddenCallbacks.forEach(function (callback) { callback(); }); }
+  });
   /* Shared names from the other modules (see window.CapitalConvert). */
   var I18N = App.I18N;
   /* Quiet-reset hooks: every timer-driven game registers its reset here so

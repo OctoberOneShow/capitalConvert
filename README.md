@@ -98,6 +98,55 @@ Verification:
 
 ### 恋与深空 / Love and Deepspace
 
+#### 1.0 fan release
+
+Open [the game directly](index.html?game=love-deepspace), or use the game drawer
+on any of the four pages. This is an independent fan-made mini-adventure; its
+1.0 version does not refer to an official Infold game release.
+
+**HD Gallery / 高清画廊** includes nine local artworks for each of the five
+partners, for 45 images. The 20 added images include eight native 4K artworks
+and twelve native Full HD artworks. Open any card to see the complete image, inspect its
+dimensions, zoom in, save a favourite, or download the original file. Arrow keys
+move between images, Escape closes the viewer, and keyboard focus returns to
+the opened card. The favourite filter and saved favourites help players return
+to their collection. Artwork also appears in the character scene strip and
+photo studio. Media provenance is recorded in
+[CREDITS.md](assets/media/love-deepspace/CREDITS.md).
+
+**Our journey / 我们的旅程** gives each partner six visible goals connected to
+the existing activities: a photograph, a story ending, Starpath, Kitty Cards,
+a successful meal, and a mission memory. Its next-step button takes the player
+to an unfinished activity. Goals follow the actual collection and completion
+records, so replaying a goal cannot award a second collection reward.
+
+**Starpath / 星轨** adds a constellation puzzle to Together. Rotate the star
+tiles to connect the route, use a star hint when needed, and complete
+the constellation to keep its result. The puzzle can be replayed without
+duplicating its first-completion reward.
+
+The complete gallery and gameplay use bundled files and work without a network
+connection. Character videos remain optional online media. Closing the drawer,
+switching activities, and hiding the browser tab pause active gameplay and
+stop the character video. Saves remain compatible with existing collections;
+live rounds restart after a reload. If browser storage is unavailable, progress
+lasts for the current session.
+
+Release verification:
+
+- `node tools/love-deepspace-release-check.js` runs the real game in Chrome or
+  Edge over a temporary local HTTP server. It checks all four direct entry
+  links, image decoding, the gallery viewer and favourites, photo and story
+  collections, mission rewards, Journey goals, reduced motion, and narrow
+  layouts in English/Chinese and both themes. Reports and screenshots are saved
+  under `tools/shots/love-deepspace-release/`. Use `CHROME_PATH` or
+  `--chrome=/path/to/chrome` when the browser is installed elsewhere.
+- `node tools/harness/cases-love-deepspace.js` verifies the original activities,
+  saves, combat rules, collection rewards, and pause/resume lifecycle.
+- `node tools/static-checks.js` verifies all four page manifests, translation
+  packs, and shared game wiring; `node tools/pet-harness.js` runs the wider
+  regression suite.
+
 Its original responsive, arena, date-activity, and animation styles are restored after an earlier stylesheet merge omitted them. Both this game and Item Quest isolate their native colours and controls from the shared game skin.
 
 **Together → Heart to heart / 陪伴 → 倾心之谈** adds original mood conversations for all five partners. Choose a good, tiring, or worrying day, then choose quiet company or a small plan. Completed exchanges go into each partner's journal; favourite and replay them in either language. The latest 20 distinct exchanges are saved across partners, duplicate choices update the existing entry, and replaying does not award affinity. Old saves remain compatible.
@@ -118,10 +167,10 @@ character video. **Say hello** starts the muted video when motion is enabled;
 the character stays beside the date activity. **All games** restores the shared
 picker, and **Missions** opens the existing combat and strategy modes.
 
-Each partner has **five distinct images**: the original portrait plus four
+Each partner has **nine distinct images**: the original portrait plus eight
 official gallery artworks. The scene strip switches images, remembers a separate
 selection for each partner, and can change scenes in response to play. Turn off
-**Scenes react to play** to keep your chosen image. All 25 images are bundled
+**Scenes react to play** to keep your chosen image. All 45 images are bundled
 locally, and every scene is also available in the photo studio.
 
 The date activities are simplified fan adaptations inspired by the official
@@ -144,7 +193,7 @@ The date activities are simplified fan adaptations inspired by the official
   the partner chooses tactics that improve its score advantage.
 - **Date story / 约会故事:** three choices lead to two original endings, with
   different partner dialogue. Replay from **New session** to collect both endings.
-- **Photo studio / 拍照馆:** choose any of the partner's five artworks, then adjust
+- **Photo studio / 拍照馆:** choose any of the partner's nine artworks, then adjust
   lighting, frame, sticker, close-up, and
   portrait crop by dragging or using the arrow keys. Save up to twelve snapshots;
   thumbnails recreate their settings and **Download PNG** exports a local portrait

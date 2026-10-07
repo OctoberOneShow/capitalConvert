@@ -1,0 +1,100 @@
+/* The game's own visual language: soft light, editorial artwork, quiet chrome. */
+.game-dialog:has(.lds-character-focus:not([hidden])) { width: min(1180px, 100%); }
+#gamePanelLoveDeepspace { padding: clamp(14px, 2.5vw, 28px); border-radius: 22px; background: radial-gradient(ellipse at 100% 0, #46436848, transparent 52%), linear-gradient(145deg, #151829, #10121e); --surface-soft: #bec4ed08; --border: #c5bce328; }
+[data-theme="light"] #gamePanelLoveDeepspace { background: radial-gradient(ellipse at 100% 0, #dbd7e775, transparent 60%), linear-gradient(145deg, #faf7fc, #f0edf5); }
+.ldr-masthead { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 0 0 18px; border-bottom: 1px solid var(--border); grid-column: 1 / -1; }
+.ldr-brand { display: flex; align-items: center; gap: 12px; }
+.ldr-emblem { color: var(--lds-accent); font-size: 35px; text-shadow: 0 0 22px #aaa5df77; }
+.ldr-brand h2 { color: var(--text); font: 500 clamp(1.1rem, 2.5vw, 1.55rem)/1.25 Georgia, 'Noto Serif SC', serif; letter-spacing: .03em; margin: 0 0 6px; }
+.ldr-overline, .ldr-edition { display: block; font-size: .58rem; letter-spacing: .15em; line-height: 1.6; color: var(--text-secondary); }
+.ldr-save-state { max-width: 150px; margin: 0; text-align: right; font-size: .61rem; line-height: 1.6; color: var(--text-secondary); }
+.ldr-save-state::before { content: '● '; color: #83bca8; }
+.ldr-save-state[data-persistent="false"]::before { color: #d7ac7e; }
+#gamePanelLoveDeepspace .lds-view-nav { padding-bottom: 0; gap: 12px 28px; grid-column: 1 / -1; }
+#gamePanelLoveDeepspace .lds-view-button { min-height: 44px; font-size: .8rem; }
+#gamePanelLoveDeepspace .lds-scene { border-radius: 18px; border: 1px solid #ffffff22; }
+#gamePanelLoveDeepspace .lds-scene-top { padding: 20px; }
+#gamePanelLoveDeepspace .lds-edition { font-size: .5rem; letter-spacing: .04em; backdrop-filter: blur(12px); }
+#gamePanelLoveDeepspace .lds-dialogue { border-radius: 14px; padding: 16px; background: var(--surface-soft); }
+#gamePanelLoveDeepspace .lds-dialogue > p { font-size: .85rem; }
+#gamePanelLoveDeepspace .lds-small-button { min-height: 36px; border-radius: 8px; }
+#gamePanelLoveDeepspace .lds-scene-thumbs { grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 5px; }
+#gamePanelLoveDeepspace .lds-art-thumb { aspect-ratio: 3 / 4; height: auto; border-radius: 6px; }
+#gamePanelLoveDeepspace .lds-gallery-count { font-size: .64rem; }
+#gamePanelLoveDeepspace .lds-roster { gap: 8px; }
+#gamePanelLoveDeepspace .lds-partner-card { border-radius: 10px; }
+#gamePanelLoveDeepspace .lds-date-tab { min-height: 40px; padding: 8px 12px; border-radius: 20px; font-size: .69rem; }
+#gamePanelLoveDeepspace .lds-date-intro p { max-width: 45ch; }
+.ldr-journey { padding: 16px 18px; border: 1px solid var(--border); border-radius: 16px; background: linear-gradient(110deg, #afa1d214, #a8c8cc08); display: grid; gap: 10px; }
+.ldr-journey-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ldr-journey h4 { margin: 5px 0 0; font: 500 1rem/1.4 Georgia, serif; color: var(--text); }
+.ldr-journey-count { color: var(--lds-accent); font-size: .8rem; white-space: nowrap; }
+[data-theme="light"] .ldr-journey-count { color: var(--text); }
+.ldr-journey-track { height: 3px; border-radius: 10px; background: var(--border); overflow: hidden; }
+.ldr-journey-track i { display: block; height: 100%; background: linear-gradient(90deg,#ac9aca,#a7d6d1); transition: width .3s; }
+.ldr-journey-next { margin: 0; font-size: .71rem; line-height: 1.6; color: var(--text-secondary); }
+.lds-stage .ldr-journey-continue { justify-self: start; min-height: 38px; padding: 8px 14px; color: #211c32; background: #d7cfec; border: 1px solid #eee7ff77; border-radius: 9px; font-size: .71rem; }
+.ldr-journey-details { font-size: .65rem; color: var(--text-secondary); }
+.ldr-journey-details summary { cursor: pointer; padding: 4px 0; }
+.ldr-goals { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 6px; margin-top: 9px; }
+.lds-stage .ldr-goal { display: flex; text-align: left; align-items: center; gap: 8px; padding: 9px; border: 1px solid var(--border); border-radius: 8px; color: var(--text-secondary); background: var(--surface-soft); min-height: 38px; font-size: .66rem; }
+.ldr-goal[data-complete="true"] { color: #a8d3c7; }
+[data-theme="light"] .ldr-goal[data-complete="true"] { color: #32735c; }
+.ldr-goal-mark { font-size: 1rem; }
+.ldr-gallery { display: grid; gap: 18px; min-width: 0; grid-column: 1 / -1; }
+.ldr-gallery-header { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 8px 0; }
+.ldr-gallery h4 { font: 500 1.7rem/1.4 Georgia, serif; color: var(--text); margin: 6px 0; }
+.ldr-gallery-header p { font-size: .75rem; line-height: 1.6; color: var(--text-secondary); margin: 0; }
+.ldr-filter-label { display: grid; gap: 6px; color: var(--text-secondary); font-size: .66rem; }
+.lds-stage .ldr-gallery-filter { padding: 9px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-soft); color: var(--text); font-size: .72rem; min-width: 130px; }
+.ldr-gallery-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 18px; }
+.lds-stage .ldr-art-card { position: relative; display: grid; grid-template-rows: 1fr auto; text-align: left; padding: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface-soft); color: var(--text); box-shadow: 0 8px 30px #0000000c; }
+.ldr-art-card img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; transition: transform .35s ease; }
+.ldr-art-card:hover img { transform: scale(1.035); }
+.ldr-art-title { padding: 13px 42px 13px 14px; font-size: .73rem; line-height: 1.5; }
+.ldr-art-index { position: absolute; right: 12px; bottom: 14px; color: var(--text-secondary); font-size: .64rem; }
+.ldr-gallery-empty { padding: 50px 20px; text-align: center; color: var(--text-secondary); font-size: .85rem; }
+.ldr-viewer { display: grid; gap: 12px; min-width: 0; }
+.ldr-view-tools { display: flex; flex-wrap: wrap; gap: 8px; }
+.lds-stage a.ldr-view-download { display: inline-flex; align-items: center; padding: 6px 12px; text-decoration: none; }
+.ldr-view-viewport { position: relative; width: 100%; height: min(63vh,640px); min-height: 260px; overflow: auto; border: 1px solid #ffffff1e; border-radius: 14px; background: #090b14; }
+.ldr-view-image { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center; }
+.ldr-view-loading { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; font-size: .8rem; color: #d1c7e5; text-align: center; }
+.ldr-view-caption { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.ldr-view-caption h5 { font: 500 1.1rem/1.5 Georgia, serif; color: var(--text); margin: 0; }
+.ldr-view-position, .ldr-view-status, .ldr-gallery-note { color: var(--text-secondary); font-size: .65rem; margin: 0; line-height: 1.7; }
+.ldr-view-controls { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px; }
+.ldr-view-zoom-label { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: .7rem; }
+.ldr-view-zoom { width: 110px; accent-color: #b2a0d4; }
+.ldr-view-photo { justify-self: center; }
+.lds-stage[data-view="gallery"] .lds-scene, .lds-stage[data-view="gallery"] .lds-dialogue, .lds-stage[data-view="gallery"] .lds-feedback { display: none; }
+.lds-stage[data-view="gallery"] .lds-roster { grid-column: 1 / -1; max-width: 550px; width: 100%; justify-self: center; }
+@media (min-width: 960px) {
+  #gamePanelLoveDeepspace[data-view="dates"] { grid-template-columns: minmax(0,.95fr) minmax(0,1.1fr); gap: 16px 24px; }
+  #gamePanelLoveDeepspace[data-view="dates"] .lds-scene { grid-row: 3; min-height: 400px; aspect-ratio: 1; }
+  #gamePanelLoveDeepspace[data-view="dates"] .lds-dialogue { grid-row: 4; }
+  #gamePanelLoveDeepspace[data-view="dates"] .lds-feedback { grid-row: 5; }
+  #gamePanelLoveDeepspace[data-view="dates"] .lds-roster { grid-row: 6; }
+  #gamePanelLoveDeepspace[data-view="dates"] .lds-dates { grid-row: 3 / span 4; }
+  #gamePanelLoveDeepspace[data-view="dates"] .lds-credit { grid-row: 7; }
+}
+@media (max-width: 560px) {
+  #gamePanelLoveDeepspace { border-radius: 15px; padding: 12px; }
+  .ldr-masthead { gap: 10px; padding-bottom: 12px; }
+  .ldr-brand { gap: 8px; } .ldr-emblem { font-size: 24px; }
+  .ldr-brand h2 { font-size: 1rem; } .ldr-edition { font-size: .45rem; letter-spacing: .08em; }
+  .ldr-save-state { font-size: .48rem; max-width: 90px; }
+  #gamePanelLoveDeepspace .lds-view-nav { gap: 7px 16px; }
+  #gamePanelLoveDeepspace .lds-view-button { font-size: .7rem; }
+  .lds-stage .ldr-journey-continue { width: 100%; }
+  .ldr-journey { padding: 12px; } .ldr-journey h4 { font-size: .9rem; }
+  .ldr-gallery-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+  .ldr-gallery-header { align-items: start; flex-direction: column; gap: 10px; }
+  .ldr-gallery h4 { font-size: 1.3rem; }
+  .ldr-art-title { padding: 9px 24px 9px 9px; font-size: .6rem; } .ldr-art-index { font-size: .5rem; right: 7px; bottom: 11px; }
+  .ldr-view-viewport { height: 52vh; min-height: 230px; }
+  .ldr-view-controls { gap: 7px; } .ldr-view-zoom { width: 75px; }
+  #gamePanelLoveDeepspace .lds-scene-thumbs { grid-template-columns: repeat(5,minmax(0,1fr)); }
+}
+[data-motion="off"] .ldr-art-card img, [data-motion="off"] .ldr-journey-track i { transition: none; }
+@media (prefers-reduced-motion: reduce) { .ldr-art-card img, .ldr-journey-track i { transition: none; } }

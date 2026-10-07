@@ -164,6 +164,11 @@
     initPageClickEffect();
     initAmbientDust();
     initHoverSparks();
+    // A shareable game link also survives a language/theme reload.
+    if (typeof URLSearchParams !== "undefined" && new URLSearchParams(location.search).get("game") === "love-deepspace") {
+      var gameOpen = getElement("gameToggleBtn"), loveTab = getElement("gameTabLoveDeepspace");
+      if (gameOpen && loveTab) { gameOpen.click(); loveTab.click(); }
+    }
   });
 
   window.formatText = function () {

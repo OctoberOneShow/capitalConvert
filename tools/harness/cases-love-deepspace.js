@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const { createEnvironment, check, run } = require("./lib");
-const source = ["i18n", "core", "game-campaign", "game-registry", "love-deepspace-combat", "love-deepspace-home", "love-deepspace-dates", "game-love-deepspace", "game-guide"]
+const source = ["i18n", "core", "game-campaign", "game-registry", "love-deepspace-combat", "love-deepspace-home", "love-deepspace-release", "love-deepspace-starpath", "love-deepspace-dates", "game-love-deepspace", "game-guide"]
   .map(name => fs.readFileSync(path.join(__dirname, "../../assets/app", name + ".js"), "utf8")).join("\n");
 function boot(options, live) {
   const env = createEnvironment(options);
@@ -491,24 +491,24 @@ run("Love and Deepspace character gallery", () => {
   const hashes = new Set(), crypto = require("crypto");
   for (const partner of App.ldsPartners) {
     panel.querySelectorAll(".lds-partner-card").find(p => p.getAttribute("data-partner") === partner.id).click();
-    for (let index = 0; index < 5; index++) {
+    for (let index = 0; index < App.ldsArtCount; index++) {
       const art = App.ldsSceneArt(partner.id, index), file = path.join(__dirname, "../..", art.src);
       const pixels = fs.readFileSync(file); hashes.add(crypto.createHash("sha256").update(pixels).digest("hex"));
-      check("Love and Deepspace character gallery", partner.id + " scene " + index + " exists with actual image bytes", pixels.length > 10000 && (index ? pixels.subarray(0, 2).toString("hex") === "ffd8" : pixels.subarray(0, 4).toString() === "RIFF"));
+      check("Love and Deepspace character gallery", partner.id + " scene " + index + " exists with actual image bytes", pixels.length > 10000 && (art.src.endsWith(".png") ? pixels.subarray(0,8).toString("hex") === "89504e470d0a1a0a" : index ? pixels.subarray(0, 2).toString("hex") === "ffd8" : pixels.subarray(0, 4).toString() === "RIFF"));
       panel.querySelectorAll(".lds-art-thumb")[index].click();
       check("Love and Deepspace character gallery", partner.id + " scene " + index + " switches both hero and photograph", panel.querySelector(".lds-scene-portrait").src === art.src && panel.querySelector(".lds-photo-source").src === art.src && panel.querySelectorAll('.lds-art-thumb[aria-pressed="true"]').length === 1);
     }
   }
-  check("Love and Deepspace character gallery", "all 25 portraits and artworks are distinct images", hashes.size === 25);
+  check("Love and Deepspace character gallery", "all 45 portraits and artworks are distinct images", hashes.size === 45);
   const reloaded = boot({ store: env.store }, true);
-  check("Love and Deepspace character gallery", "scene choices are restored per partner", Object.values(App.ldsReadLooks(env.store.get("love-deepspace-looks-v1")).scenes).every(i => i === 4) && reloaded.byId("gamePanelLoveDeepspace").querySelector(".lds-scene").getAttribute("data-art") === "4");
+  check("Love and Deepspace character gallery", "scene choices are restored per partner", Object.values(App.ldsReadLooks(env.store.get("love-deepspace-looks-v1")).scenes).every(i => i === 8) && reloaded.byId("gamePanelLoveDeepspace").querySelector(".lds-scene").getAttribute("data-art") === "8");
   const parsed = App.ldsReadLooks('{"version":1,"auto":false,"scenes":{"xavier":999,"zayne":2}}');
   check("Love and Deepspace character gallery", "appearance saves validate indexes and the reaction preference", parsed.scenes.xavier === 3 && parsed.scenes.zayne === 2 && !parsed.auto);
   const auto = panel.querySelector(".lds-art-auto input"); auto.checked = false; env.dispatch(auto, "change"); env.dates.select("story"); const root = env.dates.element;
   root.querySelector(".lds-story-choice").click();
-  check("Love and Deepspace character gallery", "disabling reactions preserves the chosen scene during play", panel.querySelector(".lds-scene").getAttribute("data-art") === "4");
+  check("Love and Deepspace character gallery", "disabling reactions preserves the chosen scene during play", panel.querySelector(".lds-scene").getAttribute("data-art") === "8");
   env.dates.select("photo"); root.querySelector(".lds-photo-actions button").click();
-  check("Love and Deepspace character gallery", "saved snapshots include the selected character artwork", env.dates.inspect().progress.photos[0].art === 4);
+  check("Love and Deepspace character gallery", "saved snapshots include the selected character artwork", env.dates.inspect().progress.photos[0].art === 8);
 });
 
 run("Love and Deepspace heart-to-heart journal", () => {
