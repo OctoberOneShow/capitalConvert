@@ -120,21 +120,34 @@ async function main() {
       await load(page);
       check(page + " direct launch opens the game", await evaluate("!document.querySelector('#gamePanelLoveDeepspace').hidden&&!document.querySelector('#gameModal').hidden"));
       check(page + " includes gallery, journey and Starpath", await evaluate("!!document.querySelector('.ldr-gallery')&&!!document.querySelector('.ldr-journey')&&!!document.querySelector('[data-date=starpath]')"));
+      await click('[data-starpath-tile="4"]');
+      check(page + " landing puzzle is playable immediately", await evaluate("document.querySelector('.lsp-observatory').getAttribute('data-complete')==='true'"));
+      await click(".lsp-controls [data-i18n=lspReset]");
+      await click("#gameCloseBtn"); await click("#gameToggleBtn");
+      await click('[data-starpath-tile="4"]');
+      check(page + " puzzle remains playable after drawer reopen", await evaluate("document.querySelector('.lsp-observatory').getAttribute('data-complete')==='true'"));
     }
     await load("index.html");
     await click("[data-i18n=ldsGalleryTab]");
-    const images = [];
+    const images = [], previews = [];
     for (const partner of PARTNERS) {
       await click('[data-partner="' + partner + '"].lds-partner-card');
       const entries = await evaluate(`[...document.querySelectorAll('.ldr-art-card')].map(n=>CapitalConvert.ldsSceneArt(${JSON.stringify(partner)},Number(n.getAttribute('data-art'))).src)`);
       check(partner + " has nine gallery artworks", entries.length === 9, entries.length);
       images.push(...entries);
+      previews.push(...await evaluate("[...document.querySelectorAll('.ldr-art-card img')].map(n=>n.getAttribute('src'))"));
     }
     const decoded = await evaluate(`Promise.all(${JSON.stringify(images)}.map(src=>new Promise(resolve=>{const i=new Image();i.onload=()=>resolve({src,width:i.naturalWidth,height:i.naturalHeight});i.onerror=()=>resolve({src,width:0,height:0});i.src=src})))`);
     check("all 45 bundled artworks decode", decoded.length === 45 && decoded.every(item => item.width > 0 && item.height > 0), decoded.filter(item => !item.width));
     check("gallery images have distinct local paths", new Set(images).size === 45 && images.every(src => src.startsWith("assets/media/love-deepspace/")));
     const newArt = decoded.filter(item => /-scene-[5-8]\.(jpg|png)$/.test(item.src));
     check("all twenty new artworks are native Full HD or larger", newArt.length === 20 && newArt.every(item => Math.max(item.width, item.height) >= 1920), newArt);
+    const previewPixels = await evaluate(`Promise.all(${JSON.stringify(previews)}.map(src=>new Promise(resolve=>{const i=new Image();i.onload=()=>resolve({width:i.naturalWidth,height:i.naturalHeight});i.onerror=()=>resolve({width:0,height:0});i.src=src})))`);
+    const previewBytes = previews.reduce((sum, src) => sum + fs.statSync(path.join(ROOT, src)).size, 0);
+    check("all 45 gallery previews decode and total less than 1 MB", previews.length === 45 && previews.every(src => src.includes("/thumbs/")) && previewPixels.every(item => item.width > 0 && Math.max(item.width, item.height) <= 480) && previewBytes < 1000000, previewBytes);
+    await click('.ldr-art-card[data-art="6"]');
+    check("Caleb's PNG original keeps its PNG download extension", await evaluate("document.querySelector('.ldr-view-download').download.endsWith('.png')&&document.querySelector('.ldr-view-download').getAttribute('href').endsWith('.png')"));
+    await click(".ldr-view-close");
     await click('.lds-partner-card[data-partner="xavier"]');
     await click(".ldr-art-card");
     await waitFor("document.querySelector('.ldr-view-image').complete&&document.querySelector('.ldr-view-image').naturalWidth>0", "full-size viewer image");
@@ -148,7 +161,8 @@ async function main() {
     await click(".ldr-view-favorite");
     check("a favourite has an announced selected state", await evaluate("document.querySelector('.ldr-view-favorite').getAttribute('aria-pressed')==='true'"));
     check("original artwork can be downloaded", await evaluate("document.querySelector('.ldr-view-download').hasAttribute('download')&&document.querySelector('.ldr-view-download').getAttribute('href').includes('assets/media/love-deepspace/')"));
-    await evaluate("(() => {const z=document.querySelector('.ldr-view-zoom');z.value='1.7';z.dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('.ldr-view-close').focus()})()");
+    await evaluate("(() => {const z=document.querySelector('.ldr-view-zoom');z.value='4';z.dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('.ldr-view-close').focus()})()");
+    check("400% zoom has visible and announced detail magnification", await evaluate("document.querySelector('.ldr-view-zoom').value==='4'&&document.querySelector('.ldr-view-zoom').getAttribute('aria-valuetext')==='400%'&&document.querySelector('.ldr-view-zoom-value').textContent==='400%'"));
     await key("Tab", "Tab", 9);
     check("Tab reaches a real viewer control", await evaluate("document.activeElement.classList.contains('ldr-view-favorite')"));
     await key("Escape", "Escape", 27);
@@ -245,6 +259,11 @@ async function main() {
           const bounds = await evaluate("(() => {const d=document.querySelector('.ldr-viewer');const b=d.getBoundingClientRect();return {left:b.left,right:b.right,top:b.top,bottom:b.bottom,overflow:d.scrollWidth-d.clientWidth}})()");
           check(language + " " + theme + " " + width + " viewer fits", bounds.left >= -1 && bounds.right <= width + 1 && bounds.overflow <= 2, bounds);
           if (language === "zh" && theme === "dark") await screenshot("zh-gallery-viewer-" + width);
+          if (width === 320) {
+            await evaluate("(() => {const z=document.querySelector('.ldr-view-zoom');z.value='4';z.dispatchEvent(new Event('input',{bubbles:true}))})()");
+            const magnified = await evaluate("(() => {const v=document.querySelector('.ldr-view-viewport'),d=document.querySelector('.ldr-viewer'),p=document.querySelector('#gamePanelLoveDeepspace');return {zoom:document.querySelector('.ldr-view-zoom').value,imageWidth:v.scrollWidth,viewportWidth:v.clientWidth,viewerOverflow:d.scrollWidth-d.clientWidth,panelOverflow:p.scrollWidth-p.clientWidth}})()");
+            check(language + " " + theme + " 320px keeps 400% detail inside the image viewport", magnified.zoom === "4" && magnified.imageWidth >= magnified.viewportWidth * 3.9 && magnified.viewerOverflow <= 2 && magnified.panelOverflow <= 2, magnified);
+          }
           await key("Escape", "Escape", 27);
         }
       }

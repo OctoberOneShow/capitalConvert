@@ -27,12 +27,15 @@
 #gamePanelLoveDeepspace .lds-date-intro p { max-width: 45ch; }
 .ldr-journey { padding: 16px 18px; border: 1px solid var(--border); border-radius: 16px; background: linear-gradient(110deg, #afa1d214, #a8c8cc08); display: grid; gap: 10px; }
 .ldr-journey-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ldr-journey-top > div { flex: 1; min-width: 0; }
+.ldr-journey-top .ldr-journey-continue { max-width: 170px; }
 .ldr-journey h4 { margin: 5px 0 0; font: 500 1rem/1.4 Georgia, serif; color: var(--text); }
 .ldr-journey-count { color: var(--lds-accent); font-size: .8rem; white-space: nowrap; }
 [data-theme="light"] .ldr-journey-count { color: var(--text); }
 .ldr-journey-track { height: 3px; border-radius: 10px; background: var(--border); overflow: hidden; }
 .ldr-journey-track i { display: block; height: 100%; background: linear-gradient(90deg,#ac9aca,#a7d6d1); transition: width .3s; }
 .ldr-journey-next { margin: 0; font-size: .71rem; line-height: 1.6; color: var(--text-secondary); }
+.ldr-journey-details .ldr-journey-next { margin-top: 10px; }
 .lds-stage .ldr-journey-continue { justify-self: start; min-height: 38px; padding: 8px 14px; color: #211c32; background: #d7cfec; border: 1px solid #eee7ff77; border-radius: 9px; font-size: .71rem; }
 .ldr-journey-details { font-size: .65rem; color: var(--text-secondary); }
 .ldr-journey-details summary { cursor: pointer; padding: 4px 0; }
@@ -67,6 +70,10 @@
 .ldr-view-zoom-label { display: flex; align-items: center; gap: 8px; color: var(--text-secondary); font-size: .7rem; }
 .ldr-view-zoom { width: 110px; accent-color: #b2a0d4; }
 .ldr-view-photo { justify-self: center; }
+.lds-stage .lsp-board { width: min(100%,340px); }
+.lds-stage .lsp-heading { padding-top: 4px; }
+.lds-stage .lsp-title { font-size: 1.4rem; margin: 6px 0 8px; }
+.lds-stage .lsp-intro { font-size: .75rem; line-height: 1.65; }
 .lds-stage[data-view="gallery"] .lds-scene, .lds-stage[data-view="gallery"] .lds-dialogue, .lds-stage[data-view="gallery"] .lds-feedback { display: none; }
 .lds-stage[data-view="gallery"] .lds-roster { grid-column: 1 / -1; max-width: 550px; width: 100%; justify-self: center; }
 @media (min-width: 960px) {
@@ -86,6 +93,8 @@
   .ldr-save-state { font-size: .48rem; max-width: 90px; }
   #gamePanelLoveDeepspace .lds-view-nav { gap: 7px 16px; }
   #gamePanelLoveDeepspace .lds-view-button { font-size: .7rem; }
+  .ldr-journey-top { flex-wrap: wrap; }
+  .ldr-journey-top .ldr-journey-continue { flex-basis: 100%; max-width: none; }
   .lds-stage .ldr-journey-continue { width: 100%; }
   .ldr-journey { padding: 12px; } .ldr-journey h4 { font-size: .9rem; }
   .ldr-gallery-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }

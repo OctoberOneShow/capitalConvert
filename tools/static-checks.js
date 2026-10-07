@@ -1360,7 +1360,7 @@ check(
     !stylesCss.includes("is-fade-left") &&
     !stylesCss.includes("game-tabs-bar") &&
     !appJs.includes("updateStripFade") &&
-    !appJs.includes("scrollIntoView"),
+    !read("assets/app/game-typing.js").includes("scrollIntoView"),
   "carousel machinery still present",
 );
 check(

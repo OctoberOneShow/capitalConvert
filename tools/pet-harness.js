@@ -21,6 +21,7 @@ require("./harness/cases-arcade-regressions");
 require("./harness/cases-registry-regressions");
 require("./harness/cases-love-deepspace");
 require("./harness/cases-love-starpath");
+require("./harness/cases-love-release");
 
 /* report ---------------------------------------------------------------- */
 console.log("pet companion harness");

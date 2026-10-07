@@ -249,7 +249,15 @@
     var journey = App.mountLdsJourney(root, {
       getPartner: function () { return partner; },
       getState: function () { return { album: options.getAlbum ? options.getAlbum() : {}, dates: progress, home: homeGame.inspect().progress, starpath: starpathGame.getProgress() }; },
-      go: function (id) { if (id === "mission") { if (options.onMission) { options.onMission(); } } else { select(id); } }
+      go: function (id) {
+        if (id === "mission") { if (options.onMission) { options.onMission(); } }
+        else {
+          select(id);
+          var control = pages[id].querySelector('canvas[tabindex="0"],button:not([disabled]),input,select');
+          if (control) { control.focus({ preventScroll: true }); }
+          if (pages[id].scrollIntoView) { pages[id].scrollIntoView({ block: "nearest", behavior: reduced() ? "auto" : "smooth" }); }
+        }
+      }
     });
     root.insertBefore(journey.element, nav);
     root.addEventListener("click", function () { if (partner) { journey.refresh(); } });
@@ -608,7 +616,8 @@
     }
     function pause() {
       homeGame.pause();
-      starpathGame.pause();
+      // Starpath has no clock. Its own visibility guard blocks hidden input;
+      // retaining a manual pause here would strand the board after reopening.
       if (!active) { clearInputs(); return; } active = false; paused = true; cancel(); clearInputs();
       tell("ldsDatePaused"); syncToolbar(); options.onRunning(false);
     }
@@ -689,6 +698,7 @@
       if (!e.repeat && key === "e") { help = true; }
     });
     root.addEventListener("keyup", function (e) { delete keys[String(e.key).toLowerCase()]; });
+    root.addEventListener("focusin", function () { if (partner && mode === "starpath") { starpathGame.refresh(); } });
     root.addEventListener("focusout", function (e) {
       if (!e.relatedTarget || (!root.contains(e.relatedTarget) && !(mode === "focus" && options.isCompanionTarget(e.relatedTarget)))) { pause(); }
     });

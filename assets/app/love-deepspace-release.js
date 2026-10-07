@@ -29,7 +29,7 @@
       { id: "story", key: "ldrGoalStory", detail: "ldrGoalStoryHint", done: !!(dates.stories && dates.stories[id] && dates.stories[id].length) },
       { id: "starpath", key: "ldrGoalStarpath", detail: "ldrGoalStarpathHint", done: !!(starpath && starpath.cleared) },
       { id: "kitty", key: "ldrGoalKitty", detail: "ldrGoalKittyHint", done: !!(dates.badges && dates.badges[id]) },
-      { id: "cook", key: "ldrGoalCook", detail: "ldrGoalCookHint", done: !!(room && Object.keys(room.records).some(function (key) { return room.records[key] > 0; })) },
+      { id: "cook", key: "ldrGoalCook", detail: "ldrGoalCookHint", done: !!(room && Object.keys(room.records || {}).some(function (key) { return room.records[key] > 0; })) },
       { id: "mission", key: "ldrGoalMission", detail: "ldrGoalMissionHint", done: Object.keys(album.memories || {}).some(function (key) { return key.indexOf(id + ":") === 0; }) }
     ];
   }
@@ -45,6 +45,7 @@
     var go = button("ldr-journey-continue", null, root, function () { options.go(recommendation); });
     var details = node("details", "ldr-journey-details", null, root);
     node("summary", "", "ldrJourneyAll", details);
+    top.appendChild(go); details.appendChild(next);
     var goals = node("div", "ldr-goals", null, details);
     function refresh() {
       var p = options.getPartner(), state = options.getState();
@@ -103,10 +104,12 @@
     button("lds-small-button ldr-view-prev", "ldsGalleryPrev", controls, function () { openArt((selected + App.ldsArtCount - 1) % App.ldsArtCount); });
     var zoomLabel = node("label", "ldr-view-zoom-label", null, controls);
     node("span", "", "ldrViewZoom", zoomLabel);
-    var zoom = node("input", "ldr-view-zoom", null, zoomLabel); zoom.type = "range"; zoom.min = "1"; zoom.max = "2"; zoom.step = ".1"; zoom.value = "1";
+    var zoom = node("input", "ldr-view-zoom", null, zoomLabel); zoom.type = "range"; zoom.min = "1"; zoom.max = "4"; zoom.step = ".1"; zoom.value = "1";
+    var zoomValue = node("span", "ldr-view-zoom-value", null, zoomLabel); zoomValue.textContent = "100%";
     zoom.setAttribute("aria-label", App.t("ldrViewZoom"));
     zoom.addEventListener("input", function () {
-      var value = Math.max(1, Math.min(2, Number(zoom.value) || 1));
+      var value = Math.max(1, Math.min(4, Number(zoom.value) || 1));
+      zoomValue.textContent = Math.round(value * 100) + "%"; zoom.setAttribute("aria-valuetext", zoomValue.textContent);
       picture.style.width = value * 100 + "%"; picture.style.maxWidth = "none";
       picture.style.height = value * 100 + "%";
     });
@@ -123,7 +126,7 @@
       grid.hidden = true; empty.hidden = true; viewer.hidden = false; filterLabel.hidden = true;
       viewer.setAttribute("data-art", String(index));
       loading.textContent = App.t("ldrLoading"); loading.hidden = false; picture.hidden = true;
-      dimensions.textContent = ""; zoom.value = "1"; picture.style.width = "100%"; picture.style.height = "100%";
+      dimensions.textContent = ""; zoom.value = "1"; zoomValue.textContent = "100%"; zoom.setAttribute("aria-valuetext", "100%"); picture.style.width = "100%"; picture.style.height = "100%";
       viewport.scrollTop = 0; viewport.scrollLeft = 0; download.hidden = true;
       picture.onload = function () {
         if (token !== epoch) { return; }
@@ -133,7 +136,7 @@
       picture.onerror = function () { if (token === epoch) { picture.hidden = true; loading.textContent = App.t("ldrImageError"); dimensions.textContent = App.t("ldrImageError"); } };
       picture.src = art.src; picture.alt = App.t(p.nameKey) + " · " + art.title;
       artTitle.textContent = art.title; position.textContent = (index + 1) + " / " + App.ldsArtCount;
-      download.href = art.src; download.download = p.id + "-" + index + (index ? ".jpg" : ".webp");
+      download.href = art.src; download.download = p.id + "-" + index + art.src.slice(art.src.lastIndexOf("."));
       syncFavorite(); options.onArt(index); if (target) { close.focus({ preventScroll: true }); }
     }
     function closeViewer() {

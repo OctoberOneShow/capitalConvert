@@ -535,7 +535,7 @@
       onMoment: function (mood) { say(mood); if (looks.auto) { chooseArt(mood === "Win" ? 2 : mood === "Skill" ? 4 : mood === "Miss" ? 0 : partner.id === "zayne" ? 4 : 3, false); } if (!motionOff()) { animate(mood === "Win" ? "win" : mood === "Skill" ? "skill" : "heart", feedback.textContent); } },
       getArt: function (id) { return looks.scenes[id]; },
       getAlbum: function () { return album; },
-      onMission: function () { switchView(false); },
+      onMission: function () { switchView(false); actionModeBtn.focus({ preventScroll: true }); },
       onArt: function (index) { chooseArt(index, false); },
       onReward: function (kind) {
         album.bonds[partner.id] = Math.min(999, (album.bonds[partner.id] || 0) + 2);
@@ -740,6 +740,7 @@
         if (panelEl.hidden || panelEl.closest("[hidden]")) { combat.pause(); dates.pause(); }
         if (!panelEl.hidden && records.some(function (record) { return record.target === panelEl && record.attributeName === "hidden"; })) {
           var gameDialog = panelEl.closest(".game-dialog"); if (gameDialog) { gameDialog.scrollTop = 0; }
+          if (viewMode === "dates") { dates.refresh(); }
         }
       });
       observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-motion"] });

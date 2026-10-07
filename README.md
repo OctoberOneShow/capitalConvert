@@ -104,6 +104,10 @@ Open [the game directly](index.html?game=love-deepspace), or use the game drawer
 on any of the four pages. This is an independent fan-made mini-adventure; its
 1.0 version does not refer to an official Infold game release.
 
+For a local preview with reliable photo exports, run `node tools/serve-game.js`
+and open [the preview](http://127.0.0.1:8765/index.html?game=love-deepspace).
+The preview listens only on this computer; `PORT` changes its default port.
+
 **HD Gallery / 高清画廊** includes nine local artworks for each of the five
 partners, for 45 images. The 20 added images include eight native 4K artworks
 and twelve native Full HD artworks. Open any card to see the complete image, inspect its
@@ -120,10 +124,15 @@ a successful meal, and a mission memory. Its next-step button takes the player
 to an unfinished activity. Goals follow the actual collection and completion
 records, so replaying a goal cannot award a second collection reward.
 
-**Starpath / 星轨** adds a constellation puzzle to Together. Rotate the star
+**Starpath resonance / 星轨共鸣** adds a constellation puzzle to Together. Rotate the star
 tiles to connect the route, use a star hint when needed, and complete
-the constellation to keep its result. The puzzle can be replayed without
-duplicating its first-completion reward. Together opens on Starpath, so players
+each of twelve constellations to unlock the next sky. Visit every diamond beacon
+and find a route around fixed anchors and decoys. Matching the minimum rotation
+count without hints earns three stars; a few extra turns earn two, and other
+clears earn one. Hints earn one star for that attempt. Undo restores a tile but
+still counts the rotation; beginning again resets the attempt. Best stars are
+saved per partner. First completions award affinity once per constellation.
+Together opens on Starpath, so players
 can start with a calm puzzle and follow their partner's Journey from there.
 
 The scene strips and gallery cards use compact local previews. The 45 previews
@@ -147,6 +156,12 @@ Release verification:
   `--chrome=/path/to/chrome` when the browser is installed elsewhere.
 - `node tools/harness/cases-love-deepspace.js` verifies the original activities,
   saves, combat rules, collection rewards, and pause/resume lifecycle.
+- `node tools/harness/cases-love-starpath.js` verifies all twelve puzzles,
+  optimal scoring, hints, undo, keyboard navigation, per-partner unlocks, and
+  rewards once per first clear.
+- `node tools/harness/cases-love-release.js` checks expanded-image save
+  compatibility, corrupted favourites, viewer focus, photo handoff, media
+  lifecycle, Journey progress, and bilingual labels.
 - `node tools/static-checks.js` verifies all four page manifests, translation
   packs, and shared game wiring; `node tools/pet-harness.js` runs the wider
   regression suite.
