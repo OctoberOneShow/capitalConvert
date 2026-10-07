@@ -376,7 +376,7 @@
       var card = button("lds-partner-card", null, roster, function () { choosePartner(entry.id); });
       card.setAttribute("data-partner", entry.id);
       var image = node("img", "", null, card);
-      image.src = portraitPath(entry);
+      image.src = App.ldsSceneArt(entry.id, 0).thumb;
       image.alt = "";
       image.loading = "lazy";
       image.addEventListener("error", function () { image.hidden = true; });
@@ -587,7 +587,7 @@
       portrait.hidden = false; portrait.src = art.src; portrait.alt = t("ldsPortraitAlt", { name: t(partner.nameKey) }) + " · " + art.title;
       portrait.style.objectPosition = art.x * 100 + "% " + art.y * 100 + "%";
       scene.setAttribute("data-art", String(art.index)); galleryCount.textContent = t("ldsGalleryCount", { n: art.index + 1, max: App.ldsArtCount, title: art.title });
-      artButtons.forEach(function (button, index) { var preview = App.ldsSceneArt(partner.id, index), image = button.querySelector("img"); image.src = preview.src; image.loading = "lazy"; image.style.objectPosition = preview.x * 100 + "% " + preview.y * 100 + "%"; button.setAttribute("aria-label", preview.title); button.setAttribute("aria-pressed", String(index === art.index)); });
+      artButtons.forEach(function (button, index) { var preview = App.ldsSceneArt(partner.id, index), image = button.querySelector("img"); image.src = preview.thumb; image.loading = "lazy"; image.style.objectPosition = preview.x * 100 + "% " + preview.y * 100 + "%"; button.setAttribute("aria-label", preview.title); button.setAttribute("aria-pressed", String(index === art.index)); });
     }
     function chooseArt(index, manual) {
       if (!Number.isInteger(index) || index < 0 || index >= App.ldsArtCount) { return; }
@@ -604,7 +604,7 @@
         var art = node("div", "lds-memory-art", null, card);
         if (stars) {
           var image = node("img", "", null, art);
-          image.src = App.ldsSceneArt(partner.id, index + 1).src; image.alt = ""; image.loading = "lazy";
+          image.src = App.ldsSceneArt(partner.id, index + 1).thumb; image.alt = ""; image.loading = "lazy";
         }
         node("span", "lds-memory-number", null, art).textContent = "0" + (index + 1);
         node("h5", "", null, card).textContent = t(entry.labelKey);

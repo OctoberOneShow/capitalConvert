@@ -150,7 +150,7 @@
         (function (index) {
           var art = App.ldsSceneArt(p.id, index), card = button("ldr-art-card", null, grid, function () { openArt(index, card); });
           card.setAttribute("data-art", String(index)); card.setAttribute("aria-label", App.t("ldrOpenArt", { title: art.title }));
-          var image = node("img", "", null, card); image.src = art.src; image.alt = ""; image.loading = "lazy"; image.decoding = "async";
+          var image = node("img", "", null, card); image.src = art.thumb; image.alt = ""; image.loading = "lazy"; image.decoding = "async";
           image.style.objectPosition = art.x * 100 + "% " + art.y * 100 + "%";
           node("span", "ldr-art-title", null, card).textContent = art.title;
           node("span", "ldr-art-index", null, card).textContent = String(index + 1).padStart(2, "0") + (list.indexOf(index) >= 0 ? " ♡" : " ↗");

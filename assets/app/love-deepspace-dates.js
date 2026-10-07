@@ -14,7 +14,7 @@
   function sceneArt(id, index) {
     id = ids.indexOf(id) >= 0 ? id : "xavier"; index = Number.isInteger(index) && index >= 0 && index < App.ldsArtCount ? index : 0;
     var extension = id === "caleb" && index >= 6 ? ".png" : ".jpg";
-    return { index: index, src: "assets/media/love-deepspace/" + id + (index ? "-scene-" + index + extension : ".webp"),
+    return { index: index, src: "assets/media/love-deepspace/" + id + (index ? "-scene-" + index + extension : ".webp"), thumb: "assets/media/love-deepspace/thumbs/" + id + "-" + index + ".webp",
       title: index ? artTitles[id][index - 1] : App.t("ldsLookOriginal"), x: index ? .5 : id === "rafayel" ? .34 : .62, y: artFocus[id][index] == null ? .5 : artFocus[id][index] };
   }
   App.ldsArtCount = 9;
@@ -204,7 +204,7 @@
 
   function mountDates(host, options) {
     var t = App.t, progress = readDates(App.storage.getItem("love-deepspace-dates-v1"));
-    var partner, mode = "claw", claw, kitty, active = false, paused = false, raf = null, last = 0;
+    var partner, mode = "starpath", claw, kitty, active = false, paused = false, raf = null, last = 0;
     var keys = {}, held = 0, aimed = null, drop = false, grip = false, help = false, kittyWait = 0, guard = false, kittyAction = "";
     var kittySession = 0;
     var storyStep = 0, storyScore = 0, storyChoices = [], focusElapsed = 0, focusLimit = 60, focusDone = false;

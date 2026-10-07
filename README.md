@@ -123,7 +123,11 @@ records, so replaying a goal cannot award a second collection reward.
 **Starpath / 星轨** adds a constellation puzzle to Together. Rotate the star
 tiles to connect the route, use a star hint when needed, and complete
 the constellation to keep its result. The puzzle can be replayed without
-duplicating its first-completion reward.
+duplicating its first-completion reward. Together opens on Starpath, so players
+can start with a calm puzzle and follow their partner's Journey from there.
+
+The scene strips and gallery cards use compact local previews. The 45 previews
+total less than 1 MB; opening an artwork loads its full-resolution original.
 
 The complete gallery and gameplay use bundled files and work without a network
 connection. Character videos remain optional online media. Closing the drawer,
@@ -137,7 +141,7 @@ Release verification:
 - `node tools/love-deepspace-release-check.js` runs the real game in Chrome or
   Edge over a temporary local HTTP server. It checks all four direct entry
   links, image decoding, the gallery viewer and favourites, photo and story
-  collections, mission rewards, Journey goals, reduced motion, and narrow
+  collections, mission rewards, Journey goals, storage failure, reduced motion, and narrow
   layouts in English/Chinese and both themes. Reports and screenshots are saved
   under `tools/shots/love-deepspace-release/`. Use `CHROME_PATH` or
   `--chrome=/path/to/chrome` when the browser is installed elsewhere.

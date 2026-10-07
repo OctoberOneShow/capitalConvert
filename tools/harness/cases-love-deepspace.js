@@ -378,7 +378,7 @@ run("Love and Deepspace date activities", () => {
   check("Love and Deepspace date activities", "landing view foregrounds character and dates without starting any loop", panel.getAttribute("data-view") === "dates" && !root.hidden && env.frames.size === 0 && panel.classList.contains("lds-character-focus"));
   panel.querySelector(".lds-game-picker-button").click();
   check("Love and Deepspace date activities", "the player can restore the shared game picker", !panel.classList.contains("lds-character-focus"));
-  dates.start(); key("keydown", "d"); for (let i = 0; i < 30; i++) env.tick();
+  dates.select("claw"); dates.start(); key("keydown", "d"); for (let i = 0; i < 30; i++) env.tick();
   check("Love and Deepspace date activities", "held movement moves the real claw", dates.inspect().claw.x > 390 && env.frames.size === 1);
   key("keydown", "p"); const x = dates.inspect().claw.x, elapsed = dates.inspect().claw.elapsed; env.tick(500);
   check("Love and Deepspace date activities", "pausing cancels the loop and stops the conveyor clock", dates.inspect().paused && env.frames.size === 0 && dates.inspect().claw.elapsed === elapsed);
@@ -458,7 +458,7 @@ run("Love and Deepspace advanced claw", () => {
   check("Love and Deepspace advanced claw", "timeout releases an undelivered prize and awards nothing", timeout.done && !timeout.caught.length && timeout.score === 0 && timeout.toys.every(t => !t.taken));
   const env = boot({}, true), dates = env.dates, root = dates.element;
   env.byId("gamePanelLoveDeepspace").hidden = false;
-  const checkbox = root.querySelector(".lds-date-claw input"); checkbox.checked = true; env.dispatch(checkbox, "change"); dates.start();
+  dates.select("claw"); const checkbox = root.querySelector(".lds-date-claw input"); checkbox.checked = true; env.dispatch(checkbox, "change"); dates.start();
   const state = dates.inspect().claw; state.score = 450; state.remaining = .001; env.tick();
   check("Love and Deepspace advanced claw", "challenge completion persists the best record and stops frames", !env.frames.size && dates.inspect().progress.clawBest.xavier === 450 && JSON.parse(env.store.get("love-deepspace-dates-v1")).clawBest.xavier === 450);
   root.querySelector(".lds-date-toolbar").querySelectorAll("button")[1].click(); dates.start(); dates.inspect().claw.remaining = .001; env.tick();

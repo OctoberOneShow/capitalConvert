@@ -7,7 +7,9 @@
   max-width: 740px;
   margin: 0 auto;
   color: var(--text);
+  min-width: 0;
 }
+.lsp-game > * { min-width: 0; }
 .lsp-game[data-partner="zayne"] { --lsp-color: #99ddd9; }
 .lsp-game[data-partner="rafayel"] { --lsp-color: #dba4ef; }
 .lsp-game[data-partner="sylus"] { --lsp-color: #e3a2af; }
@@ -101,6 +103,9 @@
   .lsp-controls { gap: 6px; }
   .lsp-controls .lds-small-button { font-size: .72rem; padding-inline: 10px; }
   .lsp-star-tile { border-radius: 10px; }
+}
+@media (max-width: 360px) {
+  .lsp-stage-nav { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) {
   .lsp-game *, .lsp-game *::before, .lsp-game *::after { transition: none !important; animation: none !important; }

@@ -254,6 +254,12 @@ async function main() {
     await evaluate("document.documentElement.setAttribute('data-motion','full')");
     await click(".lds-together-tab"); await click("[data-i18n=ldsWatch]");
     check("reduced motion prevents character video playback", await evaluate("document.querySelector('.lds-scene-video').hidden"));
+    await evaluate("window.__ldsReleaseNativeSet=Storage.prototype.setItem;Storage.prototype.setItem=function(){throw new DOMException('Storage rejected for acceptance test','QuotaExceededError')}");
+    await click('.lds-partner-card[data-partner="zayne"]'); await click(".lds-together-tab");
+    check("unavailable storage is explained to the player", await evaluate("document.querySelector('.ldr-save-state').getAttribute('data-persistent')==='false'"));
+    await click('[data-date="starpath"]'); await click('[data-starpath-stage="0"]'); await click('[data-starpath-tile="4"]');
+    check("storage failure preserves playable session progress", await evaluate("(() => {const a=JSON.parse(CapitalConvert.storage.getItem('love-deepspace-album-v1'));return a.selected==='zayne'&&a.bonds.zayne===2&&document.querySelector('[data-goal=starpath]').getAttribute('data-complete')==='true'})()"));
+    await evaluate("Storage.prototype.setItem=window.__ldsReleaseNativeSet;delete window.__ldsReleaseNativeSet");
     check("no uncaught browser exceptions", exceptions.length === 0, exceptions);
     fs.writeFileSync(path.join(OUT, "report.json"), JSON.stringify({ passed: results.length - failures.length, failed: failures.length, results, imageDimensions: decoded, exceptions }, null, 2));
     console.log("Release checks passed: " + (results.length - failures.length) + "; failed: " + failures.length);
