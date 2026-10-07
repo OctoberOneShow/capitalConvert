@@ -306,6 +306,7 @@
     function draw() {
       var songTime = nowSec() - startAt;
       ctx.clearRect(0, 0, beatWidth, beatHeight);
+      if (App.world) { App.world.backdrop(ctx, beatWidth, beatHeight, "stage"); }
       /* Before the first Start the stage is an idle lane board: songTime
        * has no meaning yet, so no pulse and no notes are drawn. */
       if (!running) {

@@ -242,6 +242,7 @@
 
     function draw() {
       ctx.clearRect(0, 0, slashWidth, slashHeight);
+      if (App.world) { App.world.backdrop(ctx, slashWidth, slashHeight, "neon"); }
       for (var index = 0; index < fruits.length; index += 1) {
         var fruit = fruits[index];
         if (fruit.color < 0) {

@@ -456,6 +456,7 @@
       var time = Date.now();
       var geo = geometry();
       ctx.clearRect(0, 0, pushSize, pushSize);
+      if (App.world) { App.world.backdrop(ctx, pushSize, pushSize, "workshop"); }
       /* Floor */
       for (var y = 0; y < gridH; y += 1) {
         for (var x = 0; x < gridW; x += 1) {
@@ -528,6 +529,7 @@
         ctx.strokeStyle = "rgba(15, 23, 42, 0.5)";
         ctx.lineWidth = 1.5;
         ctx.strokeRect(cx + 10, cy + 10, geo.cell - 20, geo.cell - 20);
+        if (App.world) { App.world.piece(ctx, "crate", cx + geo.cell / 2, cy + geo.cell / 2, geo.cell - 6, home ? "#b4daa0" : "#d1a16e"); }
       });
       /* Puffs */
       puffs.forEach(function (bit) {

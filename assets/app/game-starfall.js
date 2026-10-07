@@ -398,6 +398,7 @@
     function draw() {
       var time = Date.now();
       ctx.clearRect(0, 0, lantWidth, lantHeight);
+      if (App.world) { App.world.backdrop(ctx, lantWidth, lantHeight, "space"); }
       stars.forEach(function (star) {
         ctx.globalAlpha = 0.2 + 0.25 * Math.sin(time / 650 + star.p);
         ctx.fillStyle = "#e2e8f0";

@@ -1136,6 +1136,7 @@
       ctx.clearRect(0, 0, ttsW, ttsH);
       ctx.fillStyle = "rgba(8, 12, 20, 0.86)";
       ctx.fillRect(0, 0, ttsW, ttsH);
+      if (App.world) { App.world.backdrop(ctx, ttsW, ttsH, "space"); }
       ctx.fillStyle = "rgba(148, 163, 184, 0.45)";
       for (i = 0; i < ttsStars.length; i += 1) {
         ctx.fillRect(ttsStars[i].x, ttsStars[i].y, ttsStars[i].r, ttsStars[i].r);

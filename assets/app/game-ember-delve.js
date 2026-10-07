@@ -909,6 +909,12 @@
         }
         cell.className = cls;
         cell.textContent = text;
+        if (App.art && room.seen && room.open) {
+          var motif = index === run.at ? "knight" : live.length ? "skull" : room.stair ? "door" : "torch";
+          cell.textContent = "";
+          cell.appendChild(App.art.icon(motif, { hue: index === run.at ? 180 : live.length ? 12 : 38, cls: "world-room-piece" }));
+          if (live.length && index !== run.at) { var badge = document.createElement("span"); badge.className = "world-piece-count"; badge.textContent = String(pooled); cell.appendChild(badge); }
+        }
         cell.setAttribute("aria-label", t("edlRoomAria", { x: (index % SIDE) + 1, y: Math.floor(index / SIDE) + 1, v: roomLabel(room, index) }));
       }
       legend.textContent = t("edlLegend");

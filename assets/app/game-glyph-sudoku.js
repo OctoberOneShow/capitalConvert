@@ -492,6 +492,7 @@
         }
       }
       ctx.clearRect(0, 0, sudSize, sudSize);
+      if (App.world) { App.world.backdrop(ctx, sudSize, sudSize, "archive"); }
       for (var r = 0; r < size; r += 1) {
         for (var c = 0; c < size; c += 1) {
           var index = r * size + c;

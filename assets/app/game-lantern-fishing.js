@@ -680,6 +680,7 @@
     function draw() {
       var band = litBand();
       ctx.clearRect(0, 0, lfsW, lfsH);
+      if (App.world) { App.world.backdrop(ctx, lfsW, lfsH, "ocean"); }
       ctx.fillStyle = "#0a1122";
       ctx.fillRect(0, 0, lfsW, lfsTop);
       ctx.fillStyle = "#0b1a2e";

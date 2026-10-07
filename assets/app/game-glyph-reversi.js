@@ -396,6 +396,7 @@
       var time = Date.now();
       var geo = geometry();
       ctx.clearRect(0, 0, revSize, revSize);
+      if (App.world) { App.world.backdrop(ctx, revSize, revSize, "tabletop"); }
       for (var i = 0; i < REV_N * REV_N; i += 1) {
         var x = i % REV_N;
         var y = Math.floor(i / REV_N);
@@ -408,6 +409,8 @@
         ctx.strokeRect(gx + 1, gy + 1, geo.cell - 2, geo.cell - 2);
         if (board[i] !== REV_EMPTY) {
           var isPlayer = board[i] === REV_PLAYER;
+          if (App.world) { App.world.piece(ctx, "disc", gx + geo.cell / 2, gy + geo.cell / 2, geo.cell * .85, null, !isPlayer); }
+          else {
           ctx.beginPath();
           ctx.arc(
             gx + geo.cell / 2,
@@ -421,6 +424,7 @@
           ctx.shadowBlur = 8;
           ctx.fill();
           ctx.shadowBlur = 0;
+          }
         }
       }
       /* Legal moves for the player */

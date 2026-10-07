@@ -974,6 +974,7 @@
     function draw() {
       var time = Date.now();
       ctx.clearRect(0, 0, gbmSize, gbmSize);
+      if (App.world) { App.world.backdrop(ctx, gbmSize, gbmSize, "space"); }
       quad([[0, 0], [gbmNetU, 0], [gbmNetU, gbmHigh], [0, gbmHigh]], "rgba(34, 211, 238, 0.1)", null, 0);
       quad([[gbmNetU, 0], [gbmLen, 0], [gbmLen, gbmHigh], [gbmNetU, gbmHigh]], "rgba(255, 107, 53, 0.1)", null, 0);
       quad([[0, 0], [gbmLen, 0], [gbmLen, gbmHigh], [0, gbmHigh]], null, "rgba(148, 163, 184, 0.4)", 1.5);

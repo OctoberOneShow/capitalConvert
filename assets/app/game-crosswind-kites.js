@@ -1464,6 +1464,7 @@
       ctx.clearRect(0, 0, kctW, kctH);
       ctx.fillStyle = "#080d17";
       ctx.fillRect(0, 0, kctW, kctH);
+      if (App.world) { App.world.backdrop(ctx, kctW, kctH, "garden"); }
       drawSky();
       drawCity();
       for (var i = 0; i < world.stream.length; i += 1) {

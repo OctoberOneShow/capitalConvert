@@ -923,6 +923,11 @@
         }
         button.className = cls;
         button.textContent = text;
+        if (App.art && (tower || mob)) {
+          button.textContent = "";
+          button.appendChild(App.art.icon(tower ? (tower.kind === "piercer" ? "sword" : tower.kind === "smoulder" ? "flame" : "chain") : "skull", { hue: tower ? 165 : 12, cls: "world-bastion-piece" }));
+          var badge = document.createElement("span"); badge.className = "world-piece-count"; badge.textContent = String(tower ? gstKind(tower.kind).cost : mob.hp); button.appendChild(badge);
+        }
         button.setAttribute("aria-label", t("gstCellAria", {
           x: x + 1,
           y: y + 1,

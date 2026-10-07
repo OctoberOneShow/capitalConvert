@@ -457,6 +457,7 @@
     function draw() {
       var geo = geometry();
       ctx.clearRect(0, 0, fltSize, fltSize);
+      if (App.world) { App.world.backdrop(ctx, fltSize, fltSize, "ocean"); }
       ctx.font = "bold 10px 'JetBrains Mono', monospace";
       ctx.fillStyle = "#22d3ee";
       ctx.textAlign = "left";

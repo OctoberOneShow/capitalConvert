@@ -426,6 +426,7 @@
       draftButtons.forEach(function (btn, slot) {
         var kind = line.charAt(slot);
         btn.textContent = kind ? kind + " " + t(corSpecies[kind].key) : "-";
+        if (kind && App.art) { btn.insertBefore(App.art.icon(kind === "S" ? "shell" : kind === "P" ? "rock" : "coral", { hue: kind === "N" ? 120 : kind === "X" ? 12 : 190, cls: "world-draft-art" }), btn.firstChild); }
         btn.className = "cor-draft-btn" + (hand === slot ? " is-on" : "");
         btn.setAttribute("aria-label", t("corDraftPick") + " " + (slot + 1) + " " + (kind || ""));
         btn.setAttribute("aria-pressed", hand === slot ? "true" : "false");
@@ -567,6 +568,7 @@
     }
 
     function drawShape(cx, cy, shape, colour) {
+      if (App.world) { App.world.piece(ctx, "coral", cx, cy, 31, colour, shape); return; }
       ctx.strokeStyle = colour;
       ctx.fillStyle = colour;
       ctx.lineWidth = 2;
@@ -614,6 +616,7 @@
       ctx.clearRect(0, 0, corWide, corTall);
       ctx.fillStyle = "rgba(6, 20, 30, 0.94)";
       ctx.fillRect(0, 0, corWide, corTall);
+      if (App.world) { App.world.backdrop(ctx, corWide, corTall, "ocean"); }
       for (var y = 0; y < corRows; y += 1) {
         for (var x = 0; x < corCols; x += 1) {
           var index = y * corCols + x;

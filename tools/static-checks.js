@@ -3,7 +3,7 @@
  * Static acceptance checks for the pet companion change.
  *
  *   1. the four pages still expose exactly 49 game tabs / 49 game panels
- *   2. both shared assets are requested with ?v=61 on all four pages
+ *   2. both shared assets are requested with ?v=62 on all four pages
  *   3. only the cache-busting string changed on the asset lines of each page
  *   4. the pet markup is NOT present in any HTML file (it is JS-injected)
  *   5. UTF-8 / CJK integrity (BOM, no U+FFFD, no latin1 mojibake, sample strings)
@@ -163,12 +163,12 @@ PAGES.forEach((page) => {
   check(`${page}: exactly 49 game-tab`, tabs === 49, `found ${tabs}`);
   check(`${page}: exactly 49 game-panel`, panels === 49, `found ${panels}`);
   check(
-    `${page}: stylesheets requested as ?v=61`,
-    STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=61`)),
+    `${page}: stylesheets requested as ?v=62`,
+    STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=62`)),
   );
   check(
-    `${page}: scripts requested as ?v=61`,
-    APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=61`)),
+    `${page}: scripts requested as ?v=62`,
+    APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=62`)),
   );
   /* Collect every ?v= token on the page and require them all to equal
    * the current cache-busting version, so single-digit versions cannot
@@ -177,8 +177,8 @@ PAGES.forEach((page) => {
     (match) => match[1],
   );
   check(
-    `${page}: every asset token is ?v=61 with no stale versions left`,
-    pageVersions.length > 0 && pageVersions.every((v) => v === "61"),
+    `${page}: every asset token is ?v=62 with no stale versions left`,
+    pageVersions.length > 0 && pageVersions.every((v) => v === "62"),
     Array.from(new Set(pageVersions)).join(",") || "none found",
   );
 
@@ -191,8 +191,8 @@ PAGES.forEach((page) => {
     `found ${assetLines.length}`,
   );
   check(
-    `${page}: all asset references are ?v=61`,
-    assetLines.every((line) => line.includes("?v=61")),
+    `${page}: all asset references are ?v=62`,
+    assetLines.every((line) => line.includes("?v=62")),
     assetLines.join(" | "),
   );
 
@@ -207,9 +207,9 @@ PAGES.forEach((page) => {
   // reference is versioned and every expected module is present.
   check(
     `${page}: asset lines are all versioned split modules`,
-    assetLines.every((line) => /\?v=61/.test(line)) &&
-      STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=61`)) &&
-      APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=61`)),
+    assetLines.every((line) => /\?v=62/.test(line)) &&
+      STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=62`)) &&
+      APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=62`)),
     "asset reference shape changed beyond version token",
   );
 });
@@ -4152,7 +4152,13 @@ check(
     if (start === -1) {
       return false;
     }
-    const region = gamesCss.slice(start);
+    /* Bounded to this game's own block: the sheets are merged in name order, so
+     * "everything after here" is another game's ruleset and would fail on
+     * perfectly ordinary hardcoded colours that have nothing to do with here. */
+    const nextAt = gamesCss
+      .slice(start + 20)
+      .search(/\/\* game-[a-z0-9-]+ \((?:registry|drawer) game\) \*\//);
+    const region = gamesCss.slice(start, nextAt === -1 ? undefined : start + 20 + nextAt);
     /* Hardcoded near-white text measured 1.1:1 on the light theme, which made
      * the quiz note unreadable; tokens flip with the theme. Anchored to the
      * start of a declaration so accent borders are not swept up with it. */
@@ -4851,7 +4857,7 @@ console.log("\n== 6. registry games: injected, linked, bilingual, scoped ==");
     check(
       `${name}: loads on all four pages at the current version`,
       PAGES.every((page) =>
-        read(page).includes(`assets/app/${name}.js?v=61`),
+        read(page).includes(`assets/app/${name}.js?v=62`),
       ),
     );
     check(

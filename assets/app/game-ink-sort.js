@@ -439,6 +439,7 @@
     function draw() {
       var time = Date.now();
       ctx.clearRect(0, 0, sortSize, sortSize);
+      if (App.world) { App.world.backdrop(ctx, sortSize, sortSize, "laboratory"); }
       tubes.forEach(function (tube, index) {
         var r = tubeRect(index);
         var isSel = index === selected || (selected === -1 && index === keyIndex);

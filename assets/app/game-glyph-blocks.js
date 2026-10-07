@@ -385,6 +385,12 @@
       ctx.globalAlpha = alpha || 1;
       ctx.fillStyle = blkColors[letter] || blkGarbageTint;
       ctx.fillRect(gx * blkCell + 1, gy * blkCell + 1, blkCell - 2, blkCell - 2);
+      ctx.fillStyle = "rgba(255,255,255,.38)";
+      ctx.fillRect(gx * blkCell + 3, gy * blkCell + 3, blkCell - 6, 3);
+      ctx.fillStyle = "rgba(0,0,0,.3)";
+      ctx.fillRect(gx * blkCell + 2, gy * blkCell + blkCell - 5, blkCell - 4, 3);
+      ctx.fillStyle = "rgba(255,255,255,.1)";
+      ctx.fillRect(gx * blkCell + 5, gy * blkCell + 8, blkCell - 10, blkCell - 16);
       if (alpha === undefined) {
         ctx.strokeStyle = "rgba(255, 255, 255, 0.28)";
         ctx.strokeRect(gx * blkCell + 1.5, gy * blkCell + 1.5, blkCell - 3, blkCell - 3);
@@ -394,6 +400,7 @@
 
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (App.world) { App.world.backdrop(ctx, canvas.width, canvas.height, "neon"); }
       for (var y = 0; y < blkRows; y += 1) {
         for (var x = 0; x < blkCols; x += 1) {
           if (grid[y][x]) {

@@ -792,6 +792,7 @@
       ctx.clearRect(0, 0, nirW, nirH);
       ctx.fillStyle = "#080d17";
       ctx.fillRect(0, 0, nirW, nirH);
+      if (App.world) { App.world.backdrop(ctx, nirW, nirH, "neon"); }
       drawTrack();
       drawPads();
       drawPylons();

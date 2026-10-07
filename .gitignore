@@ -4,3 +4,14 @@
 # OS files
 .DS_Store
 Thumbs.db
+
+# Dev/test runtime artifacts (not source)
+tools/.chrome-profile/
+tools/.chrome-profile-*/
+tools/.staging/
+tools/.bak/
+tools/shots/
+tools/shot.png
+tools/tmp-css/
+tools/*.txt
+tools/hues.json

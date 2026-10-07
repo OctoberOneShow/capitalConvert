@@ -11,6 +11,7 @@
   var setActiveNav = App.setActiveNav;
   var initTheme = App.initTheme;
   var initMotionControls = App.initMotionControls;
+  var initSoundControls = App.initSoundControls;
   var initHistoryDrawer = App.initHistoryDrawer;
   var initBackground = App.initBackground;
   var initAmbientOrbs = App.initAmbientOrbs;
@@ -90,6 +91,7 @@
     initPet();
     initLanguagePicker();
     initMotionControls();
+    initSoundControls();
     initAmbientOrbs();
     initHistoryDrawer();
     setActiveNav();
@@ -146,6 +148,7 @@
     initRoofGardenGame();
     initRegistryGames();
     initGameGuides();
+    if (App.initGamePresentation) { App.initGamePresentation(); }
     initCounters();
     initUtilityActions();
     initUndo();

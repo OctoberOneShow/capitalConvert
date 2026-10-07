@@ -381,6 +381,7 @@
     function draw() {
       var time = Date.now();
       ctx.clearRect(0, 0, croWidth, croHeight);
+      if (App.world) { App.world.backdrop(ctx, croWidth, croHeight, "forest"); }
       /* Bank bands */
       ctx.fillStyle = "rgba(30, 41, 59, 0.55)";
       ctx.fillRect(0, 0, croWidth, croCell);

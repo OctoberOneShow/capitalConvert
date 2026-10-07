@@ -884,6 +884,7 @@
       ctx.clearRect(0, 0, echWid, echHit);
       ctx.fillStyle = "#070b14";
       ctx.fillRect(0, 0, echWid, echHit);
+      if (App.world) { App.world.backdrop(ctx, echWid, echHit, "ocean"); }
       var x;
       var y;
       for (y = 0; y < cave.h; y += 1) {

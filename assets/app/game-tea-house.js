@@ -1149,6 +1149,7 @@
     teaKeyEls = [];
     teaGuestEl.textContent = "";
     teaNode("div", "tea-head", t("teaHeadChair"), teaGuestEl);
+    if (App.world) { teaGuestEl.appendChild(App.world.portrait(gid || "waiting")); }
     if (gid) {
       teaNode("div", "tea-guest-name", teaName(gid), teaGuestEl);
       teaNode("p", "tea-guest-rap", teaText("teaNoteRow", { g: gid, rap: teaInt(s.rap[gid]) }), teaGuestEl);
@@ -1229,6 +1230,7 @@
       btn = teaButton(label, (function (cupId) {
         return function () { teaMove({ k: "pour", d: cupId }); };
       }(drink.id)), "tea-cup");
+      if (App.world) { btn.insertBefore(App.world.cup(teaDrinks.indexOf(drink)), btn.firstChild); }
       if (teaHas(s.poured, drink.id)) {
         btn.setAttribute("aria-disabled", "true");
         btn.className = "tea-cup tea-cup-done";

@@ -1087,6 +1087,7 @@
       ctx.clearRect(0, 0, PBC_W, PBC_H);
       ctx.fillStyle = "#0b1020";
       ctx.fillRect(0, 0, PBC_W, PBC_H);
+      if (App.world) { App.world.backdrop(ctx, PBC_W, PBC_H, "neon"); }
 
       /* rail + shafts plates */
       ctx.fillStyle = "rgba(30, 41, 59, 0.8)";

@@ -663,6 +663,7 @@
       ctx.clearRect(0, 0, pbrWide, pbrTall);
       ctx.fillStyle = "rgba(8, 12, 20, 0.92)";
       ctx.fillRect(0, 0, pbrWide, pbrTall);
+      if (App.world) { App.world.backdrop(ctx, pbrWide, pbrTall, "workshop"); }
 
       /* Rock first, so the chasm reads as a hole rather than empty space. */
       (level.ground || []).forEach(function (span) {

@@ -3,7 +3,12 @@
  * closes others: the moth crosses the chasm but cannot push, the crab pushes and
  * swims but cannot cross dry ground, the eel fits the pipe and the latch but
  * cannot climb. Bodies stay where you leave them, so the exit is only reachable
- * by sequencing possessions - never by any single creature. */
+ * by sequencing possessions - never by any single creature.
+ *
+ * Presentation layer: the room is drawn - bevelled terrain plates under meeple
+ * figures, one hue per body carried across cell, portrait, button and HUD. The
+ * signature beat is possession: a spirit visibly arcs from the abandoned body
+ * to the borrowed one. The resolver, rooms and par are untouched. */
 (function (App) {
   var t = App.t;
   var logAction = App.logAction;
@@ -15,6 +20,104 @@
 
   var brbCols = 10;
   var brbRows = 6;
+  var SVG_NS = "http://www.w3.org/2000/svg";
+
+  /* Presentation tokens. Each body keeps one hue across cell, portrait, button
+   * and HUD so "whose eyes am I looking through" is answerable at a glance;
+   * terrain hues are fixed so a room reads the same in any panel hue. */
+  var brbBodyHues = { M: 46, C: 8, E: 158 };
+  var brbPanelHue = 268; /* fallback; the real value is read off the panel token */
+
+  function brbMotionOff() {
+    return App.isMotionOff
+      ? App.isMotionOff()
+      : document.documentElement.getAttribute("data-motion") === "off";
+  }
+
+  function brbMotionCalm() {
+    return App.isMotionCalm
+      ? App.isMotionCalm()
+      : document.documentElement.getAttribute("data-motion") === "calm";
+  }
+
+  /* A five-colour palette from one hue, matching the values App.art paints with. */
+  function brbPaint(hue, sat) {
+    var s = sat === undefined ? 70 : sat;
+    return {
+      main: "hsl(" + hue + "," + s + "%,52%)",
+      deep: "hsl(" + hue + "," + s + "%,30%)",
+      lit: "hsl(" + hue + "," + Math.min(98, s + 12) + "%,74%)",
+      soft: "hsl(" + hue + "," + Math.round(s * 0.6) + "%,86%)",
+      line: "hsl(" + hue + "," + s + "%,18%)",
+    };
+  }
+
+  function brbSvg(tag, attrs) {
+    var node = document.createElementNS(SVG_NS, tag);
+    if (attrs) {
+      for (var key in attrs) {
+        if (Object.prototype.hasOwnProperty.call(attrs, key)) {
+          node.setAttribute(key, String(attrs[key]));
+        }
+      }
+    }
+    return node;
+  }
+
+  /* The three bodies as meeple figures: the shared silhouette the drawer reads
+   * as "a character", plus the silhouette feature that *is* the body's rule -
+   * the moth's wings, the crab's claws, the eel's fin and tail. */
+  var brbMeeplePath =
+    "M12 3.4c1.7 0 2.9 1.3 2.9 2.9 0 .8-.3 1.4-.7 1.9 2 .5 3.4 1.7 4.2 3.4l-2.3.9.6 6.2H8l.6-6.2-2.3-.9c.8-1.7 2.2-2.9 4.2-3.4-.4-.5-.7-1.1-.7-1.9 0-1.6 1.2-2.9 2.2-2.9z";
+
+  function brbFigure(id) {
+    var p = brbPaint(brbBodyHues[id] || brbPanelHue, 72);
+    var svg = brbSvg("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", focusable: "false", "class": "brb-fig" });
+    var torso = brbSvg("path", { d: brbMeeplePath, fill: p.main, stroke: p.line, "stroke-width": 1.2 });
+    if (id === "M") {
+      svg.appendChild(brbSvg("path", { d: "M10.6 10.4C8.8 6.9 5.4 5.6 3.5 7.2c-1.9 1.6-1.1 4.7 1.3 6.1 1.7 1 3.8.9 5-.1", fill: p.soft, stroke: p.line, "stroke-width": 1.1 }));
+      svg.appendChild(brbSvg("path", { d: "M13.4 10.4c1.8-3.5 5.2-4.8 7.1-3.2 1.9 1.6 1.1 4.7-1.3 6.1-1.7 1-3.8.9-5-.1", fill: p.soft, stroke: p.line, "stroke-width": 1.1 }));
+      svg.appendChild(brbSvg("path", { d: "M10.7 3.8 9 1.5M13.3 3.8l1.7-2.3", stroke: p.line, "stroke-width": 1.2, "stroke-linecap": "round", fill: "none" }));
+      svg.appendChild(torso);
+    } else if (id === "C") {
+      svg.appendChild(brbSvg("path", { d: "M8.6 17 6 19M9.2 18.4 7.2 20.6M15.4 17l2.6 2M14.8 18.4l2 2.2", stroke: p.line, "stroke-width": 1.3, "stroke-linecap": "round", fill: "none" }));
+      svg.appendChild(brbSvg("path", { d: "M8.8 9.6C6.9 8.7 5.4 8.6 4.3 9.2", stroke: p.line, "stroke-width": 1.5, fill: "none", "stroke-linecap": "round" }));
+      svg.appendChild(brbSvg("path", { d: "M15.2 9.6c1.9-.9 3.4-1 4.5-.4", stroke: p.line, "stroke-width": 1.5, fill: "none", "stroke-linecap": "round" }));
+      svg.appendChild(brbSvg("path", { d: "M4.4 6c-1.6.4-2.5 1.9-2.1 3.4.4 1.5 1.9 2.3 3.4 2-1-.7-1.4-1.7-1.1-2.7.3-.9 1-1.5 2-1.7z", fill: p.main, stroke: p.line, "stroke-width": 1 }));
+      svg.appendChild(brbSvg("path", { d: "M19.6 6c1.6.4 2.5 1.9 2.1 3.4-.4 1.5-1.9 2.3-3.4 2 1-.7 1.4-1.7 1.1-2.7-.3-.9-1-1.5-2-1.7z", fill: p.main, stroke: p.line, "stroke-width": 1 }));
+      torso.setAttribute("transform", "translate(12 13.2) scale(1.18 .86) translate(-12 -13.2)");
+      svg.appendChild(torso);
+    } else {
+      svg.appendChild(brbSvg("path", { d: "M9.6 16.2c-2.5.9-4 2.5-4.4 4.9 2.2-.2 4-.9 5.4-2.2", fill: p.soft, stroke: p.line, "stroke-width": 1.1 }));
+      svg.appendChild(brbSvg("path", { d: "M11.2 3.3c.2-1.4 1.2-2.4 2.8-2.8-.3 1.3-.4 2.3-.1 3.3", fill: p.deep, stroke: p.line, "stroke-width": 1 }));
+      torso.setAttribute("transform", "translate(12 12.6) scale(.94 .96) translate(-12 -12.6)");
+      svg.appendChild(torso);
+    }
+    return svg;
+  }
+
+  /* The mind itself: a small ghost that carries the possession arc. */
+  function brbSpiritSvg() {
+    var p = brbPaint(brbPanelHue, 80);
+    var svg = brbSvg("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", focusable: "false", "class": "brb-fig" });
+    svg.appendChild(brbSvg("path", {
+      d: "M12 2.6c3.1 3.3 5.3 6.3 5.3 9.5a5.3 5.3 0 0 1-10.6 0c0-3.2 2.2-6.2 5.3-9.5z",
+      fill: "rgba(255,255,255,.92)",
+      stroke: p.main,
+      "stroke-width": 1.2,
+    }));
+    svg.appendChild(brbSvg("circle", { cx: 10.2, cy: 12.4, r: 1.1, fill: p.deep }));
+    svg.appendChild(brbSvg("circle", { cx: 13.8, cy: 12.4, r: 1.1, fill: p.deep }));
+    return svg;
+  }
+
+  function brbCenterOf(el) {
+    var rect = el && el.getBoundingClientRect ? el.getBoundingClientRect() : null;
+    if (rect && rect.width) {
+      return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, w: rect.width, h: rect.height };
+    }
+    return { x: 0, y: 0, w: 0, h: 0 };
+  }
 
   /* The three bodies. `can` is the whole ruleset, and the panel prints it as
    * words so a failed plan is a mistake the player can see coming. */
@@ -547,6 +650,78 @@
     var undoStack = [];
     var hint = "";
 
+    /* --- feel layer (presentation only; the resolver above stays the game) --- */
+    var art = App.art;
+    var fx = App.fx || {
+      pop: noop,
+      shake: noop,
+      ring: noop,
+      burst: noop,
+      floatText: noop,
+      stagger: noop,
+      countUp: noop,
+      sweep: noop,
+      jolt: noop,
+      flash: noop,
+      ceremony: noop,
+    };
+    var playSfx = App.playSfx || noop;
+    /* Without the illustration layer the room falls back to the original glyph
+     * text over CSS plates, so the panel is never empty - only less drawn. */
+    var canDraw = !!(art && art.tile && art.icon);
+    var fxTimers = [];
+    var roundId = 0;
+
+    function noop() {}
+
+    /* One-shot beats are guarded by the round id: a stale ceremony must not
+     * land on the room that replaced it. */
+    function later(fn, ms) {
+      var round = roundId;
+      var id = window.setTimeout(function () {
+        var at = fxTimers.indexOf(id);
+        if (at >= 0) {
+          fxTimers.splice(at, 1);
+        }
+        if (round === roundId) {
+          fn();
+        }
+      }, ms);
+      fxTimers.push(id);
+      return id;
+    }
+
+    function clearFxTimers() {
+      fxTimers.forEach(function (id) {
+        window.clearTimeout(id);
+      });
+      fxTimers = [];
+    }
+
+    /* The panel hue drives the floor plates, the backdrop and the spirit, so the
+     * art follows the token instead of a second copy of the palette kept here. */
+    function readHue() {
+      var raw = "";
+      try {
+        raw = window.getComputedStyle(panelEl).getPropertyValue("--gp-hue");
+      } catch (error) {
+        raw = "";
+      }
+      var parsed = parseInt(raw, 10);
+      brbPanelHue = isNaN(parsed) ? 268 : parsed;
+    }
+
+    function mountBackdrop() {
+      if (!canDraw || !art.pattern) {
+        return;
+      }
+      var layer = document.createElement("div");
+      layer.className = "brb-backdrop";
+      layer.setAttribute("aria-hidden", "true");
+      layer.appendChild(art.pattern("stars", { hue: brbPanelHue, sat: 40, tile: 22 }));
+      panelEl.insertBefore(layer, panelEl.firstChild);
+    }
+
     /* --- markup --- */
     var hud = document.createElement("div");
     hud.className = "game-hud";
@@ -567,8 +742,19 @@
     var ruleLines = brbBodies.map(function (body) {
       var p = document.createElement("p");
       p.className = "brb-rule";
+      var portrait = document.createElement("span");
+      portrait.className = "brb-portrait";
+      if (canDraw) {
+        portrait.appendChild(brbFigure(body.id));
+      } else {
+        portrait.textContent = body.glyph;
+      }
+      var text = document.createElement("span");
+      text.className = "brb-rule-text";
+      p.appendChild(portrait);
+      p.appendChild(text);
       rulesBox.appendChild(p);
-      return { body: body, node: p };
+      return { body: body, node: p, text: text };
     });
 
     var preview = document.createElement("p");
@@ -597,7 +783,7 @@
     var bodyBtns = brbBodies.map(function (body) {
       return brbButton("brb-body", body.keyName || body.nameKey, function () {
         possess(body.id);
-      });
+      }, brbBodyDeco(body.id));
     });
     var latchBtn = brbButton("brb-latch", "brbBtnLatch", function () {
       act({ type: "latch" });
@@ -606,6 +792,7 @@
       undo();
     });
     var resetBtn = brbButton("primary", "btnNewRound", function () {
+      playSfx("flip");
       loadRoom(room);
     });
     var best = document.createElement("p");
@@ -635,14 +822,31 @@
       return stat;
     }
 
-    function brbButton(cls, key, onClick) {
+    function brbButton(cls, key, onClick, decorate) {
       var b = document.createElement("button");
       b.type = "button";
       b.className = "brb-btn " + cls;
       b.setAttribute("data-i18n", key);
       b.textContent = t(key);
+      if (decorate) {
+        decorate(b);
+      }
       b.addEventListener("click", onClick);
       return b;
+    }
+
+    /* A body button wears its meeple, so the borrow verbs read at a glance. */
+    function brbBodyDeco(id) {
+      return function (b) {
+        var fig = document.createElement("span");
+        fig.className = "brb-btn-fig";
+        if (canDraw) {
+          fig.appendChild(brbFigure(id));
+        } else {
+          fig.textContent = brbBody(id).glyph;
+        }
+        b.insertBefore(fig, b.firstChild);
+      };
     }
 
     /* --- grid --- */
@@ -673,9 +877,43 @@
       return t("brbTerrain" + ch);
     }
 
+    /* The ground under the figures: a bevelled plate per terrain, hue-coded and
+     * glyph-marked so no cell is a plain rectangle or a colour-only state. */
+    function brbPlateFor(ch, x, y, latchOpen) {
+      var drift = ((x * 5 + y * 3) % 7) - 3;
+      if (ch === "#") {
+        return art.tile({ hue: brbPanelHue, sat: 22, tone: "deep", state: "up", radius: 5 });
+      }
+      if (ch === "_") {
+        return art.tile({ hue: brbPanelHue, sat: 26, state: "empty", radius: 7 });
+      }
+      if (ch === "~") {
+        return art.tile({ hue: 196, sat: 62, state: "up", radius: 7, icon: "wave", iconHue: 196, iconSat: 74 });
+      }
+      if (ch === "P") {
+        return art.tile({ hue: 205, sat: 26, tone: "deep", state: "up", radius: 7, icon: "pipe", iconHue: 205, iconSat: 58 });
+      }
+      if (ch === "^") {
+        return art.tile({ hue: 32, sat: 42, state: "up", radius: 7, glyph: "\u25B2", glyphSize: 15, glyphFill: "rgba(255,255,255,.82)" });
+      }
+      if (ch === "L") {
+        return art.tile({ hue: 46, sat: 58, state: "up", radius: 7, icon: latchOpen ? "key" : "lock", iconHue: 46, iconSat: 70 });
+      }
+      return art.tile({ hue: brbPanelHue + drift, sat: 32, state: "up", radius: 7 });
+    }
+
     function render() {
       var body = brbBody(state.mind);
-      mindEl.textContent = t(body.nameKey);
+      mindEl.textContent = "";
+      if (canDraw) {
+        /* The chip's strong is an inline box; the figure rides in a fixed-size
+         * span so it can never inflate the stat it illustrates. */
+        var mindFig = document.createElement("span");
+        mindFig.className = "brb-mind-fig";
+        mindFig.appendChild(brbFigure(body.id));
+        mindEl.appendChild(mindFig);
+      }
+      mindEl.appendChild(document.createTextNode(t(body.nameKey)));
       moveEl.textContent = t("brbMoveStat", { n: state.moves });
       parEl.textContent = t("brbParStat", { n: room.par });
 
@@ -685,23 +923,56 @@
           var ch = state.ground[y][x];
           var who = brbAtBody(state, x, y, null);
           var crate = brbAtCrates(state, x, y);
-          var text = ch === "#" ? "\u2588" : ch === "." ? "\u00B7" : ch === "L" ? (state.latchOpen ? "\u25A1" : "\u25A3") : ch;
-          if (who) {
-            text = brbBody(who).glyph;
-          } else if (crate) {
-            text = "\u25A0";
-          }
-          if (state.exit.x === x && state.exit.y === y && !who && !crate) {
-            text = "\u2691";
-          }
-          node.textContent = text;
+          var isExit = state.exit.x === x && state.exit.y === y;
           node.className =
             "brb-cell is-" +
             (ch === "#" ? "wall" : ch === "_" ? "gap" : ch === "~" ? "water" : ch === "P" ? "pipe" : ch === "^" ? "perch" : ch === "L" ? (state.latchOpen ? "open" : "latch") : "flat") +
             (who === state.mind ? " brb-here" : "") +
             (who ? " brb-body-" + who.toLowerCase() : "") +
             (crate ? " brb-crate" : "") +
-            (state.exit.x === x && state.exit.y === y ? " brb-exit" : "");
+            (isExit ? " brb-exit" : "");
+
+          if (canDraw) {
+            node.textContent = "";
+            var plate = document.createElement("span");
+            plate.className = "brb-plate";
+            plate.appendChild(
+              isExit
+                ? art.tile({ hue: 46, sat: 84, state: "glow", radius: 7 })
+                : brbPlateFor(ch, x, y, state.latchOpen),
+            );
+            node.appendChild(plate);
+            var mark = null;
+            if (who) {
+              mark = document.createElement("span");
+              mark.className = "brb-mark brb-mark-body" + (who === state.mind ? " brb-mark-mind" : "");
+              mark.appendChild(brbFigure(who));
+            } else if (crate) {
+              mark = document.createElement("span");
+              mark.className = "brb-mark brb-mark-crate";
+              mark.appendChild(art.icon("crate", { hue: 32, sat: 55 }));
+            } else if (isExit) {
+              mark = document.createElement("span");
+              mark.className = "brb-mark brb-mark-exit";
+              mark.appendChild(art.icon("flag", { hue: 46, sat: 88 }));
+            }
+            if (mark) {
+              node.appendChild(mark);
+            }
+          } else {
+            var text =
+              ch === "#" ? "\u2588" : ch === "." ? "\u00B7" : ch === "L" ? (state.latchOpen ? "\u25A1" : "\u25A3") : ch;
+            if (who) {
+              text = brbBody(who).glyph;
+            } else if (crate) {
+              text = "\u25A0";
+            }
+            if (isExit && !who && !crate) {
+              text = "\u2691";
+            }
+            node.textContent = text;
+          }
+
           node.setAttribute(
             "aria-label",
             t("brbCellAria", {
@@ -715,7 +986,7 @@
       }
 
       ruleLines.forEach(function (entry) {
-        entry.node.textContent = brbRulesText(entry.body);
+        entry.text.textContent = brbRulesText(entry.body);
         entry.node.className = "brb-rule" + (entry.body.id === state.mind ? " brb-active" : "");
       });
 
@@ -747,29 +1018,193 @@
       var target = brbBody(id);
       hint = brbRulesText(target);
       if (id === state.mind) {
+        ruleLines.forEach(function (entry) {
+          if (entry.body.id === id) {
+            fx.pop(entry.node, { scale: 1.05 });
+          }
+        });
+        playSfx("select");
         render();
         return;
       }
       act({ type: "possess", id: id });
     }
 
+    /* What the resolver just did, told as a beat: diff the two states instead of
+     * trusting the action, so keyboard, click and picker all animate the same. */
+    function brbReadBeat(before, after) {
+      if (after.latchOpen && !before.latchOpen) {
+        return { kind: "latch", body: after.mind };
+      }
+      if (after.mind !== before.mind) {
+        return {
+          kind: "possess",
+          body: after.mind,
+          from: { x: before.bodies[before.mind].x, y: before.bodies[before.mind].y },
+          to: { x: before.bodies[after.mind].x, y: before.bodies[after.mind].y },
+        };
+      }
+      var from = before.bodies[after.mind];
+      var to = after.bodies[after.mind];
+      var beat = {
+        kind: "move",
+        body: after.mind,
+        from: { x: from.x, y: from.y },
+        to: { x: to.x, y: to.y },
+      };
+      for (var i = 0; i < before.crates.length && i < after.crates.length; i += 1) {
+        if (before.crates[i].x !== after.crates[i].x || before.crates[i].y !== after.crates[i].y) {
+          beat.crate = {
+            from: { x: before.crates[i].x, y: before.crates[i].y },
+            to: { x: after.crates[i].x, y: after.crates[i].y },
+          };
+        }
+      }
+      return beat;
+    }
+
+    /* A floating rider that arcs from one cell to another - the spirit on a
+     * possession, the body on a step, the crate on a push. Coordinates are
+     * viewport-fixed because the node hangs off the body, off any offset parent. */
+    function brbFly(fromCell, toCell, flavor, lift, bodyId) {
+      if (brbMotionOff() || !fromCell || !toCell) {
+        return;
+      }
+      var a = brbCenterOf(fromCell);
+      var b = brbCenterOf(toCell);
+      if (!a.w || !b.w) {
+        return; /* headless: nothing visible to fly */
+      }
+      var size = Math.max(20, Math.round(Math.min(a.w, a.h) * 0.8));
+      var node = document.createElement("div");
+      node.className = "brb-fly brb-fly-" + flavor;
+      node.style.left = (a.x - size / 2) + "px";
+      node.style.top = (a.y - size / 2) + "px";
+      node.style.width = size + "px";
+      node.style.height = size + "px";
+      if (flavor === "wisp") {
+        node.appendChild(brbSpiritSvg());
+      } else if (flavor === "crate") {
+        node.appendChild(canDraw ? art.icon("crate", { hue: 32, sat: 55 }) : document.createTextNode("\u25A0"));
+      } else {
+        node.appendChild(brbFigure(bodyId || state.mind));
+      }
+      document.body.appendChild(node);
+      var arc = lift === undefined ? 26 : lift;
+      var mx = (a.x + b.x) / 2;
+      var my = Math.min(a.y, b.y) - arc;
+      var frames = [];
+      for (var i = 0; i <= 4; i += 1) {
+        var t = i / 4;
+        var u = 1 - t;
+        var x = u * u * a.x + 2 * u * t * mx + t * t * b.x;
+        var y = u * u * a.y + 2 * u * t * my + t * t * b.y;
+        frames.push({
+          transform: "translate(" + (x - a.x).toFixed(1) + "px," + (y - a.y).toFixed(1) + "px) scale(" + (i === 0 || i === 4 ? 1 : 1.12) + ")",
+          opacity: i === 4 && flavor === "wisp" ? 0 : 1,
+        });
+      }
+      var ms = brbMotionCalm() ? 180 : flavor === "wisp" ? 440 : 230;
+      var done = false;
+      var wipe = function () {
+        if (done) {
+          return;
+        }
+        done = true;
+        if (node.parentNode) {
+          node.parentNode.removeChild(node);
+        }
+      };
+      var tid = window.setTimeout(wipe, ms + 340);
+      fxTimers.push(tid);
+      var anim = typeof node.animate === "function" ? node.animate(frames, { duration: ms, easing: "linear" }) : null;
+      if (anim && anim.finished && anim.finished.then) {
+        anim.finished.then(wipe).catch(wipe);
+      }
+    }
+
+    function brbCellAt(pos) {
+      return cells[pos.y] && cells[pos.y][pos.x];
+    }
+
+    function brbPlayBeat(beat) {
+      if (!beat) {
+        return;
+      }
+      if (beat.kind === "latch") {
+        var latchCell = state.latch ? brbCellAt(state.latch) : null;
+        if (latchCell) {
+          fx.ring(latchCell, { hue: 46 });
+          fx.burst(latchCell, { kind: "spark", count: 9, hue: 46 });
+        }
+        fx.pop(brbCellAt(state.bodies[state.mind]), { scale: 1.12 });
+        playSfx("pop");
+        return;
+      }
+      if (beat.kind === "possess") {
+        /* The signature move: the mind leaves one body and visibly flies to the
+         * other, rings both ends, and the borrowed body's rule line wakes up. */
+        var fromCell = brbCellAt(beat.from);
+        var toCell = brbCellAt(beat.to);
+        if (fromCell) {
+          fx.ring(fromCell, { hue: brbBodyHues[beat.body] });
+        }
+        if (fromCell && toCell) {
+          brbFly(fromCell, toCell, "wisp", 34, beat.body);
+          fx.ring(toCell, { hue: brbBodyHues[beat.body] });
+        }
+        ruleLines.forEach(function (entry) {
+          if (entry.body.id === beat.body) {
+            fx.pop(entry.node, { scale: 1.05 });
+          }
+        });
+        playSfx("heal");
+        return;
+      }
+      var movedCell = brbCellAt(beat.to);
+      var longHaul = Math.abs(beat.to.x - beat.from.x) + Math.abs(beat.to.y - beat.from.y) > 1;
+      if (movedCell) {
+        fx.pop(movedCell, { scale: 1.1, ms: 200 });
+        fx.burst(movedCell, { kind: "spark", count: longHaul ? 10 : 4, hue: brbBodyHues[beat.body] });
+      }
+      var startCell = brbCellAt(beat.from);
+      if (startCell && movedCell) {
+        brbFly(startCell, movedCell, longHaul ? "wisp" : "hop", longHaul ? 36 : 9, beat.body);
+      }
+      if (beat.crate) {
+        var crateFrom = brbCellAt(beat.crate.from);
+        var crateTo = brbCellAt(beat.crate.to);
+        if (crateFrom && crateTo) {
+          brbFly(crateFrom, crateTo, "crate", 4, beat.body);
+        }
+        playSfx("place");
+      } else {
+        playSfx(longHaul ? "splash" : "step");
+      }
+    }
+
     function act(action) {
       if (state.over) {
         return;
       }
+      var before = state;
       var result = brbApply(state, action);
       if (!result) {
         return;
       }
       if (result.error) {
         hint = result.error;
+        fx.shake(brbCellAt(before.bodies[before.mind]), { dist: 5 });
+        playSfx("wrong");
         render();
         return;
       }
       undoStack.push(brbClone(state));
       state = result.state;
       hint = "";
+      var beat = brbReadBeat(before, state);
       render();
+      brbPlayBeat(beat);
       if (state.over) {
         finish();
       }
@@ -783,6 +1218,7 @@
       }
       state = undoStack.pop();
       hint = t("brbUndid");
+      playSfx("tick");
       render();
     }
 
@@ -791,16 +1227,26 @@
       var starsWon = starsFor(moves, room.starMoves, "low");
       var outcome = campaign.record(room.id, { stars: starsWon, best: moves, better: "low" });
       var message = t("brbWon", { n: moves, par: room.par, s: starsWon });
+      var lines = [];
       if (outcome.isBest) {
-        message += " " + t("newBest");
+        lines.push(t("newBest"));
       }
       if (outcome.unlockedNext) {
-        message += " " + t("brbNextRoom");
+        lines.push(t("brbNextRoom"));
       } else if (campaign.clearedCount() === rooms.length) {
-        message += " " + t("brbAllRooms");
+        lines.push(t("brbAllRooms"));
       }
-      result.textContent = message;
+      result.className = "game-result is-win";
+      result.textContent = lines.length ? message + " " + lines.join(" ") : message;
       logAction(t("logBorrowedBodies", { n: moves }));
+      var exitCell = brbCellAt(state.exit);
+      if (exitCell) {
+        fx.ring(exitCell, { hue: 46 });
+        fx.burst(exitCell, { kind: "star", count: 14, hue: 46 });
+      }
+      later(function () {
+        fx.ceremony(panelEl, { tone: "win", title: message, lines: lines, stars: starsWon });
+      }, 460);
       var rect = resetBtn.getBoundingClientRect();
       createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
       petNotifyGame(outcome.isBest || outcome.firstClear);
@@ -816,9 +1262,12 @@
 
     function loadRoom(next) {
       room = next;
+      roundId += 1;
+      clearFxTimers();
       state = brbStart(room);
       undoStack = [];
       hint = "";
+      result.className = "game-result";
       result.textContent = t("brbPrompt", {
         name: t(room.labelKey),
         par: room.par,
@@ -826,6 +1275,13 @@
       });
       refreshPicker();
       render();
+      var dealt = [];
+      for (var y = 0; y < brbRows; y += 1) {
+        for (var x = 0; x < brbCols; x += 1) {
+          dealt.push(cells[y][x]);
+        }
+      }
+      fx.stagger(dealt, { step: 5, ms: 300 });
     }
 
     function moveBy(dx, dy) {
@@ -868,12 +1324,21 @@
     sel.addEventListener("change", function () {
       var index = campaign.indexOf(sel.value);
       if (index >= 0 && campaign.isUnlocked(sel.value)) {
+        playSfx("select");
         loadRoom(rooms[index]);
       }
     });
 
     buildGrid();
+    readHue();
+    mountBackdrop();
     loadRoom(rooms[campaign.indexOf(campaign.nextLevelId())] || rooms[0]);
+
+    /* Drawer pause: stop pending beats. State is kept, as the hook contract
+     * requires - the room is exactly where the player left it. */
+    App.quietResetBorrowedBodies = function () {
+      clearFxTimers();
+    };
   }
 
   App.addStrings({

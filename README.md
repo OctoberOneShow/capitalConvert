@@ -79,6 +79,21 @@ a scroll gesture.
 
 Open any `.html` file directly in a browser. No server required.
 
+### Game presentation
+
+The 96 games other than **Item Quest / 寻物启事** and **Love and Deepspace / 恋与深空** now have illustrated title scenes, bilingual objectives, and genre identities. The expanded picker supports searching English or Chinese names and filtering by category. Keyboard navigation follows the filtered results.
+
+The remaining game screens use coordinated controls and readable dark surfaces in either site theme. Thirty-four canvas games include original environment artwork; trains, ships, stealth characters, coral, crates, board discs, and falling blocks have additional piece detail. Whisper Deck has illustrated card faces with visible costs and echo rules. Tea House has guest portraits and illustrated drinks. Weather Loom shows terrain and weather gauges, with exact values available through **Show readings** and the selected-cell readout.
+
+Presentation animations respect the motion setting and the system's reduced-motion preference. Score changes animate only when the value changes; hidden games do not run presentation animation loops. Campaign completions display a dismissible star banner. Game rules and saved-progress formats are preserved.
+
+Verification:
+
+- `node tools/game-presentation-check.js` checks all 98 panels at 860px, 390px, and 320px; validates search, localization, motion controls, and the two excluded panels; and saves previews and a report in `tools/shots/completed/`. It requires local Chrome.
+- `node tools/verify-game.js game-weather-loom game-coral-architect game-clockwork-dispatch game-whisper-deck game-tea-house game-ember-delve game-glyph-bastion game-lantern-heist` exercises the changed game controls and timer cleanup.
+- `node tools/pet-harness.js` runs the full gameplay and companion regression suite.
+- `node tools/static-checks.js` checks page wiring, localization, and the shared game infrastructure.
+
 ### 恋与深空 / Love and Deepspace
 
 Open **Games → More games → Love and Deepspace** on any of the four pages.

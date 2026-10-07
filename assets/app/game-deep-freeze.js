@@ -930,6 +930,7 @@
       ctx.clearRect(0, 0, dfzWidth, dfzHeight);
       ctx.fillStyle = "#111a2e";
       ctx.fillRect(0, 0, dfzWidth, dfzHeight);
+      if (App.world) { App.world.backdrop(ctx, dfzWidth, dfzHeight, "ice"); }
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       for (i = 0; i < dfzEdges.length; i += 1) {

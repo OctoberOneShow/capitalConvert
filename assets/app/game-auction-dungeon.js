@@ -16,6 +16,96 @@
   var fillCampaignPicker = App.fillCampaignPicker;
   var starsFor = App.starsFor;
 
+  function noop() {}
+
+  /* ---------------- drawn motifs the art bank lacks ----------------
+   * Four recipes over the same 24x24 grid as App.art, painted from the same
+   * token palette, so the lots and foes read as illustrations even where the
+   * shared bank has no fit (an axe, a canteen, a snake, a club). */
+  var SVG_NS = "http://www.w3.org/2000/svg";
+
+  function audTag(tag, attrs) {
+    var el = document.createElementNS(SVG_NS, tag);
+    for (var key in attrs) {
+      if (Object.prototype.hasOwnProperty.call(attrs, key)) {
+        el.setAttribute(key, String(attrs[key]));
+      }
+    }
+    return el;
+  }
+
+  function audPaint(hue, sat) {
+    sat = sat === undefined ? 62 : sat;
+    return {
+      main: "hsl(" + hue + "," + sat + "%,52%)",
+      deep: "hsl(" + hue + "," + sat + "%,30%)",
+      lit: "hsl(" + hue + ",92%,74%)",
+      line: "hsl(" + hue + "," + sat + "%,16%)"
+    };
+  }
+
+  var AUD_DRAWN = {
+    axe: function (c) {
+      return [
+        audTag("path", { d: "M11.4 5.4C14.8 3.2 19.2 4.6 20.6 8.8 16.8 8.4 13.6 9.8 11.6 12.6 9.8 10.2 9.8 7.6 11.4 5.4Z", fill: c.main, stroke: c.line, "stroke-width": 1.2 }),
+        audTag("path", { d: "M11.8 10.8 4.6 20.4", stroke: c.deep, "stroke-width": 2.2, "stroke-linecap": "round" }),
+        audTag("path", { d: "M12.4 6.4C14.8 5.2 17.4 5.8 18.8 7.8", fill: "none", stroke: c.lit, "stroke-width": 1, "stroke-linecap": "round" })
+      ];
+    },
+    canteen: function (c) {
+      return [
+        audTag("circle", { cx: 12, cy: 14, r: 6.6, fill: c.main, stroke: c.line, "stroke-width": 1.2 }),
+        audTag("rect", { x: 10.4, y: 3.4, width: 3.2, height: 4, rx: 1, fill: c.deep, stroke: c.line, "stroke-width": 1 }),
+        audTag("path", { d: "M7.2 9.8C8.2 6.4 15.8 6.4 16.8 9.8", fill: "none", stroke: c.deep, "stroke-width": 1.4, "stroke-linecap": "round" }),
+        audTag("path", { d: "M9 12.6a4.4 4.4 0 0 1 3-2", fill: "none", stroke: c.lit, "stroke-width": 1.1, "stroke-linecap": "round" })
+      ];
+    },
+    adder: function (c) {
+      return [
+        audTag("path", { d: "M4.6 19.4C6 16 9.2 16.2 11 14.4 13 12.4 12.4 9.8 10.6 8.8 12.6 6 17.6 6.6 18.8 10", fill: "none", stroke: c.main, "stroke-width": 2.6, "stroke-linecap": "round" }),
+        audTag("circle", { cx: 18.9, cy: 10.4, r: 1.9, fill: c.deep, stroke: c.line, "stroke-width": 1 }),
+        audTag("circle", { cx: 19.4, cy: 9.9, r: 0.55, fill: c.lit }),
+        audTag("path", { d: "M20.6 11.8 21.6 13.4", stroke: c.lit, "stroke-width": 0.9, "stroke-linecap": "round" })
+      ];
+    },
+    club: function (c) {
+      return [
+        audTag("path", { d: "M8.2 20.6 12.4 12", stroke: c.deep, "stroke-width": 2.4, "stroke-linecap": "round" }),
+        audTag("circle", { cx: 14.4, cy: 8.4, r: 3.6, fill: c.main, stroke: c.line, "stroke-width": 1.2 }),
+        audTag("path", { d: "M14.4 4.2V2.6M18 5.8 19.4 4.6M18.4 10.6 20 11.6M10.8 5.4 9.6 4.2", stroke: c.lit, "stroke-width": 1.3, "stroke-linecap": "round" }),
+        audTag("circle", { cx: 13.2, cy: 7.2, r: 1, fill: c.lit, opacity: 0.85 })
+      ];
+    }
+  };
+
+  /* Icon per lot and per foe: bank motifs first, drawn motifs where the bank
+   * has no fit. The hue pairs with the printed name, never replaces it. */
+  var AUD_ITEM_ICON = {
+    dirk: ["sword", 212], axe: ["axe", 212], buckler: ["shield", 208],
+    cloak: ["feather", 276], vial: ["flask", 350], goad: ["bell", 46],
+    lantern: ["lantern", 42], canteen: ["canteen", 30]
+  };
+  var AUD_FOE_ICON = {
+    rat: ["paw", 34], adder: ["adder", 128], hook: ["hook", 210],
+    brute: ["club", 8], warden: ["key", 44]
+  };
+  var AUD_SEAT_ICON = ["meeple", "bag", "eye", "lock"];
+  var AUD_SEAT_HUE = [48, 8, 288, 128];
+
+  function audIcon(name, hue, sat) {
+    var drawn = AUD_DRAWN[name];
+    if (drawn) {
+      var c = audPaint(hue, sat);
+      var svg = audTag("svg", { viewBox: "0 0 24 24", "aria-hidden": "true", focusable: "false", "class": "art-icon" });
+      var kids = drawn(c);
+      for (var i = 0; i < kids.length; i += 1) {
+        svg.appendChild(kids[i]);
+      }
+      return svg;
+    }
+    return App.art.icon(name, { hue: hue, sat: sat === undefined ? 72 : sat });
+  }
+
   /* What a bare-handed party brings to a fight, before any lot is won. */
   var AUD_BASE = { atk: 3, ap: 1 };
   var AUD_BRACE = 6;
@@ -871,6 +961,73 @@
     var plan = [];
     var roundLog = [];
 
+    /* Feel layer: App.fx voices and motion, App.art for illustration. All
+     * defensive so a missing module costs effects, never the game itself. */
+    var fx = App.fx || {
+      pop: noop, shake: noop, ring: noop, burst: noop, floatText: noop,
+      stagger: noop, countUp: noop, sweep: noop, jolt: noop, flash: noop, ceremony: noop
+    };
+    var art = App.art;
+    var playSfx = App.playSfx || noop;
+    var canDraw = !!(art && art.icon && art.frame && art.plaque && art.scene);
+
+    /* The counter sits in the panel's own light: hue comes from the token the
+     * sheet sets, with the torch-warm family value as fallback. */
+    var audHue = 42;
+
+    function readHue() {
+      var raw = "";
+      try {
+        raw = window.getComputedStyle(panelEl).getPropertyValue("--gp-hue");
+      } catch (error) {
+        raw = "";
+      }
+      var parsed = parseInt(raw, 10);
+      if (!isNaN(parsed)) {
+        audHue = parsed;
+      }
+    }
+
+    readHue();
+
+    /* Sequenced beats ride tracked timeouts that a tab switch can cancel; no
+     * interval ever outlives the panel. */
+    var fxTimers = [];
+    var roundId = 0;
+
+    function later(fn, ms) {
+      var round = roundId;
+      var id = window.setTimeout(function () {
+        var at = fxTimers.indexOf(id);
+        if (at >= 0) {
+          fxTimers.splice(at, 1);
+        }
+        if (round === roundId) {
+          fn();
+        }
+      }, ms);
+      fxTimers.push(id);
+      return id;
+    }
+
+    function clearFxTimers() {
+      fxTimers.forEach(function (id) {
+        window.clearTimeout(id);
+      });
+      fxTimers = [];
+    }
+
+    /* The torch-lit room the whole auction plays out in. */
+    function mountBackdrop() {
+      if (!canDraw) {
+        return;
+      }
+      var layer = node("div", "aud-backdrop");
+      layer.setAttribute("aria-hidden", "true");
+      layer.appendChild(art.scene("dungeon", { hue: audHue, sat: 40 }));
+      panelEl.insertBefore(layer, panelEl.firstChild);
+    }
+
     /* --- markup: createElement all the way down, no innerHTML --- */
     function node(tag, cls, parent, text) {
       var made = document.createElement(tag);
@@ -931,6 +1088,7 @@
       stepBtn.setAttribute("aria-keyshortcuts", String(index + 1));
       stepBtn.addEventListener("click", function () {
         stepPick = index;
+        playSfx("tick");
         render();
       });
       stepBtns.push(stepBtn);
@@ -943,6 +1101,32 @@
     nextLotBtn.setAttribute("aria-keyshortcuts", "N");
     var lotKitLine = node("p", "aud-kits", lotBox);
 
+    /* The counter: a drawn portrait of the lot on the block, a wooden price
+     * plaque, and the bid ladder whose rungs pile up as the price climbs. */
+    var lotTop = node("div", "aud-lottop");
+    var portrait = node("div", "aud-portrait", lotTop);
+    if (canDraw) {
+      portrait.appendChild(art.frame({ hue: audHue }));
+    }
+    var portraitIcon = node("div", "aud-portrait-icon", portrait);
+    var lotText = node("div", "aud-lottext", lotTop);
+    lotText.appendChild(lotHead);
+    lotText.appendChild(lotFx);
+    lotText.appendChild(lotBand);
+    var counter = node("div", "aud-counter");
+    if (canDraw) {
+      counter.appendChild(art.plaque({ hue: 32 }));
+    }
+    var counterRow = node("div", "aud-counterrow", counter);
+    var coinMark = node("span", "aud-coinmark", counterRow);
+    if (canDraw) {
+      coinMark.appendChild(audIcon("coin", 46, 84));
+    }
+    counterRow.appendChild(lotPrice);
+    var ladder = node("div", "aud-ladder", counter);
+    lotBox.insertBefore(lotTop, saleBox);
+    lotBox.insertBefore(counter, saleBox);
+
     var bidderBox = group(node("div", "aud-bidders"), "audBiddersLabel");
     var bidderRows = [];
     for (var seat = 0; seat < 4; seat += 1) {
@@ -951,16 +1135,36 @@
         row: brow, name: node("strong", "aud-bidname", brow), plan: node("span", "aud-bidplan", brow),
         state: node("span", "aud-bidstate", brow), purse: node("span", "aud-bidpurse", brow), kit: node("span", "aud-bidkit", brow)
       });
+      if (canDraw) {
+        var avatar = node("div", "aud-avatar", brow);
+        avatar.appendChild(audIcon(AUD_SEAT_ICON[seat], AUD_SEAT_HUE[seat], 68));
+      }
     }
 
     var stageBox = group(node("div", "aud-stage"), "audStageLabelAria");
     var stageHead = node("p", "aud-stagehead", stageBox);
+    var stageHeadRow = node("div", "aud-stageheadrow");
+    stageBox.insertBefore(stageHeadRow, stageHead);
+    var stageIconBox = node("div", "aud-stageicon", stageHeadRow);
+    if (canDraw) {
+      stageIconBox.appendChild(audIcon("sword", audHue, 64));
+      stageIconBox.__kind = "sword";
+    }
+    stageHeadRow.appendChild(stageHead);
     var foeBox = node("div", "aud-foes", stageBox);
     var foeRows = [];
     for (var slot = 0; slot < 3; slot += 1) {
       var frow = node("div", "aud-foe", foeBox);
       frow.hidden = true;
       foeRows.push({ row: frow, name: node("strong", "aud-foename", frow), state: node("span", "aud-foestate", frow), intent: node("span", "aud-intent", frow) });
+      if (canDraw) {
+        var foeIcon = node("div", "aud-foeicon", frow);
+        frow.insertBefore(foeIcon, frow.firstChild);
+        foeRows[slot].icon = foeIcon;
+      }
+      var bar = node("div", "aud-hpbar", frow);
+      foeRows[slot].bar = bar;
+      foeRows[slot].fill = node("div", "aud-hpfill", bar);
     }
     var campBox = node("div", "aud-camp", stageBox);
     var campHead = node("p", "aud-camphead", campBox);
@@ -996,6 +1200,8 @@
       panelEl.appendChild(made);
     });
 
+    mountBackdrop();
+
     function makeStat(parent, key) {
       var stat = node("div", "game-stat", parent);
       labelled(node("span", null, stat), key);
@@ -1030,6 +1236,9 @@
     /* ---------------- play ---------------- */
 
     function startRun() {
+      clearFxTimers();
+      roundId += 1;
+      audView = null;
       run = audBuildRun(level);
       stepPick = 0;
       plan = [];
@@ -1037,6 +1246,7 @@
       audEnter(run);
       result.textContent = t("audPrompt", { name: t(level.labelKey), twist: t(level.twistKey), purse: coins(level.purse), hp: hitWords(run), seed: audInt(run.seed) });
       render();
+      fx.stagger([hud, lotBox, bidderBox, stageBox], { step: 55, ms: 320 });
     }
 
     function bidLine(line) {
@@ -1084,6 +1294,15 @@
         : took.note === "full" ? t("audRestFull", { hp: hitWords(run) })
         : took.note === "none" ? t("audRestNone")
         : t("audRested", { h: t("audHpGain", { n: took.mend }), c: coins(took.cost), hp: hitWords(run) });
+      if (took.note === "mend") {
+        playSfx("heal");
+        fx.floatText(hpEl, "+" + took.mend, { kind: "good" });
+        fx.ring(hpEl, { hue: 140 });
+        fx.pop(campBox, { scale: 1.02, ms: 200 });
+      } else {
+        playSfx("wrong");
+        fx.shake(restBtn, { dist: 5 });
+      }
       render();
     }
 
@@ -1100,6 +1319,8 @@
         resolveRound();
         return;
       }
+      playSfx("click");
+      fx.pop(queueLine, { scale: 1.05, ms: 160 });
       render();
     }
 
@@ -1115,12 +1336,18 @@
         result.textContent = run.fallen
           ? t("audLostHp", { n: audInt(run.encIdx) + 1, seed: audInt(run.seed) })
           : t("audLostStall", { n: audInt(run.encIdx) + 1, cap: AUD_ROUND_CAP, seed: audInt(run.seed) });
+        var endLine = result.textContent;
+        later(function () {
+          fx.ceremony(panelEl, { tone: "lose", title: t("audSilence"), lines: [endLine], stars: 0 });
+        }, 380);
         refreshPicker();
         render();
         return;
       }
       if (run.wiped) {
         result.textContent = t("audClearedEnc", { n: audInt(run.encIdx) + 1, hp: hitWords(run), purse: coins(run.purse) });
+        fx.ring(stageBox);
+        playSfx("clear");
         var wasWon = run.pos;
         run = audAdvance(run);
         if (run.phase === "won" && run.pos !== wasWon) {
@@ -1150,6 +1377,11 @@
       var rect = newBtn.getBoundingClientRect();
       createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
       petNotifyGame(outcome.isBest || outcome.firstClear);
+      /* The run ends as an event: the rung's name stamps over the hall with the
+       * earned stars, then the receipt. */
+      later(function () {
+        fx.ceremony(panelEl, { tone: "win", title: t(level.labelKey), lines: [message], stars: starsWon });
+      }, 320);
       refreshPicker();
     }
 
@@ -1159,9 +1391,19 @@
 
     /* ---------------- render ---------------- */
 
-    function renderHud() {
-      purseEl.textContent = coins(run.purse);
+    function renderHud(prev) {
+      if (prev && audInt(prev.purse) !== audInt(run.purse)) {
+        fx.countUp(purseEl, audInt(prev.purse), audInt(run.purse), { format: coins });
+      } else {
+        purseEl.textContent = coins(run.purse);
+      }
+      if (prev && audInt(prev.hp) !== audInt(run.hp)) {
+        fx.pop(hpEl, { scale: 1.12, ms: 180 });
+      }
       hpEl.textContent = hitWords(run);
+      if (prev && (prev.kitCount === undefined || prev.kitCount !== run.kit.length)) {
+        fx.pop(kitEl, { scale: 1.12, ms: 180 });
+      }
       kitEl.textContent = t("audKitValue", { n: run.kit.length, max: audInt(level.slots) });
       var step = run.seq[run.pos];
       var word = !step ? t("audStageDone") : step.t === "lot" ? t("audStageLot") : step.t === "camp" ? t("audStageCamp") : t("audStageFight");
@@ -1188,13 +1430,36 @@
       node("p", "aud-salerow" + (isWinner ? " aud-is-win" : "") + (isOver ? " aud-is-over" : ""), saleBox, text);
     }
 
-    function renderLot() {
+    function renderLot(prev) {
       var live = run.phase === "bid" && !!run.lot;
       lotBox.hidden = !live;
       if (!live) {
         return;
       }
       var item = audItem(run.lot.item);
+      /* The portrait re-draws only when the lot changes, so the frame stays
+       * steady while the bidding goes on. */
+      if (canDraw && portraitIcon.__item !== item.id) {
+        portraitIcon.textContent = "";
+        portraitIcon.__item = item.id;
+        var ispec = AUD_ITEM_ICON[item.id] || ["chest", audHue];
+        portraitIcon.appendChild(audIcon(ispec[0], ispec[1], 78));
+      }
+      /* The ladder ticks: one rung for every paddle raised on this lot, the
+       * newest ones stamped in as they land. */
+      var rungs = 0;
+      for (var r = 0; r < 4; r += 1) {
+        rungs += audInt(run.lot.counts[r]);
+      }
+      rungs = Math.min(rungs, 14);
+      if (ladder.__count !== rungs) {
+        var prevCount = ladder.__count || 0;
+        ladder.textContent = "";
+        for (var g = 0; g < rungs; g += 1) {
+          node("span", "aud-rung" + (g >= prevCount ? " aud-rung-new" : ""), ladder);
+        }
+        ladder.__count = rungs;
+      }
       var lots = 0;
       var seen = 0;
       for (var i = 0; i < run.seq.length; i += 1) {
@@ -1294,6 +1559,12 @@
       }
       foeBox.hidden = cmdRow.hidden = queueLine.hidden = !fighting;
       campBox.hidden = !camping;
+      var wantIcon = camping ? "flame" : "sword";
+      if (canDraw && stageIconBox.__kind !== wantIcon) {
+        stageIconBox.textContent = "";
+        stageIconBox.__kind = wantIcon;
+        stageIconBox.appendChild(audIcon(wantIcon, wantIcon === "flame" ? 28 : audHue, 74));
+      }
       if (camping) {
         stageHead.textContent = t("audStageCamp") + " " + t("audStageValue", { n: audInt(run.pos) + 1, total: run.seq.length });
         campHead.textContent = t("audCampHead", {
@@ -1316,13 +1587,23 @@
         if (!foe) {
           continue;
         }
+        if (canDraw && foeRows[f].icon.__kind !== foe.kind) {
+          foeRows[f].icon.__kind = foe.kind;
+          foeRows[f].icon.textContent = "";
+          var fspec = AUD_FOE_ICON[foe.kind] || ["skull", 30];
+          foeRows[f].icon.appendChild(audIcon(fspec[0], fspec[1], 72));
+        }
+        foeRows[f].fill.style.width = Math.round(100 * Math.max(0, audInt(foe.hp)) / Math.max(1, audInt(foe.maxHp))) + "%";
+        if (foeRows[f].row.classList) {
+          foeRows[f].row.classList.toggle("is-down", foe.hp <= 0);
+        }
         foeRows[f].name.textContent = spec.gl + " " + t(spec.key);
         foeRows[f].state.textContent = foe.hp > 0 ? t("audFoeState", { hp: t("audHpValue", { n: audInt(foe.hp), max: audInt(foe.maxHp) }), s: audInt(foe.soak) + audInt(foe.guard) }) : t("audFoeDown");
         foeRows[f].intent.textContent = foe.hp > 0 ? intentText(audIntent(foe)) : t("audFoeSilent");
       }
       queueLine.textContent = t("audQueue", { n: plan.length ? plan.map(cmdWord).join(" > ") : t("audNone"), left: Math.max(0, audClamp(stats.ap, 1, 3) - plan.length) });
       resolveBtn.disabled = run.wiped || run.fallen;
-      logLine.textContent = (roundLog.length ? roundLog.join(" / ") + " " : "") + (run.round > 0 ? t("audRoundValue", { n: audInt(run.round), cap: AUD_ROUND_CAP }) : t("audRoundOpen", { n: AUD_ROUND_CAP }));
+      logLine.textContent = (roundLog.length ? roundLog.join(" / ") + " " : "") + (run.round > 0 ? t("audRoundValue", { n: audInt(run.round), cap: AUD_ROUND_CAP }) : t("audRoundOpen", { cap: AUD_ROUND_CAP }));
     }
 
     function refreshPicker() {
@@ -1385,16 +1666,187 @@
       }
     });
 
+    /* ---------------- beats ----------------
+     * Every action lands a visible beat and one voice. The resolvers stay
+     * pure; the panel diffs the previous view against the new run to decide
+     * which beat the change deserves. */
+
+    var audView = null;
+
+    function viewOf() {
+      var v = { purse: 0, hp: 0, phase: "", item: "", price: 0, done: false, winner: -1, high: [0, 0, 0, 0], live: [false, false, false, false], rungs: 0, foes: [], wiped: false, kitCount: 0 };
+      if (!run) {
+        return v;
+      }
+      v.purse = audInt(run.purse);
+      v.hp = audInt(run.hp);
+      v.phase = run.phase;
+      v.wiped = !!run.wiped;
+      v.kitCount = run.kit.length;
+      if (run.lot) {
+        v.item = run.lot.item;
+        v.price = audInt(run.lot.price);
+        v.done = !!run.lot.done;
+        v.winner = audInt(run.lot.winner);
+        v.high = run.lot.high.slice();
+        v.live = run.lot.live.slice();
+        for (var i = 0; i < 4; i += 1) {
+          v.rungs += audInt(run.lot.counts[i]);
+        }
+      }
+      v.foes = (run.foes || []).map(function (foe) {
+        return audInt(foe.hp);
+      });
+      return v;
+    }
+
+    /* A new lot comes to the block: the counter deals itself in. */
+    function dealLotIn() {
+      fx.pop(portrait, { scale: 1.12, ms: 300 });
+      fx.stagger([lotTop, counter, bidRow], { step: 55, ms: 300 });
+      playSfx("flip");
+    }
+
+    /* The hammer fell: won is a coin beat, lost is a shake. */
+    function settleLot(prev) {
+      var sold = run.sale;
+      if (run.lot.winner === 0) {
+        fx.ring(portrait, { hue: 48 });
+        fx.burst(portrait, { kind: "spark", count: 16, hue: 46 });
+        fx.pop(portrait, { scale: 1.15 });
+        fx.floatText(counter, "-" + coins(sold ? sold.price : run.lot.price), { kind: "bad" });
+        playSfx("coin");
+      } else if (audInt(prev.high[0]) > 0 || run.lot.fold === 0) {
+        fx.shake(lotBox, { dist: 7 });
+        playSfx("wrong");
+      } else {
+        fx.pop(counter, { scale: 1.08 });
+        playSfx("land");
+      }
+      if (sold && sold.winner >= 0) {
+        later(function () {
+          fx.pop(saleBox, { scale: 1.03, ms: 220 });
+        }, 140);
+      }
+    }
+
+    /* One round at a door: strikes shake their target, a kill bursts, damage
+     * to the party jolts the hall. */
+    function fightBeats(prev) {
+      var hurt = audInt(run.hp) < audInt(prev.hp);
+      var healed = audInt(run.hp) > audInt(prev.hp);
+      var hit = -1;
+      var down = -1;
+      for (var i = 0; i < run.foes.length && i < foeRows.length; i += 1) {
+        var now = audInt(run.foes[i].hp);
+        var was = prev.foes[i] === undefined ? now : audInt(prev.foes[i]);
+        if (now <= 0 && was > 0) {
+          down = i;
+        } else if (now < was) {
+          hit = i;
+        }
+      }
+      if (hurt) {
+        fx.jolt(stageBox, { dist: 5 });
+        fx.flash(stageBox, { hue: 4 });
+        fx.floatText(hpEl, "-" + (audInt(prev.hp) - audInt(run.hp)), { kind: "bad" });
+      }
+      if (hit >= 0) {
+        fx.shake(foeRows[hit].row, { dist: 5, ms: 240 });
+        fx.floatText(foeRows[hit].row, "-" + (audInt(prev.foes[hit]) - audInt(run.foes[hit].hp)), { kind: "good" });
+      }
+      if (down >= 0) {
+        fx.burst(foeRows[down].row, { kind: "ember", count: 14, hue: 22 });
+      }
+      if (run.wiped) {
+        fx.ring(stageBox);
+        playSfx("clear");
+      } else {
+        playSfx(hurt ? "hit" : down >= 0 ? "hit" : hit >= 0 ? "hit" : healed ? "heal" : "tick");
+      }
+    }
+
+    function beats(prev) {
+      if (!run) {
+        return;
+      }
+      if (prev && prev.phase && prev.phase !== run.phase && run.phase === "fight") {
+        /* Marching through a door deals the pack in. */
+        var incoming = [];
+        foeRows.forEach(function (row) {
+          if (!row.row.hidden) {
+            incoming.push(row.row);
+          }
+        });
+        fx.stagger(incoming, { kind: "drop", step: 60, ms: 320 });
+        playSfx("danger");
+      }
+      if (run.phase !== "bid" || !run.lot) {
+        if (run.phase === "fight" && prev && (prev.phase === "fight" || prev.wiped)) {
+          fightBeats(prev);
+        }
+        return;
+      }
+      var lot = run.lot;
+      if (!prev || prev.phase !== "bid" || prev.item !== lot.item) {
+        if (prev) {
+          dealLotIn();
+        }
+        return;
+      }
+      /* Mid-lot: folds shake their seat, raises tick the ladder, and the
+       * hammer settles the lot with a coin beat or a shake. */
+      var folded = -1;
+      var s;
+      for (s = 0; s < 4; s += 1) {
+        if (prev.live[s] && !lot.live[s]) {
+          folded = s;
+          fx.shake(bidderRows[s].row, { dist: 5 });
+        }
+      }
+      if (lot.done && !prev.done) {
+        settleLot(prev);
+        return;
+      }
+      var raised = -1;
+      for (s = 0; s < 4; s += 1) {
+        if (audInt(lot.high[s]) > audInt(prev.high[s])) {
+          raised = s;
+        }
+      }
+      if (folded === 0) {
+        playSfx("miss");
+      } else if (raised === 0) {
+        fx.pop(counter, { scale: 1.1 });
+        fx.floatText(counter, "+" + coins(bidAmount()), {});
+        playSfx("tap");
+      } else if (raised > 0) {
+        fx.pop(counter, { scale: 1.06, ms: 180 });
+        fx.pop(bidderRows[raised].row, { scale: 1.03, ms: 200 });
+        playSfx("tick");
+      } else if (folded > 0) {
+        playSfx("miss");
+      }
+    }
+
     function render() {
       if (!run) {
         return;
       }
-      renderHud();
-      renderLot();
+      var prev = audView;
+      beats(prev);
+      renderHud(prev);
+      renderLot(prev);
       renderBidders();
       renderStage();
       refreshPicker();
+      audView = viewOf();
     }
+
+    /* Drawer pause: cancel pending beat timers, keep the run itself intact. */
+    App.quietResetAuctionDungeon = function () {
+      clearFxTimers();
+    };
 
     startRun();
   }

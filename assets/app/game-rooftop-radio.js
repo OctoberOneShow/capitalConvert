@@ -291,6 +291,7 @@
       var geo = geometry();
       var time = Date.now();
       ctx.clearRect(0, 0, rrSize, rrSize);
+      if (App.world) { App.world.backdrop(ctx, rrSize, rrSize, "city"); }
       /* City blocks: a faint grid with every street drawn. */
       ctx.fillStyle = "rgba(15, 23, 42, 0.55)";
       ctx.fillRect(geo.x0, geo.y0, geo.span, geo.span);

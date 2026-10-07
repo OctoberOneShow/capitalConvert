@@ -326,6 +326,7 @@
     function draw() {
       var time = Date.now();
       ctx.clearRect(0, 0, cgfWidth, cgfHeight);
+      if (App.world) { App.world.backdrop(ctx, cgfWidth, cgfHeight, "space"); }
       /* Starfield */
       cgfStars.forEach(function (star) {
         ctx.globalAlpha = 0.25 + 0.25 * Math.sin(time / 700 + star.p);

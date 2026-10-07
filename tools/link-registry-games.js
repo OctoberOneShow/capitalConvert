@@ -23,7 +23,7 @@ const PAGES = [
   "chinese_punctuation.html",
   "words_replacing.html",
 ];
-const VERSION = 61;
+const VERSION = 62;
 const APP_DIR = path.join(root, "assets", "app");
 const CSS_DIR = path.join(root, "tools", "tmp-css");
 const GAMES_CSS = path.join(root, "assets", "styles", "games.css");
@@ -160,13 +160,17 @@ function mergeCss() {
   const refreshed = [];
 
   sheets.forEach((name) => {
-    const banner = `/* ${name.replace(/\.css$/, "")} (registry game) */`;
-    const body = fs
-      .readFileSync(path.join(CSS_DIR, name), "utf8")
+    const stem = name.replace(/\.css$/, "");
+    const raw = fs.readFileSync(path.join(CSS_DIR, name), "utf8").replace(/\r\n/g, "\n");
+    /* A sheet may already open with its own banner naming it; that form wins so
+     * a registry game keeps "(registry game)" and a moved-out hand-wired game
+     * keeps "(drawer game)" without either being rewritten on every merge. */
+    const own = raw.match(/^\/\* ([a-z0-9-]+) \((?:registry|drawer) game\) \*\//);
+    const banner = own && own[1] === stem ? own[0] : `/* ${stem} (registry game) */`;
+    const body = raw
       .trim()
-      /* A sheet may still carry its own banner line from authoring; the merged
-       * block adds the header, so the sheet's copy is dropped here. */
-      .replace(/^\/\*[^*]*\(registry game\) \*\/\r?\n/, "")
+      /* The merged block adds the header, so the sheet's copy is dropped here. */
+      .replace(/^\/\*[^*]*\((?:registry|drawer) game\) \*\/\r?\n?/, "")
       .replace(/\r\n/g, "\n")
       .split("\n")
       .join(eol);
@@ -183,11 +187,11 @@ function mergeCss() {
      * finds the banner doubled - or the whole block repeated by an earlier
      * merge - heals the region in one shot instead of growing it again. */
     const tail = css.slice(at + banner.length);
-    const headerPattern = /\/\* ([a-z0-9-]+) \(registry game\) \*\//g;
+    const headerPattern = /\/\* ([a-z0-9-]+) \((?:registry|drawer) game\) \*\//g;
     let end = css.length;
     let header;
     while ((header = headerPattern.exec(tail))) {
-      if (header[1] !== name.replace(/\.css$/, "")) {
+      if (header[1] !== stem) {
         end = at + banner.length + header.index;
         break;
       }

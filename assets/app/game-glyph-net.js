@@ -391,6 +391,7 @@
       var geo = geometry();
       var lit = powered();
       ctx.clearRect(0, 0, netSize, netSize);
+      if (App.world) { App.world.backdrop(ctx, netSize, netSize, "laboratory"); }
       for (var i = 0; i < size * size; i += 1) {
         var x = i % size;
         var y = Math.floor(i / size);

@@ -254,6 +254,7 @@
 
     function draw() {
       ctx.clearRect(0, 0, leapWidth, leapHeight);
+      if (App.world) { App.world.backdrop(ctx, leapWidth, leapHeight, "forest"); }
       ctx.save();
       ctx.translate(0, -camY);
       /* Height guide lines every 250 units once the climb starts. */

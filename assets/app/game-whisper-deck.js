@@ -861,6 +861,14 @@
           l: card.lane >= 0 ? wsdLaneText(card.lane) : "\u00b0",
           e: wsdCopy(card),
         });
+        if (App.art) {
+          button.textContent = "";
+          var cost = document.createElement("span"); cost.className = "world-card-cost"; cost.textContent = String(card.cost); button.appendChild(cost);
+          button.appendChild(App.art.icon(card.type === TYPES.strike ? "sword" : card.type === TYPES.guard ? "shield" : "wave", { hue: card.type === TYPES.strike ? 340 : card.type === TYPES.guard ? 175 : 265, cls: "world-card-art" }));
+          var name = document.createElement("strong"); name.className = "world-card-name"; name.textContent = t("wsdC" + id); button.appendChild(name);
+          var effect = document.createElement("span"); effect.className = "world-card-effect"; effect.textContent = wsdCopy(card); button.appendChild(effect);
+          var echo = document.createElement("span"); echo.className = "world-card-echo"; echo.textContent = wsdEchoCopy(card); button.appendChild(echo);
+        }
         button.className = "wsd-card wsd-" + card.type + (blocked ? " wsd-dud" : "") + (armed ? " wsd-armed" : "");
         button.disabled = false;
         button.setAttribute("aria-label", t("wsdCardAria", {

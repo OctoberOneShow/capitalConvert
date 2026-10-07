@@ -13,6 +13,31 @@
 
   var arcClueTotal = 5;
 
+  /* Presentation-only fallbacks: the isolated verifier boots without the feel
+   * layer, so every beat below has to be allowed to simply not happen. */
+  function noop() {}
+
+  function motionOff() {
+    return App.isMotionOff
+      ? App.isMotionOff()
+      : document.documentElement.getAttribute("data-motion") === "off";
+  }
+
+  /* One motif per room, ending, item and clue tile, so the satchel reads as
+   * objects rather than sentences. Keys are story data names - the maps only
+   * choose pictures, never behaviour. */
+  var arcRoomArt = { front: "lantern", plant: "gear", stacks: "book", ledger: "chest", roof: "moon" };
+  var arcSceneArt = {
+    front: { icon: "lantern", minis: ["envelope", "key"], pattern: "felt" },
+    plant: { icon: "gear", minis: ["bolt", "valve"], pattern: "planks" },
+    stacks: { icon: "book", minis: ["scroll", "quill"], pattern: "weave" },
+    ledger: { icon: "chest", minis: ["book", "coin"], pattern: "marble" },
+    roof: { icon: "moon", minis: ["rain", "cloud"], pattern: "stars" },
+  };
+  var arcEndingArt = { ledger: "book", roof: "moon", secret: "crystal" };
+  var arcItemArt = { key: "key", card: "card", lamp: "lantern", rope: "chain", chit: "stamp", tea: "flask", ledger: "book" };
+  var arcClueArt = { c1: "card", c2: "map", c3: "scroll", c4: "magnifier", c5: "wave" };
+
   /* Same map, five escalating nights; the star bands are measured off the
    * solved minimum turn count for each goal, not authored here. */
   var arcLevels = [
@@ -581,6 +606,47 @@
     var bands = arcBands(level.goal);
     var over = false;
 
+    var art = App.art;
+    var fx = App.fx || {
+      pop: noop,
+      shake: noop,
+      ring: noop,
+      burst: noop,
+      floatText: noop,
+      stagger: noop,
+      countUp: noop,
+      sweep: noop,
+      jolt: noop,
+      flash: noop,
+      ceremony: noop,
+    };
+    var playSfx = App.playSfx || noop;
+    var canDraw = !!(art && art.icon && art.scene && art.pattern);
+    var hue = 42;
+    /* Deferred beats. The ending ceremony must not fire inside the click's own
+     * dispatch: the host dismisses a ceremony on click, and the very event that
+     * ended the night is still bubbling when the listener is registered. */
+    var fxTimers = [];
+
+    function later(fn, ms) {
+      var id = window.setTimeout(function () {
+        var at = fxTimers.indexOf(id);
+        if (at >= 0) {
+          fxTimers.splice(at, 1);
+        }
+        fn();
+      }, ms);
+      fxTimers.push(id);
+      return id;
+    }
+
+    function clearFxTimers() {
+      fxTimers.forEach(function (id) {
+        window.clearTimeout(id);
+      });
+      fxTimers = [];
+    }
+
     /* --- markup ---------------------------------------------------------- */
     var hud = document.createElement("div");
     hud.className = "game-hud";
@@ -599,13 +665,24 @@
     stage.className = "arc-stage";
     stage.setAttribute("tabindex", "0");
     stage.setAttribute("aria-label", t("arcFieldLabel"));
+    /* The illustrated strip above the prose: patterned ground, the room's motif
+     * and two small props, rebuilt whenever the story changes rooms. */
+    var sceneStrip = document.createElement("div");
+    sceneStrip.className = "arc-scene";
+    var roomLine = document.createElement("div");
+    roomLine.className = "arc-roomline";
+    var roomMark = document.createElement("div");
+    roomMark.className = "arc-roommark";
     var roomTitle = document.createElement("p");
     roomTitle.className = "arc-room";
+    roomLine.appendChild(roomMark);
+    roomLine.appendChild(roomTitle);
     var prose = document.createElement("p");
     prose.className = "arc-prose";
     var choiceBox = document.createElement("div");
     choiceBox.className = "arc-choices";
-    stage.appendChild(roomTitle);
+    stage.appendChild(sceneStrip);
+    stage.appendChild(roomLine);
     stage.appendChild(prose);
     stage.appendChild(choiceBox);
 
@@ -662,6 +739,22 @@
     [hud, wrap, result, nightRow, actions, hint].forEach(function (node) {
       panelEl.appendChild(node);
     });
+
+    if (canDraw) {
+      /* A corridor of shelves behind everything: the archive at night, one
+       * warm lamp down the hall. */
+      var backdrop = document.createElement("div");
+      backdrop.className = "arc-backdrop";
+      backdrop.setAttribute("aria-hidden", "true");
+      backdrop.appendChild(art.scene("dungeon", { hue: hue, sat: 46 }));
+      panelEl.insertBefore(backdrop, panelEl.firstChild);
+    }
+
+    function arcIcon(name, opts) {
+      var o = opts || {};
+      o.hue = hue;
+      return art.icon(art.has(name) ? name : "sparkle", o);
+    }
 
     function makeStat(key, valueEl) {
       var stat = document.createElement("div");
@@ -749,60 +842,159 @@
       });
     }
 
-    /* The standing report: rooms mapped, satchel, clues. Nothing is ever asked
-     * of the player's memory. */
+    /* The standing report: rooms mapped, satchel, clues - each entry a drawn
+     * chip rather than a word, because objects should look like objects.
+     * Nothing is ever asked of the player's memory. */
+    function renderChips(body, entries, emptyLabel) {
+      body.textContent = "";
+      if (!entries.length) {
+        body.textContent = emptyLabel;
+        return;
+      }
+      for (var i = 0; i < entries.length; i += 1) {
+        var chip = document.createElement("span");
+        chip.className = "arc-chip";
+        if (canDraw && entries[i].icon) {
+          var ico = document.createElement("span");
+          ico.className = "arc-chip-ico";
+          ico.appendChild(arcIcon(entries[i].icon, { sat: 62, tone: "soft" }));
+          chip.appendChild(ico);
+        }
+        var label = document.createElement("span");
+        label.textContent = entries[i].label;
+        chip.appendChild(label);
+        body.appendChild(chip);
+      }
+    }
+
     function renderLedger(visited) {
-      roomsRow.body.textContent = joinList(mapRooms(visited));
+      var roomChips = [];
+      var order = ["front", "plant", "stacks", "ledger", "roof"];
+      for (var i = 0; i < order.length; i += 1) {
+        if (visited[order[i]]) {
+          roomChips.push({ icon: arcRoomArt[order[i]], label: roomLabel(order[i]) });
+        }
+      }
+      renderChips(roomsRow.body, roomChips, t("arcRoomsNone"));
       var kit = [];
       var key;
       for (key in state.items) {
         if (Object.prototype.hasOwnProperty.call(state.items, key)) {
-          kit.push(itemLabel(key));
+          kit.push({ icon: arcItemArt[key], label: itemLabel(key) });
         }
       }
-      kitRow.body.textContent = kit.length ? kit.join(" \u00b7 ") : t("arcKitEmpty");
+      renderChips(kitRow.body, kit, t("arcKitEmpty"));
       var found = [];
       for (key in state.clues) {
         if (Object.prototype.hasOwnProperty.call(state.clues, key)) {
-          found.push(clueLabel(key));
+          found.push({ icon: arcClueArt[key], label: clueLabel(key) });
         }
       }
-      cluesRow.body.textContent = found.length ? found.join(" \u00b7 ") : t("arcClueNone");
+      renderChips(cluesRow.body, found, t("arcClueNone"));
     }
 
     var visitedRooms = {};
 
-    function mapRooms(visited) {
-      var names = [];
-      var order = ["front", "plant", "stacks", "ledger", "roof"];
-      for (var i = 0; i < order.length; i += 1) {
-        if (visited[order[i]]) {
-          names.push(roomLabel(order[i]));
-        }
+    var shownTurns = 0;
+    var shownClues = 0;
+
+    function renderHud(roll) {
+      var clues = arcCount(state.clues);
+      if (roll) {
+        fx.countUp(turnEl, shownTurns, state.turns);
+        fx.countUp(clueEl, shownClues, clues, {
+          format: function (v) {
+            return v + "/" + arcClueTotal;
+          },
+        });
+      } else {
+        turnEl.textContent = String(state.turns);
+        clueEl.textContent = clues + "/" + arcClueTotal;
       }
-      return names;
-    }
-
-    function joinList(list) {
-      return list.length ? list.join(" \u00b7 ") : t("arcRoomsNone");
-    }
-
-    function renderHud() {
-      turnEl.textContent = String(state.turns);
-      clueEl.textContent = arcCount(state.clues) + "/" + arcClueTotal;
+      shownTurns = state.turns;
+      shownClues = clues;
       var node = arcNode(state.node);
       roomEl.textContent = node ? roomLabel(node.room) : "-";
       goalEl.textContent = goalLabel(level.goal);
     }
 
+    var currentRoomKey = "";
+
+    function roomArtKey(node) {
+      if (node && node.ending && arcEndingArt[node.ending]) {
+        return "end-" + node.ending;
+      }
+      return node ? node.room : "front";
+    }
+
+    /* The picture of where you are: medallion beside the title, patterned strip
+     * with the room's motif and props above it. Rebuilt only when the room or
+     * ending actually changes, so revisits do not flicker. */
+    function renderRoomArt(node) {
+      if (state.flags.power) {
+        stage.classList.add("is-lit");
+      } else {
+        stage.classList.remove("is-lit");
+      }
+      var key = roomArtKey(node);
+      if (!canDraw || key === currentRoomKey) {
+        return;
+      }
+      currentRoomKey = key;
+      var spec = arcSceneArt[node ? node.room : "front"] || arcSceneArt.front;
+      var mainIcon = (node && node.ending && arcEndingArt[node.ending]) || spec.icon;
+      sceneStrip.textContent = "";
+      sceneStrip.appendChild(art.pattern(spec.pattern, { hue: hue, sat: 40, tile: 22 }));
+      var mainBox = document.createElement("div");
+      mainBox.className = "arc-scene-main";
+      mainBox.appendChild(arcIcon(mainIcon, { sat: 66 }));
+      sceneStrip.appendChild(mainBox);
+      for (var i = 0; i < spec.minis.length; i += 1) {
+        var mini = document.createElement("div");
+        mini.className = "arc-scene-mini arc-scene-mini-" + (i + 1);
+        mini.appendChild(arcIcon(spec.minis[i], { sat: 52, tone: "soft" }));
+        sceneStrip.appendChild(mini);
+      }
+      roomMark.textContent = "";
+      roomMark.appendChild(arcIcon(mainIcon, { sat: 66 }));
+      fx.pop(sceneStrip, { scale: 1.02, ms: 240 });
+    }
+
+    /* The genre's signature move: the room changes and the passage arrives like
+     * ink settling rather than a swap of text. Guarded like every fx call so
+     * [data-motion="off"] holds the page still. */
+    function inkIn(el) {
+      if (motionOff() || !el || typeof el.animate !== "function") {
+        return;
+      }
+      try {
+        el.animate([
+          { opacity: 0, transform: "translateY(7px)" },
+          { opacity: 1, transform: "translateY(0)" },
+        ], { duration: 420, easing: "cubic-bezier(0.2,0.7,0.3,1)" });
+      } catch (error) {
+        /* animation is decoration */
+      }
+    }
+
+    function setRoom(node) {
+      prose.textContent = node ? (App.currentLang === "zh" ? node.zh : node.en) : "";
+      roomTitle.textContent = node ? roomLabel(node.room) : "";
+      renderRoomArt(node);
+      inkIn(prose);
+      fx.pop(roomMark, { scale: 1.12, ms: 260 });
+    }
+
     /* Choices are real buttons: Tab and Enter come free, and the number keys
-     * are only a shortcut over the same enabled list. */
+     * are only a shortcut over the same enabled list. A fresh room deals its
+     * options in rather than having them appear. */
     function renderChoices() {
       var node = arcNode(state.node);
       choiceBox.textContent = "";
       if (!node) {
         return;
       }
+      var dealt = [];
       for (var i = 0; i < node.choices.length; i += 1) {
         (function (index) {
           var choice = node.choices[index];
@@ -822,8 +1014,16 @@
             btn.disabled = true;
             var why = document.createElement("span");
             why.className = "arc-choice-need";
-            why.textContent = t("arcNeeds", { w: needLabel(choice.need) });
+            if (canDraw) {
+              var lockChip = document.createElement("span");
+              lockChip.className = "arc-need-ico";
+              lockChip.appendChild(arcIcon("lock", { sat: 30 }));
+              why.appendChild(lockChip);
+            }
+            why.appendChild(document.createTextNode(t("arcNeeds", { w: needLabel(choice.need) })));
             btn.appendChild(why);
+          } else {
+            dealt.push(btn);
           }
           btn.addEventListener("click", function () {
             take(index);
@@ -831,6 +1031,7 @@
           choiceBox.appendChild(btn);
         })(i);
       }
+      fx.stagger(dealt, { kind: "drop", step: 42, ms: 300 });
     }
 
     function take(index) {
@@ -844,6 +1045,8 @@
       var choice = node.choices[index];
       if (!arcCan(state, choice)) {
         result.textContent = t("arcLocked", { w: needLabel(choice.need) });
+        fx.shake(stage, { dist: 5 });
+        playSfx("wrong");
         return;
       }
       var before = arcCount(state.clues);
@@ -857,20 +1060,37 @@
       var landed = arcNode(state.node);
       visitedRooms[landed ? landed.room : "front"] = 1;
       var notes = [];
-      if (arcCount(state.clues) > before) {
+      var gainedClue = arcCount(state.clues) > before;
+      var gainedItem = arcKeys(state.items) !== had;
+      var gainedFlag = arcKeys(state.flags) !== hadFlags;
+      if (gainedClue) {
         notes.push(t("arcClueTaken", { n: arcCount(state.clues) }));
       }
-      if (arcKeys(state.items) !== had) {
+      if (gainedItem) {
         notes.push(t("arcNoted"));
       }
-      if (arcKeys(state.flags) !== hadFlags) {
+      if (gainedFlag) {
         notes.push(t("arcFlagUp", { w: flagLabel(arcDiffKey(hadFlags, state.flags)) }));
       }
-      prose.textContent = landed ? (App.currentLang === "zh" ? landed.zh : landed.en) : "";
-      roomTitle.textContent = landed ? roomLabel(landed.room) : "";
+      setRoom(landed);
       renderChoices();
       renderLedger(visitedRooms);
-      renderHud();
+      renderHud(true);
+      /* The beat: one voice for the kind of thing that happened, and a ring on
+       * whichever line of the ledger just changed. */
+      playSfx(gainedFlag ? "levelup" : gainedClue ? "match" : gainedItem ? "coin" : "step");
+      if (gainedClue) {
+        fx.ring(cluesRow.node, { hue: 48 });
+        fx.floatText(cluesRow.node, "+1", { kind: "good", hue: 48 });
+      }
+      if (gainedItem) {
+        fx.ring(kitRow.node, { hue: 46 });
+        fx.pop(kitRow.node, { scale: 1.03, ms: 220 });
+      }
+      if (gainedFlag) {
+        fx.burst(stage, { kind: "spark", count: 16, hue: hue });
+        fx.ring(stage, { hue: hue });
+      }
       if (landed && landed.ending) {
         conclude(landed, notes);
         return;
@@ -887,9 +1107,12 @@
           want: goalLabel(level.goal),
           n: state.turns,
         });
+        fx.shake(stage, { dist: 6 });
+        playSfx("wrong");
         return;
       }
       over = true;
+      stage.classList.add("is-over");
       var starsWon = starsFor(state.turns, bands, "low");
       var outcome = campaign.record(level.id, { stars: starsWon, best: state.turns, better: "low" });
       var message = t("arcFiled", {
@@ -907,10 +1130,18 @@
       }
       result.textContent = message;
       logAction(t("logArchiveEscape", { n: state.turns, c: arcCount(state.clues) }));
-      var rect = againBtn.getBoundingClientRect();
-      createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
       petNotifyGame(outcome.isBest || outcome.firstClear);
       refreshPicker();
+      /* The night files itself: the ending arrives as a ceremony over the whole
+       * panel, stars stamping in, instead of a sentence in the result line. */
+      later(function () {
+        fx.ceremony(panelEl, {
+          tone: "win",
+          stars: starsWon,
+          title: endingLabel(node.ending),
+          lines: [message],
+        });
+      }, 60);
     }
 
     function back() {
@@ -927,11 +1158,11 @@
         turns: state.turns + 1,
       };
       var node = arcNode(previous);
-      prose.textContent = node ? (App.currentLang === "zh" ? node.zh : node.en) : "";
-      roomTitle.textContent = node ? roomLabel(node.room) : "";
+      setRoom(node);
       renderChoices();
-      renderHud();
+      renderHud(true);
       result.textContent = t("arcBack");
+      playSfx("flip");
     }
 
     function speakClues() {
@@ -945,6 +1176,7 @@
       result.textContent = found.length
         ? t("arcClueList", { n: found.length, total: arcClueTotal, list: found.join(" \u00b7 ") })
         : t("arcClueNone");
+      playSfx("tick");
     }
 
     function startNight(def) {
@@ -954,18 +1186,22 @@
       trail = [];
       over = false;
       visitedRooms = { front: 1 };
+      currentRoomKey = "";
+      stage.classList.remove("is-over");
+      clearFxTimers();
       var node = arcNode(state.node);
-      prose.textContent = node ? (App.currentLang === "zh" ? node.zh : node.en) : "";
-      roomTitle.textContent = node ? t("arcRoomFront") : "";
+      setRoom(node);
       renderChoices();
       renderLedger(visitedRooms);
-      renderHud();
+      renderHud(false);
       refreshPicker();
       result.textContent = t("arcObjective", {
         name: t(level.labelKey),
         want: goalLabel(level.goal),
         p: bands[0],
       });
+      /* The night is dealt: HUD, passage and ledger arrive in one cascade. */
+      fx.stagger([hud, wrap, nightRow, actions], { kind: "drop", step: 60, ms: 340 });
     }
 
     /* --- input ----------------------------------------------------------- */
@@ -999,8 +1235,10 @@
     });
 
     /* Pausing leaves the archive exactly as the player left it: only the prose
-     * is restated, because nothing here runs a clock. */
+     * is restated, because nothing here runs a clock. A pending ceremony is
+     * stopped, never the state. */
     App.quietResetArchiveEscape = function () {
+      clearFxTimers();
       if (!over) {
         result.textContent = t("arcPaused", { n: state.turns });
       }

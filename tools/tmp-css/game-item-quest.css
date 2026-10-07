@@ -54,6 +54,28 @@
     box-shadow: 0 2px 6px rgba(15, 23, 42, 0.3);
 }
 
+.iq-pill-time {
+    background: linear-gradient(180deg, hsl(210, 70%, 52%), hsl(210, 75%, 40%));
+    color: hsl(0, 0%, 98%);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.3);
+}
+
+.iq-pill-time.is-low {
+    animation: iq-time-low 0.8s ease-in-out infinite;
+}
+
+@keyframes iq-time-low {
+    0%,
+    100% {
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 0 4px rgba(251, 146, 60, 0.35);
+    }
+}
+
 .iq-pill-score {
     background: linear-gradient(180deg, hsl(45, 85%, 58%), hsl(40, 80%, 46%));
     color: hsl(35, 60%, 18%);

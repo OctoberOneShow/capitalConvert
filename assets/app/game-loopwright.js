@@ -648,6 +648,7 @@
     function draw() {
       var snap = currentSnap();
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (App.world) { App.world.backdrop(ctx, canvas.width, canvas.height, "laboratory"); }
       var x, y;
       for (y = 0; y < lpwSize; y += 1) {
         for (x = 0; x < lpwSize; x += 1) {

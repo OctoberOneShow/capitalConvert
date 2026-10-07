@@ -427,6 +427,43 @@
     var axisNameKeys = ["bldAxisTop", "bldAxisFront", "bldAxisSide"];
     var i;
 
+    /* Feel layer. The studio hue matches the sheet's --gp-hue on this panel and
+     * is re-read from the computed style, so the art follows whichever theme
+     * tokens the shell hands over. */
+    var noop = function () {};
+    var fx = App.fx || {
+      pop: noop, shake: noop, ring: noop, burst: noop, floatText: noop,
+      stagger: noop, countUp: noop, sweep: noop, jolt: noop, flash: noop,
+      ceremony: noop,
+    };
+    var playSfx = App.playSfx || noop;
+    var art = App.art;
+    var hue = 42;
+    var fxTimers = [];
+    var fxRound = 0;
+
+    function later(fn, ms) {
+      var round = fxRound;
+      var id = window.setTimeout(function () {
+        var at = fxTimers.indexOf(id);
+        if (at >= 0) fxTimers.splice(at, 1);
+        if (round === fxRound) fn();
+      }, ms);
+      fxTimers.push(id);
+      return id;
+    }
+
+    function clearFxTimers() {
+      while (fxTimers.length) window.clearTimeout(fxTimers.pop());
+    }
+
+    function readHue() {
+      var raw = "";
+      try { raw = window.getComputedStyle(panelEl).getPropertyValue("--gp-hue"); } catch (error) { raw = ""; }
+      var parsed = parseInt(raw, 10);
+      if (!isNaN(parsed)) hue = parsed;
+    }
+
     /* --- helpers: every node through createElement, never innerHTML --- */
     function el(tag, cls, parent, text) {
       var node = document.createElement(tag);
@@ -481,6 +518,92 @@
       while (box.firstChild) box.removeChild(box.firstChild);
     }
 
+    /* --- drawing: the sculpture itself, in raw createElementNS --- */
+    var SVG_NS = "http://www.w3.org/2000/svg";
+
+    function svgTag(name, attrs) {
+      var node = document.createElementNS(SVG_NS, name);
+      if (attrs) {
+        for (var key in attrs) {
+          if (Object.prototype.hasOwnProperty.call(attrs, key)) {
+            node.setAttribute(key, String(attrs[key]));
+          }
+        }
+      }
+      return node;
+    }
+
+    /* One carved block: three bevelled faces plus a chisel nick, tilted a few
+     * deterministic degrees per cell so the stack reads as hand-set, not stamped.
+     * Face colours come from CSS vars, so both themes repaint it for free. */
+    function bldCubeEl(cell) {
+      var svg = svgTag("svg", {
+        viewBox: "0 0 48 48", "class": "bld-cube",
+        "aria-hidden": "true", focusable: "false",
+      });
+      var tilt = ((cell * 47) % 7) - 3;
+      if (tilt) svg.style.transform = "rotate(" + tilt + "deg)";
+      svg.appendChild(svgTag("path", { d: "M24 5 42 14 24 23 6 14Z", "class": "bld-face-top" }));
+      svg.appendChild(svgTag("path", { d: "M6 14 24 23v19L6 33Z", "class": "bld-face-left" }));
+      svg.appendChild(svgTag("path", { d: "M42 14 24 23v19l18-9Z", "class": "bld-face-right" }));
+      svg.appendChild(svgTag("path", {
+        d: "M17 19.5 21 21.5M31 19.5 27 21.5M24 24.5v3",
+        "class": "bld-face-nick", fill: "none",
+      }));
+      return svg;
+    }
+
+    /* The studio scene the panel opens on: bench, plinth, the solid still
+     * shrouded in dashed wireframe with its unknown faces hatched, and the
+     * tools waiting. Purely decorative, so it stays aria-hidden and carries no
+     * words that would need translating. */
+    function bldSceneEl() {
+      var svg = svgTag("svg", {
+        viewBox: "0 0 340 84", "class": "bld-scene-art",
+        "aria-hidden": "true", focusable: "false",
+      });
+      /* the hidden solid: dashed wireframe, hatched unknown faces, one glyph.
+       * Drawn before the plinth so its base is tucked behind the lip. */
+      svg.appendChild(svgTag("path", { d: "M80 6 101 16 80 26 59 16Z", "class": "bld-solid" }));
+      svg.appendChild(svgTag("path", { d: "M59 16 80 26v18L59 34Z", "class": "bld-solid" }));
+      svg.appendChild(svgTag("path", { d: "M101 16 80 26v18l21-10Z", "class": "bld-solid" }));
+      svg.appendChild(svgTag("path", { d: "M64 21 72 17M64 27l8 4", "class": "bld-hatch" }));
+      svg.appendChild(svgTag("path", { d: "M86 30.5 95 34.5", "class": "bld-hatch" }));
+      var q = svgTag("text", { x: 80, y: 19, "text-anchor": "middle", "class": "bld-q" });
+      q.textContent = "?";
+      svg.appendChild(q);
+      /* plinth with a lip over the solid's base */
+      svg.appendChild(svgTag("rect", { x: 48, y: 38, width: 64, height: 8, rx: 2, "class": "bld-plinth-lip" }));
+      svg.appendChild(svgTag("path", { d: "M54 46h52l-4 12H58Z", "class": "bld-plinth" }));
+      /* workbench */
+      svg.appendChild(svgTag("path", { d: "M8 58h324v6H8Z", "class": "bld-bench-top" }));
+      svg.appendChild(svgTag("path", { d: "M8 64h324l-10 16H18Z", "class": "bld-bench-face" }));
+      /* chisel and mallet, laid down between cuts */
+      svg.appendChild(svgTag("g", { transform: "rotate(-14 190 47)", "class": "bld-tool" }));
+      var tool = svg.lastChild;
+      tool.appendChild(svgTag("path", { d: "M158 44l-12 3 12 3z", "class": "bld-chisel-tip" }));
+      tool.appendChild(svgTag("rect", { x: 156, y: 44, width: 62, height: 6, rx: 3, "class": "bld-chisel" }));
+      svg.appendChild(svgTag("g", { transform: "rotate(16 252 30)", "class": "bld-tool" }));
+      tool = svg.lastChild;
+      tool.appendChild(svgTag("rect", { x: 240, y: 14, width: 30, height: 16, rx: 3, "class": "bld-mallet" }));
+      tool.appendChild(svgTag("rect", { x: 252, y: 30, width: 6, height: 26, rx: 2.6, "class": "bld-chisel" }));
+      /* stone dust: a pile and motes that drift while the bench waits */
+      svg.appendChild(svgTag("ellipse", { cx: 80, cy: 59, rx: 26, ry: 3, "class": "bld-dust" }));
+      svg.appendChild(svgTag("circle", { cx: 130, cy: 36, r: 1.6, "class": "bld-mote" }));
+      svg.appendChild(svgTag("circle", { cx: 146, cy: 22, r: 1.1, "class": "bld-mote bld-mote-slow" }));
+      svg.appendChild(svgTag("circle", { cx: 118, cy: 14, r: 1.3, "class": "bld-mote bld-mote-slow" }));
+      svg.appendChild(svgTag("circle", { cx: 290, cy: 20, r: 1.4, "class": "bld-mote" }));
+      return svg;
+    }
+
+    function mountBackdrop() {
+      if (!art || typeof art.pattern !== "function") return;
+      var layer = el("div", "bld-backdrop");
+      layer.setAttribute("aria-hidden", "true");
+      layer.appendChild(art.pattern("marble", { hue: hue, sat: 30, tile: 26 }));
+      panelEl.insertBefore(layer, panelEl.firstChild);
+    }
+
     /* --- markup, in the drawer's panel order --- */
     var hud = el("div", "game-hud", panelEl);
     var probesEl = el("strong");
@@ -503,6 +626,7 @@
         if (!st) return;
         st.axis = axis;
         renderAll();
+        playSfx("click");
       });
       node.setAttribute("data-axis", axis);
       axisEls.push(node);
@@ -515,6 +639,7 @@
           if (!st) return;
           st.index = n;
           renderAll();
+          playSfx("click");
         });
         el("span", "bld-idx-num", node.firstChild, String(n + 1));
         indexEls.push(node);
@@ -567,8 +692,8 @@
 
     var actions = el("div", "game-actions", panelEl);
     var submitBtn = btn("primary", actions, "bldBtnSubmit", submitBuild);
-    btn("", actions, "bldBtnClear", clearBuild);
-    btn("", actions, "bldBtnReveal", revealBlock);
+    var clearBtn = btn("", actions, "bldBtnClear", clearBuild);
+    var revealBtn = btn("", actions, "bldBtnReveal", revealBlock);
     btn("", actions, "btnNewRound", function () {
       var id = st ? st.def.id : campaign.nextLevelId();
       rounds[id] = (rounds[id] || 0) + 1;
@@ -577,6 +702,15 @@
     var bestEl = el("p", "game-best", actions);
 
     lab("p", "game-hint", panelEl, "bldHint");
+
+    /* First paint carries the room: marble backdrop, the studio scene above the
+     * HUD, then the bench plates. All decorative and hue-driven. */
+    readHue();
+    mountBackdrop();
+    var scene = el("div", "bld-scene");
+    scene.setAttribute("aria-hidden", "true");
+    scene.appendChild(bldSceneEl());
+    panelEl.insertBefore(scene, hud);
 
     /* --- state reads --- */
     function levelOf(id) {
@@ -629,10 +763,17 @@
       if (at >= 0) {
         st.pin = at;
         say("bldAlready", { key: st.notes[at].key, n: st.notes[at].filled });
+        fx.shake(indexEls[st.index], { dist: 4 });
+        playSfx("miss");
         renderAll();
         return;
       }
-      if (st.probes <= 0) { say("bldNoProbe"); return; }
+      if (st.probes <= 0) {
+        say("bldNoProbe");
+        fx.shake(probeBtn, { dist: 5 });
+        playSfx("miss");
+        return;
+      }
       var slice = sculptorSlice(st.mask, st.axis, st.index);
       st.probes -= 1;
       st.notes.push({
@@ -645,6 +786,17 @@
       if (status.unique) result.textContent += " " + t("bldOnlyOne");
       else if (st.probes <= 0) result.textContent += " " + t("bldNoProbe");
       renderAll();
+      /* The reading lands as a beat: the fresh digits stamp in one by one
+       * inside a ring, the spent probe counter punches, and a breakthrough
+       * gets its own voice instead of the dust-hiss of an ordinary cut. */
+      fx.ring(readGrid, { hue: hue });
+      fx.stagger(readSpans, { step: 26, kind: "drop" });
+      fx.pop(probesEl, { scale: 1.2, ms: 220 });
+      playSfx(status.unique ? "match" : "flip");
+      if (status.unique) {
+        fx.ring(shapesEl, { hue: hue + 40 });
+        fx.pop(shapesEl, { scale: 1.3, ms: 300 });
+      }
     }
 
     /* --- the player's own grid --- */
@@ -656,11 +808,20 @@
       if (st.build[cell]) {
         st.build[cell] = 0;
         st.placed -= 1;
+        renderAll();
+        fx.pop(cellEls[cell], { scale: 0.88, ms: 180 });
+        fx.burst(cellEls[cell], { kind: "spark", count: 4, hue: hue });
+        playSfx("tap");
       } else {
         st.build[cell] = 1;
         st.placed += 1;
+        renderAll();
+        /* Carving: the block stamps in while stone chips spray off it, with
+         * the percussive knock of a chisel as the one voice. */
+        fx.pop(cellEls[cell], { scale: 1.24, ms: 260 });
+        fx.burst(cellEls[cell], { kind: "spark", count: 7, hue: hue + 6 });
+        playSfx("hit");
       }
-      renderAll();
     }
 
     function clearBuild() {
@@ -672,6 +833,8 @@
       st.placed = 0;
       say("bldCleared", { shapes: cover().shapes });
       renderAll();
+      fx.sweep(build);
+      playSfx("flip");
     }
 
     /* A reveal buys one true cell outright - useful, never required. */
@@ -680,26 +843,43 @@
       if (st.phase !== "play") { say("bldDone"); return; }
       if (st.probes < bldRevealCost) {
         say("bldRevealCost", { n: bldRevealCost, left: st.probes });
+        fx.shake(revealBtn, { dist: 5 });
+        playSfx("miss");
         return;
       }
       var status = cover(), found = -1, i;
       for (i = 0; i < bldCells; i += 1) {
         if ((st.mask & (1 << i)) && !(status.covered & (1 << i))) { found = i; break; }
       }
-      if (found < 0) { say("bldRevealNone", { shapes: status.shapes }); return; }
+      if (found < 0) {
+        say("bldRevealNone", { shapes: status.shapes });
+        fx.shake(revealBtn, { dist: 4 });
+        playSfx("miss");
+        return;
+      }
       st.probes -= bldRevealCost;
       st.hintMask |= 1 << found;
       st.hints.push(t("bldReveal", { where: bldWhere(found) }) + " " + t("bldRevealPaid", { n: bldRevealCost, left: st.probes }));
       renderAll();
+      fx.ring(notebook, { hue: hue + 30 });
+      fx.pop(notebook.lastElementChild, { scale: 1.05, ms: 240 });
+      playSfx("heal");
     }
 
     /* --- submitting --- */
     function submitBuild() {
       if (!st) return;
       if (st.phase !== "play") { say("bldDone"); return; }
-      if (st.placed <= 0) { say("bldEmptyBuild"); return; }
+      if (st.placed <= 0) {
+        say("bldEmptyBuild");
+        fx.shake(submitBtn, { dist: 5 });
+        playSfx("miss");
+        return;
+      }
       if (st.placed !== st.blocks) {
         say("bldWrongCount", { n: st.placed, blocks: st.blocks });
+        fx.shake(submitBtn, { dist: 5 });
+        playSfx("miss");
         return;
       }
       var diff = bldDiff(st.mask, buildMask());
@@ -711,6 +891,11 @@
         list: bldWhereList(diff.miss.concat(diff.extra)),
       });
       renderAll();
+      /* A wrong cut: the whole bench rattles, a red wash flashes across it and
+         the dull "no" voice answers - the mistake should feel like one. */
+      fx.shake(build, { dist: 7 });
+      fx.flash(build, { hue: 0 });
+      playSfx("wrong");
     }
 
     function winRound() {
@@ -728,11 +913,36 @@
       createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
       petNotifyGame(outcome.isBest || outcome.firstClear);
       renderAll();
+      /* The reveal of the finished form: every carved block punches in from
+       * the floor up, a puff of dust stars crowns it, and only then does the
+       * ceremony land with its star stamping. */
+      var carved = [], i;
+      for (i = 0; i < bldCells; i += 1) if (st.build[i]) carved.push(i);
+      for (i = 0; i < carved.length; i += 1) {
+        (function (cellEl, at) {
+          later(function () {
+            fx.pop(cellEl, { scale: 1.32, ms: 340 });
+          }, at * 46);
+        })(cellEls[carved[i]], i);
+      }
+      playSfx("score");
+      later(function () {
+        fx.burst(build, { kind: "star", count: 14, hue: hue + 24 });
+      }, carved.length * 46 + 80);
+      later(function () {
+        fx.ceremony(panelEl, { tone: "win", title: message, stars: starsWon });
+      }, carved.length * 46 + 560);
     }
 
     function loseRound() {
       st.phase = "lost";
-      say("bldLost", { list: bldWhereList(bldCellListOf(st.mask)), par: st.par });
+      var message = t("bldLost", { list: bldWhereList(bldCellListOf(st.mask)), par: st.par });
+      result.textContent = message;
+      fx.jolt(build, { dist: 7 });
+      fx.flash(build, { hue: 0 });
+      later(function () {
+        fx.ceremony(panelEl, { tone: "lose", title: message, stars: 0 });
+      }, 760);
       renderAll();
     }
 
@@ -826,7 +1036,15 @@
         if (!node) continue;
         on = st.build[i] ? 1 : 0;
         here = st.cursor.x === bldX(i) && st.cursor.y === bldY(i) && st.cursor.z === bldZ(i);
-        node.textContent = on ? "\u25a0" : "\u00b7";
+        if (on && !node.__bldCarved) {
+          clearBox(node);
+          node.appendChild(bldCubeEl(i));
+          node.__bldCarved = true;
+        } else if (!on && (node.__bldCarved || node.textContent !== "\u00b7")) {
+          clearBox(node);
+          node.__bldCarved = false;
+          node.textContent = "\u00b7";
+        }
         node.className = "bld-btn bld-cell" + (on ? " is-on" : "") + (here ? " is-cursor" : "");
         node.setAttribute("aria-pressed", on ? "true" : "false");
         node.setAttribute("aria-label", t("bldCellAria", {
@@ -885,6 +1103,11 @@
       );
       pickSel.value = def.id;
       renderAll();
+      /* A fresh solid arrives as a dealt bench: layers settle in from above
+         instead of the grid simply appearing. */
+      fxRound += 1;
+      clearFxTimers();
+      fx.stagger(cellEls, { kind: "drop", step: 9, ms: 300 });
       say("bldPrompt", {
         name: t(def.labelKey), blocks: def.blocks, probes: budget,
         par: par, note: t(def.noteKey),
@@ -901,6 +1124,7 @@
         event.preventDefault();
         st.axis = bldAxes[(bldAxes.indexOf(st.axis) + step + 3) % 3];
         renderAll();
+        playSfx("click");
         return;
       }
       if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
@@ -920,6 +1144,7 @@
         st.cursor.x = Math.max(0, Math.min(2, st.cursor.x + moves[event.key].x));
         st.cursor.y = Math.max(0, Math.min(2, st.cursor.y + moves[event.key].y));
         renderBuild();
+        playSfx("tick");
         return;
       }
       if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") {
@@ -933,6 +1158,7 @@
         st.cursor.z = Math.max(0, Math.min(2, st.cursor.z + (up ? 1 : -1)));
         renderBuild();
         say("bldLayerNow", { n: st.cursor.z + 1 });
+        playSfx("step");
         return;
       }
       if (event.key === "Escape") {
@@ -952,8 +1178,11 @@
       loadRound(bldLevels[index], rounds[bldLevels[index].id]);
     });
 
-    /* Turn-based with no clock: the readings survive every tab switch whole. */
+    /* Turn-based with no clock: the readings survive every tab switch whole.
+       Pending fx beats are dropped here so nothing fires behind a hidden tab. */
     App.quietResetBlindSculptor = function () {
+      fxRound += 1;
+      clearFxTimers();
       if (st && st.phase === "play") {
         say("bldPaused", { probes: st.probes, shapes: cover().shapes });
       }

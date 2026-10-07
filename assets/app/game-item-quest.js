@@ -19,9 +19,12 @@
 
   var iqMaxHearts = 3;
   var iqMaxHints = 2;
-  /* The ladder: fifty levels. Each pair of decades adds one more item to
-   * hunt, milestone levels run a fourth round, and names compose from five
-   * tier adjectives across ten venues. */
+  var iqLevelSeconds = 300;
+  /* The ladder: fifty levels touring the twelve rooms. The tour order is
+   * shuffled once per page load, so every block of twelve levels visits
+   * each room exactly once in a different sequence - no fixed loop to
+   * memorise - and the level's name always names the room on screen.
+   * Item counts climb from four toward eight by the final decade. */
   var iqZoneAdjectives = [
     "iqAdjQuiet",
     "iqAdjCluttered",
@@ -29,26 +32,22 @@
     "iqAdjDusty",
     "iqAdjMidnight",
   ];
-  var iqZoneNouns = [
-    "iqNounPlayroom",
-    "iqNounKitchen",
-    "iqNounGarden",
-    "iqNounCapsule",
-    "iqNounBeach",
-    "iqNounAttic",
-    "iqNounCellar",
-    "iqNounStudio",
-    "iqNounHarbor",
-    "iqNounLibrary",
-  ];
 
   function iqBuildZones() {
+    var order = iqShuffle(iqScenes.map(function (scene, index) {
+      return index;
+    }));
     var zones = [];
     for (var index = 1; index <= 50; index += 1) {
+      var slot = (index - 1) % 12;
+      var sceneIndex = order[slot];
+      var block = Math.floor((index - 1) / 12);
       zones.push({
         id: "iq" + index,
-        adjKey: iqZoneAdjectives[Math.floor((index - 1) / 10)],
-        nounKey: iqZoneNouns[(index - 1) % 10],
+        scene: sceneIndex,
+        nth: block,
+        adjKey: iqZoneAdjectives[(block + slot) % 5],
+        nounKey: iqScenes[sceneIndex].nameKey,
         rounds: index % 10 === 0 ? 4 : 3,
         count: Math.min(8, 4 + Math.floor((index - 1) / 10)),
       });
@@ -56,7 +55,7 @@
     return zones;
   }
 
-  var iqZones = iqBuildZones();
+  /* Zones are built down below, once the twelve-scene deck exists. */
   var iqStarBands = [0, 1, 2];
 
   /* Fixed item inks: targets must stay readable over any backdrop palette,
@@ -92,8 +91,20 @@
     return list;
   }
 
+  /* Level names compose per language and always match the room on screen;
+   * block two appends II, block three III, and so on up to V. */
   function zoneName(def) {
-    return t("iqZoneName", { a: t(def.adjKey), b: t(def.nounKey) });
+    var name = t("iqZoneName", { a: t(def.adjKey), b: t(def.nounKey) });
+    if (def.nth >= 4) {
+      name += t("iqVisit" + Math.min(5, def.nth + 1));
+    } else if (def.nth === 3) {
+      name += t("iqVisit4");
+    } else if (def.nth === 2) {
+      name += t("iqVisit3");
+    } else if (def.nth === 1) {
+      name += t("iqVisit2");
+    }
+    return name;
   }
 
   /* ------------------------------------------------------------------ *
@@ -175,7 +186,7 @@
     var items = [
       { draw: '<rect x="6" y="12" width="12" height="8" rx="1.5" fill="' + iqGray + '"/><rect x="8" y="5.5" width="8" height="6" rx="1" fill="' + iqGray + '"/><circle cx="10.2" cy="8.5" r="1" fill="' + iqTeal + '"/><circle cx="13.8" cy="8.5" r="1" fill="' + iqTeal + '"/><line x1="12" y1="5.5" x2="12" y2="3" stroke="' + iqInk + '" stroke-width="1"/><circle cx="12" cy="2.6" r="1" fill="' + iqRed + '"/><rect x="3" y="13" width="3" height="5" rx="1" fill="' + iqGray + '"/><rect x="18" y="13" width="3" height="5" rx="1" fill="' + iqGray + '"/>', x: 32, y: 15.5, s: 0.55 },
       { draw: '<path d="M12 2q5 5.5 4 14h-8Q7 7.5 12 2Z" fill="' + iqCream + '" stroke="' + iqInk + '" stroke-width=".7"/><circle cx="12" cy="10" r="2.4" fill="' + iqTeal + '"/><path d="M8 13l-3 5 3.5-1Z" fill="' + iqRed + '"/><path d="M16 13l3 5-3.5-1Z" fill="' + iqRed + '"/>', x: 49, y: 15.5, s: 0.55 },
-      { draw: '<path d="M12 2l7 8-7 8-7-8Z" fill="' + iqTeal + '"/><path d="M12 18q-3 2-1 4" stroke="' + iqInk + '" stroke-width="1" fill="none"/>', x: 66, y: 15.5, s: 0.55 },
+      { draw: '<path d="M12 2l7 8-7 8-7-8Z" fill="' + iqTeal + '"/><path d="M12 18q-3 2-1 4" stroke="' + iqInk + '" stroke-width="1" fill="none"/>', x: 66, y: 15.5, s: 0.55, fly: true },
       { draw: '<line x1="6" y1="21" x2="15" y2="10" stroke="' + iqOrange + '" stroke-width="2"/><path d="M17 3l1.5 3 3 .5-2.2 2.2.5 3.2-2.8-1.5-2.8 1.5.5-3.2L12.5 6.5l3-.5Z" fill="' + iqGold + '"/>', x: 83, y: 15.5, s: 0.55 },
       { draw: '<rect x="4" y="12" width="12" height="7" rx="1" fill="' + iqGreen + '"/><rect x="15" y="7" width="5" height="12" rx="1" fill="' + iqGreen + '"/><rect x="6" y="7" width="3" height="5" fill="' + iqInk + '"/><circle cx="8" cy="20.5" r="2.4" fill="' + iqRed + '"/><circle cx="14" cy="20.5" r="2.4" fill="' + iqRed + '"/><circle cx="18" cy="20.5" r="2" fill="' + iqRed + '"/>', x: 40, y: 33.5, s: 0.55 },
       { draw: '<rect x="5" y="10" width="14" height="9" rx="1.5" fill="' + iqRed + '"/><ellipse cx="12" cy="10" rx="7" ry="2.2" fill="' + iqCream + '"/><path d="M6 14l3 2 3-2 3 2 3-2" stroke="' + iqCream + '" stroke-width="1.2" fill="none"/><line x1="7" y1="19" x2="7" y2="21" stroke="' + iqInk + '" stroke-width="1"/><line x1="17" y1="19" x2="17" y2="21" stroke="' + iqInk + '" stroke-width="1"/>', x: 74, y: 33.5, s: 0.55 },
@@ -312,8 +323,8 @@
       { draw: '<path d="M4 12q8-10 16 0q-2 2-8 2t-8-2Z" fill="' + iqRed + '"/><circle cx="9" cy="9.5" r="1.2" fill="' + iqCream + '"/><circle cx="14.5" cy="8.5" r="1.5" fill="' + iqCream + '"/><rect x="9.5" y="13" width="5" height="8" rx="2" fill="' + iqCream + '"/>', x: 45, y: 59, s: 0.58 },
       { draw: '<circle cx="9" cy="12" r="6" fill="' + iqOrange + '"/><circle cx="9" cy="12" r="3.4" fill="' + iqCream + '"/><path d="M14 18q4 1 7-1l1-4" stroke="' + iqGreen + '" stroke-width="2" fill="none"/><line x1="15" y1="9" x2="15" y2="6" stroke="' + iqInk + '" stroke-width=".9"/><circle cx="15.3" cy="5.5" r=".8" fill="' + iqInk + '"/>', x: 62, y: 61, s: 0.55 },
       { draw: '<rect x="6" y="11" width="11" height="9" rx="2" fill="' + iqTeal + '"/><path d="M6 13l-4-3 1.5-2 4 3Z" fill="' + iqTeal + '"/><path d="M17 12q4 1 3 5" stroke="' + iqTeal + '" stroke-width="1.6" fill="none"/><path d="M2 8l-1 3M4 7l-1 3" stroke="' + iqBlue + '" stroke-width="1" opacity=".7"/>', x: 80, y: 60, s: 0.6 },
-      { draw: '<ellipse cx="8" cy="10" rx="4.5" ry="5.5" fill="' + iqPink + '"/><ellipse cx="16" cy="10" rx="4.5" ry="5.5" fill="' + iqPink + '"/><ellipse cx="9" cy="16" rx="3.5" ry="3.5" fill="' + iqGold + '"/><ellipse cx="15" cy="16" rx="3.5" ry="3.5" fill="' + iqGold + '"/><line x1="12" y1="6" x2="12" y2="20" stroke="' + iqInk + '" stroke-width="1.4"/><path d="M10.5 5l-1.5-3M13.5 5l1.5-3" stroke="' + iqInk + '" stroke-width=".8"/>', x: 20, y: 36, s: 0.55 },
-      { draw: '<ellipse cx="12" cy="14" rx="6.5" ry="5" fill="' + iqGold + '"/><path d="M10 9.5v9M14 9.7v8.6" stroke="' + iqInk + '" stroke-width="1.6"/><ellipse cx="8" cy="8" rx="4" ry="2.6" fill="' + iqWhite + '" opacity=".85"/><ellipse cx="15" cy="7.5" rx="4" ry="2.6" fill="' + iqWhite + '" opacity=".85"/><circle cx="6.5" cy="13" r=".8" fill="' + iqInk + '"/>', x: 55, y: 33, s: 0.5 },
+      { draw: '<ellipse cx="8" cy="10" rx="4.5" ry="5.5" fill="' + iqPink + '"/><ellipse cx="16" cy="10" rx="4.5" ry="5.5" fill="' + iqPink + '"/><ellipse cx="9" cy="16" rx="3.5" ry="3.5" fill="' + iqGold + '"/><ellipse cx="15" cy="16" rx="3.5" ry="3.5" fill="' + iqGold + '"/><line x1="12" y1="6" x2="12" y2="20" stroke="' + iqInk + '" stroke-width="1.4"/><path d="M10.5 5l-1.5-3M13.5 5l1.5-3" stroke="' + iqInk + '" stroke-width=".8"/>', x: 20, y: 36, s: 0.55, fly: true },
+      { draw: '<ellipse cx="12" cy="14" rx="6.5" ry="5" fill="' + iqGold + '"/><path d="M10 9.5v9M14 9.7v8.6" stroke="' + iqInk + '" stroke-width="1.6"/><ellipse cx="8" cy="8" rx="4" ry="2.6" fill="' + iqWhite + '" opacity=".85"/><ellipse cx="15" cy="7.5" rx="4" ry="2.6" fill="' + iqWhite + '" opacity=".85"/><circle cx="6.5" cy="13" r=".8" fill="' + iqInk + '"/>', x: 55, y: 33, s: 0.5, fly: true },
       { draw: '<circle cx="12" cy="13" r="7" fill="' + iqRed + '"/><line x1="12" y1="6" x2="12" y2="20" stroke="' + iqInk + '" stroke-width="1.2"/><circle cx="8.5" cy="11" r="1.2" fill="' + iqInk + '"/><circle cx="15.5" cy="11" r="1.2" fill="' + iqInk + '"/><circle cx="9.5" cy="16" r="1" fill="' + iqInk + '"/><circle cx="14.5" cy="16" r="1" fill="' + iqInk + '"/><path d="M12 6q-3-3-6-2" stroke="' + iqInk + '" stroke-width="1" fill="none"/>', x: 68, y: 46, s: 0.5 },
       { draw: '<circle cx="9" cy="11" r="5" fill="' + iqBlue + '"/><path d="M9 16q1 4-2 5" stroke="' + iqBlue + '" stroke-width="2" fill="none"/><path d="M4 10l-3 1.5L4 13Z" fill="' + iqOrange + '"/><circle cx="10.5" cy="9.5" r=".9" fill="' + iqInk + '"/><path d="M11 11q4-2 6 1q-3 2-6-1Z" fill="' + iqTeal + '"/>', x: 88, y: 42, s: 0.55 },
       { draw: '<path d="M7 4h7v10h4q4 0 4 4v2H7Z" fill="' + iqBrown + '"/><path d="M7 20h15" stroke="' + iqInk + '" stroke-width="1.4"/><rect x="7" y="4" width="7" height="3" fill="' + iqInk + '"/>', x: 36, y: 74, s: 0.6 },
@@ -378,8 +389,8 @@
     var items = [
       { draw: '<path d="M12 2q5 5.5 4 14h-8Q7 7.5 12 2Z" fill="' + iqCream + '"/><circle cx="12" cy="10" r="2.4" fill="' + iqBlue + '"/><path d="M8 13l-3 5 3.5-1Z" fill="' + iqRed + '"/><path d="M16 13l3 5-3.5-1Z" fill="' + iqRed + '"/>', x: 12, y: 50, s: 0.6 },
       { draw: '<circle cx="12" cy="12" r="9" fill="' + iqGold + '"/><circle cx="8" cy="9" r="1.6" fill="' + iqBrown + '"/><circle cx="14" cy="15" r="2.2" fill="' + iqBrown + '"/><circle cx="16" cy="8" r="1.1" fill="' + iqBrown + '"/>', x: 36, y: 53, s: 0.55 },
-      { draw: '<ellipse cx="12" cy="13" rx="10" ry="4" fill="' + iqGray + '"/><path d="M6 11q6-8 12 0Z" fill="' + iqTeal + '"/><circle cx="12" cy="9" r="2" fill="' + iqCream + '" opacity=".85"/><circle cx="5" cy="13" r="1" fill="' + iqGold + '"/><circle cx="12" cy="14.5" r="1" fill="' + iqGold + '"/><circle cx="19" cy="13" r="1" fill="' + iqGold + '"/>', x: 56, y: 10, s: 0.6 },
-      { draw: '<path d="M12 2l2.6 6 6.4.6-4.8 4.3 1.4 6.3L12 15.9 6.4 19.2l1.4-6.3L3 8.6l6.4-.6Z" fill="' + iqGold + '"/>', x: 78, y: 10, s: 0.55 },
+      { draw: '<ellipse cx="12" cy="13" rx="10" ry="4" fill="' + iqGray + '"/><path d="M6 11q6-8 12 0Z" fill="' + iqTeal + '"/><circle cx="12" cy="9" r="2" fill="' + iqCream + '" opacity=".85"/><circle cx="5" cy="13" r="1" fill="' + iqGold + '"/><circle cx="12" cy="14.5" r="1" fill="' + iqGold + '"/><circle cx="19" cy="13" r="1" fill="' + iqGold + '"/>', x: 56, y: 10, s: 0.6, fly: true },
+      { draw: '<path d="M12 2l2.6 6 6.4.6-4.8 4.3 1.4 6.3L12 15.9 6.4 19.2l1.4-6.3L3 8.6l6.4-.6Z" fill="' + iqGold + '"/>', x: 78, y: 10, s: 0.55, fly: true },
       { draw: '<rect x="6" y="12" width="12" height="8" rx="1.5" fill="' + iqGray + '"/><rect x="8" y="5.5" width="8" height="6" rx="1" fill="' + iqGray + '"/><circle cx="10.2" cy="8.5" r="1" fill="' + iqTeal + '"/><circle cx="13.8" cy="8.5" r="1" fill="' + iqTeal + '"/><line x1="12" y1="5.5" x2="12" y2="3" stroke="' + iqInk + '" stroke-width="1"/><circle cx="12" cy="2.6" r="1" fill="' + iqRed + '"/><rect x="3" y="13" width="3" height="5" rx="1" fill="' + iqGray + '"/><rect x="18" y="13" width="3" height="5" rx="1" fill="' + iqGray + '"/>', x: 72, y: 72, s: 0.6 },
       { draw: '<path d="M8 4a4 4 0 1 0 3 7l7 7 2-2-7-7a4 4 0 0 0-5-5Z" fill="' + iqGray + '"/><circle cx="9" cy="6.5" r="1.6" fill="' + P.space + '"/>', x: 16, y: 68, s: 0.55 },
       { draw: '<rect x="7" y="7" width="10" height="14" rx="1.5" fill="' + iqGreen + '"/><rect x="10" y="4" width="4" height="3" fill="' + iqInk + '"/><path d="M13 10l-4 5h3l-1 4 4-5.5h-3Z" fill="' + iqInk + '"/>', x: 36, y: 69, s: 0.55 },
@@ -523,7 +534,10 @@
       { draw: '<rect x="9" y="10" width="6" height="11" rx="1" fill="' + iqCream + '"/><path d="M12 10q-3-3 0-6q3 3 0 6Z" fill="' + iqOrange + '"/><line x1="12" y1="10" x2="12" y2="8" stroke="' + iqInk + '" stroke-width=".8"/>', x: 68, y: 47, s: 0.55 },
       { draw: '<rect x="4" y="10" width="16" height="11" rx="1.5" fill="' + iqBrown + '"/><path d="M4 12q8-6 16 0v-2q-8-6-16 0Z" fill="' + iqBrown + '"/><rect x="10.5" y="12" width="3" height="4" fill="' + iqGold + '"/>', x: 6, y: 44, s: 0.58 },
       { draw: '<ellipse cx="12" cy="17" rx="9" ry="2.6" fill="' + iqBrown + '"/><path d="M7 17q0-8 5-8t5 8" fill="' + iqBrown + '"/><path d="M7.5 14.5h9" stroke="' + iqRed + '" stroke-width="1.4"/>', x: 48, y: 40, s: 0.55 },
-      { draw: '<path d="M12 3q5 0 5 8l1.5 4h-13L7 11q0-8 5-8Z" fill="' + iqGold + '"/><circle cx="12" cy="18.5" r="1.8" fill="' + iqGold + '"/><line x1="10" y1="3.5" x2="14" y2="3.5" stroke="' + iqInk + '" stroke-width="1.2"/>', x: 88, y: 16, s: 0.55 },
+      { draw: '<path d="M12 3q5.5 0 5.5 8l2 4.5h-15l2-4.5q0-8 5.5-8Z" fill="' + iqGold + '" stroke="' + iqInk + '" stroke-width="1"/>' +
+        '<circle cx="12" cy="19" r="2.2" fill="' + iqOrange + '"/>' +
+        '<line x1="9.5" y1="3.5" x2="14.5" y2="3.5" stroke="' + iqInk + '" stroke-width="1.4"/>' +
+        '<path d="M9 14q3 2 6 0" stroke="' + iqInk + '" stroke-width=".9" fill="none"/>', x: 87, y: 15, s: 0.66 },
       { draw: '<circle cx="12" cy="14" r="4" fill="' + iqGray + '"/><circle cx="12" cy="9" r="2" fill="' + iqGray + '"/><line x1="12" y1="3" x2="12" y2="7" stroke="' + P.paper + '" stroke-width=".8"/><path d="M8 12l-4-3M8 16l-4 2M16 12l4-3M16 16l4 2" stroke="' + iqGray + '" stroke-width="1.1"/><circle cx="10.8" cy="13" r=".7" fill="' + iqInk + '"/><circle cx="13.2" cy="13" r=".7" fill="' + iqInk + '"/>', x: 26, y: 36, s: 0.5 },
     ];
     return { backdrop: backdrop, items: items };
@@ -533,14 +547,504 @@
     return iqHsl(265, 50, 58);
   }
 
+  function iqSceneHarbor(P, H) {
+    var backdrop = [
+      '<defs>' +
+        '<linearGradient id="iqHs" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0" stop-color="' + iqHsl(H + 230, 40, 42) + '"/>' +
+        '<stop offset="1" stop-color="' + iqHsl(25, 55, 66) + '"/></linearGradient>' +
+        '<linearGradient id="iqHw" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0" stop-color="' + iqHsl(H + 15, 40, 46) + '"/>' +
+        '<stop offset="1" stop-color="' + iqHsl(H + 15, 42, 34) + '"/></linearGradient>' +
+        '<linearGradient id="iqHd" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0" stop-color="' + iqHsl(30, 35, 48) + '"/>' +
+        '<stop offset="1" stop-color="' + iqHsl(30, 32, 36) + '"/></linearGradient>' +
+        "</defs>" +
+        '<rect width="100" height="100" fill="url(#iqHs)"/>',
+      '<circle cx="76" cy="14" r="5.5" fill="' + P.glow + '" opacity=".9"/>' +
+        '<ellipse cx="24" cy="12" rx="9" ry="2.4" fill="' + iqWhite + '" opacity=".35"/>' +
+        '<ellipse cx="52" cy="18" rx="7" ry="2" fill="' + iqWhite + '" opacity=".28"/>',
+      '<rect y="40" width="100" height="26" fill="url(#iqHw)"/>' +
+        '<path d="M6 46q5-2 10 0M40 52q5-2 10 0M74 47q5-2 10 0" stroke="' + iqWhite + '" stroke-width="1" fill="none" opacity=".5"/>' +
+        '<path d="M30 44h9l-2.5 7h-4Z" fill="' + iqRed + '"/><rect x="33.5" y="40" width="2" height="4" fill="' + iqRed + '"/>',
+      '<path d="M0 40h100" stroke="' + iqHsl(H + 15, 30, 26) + '" stroke-width="1.2"/>',
+      '<rect y="66" width="100" height="34" fill="url(#iqHd)"/>' +
+        '<path d="M0 72h100M0 84h100" stroke="' + iqHsl(30, 28, 28) + '" stroke-width="1.2"/>' +
+        '<path d="M12 66v40M40 66v40M68 66v40M92 66v40" stroke="' + iqHsl(30, 28, 28) + '" stroke-width="1.4"/>',
+      '<rect x="58" y="52" width="8" height="14" rx="1.5" fill="' + iqBrown + '"/>' +
+        '<circle cx="62" cy="52" r="2.4" fill="' + iqGold + '"/>' +
+        '<path d="M58 58h8" stroke="' + iqInk + '" stroke-width=".8" opacity=".6"/>',
+      '<rect x="20" y="58" width="14" height="10" rx="1" fill="' + iqHsl(28, 38, 50) + '"/>' +
+        '<path d="M20 61h14M20 65h14" stroke="' + iqHsl(28, 32, 38) + '" stroke-width=".9"/>' +
+        '<line x1="22" y1="58" x2="24" y2="52" stroke="' + iqInk + '" stroke-width="1"/><circle cx="24.6" cy="51" r="1" fill="' + iqGray + '"/>',
+      '<line x1="4" y1="0" x2="4" y2="64" stroke="' + iqBrown + '" stroke-width="2"/>' +
+        '<line x1="2" y1="30" x2="12" y2="26" stroke="' + iqInk + '" stroke-width=".8"/>',
+    ];
+    var items = [
+      { draw: '<path d="M12 3v12M12 15q-6 1-6-4" stroke="' + iqGray + '" stroke-width="2" fill="none"/><path d="M12 15q6 1 6-4" stroke="' + iqGray + '" stroke-width="2" fill="none"/><circle cx="12" cy="4.5" r="2.6" fill="' + iqGray + '"/><circle cx="12" cy="4.5" r="1.2" fill="' + iqInk + '"/>', x: 8, y: 70, s: 0.58 },
+      { draw: '<line x1="7" y1="4" x2="14" y2="19" stroke="' + iqInk + '" stroke-width="2.6"/><circle cx="15" cy="18" r="2.2" fill="' + iqRed + '"/><path d="M16.5 20.5q3 2 6.5 1.5" stroke="' + iqGold + '" stroke-width="1.2" fill="none"/><path d="M16 19l1.6 1.4" stroke="' + iqGold + '" stroke-width="1.1"/>', x: 30, y: 70, s: 0.6 },
+      { draw: '<circle cx="12" cy="12" r="9" fill="' + iqOrange + '"/><circle cx="12" cy="12" r="3.8" fill="' + P.paper + '"/><path d="M12 3v-2.5M4 5.5l1.8 1.8M20 5.5l-1.8 1.8M3 12h-2.5M21 12h-2.5M4 18.5l1.8-1.8M20 18.5l-1.8-1.8" stroke="' + iqOrange + '" stroke-width="1.8"/>', x: 52, y: 70, s: 0.64 },
+      { draw: '<rect x="4" y="9" width="16" height="12" rx="1.5" fill="' + iqHsl(15, 45, 55) + '"/>' +
+        '<path d="M4 13h16M4 17h16" stroke="' + iqHsl(15, 40, 30) + '" stroke-width="1.2"/>' +
+        '<line x1="4" y1="9" x2="20" y2="21" stroke="' + iqHsl(15, 40, 30) + '" stroke-width="1"/>' +
+        '<rect x="4" y="9" width="16" height="12" rx="1.5" fill="none" stroke="' + iqInk + '" stroke-width="1.2"/>', x: 74, y: 70, s: 0.58 },
+      { draw: '<circle cx="12" cy="14" r="7" fill="' + iqBrown + '"/><circle cx="12" cy="14" r="4.4" fill="' + iqTeal + '"/><circle cx="12" cy="14" r="1.8" fill="' + iqBrown + '"/>', x: 16, y: 46, s: 0.5 },
+      { draw: '<rect x="8" y="8" width="8" height="11" rx="2" fill="' + iqGold + '"/><rect x="10" y="5" width="4" height="3" fill="' + iqInk + '"/><circle cx="12" cy="13.5" r="2.2" fill="' + iqOrange + '"/><line x1="12" y1="3" x2="12" y2="5" stroke="' + iqInk + '" stroke-width="1"/>', x: 44, y: 44, s: 0.55 },
+      { draw: '<ellipse cx="10" cy="13" rx="7" ry="4.5" fill="' + iqOrange + '"/><path d="M17 13l5-3.5v7Z" fill="' + iqOrange + '"/><circle cx="6.5" cy="12" r=".9" fill="' + iqInk + '"/><path d="M8 13q2-2 4 0" stroke="' + iqInk + '" stroke-width=".8" fill="none"/>', x: 60, y: 44, s: 0.55 },
+      { draw: '<path d="M6 9h12l-1.5 11h-9Z" fill="' + iqTeal + '"/><ellipse cx="12" cy="9" rx="6" ry="1.8" fill="' + iqTeal + '"/><path d="M6.5 9a5.5 5.5 0 0 1 11 0" stroke="' + iqInk + '" stroke-width="1.2" fill="none"/>', x: 84, y: 72, s: 0.58 },
+      { draw: '<path d="M12 21C5 18 3 12 5 7q7-4 14 0q2 5-5 14Z" fill="' + iqPink + '"/>' +
+        '<path d="M12 21V5.5M8.5 20L6 8M15.5 20L18 8" stroke="' + iqInk + '" stroke-width="1.2"/>' +
+        '<circle cx="9" cy="9" r="1.1" fill="' + iqInk + '"/><circle cx="15" cy="9" r="1.1" fill="' + iqInk + '"/>', x: 36, y: 44, s: 0.6 },
+      { draw: '<path d="M6 12q3-3.5 6 0q3-3.5 6 0" stroke="' + iqWhite + '" stroke-width="2.4" fill="none"/><path d="M9 12.5v2.5M15 12.5v2.5" stroke="' + iqWhite + '" stroke-width="1.4"/><circle cx="8" cy="12" r="1" fill="' + iqWhite + '"/>', x: 60, y: 12, s: 0.68, fly: true },
+    ];
+    return { backdrop: backdrop, items: items };
+  }
+
+  function iqHarborPalette(H) {
+    return {
+      paper: iqHsl(H, 40, 92),
+      glow: iqHsl(45, 90, 70),
+      brown: iqHsl(28, 40, 42),
+      ink: iqInk,
+      red: iqRed,
+      gold: iqGold,
+      teal: iqTeal,
+      gray: iqGray,
+      pink: iqPink,
+      orange: iqOrange,
+    };
+  }
+
+  function iqSceneLibrary(P, H) {
+    var spines = [];
+    var cols = [iqRed, iqTeal, iqGold, iqGreen, iqBlue, iqPink, iqOrange];
+    for (var sx = 10; sx <= 34; sx += 4) {
+      spines.push('<rect x="' + sx + '" y="52" width="3" height="11" fill="' + cols[(sx / 4) % 7 | 0] + '"/>');
+    }
+    for (var sx2 = 62; sx2 <= 86; sx2 += 4) {
+      spines.push('<rect x="' + sx2 + '" y="52" width="3" height="11" fill="' + cols[(sx2 / 4) % 7 | 0] + '"/>');
+    }
+    var backdrop = [
+      '<defs><linearGradient id="iqLw" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0" stop-color="' + iqHsl(H, 30, 76) + '"/>' +
+        '<stop offset="1" stop-color="' + iqHsl(H, 28, 62) + '"/></linearGradient></defs>' +
+        '<rect width="100" height="100" fill="url(#iqLw)"/>',
+      '<rect x="6" y="8" width="40" height="3.2" fill="' + P.wood + '"/>' +
+        '<rect x="6" y="26" width="40" height="3.2" fill="' + P.wood + '"/>' +
+        '<rect x="6" y="44" width="40" height="3.2" fill="' + P.wood + '"/>' +
+        '<rect x="58" y="8" width="36" height="3.2" fill="' + P.wood + '"/>' +
+        '<rect x="58" y="26" width="36" height="3.2" fill="' + P.wood + '"/>' +
+        '<rect x="58" y="44" width="36" height="3.2" fill="' + P.wood + '"/>',
+      '<rect x="8" y="12" width="5" height="14" fill="' + iqRed + '"/><rect x="14" y="14" width="5" height="12" fill="' + iqTeal + '"/>' +
+        '<rect x="20" y="11" width="5" height="15" fill="' + iqGold + '"/><rect x="27" y="13" width="5" height="13" fill="' + iqBlue + '"/>' +
+        '<rect x="34" y="15" width="5" height="11" fill="' + iqPink + '"/>' +
+        '<rect x="60" y="12" width="5" height="14" fill="' + iqGreen + '"/><rect x="66" y="13" width="5" height="13" fill="' + iqOrange + '"/>' +
+        '<rect x="72" y="11" width="5" height="15" fill="' + iqRed + '"/><rect x="79" y="14" width="5" height="12" fill="' + iqTeal + '"/>' +
+        '<rect x="85" y="12" width="5" height="14" fill="' + iqGold + '"/>',
+      '<rect x="42" y="16" width="14" height="18" rx="1" fill="' + iqHsl(200, 30, 20) + '"/>' +
+        '<circle cx="49" cy="25" r="6" fill="' + P.paper + '" opacity=".9"/><circle cx="49" cy="25" r="3.4" fill="' + iqHsl(200, 30, 20) + '"/>' +
+        '<circle cx="47" cy="23" r="1" fill="' + iqGold + '"/>',
+      '<rect y="66" width="100" height="34" fill="' + P.wood + '"/>' +
+        '<path d="M0 72h100M0 82h100M0 92h100" stroke="' + iqHsl(28, 30, 32) + '" stroke-width="1"/>',
+      '<ellipse cx="50" cy="72" rx="24" ry="5" fill="' + P.glow + '" opacity=".25"/>',
+      '<rect x="86" y="50" width="10" height="16" rx="1" fill="' + iqHsl(200, 35, 45) + '"/>' +
+        '<rect x="88" y="52" width="6" height="5" rx=".5" fill="' + iqCream + '"/>',
+    ];
+    var items = [
+      { draw: '<rect x="4" y="5" width="16" height="15" rx="1.5" fill="' + iqRed + '"/><rect x="6" y="5" width="2" height="15" fill="' + iqInk + '"/><line x1="10" y1="9" x2="17" y2="9" stroke="' + iqCream + '" stroke-width="1"/><line x1="10" y1="12" x2="17" y2="12" stroke="' + iqCream + '" stroke-width="1"/>', x: 10, y: 68, s: 0.58 },
+      { draw: '<circle cx="12" cy="13" r="8" fill="' + iqCream + '" stroke="' + iqInk + '" stroke-width="1.5"/><line x1="12" y1="13" x2="12" y2="8.5" stroke="' + iqInk + '" stroke-width="1.2"/><line x1="12" y1="13" x2="15.5" y2="14.5" stroke="' + iqInk + '" stroke-width="1.2"/>', x: 30, y: 70, s: 0.55 },
+      { draw: '<rect x="9" y="10" width="6" height="11" rx="1" fill="' + iqCream + '"/><path d="M12 10q-3-3 0-6q3 3 0 6Z" fill="' + iqOrange + '"/><line x1="12" y1="10" x2="12" y2="8" stroke="' + iqInk + '" stroke-width=".8"/>', x: 52, y: 70, s: 0.55 },
+      { draw: '<circle cx="8" cy="8" r="4" fill="' + iqGold + '"/><circle cx="8" cy="8" r="1.6" fill="' + iqInk + '"/><line x1="11" y1="11" x2="19" y2="19" stroke="' + iqGold + '" stroke-width="2"/><line x1="16" y1="16" x2="18.5" y2="13.5" stroke="' + iqGold + '" stroke-width="1.6"/><line x1="18" y1="18" x2="20.5" y2="15.5" stroke="' + iqGold + '" stroke-width="1.6"/>', x: 70, y: 70, s: 0.55 },
+      { draw: '<path d="M17 3q-9 3-10 14" stroke="' + iqGray + '" stroke-width="3.4" fill="none"/><path d="M7 17q-3-1-4 2l4 2Z" fill="' + iqInk + '"/><path d="M9 8l3 2M11 5l3 3M7 12l3 2" stroke="' + iqGray + '" stroke-width="1.2"/>', x: 48, y: 44, s: 0.62 },
+      { draw: '<circle cx="7" cy="12" r="4.8" fill="' + iqCream + '" stroke="' + iqInk + '" stroke-width="2"/><circle cx="17" cy="12" r="4.8" fill="' + iqCream + '" stroke="' + iqInk + '" stroke-width="2"/><path d="M11.5 12q2.5-2.5 1 0" stroke="' + iqInk + '" stroke-width="2"/><line x1="2.2" y1="12" x2="3" y2="9.5" stroke="' + iqInk + '" stroke-width="1.6"/>', x: 68, y: 44, s: 0.6 },
+      { draw: '<rect x="4" y="8" width="16" height="12" rx="2" fill="' + iqCream + '"/>' +
+        '<path d="M4 12q8 4 16 0" stroke="' + iqRed + '" stroke-width=".8" fill="none"/>' +
+        '<path d="M4 16q8-4 16 0" stroke="' + iqRed + '" stroke-width=".8" fill="none"/><circle cx="12" cy="14" r="1.4" fill="' + iqRed + '"/>', x: 86, y: 70, s: 0.55 },
+      { draw: '<ellipse cx="10" cy="13" rx="6" ry="4.5" fill="' + iqGray + '"/><circle cx="6" cy="11" r="2" fill="' + iqGray + '"/><circle cx="5" cy="14.5" r=".7" fill="' + iqInk + '"/><path d="M16 15q5 1 5 5" stroke="' + iqInk + '" stroke-width="1.2" fill="none"/><circle cx="5.5" cy="9" r="1.2" fill="' + iqPink + '"/><circle cx="8" cy="8.5" r="1.2" fill="' + iqPink + '"/>', x: 14, y: 44, s: 0.5 },
+      { draw: '<path d="M6 8q6-4 12 0l-1.5 12h-9Z" fill="' + iqCream + '"/><path d="M8 11h8M8 14h8M8 17h8" stroke="' + iqRed + '" stroke-width=".9"/><line x1="12" y1="8" x2="12" y2="20" stroke="' + iqInk + '" stroke-width=".8"/>', x: 54, y: 44, s: 0.5 },
+      { draw: '<rect x="7" y="10" width="10" height="9" rx="1.5" fill="' + iqTeal + '"/><ellipse cx="12" cy="10" rx="5" ry="1.6" fill="' + iqCream + '"/><path d="M16 12q4-1 3 3q-1 2-3 1" stroke="' + iqTeal + '" stroke-width="1.4" fill="none"/>', x: 88, y: 44, s: 0.52 },
+    ];
+    return { backdrop: backdrop, items: items };
+  }
+
+  function iqLibraryPalette(H) {
+    return {
+      wood: iqHsl(H + 20, 35, 40),
+      paper: iqHsl(H, 40, 95),
+      glow: iqHsl(45, 90, 70),
+    };
+  }
+
+  function iqSceneCellar(P, H) {
+    var stones = [];
+    for (var sy = 6; sy < 60; sy += 12) {
+      for (var sx = 4; sx < 96; sx += 16) {
+        stones.push('<rect x="' + sx + '" y="' + sy + '" width="13" height="9" rx="3.5" fill="' + iqHsl(H + 220, 10, 34 + ((sx + sy) % 3) * 3) + '"/>');
+      }
+    }
+    var backdrop = [
+      '<defs><linearGradient id="iqCd" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0" stop-color="' + iqHsl(H + 220, 20, 18) + '"/>' +
+        '<stop offset="1" stop-color="' + iqHsl(H + 220, 18, 10) + '"/></linearGradient></defs>' +
+      '<rect width="100" height="100" fill="url(#iqCd)"/>',
+      stones.join(""),
+      '<rect x="0" y="26" width="100" height="5" fill="' + iqBrown + '"/>' +
+        '<rect x="0" y="54" width="100" height="5" fill="' + iqBrown + '"/>' +
+        '<line x1="14" y1="0" x2="14" y2="70" stroke="' + iqBrown + '" stroke-width="2.4"/>' +
+        '<line x1="86" y1="0" x2="86" y2="70" stroke="' + iqBrown + '" stroke-width="2.4"/>',
+      '<rect y="70" width="100" height="30" fill="' + iqHsl(H, 15, 22) + '"/>' +
+        '<path d="M0 78h100M0 90h100" stroke="' + iqInk + '" stroke-width="1"/>',
+      '<ellipse cx="50" cy="70" rx="16" ry="3" fill="' + P.glow + '" opacity=".18"/>' +
+        '<line x1="50" y1="8" x2="50" y2="46" stroke="' + iqInk + '" stroke-width=".9"/>' +
+        '<circle cx="50" cy="50" r="4" fill="' + P.glow + '" opacity=".5"/>',
+      '<circle cx="20" cy="12" r="4" fill="' + iqGray + '" opacity=".5"/><path d="M16 15q4 3 8 0M20 12l-5-3M20 12l5-3" stroke="' + iqGray + '" stroke-width=".8" fill="none" opacity=".5"/>',
+    ];
+    var items = [
+      { draw: '<rect x="9" y="10" width="6" height="11" rx="1" fill="' + iqCream + '"/><path d="M12 10q-3-3 0-6q3 3 0 6Z" fill="' + iqOrange + '"/><line x1="12" y1="10" x2="12" y2="8" stroke="' + iqInk + '" stroke-width=".8"/>', x: 10, y: 58, s: 0.58 },
+      { draw: '<circle cx="8" cy="8" r="4" fill="' + iqGold + '"/><circle cx="8" cy="8" r="1.6" fill="' + iqInk + '"/><line x1="11" y1="11" x2="19" y2="19" stroke="' + iqGold + '" stroke-width="2"/><line x1="16" y1="16" x2="18.5" y2="13.5" stroke="' + iqGold + '" stroke-width="1.6"/><line x1="18" y1="18" x2="20.5" y2="15.5" stroke="' + iqGold + '" stroke-width="1.6"/>', x: 30, y: 58, s: 0.55 },
+      { draw: '<ellipse cx="10" cy="15" rx="6" ry="4.5" fill="' + iqGray + '"/><circle cx="6" cy="11" r="2" fill="' + iqGray + '"/><circle cx="5" cy="14.5" r=".7" fill="' + iqInk + '"/><path d="M16 15q5 1 5 5" stroke="' + iqInk + '" stroke-width="1.2" fill="none"/><circle cx="5.5" cy="9" r="1.2" fill="' + iqPink + '"/><circle cx="8" cy="8.5" r="1.2" fill="' + iqPink + '"/>', x: 48, y: 72, s: 0.52 },
+      { draw: '<path d="M4 12q8-10 16 0q-2 2-8 2t-8-2Z" fill="' + iqRed + '"/><circle cx="9" cy="9.5" r="1.2" fill="' + iqCream + '"/><circle cx="14.5" cy="8.5" r="1.5" fill="' + iqCream + '"/><rect x="9.5" y="13" width="5" height="8" rx="2" fill="' + iqCream + '"/>', x: 66, y: 60, s: 0.58 },
+      { draw: '<circle cx="12" cy="14" r="4" fill="' + iqGray + '"/><circle cx="12" cy="9" r="2" fill="' + iqGray + '"/><line x1="12" y1="3" x2="12" y2="7" stroke="' + iqCream + '" stroke-width=".8"/><path d="M8 12l-4-3M8 16l-4 2M16 12l4-3M16 16l4 2" stroke="' + iqGray + '" stroke-width="1.1"/><circle cx="10.8" cy="13" r=".7" fill="' + iqInk + '"/><circle cx="13.2" cy="13" r=".7" fill="' + iqInk + '"/>', x: 24, y: 34, s: 0.52 },
+      { draw: '<rect x="9" y="9" width="6" height="12" rx="2" fill="' + iqGreen + '"/><rect x="10.5" y="4" width="3" height="6" fill="' + iqGreen + '"/><rect x="9" y="13" width="6" height="3" fill="' + iqCream + '"/>', x: 76, y: 58, s: 0.55 },
+      { draw: '<rect x="4" y="10" width="16" height="11" rx="1.5" fill="' + iqBrown + '"/><path d="M4 12q8-6 16 0v-2q-8-6-16 0Z" fill="' + iqBrown + '"/><rect x="10.5" y="12" width="3" height="4" fill="' + iqGold + '"/>', x: 8, y: 34, s: 0.56 },
+      { draw: '<path d="M6 10L16 6l4 4-10 4Z" fill="' + iqGold + '" stroke="' + iqInk + '" stroke-width="1"/>' +
+        '<path d="M8 12l3-1.2M11 13l3-1.2" stroke="' + iqHsl(40, 60, 30) + '" stroke-width="1"/>' +
+        '<circle cx="7" cy="10.8" r="1.1" fill="' + iqHsl(40, 60, 30) + '"/>', x: 44, y: 34, s: 0.62 },
+      { draw: '<rect x="8" y="6" width="8" height="13" rx="1" fill="' + iqGray + '"/><circle cx="12" cy="10" r="1.6" fill="' + iqInk + '"/><rect x="9.5" y="4.5" width="5" height="2" rx="1" fill="' + iqInk + '"/>', x: 62, y: 33, s: 0.55 },
+      { draw: '<path d="M12 4q-8 3-8 9h16q0-6-8-9Z" fill="' + iqGold + '"/><path d="M12 13v7M8 13q4 3 8 0" stroke="' + iqInk + '" stroke-width="1.2" fill="none"/><circle cx="12" cy="20" r="1.4" fill="' + iqGold + '"/>', x: 88, y: 34, s: 0.55 },
+    ];
+    return { backdrop: backdrop, items: items };
+  }
+
+  function iqCellarPalette(H) {
+    return {
+      glow: iqHsl(45, 90, 70),
+      brown: iqHsl(28, 40, 42),
+    };
+  }
+
+  function iqSceneStudio(P, H) {
+    var backdrop = [
+      '<defs><linearGradient id="iqStw" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0" stop-color="' + iqHsl(H, 22, 84) + '"/>' +
+        '<stop offset="1" stop-color="' + iqHsl(H, 20, 70) + '"/></linearGradient></defs>' +
+      '<rect width="100" height="100" fill="url(#iqStw)"/>',
+      '<rect x="10" y="10" width="22" height="17" rx="1" fill="' + iqCream + '"/>' +
+        '<path d="M12 22l6-7 4 4 3-4 4 5v4H12Z" fill="' + iqBlue + '"/>' +
+        '<circle cx="27" cy="14" r="2" fill="' + iqGold + '"/>' +
+        '<rect x="10" y="10" width="22" height="17" fill="none" stroke="' + P.wood + '" stroke-width="1.6"/>',
+      '<rect x="68" y="12" width="20" height="15" rx="1" fill="' + iqPink + '"/>' +
+        '<circle cx="74" cy="19" r="4" fill="' + iqGold + '"/><circle cx="81" cy="21" r="3" fill="' + iqTeal + '"/>' +
+        '<rect x="68" y="12" width="20" height="15" fill="none" stroke="' + P.wood + '" stroke-width="1.6"/>',
+      '<path d="M30 66l14-20 4 20Z" fill="' + P.wood + '"/>' +
+        '<rect x="26" y="42" width="24" height="18" rx="1" fill="' + iqCream + '"/>' +
+        '<path d="M30 50q6-6 8 0q4-5 8 1" stroke="' + iqBlue + '" stroke-width="1.4" fill="none"/>' +
+        '<circle cx="38" cy="46" r="2.4" fill="' + iqOrange + '"/>' +
+        '<line x1="28" y1="42" x2="48" y2="42" stroke="' + P.wood + '" stroke-width="1.4"/>',
+      '<rect y="78" width="100" height="22" fill="' + iqHsl(H, 20, 52) + '"/>' +
+        '<path d="M0 84h100M0 92h100" stroke="' + iqHsl(H, 18, 40) + '" stroke-width="1"/>',
+      '<rect x="56" y="66" width="10" height="3.5" rx="1" fill="' + iqRed + '"/>' +
+        '<rect x="68" y="66" width="10" height="3.5" rx="1" fill="' + iqTeal + '"/>' +
+        '<rect x="80" y="66" width="10" height="3.5" rx="1" fill="' + iqGold + '"/>' +
+        '<ellipse cx="61" cy="70" rx="1.6" ry=".7" fill="' + iqInk + '" opacity=".4"/>' +
+        '<ellipse cx="73" cy="70" rx="1.6" ry=".7" fill="' + iqInk + '" opacity=".4"/>' +
+        '<ellipse cx="85" cy="70" rx="1.6" ry=".7" fill="' + iqInk + '" opacity=".4"/>',
+      '<rect x="88" y="40" width="9" height="26" rx="1" fill="' + P.wood + '"/>' +
+        '<rect x="86" y="38" width="13" height="4" rx="1" fill="' + P.wood + '"/>',
+    ];
+    var items = [
+      { draw: '<line x1="8" y1="20" x2="16" y2="6" stroke="' + iqGold + '" stroke-width="3.2"/><path d="M16 6q4-3 5 1" stroke="' + iqTeal + '" stroke-width="2" fill="none"/>', x: 8, y: 44, s: 0.6 },
+      { draw: '<ellipse cx="12" cy="13" rx="10" ry="7" fill="' + iqHsl(30, 45, 72) + '"/><circle cx="8" cy="10" r="2" fill="' + iqRed + '"/><circle cx="13" cy="8" r="2" fill="' + iqTeal + '"/><circle cx="16" cy="13" r="2" fill="' + iqGold + '"/><circle cx="10" cy="16" r="2" fill="' + iqBlue + '"/>', x: 60, y: 42, s: 0.55 },
+      { draw: '<path d="M7 20l8-11" stroke="' + iqOrange + '" stroke-width="3"/><path d="M15 9l4-4 3 3-4 4Z" fill="' + iqPink + '"/>', x: 10, y: 68, s: 0.6 },
+      { draw: '<circle cx="8" cy="8" r="3.4" fill="' + iqGray + '"/><circle cx="8" cy="8" r="1.4" fill="' + iqCream + '"/><path d="M11 8h8" stroke="' + iqInk + '" stroke-width="1.6"/><path d="M19 8l-2-2M19 8l-2 2" stroke="' + iqInk + '" stroke-width="1.4"/><circle cx="16" cy="16" r="3.4" fill="' + iqGray + '"/><circle cx="16" cy="16" r="1.4" fill="' + iqCream + '"/>', x: 30, y: 68, s: 0.55 },
+      { draw: '<rect x="9" y="3" width="6" height="17" rx="1" fill="' + iqTeal + '"/><rect x="9" y="3" width="6" height="4" rx="1" fill="' + iqInk + '"/><path d="M9 11h6" stroke="' + iqWhite + '" stroke-width="1"/>', x: 50, y: 68, s: 0.55 },
+      { draw: '<path d="M6 4h12v13q-6 4-12 0Z" fill="' + iqOrange + '"/><rect x="4" y="2" width="16" height="3" rx="1.5" fill="' + iqRed + '"/>', x: 70, y: 68, s: 0.55 },
+      { draw: '<path d="M8 5h8v13l-4 3-4-3Z" fill="' + iqGold + '"/><path d="M8 9h8" stroke="' + iqInk + '" stroke-width="1"/><circle cx="12" cy="12" r="1.2" fill="' + iqInk + '"/>', x: 88, y: 68, s: 0.55 },
+      { draw: '<path d="M6 6h12v12H6Z" fill="' + iqPink + '"/><path d="M6 6l12 12M18 6L6 18" stroke="' + iqWhite + '" stroke-width="1.4"/><circle cx="12" cy="12" r="3.6" fill="' + iqCream + '" stroke="' + iqRed + '" stroke-width="1.2"/>', x: 46, y: 44, s: 0.5 },
+      { draw: '<rect x="5" y="8" width="14" height="10" rx="2" fill="' + iqTeal + '"/><ellipse cx="12" cy="8" rx="7" ry="2" fill="' + iqCream + '"/><rect x="15" y="4" width="3" height="4" rx="1" fill="' + iqTeal + '"/>', x: 24, y: 68, s: 0.55 },
+      { draw: '<ellipse cx="12" cy="13" rx="8" ry="5.5" fill="' + iqPink + '"/><ellipse cx="12" cy="10.5" rx="8" ry="3.4" fill="' + iqGreen + '"/><circle cx="12" cy="10.5" r="1.6" fill="' + iqRed + '"/>', x: 88, y: 44, s: 0.52 },
+    ];
+    return { backdrop: backdrop, items: items };
+  }
+
+  function iqStudioPalette(H) {
+    return {
+      wood: iqHsl(H + 20, 35, 42),
+      paper: iqHsl(H, 40, 95),
+      gold: iqGold,
+      blue: iqBlue,
+      teal: iqTeal,
+      orange: iqOrange,
+      pink: iqPink,
+      red: iqRed,
+      green: iqGreen,
+      cream: iqCream,
+      ink: iqInk,
+    };
+  }
+
+  function iqSceneCamp(P, H) {
+    var backdrop = [
+      '<defs><linearGradient id="iqCn" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0" stop-color="' + iqHsl(H + 230, 45, 24) + '"/>' +
+        '<stop offset="1" stop-color="' + iqHsl(H + 240, 40, 14) + '"/></linearGradient></defs>' +
+      '<rect width="100" height="100" fill="url(#iqCn)"/>',
+      '<circle cx="18" cy="12" r="1.2" fill="' + iqWhite + '"/><circle cx="40" cy="8" r="1.1" fill="' + iqWhite + '"/>' +
+        '<circle cx="66" cy="12" r="1.2" fill="' + iqWhite + '"/><circle cx="90" cy="16" r="1" fill="' + iqWhite + '"/>' +
+        '<circle cx="78" cy="6" r="1" fill="' + iqWhite + '"/><circle cx="10" cy="24" r="1" fill="' + iqWhite + '"/>',
+      '<path d="M55 20l7-9 7 11-7 2Z" fill="' + iqWhite + '" opacity=".85"/>',
+      '<path d="M0 46q20-16 34-10l-4 12H0Z" fill="' + iqHsl(H + 230, 25, 30) + '"/>' +
+        '<path d="M100 44q-24-14-44-8l4 12 40 0Z" fill="' + iqHsl(H + 230, 25, 26) + '"/>',
+      '<path d="M8 46l9-18 9 18Z" fill="' + iqGreen + '"/><path d="M24 46l8-14 8 14Z" fill="' + iqGreen + '"/>' +
+        '<path d="M64 46l9-17 9 17Z" fill="' + iqGreen + '"/><rect x="15" y="46" width="3" height="4" fill="' + iqBrown + '"/><rect x="71" y="46" width="3" height="4" fill="' + iqBrown + '"/>',
+      '<path d="M30 88L48 44l18 44-6 0-12-32-12 32Z" fill="' + iqOrange + '"/>' +
+        '<path d="M42 74h12l3 14H39Z" fill="' + iqRed + '"/>' +
+        '<path d="M45 74l3-8 3 8" fill="' + iqHsl(350, 60, 30) + '"/>' +
+        '<path d="M42 74q6-5 12 0l3 14H39Z" fill="none" stroke="' + iqInk + '" stroke-width="1"/>',
+      '<rect y="86" width="100" height="14" fill="' + iqHsl(110, 25, 32) + '"/>' +
+        '<path d="M0 90h100" stroke="' + iqHsl(110, 25, 26) + '" stroke-width="1"/>',
+      '<circle cx="50" cy="82" r="5" fill="' + iqOrange + '"/><circle cx="50" cy="82" r="2.4" fill="' + iqGold + '"/>' +
+        '<path d="M42 86l-6 3M58 86l6 3" stroke="' + iqBrown + '" stroke-width="2.4"/>',
+      '<path d="M70 66q2-6 6-2" stroke="' + iqGray + '" stroke-width="1.2" fill="none"/><circle cx="76" cy="63" r="1.4" fill="' + iqCream + '"/>',
+    ];
+    var items = [
+      { draw: '<rect x="8" y="8" width="8" height="11" rx="2" fill="' + iqGold + '"/><rect x="10" y="5" width="4" height="3" fill="' + iqInk + '"/><circle cx="12" cy="13.5" r="2.2" fill="' + iqOrange + '"/><line x1="12" y1="3" x2="12" y2="5" stroke="' + iqInk + '" stroke-width="1"/>', x: 8, y: 62, s: 0.58 },
+      { draw: '<rect x="9" y="5" width="7" height="15" rx="2" fill="' + iqGold + '"/><circle cx="12.5" cy="5.5" r="2.4" fill="' + iqTeal + '"/><path d="M9 10h7M9 14h7" stroke="' + iqInk + '" stroke-width="1"/>', x: 26, y: 62, s: 0.55 },
+      { draw: '<circle cx="12" cy="13" r="8" fill="' + iqTeal + '"/><circle cx="12" cy="13" r="5.6" fill="' + iqCream + '"/><path d="M12 13l4-4" stroke="' + iqRed + '" stroke-width="1.4"/><circle cx="12" cy="13" r="1.4" fill="' + iqRed + '"/>', x: 44, y: 62, s: 0.55 },
+      { draw: '<path d="M6 8h7l3 10H9Z" fill="' + iqGray + '"/><path d="M13 8l6-4 2 2-5 5" stroke="' + iqBrown + '" stroke-width="2" fill="none"/>', x: 62, y: 62, s: 0.55 },
+      { draw: '<rect x="6" y="8" width="12" height="13" rx="2" fill="' + iqRed + '"/><path d="M9 4h6v4H9Z" fill="' + iqGray + '"/><path d="M6 14h12" stroke="' + iqInk + '" stroke-width="1"/><circle cx="12" cy="11" r="1.6" fill="' + iqCream + '"/>', x: 82, y: 62, s: 0.55 },
+      { draw: '<rect x="5" y="8" width="14" height="12" rx="2" fill="' + iqBrown + '"/><line x1="9" y1="8" x2="9" y2="20" stroke="' + iqInk + '" stroke-width="1"/><line x1="15" y1="8" x2="15" y2="20" stroke="' + iqInk + '" stroke-width="1"/><circle cx="12" cy="8" r="1.4" fill="' + iqGray + '"/><path d="M7 12h4l1.5 3h3L14 12" stroke="' + iqCream + '" stroke-width=".9" fill="none"/>', x: 10, y: 74, s: 0.55 },
+      { draw: '<path d="M8 4h8v14l-4-3-4 3Z" fill="' + iqRed + '"/><circle cx="12" cy="8" r="2" fill="' + iqCream + '"/><line x1="8" y1="13" x2="16" y2="13" stroke="' + iqInk + '" stroke-width="1"/>', x: 28, y: 74, s: 0.55 },
+      { draw: '<path d="M9 4h7l3 15H6Z" fill="' + iqTeal + '"/><path d="M11 4h4l2 15" stroke="' + iqInk + '" stroke-width=".9" fill="none"/><rect x="7" y="15" width="11" height="3" rx="1.5" fill="' + iqInk + '"/>', x: 46, y: 74, s: 0.55 },
+      { draw: '<path d="M4 12q8-10 16 0q-2 2-8 2t-8-2Z" fill="' + iqRed + '"/><circle cx="9" cy="9.5" r="1.2" fill="' + iqCream + '"/><circle cx="14.5" cy="8.5" r="1.5" fill="' + iqCream + '"/><rect x="9.5" y="13" width="5" height="8" rx="2" fill="' + iqCream + '"/>', x: 64, y: 76, s: 0.55 },
+      { draw: '<path d="M7 4h7v10h4q4 0 4 4v2H7Z" fill="' + iqBrown + '"/><path d="M7 20h15" stroke="' + iqInk + '" stroke-width="1.4"/><rect x="7" y="4" width="7" height="3" fill="' + iqInk + '"/>', x: 88, y: 74, s: 0.55 },
+    ];
+    return { backdrop: backdrop, items: items };
+  }
+
+  function iqCampPalette(H) {
+    return {
+      glow: iqHsl(45, 90, 70),
+      brown: iqHsl(28, 40, 42),
+      green: iqHsl(120, 40, 38),
+      gray: iqGray,
+      red: iqRed,
+      gold: iqGold,
+      teal: iqTeal,
+      cream: iqCream,
+      ink: iqInk,
+      paper: iqWhite,
+      orange: iqOrange,
+      blue: iqBlue,
+      pink: iqPink,
+    };
+  }
+
+  function iqSceneCandy(P, H) {
+    var backdrop = [
+      '<defs><linearGradient id="iqCyw" x1="0" y1="0" x2="0" y2="1">' +
+        '<stop offset="0" stop-color="' + iqHsl(H, 55, 90) + '"/>' +
+        '<stop offset="1" stop-color="' + iqHsl(H, 50, 80) + '"/></linearGradient></defs>' +
+      '<rect width="100" height="100" fill="url(#iqCyw)"/>' +
+        '<path d="M0 0h12v44H0Z" fill="' + iqPink + '" opacity=".35"/><path d="M24 0h12v44H24Z" fill="' + iqPink + '" opacity=".35"/>' +
+        '<path d="M48 0h12v44H48Z" fill="' + iqPink + '" opacity=".35"/><path d="M72 0h12v44H72Z" fill="' + iqPink + '" opacity=".35"/>' +
+        '<path d="M96 0h12v44H96Z" fill="' + iqPink + '" opacity=".35"/>',
+      '<path d="M0 24q12.5-8 25 0q12.5-8 25 0q12.5-8 25 0q12.5-8 25 0q12.5-8 12.5 0L100 14 0 14Z" fill="' + iqRed + '"/>',
+      '<rect x="6" y="30" width="88" height="3" fill="' + P.wood + '"/>' +
+        '<rect x="6" y="52" width="88" height="3" fill="' + P.wood + '"/>' +
+        '<rect x="8" y="20" width="4" height="12" fill="' + P.wood + '"/>' +
+        '<rect x="88" y="20" width="4" height="12" fill="' + P.wood + '"/>' +
+        '<rect x="8" y="42" width="4" height="12" fill="' + P.wood + '"/>' +
+        '<rect x="88" y="42" width="4" height="12" fill="' + P.wood + '"/>',
+      '<rect y="66" width="100" height="34" fill="' + iqHsl(H, 35, 70) + '"/>' +
+        '<rect y="66" width="100" height="3" fill="' + iqHsl(H, 30, 56) + '"/>' +
+        '<path d="M8 74q6-4 12 0M76 78q6-4 12 0" stroke="' + iqWhite + '" stroke-width="1.2" fill="none" opacity=".7"/>',
+      '<rect x="10" y="58" width="26" height="8" rx="2" fill="' + iqCream + '"/>' +
+        '<path d="M12 58v8M22 58v8" stroke="' + iqHsl(H, 25, 62) + '" stroke-width="1"/>',
+    ];
+    var items = [
+      { draw: '<circle cx="12" cy="10" r="6" fill="' + iqPink + '"/><path d="M12 4v-2M9 5l-1-2M15 5l1-2" stroke="' + iqRed + '" stroke-width="1"/><path d="M12 16q1 4-2 6" stroke="' + iqCream + '" stroke-width="1.6" fill="none"/><circle cx="12" cy="10" r="2" fill="' + iqWhite + '" opacity=".7"/>', x: 10, y: 24, s: 0.55 },
+      { draw: '<path d="M9 4q-4 8 0 15q2 3 6 2" stroke="' + iqRed + '" stroke-width="3.4" fill="none"/><path d="M8.5 8l3-2M8 13l3-2" stroke="' + iqWhite + '" stroke-width="1.2"/>', x: 30, y: 22, s: 0.55 },
+      { draw: '<ellipse cx="12" cy="14" rx="8" ry="5.5" fill="' + iqGold + '"/><circle cx="8.5" cy="12" r="2.4" fill="' + iqPink + '"/><circle cx="15.5" cy="12" r="2.4" fill="' + iqBrown + '"/><circle cx="12" cy="14" r="1.6" fill="' + iqHsl(320, 60, 70) + '"/>', x: 52, y: 22, s: 0.55 },
+      { draw: '<path d="M5 12h14v7q-7 4-14 0Z" fill="' + iqPink + '"/><path d="M5 12q7-6 14 0l-2 3H7Z" fill="' + iqCream + '"/><circle cx="12" cy="8" r="2" fill="' + iqRed + '"/><rect x="11" y="4" width="2" height="4" fill="' + iqGold + '"/>', x: 74, y: 20, s: 0.55 },
+      { draw: '<circle cx="12" cy="13" r="8" fill="' + iqGold + '"/><circle cx="9" cy="10" r="2" fill="' + iqBrown + '"/><circle cx="15" cy="10" r="2" fill="' + iqBrown + '"/><path d="M8 15q4 3 8 0" stroke="' + iqInk + '" stroke-width="1" fill="none"/><circle cx="9.5" cy="13" r=".8" fill="' + iqInk + '"/><circle cx="14.5" cy="13" r=".8" fill="' + iqInk + '"/>', x: 88, y: 22, s: 0.52 },
+      { draw: '<path d="M12 3q5 7 0 12q-5-5 0-12Z" fill="' + iqCream + '"/><path d="M12 3q5 7 0 12q-5-5 0-12Z" fill="none" stroke="' + iqPink + '" stroke-width="1.2"/><path d="M7 13h10l1 7H6Z" fill="' + iqTeal + '"/>', x: 10, y: 42, s: 0.55 },
+      { draw: '<rect x="6" y="8" width="13" height="9" rx="1" fill="' + iqBrown + '"/>' +
+        '<path d="M6 8l13 9M19 8L6 17" stroke="' + iqHsl(40, 60, 30) + '" stroke-width=".8"/><rect x="6" y="8" width="13" height="9" fill="none" stroke="' + iqHsl(40, 60, 30) + '" stroke-width="1"/>', x: 34, y: 42, s: 0.55 },
+      { draw: '<circle cx="12" cy="13" r="8.5" fill="' + iqTeal + '" opacity=".9"/><circle cx="12" cy="13" r="6" fill="' + iqCream + '" opacity=".4"/><circle cx="7" cy="10" r="2.2" fill="' + iqRed + '"/><circle cx="16" cy="10" r="2.2" fill="' + iqGold + '"/><circle cx="7" cy="16" r="2.2" fill="' + iqGreen + '"/><circle cx="16" cy="16" r="2.2" fill="' + iqPink + '"/>', x: 60, y: 42, s: 0.55 },
+      { draw: '<circle cx="12" cy="13" r="7" fill="' + iqWhite + '"/><path d="M12 6a7 7 0 0 1 0 14" fill="' + iqRed + '"/><circle cx="12" cy="13" r="1.6" fill="' + iqWhite + '"/>', x: 82, y: 42, s: 0.55 },
+      { draw: '<ellipse cx="12" cy="13" rx="8" ry="5" fill="' + iqGold + '"/><ellipse cx="12" cy="10.6" rx="8" ry="2.6" fill="' + iqPink + '"/><ellipse cx="12" cy="15.4" rx="8" ry="2.6" fill="' + iqGreen + '"/>', x: 60, y: 68, s: 0.55 },
+    ];
+    return { backdrop: backdrop, items: items };
+  }
+
+  function iqCandyPalette(H) {
+    return {
+      wood: iqHsl(H + 20, 35, 42),
+      red: iqRed,
+    };
+  }
+
+  /* Deterministic little RNG (LCG) so a seeded scatter can be replayed by
+   * the audits exactly as the game renders it. */
+  function iqLcg(seed) {
+    var state = seed % 2147483647;
+    if (state <= 0) state += 2147483646;
+    return function () {
+      state = (state * 16807) % 2147483647;
+      return (state - 1) / 2147483646;
+    };
+  }
+
+  /* Real hidden-object scenes never line items up: everything sits at a
+   * jittered spot, tilted, and sized by perspective (foreground bigger).
+   * Flying things drift farther and tilt freely. The tray thumbnail keeps
+   * the upright art; only the placed copy scatters. */
+  function iqScatter(items, rng) {
+    return items.map(function (item) {
+      var fly = item.fly === true;
+      var x = item.x + (rng() * 2 - 1) * (fly ? 12 : 8);
+      var y = item.y + (rng() * 2 - 1) * (fly ? 9 : 3);
+      var s = item.s;
+      var rot;
+      if (fly) {
+        s *= 0.9 + rng() * 0.22;
+        rot = rng() * 44 - 22;
+      } else {
+        var depth = Math.max(0, Math.min(1, (y + 12 * s) / 100));
+        s *= 0.84 + 0.3 * depth;
+        rot = rng() * 22 - 11;
+      }
+      return { draw: item.draw, x: x, y: y, s: s, rot: rot };
+    });
+  }
+
+  /* Collision relaxation: nudges overlapping items apart (and back inside
+   * the frame) so hand-placed walls of items can never crowd each other
+   * out of tap range. Runs wherever a scene is consumed. */
+  function iqRelax(items) {
+    var placed = items.map(function (item) {
+      return {
+        draw: item.draw, s: item.s, rot: item.rot || 0,
+        cx: item.x + 12 * item.s,
+        cy: item.y + 12 * item.s,
+        r: 14 * item.s + 1
+      };
+    });
+    for (var pass = 0; pass < 60; pass += 1) {
+      var moved = false;
+      for (var a = 0; a < placed.length; a += 1) {
+        for (var b = a + 1; b < placed.length; b += 1) {
+          var A = placed[a], B = placed[b];
+          var dx = B.cx - A.cx, dy = B.cy - A.cy;
+          var dist = Math.sqrt(dx * dx + dy * dy) || 0.01;
+          var min = A.r + B.r;
+          if (dist < min) {
+            var push = (min - dist) / 2;
+            var ux = (dx / dist) * push, uy = (dy / dist) * push;
+            A.cx -= ux; A.cy -= uy;
+            B.cx += ux; B.cy += uy;
+            moved = true;
+          }
+        }
+      }
+      for (var i = 0; i < placed.length; i += 1) {
+        var item = placed[i];
+        var margin = 12 * item.s + 2;
+        item.cx = Math.max(margin, Math.min(100 - margin, item.cx));
+        item.cy = Math.max(margin, Math.min(100 - margin, item.cy));
+      }
+      if (!moved) break;
+    }
+    placed.forEach(function (item) {
+      item.x = item.cx - 12 * item.s;
+      item.y = item.cy - 12 * item.s;
+    });
+    return placed;
+  }
+
+  /* The one entry point the game, the audits and the sheet all share.
+   * `seed` re-scatters the room per round so replays never look alike. */
+  App.itemQuestScene = function (scene, hue, seed) {
+    var rng = iqLcg(40503 + (seed || 0) * 7919 + Math.round(hue));
+    var built = scene.paint(scene.palette(hue), hue);
+    built.items = iqRelax(iqScatter(built.items, rng));
+    built.foreground = iqForegrounds(hue)[scene.fg] || [];
+    return built;
+  };
+
+  /* Foreground strips drawn after the items: bases get tucked behind a rug
+   * rim, a counter lip, grass or a floor edge, the way real scenes hide
+   * the bottom of objects instead of floating them. */
+  function iqForegrounds(H) {
+    return {    toy: [
+      '<path d="M8 89q42 9 84-1l0 5q-42 9-84 1Z" fill="' + iqHsl(25, 25, 30) + '" opacity=".55"/>'
+    ],
+    kitchen: [
+      '<rect y="93" width="100" height="7" fill="' + iqHsl(H, 20, 30) + '"/>' +
+        '<rect x="30" y="90" width="14" height="10" rx="2" fill="' + iqGray + '"/>' +
+        '<path d="M33 90v-5q0-3 4-3t4 3v5" fill="none" stroke="' + iqGray + '" stroke-width="2"/>'
+    ],
+    garden: [
+      '<path d="M2 96q6-8 12-2q2-6 8-3q6-4 9 2l0 6L2 100Z" fill="' + iqHsl(110, 38, 42) + '"/>' +
+        '<path d="M62 97q5-7 11-2q4-5 10-1q6-3 9 2l0 4L62 100Z" fill="' + iqHsl(110, 38, 42) + '"/>'
+    ],
+    space: [
+      '<rect y="95" width="100" height="5" fill="' + iqInk + '" opacity=".55"/>' +
+        '<path d="M18 96q32-7 64 0" stroke="' + iqTeal + '" stroke-width="1" fill="none" opacity=".6"/>'
+    ],
+    beach: [
+      '<path d="M0 95q25-6 50-2t50-4l0 11L0 100Z" fill="' + iqHsl(45, 55, 74) + '"/>' +
+        '<path d="M0 96q25-5 50-2t50-3" stroke="' + iqWhite + '" stroke-width="1.2" fill="none" opacity=".7"/>'
+    ],
+    attic: [
+      '<rect y="94" width="100" height="6" fill="' + iqHsl(H, 20, 26) + '"/>' +
+        '<path d="M10 97h14M60 97h16" stroke="' + iqHsl(H, 18, 40) + '" stroke-width="1"/>'
+    ],
+    harbor: [
+      '<rect y="95" width="100" height="5" fill="' + iqHsl(30, 30, 30) + '"/>' +
+        '<circle cx="24" cy="95" r="4" fill="' + iqHsl(5, 60, 45) + '"/><circle cx="70" cy="96" r="4" fill="' + iqHsl(5, 60, 45) + '"/>'
+    ],
+    library: [
+      '<rect y="95" width="100" height="5" fill="' + iqHsl(28, 30, 32) + '"/>' +
+        '<rect x="14" y="90" width="18" height="6" rx="1" fill="' + iqRed + '"/>' +
+        '<rect x="66" y="91" width="16" height="5" rx="1" fill="' + iqTeal + '"/>'
+    ],
+    cellar: [
+      '<rect y="95" width="100" height="5" fill="' + iqInk + '" opacity=".6"/>' +
+        '<ellipse cx="30" cy="95" rx="12" ry="2.4" fill="' + iqGray + '" opacity=".35"/>' +
+        '<ellipse cx="72" cy="96" rx="10" ry="2.2" fill="' + iqGray + '" opacity=".35"/>'
+    ],
+    studio: [
+      '<rect y="95" width="100" height="5" fill="' + iqHsl(H, 18, 40) + '"/>' +
+        '<rect x="20" y="90" width="30" height="6" rx="1" fill="' + iqHsl(H, 20, 44) + '"/>'
+    ],
+    camp: [
+      '<rect y="95" width="100" height="5" fill="' + iqHsl(110, 25, 26) + '"/>' +
+        '<path d="M14 97q4-4 9-1M56 96q5-4 10 0" stroke="' + iqHsl(110, 25, 40) + '" stroke-width="1" fill="none"/>'
+    ],
+    candy: [
+      '<rect y="95" width="100" height="5" fill="' + iqHsl(H, 32, 60) + '"/>' +
+        '<circle cx="28" cy="95" r="3" fill="' + iqRed + '"/><circle cx="60" cy="96" r="3" fill="' + iqTeal + '"/><circle cx="86" cy="95" r="3" fill="' + iqGold + '"/>'
+    ]
+  };
+  }
+
   var iqScenes = [
-    { paint: iqSceneToy, palette: iqToyPalette, nameKey: "iqNounPlayroom" },
-    { paint: iqSceneKitchen, palette: iqKitchenPalette, nameKey: "iqNounKitchen" },
-    { paint: iqSceneGarden, palette: iqGardenPalette, nameKey: "iqNounGarden" },
-    { paint: iqSceneSpace, palette: iqSpacePalette, nameKey: "iqNounCapsule" },
-    { paint: iqSceneBeach, palette: iqBeachPalette, nameKey: "iqNounBeach" },
-    { paint: iqSceneAttic, palette: iqAtticPalette, nameKey: "iqNounAttic" },
+    { paint: iqSceneToy, palette: iqToyPalette, nameKey: "iqNounPlayroom", fg: "toy" },
+    { paint: iqSceneKitchen, palette: iqKitchenPalette, nameKey: "iqNounKitchen", fg: "kitchen" },
+    { paint: iqSceneGarden, palette: iqGardenPalette, nameKey: "iqNounGarden", fg: "garden" },
+    { paint: iqSceneSpace, palette: iqSpacePalette, nameKey: "iqNounCapsule", fg: "space" },
+    { paint: iqSceneBeach, palette: iqBeachPalette, nameKey: "iqNounBeach", fg: "beach" },
+    { paint: iqSceneAttic, palette: iqAtticPalette, nameKey: "iqNounAttic", fg: "attic" },
+    { paint: iqSceneHarbor, palette: iqHarborPalette, nameKey: "iqNounHarbor", fg: "harbor" },
+    { paint: iqSceneLibrary, palette: iqLibraryPalette, nameKey: "iqNounLibrary", fg: "library" },
+    { paint: iqSceneCellar, palette: iqCellarPalette, nameKey: "iqNounCellar", fg: "cellar" },
+    { paint: iqSceneStudio, palette: iqStudioPalette, nameKey: "iqNounStudio", fg: "studio" },
+    { paint: iqSceneCamp, palette: iqCampPalette, nameKey: "iqNounCamp", fg: "camp" },
+    { paint: iqSceneCandy, palette: iqCandyPalette, nameKey: "iqNounCandy", fg: "candy" },
   ];
+  var iqZones = iqBuildZones();
   /* Exported so checks and curious players can see the whole deck. */
   App.itemQuestDeck = iqScenes;
 
@@ -569,33 +1073,23 @@
     var flashId = null;
     var shakeId = null;
     var puffId = null;
-    var sceneBag = [];
-    var lastSceneIdx = -1;
-    var levelStartAt = 0;
-
-    function dealScene() {
-      if (!sceneBag.length) {
-        sceneBag = iqShuffle(iqScenes.map(function (scene, index) {
-          return index;
-        }));
-        if (lastSceneIdx !== -1 && sceneBag[sceneBag.length - 1] === lastSceneIdx) {
-          sceneBag.unshift(sceneBag.pop());
-        }
-      }
-      lastSceneIdx = sceneBag.pop();
-      return iqScenes[lastSceneIdx];
-    }
+    var timeLeft = iqLevelSeconds;
+    var tickId = null;
 
     /* --- markup: built with createElement so the headless harness sees it --- */
     var hud = document.createElement("div");
     hud.className = "iq-topbar";
     var heartsEl = document.createElement("strong");
+    var timeEl = document.createElement("strong");
     var scoreEl = document.createElement("strong");
     var badgeEl = document.createElement("strong");
     var heartsPill = document.createElement("span");
     heartsPill.className = "iq-pill iq-pill-hearts";
     heartsPill.appendChild(heartsEl);
     heartsPill.setAttribute("aria-label", t("iqHeartsLeft", { n: iqMaxHearts }));
+    var timePill = document.createElement("span");
+    timePill.className = "iq-pill iq-pill-time";
+    timePill.appendChild(timeEl);
     var scorePill = document.createElement("span");
     scorePill.className = "iq-pill iq-pill-score";
     scorePill.appendChild(scoreEl);
@@ -604,6 +1098,7 @@
     levelBadge.className = "iq-badge";
     levelBadge.appendChild(badgeEl);
     hud.appendChild(heartsPill);
+    hud.appendChild(timePill);
     hud.appendChild(scorePill);
     hud.appendChild(levelBadge);
 
@@ -773,10 +1268,12 @@
       foundSet = [];
       cursor = { x: 50, y: 50 };
 
-      var scene = dealScene();
+      /* The level name promises the room, and the room is delivered: each
+       * level paints its own venue, with a fresh palette and a new pick of
+       * hidden items every round. */
+      var scene = iqScenes[zone.scene];
       var hue = Math.random() * 360;
-      var P = scene.palette(hue);
-      var built = scene.paint(P, hue);
+      var built = App.itemQuestScene(scene, hue);
       var pool = iqShuffle(built.items.slice());
       targets = pool.slice(0, zone.count).map(function (item) {
         return {
@@ -794,9 +1291,10 @@
         var ground =
           '<ellipse cx="' + (item.x + 12 * item.s).toFixed(2) + '" cy="' + (item.y + 24 * item.s - 0.8).toFixed(2) +
           '" rx="' + (9.5 * item.s).toFixed(2) + '" ry="' + (1.9 * item.s).toFixed(2) + '" fill="rgba(15,23,42,.16)"/>';
+        var spin = item.rot ? " rotate(" + item.rot.toFixed(1) + " 12 12)" : "";
         return (
           ground +
-          '<g transform="translate(' + item.x + " " + item.y + ') scale(' + item.s + ')">' +
+          '<g transform="translate(' + item.x.toFixed(2) + " " + item.y.toFixed(2) + ')' + spin + ' scale(' + item.s.toFixed(2) + ')">' +
           item.draw +
           "</g>"
         );
@@ -805,6 +1303,7 @@
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">' +
         built.backdrop.join("") +
         placed.join("") +
+        (built.foreground || []).join("") +
         "</svg>";
       art.style.setProperty(
         "background-image",
@@ -843,6 +1342,58 @@
         "width",
         (targets.length ? (foundSet.length / targets.length) * 100 : 0) + "%",
       );
+    }
+
+    /* The level countdown: 5:00, lazy-armed on the first tap so nothing
+     * ticks behind a hidden panel, and stopped the moment a run ends. */
+    function renderTime() {
+      var m = Math.floor(timeLeft / 60);
+      var sec = timeLeft % 60;
+      timeEl.textContent = m + ":" + (sec < 10 ? "0" : "") + sec;
+      timePill.setAttribute("aria-label", t("iqTimeLeft", {
+        t: m + ":" + (sec < 10 ? "0" : "") + sec
+      }));
+      timePill.classList.toggle("is-low", timeLeft <= 30 && runActive);
+    }
+
+    function ensureTicker() {
+      if (tickId === null && runActive) {
+        tickId = window.setTimeout(tick, 1000);
+      }
+    }
+
+    function stopTicker() {
+      window.clearTimeout(tickId);
+      tickId = null;
+    }
+
+    function tick() {
+      tickId = null;
+      if (!runActive) {
+        return;
+      }
+      timeLeft = Math.max(0, timeLeft - 1);
+      renderTime();
+      if (timeLeft <= 0) {
+        timeUp();
+        return;
+      }
+      tickId = window.setTimeout(tick, 1000);
+    }
+
+    /* The clock beat the hunter: same reveal as running out of hearts. */
+    function timeUp() {
+      stopTicker();
+      runActive = false;
+      roundOpen = false;
+      targets.forEach(function (d, index) {
+        if (foundSet.indexOf(index) !== -1) {
+          return;
+        }
+        addRing(d.cx, d.cy, d.r, "is-reveal");
+      });
+      result.textContent = t("iqTimeUp", { n: score });
+      logAction(t("logItemQuest", { name: zoneName(zone), s: 0, n: score }));
     }
 
     function probeAt(event) {
@@ -893,6 +1444,7 @@
       if (!runActive || !roundOpen) {
         return;
       }
+      ensureTicker();
       for (var index = 0; index < targets.length; index += 1) {
         if (foundSet.indexOf(index) !== -1) {
           continue;
@@ -1020,6 +1572,7 @@
     function runOut() {
       runActive = false;
       roundOpen = false;
+      stopTicker();
       window.clearTimeout(dealId);
       dealId = null;
       targets.forEach(function (d, index) {
@@ -1037,10 +1590,9 @@
 
     function zoneCleared() {
       runActive = false;
-      /* Fast clears bank a speed bonus: the quicker the hunt, the fatter
-       * the payout, capped so patience is never punished into negatives. */
-      var seconds = Math.max(0, Math.round((Date.now() - levelStartAt) / 1000));
-      var speedBonus = Math.max(0, Math.min(300, Math.round(240 - seconds * 2)));
+      stopTicker();
+      /* Whatever is left on the clock banks as a speed bonus. */
+      var speedBonus = Math.min(300, timeLeft * 2);
       if (speedBonus > 0) {
         score += speedBonus;
       }
@@ -1087,13 +1639,15 @@
       mistakes = 0;
       hintsLeft = iqMaxHints;
       runActive = true;
-      levelStartAt = Date.now();
+      stopTicker();
+      timeLeft = iqLevelSeconds;
       result.textContent = t("iqPrompt", {
         name: zoneName(zone),
         k: zone.count,
         r: zone.rounds,
       });
       refreshPicker();
+      renderTime();
       buildRound();
     }
 
@@ -1110,6 +1664,7 @@
     });
 
     App.quietResetItemQuest = function () {
+      stopTicker();
       window.clearTimeout(dealId);
       window.clearTimeout(shakeId);
       window.clearTimeout(puffId);
@@ -1145,10 +1700,16 @@
       "iqNounCapsule": "Capsule",
       "iqNounBeach": "Beach",
       "iqNounAttic": "Attic",
-      "iqNounCellar": "Cellar",
-      "iqNounStudio": "Studio",
       "iqNounHarbor": "Harbor",
       "iqNounLibrary": "Library",
+      "iqNounCellar": "Cellar",
+      "iqNounStudio": "Studio",
+      "iqNounCamp": "Campsite",
+      "iqNounCandy": "Candy Shop",
+      "iqVisit2": " II",
+      "iqVisit3": " III",
+      "iqVisit4": " IV",
+      "iqVisit5": " V",
       "iqRoundStat": "{n}/{total}",
       "iqHeartsLeft": "{n} of 3 hearts left",
       "iqBtnNew": "New run",
@@ -1166,6 +1727,8 @@
       "iqBest": "Best {n}",
       "iqProgress": "Found {n} of {total}",
       "iqSpeed": "Speed bonus +{n} points!",
+      "iqTimeUp": "Time's up! {n} points. The rest are lit.",
+      "iqTimeLeft": "Time left {t}",
       "iqTrayLabel": "Items to find",
       "iqTrayTitle": "Find these items",
       "iqBoardLabel": "Scene - tap the items listed in the tray",
@@ -1190,10 +1753,16 @@
       "iqNounCapsule": "太空舱",
       "iqNounBeach": "海滩",
       "iqNounAttic": "阁楼",
-      "iqNounCellar": "地窖",
-      "iqNounStudio": "画室",
       "iqNounHarbor": "码头",
       "iqNounLibrary": "书房",
+      "iqNounCellar": "地窖",
+      "iqNounStudio": "画室",
+      "iqNounCamp": "露营地",
+      "iqNounCandy": "糖果店",
+      "iqVisit2": "·二",
+      "iqVisit3": "·三",
+      "iqVisit4": "·四",
+      "iqVisit5": "·五",
       "iqRoundStat": "{n}/{total}",
       "iqHeartsLeft": "还剩 {n} 颗红心",
       "iqBtnNew": "重新开始",
@@ -1211,6 +1780,8 @@
       "iqBest": "最佳 {n}",
       "iqProgress": "已找到 {n}/{total} 件",
       "iqSpeed": "速度奖励 +{n} 分！",
+      "iqTimeUp": "时间到！共 {n} 分。其余物品已点亮。",
+      "iqTimeLeft": "剩余时间 {t}",
       "iqTrayLabel": "待寻找物品",
       "iqTrayTitle": "找出这些物品",
       "iqBoardLabel": "场景 - 点击托盘中列出的物品",

@@ -694,6 +694,7 @@
       ctx.clearRect(0, 0, shpW, shpH);
       ctx.fillStyle = "#0c1327";
       ctx.fillRect(0, 0, shpW, shpH);
+      if (App.world) { App.world.backdrop(ctx, shpW, shpH, "stage"); }
       /* The wall strip. */
       ctx.fillStyle = "#d9c493";
       ctx.fillRect(288, 6, 44, shpH - 12);

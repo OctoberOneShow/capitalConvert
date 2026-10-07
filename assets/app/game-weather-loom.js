@@ -357,6 +357,7 @@
     var cursor = { x: 2, y: 3 };
     var running = false;
     var done = false;
+    var showMetrics = false;
     var timerId = null;
     var rafId = null;
 
@@ -432,6 +433,12 @@
       dirRow.appendChild(btn);
       return btn;
     });
+
+    var metricsBtn = el("button", "wlk-tool", "wlkReadouts");
+    metricsBtn.type = "button";
+    metricsBtn.setAttribute("aria-pressed", "false");
+    metricsBtn.addEventListener("click", function () { showMetrics = !showMetrics; metricsBtn.setAttribute("aria-pressed", String(showMetrics)); render(); });
+    toolsRow.appendChild(metricsBtn);
 
     var result = el("p", "game-result");
     result.setAttribute("role", "status");
@@ -668,6 +675,7 @@
       ctx.clearRect(0, 0, wlkWide, wlkTall);
       ctx.fillStyle = "rgba(8, 12, 20, 0.92)";
       ctx.fillRect(0, 0, wlkWide, wlkTall);
+      if (App.world) { App.world.backdrop(ctx, wlkWide, wlkTall, "garden"); }
       for (y = 0; y < wlkRows; y += 1) {
         for (x = 0; x < wlkCols; x += 1) {
           i = wlkAt(x, y);
@@ -682,8 +690,9 @@
           if (stone || open) {
             ctx.fillStyle = "rgba(226, 232, 240, 0.8)";
             ctx.font = "bold 13px 'JetBrains Mono', monospace";
-            ctx.fillText(stone ? "^" : "=", px + wlkCell / 2, py + 10);
-          } else {
+            if (App.world) { App.world.piece(ctx, stone ? "mountain" : "wave", px + wlkCell / 2, py + wlkCell / 2, wlkCell - 8, stone ? "#a9b8bb" : "#91e6e4"); }
+            else { ctx.fillText(stone ? "^" : "=", px + wlkCell / 2, py + 10); }
+          } else if (showMetrics || !App.world) {
             ctx.fillStyle = "rgba(255, 214, 165, 0.95)";
             ctx.font = "9px 'JetBrains Mono', monospace";
             ctx.fillText(String(Math.round(wlkClamp(state.heat[i], 0, 100))), px + wlkCell / 2, py + 2);
@@ -695,6 +704,11 @@
               ctx.textAlign = "left";
               ctx.fillText("r" + Math.round(state.rain[i]), px + 2, py + 12);
             }
+          } else {
+            if (state.moist[i] > 45) { App.world.piece(ctx, "cloud", px + wlkCell / 2, py + 12, 18, state.moist[i] > 95 ? "#cce5ef" : "#9db9bf"); }
+            ctx.fillStyle = "#d7b07c"; ctx.fillRect(px + 4, py + wlkCell - 8, Math.max(2, (wlkCell - 9) * state.heat[i] / 100), 2);
+            ctx.fillStyle = "#81d4dd"; ctx.fillRect(px + 4, py + wlkCell - 4, Math.max(2, (wlkCell - 9) * state.moist[i] / 160), 2);
+            if (state.rain[i] > .5) { ctx.strokeStyle = "#b7e7ef"; ctx.lineWidth = 1; for (var drop = 0; drop < 3; drop += 1) { ctx.beginPath(); ctx.moveTo(px + 10 + drop * 5, py + 16); ctx.lineTo(px + 8 + drop * 5, py + 20); ctx.stroke(); } }
           }
         }
       }
@@ -727,6 +741,7 @@
         ctx.strokeStyle = over ? "#fb7185" : inside ? "#a3e635" : "rgba(226, 232, 240, 0.7)";
         ctx.lineWidth = 2;
         ctx.strokeRect(px + 2, py + 2, wlkCell - 5, wlkCell - 5);
+        if (App.world) { App.world.piece(ctx, "house", px + wlkCell / 2 - 3, py + wlkCell / 2 + 4, wlkCell - 12, over ? "#fba79b" : inside ? "#b6e9ac" : "#d9c39a"); }
         ctx.fillStyle = "#ffffff";
         ctx.font = "bold 11px 'JetBrains Mono', monospace";
         ctx.textAlign = "right";
@@ -766,7 +781,7 @@
         t("wlkTool" + tool.toUpperCase()) +
         (tool === "w" ? " " + wlkArrows[wind] : "") +
         " \u00b7 " +
-        villageLine();
+        villageLine() + " · " + t("wlkCellReadings", { h: Math.round(state.heat[wlkAt(cursor.x, cursor.y)]), m: Math.round(state.moist[wlkAt(cursor.x, cursor.y)]) });
     }
 
     function frame() {
@@ -911,6 +926,8 @@
   App.addStrings({
     en: {
       "tabWeatherLoom": "Weather Loom",
+      "wlkReadouts": "Show readings",
+      "wlkCellReadings": "Selected: heat {h} / moisture {m}",
       "wlkZ1": "Two Villages",
       "wlkZ2": "The Ridge",
       "wlkZ3": "Dust Year",
@@ -925,7 +942,7 @@
       "wlkPointsValue": "{n}/{max} left",
       "wlkFedValue": "{n}/{max}",
       "wlkFloodValue": "{n}",
-      "wlkFieldLabel": "Region map: every cell prints its heat and moisture as numbers; arrow keys move the cursor, 1 2 3 pick wind, heat or shade, Enter weaves, R runs the season",
+      "wlkFieldLabel": "Region map: gauges show heat and moisture; Show readings reveals numbers. Arrow keys move the cursor, 1 2 3 pick wind, heat or shade, Enter weaves, R runs the season",
       "wlkToolW": "Wind",
       "wlkToolH": "Heat",
       "wlkToolS": "Shade",
@@ -956,6 +973,8 @@
     },
     zh: {
       "tabWeatherLoom": "气候织机",
+      "wlkReadouts": "显示读数",
+      "wlkCellReadings": "选中格：热度 {h} / 湿度 {m}",
       "wlkZ1": "两个村庄",
       "wlkZ2": "山脊挡凤",
       "wlkZ3": "干旱之年",
@@ -970,7 +989,7 @@
       "wlkPointsValue": "剩 {n}/{max}",
       "wlkFedValue": "{n}/{max}",
       "wlkFloodValue": "{n}",
-      "wlkFieldLabel": "区域图：每格都用数字写着自己的温度与湿度；方向键移动光标，1 2 3 选风、热、荫，回车织入，R 运行季度",
+      "wlkFieldLabel": "区域图：刻度显示热度与湿度，显示读数可查看数字；方向键移动光标，1 2 3 选风、热、荫，回车织入，R 运行季度",
       "wlkToolW": "风",
       "wlkToolH": "热",
       "wlkToolS": "荫",

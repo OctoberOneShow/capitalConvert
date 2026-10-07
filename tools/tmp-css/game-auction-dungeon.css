@@ -158,13 +158,22 @@
 
 .aud-bidder {
     display: grid;
-    grid-template-columns: minmax(76px, 1fr) 2fr 1fr;
+    grid-template-columns: 30px minmax(72px, 1fr) 2fr 1fr;
+    align-items: center;
     gap: 2px 10px;
     padding: 6px 4px;
     border-bottom: 1px solid var(--border);
     font-family: "JetBrains Mono", monospace;
     font-size: 0.64rem;
     line-height: 1.45;
+}
+
+.aud-bidpurse {
+    grid-column: 2;
+}
+
+.aud-bidkit {
+    grid-column: 3 / -1;
 }
 
 .aud-bidder:last-child {
@@ -232,7 +241,8 @@
 
 .aud-foe {
     display: grid;
-    grid-template-columns: minmax(84px, 1fr) 2fr;
+    grid-template-columns: 30px minmax(84px, 1fr) 2fr;
+    align-items: center;
     gap: 2px 8px;
     padding: 5px 4px;
     border-bottom: 1px dashed var(--border);
@@ -256,7 +266,7 @@
 
 /* The telegraph is a sentence with a number in it, never a colour chip. */
 .aud-intent {
-    grid-column: 1 / -1;
+    grid-column: 2 / -1;
     color: var(--accent-2);
     font-family: "JetBrains Mono", monospace;
     font-size: 0.64rem;
@@ -297,4 +307,422 @@
     .aud-foe {
         grid-template-columns: 1fr;
     }
+
+    .aud-bidpurse,
+    .aud-bidkit,
+    .aud-intent {
+        grid-column: auto;
+    }
+}
+
+/* ======================================================================
+ * The polish pass: a torch-lit auction hall.
+ * Hue 42 is the family's hearth value — warm wood, gold coin, one dark
+ * doorway. Every state stays doubled by words (in/out, over the band,
+ * down) exactly as the first pass guaranteed; what is added here is the
+ * room, the counter and the beats.
+ * ====================================================================== */
+
+#gamePanelAuctionDungeon {
+    --gp-hue: 42;
+    --gp-sat: 46%;
+    --gp-l: 24%;
+}
+
+[data-theme="light"] #gamePanelAuctionDungeon {
+    --gp-l: 32%;
+    --gp-sat: 42%;
+}
+
+/* ------------------------------------------------------ the dungeon room */
+
+.aud-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.5;
+    pointer-events: none;
+    border-radius: inherit;
+}
+
+[data-theme="light"] .aud-backdrop {
+    opacity: 0.32;
+}
+
+/* Torch-breath over the scene: a slow warm pulse, never a hard blink. */
+.aud-backdrop::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(88% 58% at 50% -6%, hsla(34, 96%, 56%, 0.2), transparent 68%);
+    animation: aud-flicker 3.8s ease-in-out infinite alternate;
+}
+
+@keyframes aud-flicker {
+    from { opacity: 0.5; }
+    to { opacity: 1; }
+}
+
+[data-motion="off"] .aud-backdrop::after {
+    animation: none;
+    opacity: 0.8;
+}
+
+/* --------------------------------------------------- the lot on the block */
+
+/* --------------------------------------------------- the lot on the block
+ * The boxes take the panel's own dark gp surfaces, not the page's light
+ * parchment: the hall stays a dark room in both themes, which is what keeps
+ * the panel's near-white ink readable everywhere. */
+.aud-lot,
+[data-theme="light"] .aud-lot {
+    overflow: hidden;
+    background:
+        radial-gradient(120% 90% at 50% -20%, hsla(var(--gp-hue), 78%, 52%, 0.17), transparent 60%),
+        linear-gradient(176deg, var(--gp-surface-hi), var(--gp-surface) 46%, var(--gp-surface-lo));
+    box-shadow:
+        inset 0 1px 0 hsla(var(--gp-hue), 70%, 78%, 0.14),
+        inset 0 -12px 26px rgba(0, 0, 0, 0.3),
+        0 10px 24px -18px rgba(0, 0, 0, 0.8);
+}
+
+.aud-lottop {
+    display: flex;
+    gap: 12px;
+    align-items: stretch;
+}
+
+/* The drawn portrait: frame and motif are App.art; the box gives the shared
+ * .art-icon a fixed well to fill, so it can never render enormous. */
+.aud-portrait {
+    position: relative;
+    flex: 0 0 auto;
+    width: 88px;
+    min-height: 96px;
+    border-radius: 10px;
+    background:
+        radial-gradient(82% 72% at 50% 28%, hsla(var(--gp-hue), 68%, 38%, 0.55), hsla(var(--gp-hue), 58%, 10%, 0.7));
+    box-shadow:
+        inset 0 0 18px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 hsla(var(--gp-hue), 70%, 76%, 0.18);
+}
+
+[data-theme="light"] .aud-portrait {
+    background: radial-gradient(82% 72% at 50% 28%, hsla(var(--gp-hue), 48%, 44%, 0.55), hsla(var(--gp-hue), 50%, 16%, 0.75));
+}
+
+.aud-portrait-icon {
+    position: absolute;
+    left: 17%;
+    top: 20%;
+    width: 66%;
+    height: 60%;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
+}
+
+.aud-lottext {
+    flex: 1;
+    min-width: 0;
+}
+
+/* --------------------------------------------------------- the counter */
+
+.aud-counter {
+    position: relative;
+    margin-top: 10px;
+    padding: 9px 14px 8px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(180deg, hsl(30, 40%, 23%), hsl(28, 44%, 13%));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.14),
+        inset 0 -2px 6px rgba(0, 0, 0, 0.5),
+        0 4px 10px -6px rgba(0, 0, 0, 0.8);
+}
+
+/* The engraved plaque rides under the price as texture, not as layout. */
+.aud-counter .art-plaque {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.28;
+    pointer-events: none;
+}
+
+.aud-counterrow {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.aud-coinmark {
+    display: block;
+    flex: 0 0 auto;
+    width: 20px;
+    height: 20px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.6));
+}
+
+.aud-counter .aud-price {
+    margin: 0;
+    color: #ffe9c2;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.65);
+}
+
+/* The bid ladder: one rung per paddle raised, the newest stamped in. */
+.aud-ladder {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 9px;
+    margin-top: 7px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.aud-rung {
+    width: 8px;
+    height: 100%;
+    border-radius: 2px 2px 1px 1px;
+    background: linear-gradient(180deg, hsl(44, 90%, 62%), hsl(36, 80%, 40%));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.5),
+        0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.aud-rung.aud-rung-new {
+    transform-origin: bottom;
+    animation: aud-rung-pop 300ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes aud-rung-pop {
+    from {
+        transform: scaleY(0.15);
+        opacity: 0;
+    }
+    to {
+        transform: scaleY(1);
+        opacity: 1;
+    }
+}
+
+[data-motion="off"] .aud-rung.aud-rung-new {
+    animation: none;
+}
+
+/* ------------------------------------------------------- the bidder seats */
+
+.aud-avatar {
+    grid-row: 1 / span 2;
+    width: 30px;
+    height: 30px;
+    padding: 4px;
+    box-sizing: border-box;
+    border-radius: 50%;
+    border: 1px solid hsla(var(--gp-hue), 60%, 70%, 0.35);
+    background: radial-gradient(circle at 35% 30%, hsla(var(--gp-hue), 50%, 34%, 0.9), hsla(var(--gp-hue), 55%, 12%, 0.95));
+    box-shadow:
+        inset 0 2px 4px rgba(255, 255, 255, 0.12),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.5),
+        0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="light"] .aud-avatar {
+    background: radial-gradient(circle at 35% 30%, hsla(var(--gp-hue), 44%, 50%, 0.9), hsla(var(--gp-hue), 50%, 22%, 0.95));
+}
+
+.aud-bidder.aud-is-out .aud-avatar {
+    filter: grayscale(0.7) brightness(0.7);
+}
+
+.aud-bidder.aud-is-you .aud-avatar {
+    border-color: hsl(44, 88%, 60%);
+}
+
+/* The sale reveal: the winning row carries a gold edge as well as weight. */
+.aud-salerow.aud-is-win {
+    padding-left: 8px;
+    border-left: 3px solid hsl(44, 88%, 58%);
+}
+
+/* ------------------------------------------------------------ the doors */
+
+/* The rows and the camp carry their own display, which would out-vote the
+ * UA's [hidden] rule — empty seats and camp buttons would haunt every door. */
+.aud-foe[hidden],
+.aud-camp[hidden] {
+    display: none;
+}
+
+.aud-stageheadrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.aud-stageicon {
+    display: block;
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+    padding: 2px;
+    box-sizing: border-box;
+    border-radius: 7px;
+    border: 1px solid hsla(var(--gp-hue), 60%, 70%, 0.3);
+    background: radial-gradient(circle at 35% 30%, hsla(var(--gp-hue), 50%, 32%, 0.9), hsla(var(--gp-hue), 55%, 12%, 0.95));
+    box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.45);
+}
+
+.aud-foeicon {
+    display: block;
+    width: 30px;
+    height: 30px;
+    padding: 3px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid hsla(var(--gp-hue), 45%, 62%, 0.3);
+    background:
+        radial-gradient(circle at 35% 28%, hsla(0, 0%, 100%, 0.08), transparent 60%),
+        linear-gradient(180deg, hsla(var(--gp-hue), 30%, 20%, 0.9), hsla(var(--gp-hue), 35%, 9%, 0.95));
+    box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="light"] .aud-foeicon,
+[data-theme="light"] .aud-stageicon {
+    background: radial-gradient(circle at 35% 28%, hsla(var(--gp-hue), 40%, 46%, 0.9), hsla(var(--gp-hue), 45%, 20%, 0.95));
+}
+
+/* Downed is a word, a greyed plate and a flat bar — never colour alone. */
+.aud-foe.is-down {
+    opacity: 0.55;
+}
+
+.aud-foe.is-down .aud-foeicon {
+    filter: grayscale(1) brightness(0.6);
+}
+
+.aud-hpbar {
+    grid-column: 2 / -1;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.7);
+    overflow: hidden;
+}
+
+[data-theme="light"] .aud-hpbar {
+    background: hsla(var(--gp-hue), 40%, 10%, 0.5);
+}
+
+.aud-hpfill {
+    height: 100%;
+    width: 100%;
+    border-radius: 3px;
+    background: linear-gradient(180deg, hsl(8, 85%, 58%), hsl(8, 80%, 38%));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    transition: width 0.35s ease;
+}
+
+[data-motion="off"] .aud-hpfill {
+    transition: none;
+}
+
+/* On narrow seats the medallions drop into the flow above their rows. */
+@media (max-width: 640px) {
+    .aud-lottop {
+        flex-wrap: wrap;
+    }
+
+    .aud-portrait {
+        width: 72px;
+        min-height: 80px;
+    }
+}
+
+/* --------------------------------------------- the hall's own button metal
+ * The first pass borrowed the site's cyan accent; under torchlight every
+ * control belongs to the warm family, and the hammer action is a filled
+ * brass paddle rather than a second hue. */
+.aud-btn {
+    border-color: hsla(var(--gp-hue), 48%, 62%, 0.32);
+    background: linear-gradient(180deg, hsla(var(--gp-hue), 32%, 25%, 0.8), hsla(var(--gp-hue), 36%, 14%, 0.85));
+}
+
+.aud-btn:hover:not(:disabled) {
+    border-color: var(--gp-accent);
+    background: linear-gradient(180deg, hsla(var(--gp-hue), 42%, 30%, 0.9), hsla(var(--gp-hue), 40%, 18%, 0.9));
+}
+
+.aud-btn.aud-is-sel {
+    border-color: var(--gp-accent);
+    color: var(--gp-accent-soft);
+    background: linear-gradient(180deg, hsla(var(--gp-hue), 46%, 30%, 0.9), hsla(var(--gp-hue), 44%, 16%, 0.95));
+}
+
+.aud-btn.aud-bid {
+    border-color: var(--gp-accent);
+    color: var(--gp-accent-soft);
+}
+
+/* The resolve paddle: filled brass, dark ink — unmistakable as the go button. */
+.aud-btn.aud-go {
+    border-color: hsl(40, 84%, 58%);
+    background: linear-gradient(180deg, hsl(44, 86%, 60%), hsl(36, 76%, 42%));
+    color: #2b1a05;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.aud-btn.aud-go:hover:not(:disabled) {
+    background: linear-gradient(180deg, hsl(46, 92%, 66%), hsl(38, 80%, 46%));
+}
+
+.aud-btn.aud-go:disabled {
+    color: #4b3a1c;
+    opacity: 0.6;
+}
+
+/* One surface for the whole door, so the log line never floats over the room.
+ * Doubled with the light selector so it out-ranks the theme block above. */
+.aud-stage,
+[data-theme="light"] .aud-stage {
+    background:
+        radial-gradient(120% 90% at 50% -20%, hsla(var(--gp-hue), 70%, 52%, 0.12), transparent 60%),
+        linear-gradient(176deg, var(--gp-surface-hi), var(--gp-surface) 46%, var(--gp-surface-lo));
+    box-shadow:
+        inset 0 1px 0 hsla(var(--gp-hue), 70%, 78%, 0.12),
+        inset 0 -12px 26px rgba(0, 0, 0, 0.26),
+        0 10px 24px -18px rgba(0, 0, 0, 0.8);
+}
+
+/* The seats and the sale reveal sit in the same dark wood as the counter. */
+.aud-bidders,
+[data-theme="light"] .aud-bidders {
+    background: linear-gradient(176deg, var(--gp-surface-hi), var(--gp-surface) 46%, var(--gp-surface-lo));
+}
+
+.aud-bidder.aud-is-you {
+    background: hsla(var(--gp-hue), 55%, 40%, 0.18);
+}
+
+.aud-sale,
+[data-theme="light"] .aud-sale {
+    border-style: dashed;
+    background: hsla(var(--gp-hue), 45%, 8%, 0.45);
+}
+
+[data-theme="light"] .aud-btn.aud-is-sel {
+    background: linear-gradient(180deg, hsla(var(--gp-hue), 40%, 34%, 0.95), hsla(var(--gp-hue), 40%, 22%, 0.95));
+}
+
+.aud-kits,
+.aud-queue,
+.aud-bidpurse {
+    color: var(--gp-accent-soft);
+}
+
+/* The enemy telegraph keeps a hot ember voice, still with its sentence. */
+.aud-intent {
+    color: hsl(22, 86%, 66%);
 }

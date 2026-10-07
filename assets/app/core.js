@@ -194,6 +194,7 @@
     document.querySelectorAll("[data-i18n-title]").forEach(function (element) {
       element.setAttribute("title", t(element.getAttribute("data-i18n-title")));
     });
+    if (App.refreshPresentationLabels) { App.refreshPresentationLabels(); }
   }
 
   function initLanguagePicker() {
@@ -589,6 +590,31 @@
       applyMotionLevel(motionLevel.value);
       setStatus(t("statusMotion"), "success");
       logAction(t("logMotion", { value: motionLevel.value }));
+    });
+  }
+
+  function initSoundControls() {
+    var soundLevel = getElement("soundLevel");
+    var saved = App.storage.getItem("sound-level") || "on";
+
+    if (App.applySoundLevel) {
+      App.applySoundLevel(saved);
+    }
+    if (!soundLevel) {
+      return;
+    }
+
+    soundLevel.value = saved;
+    soundLevel.addEventListener("change", function () {
+      App.storage.setItem("sound-level", soundLevel.value);
+      if (App.applySoundLevel) {
+        App.applySoundLevel(soundLevel.value);
+      }
+      setStatus(t("statusSound"), "success");
+      logAction(t("logSound", { value: soundLevel.value }));
+      if (soundLevel.value === "on" && App.playSfx) {
+        App.playSfx("select");
+      }
     });
   }
 
@@ -1893,6 +1919,7 @@
   App.setActiveNav = setActiveNav;
   App.initTheme = initTheme;
   App.initMotionControls = initMotionControls;
+  App.initSoundControls = initSoundControls;
   App.initHistoryDrawer = initHistoryDrawer;
   App.initBackground = initBackground;
   App.initAmbientOrbs = initAmbientOrbs;

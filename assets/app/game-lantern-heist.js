@@ -664,6 +664,7 @@
       var parsed = lheParse(level);
       var cells = view.cells;
       ctx.clearRect(0, 0, lheCanvas, lheCanvas);
+      if (App.world) { App.world.backdrop(ctx, lheCanvas, lheCanvas, "city"); }
       ctx.fillStyle = "rgba(12, 18, 30, 0.92)";
       ctx.fillRect(geo.x0, geo.y0, geo.cell * geo.side, geo.cell * geo.side);
 
@@ -727,7 +728,8 @@
       ctx.font = "bold " + Math.floor(geo.cell * 0.5) + "px 'JetBrains Mono', monospace";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("@", bx + geo.cell / 2, by + geo.cell / 2 + 1);
+      if (App.world) { App.world.piece(ctx, "agent", bx + geo.cell / 2, by + geo.cell / 2, geo.cell - 6, state.hidden > 0 ? "#56787f" : "#99dfd9"); }
+      else { ctx.fillText("@", bx + geo.cell / 2, by + geo.cell / 2 + 1); }
     }
 
     function glyph(x, y, text, color) {
@@ -738,7 +740,9 @@
       ctx.font = "bold " + Math.floor(geo.cell * 0.52) + "px 'JetBrains Mono', monospace";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(text, px + geo.cell / 2, py + geo.cell / 2 + 1);
+      var icon = text === "K" ? "key" : text === "G" ? "book" : "door";
+      if (App.world) { App.world.piece(ctx, icon, px + geo.cell / 2, py + geo.cell / 2, geo.cell - 9, color); }
+      else { ctx.fillText(text, px + geo.cell / 2, py + geo.cell / 2 + 1); }
     }
 
     function markCell(map, letter, colorFor) {

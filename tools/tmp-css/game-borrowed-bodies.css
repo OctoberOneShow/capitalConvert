@@ -1,143 +1,399 @@
-/* Borrowed Bodies */
-.brb-grid {
-    display: grid;
-    grid-template-columns: repeat(10, minmax(0, 1fr));
-    gap: 3px;
-    margin-top: 12px;
-    padding: 8px;
-    border-radius: 14px;
-    border: 1px solid var(--border);
-    background: var(--panel-strong);
+/* game-borrowed-bodies (registry game) */
+
+/* Borrowed Bodies: three meeple bodies seated in drawn tiles, one wandering mind.
+   The terrain plates are drawn by App.art and the figures by a small meeple set
+   this sheet hosts; the two animations the genre is judged on are the possession
+   arc - a spirit that flies from the abandoned body to the borrowed one - and
+   the hop a body makes when the mind steps it. Every state also carries a glyph,
+   an icon or a ring, so no rule here leans on colour alone. */
+
+/* The mystery hue of the family palette; the shared layer would otherwise pick
+   its own, and everything below is keyed off these three tokens. */
+#gamePanelBorrowedBodies {
+    --gp-hue: 272;
+    --gp-sat: 58%;
+    --gp-l: 23%;
 }
 
+/* ------------------------------------------------------- the room and its air */
+
+.brb-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.brb-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+    gap: 4px;
+    margin-top: 12px;
+    padding: 9px;
+    border-radius: 16px;
+    border: 1px solid hsla(var(--gp-hue), 60%, 74%, 0.3);
+    background:
+        radial-gradient(120% 90% at 50% -12%, hsla(var(--gp-hue), 72%, 46%, 0.3), transparent 62%),
+        linear-gradient(178deg, hsla(var(--gp-hue), 56%, 15%, 0.92), hsla(calc(var(--gp-hue) + 18), 52%, 8%, 0.96));
+    box-shadow:
+        inset 0 2px 14px rgba(0, 0, 0, 0.6),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+        0 12px 26px -16px rgba(0, 0, 0, 0.8);
+    touch-action: manipulation;
+}
+
+/* An inner bevel line so the room reads as carved, not printed. */
+.brb-grid::before {
+    content: "";
+    position: absolute;
+    inset: 3px;
+    border-radius: 13px;
+    border: 1px solid hsla(var(--gp-hue), 70%, 72%, 0.14);
+    pointer-events: none;
+}
+
+[data-theme="light"] .brb-grid {
+    border-color: hsla(var(--gp-hue), 40%, 30%, 0.3);
+    background:
+        radial-gradient(120% 90% at 50% -12%, hsla(var(--gp-hue), 52%, 66%, 0.34), transparent 62%),
+        linear-gradient(178deg, hsla(var(--gp-hue), 34%, 78%, 0.92), hsla(var(--gp-hue), 30%, 62%, 0.94));
+    box-shadow:
+        inset 0 2px 10px hsla(var(--gp-hue), 42%, 24%, 0.28),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.55),
+        0 12px 24px -18px hsla(var(--gp-hue), 40%, 22%, 0.6);
+}
+
+[data-theme="light"] .brb-grid::before {
+    border-color: hsla(var(--gp-hue), 50%, 22%, 0.16);
+}
+
+/* ------------------------------------------------------------------ the cells */
+
 .brb-cell {
+    position: relative;
     aspect-ratio: 1;
-    min-height: 28px;
+    min-height: 26px;
+    display: block;
     padding: 0;
-    border-radius: 6px;
-    border: 1px solid transparent;
-    background: var(--surface-soft);
-    color: var(--text-secondary);
-    font-family: "JetBrains Mono", monospace;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text);
+    font-family: "JetBrains Mono", ui-monospace, monospace;
     font-size: 0.82rem;
     line-height: 1;
     cursor: pointer;
-    transition:
-        border-color 0.16s ease,
-        transform 0.16s ease;
-}
-
-.brb-cell.is-wall {
-    background: var(--panel-bg);
-    color: var(--text-secondary);
-    cursor: default;
-}
-
-.brb-cell.is-gap {
-    border-style: dashed;
-    border-color: var(--danger-text);
-    color: var(--danger-text);
-}
-
-.brb-cell.is-water {
-    border-color: var(--accent);
-    color: var(--accent);
-}
-
-.brb-cell.is-pipe,
-.brb-cell.is-perch {
-    border-color: var(--accent-2);
-    color: var(--accent-2);
-}
-
-.brb-cell.is-latch {
-    border-style: dashed;
-    border-color: var(--text-secondary);
-    color: var(--text-secondary);
-}
-
-.brb-cell.is-open {
-    border-color: var(--success-text, var(--accent));
-    color: var(--accent);
-}
-
-.brb-cell.brb-crate {
-    background: var(--panel-bg);
-    color: var(--text);
-}
-
-.brb-cell.brb-exit {
-    border-color: var(--accent-2);
-    color: var(--accent-2);
-    font-weight: 800;
-}
-
-.brb-cell.brb-here {
-    border-color: var(--accent);
-    box-shadow: var(--focus-ring);
-    color: var(--text);
-    font-weight: 800;
-}
-
-.brb-cell:hover:not(.is-wall) {
-    transform: translateY(-1px);
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .brb-cell:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
+    z-index: 2;
 }
+
+/* The terrain plate is drawn art; the button just carries it. */
+.brb-plate {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transition: transform 0.14s ease;
+}
+
+.brb-plate > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.4));
+}
+
+.brb-cell:hover .brb-plate {
+    transform: translateY(-1.5px);
+}
+
+.brb-cell:active .brb-plate {
+    transform: translateY(1px) scale(0.97);
+}
+
+.brb-cell.is-wall {
+    cursor: default;
+}
+
+/* Walls sink: darker and flatter than any standing surface, so the room's
+   boundary is a value change, not just a hue change. */
+.brb-cell.is-wall .brb-plate > svg {
+    filter: brightness(0.52) saturate(0.72);
+}
+
+.brb-cell.is-wall:hover .brb-plate,
+.brb-cell.is-wall:active .brb-plate {
+    transform: none;
+}
+
+/* The chasm: a dashed lip over the dark well so the hole is a shape, not a tint. */
+.brb-cell.is-gap .brb-plate::after {
+    content: "";
+    position: absolute;
+    inset: 14%;
+    border-radius: 6px;
+    border: 2px dashed hsla(var(--gp-hue), 65%, 82%, 0.42);
+    pointer-events: none;
+}
+
+[data-theme="light"] .brb-cell.is-gap .brb-plate::after {
+    border-color: hsla(var(--gp-hue), 55%, 24%, 0.5);
+}
+
+/* The goal breathes: the flag's plate pulses its glow. Paired with the flag
+   icon, so the state is never colour-only. */
+.brb-cell.brb-exit .brb-plate > svg {
+    animation: brb-exit-pulse 1.9s ease-in-out infinite;
+}
+
+@keyframes brb-exit-pulse {
+    0%,
+    100% {
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 2px hsla(46, 95%, 62%, 0.3));
+    }
+    50% {
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4)) drop-shadow(0 0 9px hsla(46, 95%, 64%, 0.9));
+    }
+}
+
+/* ----------------------------------------------------------------- the bodies */
+
+/* The HUD chip's meeple: sized in em so it sits in the text line it names. */
+.brb-mind-fig {
+    display: inline-block;
+    width: 1.15em;
+    height: 1.15em;
+    vertical-align: -0.16em;
+    margin-right: 5px;
+}
+
+.brb-mark {
+    position: absolute;
+    inset: 11%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.brb-mark-crate {
+    inset: 17%;
+}
+
+.brb-mark-exit {
+    inset: 13% 19% 7%;
+}
+
+.brb-fig {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* The inhabited body floats on the panel glow - the "you are in here" cue. */
+.brb-cell.brb-here .brb-mark {
+    filter: drop-shadow(0 0 7px var(--gp-glow));
+}
+
+/* A spirit halo hovers over whichever body holds the mind. */
+.brb-mark-mind::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: -13%;
+    width: 58%;
+    height: 22%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    border: 2px solid hsla(var(--gp-hue), 95%, 82%, 0.95);
+    box-shadow:
+        0 0 9px var(--gp-glow),
+        inset 0 0 4px var(--gp-glow);
+    animation: brb-halo 2.1s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes brb-halo {
+    0%,
+    100% {
+        opacity: 0.55;
+        transform: translateX(-50%) scale(0.92);
+    }
+    50% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1.07);
+    }
+}
+
+/* --------------------------------------------------- the floating riders */
+
+.brb-fly {
+    position: fixed;
+    z-index: 9997;
+    pointer-events: none;
+    will-change: transform;
+}
+
+.brb-fly > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+.brb-fly-wisp {
+    filter: drop-shadow(0 0 10px hsla(var(--gp-hue), 95%, 70%, 0.9));
+}
+
+.brb-fly-hop,
+.brb-fly-crate {
+    filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.45));
+}
+
+/* --------------------------------------------------------- rules and portraits */
 
 .brb-rules {
     display: grid;
-    gap: 4px;
+    gap: 5px;
     margin-top: 10px;
 }
 
 .brb-rule {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 6px 8px;
-    border-radius: 8px;
-    border: 1px dashed var(--border);
-    background: var(--surface-soft);
+    border-radius: 10px;
+    border: 1px dashed hsla(var(--gp-hue), 45%, 74%, 0.28);
+    background: hsla(var(--gp-hue), 60%, 12%, 0.45);
     color: var(--text-secondary);
     font-size: 0.76rem;
     line-height: 1.4;
 }
 
+[data-theme="light"] .brb-rule {
+    background: hsla(var(--gp-hue), 46%, 92%, 0.5);
+    border-color: hsla(var(--gp-hue), 45%, 28%, 0.3);
+}
+
+/* The active body's rule card: solid frame plus a lit portrait. */
 .brb-rule.brb-active {
     border-style: solid;
-    border-color: var(--accent);
+    border-color: hsla(var(--gp-hue), 85%, 76%, 0.65);
     color: var(--text);
+    box-shadow:
+        inset 0 0 0 1px hsla(var(--gp-hue), 80%, 70%, 0.2),
+        0 2px 10px -4px var(--gp-glow);
+}
+
+.brb-portrait {
+    flex: none;
+    width: 27px;
+    height: 27px;
+    padding: 2px;
+    border-radius: 8px;
+    border: 1px solid hsla(var(--gp-hue), 55%, 74%, 0.32);
+    background:
+        radial-gradient(120% 100% at 50% 0%, hsla(var(--gp-hue), 60%, 62%, 0.3), transparent 70%),
+        linear-gradient(180deg, hsla(var(--gp-hue), 40%, 30%, 0.7), hsla(var(--gp-hue), 50%, 12%, 0.9));
+    box-shadow: inset 0 1px 0 hsla(var(--gp-hue), 80%, 88%, 0.2);
+}
+
+[data-theme="light"] .brb-portrait {
+    border-color: hsla(var(--gp-hue), 45%, 28%, 0.35);
+    background:
+        radial-gradient(120% 100% at 50% 0%, hsla(var(--gp-hue), 55%, 80%, 0.5), transparent 70%),
+        linear-gradient(180deg, hsla(var(--gp-hue), 34%, 86%, 0.9), hsla(var(--gp-hue), 30%, 66%, 0.95));
+}
+
+.brb-portrait > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.brb-rule-text {
+    flex: 1;
+    min-width: 0;
 }
 
 .brb-preview {
     min-height: 2.6em;
     margin-top: 8px;
+    padding: 7px 10px;
+    border-radius: 10px;
+    border: 1px solid hsla(var(--gp-hue), 45%, 74%, 0.2);
+    background: hsla(var(--gp-hue), 60%, 12%, 0.35);
     color: var(--text-secondary);
     font-size: 0.8rem;
-    line-height: 1.4;
+    line-height: 1.45;
 }
 
+[data-theme="light"] .brb-preview {
+    background: hsla(var(--gp-hue), 46%, 92%, 0.45);
+    border-color: hsla(var(--gp-hue), 45%, 28%, 0.25);
+}
+
+/* ------------------------------------------------------------------ the buttons */
+
 .brb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
     min-height: 40px;
     padding: 8px 10px;
     border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--surface-soft);
+    border: 1px solid hsla(var(--gp-hue), 50%, 70%, 0.26);
+    background:
+        linear-gradient(180deg, hsla(var(--gp-hue), 60%, 60%, 0.12), rgba(0, 0, 0, 0.2)),
+        hsla(var(--gp-hue), 60%, 12%, 0.5);
     color: var(--text);
     font-weight: 700;
     font-size: 0.8rem;
     cursor: pointer;
     touch-action: manipulation;
+    transition: transform 0.12s ease, border-color 0.16s ease, box-shadow 0.16s ease;
 }
 
 .brb-btn:hover {
-    border-color: rgba(0, 242, 255, 0.45);
+    border-color: hsla(var(--gp-hue), 86%, 74%, 0.55);
+    transform: translateY(-1px);
+}
+
+.brb-btn:active {
+    transform: translateY(1px) scale(0.985);
 }
 
 .brb-btn:focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
+}
+
+[data-theme="light"] .brb-btn {
+    background:
+        linear-gradient(180deg, hsla(var(--gp-hue), 55%, 86%, 0.7), hsla(var(--gp-hue), 40%, 70%, 0.8));
+}
+
+.brb-btn-fig {
+    flex: none;
+    width: 20px;
+    height: 20px;
+}
+
+.brb-btn-fig > svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
 }
 
 .brb-body-moth,
@@ -147,22 +403,36 @@
     font-weight: 800;
 }
 
-[data-theme="light"] .brb-grid,
-[data-theme="light"] .brb-rule,
-[data-theme="light"] .brb-btn {
-    background: rgba(255, 255, 255, 0.72);
+/* -------------------------------------------------------------- the escapes */
+
+[data-motion="off"] .brb-plate,
+[data-motion="off"] .brb-btn {
+    transition: none;
 }
 
-[data-motion="off"] .brb-cell {
-    transition: none !important;
+[data-motion="off"] .brb-cell:hover .brb-plate,
+[data-motion="off"] .brb-cell:active .brb-plate,
+[data-motion="off"] .brb-btn:hover,
+[data-motion="off"] .brb-btn:active {
+    transform: none;
 }
 
-[data-motion="off"] .brb-cell:hover:not(.is-wall) {
-    transform: none !important;
+[data-motion="off"] .brb-cell.brb-exit .brb-plate > svg,
+[data-motion="off"] .brb-mark-mind::before {
+    animation: none !important;
+}
+
+[data-motion="off"] .brb-mark-mind::before {
+    opacity: 1;
 }
 
 @media (max-width: 360px) {
     .brb-cell {
-        font-size: 0.7rem;
+        min-height: 22px;
+    }
+
+    .brb-portrait {
+        width: 23px;
+        height: 23px;
     }
 }

@@ -266,6 +266,7 @@
     function draw() {
       var time = Date.now();
       ctx.clearRect(0, 0, sketchSize, sketchSize);
+      if (App.world) { App.world.backdrop(ctx, sketchSize, sketchSize, "archive"); }
       ctx.font = "10px 'JetBrains Mono', monospace";
       ctx.textAlign = "right";
       ctx.textBaseline = "middle";

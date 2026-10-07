@@ -1248,6 +1248,7 @@
       ctx.clearRect(0, 0, ocnWid, ocnHit);
       ctx.fillStyle = "#050b14";
       ctx.fillRect(0, 0, ocnWid, ocnHit);
+      if (App.world) { App.world.backdrop(ctx, ocnWid, ocnHit, "ocean"); }
       ctx.fillStyle = "#0b1526";
       ctx.fillRect(geo.x0, geo.y0, geo.spanW, geo.spanH);
       for (y = 0; y < wreck.h; y += 1) {

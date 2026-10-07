@@ -164,6 +164,7 @@
         }
       });
       var index = indexOf(id);
+      if (typeof App !== "undefined" && App.presentGameAchievement) { App.presentGameAchievement(result, isBest); }
       return {
         isBest: isBest,
         firstClear: firstClear,

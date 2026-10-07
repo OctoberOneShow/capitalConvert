@@ -298,6 +298,7 @@
 
     function draw() {
       ctx.clearRect(0, 0, pegWidth, pegHeight);
+      if (App.world) { App.world.backdrop(ctx, pegWidth, pegHeight, "ocean"); }
       for (var index = 0; index < pegs.length; index += 1) {
         var peg = pegs[index];
         if (!peg.alive) {

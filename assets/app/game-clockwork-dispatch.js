@@ -570,6 +570,8 @@
     var finished = false;
     var rafId = null;
     var timerId = null;
+    var visualOrigins = {};
+    var visualBeatAt = 0;
 
     function el(tag, className, key) {
       var node = document.createElement(tag);
@@ -731,6 +733,7 @@
 
     function pauseRun() {
       live = false;
+      visualOrigins = {};
       if (timerId !== null) {
         window.clearInterval(timerId);
         timerId = null;
@@ -746,6 +749,9 @@
       if (panelEl.hidden || document.hidden || finished || !live) {
         return;
       }
+      visualOrigins = {};
+      st.trains.forEach(function (train) { visualOrigins[train.id] = { x: train.x, y: train.y }; });
+      visualBeatAt = Date.now();
       cwkStep(st, null);
       renderHud();
       render();
@@ -809,6 +815,7 @@
       proof = cwkSolve(def);
       par = proof.solvable ? proof.par : 3;
       st = cwkFresh(def, true);
+      visualOrigins = {};
       cursor = 0;
       flips = 0;
       finished = false;
@@ -868,6 +875,7 @@
       ctx.clearRect(0, 0, cwkWide, cwkTall);
       ctx.fillStyle = "rgba(8, 12, 20, 0.92)";
       ctx.fillRect(0, 0, cwkWide, cwkTall);
+      if (App.world) { App.world.backdrop(ctx, cwkWide, cwkTall, "city"); }
 
       for (var y = 0; y < cwkRows; y += 1) {
         for (var x = 0; x < cwkCols; x += 1) {
@@ -884,6 +892,12 @@
             ctx.moveTo(px + 3, py + cwkCellSize / 2 + 5);
             ctx.lineTo(px + cwkCellSize - 3, py + cwkCellSize / 2 + 5);
             ctx.stroke();
+            // Sleepers give the track a physical surface without obscuring arrows.
+            ctx.strokeStyle = "#cfb48a55";
+            ctx.lineWidth = 2;
+            for (var tie = 7; tie < cwkCellSize; tie += 8) {
+              ctx.beginPath(); ctx.moveTo(px + tie, py + cwkCellSize / 2 - 8); ctx.lineTo(px + tie, py + cwkCellSize / 2 + 8); ctx.stroke();
+            }
           } else {
             ctx.fillStyle = "rgba(15, 23, 42, 0.6)";
             ctx.fillRect(px + 7, py + 7, cwkCellSize - 14, cwkCellSize - 14);
@@ -926,14 +940,24 @@
 
       var pulse = isMotionOff() || !live ? 1 : 1 + Math.sin(now / 190) * 0.06;
       st.trains.forEach(function (train) {
-        var px = cwkCol + train.x * cwkCellSize;
-        var py = cwkRow + train.y * cwkCellSize;
+        var origin = visualOrigins[train.id];
+        var progress = isMotionOff() || !live || !origin ? 1 : Math.min(1, Math.max(0, (now - visualBeatAt) / Math.min(320, (level.tickMs || 560) * .6)));
+        progress = progress * progress * (3 - 2 * progress);
+        var px = cwkCol + (origin ? origin.x + (train.x - origin.x) * progress : train.x) * cwkCellSize;
+        var py = cwkRow + (origin ? origin.y + (train.y - origin.y) * progress : train.y) * cwkCellSize;
         var flat = train.dir === 0 || train.dir === 2;
         var w = (flat ? 28 : 17) * pulse;
         var h = (flat ? 17 : 28) * pulse;
         ctx.fillStyle = cwkColourHex(train.c);
-        ctx.fillRect(px + cwkCellSize / 2 - w / 2, py + cwkCellSize / 2 - h / 2, w, h);
-        stamp(cwkGlyph(train.c), px + cwkCellSize / 2, py + cwkCellSize / 2, 11, "#0f172a", true);
+        if (App.world) {
+          ctx.save(); ctx.translate(px + cwkCellSize / 2, py + cwkCellSize / 2);
+          ctx.rotate(train.dir === 1 ? -Math.PI / 2 : train.dir === 3 ? Math.PI / 2 : train.dir === 2 ? Math.PI : 0);
+          App.world.piece(ctx, "train", 0, 0, 32 * pulse, cwkColourHex(train.c)); ctx.restore();
+          stamp(cwkGlyph(train.c), px + cwkCellSize / 2, py + cwkCellSize / 2 - 1, 8, "#ffffff", true);
+        } else {
+          ctx.fillRect(px + cwkCellSize / 2 - w / 2, py + cwkCellSize / 2 - h / 2, w, h);
+          stamp(cwkGlyph(train.c), px + cwkCellSize / 2, py + cwkCellSize / 2, 11, "#0f172a", true);
+        }
         if (train.hold > 0) {
           ctx.strokeStyle = "#a3e635";
           ctx.lineWidth = 2;

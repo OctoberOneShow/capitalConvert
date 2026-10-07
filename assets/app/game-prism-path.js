@@ -317,6 +317,7 @@
     function draw() {
       var time = Date.now();
       ctx.clearRect(0, 0, prismSize, prismSize);
+      if (App.world) { App.world.backdrop(ctx, prismSize, prismSize, "laboratory"); }
       /* Emitter */
       var emitterCenter = centerOf(level.emitter.x, level.emitter.y);
       ctx.beginPath();

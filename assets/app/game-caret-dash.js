@@ -9,6 +9,21 @@
   var createConfetti = App.createConfetti;
   var petNotifyGame = App.petNotifyGame;
   var caretDashBestKey = "caret-dash-best";
+  /* Presentation fallbacks: the run itself must never depend on the feel or
+   * illustration layers being present. */
+  function noop() {}
+  var fx = App.fx || {
+    pop: noop,
+    burst: noop,
+    floatText: noop,
+    flash: noop,
+    stagger: noop,
+    ceremony: noop,
+  };
+  var playSfx = App.playSfx || noop;
+  var SVG_NS = "http://www.w3.org/2000/svg";
+  /* Hue for the shared feel calls; the runner itself is painted by the sheet. */
+  var runnerHue = 322;
   function initCaretDash() {
     var field = getElement("caretField");
     var driftFar = getElement("caretDriftFar");
@@ -121,6 +136,10 @@
     var holdId = null;
     var holdTimer = null;
     var holdDucked = false;
+    var fxTimers = [];
+    var roundId = 0;
+    var lastScoreBand = 0;
+    var lastSpeedRing = 0;
 
     function fillDrift(element, pattern, repeat) {
       var text = "";
@@ -149,6 +168,251 @@
       bestEl.textContent = best ? t("caretBest", { n: best }) : t("noBest");
     }
 
+    /* ------------------------------------------------------------ dressing */
+
+    /* Round-guarded one-shots: quietReset and the next start cancel anything
+     * still pending, so no beat outlives its round. */
+    function later(fn, ms) {
+      var round = roundId;
+      var id = window.setTimeout(function () {
+        var at = fxTimers.indexOf(id);
+        if (at >= 0) {
+          fxTimers.splice(at, 1);
+        }
+        if (round === roundId) {
+          fn();
+        }
+      }, ms);
+      fxTimers.push(id);
+      return id;
+    }
+
+    function clearFxTimers() {
+      fxTimers.forEach(function (id) {
+        window.clearTimeout(id);
+      });
+      fxTimers = [];
+    }
+
+    function svgTag(name, attrs) {
+      var node = document.createElementNS(SVG_NS, name);
+      for (var key in attrs) {
+        if (Object.prototype.hasOwnProperty.call(attrs, key)) {
+          node.setAttribute(key, String(attrs[key]));
+        }
+      }
+      return node;
+    }
+
+    /* Panel hue for the shared feel calls. Read per round rather than once at
+     * init: the panel's token sheet can land after this module runs. */
+    function readHue() {
+      var raw = "";
+      try {
+        raw = window.getComputedStyle(panel).getPropertyValue("--gp-hue");
+      } catch (error) {
+        raw = "";
+      }
+      var parsed = parseInt(raw, 10);
+      if (!isNaN(parsed)) {
+        runnerHue = parsed;
+      }
+    }
+
+    /* The runner is a drawn character, not a text bar: an I-beam caret with a
+     * serif cap for a hat, one watching eye and legs that cycle while the
+     * course runs. Geometry only is baked here - every colour comes from the
+     * panel's --gp-hue token via the sheet, so the figure follows the theme
+     * live instead of freezing in whatever hue was computed at mount time.
+     * The container stays the 6px stem the hit boxes are measured against; the
+     * figure hangs centred on that stem and overflows it. */
+    function drawRunner() {
+      if (playerEl.firstChild) {
+        return;
+      }
+      var figure = svgTag("g", { class: "caret-runner-figure" });
+      figure.appendChild(
+        svgTag("rect", {
+          x: 14.8, y: 7, width: 4.4, height: 24, rx: 2.2,
+          class: "caret-runner-stem",
+        }),
+      );
+      figure.appendChild(
+        svgTag("rect", {
+          x: 8.5, y: 2.6, width: 17, height: 4.6, rx: 2.3,
+          class: "caret-runner-cap",
+        }),
+      );
+      figure.appendChild(
+        svgTag("rect", {
+          x: 9.5, y: 28.6, width: 15, height: 4.4, rx: 2.2,
+          class: "caret-runner-hips",
+        }),
+      );
+      figure.appendChild(
+        svgTag("circle", {
+          cx: 17, cy: 15.4, r: 1.9,
+          class: "caret-runner-eye",
+        }),
+      );
+      figure.appendChild(
+        svgTag("circle", {
+          cx: 17.8, cy: 14.6, r: 0.6,
+          class: "caret-runner-glint",
+        }),
+      );
+      figure.appendChild(
+        svgTag("path", {
+          d: "M15.4 32.4 12.2 40.8",
+          class: "caret-leg caret-leg-a",
+        }),
+      );
+      figure.appendChild(
+        svgTag("path", {
+          d: "M18.6 32.4 21.8 40.8",
+          class: "caret-leg caret-leg-b",
+        }),
+      );
+      var svg = svgTag("svg", {
+        viewBox: "0 0 34 46",
+        class: "caret-runner",
+        "aria-hidden": "true",
+        focusable: "false",
+      });
+      svg.appendChild(
+        svgTag("ellipse", {
+          cx: 17, cy: 43.4, rx: 9, ry: 2,
+          class: "caret-runner-shadow",
+        }),
+      );
+      svg.appendChild(figure);
+      playerEl.appendChild(svg);
+    }
+
+    /* A drawn surface behind the course from the shared pattern library, so
+     * first paint is a composed room rather than an empty gradient. The slate
+     * tint is deliberately hue-free: this mounts before the panel's token
+     * sheet is guaranteed to be readable, and a neutral grid suits both. */
+    function mountBackdrop() {
+      if (!App.art || !App.art.pattern || field.__caretBackdrop) {
+        return;
+      }
+      field.__caretBackdrop = true;
+      var layer = document.createElement("div");
+      layer.className = "caret-backdrop";
+      layer.setAttribute("aria-hidden", "true");
+      layer.appendChild(App.art.pattern("grid", { hue: 260, sat: 18, tile: 22 }));
+      field.insertBefore(layer, field.firstChild);
+    }
+
+    /* Ink splats: a take-off stamps the ground where the jump began and a
+     * landing kicks a wider blot. They fade on their own and are swept by the
+     * round timers, never outliving a hidden panel. */
+    function spawnSplat(kind) {
+      if (isMotionOff()) {
+        return;
+      }
+      var node = document.createElement("span");
+      node.className = "caret-splat is-" + kind;
+      node.style.left = playerX() + 3 + "px";
+      field.appendChild(node);
+      later(function () {
+        if (node.parentNode) {
+          node.parentNode.removeChild(node);
+        }
+      }, 760);
+    }
+
+    function jumpBeat() {
+      fx.burst(playerEl, { kind: "spark", count: 4, hue: runnerHue });
+      spawnSplat("jump");
+      playSfx("select");
+    }
+
+    function landBeat() {
+      playerEl.classList.add("is-land");
+      later(function () {
+        playerEl.classList.remove("is-land");
+      }, 180);
+      spawnSplat("land");
+      playSfx("land");
+    }
+
+    /* A word cleared: the glyph you got past lifts off the runner as a ghost. */
+    function passBeat(obstacle) {
+      fx.floatText(playerEl, obstacle.glyph, { kind: "good" });
+    }
+
+    function checkMilestones() {
+      var score = currentScore();
+      var band = Math.floor(score / 50);
+      if (band > lastScoreBand) {
+        lastScoreBand = band;
+        fx.floatText(playerEl, score + "m", { kind: "good", hue: runnerHue });
+        fx.pop(scoreEl, { scale: 1.16, ms: 240 });
+        playSfx("coin");
+      }
+      var progress = (speedNow - BASE_SPEED) / (MAX_SPEED - BASE_SPEED);
+      var ring = Math.floor(progress * 4);
+      if (ring > lastSpeedRing) {
+        lastSpeedRing = ring;
+        fx.floatText(speedEl, speedEl.textContent, { kind: "good", hue: runnerHue });
+        fx.pop(speedEl, { scale: 1.2, ms: 240 });
+        playSfx("merge");
+      }
+    }
+
+    function buildObstacleElement(className, glyph, width, height) {
+      var element = document.createElement("span");
+      element.className = className;
+      /* The glyph lives on its own face so it can pop and glitch without
+       * fighting the scroll transform the loop paints on the shard each frame. */
+      var face = document.createElement("b");
+      face.className = "caret-obstacle-face";
+      face.textContent = glyph;
+      element.appendChild(face);
+      element.style.width = Math.round(width) + "px";
+      element.style.height = Math.round(height) + "px";
+      return element;
+    }
+
+    /* First paint: the course arrives wearing sample hazards while the runner
+     * stands on the line, so the panel never opens on an empty road. */
+    function buildPreview() {
+      var samples = [
+        { at: "46%", cls: "is-ground", glyph: groundGlyphs[1] },
+        { at: "63%", cls: "is-floating", glyph: floatGlyphs[4] },
+        { at: "81%", cls: "is-ground", glyph: groundGlyphs[7] },
+      ];
+      var dealt = [];
+      for (var i = 0; i < samples.length; i += 1) {
+        var sample = samples[i];
+        var element = buildObstacleElement(
+          "caret-obstacle is-preview " + sample.cls,
+          sample.glyph,
+          sample.cls === "is-floating" ? 26 : 24,
+          sample.cls === "is-floating" ? 22 : 26,
+        );
+        element.style.left = sample.at;
+        element.style.bottom =
+          GROUND_INSET + (sample.cls === "is-floating" ? FLOAT_GAP : 0) + "px";
+        obstaclesEl.appendChild(element);
+        dealt.push(element);
+      }
+      fx.stagger(dealt, { kind: "drop", step: 90, ms: 360 });
+    }
+
+    /* ResizeObserver runs only on a real layout change. The old idle rAF
+     * watcher kept scheduling after the drawer closed. Quiet reset already
+     * measures when selecting this panel, so no fallback polling is needed. */
+    if (window.ResizeObserver) {
+      var measureObserver = new window.ResizeObserver(function () {
+        var panel = document.getElementById("gamePanelCaretDash");
+        if (panel && !panel.hidden && field.clientWidth) { measure(); }
+      });
+      measureObserver.observe(field);
+    }
+
     function playerX() {
       return Math.round(fieldW * PLAYER_X_RATIO);
     }
@@ -160,6 +424,9 @@
     function resetPlayerVisual() {
       playerEl.style.transform = "translateY(0px)";
       playerEl.classList.remove("is-ducking");
+      playerEl.classList.remove("is-wrecked");
+      playerEl.classList.remove("is-land");
+      playerEl.classList.remove("is-airborne");
     }
 
     function measure() {
@@ -209,6 +476,7 @@
 
     function render() {
       playerEl.style.transform = "translateY(" + -jumpOffset + "px)";
+      playerEl.classList.toggle("is-airborne", !onGround);
       playerEl.classList.toggle("is-ducking", ducking);
       obstacles.forEach(function (obstacle) {
         obstacle.el.style.transform = "translateX(" + obstacle.x + "px)";
@@ -220,6 +488,11 @@
       speedEl.textContent = (speedNow / BASE_SPEED).toFixed(1) + "x";
       var progress = (speedNow - BASE_SPEED) / (MAX_SPEED - BASE_SPEED);
       railFill.style.width = Math.round(Math.min(1, Math.max(0, progress)) * 100) + "%";
+      /* Velocity leaks into the scene: streaks fade in, the run cycle and the
+       * near drift pick up their feet. Purely presentational. */
+      field.classList.toggle("is-fast", progress >= 0.42);
+      field.classList.toggle("is-blur", progress >= 0.8);
+      field.style.setProperty("--caret-run-rate", (BASE_SPEED / speedNow).toFixed(3));
     }
 
     function clearObstacles() {
@@ -269,12 +542,13 @@
       }
 
       var glyphs = floating ? floatGlyphs : groundGlyphs;
-      var element = document.createElement("span");
-      element.className =
-        "caret-obstacle " + (floating ? "is-floating" : "is-ground");
-      element.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
-      element.style.width = Math.round(width) + "px";
-      element.style.height = Math.round(height) + "px";
+      var glyph = glyphs[Math.floor(Math.random() * glyphs.length)];
+      var element = buildObstacleElement(
+        "caret-obstacle " + (floating ? "is-floating" : "is-ground"),
+        glyph,
+        width,
+        height,
+      );
       element.style.bottom =
         GROUND_INSET + (floating ? FLOAT_GAP : 0) + "px";
       element.style.transform = "translateX(" + (fieldW + 14) + "px)";
@@ -285,6 +559,7 @@
         w: Math.round(width),
         h: Math.round(height),
         floating: floating,
+        glyph: glyph,
         el: element,
       };
       obstaclesEl.appendChild(element);
@@ -323,6 +598,26 @@
         }, 300);
       }
 
+      /* The crash is an event: the scene flashes, the caret is knocked flat
+       * among its own sparks, and a dull voice lands the impact before the
+       * verdict arrives as a ceremony over the panel. */
+      field.classList.remove("is-running");
+      field.classList.remove("is-fast");
+      field.classList.remove("is-blur");
+      playerEl.classList.add("is-wrecked");
+      fx.flash(field, { hue: 6 });
+      fx.burst(playerEl, { kind: "ember", count: 14, hue: runnerHue });
+      fx.burst(playerEl, { kind: "spark", count: 8, hue: 34 });
+      playSfx("hit");
+      later(function () {
+        fx.ceremony(panel, {
+          tone: isBest ? "win" : "lose",
+          title: overlayText.textContent,
+          lines: [resultEl.textContent],
+          stars: isBest ? 3 : 0,
+        });
+      }, 640);
+
       if (isBest) {
         var rect = field.getBoundingClientRect();
         createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
@@ -333,6 +628,7 @@
     }
 
     function step(dt) {
+      var wasAirborne = !onGround;
       travelled += speedNow * dt;
 
       if (!onGround) {
@@ -350,6 +646,9 @@
           onGround = true;
         }
       }
+      if (wasAirborne && onGround) {
+        landBeat();
+      }
 
       speedNow = Math.min(MAX_SPEED, BASE_SPEED + travelled * SPEED_GAIN);
 
@@ -362,6 +661,10 @@
       for (var index = obstacles.length - 1; index >= 0; index -= 1) {
         var obstacle = obstacles[index];
         obstacle.x -= stepPx;
+        if (!obstacle.passed && obstacle.x + obstacle.w < playerX() - 6) {
+          obstacle.passed = true;
+          passBeat(obstacle);
+        }
         if (obstacle.x + obstacle.w < -12) {
           if (obstacle.el.parentNode) {
             obstacle.el.parentNode.removeChild(obstacle.el);
@@ -379,6 +682,7 @@
       }
 
       updateHud();
+      checkMilestones();
     }
 
     function frame(timestamp) {
@@ -414,6 +718,7 @@
       velY = JUMP_V;
       jumpOffset = 0.01;
       onGround = false;
+      jumpBeat();
     }
 
     function cutJump() {
@@ -429,6 +734,9 @@
       }
       ducking = next;
       playerEl.classList.toggle("is-ducking", ducking);
+      if (next) {
+        playSfx("flip");
+      }
     }
 
     function startRound() {
@@ -436,6 +744,9 @@
       clearShake();
       clearObstacles();
       measure();
+      readHue();
+      clearFxTimers();
+      roundId += 1;
 
       state = "running";
       travelled = 0;
@@ -445,6 +756,8 @@
       onGround = true;
       jumpHeld = false;
       holdDucked = false;
+      lastScoreBand = 0;
+      lastSpeedRing = 0;
       if (holdTimer !== null) {
         window.clearTimeout(holdTimer);
         holdTimer = null;
@@ -459,7 +772,12 @@
       scoreEl.textContent = "0";
       speedEl.textContent = "1.0x";
       railFill.style.width = "0%";
+      field.classList.add("is-running");
+      field.classList.remove("is-fast");
+      field.classList.remove("is-blur");
+      field.style.setProperty("--caret-run-rate", "1");
       resultEl.textContent = t("caretGo");
+      playSfx("flip");
       startLoop();
       field.focus();
     }
@@ -468,7 +786,10 @@
       state = "idle";
       stopLoop();
       clearShake();
+      clearFxTimers();
+      roundId += 1;
       clearObstacles();
+      measure();
       if (holdTimer !== null) {
         window.clearTimeout(holdTimer);
         holdTimer = null;
@@ -482,6 +803,12 @@
       onGround = true;
       ducking = false;
       jumpHeld = false;
+      lastScoreBand = 0;
+      lastSpeedRing = 0;
+      field.classList.remove("is-running");
+      field.classList.remove("is-fast");
+      field.classList.remove("is-blur");
+      field.style.setProperty("--caret-run-rate", "1");
       overlayEl.hidden = true;
       resetPlayerVisual();
       scoreEl.textContent = "0";
@@ -489,6 +816,7 @@
       railFill.style.width = "0%";
       resultEl.textContent = t("caretPrompt");
       renderBest();
+      buildPreview();
     }
 
     function releaseHold(pointerId) {
@@ -713,6 +1041,9 @@
 
     App.quietResetCaretDash = resetQuiet;
 
+    readHue();
+    drawRunner();
+    mountBackdrop();
     measure();
     resetQuiet();
   }

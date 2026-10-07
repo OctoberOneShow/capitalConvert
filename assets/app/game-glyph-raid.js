@@ -318,6 +318,7 @@
 
     function draw() {
       ctx.clearRect(0, 0, raidWidth, raidHeight);
+      if (App.world) { App.world.backdrop(ctx, raidWidth, raidHeight, "space"); }
       ctx.strokeStyle = "rgba(248, 113, 113, 0.35)";
       ctx.setLineDash([5, 5]);
       ctx.beginPath();
@@ -333,12 +334,13 @@
         var x = invaderX(inv);
         var y = invaderY(inv);
         ctx.fillStyle = raidColors[inv.row % raidColors.length];
-        ctx.fillRect(x - 8, y - 8, 16, 16);
+        if (App.world) { App.world.piece(ctx, "invader", x, y, 26, raidColors[inv.row % raidColors.length]); }
+        else { ctx.fillRect(x - 8, y - 8, 16, 16); }
         ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
         ctx.font = "bold 10px 'JetBrains Mono', monospace";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(raidGlyphs[inv.row % raidGlyphs.length], x, y);
+        ctx.fillText(raidGlyphs[inv.row % raidGlyphs.length], x, y + (App.world ? 15 : 0));
       }
       ctx.fillStyle = "#f87171";
       for (var d = 0; d < drops.length; d += 1) {
@@ -350,6 +352,8 @@
       }
       var blink = Date.now() < invulnUntil && Math.floor(Date.now() / 100) % 2 === 0;
       if (!blink) {
+        if (App.world) { App.world.piece(ctx, "ship", shipX, raidShipY, 32, "#94e3ea"); }
+        else {
         ctx.fillStyle = "#22d3ee";
         ctx.beginPath();
         ctx.moveTo(shipX, raidShipY - 10);
@@ -357,6 +361,7 @@
         ctx.lineTo(shipX + 12, raidShipY + 8);
         ctx.closePath();
         ctx.fill();
+        }
       }
       for (var p = 0; p < particles.length; p += 1) {
         var spark = particles[p];

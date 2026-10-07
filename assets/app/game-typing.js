@@ -572,6 +572,18 @@
         App.quietResetMines();
       }
 
+      if (App.quietResetColorCode) {
+        App.quietResetColorCode();
+      }
+
+      if (App.quietResetVault) {
+        App.quietResetVault();
+      }
+
+      if (App.quietResetBlackjack) {
+        App.quietResetBlackjack();
+      }
+
       if (App.quietResetGlyphBlocks) {
         App.quietResetGlyphBlocks();
       }
@@ -675,6 +687,8 @@
       if (App.resetRegistryGames) {
         App.resetRegistryGames();
       }
+
+      if (App.updateGamePresentation) { App.updateGamePresentation(selected); }
 
       if (shouldFocus) {
         gameTabEntries.forEach(function (entry) {
@@ -884,24 +898,26 @@
 
     tabTyping.parentElement.addEventListener("keydown", function (event) {
       var nextName = null;
-      var count = gameTabEntries.length;
+      var visibleEntries = gameTabEntries.filter(function (entry) { return !entry.tab.hidden; });
+      var count = visibleEntries.length;
+      if (!count) { return; }
       var index = 0;
 
       for (var i = 0; i < count; i += 1) {
-        if (gameTabEntries[i].name === activeTabName) {
+        if (visibleEntries[i].name === activeTabName) {
           index = i;
           break;
         }
       }
 
       if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-        nextName = gameTabEntries[(index + 1) % count].name;
+        nextName = visibleEntries[(index + 1) % count].name;
       } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-        nextName = gameTabEntries[(index + count - 1) % count].name;
+        nextName = visibleEntries[(index + count - 1) % count].name;
       } else if (event.key === "Home") {
-        nextName = gameTabEntries[0].name;
+        nextName = visibleEntries[0].name;
       } else if (event.key === "End") {
-        nextName = gameTabEntries[count - 1].name;
+        nextName = visibleEntries[count - 1].name;
       }
 
       if (nextName) {
@@ -999,6 +1015,18 @@
 
       if (App.quietResetMines) {
         App.quietResetMines();
+      }
+
+      if (App.quietResetColorCode) {
+        App.quietResetColorCode();
+      }
+
+      if (App.quietResetVault) {
+        App.quietResetVault();
+      }
+
+      if (App.quietResetBlackjack) {
+        App.quietResetBlackjack();
       }
 
       if (App.quietResetGlyphBlocks) {
