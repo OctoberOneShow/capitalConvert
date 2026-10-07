@@ -2,6 +2,7 @@
  * Local portraits are official; dialogue, mini-games and collectible art are original. */
 (function (App) {
   var ids = ["xavier", "zayne", "rafayel", "sylus", "caleb"];
+  var chatMoodKeys = { happy: "ldsChatMoodHappy", tired: "ldsChatMoodTired", worried: "ldsChatMoodWorried" };
   var artTitles = {
     xavier: ["Fallen Crown", "Celestial Yearn", "Seeker Of Light", "A Day Of Snow"],
     zayne: ["Edge of Continuum", "Frost Salvation", "Doomsday", "Neon Night"],
@@ -20,7 +21,7 @@
   var toySymbols = ["🐰", "🐱", "🦊", "🐳", "⭐"];
   function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
   function readDates(raw) {
-    var result = { version: 1, plushies: {}, badges: {}, stories: {}, photos: [], snapshots: {}, focus: {}, clawBest: {} }, saved;
+    var result = { version: 1, plushies: {}, badges: {}, stories: {}, photos: [], snapshots: {}, focus: {}, clawBest: {}, journal: [], strips: [] }, saved;
     ids.forEach(function (id) { result.plushies[id] = []; result.badges[id] = false; result.stories[id] = []; result.snapshots[id] = false; result.focus[id] = 0; result.clawBest[id] = 0; });
     try { saved = JSON.parse(raw || "null"); } catch (error) { return result; }
     if (!saved || saved.version !== 1) { return result; }
@@ -47,7 +48,25 @@
         result.snapshots[p.partner] = true;
       });
     }
+    if (Array.isArray(saved.journal)) {
+      saved.journal.slice(0, 20).forEach(function (entry) {
+        if (!entry || ids.indexOf(entry.partner) < 0 || ["happy", "tired", "worried"].indexOf(entry.mood) < 0 || (entry.choice !== 0 && entry.choice !== 1)) { return; }
+        if (result.journal.some(function (item) { return item.partner === entry.partner && item.mood === entry.mood && item.choice === entry.choice; })) { return; }
+        result.journal.push({ partner: entry.partner, mood: entry.mood, choice: entry.choice, favorite: entry.favorite === true });
+      });
+    }
+    if (Array.isArray(saved.strips)) {
+      saved.strips.slice(0, 4).forEach(function (strip) {
+        if (!strip || ids.indexOf(strip.partner) < 0 || !Array.isArray(strip.shots) || strip.shots.length !== 4) { return; }
+        var shots = strip.shots.map(normalizeStripShot);
+        if (shots.every(Boolean)) { result.strips.push({ partner: strip.partner, shots: shots }); result.snapshots[strip.partner] = true; }
+      });
+    }
     return result;
+  }
+  function normalizeStripShot(p) {
+    if (!p || ["night", "sunset", "studio"].indexOf(p.scene) < 0 || ["plain", "polaroid", "stars"].indexOf(p.frame) < 0) { return null; }
+    return { scene: p.scene, frame: p.frame, sticker: ["heart", "star", "flower"].indexOf(p.sticker) >= 0 ? p.sticker : "heart", art: Number.isInteger(p.art) && p.art >= 0 && p.art <= 4 ? p.art : 0, zoom: typeof p.zoom === "number" && isFinite(p.zoom) ? clamp(p.zoom, 1, 1.8) : 1, pan: typeof p.pan === "number" && isFinite(p.pan) ? clamp(p.pan, 0, 1) : .62 };
   }
 
   function createClaw(partner, challenge) {
@@ -210,11 +229,16 @@
     el("strong", "", "ldsDateTitle", intro); el("p", "", "ldsDateIntro", intro);
     var nav = el("div", "lds-date-nav", null, root); nav.setAttribute("role", "group"); nav.setAttribute("aria-label", t("ldsDateTitle"));
     var tabs = {}, pages = {};
-    ["claw", "kitty", "story", "photo", "focus"].forEach(function (id) {
+    ["claw", "kitty", "story", "photo", "focus", "chat", "home", "cook"].forEach(function (id) {
       var key = "ldsDate" + id.charAt(0).toUpperCase() + id.slice(1);
       tabs[id] = btn("lds-date-tab", key, nav, function () { select(id); });
       tabs[id].setAttribute("data-date", id);
       pages[id] = el("div", "lds-date-page lds-date-" + id, null, root); pages[id].hidden = id !== mode;
+    });
+    var homeGame = App.mountLdsHome(pages, {
+      getDates: function () { return progress; }, onSelect: select,
+      isHidden: function () { return options.isHidden() || root.hidden; },
+      onRunning: options.onRunning, onMoment: options.onMoment, onReward: options.onReward
     });
     var toolbar = el("div", "lds-date-toolbar", null, root);
     var pauseBtn = btn("lds-small-button", null, toolbar, function () { if (active) { pause(); } else { start(); } });
@@ -326,6 +350,57 @@
       renderKitty(); syncToolbar();
     }
 
+    // An original, choice-led heart-to-heart. Saved entries contain IDs only;
+    // changing language replays the same keepsake in the current language.
+    var chatMood = null, chatChoice = null;
+    var chatHead = el("div", "lds-chat-head", null, pages.chat);
+    var chatPortrait = el("img", "lds-chat-portrait", null, chatHead); chatPortrait.alt = "";
+    var chatHeading = el("div", "", null, chatHead);
+    var chatName = el("strong", "", null, chatHeading);
+    el("p", "", "ldsChatIntro", chatHeading);
+    var moodRow = el("div", "lds-chat-moods", null, pages.chat); moodRow.setAttribute("role", "group"); moodRow.setAttribute("aria-label", t("ldsChatMoodLabel"));
+    var moodButtons = {};
+    ["happy", "tired", "worried"].forEach(function (mood) {
+      moodButtons[mood] = btn("lds-small-button", chatMoodKeys[mood], moodRow, function () { chatMood = mood; chatChoice = null; renderChat(); });
+      moodButtons[mood].setAttribute("data-mood", mood);
+    });
+    var chatBubble = el("p", "lds-chat-bubble", null, pages.chat); chatBubble.setAttribute("role", "status"); chatBubble.setAttribute("aria-live", "polite");
+    var chatReplies = el("div", "lds-chat-replies", null, pages.chat);
+    [0, 1].forEach(function (choice) {
+      var reply = btn("lds-story-choice", choice ? "ldsChatPlan" : "ldsChatStay", chatReplies, function () {
+        if (!chatMood || chatChoice !== null) { return; }
+        chatChoice = choice;
+        var prior = progress.journal.find(function (entry) { return entry.partner === partner.id && entry.mood === chatMood && entry.choice === choice; });
+        progress.journal = progress.journal.filter(function (entry) { return entry !== prior; });
+        progress.journal.unshift({ partner: partner.id, mood: chatMood, choice: choice, favorite: prior ? prior.favorite : false });
+        progress.journal = progress.journal.slice(0, 20); save(); options.onMoment("Talk"); renderChat();
+        tell("ldsChatSaved");
+      });
+      reply.setAttribute("data-chat-choice", String(choice));
+    });
+    el("strong", "", "ldsChatJournal", pages.chat);
+    var journal = el("div", "lds-chat-journal", null, pages.chat);
+    function chatKey(id, ending) { return "lds" + "Chat" + id.charAt(0).toUpperCase() + id.slice(1) + ending; }
+    function renderChat() {
+      if (!partner) { return; }
+      chatPortrait.src = sceneArt(partner.id, 0).src; chatName.textContent = t(partner.nameKey);
+      Object.keys(moodButtons).forEach(function (mood) { moodButtons[mood].setAttribute("aria-pressed", String(mood === chatMood)); });
+      chatBubble.textContent = !chatMood ? t("ldsChatPrompt") : t(chatKey(partner.id, chatMood.charAt(0).toUpperCase() + chatMood.slice(1))) + (chatChoice === null ? "" : "\n\n" + t(chatKey(partner.id, chatChoice ? "Plan" : "Stay")));
+      chatReplies.hidden = !chatMood || chatChoice !== null;
+      while (journal.firstChild) { journal.removeChild(journal.firstChild); }
+      var entries = progress.journal.filter(function (entry) { return entry.partner === partner.id; });
+      entries.sort(function (a, b) { return Number(b.favorite) - Number(a.favorite); });
+      if (!entries.length) { el("p", "lds-chat-empty", "ldsChatEmpty", journal); }
+      entries.forEach(function (entry) {
+        var row = el("div", "lds-chat-entry", null, journal);
+        var replay = btn("lds-small-button lds-chat-replay", null, row, function () { chatMood = entry.mood; chatChoice = entry.choice; renderChat(); chatBubble.focus({ preventScroll: true }); });
+        replay.textContent = t(chatMoodKeys[entry.mood]) + " · " + t(entry.choice ? "ldsChatPlan" : "ldsChatStay");
+        var pin = btn("lds-small-button lds-chat-pin", null, row, function () { entry.favorite = !entry.favorite; save(); renderChat(); });
+        pin.textContent = entry.favorite ? "★" : "☆"; pin.setAttribute("aria-pressed", String(entry.favorite)); pin.setAttribute("aria-label", t("ldsChatPin"));
+      });
+    }
+    chatBubble.tabIndex = -1;
+
     // Original branching vignettes; partner-specific lines surround three choices.
     var storyTitle = el("h4", "", null, pages.story);
     var storyText = el("p", "lds-story-text", null, pages.story);
@@ -393,6 +468,60 @@
       catch (error) { tell("ldsPhotoUnavailable"); }
     });
     var gallery = el("div", "lds-photo-gallery", null, pages.photo);
+    var stripShots = [], stripImages = [];
+    var stripSection = el("section", "lds-strip-section", null, pages.photo);
+    el("strong", "", "ldsStripTitle", stripSection); el("p", "lds-date-hint", "ldsStripHint", stripSection);
+    var stripControls = el("div", "lds-gallery-tools", null, stripSection);
+    var captureStrip = btn("lds-small-button", "ldsStripCapture", stripControls, function () {
+      if (stripShots.length >= 4 || !(photoImage.complete && photoImage.naturalWidth > 0)) { return; }
+      stripShots.push(normalizeStripShot(photo)); loadStripImages();
+      if (stripShots.length === 4) {
+        var first = !progress.snapshots[partner.id]; progress.snapshots[partner.id] = true;
+        progress.strips.unshift({ partner: partner.id, shots: stripShots.map(function (s) { return normalizeStripShot(s); }) }); progress.strips = progress.strips.slice(0, 4); save();
+        if (first) { options.onReward("photo", "snapshot"); } options.onMoment("Talk"); renderShelf(); renderStripGallery(); tell("ldsStripSaved");
+      }
+      syncStrip();
+    });
+    btn("lds-small-button", "ldsStripNew", stripControls, function () { stripShots = []; stripImages = []; syncStrip(); });
+    var stripDownload = btn("lds-small-button", "ldsStripDownload", stripControls, function () {
+      if (stripDownload.disabled) { return; }
+      var filename = "starbond-four-moments-" + partner.id + ".png";
+      try { stripCanvas.toBlob(function (blob) { if (!blob) { tell("ldsPhotoUnavailable"); return; } var url = window.URL.createObjectURL(blob), link = el("a", "", null, root); link.download = filename; link.href = url; link.click(); link.remove(); window.setTimeout(function () { window.URL.revokeObjectURL(url); }, 1000); tell("ldsPhotoDownloaded"); }, "image/png"); } catch (_) { tell("ldsPhotoUnavailable"); }
+    });
+    var stripCount = el("p", "lds-strip-count", null, stripSection); stripCount.setAttribute("role", "status");
+    var stripCanvas = el("canvas", "lds-strip-canvas", null, stripSection); stripCanvas.width = 300; stripCanvas.height = 1260; stripCanvas.setAttribute("aria-label", t("ldsStripTitle"));
+    var stripGallery = el("div", "lds-strip-gallery", null, stripSection);
+    function loadStripImages() {
+      stripImages = stripShots.map(function (shot) { var img = document.createElement("img"); img.addEventListener("load", syncStrip); img.addEventListener("error", syncStrip); img.src = sceneArt(partner.id, shot.art).src; return img; });
+    }
+    function syncStrip() {
+      captureStrip.disabled = stripShots.length === 4 || !(photoImage.complete && photoImage.naturalWidth > 0);
+      stripDownload.disabled = stripShots.length !== 4 || stripImages.some(function (img) { return !img.complete || !img.naturalWidth; });
+      stripCount.textContent = t("ldsStripCount", { n: stripShots.length }); stripCanvas.hidden = stripShots.length === 0;
+      var ctx = stripCanvas.getContext("2d"); if (!ctx || !partner) { return; }
+      ctx.fillStyle = "#f5edf0"; ctx.fillRect(0, 0, 300, 1260);
+      for (var i = 0; i < 4; i++) {
+        var y = 18 + i * 294, shot = stripShots[i], img = stripImages[i];
+        ctx.fillStyle = "#d8cedd"; ctx.fillRect(18, y, 264, 264);
+        if (shot && img && img.complete && img.naturalWidth > 0) {
+          var sh = Math.min(img.naturalHeight, img.naturalWidth) / shot.zoom;
+          var sx = clamp(img.naturalWidth * shot.pan - sh / 2, 0, img.naturalWidth - sh), sy = clamp(img.naturalHeight * sceneArt(partner.id, shot.art).y - sh / 2, 0, img.naturalHeight - sh);
+          ctx.drawImage(img, sx, sy, sh, sh, 18, y, 264, 264);
+          ctx.fillStyle = shot.scene === "night" ? "#3b2d6b22" : shot.scene === "sunset" ? "#e9987833" : "#b4d9e811"; ctx.fillRect(18, y, 264, 264);
+          ctx.strokeStyle = shot.frame === "polaroid" ? "#fff8f3" : partner.color; ctx.lineWidth = shot.frame === "polaroid" ? 5 : 2; ctx.strokeRect(20, y + 2, 260, 260);
+          if (shot.frame === "stars") { ctx.fillStyle = "#ffe4f1"; ctx.font = "16px sans-serif"; ctx.textAlign = "left"; ctx.fillText("✧ ✦ ✧", 30, y + 250); }
+          ctx.fillStyle = "#ffe4f1"; ctx.font = "28px sans-serif"; ctx.textAlign = "right"; ctx.fillText({ heart: "♡", star: "✦", flower: "✿" }[shot.sticker], 267, y + 36);
+        }
+        ctx.fillStyle = "#655371"; ctx.font = "12px sans-serif"; ctx.textAlign = "left"; ctx.fillText("0" + (i + 1), 22, y + 279);
+      }
+      ctx.fillStyle = "#3a2e4e"; ctx.font = "17px sans-serif"; ctx.textAlign = "center"; ctx.fillText(t(partner.nameKey) + " · " + t("ldsStripCaption"), 150, 1212);
+      ctx.font = "8px sans-serif"; ctx.fillText(t("ldsCredit"), 150, 1246);
+    }
+    function renderStripGallery() {
+      while (stripGallery.firstChild) { stripGallery.removeChild(stripGallery.firstChild); }
+      progress.strips.filter(function (strip) { return strip.partner === partner.id; }).forEach(function (strip, index) { btn("lds-small-button", null, stripGallery, function () { stripShots = strip.shots.map(normalizeStripShot); loadStripImages(); syncStrip(); }).textContent = t("ldsStripOpen", { n: index + 1 }); });
+    }
+    photoImage.addEventListener("load", syncStrip); photoImage.addEventListener("error", syncStrip);
     function renderPhotoGallery() {
       while (gallery.firstChild) { gallery.removeChild(gallery.firstChild); }
       progress.photos.forEach(function (p, index) {
@@ -404,9 +533,10 @@
         img.style.objectPosition = p.pan * 100 + "% " + sceneArt(p.partner, p.art).y * 100 + "%";
         el("span", "", null, n).textContent = "0" + (index + 1) + " · " + t("ldsPartner" + p.partner.charAt(0).toUpperCase() + p.partner.slice(1));
       });
+      renderStripGallery();
     }
     function syncPhotoControls() { Object.keys(photoSelects).forEach(function (key) { photoSelects[key].value = photo[key]; }); zoom.value = String(photo.zoom); artSelect.value = String(photo.art); }
-    function updatePhotoImage() { var next = sceneArt(partner.id, photo.art).src; if (photoImage.getAttribute("src") !== next) { downloadBtn.disabled = true; photoImage.src = next; } drawPhoto(); }
+    function updatePhotoImage() { var next = sceneArt(partner.id, photo.art).src; if (photoImage.getAttribute("src") !== next) { downloadBtn.disabled = true; photoImage.src = next; } drawPhoto(); syncStrip(); }
     function drawPhoto() {
       if (!partner) { return; }
       var ctx = canvas.getContext("2d"); if (!ctx) { return; }
@@ -455,7 +585,7 @@
       el("p", "lds-challenge-record", null, shelf).textContent = t("ldsChallengeBest", { n: progress.clawBest[id] });
     }
     function syncToolbar() {
-      toolbar.hidden = mode === "photo"; pauseBtn.hidden = mode === "story";
+      toolbar.hidden = ["photo", "chat", "home", "cook"].indexOf(mode) >= 0; pauseBtn.hidden = mode === "story";
       pauseBtn.textContent = t(active ? "ldsBattlePause" : paused ? "ldsDateResume" : "ldsDateStart");
       pauseBtn.disabled = mode === "claw" && claw.done || mode === "kitty" && kitty.done || mode === "focus" && focusDone;
       root.setAttribute("data-active", String(active)); root.setAttribute("data-paused", String(paused));
@@ -464,6 +594,7 @@
       if (mode === "focus") { syncFocus(); }
     }
     function pause() {
+      homeGame.pause();
       if (!active) { clearInputs(); return; } active = false; paused = true; cancel(); clearInputs();
       tell("ldsDatePaused"); syncToolbar(); options.onRunning(false);
     }
@@ -489,7 +620,7 @@
       if (mode !== "kitty") { syncToolbar(); } if (active) { raf = window.requestAnimationFrame(frame); }
     }
     function start() {
-      if (active || pauseBtn.disabled || mode === "story" || mode === "photo") { return; }
+      if (active || pauseBtn.disabled || ["story", "photo", "chat", "home", "cook"].indexOf(mode) >= 0) { return; }
       active = true; paused = false; clearInputs(); last = performance.now(); syncToolbar(); options.onRunning(true);
       tell(mode === "claw" ? "ldsClawReady" : mode === "kitty" ? (kitty.turn === "you" ? "ldsKittyYourTurn" : "ldsKittyThinking") : "ldsFocusStarted");
       if (mode === "claw") { machine.focus({ preventScroll: true }); }
@@ -500,6 +631,7 @@
       claw = createClaw(partner.id, challenge.checked);
       kitty = createKitty(partner.id, advanced.checked, (Date.now() ^ Math.imul(++kittySession, 2654435761)) >>> 0);
       storyStep = 0; storyScore = 0; storyChoices = []; focusElapsed = 0; focusDone = false;
+      chatMood = null; chatChoice = null; renderChat();
       renderKitty(); renderStory(); syncFocus(); syncClaw(); renderShelf(); syncToolbar();
       tell("ldsDateReady", { name: t(partner.nameKey) });
     }
@@ -507,11 +639,13 @@
       pause(); mode = id;
       Object.keys(pages).forEach(function (key) { pages[key].hidden = key !== id; tabs[key].setAttribute("aria-pressed", String(key === id)); });
       if (id === "photo") { updatePhotoImage(); renderPhotoGallery(); }
+      if (id === "chat") { renderChat(); }
+      if (id === "home" || id === "cook") { homeGame.refresh(); }
       syncToolbar();
       if (id === "kitty" && kitty.done) { tell(kitty.winner === "you" ? "ldsKittyWon" : kitty.winner === "tie" ? "ldsKittyTie" : "ldsKittyLost"); }
       else if (id === "claw" && claw.done) { tell(claw.challenge ? "ldsChallengeEnd" : "ldsClawFinished", { n: claw.caught.length, s: claw.score }); }
       else if (id === "focus" && focusDone) { tell("ldsFocusComplete"); }
-      else { tell(id === "story" ? "ldsStoryHint" : id === "photo" ? "ldsPhotoHint" : paused ? "ldsDatePaused" : "ldsDateReady", { name: t(partner.nameKey) }); }
+      else { tell(id === "home" ? "ldhHomeIntro" : id === "cook" ? "ldhKitchenIntro" : id === "chat" ? "ldsChatPrompt" : id === "story" ? "ldsStoryHint" : id === "photo" ? "ldsPhotoHint" : paused ? "ldsDatePaused" : "ldsDateReady", { name: t(partner.nameKey) }); }
     }
     function setPartner(next) {
       partner = next;
@@ -520,6 +654,8 @@
       if (!progress.stories[partner.id]) { progress.stories[partner.id] = []; }
       if (!progress.focus[partner.id]) { progress.focus[partner.id] = 0; }
       root.style.setProperty("--lds-date-accent", partner.color);
+      homeGame.setPartner(partner);
+      stripShots = []; stripImages = []; syncStrip();
       photo.art = options.getArt ? options.getArt(partner.id) : 0; photo.pan = sceneArt(partner.id, photo.art).x;
       while (artSelect.firstChild) { artSelect.removeChild(artSelect.firstChild); }
       for (var i = 0; i < 5; i++) { var artOption = el("option", "", null, artSelect); artOption.value = String(i); artOption.textContent = sceneArt(partner.id, i).title; }
@@ -540,11 +676,33 @@
     });
     return { element: root, pause: pause, setPartner: setPartner, select: select, start: start,
       setArt: function (index) { photo.art = sceneArt(partner.id, index).index; photo.pan = sceneArt(partner.id, index).x; syncPhotoControls(); updatePhotoImage(); },
-      inspect: function () { return { claw: claw, kitty: kitty, progress: progress, active: active, paused: paused, mode: mode, focusElapsed: focusElapsed }; } };
+      inspect: function () { return { claw: claw, kitty: kitty, progress: progress, active: active, paused: paused, mode: mode, focusElapsed: focusElapsed, home: homeGame.inspect(), stripShots: stripShots }; } };
   }
   App.addStrings({
     en: {
       "ldsLookOriginal": "Classic portrait",
+      "ldsDateChat": "♡ Heart to heart",
+      "ldsChatIntro": "A quiet corner. Your mood, his reply, a moment to keep.",
+      "ldsChatMoodLabel": "How was your day?",
+      "ldsChatMoodHappy": "A good day",
+      "ldsChatMoodTired": "A tiring day",
+      "ldsChatMoodWorried": "Something on my mind",
+      "ldsChatPrompt": "Choose how your day felt. He'll meet you there.",
+      "ldsChatStay": "Stay with me a little",
+      "ldsChatPlan": "Let's make a small plan",
+      "ldsChatJournal": "Our little moments",
+      "ldsChatEmpty": "Finish a conversation to keep it here. Each partner has their own journal.",
+      "ldsChatSaved": "Moment saved. You can revisit it or mark it as a favourite.",
+      "ldsChatPin": "Favourite this moment",
+      "ldsStripTitle": "Four little moments",
+      "ldsStripHint": "Change the artwork, framing or light between captures. Four shots make a saved photo strip.",
+      "ldsStripCapture": "Capture next shot",
+      "ldsStripNew": "New strip",
+      "ldsStripDownload": "Download photo strip",
+      "ldsStripCount": "{n}/4 snapshots",
+      "ldsStripSaved": "Four moments saved. Your strip is ready to revisit or download.",
+      "ldsStripCaption": "Our day together",
+      "ldsStripOpen": "Open strip {n}",
       "ldsDateResume": "Resume",
       "ldsGalleryTitle": "Character scenes",
       "ldsGalleryPrev": "‹ Previous scene",
@@ -676,6 +834,28 @@
     },
     zh: {
       "ldsLookOriginal": "经典肖像",
+      "ldsDateChat": "♡ 倾心之谈",
+      "ldsChatIntro": "找个安静的角落，说说今天，留下一段属于你们的时光。",
+      "ldsChatMoodLabel": "今天过得怎么样？",
+      "ldsChatMoodHappy": "今天很开心",
+      "ldsChatMoodTired": "有一点累",
+      "ldsChatMoodWorried": "有些心事",
+      "ldsChatPrompt": "选择今天的心情，听听他的回应。",
+      "ldsChatStay": "再陪我一会儿",
+      "ldsChatPlan": "一起定个小计划",
+      "ldsChatJournal": "我们的小小瞬间",
+      "ldsChatEmpty": "聊完一段话，就能留在这里。每位角色都有自己的回忆簿。",
+      "ldsChatSaved": "这一刻已保存，可以重温，也可以标为心选。",
+      "ldsChatPin": "将这一刻标为心选",
+      "ldsStripTitle": "四个小小瞬间",
+      "ldsStripHint": "每拍一张，可以更换画面、取景或光线。四张照片组成一份可保存的大头贴。",
+      "ldsStripCapture": "拍下下一张",
+      "ldsStripNew": "新的一组",
+      "ldsStripDownload": "下载四连拍",
+      "ldsStripCount": "已拍 {n}/4 张",
+      "ldsStripSaved": "四个瞬间已保存，可以重温，也可以下载。",
+      "ldsStripCaption": "一起度过的今天",
+      "ldsStripOpen": "打开四连拍 {n}",
       "ldsDateResume": "继续游玩",
       "ldsGalleryTitle": "角色画面",
       "ldsGalleryPrev": "‹ 上一张",
@@ -806,6 +986,52 @@
       "ldsCompanionHint": "移动指针可调整视角，点击「播放角色动画」可观看官方角色视频。",
     },
   });
+  // Original fan-written conversations; these are not official game dialogue.
+  var chatVoices = {
+    xavier: [
+      ["Tell me the best part. I'll try not to fall asleep before you finish. We could celebrate with something warm from the bakery.", "把最开心的那一段讲给我听吧。我会努力在听完之前不睡着。要不要再去买一份热乎乎的面包？"],
+      ["Then let's stop here for a while. The stars aren't going anywhere. Lean back; I'll keep watch.", "那就在这里停一会儿吧。星星不会跑掉。你靠着休息，我来守着。"],
+      ["You don't have to find the right words straight away. Start with the smallest thing. I'm listening.", "不用一下子找到最合适的话。从最小的一件事说起就好，我在听。"],
+      ["All right. No mission, no last train to chase. Just you, me, and one more minute beneath this sky.", "好。没有任务，也不用赶末班车。只有你和我，在这片天空下再待一会儿。"],
+      ["One small plan: a short walk, and the bakery on the corner. I'll remember the way back this time.", "那就定个小计划：散一小段步，再去街角的面包店。这次我会记住回去的路。"]
+    ],
+    zayne: [
+      ["That's worth remembering. Tell me what happened before you forget the details. We can save the evening for a celebration.", "值得记下来。在忘掉细节之前，先讲给我听。今晚可以留一点时间，好好庆祝。"],
+      ["You've done enough for today. Sit down, have some water, and leave the unfinished list until tomorrow. I'll stay.", "今天已经做得够多了。坐下来，喝一点水。没完成的清单可以留到明天，我会陪着你。"],
+      ["We don't need to solve everything tonight. Tell me which part you want me to hear first.", "不必在今晚解决所有事。先告诉我，你最想让我听的是哪一部分。"],
+      ["Of course. I've put my phone away. Take your time; there is no appointment to hurry through here.", "当然。我已经把手机收起来了。慢慢说，这里没有需要匆忙结束的预约。"],
+      ["Choose one thing for tomorrow, not ten. I'll write it down with you. The rest can wait.", "给明天选一件事就好，不必选十件。我陪你记下来，其余的先放一放。"]
+    ],
+    rafayel: [
+      ["A good day? Now you have to tell me. This evening was terribly dull without you. What colour would you paint it?", "开心的一天？那你可得告诉我。没有你的晚上实在太无聊了。你会给今天涂上什么颜色？"],
+      ["Come look at the sea with me. You don't even have to say anything—though I may do enough talking for both of us.", "陪我看看海吧。不说话也可以——不过，我可能会把两个人的话都说完。"],
+      ["Some things look different when you step back from the canvas. Tell me what's crowding yours. I'll listen before offering dramatic opinions.", "退离画布一点，有些东西就会变得不同。说说什么挤满了你的画布吧。我会先听，再发表夸张意见。"],
+      ["Stay? I thought you'd never ask. I'll move these sketches. There's room beside me, and the tide has a long story tonight.", "留下来？我还以为你不打算开口呢。我把这些画稿挪开。身边的位置是你的，今晚的潮水还有很长的故事。"],
+      ["A tiny expedition: pick one colour, find it somewhere outside, and bring the story back. I'll come along if you insist.", "来一次小小探险：选一种颜色，在外面找到它，再把故事带回来。要是你坚持，我也可以同行。"]
+    ],
+    sylus: [
+      ["There it is—that look suits you. Tell me what went your way. I might even let you choose where we go tonight.", "就是这个表情，很适合你。说说今天有什么顺心的事。今晚去哪里，也许可以由你决定。"],
+      ["You can stop proving how much you can carry. Sit beside me. For once, let the evening ask nothing of you.", "不必再证明自己能扛下多少。坐到我身边来。这一次，让夜晚什么都不向你索取。"],
+      ["Name it if you want. Or don't. Either way, I'm not leaving because the conversation became inconvenient.", "想说就说出来。不想也没关系。不会因为话题变得棘手，我就转身离开。"],
+      ["A little longer, then. Pick the music. I'll be here when the last track ends, too.", "那就再待一会儿。音乐由你选。最后一首结束时，我也会在这里。"],
+      ["Pick one move you actually want to make. Not the impressive one—the one that's yours. I'll help you clear some room for it.", "选一个你真正想走的下一步。不必漂亮，要是你自己的选择。我陪你给它腾出一点空间。"]
+    ],
+    caleb: [
+      ["Hey, save some of that good mood for me. Tell me everything while I find us a snack. You get first pick.", "喂，好心情也分我一点。你慢慢讲，我去找点吃的。这次让你先选。"],
+      ["Long day? I've got the chair, the snacks, and absolutely no intention of making you do anything useful right now.", "今天很长吧？椅子和零食都准备好了，而且我现在完全不打算让你做任何正经事。"],
+      ["You can say it badly the first time. I'll still get the important part. Want to start, or should we take a walk first?", "第一次说得乱一点也没关系，重要的部分我会听懂。现在说，还是先去走走？"],
+      ["I'm here. We can talk, argue about the best snack, or sit quietly. I won't mistake the quiet for goodbye.", "我在。可以聊天，也可以争论哪种零食最好吃，或者安静坐着。我不会把安静当作再见。"],
+      ["Tomorrow's first stop: breakfast together. After that, one small thing at a time. I'll even let you choose the route.", "明天的第一站，先一起吃早餐。之后一件一件来。路线也让你选，怎么样？"]
+    ]
+  };
+  var chatStrings = { en: {}, zh: {} };
+  Object.keys(chatVoices).forEach(function (id) {
+    ["Happy", "Tired", "Worried", "Stay", "Plan"].forEach(function (ending, index) {
+      var key = "lds" + "Chat" + id.charAt(0).toUpperCase() + id.slice(1) + ending;
+      chatStrings.en[key] = chatVoices[id][index][0]; chatStrings.zh[key] = chatVoices[id][index][1];
+    });
+  });
+  App.addStrings(chatStrings);
   App.ldsReadDates = readDates;
   App.ldsCreateClaw = createClaw; App.ldsStepClaw = stepClaw;
   App.ldsCreateKitty = createKitty; App.ldsKittyPlay = kittyPlay; App.ldsKittyAssist = kittyAssist; App.ldsKittyPartner = kittyPartner; App.ldsKittyTactic = kittyTactic;

@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const { createEnvironment, check, run } = require("./lib");
-const source = ["i18n", "core", "game-campaign", "game-registry", "love-deepspace-combat", "love-deepspace-dates", "game-love-deepspace", "game-guide"]
+const source = ["i18n", "core", "game-campaign", "game-registry", "love-deepspace-combat", "love-deepspace-home", "love-deepspace-dates", "game-love-deepspace", "game-guide"]
   .map(name => fs.readFileSync(path.join(__dirname, "../../assets/app", name + ".js"), "utf8")).join("\n");
 function boot(options, live) {
   const env = createEnvironment(options);
@@ -509,6 +509,114 @@ run("Love and Deepspace character gallery", () => {
   check("Love and Deepspace character gallery", "disabling reactions preserves the chosen scene during play", panel.querySelector(".lds-scene").getAttribute("data-art") === "4");
   env.dates.select("photo"); root.querySelector(".lds-photo-actions button").click();
   check("Love and Deepspace character gallery", "saved snapshots include the selected character artwork", env.dates.inspect().progress.photos[0].art === 4);
+});
+
+run("Love and Deepspace heart-to-heart journal", () => {
+  const env = boot({}, true), App = env.window.CapitalConvert;
+  const panel = env.byId("gamePanelLoveDeepspace"), root = env.dates.element;
+  const voices = new Set();
+  for (const partner of App.ldsPartners) {
+    panel.querySelectorAll(".lds-partner-card").find(n => n.getAttribute("data-partner") === partner.id).click();
+    env.dates.select("chat");
+    for (const mood of ["happy", "tired", "worried"]) {
+      for (const choice of [0, 1]) {
+        root.querySelector('[data-mood="' + mood + '"]').click();
+        const first = root.querySelector(".lds-chat-bubble").textContent; voices.add(first);
+        root.querySelector('[data-chat-choice="' + choice + '"]').click();
+        check("Love and Deepspace heart-to-heart journal", partner.id + " " + mood + " branch " + choice + " adds its own response", root.querySelector(".lds-chat-bubble").textContent.length > first.length && !root.querySelector(".lds-chat-bubble").textContent.includes("undefined"));
+        check("Love and Deepspace heart-to-heart journal", partner.id + " keeps the completed choice", env.dates.inspect().progress.journal.some(n => n.partner === partner.id && n.mood === mood && n.choice === choice));
+      }
+    }
+  }
+  check("Love and Deepspace heart-to-heart journal", "all 15 character and mood responses are distinct", voices.size === 15);
+  check("Love and Deepspace heart-to-heart journal", "journal storage stays bounded", env.dates.inspect().progress.journal.length === 20);
+  const pin = root.querySelector(".lds-chat-pin"); pin.click();
+  const pinned = env.dates.inspect().progress.journal.find(n => n.favorite);
+  check("Love and Deepspace heart-to-heart journal", "a favourite saves without starting an animation loop", !!pinned && root.querySelector(".lds-chat-pin").getAttribute("aria-pressed") === "true" && env.frames.size === 0);
+  root.querySelector(".lds-chat-replay").click();
+  check("Love and Deepspace heart-to-heart journal", "saved conversations replay without adding entries", env.dates.inspect().progress.journal.length === 20 && root.querySelector(".lds-chat-replies").hidden);
+  const again = boot({store: env.store, language: "zh-CN"}, true);
+  again.byId("gamePanelLoveDeepspace").querySelectorAll(".lds-partner-card").find(n => n.getAttribute("data-partner") === pinned.partner).click();
+  again.dates.select("chat"); again.dates.element.querySelector(".lds-chat-replay").click();
+  check("Love and Deepspace heart-to-heart journal", "reloading preserves favourites and replays in Chinese", again.dates.inspect().progress.journal.some(n => n.favorite) && /[\u4e00-\u9fff]/.test(again.dates.element.querySelector(".lds-chat-bubble").textContent));
+  const malformed = App.ldsReadDates(JSON.stringify({version:1,journal:[{partner:"unknown",mood:"happy",choice:0},{partner:"xavier",mood:"happy",choice:99},{partner:"zayne",mood:"tired",choice:1,favorite:true},{partner:"zayne",mood:"tired",choice:1}]}));
+  check("Love and Deepspace heart-to-heart journal", "invalid and duplicate journal records are rejected", malformed.journal.length === 1 && malformed.journal[0].favorite);
+  check("Love and Deepspace heart-to-heart journal", "old saves remain compatible", App.ldsReadDates('{"version":1}').journal.length === 0);
+});
+
+run("Love and Deepspace home and cooking", () => {
+  const env = boot({}, true), App = env.window.CapitalConvert, panel = env.byId("gamePanelLoveDeepspace"), root = env.dates.element;
+  panel.hidden = false;
+  for (const recipe of App.ldsHomeRecipes) {
+    const meal = App.ldsCreateCooking(recipe.id);
+    App.ldsCookingAction(meal, "serve");
+    check("Love and Deepspace home and cooking", recipe.id + " cannot be served before preparation", meal.phase === "prep");
+    recipe.items.forEach(id => App.ldsCookingAction(meal, "add:" + id));
+    App.ldsCookingAction(meal, "heat");
+    while (meal.heat < (recipe.target[0] + recipe.target[1]) / 2) App.ldsStepCooking(meal, .05);
+    App.ldsCookingAction(meal, "serve");
+    check("Love and Deepspace home and cooking", recipe.id + " earns three stars with the intended ingredients and heat", meal.phase === "done" && meal.stars === 3);
+    const miss = App.ldsCreateCooking(recipe.id); App.ldsCookingAction(miss, "add:unknown");
+    check("Love and Deepspace home and cooking", recipe.id + " rejects a wrong ingredient without skipping preparation", miss.prepared === 0 && miss.mistakes === 1);
+    recipe.items.forEach(id => App.ldsCookingAction(miss, "add:" + id)); App.ldsCookingAction(miss, "heat"); App.ldsCookingAction(miss, "assist");
+    App.ldsStepCooking(miss, .1); const slower = miss.heat; App.ldsCookingAction(miss, "assist");
+    check("Love and Deepspace home and cooking", recipe.id + " companion help slows heat once", slower < recipe.speed * .1 && miss.helped && miss.assist < 1.8);
+    App.ldsCookingAction(miss, "pause"); App.ldsStepCooking(miss, 2);
+    check("Love and Deepspace home and cooking", recipe.id + " holds heat while paused", miss.heat === slower);
+    App.ldsCookingAction(miss, "heat"); while (miss.phase === "heating") App.ldsStepCooking(miss, .1);
+    check("Love and Deepspace home and cooking", recipe.id + " overheats and stops with no stars", miss.phase === "done" && miss.stars === 0);
+  }
+  for (const partner of App.ldsPartners) {
+    panel.querySelectorAll(".lds-partner-card").find(n => n.getAttribute("data-partner") === partner.id).click(); env.dates.select("cook");
+    for (const recipe of App.ldsHomeRecipes) {
+      root.querySelectorAll(".ldh-options button").find(n => n.getAttribute("data-i18n") === recipe.key).click();
+      recipe.items.forEach(id => root.querySelector('[data-ingredient="' + id + '"]').click());
+      root.querySelector('[data-i18n="ldhStartHeat"]').click();
+      while (env.dates.inspect().home.cooking.heat < (recipe.target[0] + recipe.target[1]) / 2) env.tick(16);
+      root.querySelector('[data-i18n="ldhServe"]').click();
+      check("Love and Deepspace home and cooking", partner.id + " " + recipe.id + " saves a playable three-star meal", env.dates.inspect().home.progress.homes[partner.id].records[recipe.id] === 3 && env.frames.size === 0);
+    }
+    env.dates.select("home");
+    const trophy = root.querySelectorAll(".ldh-inventory button").find(n => n.textContent.includes(App.t("ldhChef")));
+    check("Love and Deepspace home and cooking", partner.id + " unlocks the trophy by completing three meals", trophy && !trophy.disabled);
+    trophy.click(); root.querySelectorAll(".ldh-options button").find(n => n.getAttribute("data-i18n") === "ldhNight").click();
+    check("Love and Deepspace home and cooking", partner.id + " saves its own room light and trophy", env.dates.inspect().home.progress.homes[partner.id].theme === "night" && env.dates.inspect().home.progress.homes[partner.id].slots[0] === "chef");
+  }
+  const beforeBond = App.ldsReadAlbum(env.store.get("love-deepspace-album-v1")).bonds.caleb;
+  env.dates.select("cook"); root.querySelector('[data-i18n="ldhNewMeal"]').click();
+  App.ldsHomeRecipes[2].items.forEach(id => root.querySelector('[data-ingredient="' + id + '"]').click()); root.querySelector('[data-i18n="ldhStartHeat"]').click();
+  env.tick(16); const held = env.dates.inspect().home.cooking.heat;
+  env.dates.select("home"); env.tick(500);
+  check("Love and Deepspace home and cooking", "switching activities stops the stove and preserves heat", env.frames.size === 0 && env.dates.inspect().home.cooking.heat === held && env.dates.inspect().home.cooking.phase === "paused");
+  env.dates.select("cook"); root.querySelector('[data-i18n="ldhStartHeat"]').click(); while (env.dates.inspect().home.cooking.heat < 70) env.tick(16); root.querySelector('[data-i18n="ldhServe"]').click();
+  check("Love and Deepspace home and cooking", "replaying a recipe doesn't farm affinity", App.ldsReadAlbum(env.store.get("love-deepspace-album-v1")).bonds.caleb === beforeBond);
+  const reload = boot({store:env.store}, true);
+  check("Love and Deepspace home and cooking", "rooms and meal records survive reload for all five partners", Object.values(reload.dates.inspect().home.progress.homes).every(h => h.theme === "night" && h.slots[0] === "chef" && Object.values(h.records).every(n => n === 3)));
+  const invalid = App.ldsReadHome('{"version":1,"homes":{"xavier":{"theme":"bad","slots":["__proto__","invalid"],"records":{"soup":99,"toast":-3}}}}');
+  check("Love and Deepspace home and cooking", "corrupt decoration and score data are normalized", invalid.homes.xavier.theme === "sunset" && invalid.homes.xavier.slots[0] === "plant" && invalid.homes.xavier.records.soup === 0);
+  const helper = fs.readFileSync(path.join(__dirname,"../../assets/app/love-deepspace-home.js"),"utf8");
+  const keys = new Set(Array.from(helper.matchAll(/"(ldh[A-Z][A-Za-z0-9]+|ldsDateHome|ldsDateCook)"/g), m=>m[1]));
+  for (const language of ["en-US","zh-CN"]) { const translated = boot({language}).window.CapitalConvert; for (const key of keys) check("Love and Deepspace home and cooking", language + " resolves " + key, translated.t(key) !== key); }
+});
+
+run("Love and Deepspace four-shot strips", () => {
+  const env = boot({},true), App = env.window.CapitalConvert, root = env.dates.element;
+  env.byId("gamePanelLoveDeepspace").hidden = false; env.dates.select("photo");
+  const sourceImage = root.querySelector(".lds-photo-source"); sourceImage.complete = true; sourceImage.naturalWidth = 600; sourceImage.naturalHeight = 800; env.dispatch(sourceImage,"load");
+  const capture = root.querySelector('[data-i18n="ldsStripCapture"]');
+  for (let i=0;i<4;i++) capture.click();
+  check("Love and Deepspace four-shot strips", "four captures save exactly one strip and stop capture", env.dates.inspect().progress.strips.length === 1 && env.dates.inspect().stripShots.length === 4 && capture.disabled);
+  const saved = App.ldsReadDates(env.store.get("love-deepspace-dates-v1"));
+  check("Love and Deepspace four-shot strips", "shot settings persist and unlock the photo keepsake", saved.strips[0].shots.length === 4 && saved.snapshots.xavier);
+  root.querySelector('[data-i18n="ldsStripNew"]').click(); root.querySelector(".lds-strip-gallery button").click();
+  check("Love and Deepspace four-shot strips", "saved strips reopen without duplicate rewards", env.dates.inspect().stripShots.length === 4 && env.dates.inspect().progress.strips.length === 1);
+  env.dates.select("home"); root.querySelector('[data-decoration="photo"]').click();
+  check("Love and Deepspace four-shot strips", "a captured strip becomes a photograph on the room shelf", root.querySelector(".ldh-room-photo img").src === App.ldsSceneArt("xavier", saved.strips[0].shots[0].art).src && env.dates.inspect().home.progress.homes.xavier.slots[0] === "photo");
+  const reloaded = boot({store:env.store},true); reloaded.dates.select("home");
+  check("Love and Deepspace four-shot strips", "the earned room photograph survives reload", !!reloaded.dates.element.querySelector(".ldh-room-photo img"));
+  const bad = App.ldsReadDates(JSON.stringify({version:1,strips:[{partner:"bad",shots:[]},{partner:"xavier",shots:[{}, {}, {}, {}]}]}));
+  check("Love and Deepspace four-shot strips", "invalid photo strips are rejected", bad.strips.length === 0);
+  check("Love and Deepspace four-shot strips", "old saves open with an empty strip album", App.ldsReadDates('{"version":1}').strips.length === 0);
 });
 
 run("Love and Deepspace date translations", () => {

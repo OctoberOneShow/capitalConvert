@@ -83,6 +83,8 @@ Open any `.html` file directly in a browser. No server required.
 
 The 96 games other than **Item Quest / 寻物启事** and **Love and Deepspace / 恋与深空** now have illustrated title scenes, bilingual objectives, and genre identities. The expanded picker supports searching English or Chinese names and filtering by category. Keyboard navigation follows the filtered results.
 
+All 98 games have library icons and category metadata, including a magnifying glass for Item Quest and a heart for Love and Deepspace. Switching games preserves the shared drawer layout: three columns on desktop and two on phones. The two native game screens keep their own artwork and layout.
+
 The remaining game screens use coordinated controls and readable dark surfaces in either site theme. Thirty-four canvas games include original environment artwork; trains, ships, stealth characters, coral, crates, board discs, and falling blocks have additional piece detail. Whisper Deck has illustrated card faces with visible costs and echo rules. Tea House has guest portraits and illustrated drinks. Weather Loom shows terrain and weather gauges, with exact values available through **Show readings** and the selected-cell readout.
 
 Presentation animations respect the motion setting and the system's reduced-motion preference. Score changes animate only when the value changes; hidden games do not run presentation animation loops. Campaign completions display a dismissible star banner. Game rules and saved-progress formats are preserved.
@@ -97,6 +99,10 @@ Verification:
 ### 恋与深空 / Love and Deepspace
 
 Its original responsive, arena, date-activity, and animation styles are restored after an earlier stylesheet merge omitted them. Both this game and Item Quest isolate their native colours and controls from the shared game skin.
+
+**Together → Heart to heart / 陪伴 → 倾心之谈** adds original mood conversations for all five partners. Choose a good, tiring, or worrying day, then choose quiet company or a small plan. Completed exchanges go into each partner's journal; favourite and replay them in either language. The latest 20 distinct exchanges are saved across partners, duplicate choices update the existing entry, and replaying does not award affinity. Old saves remain compatible.
+
+The companion activities draw on Tête-à-Tête, Home, and everyday companionship described in [Infold's official App Store listing](https://apps.apple.com/us/app/love-and-deepspace/id6443467666). Dialogue, room illustrations, recipes, and gameplay are original fan adaptations. Cooking, room decoration, and four-shot photo strips now connect to the existing date collections and character affinity.
 
 Open **Games → More games → Love and Deepspace** on any of the four pages.
 The fan-made mini-adventure features Xavier, Zayne, Rafayel, Sylus, and
@@ -144,13 +150,35 @@ The date activities are simplified fan adaptations inspired by the official
   thumbnails recreate their settings and **Download PNG** exports a local portrait
   composition with attribution. Export requires a loaded portrait and browser
   permission to read its pixels; a local server supports this reliably.
+  **Four little moments / 四个小小瞬间** captures four separately styled shots into
+  a downloadable photo strip. Change the artwork, lighting, frame, sticker, crop,
+  or zoom between captures. The latest four strips are saved across partners;
+  reopen them without collecting another reward. They use local image assets
+  and compact settings rather than storing image data in browser storage.
 - **Quality time / 专属陪伴:** a 1-, 5-, or 15-minute visible-page timer for
   studying, working, or taking a break together. It can run beside the optional
   character video and pauses when the page or date view is hidden.
+- **Heart to heart / 倾心之谈:** choose a mood and a response, then favourite or
+  replay the original partner conversation from the saved journal.
+- **Cook together / 一起下厨:** prepare three ingredients in order for garden soup,
+  apple toast, or honey pudding. Start heating, ask for one companion assist to
+  slow the heat, and serve inside the green band. Perfect preparation and timing
+  earn three stars; mistakes and missed timing lower the score. Pause or resume
+  explicitly. Switching activities, closing the drawer, or hiding the page
+  stops the stove; changing partners or recipes starts fresh preparation. Each
+  partner has distinct kitchen dialogue and a saved best result for each recipe.
+- **Our room / 我们的小屋:** arrange four shelf positions and choose morning,
+  sunset, or night lighting. Plants, books, and a lamp are available immediately.
+  A caught rabbit, Kitty victory, saved photograph or strip, and completed story
+  unlock their corresponding keepsakes. Completing all three recipes with the
+  current partner unlocks the shared-meal trophy. The photo frame displays that
+  partner's saved artwork. Each partner's room layout and lighting are saved
+  independently in `love-deepspace-home-v1`.
 
 Date keepsakes are saved per partner: five plushies, one Kitty badge, two story
 endings, and completed focus sessions. A newly collected keepsake, the first
-snapshot, or the first focus session awards two affinity points. Repeating the
+snapshot, the first focus session, or the first successful preparation of each
+recipe awards two affinity points. Repeating the
 same collection does not award affinity again. These records use
 `love-deepspace-dates-v1` and share the existing character affinity. Live sessions
 restart on reload; collections remain saved, or stay in memory if storage is blocked.
@@ -188,8 +216,9 @@ preference. Closing or switching away from the game stops its video and combat.
 
 Run `node tools/harness/cases-love-deepspace.js` for the focused dates, combat, turn,
 save, memory, and media lifecycle checks. These cover full arena clears for all
-five partners on all four routes, claw timing, seeded card matches, saved photos,
-both story branches, pause/resume, held inputs, and collection rewards.
+five partners on all four routes, claw timing, seeded card matches, saved photos
+and strips, both story branches, mood journals, all three recipes for each
+partner, room unlocks, pause/resume, held inputs, and collection rewards.
 Run `node tools/verify-game.js --isolated game-love-deepspace` for its registry
 and translation checks.
 

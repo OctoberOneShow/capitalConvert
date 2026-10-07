@@ -121,7 +121,7 @@
   var selectedPanel = null;
   // Native screen designs still participate in the shared game library.
   var libraryOnly = {
-    ItemQuest: { world: "archive", icon: "eye", genre: "puzzle" },
+    ItemQuest: { world: "archive", icon: "magnifier", genre: "puzzle" },
     LoveDeepspace: { world: "space", icon: "heart", genre: "explore" }
   };
   function libraryEntry(id) { return catalog[id] || libraryOnly[id]; }
