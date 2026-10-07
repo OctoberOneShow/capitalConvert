@@ -119,6 +119,19 @@
   if (App.addStrings) { App.addStrings(strings); }
   var nativeArt = /^(2048|ArchiveEscape|AuctionDungeon|AuroraFlow|Blackjack|BlindSculptor|BorrowedBodies|Breakout|BubbleInk|CaretDash|ColorCode|Dots|GlyphFifteen|GlyphFour|GlyphGlide|GlyphTower|Gomoku|Lights|Memory|Mines|Reflex|Snake|Stack|Traffic|Vault)$/;
   var selectedPanel = null;
+  // Native screen designs still participate in the shared game library.
+  var libraryOnly = {
+    ItemQuest: { world: "archive", icon: "eye", genre: "puzzle" },
+    LoveDeepspace: { world: "space", icon: "heart", genre: "explore" }
+  };
+  function libraryEntry(id) { return catalog[id] || libraryOnly[id]; }
+  function decorateTab(tab) {
+    var c = libraryEntry((tab.getAttribute("aria-controls") || "").replace("gamePanel", ""));
+    if (!c) { return; }
+    var p = App.world.palettes[c.world];
+    tab.style.setProperty("--library-color", p[3]); tab.setAttribute("data-genre", c.genre);
+    if (!tab.querySelector(".library-icon")) { tab.appendChild(App.art.icon(c.icon, { hue: p[0], cls: "library-icon" })); }
+  }
   var filter = { query: "", genre: "all" };
   var library = null;
   function motionOff() { return App.isMotionOff() || !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
@@ -162,7 +175,7 @@
     panel.addEventListener("click", function (event) { var note = panel.querySelector(".world-achievement"); if (note && !note.contains(event.target)) { note.remove(); } });
   }
   function matching(tab) {
-    var c = catalog[(tab.getAttribute("aria-controls") || "").replace("gamePanel", "")];
+    var c = libraryEntry((tab.getAttribute("aria-controls") || "").replace("gamePanel", ""));
     var name = tab.textContent.toLocaleLowerCase();
     // Search both languages even when the current UI uses the other one.
     var key = tab.getAttribute("data-i18n");
@@ -200,11 +213,12 @@
     if (selectedPanel) { var old = selectedPanel.querySelector(".world-achievement"); if (old) { old.remove(); } }
     selectedPanel = document.getElementById("gamePanel" + selected.charAt(0).toUpperCase() + selected.slice(1));
     var dialog = selectedPanel && selectedPanel.closest(".game-dialog");
-    if (dialog) { dialog.classList.toggle("world-shell", !!catalog[selectedPanel.id.replace("gamePanel", "")]); }
+    if (dialog) { dialog.classList.add("world-shell"); }
   }
   function init() {
     document.querySelectorAll(".game-panel").forEach(function (panel) { mount(panel, document.getElementById(panel.getAttribute("aria-labelledby"))); });
     mountLibrary(); update("typing");
+    if (library) { library.grid.querySelectorAll(".game-tab").forEach(decorateTab); }
     // React to real HUD updates without a polling loop or inferred win state.
     if (window.MutationObserver && !App.presentationObserver) {
       var modal = document.getElementById("gameModal");
@@ -246,10 +260,7 @@
   App.gamePresentationCatalog = catalog;
   App.refreshPresentationLabels = function () {
     if (!library) { return; }
-    library.grid.querySelectorAll(".game-tab").forEach(function (tab) {
-      var c = catalog[(tab.getAttribute("aria-controls") || "").replace("gamePanel", "")];
-      if (c && !tab.querySelector(".library-icon")) { tab.appendChild(App.art.icon(c.icon, { hue: App.world.palettes[c.world][0], cls: "library-icon" })); }
-    });
+    library.grid.querySelectorAll(".game-tab").forEach(decorateTab);
     refreshLibrary();
   };
 })(window.CapitalConvert = window.CapitalConvert || {});

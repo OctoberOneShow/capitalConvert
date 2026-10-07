@@ -41,8 +41,8 @@ async function main() {
       for (const tab of ids) {
         const result = await evaluate(`(() => {const t=document.getElementById(${JSON.stringify(tab)}); t.click(); const p=document.getElementById(t.getAttribute('aria-controls')); const b=p.getBoundingClientRect(); const dialog=p.closest('.game-dialog'); const excluded=['gamePanelItemQuest','gamePanelLoveDeepspace'].includes(p.id); return {id:p.id,excluded,visible:!p.hidden,overflow:p.scrollWidth-p.clientWidth,dialogOverflow:dialog.scrollWidth-dialog.clientWidth,left:b.left,right:b.right,world:p.getAttribute('data-world'),art:p.querySelectorAll('.world-heading svg').length,leak:/NaN|undefined/.test(p.textContent)||p.textContent.includes('[object Object]')};})()`);
         check(width + " " + tab + " opens cleanly", result.visible && !result.leak, result);
-        if (!result.excluded) { check(width + " " + tab + " fits", result.overflow <= 2 && result.dialogOverflow <= 2 && result.left >= 0 && result.right <= width + 1, result); }
-        else { check(tab + " protected artwork untouched", result.art === 0 && !result.world, result); }
+        check(width + " " + tab + " fits", result.overflow <= 2 && result.dialogOverflow <= 2 && result.left >= 0 && result.right <= width + 1, result);
+        if (result.excluded) { check(tab + " protected artwork untouched", result.art === 0 && !result.world, result); }
         layouts.push({ width, ...result });
       }
       console.log("Inspected all 98 games at " + width + "px.");
@@ -74,6 +74,34 @@ async function main() {
         const shot = await send("Page.captureScreenshot", { format: "png" }); fs.writeFileSync(path.join(out, language + "-" + game + ".png"), Buffer.from(shot.data, "base64"));
       }
       console.log("Saved " + language + " game previews.");
+    }
+    // Excluding a redesign must never exclude layout validation. Exercise the
+    // native games' actual activities, not just their initial panel bounds.
+    for (const language of ["en", "zh"]) {
+      await load("index.html", language);
+      for (const theme of ["light", "dark"]) {
+        await evaluate(`document.documentElement.setAttribute('data-theme',${JSON.stringify(theme)});document.documentElement.setAttribute('data-motion','off')`);
+        for (const width of [1100, 390, 320]) {
+          await send("Emulation.setDeviceMetricsOverride", { width, height: 1000, deviceScaleFactor: 1, mobile: width !== 1100 });
+          await evaluate("document.getElementById('gameTabItemQuest').click()");
+          const item = await evaluate("(() => { const p=document.getElementById('gamePanelItemQuest'), h=p.querySelector('.iq-round-btn'), r=p.querySelector('.game-result');return {overflow:p.scrollWidth-p.clientWidth,hintWidth:h.getBoundingClientRect().width,hintHeight:h.getBoundingClientRect().height,text:getComputedStyle(r).color}; })()");
+          check(`${language} ${theme} ${width} Item Quest layout and hint button`, item.overflow <= 2 && Math.abs(item.hintWidth - 52) <= 1 && Math.abs(item.hintHeight - 52) <= 1, item);
+          check(`${language} ${theme} ${width} Item Quest readable text`, theme !== "light" || item.text === "rgb(48, 37, 62)", item);
+          await evaluate("document.getElementById('gameTabLoveDeepspace').click();document.querySelector('.lds-together-tab').click()");
+          for (const activity of ["claw", "kitty", "story", "photo", "focus", "action", "strategy", "memories"]) {
+            await evaluate(`(() => { const p=document.getElementById('gamePanelLoveDeepspace'); const a=${JSON.stringify(activity)}; if(['action','strategy'].includes(a)){p.querySelector('[data-i18n=ldsMissionTab]').click();p.querySelector(a==='action'?'[data-i18n=ldsActionMode]':'[data-i18n=ldsStrategyMode]').click();}else if(a==='memories'){p.querySelector('[data-i18n=ldsMemoryTab]').click();}else{p.querySelector('.lds-together-tab').click();p.querySelector('[data-date='+a+']').click();} })()`);
+            const state = await evaluate("(() => {const p=document.getElementById('gamePanelLoveDeepspace'); const visible=n=>n.getClientRects().length&&getComputedStyle(n).visibility!=='hidden';const containers=[...p.querySelectorAll('.lds-date-page,.lds-mission,.lds-roster,.lds-view-nav,.lds-combat,.lds-dialogue,.lds-claw-controls,.lds-photo-settings,.lds-album')].filter(visible); const d=p.closest('.game-dialog');return {overflow:p.scrollWidth-p.clientWidth,dialogOverflow:d.scrollWidth-d.clientWidth,clipped:containers.filter(n=>n.scrollWidth-n.clientWidth>2).map(n=>({class:n.className,overflow:n.scrollWidth-n.clientWidth})),machineHeight:p.querySelector('.lds-claw-machine').getBoundingClientRect().height,arenaPosition:getComputedStyle(p.querySelector('.lds-arena-overlay')).position,canvas:p.querySelector('.lds-arena-canvas').getBoundingClientRect().width,focusedPicker:getComputedStyle(document.getElementById('gameTabs')).display};})()");
+            check(`${language} ${theme} ${width} Love and Deepspace ${activity} fits`, state.overflow <= 2 && state.dialogOverflow <= 2 && state.clipped.length === 0, state);
+            if(activity === "claw") { check(`${language} ${theme} ${width} claw machine restored`, state.machineHeight > 80 && state.focusedPicker === "none", state); }
+            if(activity === "action") { check(`${language} ${theme} ${width} arena layout restored`, state.arenaPosition === "absolute" && state.canvas > 100, state); }
+            if(language === "zh" && theme === "light" && ["claw","action"].includes(activity)) {
+              await evaluate(`document.querySelector('.game-dialog').scrollTop=document.querySelector(${JSON.stringify(activity === "claw" ? ".lds-dates" : ".lds-combat")}).offsetTop`);
+              const shot = await send("Page.captureScreenshot", { format: "png" }); fs.writeFileSync(path.join(out, `fixed-love-${activity}-${width}.png`), Buffer.from(shot.data, "base64"));
+            }
+          }
+        }
+      }
+      console.log("Checked native game activities in " + language + " and both themes.");
     }
     for (const page of ["english_filter.html", "chinese_punctuation.html", "words_replacing.html"]) { const b = await load(page, "en"); check(page + " shares the complete presentation", b.heads === 96 && b.tabs === 98, b); }
     check("No browser exceptions", errors.length === 0, errors);

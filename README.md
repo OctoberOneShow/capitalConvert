@@ -89,12 +89,14 @@ Presentation animations respect the motion setting and the system's reduced-moti
 
 Verification:
 
-- `node tools/game-presentation-check.js` checks all 98 panels at 860px, 390px, and 320px; validates search, localization, motion controls, and the two excluded panels; and saves previews and a report in `tools/shots/completed/`. It requires local Chrome.
+- `node tools/game-presentation-check.js` checks all 98 panels at 860px, 390px, and 320px; validates search, localization, and motion controls; exercises Item Quest and all Love and Deepspace activities in both languages and themes; and saves previews and a report in `tools/shots/completed/`. It requires local Chrome.
 - `node tools/verify-game.js game-weather-loom game-coral-architect game-clockwork-dispatch game-whisper-deck game-tea-house game-ember-delve game-glyph-bastion game-lantern-heist` exercises the changed game controls and timer cleanup.
 - `node tools/pet-harness.js` runs the full gameplay and companion regression suite.
 - `node tools/static-checks.js` checks page wiring, localization, and the shared game infrastructure.
 
 ### 恋与深空 / Love and Deepspace
+
+Its original responsive, arena, date-activity, and animation styles are restored after an earlier stylesheet merge omitted them. Both this game and Item Quest isolate their native colours and controls from the shared game skin.
 
 Open **Games → More games → Love and Deepspace** on any of the four pages.
 The fan-made mini-adventure features Xavier, Zayne, Rafayel, Sylus, and
