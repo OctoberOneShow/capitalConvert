@@ -18,7 +18,6 @@ const path = require("path");
 const { createEnvironment } = require("./stub-dom");
 
 const root = path.join(__dirname, "..");
-const VERSION = 56;
 
 function readText(file) {
   return fs.readFileSync(path.join(root, file), "utf8").replace(/^﻿/, "");

@@ -1,9 +1,9 @@
 /* Weather Loom - the climate steering game in the shared game drawer.
  * Heat and moisture are numbers on a grid, and the player weaves with them one
- * season at a time: spend loom points on wind, heat and shade, then run twenty
- * fixed steps and read what each village collected. The same stepper proves an
- * authored season's weave before it is dealt. Registered through the game
- * registry, so it needs no markup in the four HTML pages. */
+ * season at a time: spend loom points on wind, heat and shade, then run the
+ * season's own fixed steps and read what each village collected. The same
+ * stepper proves an authored season's weave before it is dealt. Registered
+ * through the game registry, so it needs no markup in the four HTML pages. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
   var t = App.t;
@@ -102,6 +102,65 @@
       villages: [wlkVillage(4, 1, 45, 78), wlkVillage(4, 4, 45, 78), wlkVillage(7, 3, 50, 78), wlkVillage(7, 6, 50, 78)],
       plan: [wlkWind(0, 1), wlkWind(1, 1), wlkWind(2, 1), wlkWind(3, 1), wlkWind(0, 4), wlkWind(1, 4), wlkWind(2, 4), wlkWind(3, 4),
         wlkWind(9, 3, 2), wlkWind(8, 3, 2), wlkWind(9, 6, 2), wlkWind(8, 6, 2)],
+    },
+    /* Frost year: the air is so cold it holds almost nothing, so cooling a
+     * village in place gives no rain at all - the water has to be carried. And
+     * the wall stands in the frost village's row, so the front has to be bent
+     * around it and handed down the column. */
+    {
+      id: "w6", labelKey: "wlkZ6", points: 15, ticks: 20,
+      cfg: { ambient: 44, source: 9, wet: 1.2, wetHeat: 38, dryHeat: 50, drain: 1, rainAt: 58 },
+      ridge: [wlkSpot(3, 3), wlkSpot(3, 4), wlkSpot(3, 5)],
+      villages: [wlkVillage(5, 4, 24, 44), wlkVillage(2, 1, 50, 82), wlkVillage(3, 6, 50, 82), wlkVillage(2, 7, 50, 82)],
+      plan: [wlkWind(0, 2), wlkWind(1, 2), wlkWind(2, 2), wlkWind(3, 2), wlkWind(4, 2), wlkWind(5, 2, 1), wlkWind(5, 3, 1), wlkWind(4, 4),
+        wlkWind(0, 1), wlkWind(1, 1), wlkWind(0, 6), wlkWind(1, 6), wlkWind(2, 6), wlkWind(0, 7), wlkWind(1, 7)],
+    },
+    /* Rain shadow: the ridge runs from the top of the map to one row above the
+     * floor, so no canal from the open column crosses it and the long way round
+     * the foot delivers nothing. Only the lake, routed cell by cell, wets the
+     * village behind the wall. */
+    {
+      id: "w7", labelKey: "wlkZ7", points: 15, ticks: 20,
+      cfg: { source: 8, lakeSource: 6 },
+      ridge: [wlkSpot(4, 0), wlkSpot(4, 1), wlkSpot(4, 2), wlkSpot(4, 3), wlkSpot(4, 4), wlkSpot(4, 5), wlkSpot(4, 6)],
+      lake: [wlkSpot(6, 6)],
+      villages: [wlkVillage(1, 1, 50, 82), wlkVillage(2, 2, 50, 82), wlkVillage(3, 7, 50, 82), wlkVillage(6, 2, 50, 82)],
+      plan: [wlkWind(0, 1), wlkWind(0, 2), wlkWind(1, 2), wlkWind(0, 6), wlkWind(1, 6), wlkWind(2, 6), wlkWind(3, 6, 1),
+        wlkWind(6, 6, 2), wlkWind(5, 6, 3), wlkWind(5, 5, 3), wlkWind(5, 4), wlkWind(6, 4, 3), wlkWind(6, 3, 3)],
+    },
+    /* Opposite air: one heater sits on the last cell of a full canal. It drives
+     * the moisture up into the village above it and bakes the village beside it
+     * dry, so the hot village needs the lift and the cool village needs shade -
+     * a wind arrow on that same cell floods one and starves the other. */
+    {
+      id: "w8", labelKey: "wlkZ8", points: 16, ticks: 20,
+      cfg: { source: 14, lift: 0.5, heater: 6 },
+      ridge: [wlkSpot(3, 3), wlkSpot(5, 3), wlkSpot(4, 2), wlkSpot(6, 4), wlkSpot(5, 5)],
+      villages: [wlkVillage(4, 3, 50, 82), wlkVillage(5, 4, 24, 44), wlkVillage(1, 1, 24, 44), wlkVillage(1, 6, 24, 44), wlkVillage(1, 7, 24, 44)],
+      plan: [wlkWind(0, 4), wlkWind(1, 4), wlkWind(2, 4), wlkWind(3, 4), { x: 4, y: 4, kind: "h", dir: 0 },
+        wlkShade(5, 4), wlkShade(1, 1), wlkShade(1, 6), wlkShade(1, 7)],
+    },
+    /* Chasing front: the wet cells at the head of the valley are a front that
+     * walks east one cell a step, so the arrows have to be laid ahead of it and
+     * the season runs six steps longer to let it reach the far villages. */
+    {
+      id: "w9", labelKey: "wlkZ9", points: 17, ticks: 24,
+      cfg: { source: 6, creep: 0.09, wind: 0.62, rainAt: 56 },
+      wet: [wlkSpot(1, 2), wlkSpot(2, 2), wlkSpot(3, 2)],
+      villages: [wlkVillage(5, 2, 22, 48), wlkVillage(7, 2, 44, 84), wlkVillage(9, 2, 22, 48), wlkVillage(4, 6, 22, 48), wlkVillage(7, 6, 44, 84)],
+      plan: [wlkWind(3, 2), wlkWind(4, 2), wlkWind(2, 2, 1), wlkWind(2, 3), wlkWind(3, 3), wlkWind(4, 3), wlkWind(5, 3), wlkWind(6, 3),
+        wlkWind(7, 3, 3), wlkWind(9, 3, 3), wlkWind(8, 2), wlkWind(1, 6), wlkWind(2, 6), wlkWind(3, 6), wlkShade(4, 6), wlkShade(7, 6), wlkWind(8, 6, 2)],
+    },
+    /* Drought week: the open column barely seeps and a two-cell canal delivers
+     * nothing, so every village lives on its own cooled air plus a stub of
+     * canal, one lake carries the thirsty village, and the loom is short. */
+    {
+      id: "w10", labelKey: "wlkZ10", points: 18, ticks: 20,
+      cfg: { ambient: 62, source: 6, lakeSource: 12, dryHeat: 58, wetHeat: 44, dry: 3, drain: 1.4, rainAt: 50 },
+      lake: [wlkSpot(7, 4)],
+      villages: [wlkVillage(1, 1, 21, 45), wlkVillage(2, 3, 21, 45), wlkVillage(2, 6, 21, 45), wlkVillage(1, 7, 21, 45), wlkVillage(3, 4, 21, 45), wlkVillage(7, 2, 48, 78)],
+      plan: [wlkWind(0, 1), wlkShade(1, 1), wlkWind(0, 3), wlkWind(1, 3), wlkShade(2, 3), wlkWind(0, 6), wlkWind(1, 6), wlkShade(2, 6),
+        wlkWind(0, 7), wlkShade(1, 7), wlkWind(0, 4), wlkWind(1, 4), wlkWind(2, 4), wlkShade(3, 4), wlkWind(7, 4, 3), wlkWind(7, 3, 3), wlkWind(7, 1, 1)],
     },
   ];
 
@@ -303,7 +362,17 @@
 
   function wlkBands(level) {
     var n = level.villages.length;
-    return [n * 10, n * 10 - 4, (n - 1) * 10];
+    /* A flooded cell costs four points and a storm year doubles that, so the
+     * middle line sits exactly one flooded cell under a perfect season. The
+     * weight is clamped so the three lines always run down. */
+    var weight = Number((level.cfg || {}).floodWeight);
+    if (!isFinite(weight) || weight < 1) {
+      weight = 1;
+    }
+    if (weight > 2) {
+      weight = 2;
+    }
+    return [n * 10, n * 10 - 4 * weight, (n - 1) * 10];
   }
 
   /* Replays a whole season from scratch: the proof a level is dealt on. */
@@ -933,6 +1002,11 @@
       "wlkZ3": "Dust Year",
       "wlkZ4": "Storm Year",
       "wlkZ5": "Twin Fronts",
+      "wlkZ6": "Frost Bend",
+      "wlkZ7": "Rain Shadow",
+      "wlkZ8": "Opposite Air",
+      "wlkZ9": "Chasing Front",
+      "wlkZ10": "Drought Week",
       "wlkSeasonLabel": "Season",
       "wlkPointsLabel": "Loom",
       "wlkFedLabel": "Fed",
@@ -976,10 +1050,15 @@
       "wlkReadouts": "显示读数",
       "wlkCellReadings": "选中格：热度 {h} / 湿度 {m}",
       "wlkZ1": "两个村庄",
-      "wlkZ2": "山脊挡凤",
+      "wlkZ2": "山脊挡风",
       "wlkZ3": "干旱之年",
       "wlkZ4": "风暴之年",
       "wlkZ5": "双锋之年",
+      "wlkZ6": "冷锋绕岭",
+      "wlkZ7": "雨影之脊",
+      "wlkZ8": "一热两需",
+      "wlkZ9": "逐锋之季",
+      "wlkZ10": "旱周抢水",
       "wlkSeasonLabel": "季度",
       "wlkPointsLabel": "织点",
       "wlkFedLabel": "灌足",
@@ -1042,7 +1121,7 @@
         "Action: pick wind, heat or shade and place it on a cell - click, or move the cursor and press Enter. Each tool spends loom points.",
         "Rule: wind pushes half of a cell's moisture one step along its arrow, heat lifts a third of it a row up, and shade cools the air until it dumps rain. Water cells refill every step, so arrows in a line are a canal.",
         "Watch out: rain above the band floods the cell and floods cost you, double in a storm year; a canal that is too short delivers more than a village can hold.",
-        "Run: Run Season steps the loom twenty fixed times. Every cell prints heat above and moisture below, so colour is never the only clue.",
+        "Run: Run Season steps the loom its whole fixed length - twenty steps, twenty-four on the chasing front. Every cell prints heat above and moisture below, so colour is never the only clue.",
         "Scoring: all villages fed with no flood is three stars, one short still clears, and Z undoes a weave before you run.",
       ],
       zh: [
@@ -1050,7 +1129,7 @@
         "操作：先选风、热或荫，再点击一格或在光标处按回车；每件工具都要花织点数。",
         "规则：风把本格湿度的一半沿箭头推进一步，热把三分之一抬高一行，荫让空气凉到兜不住水便落雨。水域每步补满，所以一排箭头就是一条水渠。",
         "小心：雨量高过区间就是淹，淹一格要扣分，风暴之年还要翻倍；水渠太短送来的水会超过村庄能装的量。",
-        "运行：按运行季度会推进固定的二十步。每格上方写着温度、下方写着湿度，绝不只靠颜色传信。",
+        "运行：按运行季度会把这一季固定的步数走完——通常是二十步，逐锋之季是二十四步。每格上方写着温度、下方写着湿度，绝不只靠颜色传信。",
         "计分：所有村庄灌足且没有一格受淹是三星，少灌一个村庄也能过关；运行前用 Z 可以撤掉一次织入。",
       ],
     },

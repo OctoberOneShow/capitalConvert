@@ -24,6 +24,17 @@
     { id: "c3", labelKey: "pdkC3", n: 4, clues: 10, starTimes: [90, 150, 230] },
     { id: "c4", labelKey: "pdkC4", n: 4, clues: 12, starTimes: [110, 180, 270] },
     { id: "c5", labelKey: "pdkC5", n: 5, clues: 15, starTimes: [170, 260, 380] },
+    /* The board only lays out three, four or five names, so the back half of
+     * the campaign keeps the widest grid and lengthens the brief instead. Each
+     * step is a different job for the same grid: a line the case can lose, a
+     * pair of eliminations that only land in sequence, a shape that sits one
+     * clue away from a two-way tie, a long brief that is all grunt work, and
+     * finally every kind of line the engine can write at once. */
+    { id: "c6", labelKey: "pdkC6", n: 5, clues: 16, starTimes: [180, 270, 390] },
+    { id: "c7", labelKey: "pdkC7", n: 5, clues: 18, starTimes: [195, 290, 405] },
+    { id: "c8", labelKey: "pdkC8", n: 5, clues: 20, starTimes: [210, 305, 420] },
+    { id: "c9", labelKey: "pdkC9", n: 5, clues: 22, starTimes: [225, 315, 425] },
+    { id: "c10", labelKey: "pdkC10", n: 5, clues: 25, starTimes: [245, 350, 470] },
   ];
   /* Removal order for the carve: the plainest clues go first so the mixed
    * negative / same-owner / hour-gap lines stay in the brief. */
@@ -968,6 +979,11 @@
       "pdkC3": "Third Degree",
       "pdkC4": "Fourth Wall",
       "pdkC5": "Closing Argument",
+      "pdkC6": "Red Herring",
+      "pdkC7": "Chain Reaction",
+      "pdkC8": "Hung Jury",
+      "pdkC9": "Beat the Clock",
+      "pdkC10": "The Full Brief",
       "pdkTimeLabel": "Elapsed",
       "pdkBriefLabel": "Brief",
       "pdkRungSelectLabel": "Pick a rung",
@@ -1016,6 +1032,11 @@
       "pdkC3": "第三档",
       "pdkC4": "第四档",
       "pdkC5": "结案陈词",
+      "pdkC6": "假线索",
+      "pdkC7": "连环推理",
+      "pdkC8": "陪审僵局",
+      "pdkC9": "限时追凶",
+      "pdkC10": "完整卷宗",
       "pdkTimeLabel": "用时",
       "pdkBriefLabel": "卷宗",
       "pdkRungSelectLabel": "选择难度",
@@ -1052,7 +1073,7 @@
       "pdkBestTime": "最佳 {n} 秒",
       "pdkAlready": "「{name}」已经结案——换个难度或重开一件。",
       "pdkNextRung": "解锁下一档。",
-      "pdkCampaignDone": "五档全部办结，笔记本归你了。",
+      "pdkCampaignDone": "十档全部办结，笔记本归你了。",
       "pdkLocked": "「{name}」还封存着——先办结前面那一档。",
       "pdkHint": "打一个勾，同行同列就都该是叉；只有当这一行再无别处可去时，勾才算稳。",
       "logPocketDetective": "办结了 {n} 条线索的案子",

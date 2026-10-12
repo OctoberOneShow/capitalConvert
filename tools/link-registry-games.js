@@ -23,7 +23,14 @@ const PAGES = [
   "chinese_punctuation.html",
   "words_replacing.html",
 ];
-const VERSION = 62;
+/* The token is read off the pages, not restated here: a hardcoded copy went
+ * stale once and every later link injected an old ?v= into all four pages. */
+function currentVersion() {
+  const html = fs.readFileSync(path.join(root, "index.html"), "utf8");
+  const match = /\?v=(\d+)/.exec(html);
+  return match ? Number(match[1]) : 1;
+}
+const VERSION = currentVersion();
 const APP_DIR = path.join(root, "assets", "app");
 const CSS_DIR = path.join(root, "tools", "tmp-css");
 const GAMES_CSS = path.join(root, "assets", "styles", "games.css");

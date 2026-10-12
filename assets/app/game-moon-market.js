@@ -1,7 +1,8 @@
 /* Moon Market - the seven-day trading floor of the game drawer.
  * Prices come from a seeded walk, so every week replays identically from its
- * seed; the star bands are MEASURED by playing a greedy line over the same
- * schedule, the way the roof garden measures its seconds-to-goal floor. */
+ * seed; the star bands are MEASURED by playing lines over that schedule - the
+ * greedy run sets the derived ladder for the seats that ship no measured one of
+ * their own - the way the roof garden measures its seconds-to-goal floor. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
   var t = App.t;
@@ -22,7 +23,7 @@
   ];
   /* Event kinds in draw order: dust storm (route shut), embargo (halves a
    * price), bloom (floods supply), heat wave (spikes ice). eventWeights and
-   * amp reshape the same generator per seat instead of writing five rulesets. */
+   * amp reshape the same generator per seat instead of writing ten rulesets. */
   var mktKinds = ["storm", "embargo", "bloom", "heat"];
 
   var mktLevels = [
@@ -36,6 +37,23 @@
       amp: [1.2, 1.2, 0.8, 1.4], eventWeights: [2, 1, 1, 1], target: 210 },
     { id: "m5", labelKey: "mktS5", seed: 104, start: 170, cap: 16, fee: 2,
       amp: [1.5, 1.5, 1.5, 1.5], eventWeights: [1, 1, 2, 1], target: 320 },
+    /* The appended seats each bend one lever of the same generator instead of
+     * adding a rule, and each pins the band its own seat was measured with. */
+    { id: "m6", labelKey: "mktS6", seed: 1040, start: 150, cap: 6, fee: 2,
+      amp: [4, 0.3, 0.3, 0.3], eventWeights: [1, 1, 1, 6], target: 320,
+      starCredits: [630, 475, 320] },
+    { id: "m7", labelKey: "mktS7", seed: 1412, start: 200, cap: 14, fee: 8,
+      amp: [0.8, 0.8, 0.8, 0.8], eventWeights: [1, 1, 1, 1], target: 460,
+      starCredits: [980, 720, 460] },
+    { id: "m8", labelKey: "mktS8", seed: 722, start: 100, cap: 1, fee: 1,
+      amp: [3, 3, 3, 3], eventWeights: [1, 1, 1, 2], target: 240,
+      starCredits: [500, 370, 240] },
+    { id: "m9", labelKey: "mktS9", seed: 510, start: 180, cap: 14, fee: 1,
+      amp: [0.7, 0.7, 0.7, 0.7], eventWeights: [1, 1, 2, 1], target: 620,
+      starCredits: [1055, 840, 620] },
+    { id: "m10", labelKey: "mktS10", seed: 854, start: 220, cap: 40, fee: 3,
+      amp: [2.4, 2.4, 2.4, 2.4], eventWeights: [1, 1, 1, 2], target: 760,
+      starCredits: [1660, 1210, 760] },
   ];
 
   function mulberry32(seed) {
@@ -325,11 +343,21 @@
   }
 
   /* Bands are derived from the measured ceiling, never guessed: top is what
-   * the greedy line actually banked, middle is its midpoint with the target. */
+   * the greedy line actually banked, middle is its midpoint with the target.
+   * A seat whose own greedy run falls short of its target leaves this formula
+   * with almost nothing to split, so the three steps are pushed apart here
+   * rather than handed back flat - starsFor reads a strictly descending ladder.
+   * m6..m10 do not use this fallback: they ship the band the harness measured. */
   function mktBand(level) {
     var ceiling = mktCeiling(level);
     var top = ceiling > level.target ? ceiling : level.target + Math.max(10, Math.round(level.target * 0.1));
     var mid = Math.round(level.target + (top - level.target) / 2);
+    if (mid <= level.target) {
+      mid = level.target + 1;
+    }
+    if (top <= mid) {
+      top = mid + 1;
+    }
     return [top, mid, level.target];
   }
 
@@ -716,6 +744,11 @@
       "mktS3": "Twin Commodity Boom",
       "mktS4": "Tight Cargo, High Fees",
       "mktS5": "The Futures Desk",
+      "mktS6": "The Ice Spike",
+      "mktS7": "The Fee Grind",
+      "mktS8": "The Single Slot",
+      "mktS9": "The Slow Burn",
+      "mktS10": "The Big Board",
       "mktIce": "Moon Ice",
       "mktGrain": "Hydro Grain",
       "mktAlloy": "Regolith Alloy",
@@ -756,7 +789,7 @@
       "mktShort": "Missed the target: {n} of {t} credits.",
       "mktBankrupt": "The storage fee due on day {n} outran your credits - the colony seizes the cargo.",
       "mktNextSeat": "Next seat unlocked.",
-      "mktAllSeats": "All five seats traded.",
+      "mktAllSeats": "All ten seats traded.",
       "mktHint": "Arrows pick a commodity, +/- size the lot, Enter buys, Shift+Enter sells, D ends the day; positions are force-sold on day 7.",
       "logMoonMarket": "Banked {n} credits at the moon market",
     },
@@ -767,6 +800,11 @@
       "mktS3": "双商品热潮",
       "mktS4": "舱位紧张、费用高昂",
       "mktS5": "期货席位",
+      "mktS6": "冰价狂飙",
+      "mktS7": "仓储重税",
+      "mktS8": "唯一货舱",
+      "mktS9": "慢牛长持",
+      "mktS10": "大盘满舱",
       "mktIce": "月冰",
       "mktGrain": "水培谷物",
       "mktAlloy": "月壤合金",
@@ -807,15 +845,20 @@
       "mktShort": "没达标：只有 {n}/{t} 信用点。",
       "mktBankrupt": "第 {n} 天的仓储费超出了你的信用点——殖民地没收了货物。",
       "mktNextSeat": "解锁下一个席位。",
-      "mktAllSeats": "五个席位全部交易完毕。",
+      "mktAllSeats": "十个席位全部交易完毕。",
       "mktHint": "方向键选商品，加减号调批量，回车买入，Shift+回车卖出，D 结束当天；第 7 天所有持仓会被强制卖出。",
       "logMoonMarket": "在月球市场赚到了 {n} 信用点",
     },
   });
 
-  /* Measure every seat's band from its own greedy line at load time. */
+  /* Measure every seat's band from its own greedy line at load time, unless the
+   * row already ships the band it was measured with: on m6..m10 the greedy line
+   * is the wrong tool by design, so letting it overwrite the row would put the
+   * three-star line at a run the seat exists to punish. */
   mktLevels.forEach(function (level) {
-    level.starCredits = mktBand(level);
+    if (!level.starCredits) {
+      level.starCredits = mktBand(level);
+    }
   });
 
   App.registerGame({
@@ -837,7 +880,7 @@
         "Rules: one buy and one sell per commodity each day, the cargo cap holds you back, and every held unit pays a nightly storage fee.",
         "Watch out: a named event opens every day before prices move - storms shut a route, embargoes and blooms dump it, heat waves spike ice.",
         "Closing: on day 7 everything you still hold is force-sold at the morning price; if the fee outruns your cash the colony seizes it all.",
-        "Scoring: stars by final credits - three stars is the measured greedy line, and every week replays identically from its seed.",
+        "Scoring: stars by final credits - three stars asks for more than the measured greedy run on the seats built to punish it, and every week replays identically from its seed.",
       ],
       zh: [
         "目标：在七个交易日内把信用点攒到席位目标。",
@@ -845,7 +888,7 @@
         "规则：每种商品每天只能各买一次、各卖一次，货舱有上限，持仓每晚上要交仓储费。",
         "小心：每天开盘前先公布事件——风暴封航线、禁运与丰收砸价、热浪抬高冰价。",
         "收盘：第 7 天所有持仓按早盘价强制卖出；仓储费超过现金就会被殖民地没收全部货物。",
-        "计分：按最终信用点评星——三星线是用贪心策略实测出来的，同一颗种子每周走势完全重放。",
+        "计分：按最终信用点评星——在为惩罚频繁交易而设的席位上，三星线高于贪心策略实测的那条线，同一颗种子每周走势完全重放。",
       ],
     },
   });

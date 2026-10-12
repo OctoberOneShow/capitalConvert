@@ -15,13 +15,37 @@
   var rrSize = 320;
   var rrPad = 8;
   /* Zones: grid side, battery budget and the scan counts that earn
-   * [3-star, 2-star, 1-star]. `drift` hops the transmitter every N scans. */
+   * [3-star, 2-star, 1-star]. `drift` hops the transmitter every N scans.
+   * The five upper rungs are cut against a scripted hunt, not guessed: the
+   * readings are distance rings, so a solver that always asks the sharpest
+   * question pins the beacon within 3 scans on any still grid and within 6 on
+   * any hopping one, whatever the side. Grid size, battery and hop interval are
+   * therefore the only real difficulty levers, and each rung spends one. */
   var rrLevels = [
     { id: "r1", labelKey: "rrZ1", side: 6, scans: 8, starScans: [3, 5, 7], drift: 0 },
     { id: "r2", labelKey: "rrZ2", side: 8, scans: 10, starScans: [4, 6, 9], drift: 0 },
     { id: "r3", labelKey: "rrZ3", side: 10, scans: 12, starScans: [5, 8, 11], drift: 0 },
     { id: "r4", labelKey: "rrZ4", side: 12, scans: 13, starScans: [6, 9, 12], drift: 3 },
     { id: "r5", labelKey: "rrZ5", side: 14, scans: 15, starScans: [7, 10, 13], drift: 2 },
+    /* Uptown: the same still air as r1-r3, but a wider grid on half the battery,
+     * so a wasted probe now costs a star instead of being forgiven. The 3-star
+     * line sits on the sharpest pin a still grid allows. */
+    { id: "r6", labelKey: "rrZ6", side: 16, scans: 8, starScans: [3, 5, 6], drift: 0 },
+    /* Railyard: the beacon shunts every third scan, so readings go stale and
+     * the hunt has to be re-triangulated once before the battery dies. */
+    { id: "r7", labelKey: "rrZ7", side: 18, scans: 9, starScans: [5, 6, 7], drift: 3 },
+    /* Warehouse: the biggest grid that never moves. One percent of the longest
+     * diagonal is now a quarter of a block, so far corner probes smear and the
+     * sharpest pins come off the middle of the floor. */
+    { id: "r8", labelKey: "rrZ8", side: 20, scans: 7, starScans: [3, 4, 5], drift: 0 },
+    /* Shipyard: hop every two scans on a 22 grid. The tail is long - a crane
+     * side restart costs the whole battery - so the one-star line sits right
+     * against the budget. */
+    { id: "r9", labelKey: "rrZ9", side: 22, scans: 12, starScans: [4, 7, 10], drift: 2 },
+    /* Outer Belt: the long hunt. Largest grid, a third of a block per percent
+     * of reading, and the tightest battery of the five upper rungs - it stops
+     * one ping past the one-star line. */
+    { id: "r10", labelKey: "rrZ10", side: 24, scans: 13, starScans: [4, 8, 12], drift: 2 },
   ];
 
   /* Pure core, exported for the harness: distance is measured between cell
@@ -453,6 +477,11 @@
       "rrZ3": "Downtown",
       "rrZ4": "Harbor",
       "rrZ5": "Old Town",
+      "rrZ6": "Uptown",
+      "rrZ7": "Railyard",
+      "rrZ8": "Warehouse",
+      "rrZ9": "Shipyard",
+      "rrZ10": "Outer Belt",
       "rrBatteryLabel": "Battery",
       "rrZoneLabel": "Grid",
       "rrZoneSelectLabel": "Choose a zone",
@@ -481,6 +510,11 @@
       "rrZ3": "市区",
       "rrZ4": "港口",
       "rrZ5": "老城",
+      "rrZ6": "上城区",
+      "rrZ7": "编组站",
+      "rrZ8": "仓库区",
+      "rrZ9": "造船厂",
+      "rrZ10": "外环带",
       "rrBatteryLabel": "电量",
       "rrZoneLabel": "网格",
       "rrZoneSelectLabel": "选择区域",

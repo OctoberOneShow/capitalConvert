@@ -25,6 +25,15 @@ const APP_MODULES = Array.from(
   pageHtml.matchAll(/assets\/app\/([a-z0-9-]+)\.js\?v=\d+/g),
 ).map((match) => match[1]);
 
+/* Read off the page, never restated: a hand-kept copy of the cache token in a
+ * fixture stayed on ?v=62 after the pages moved on and reported a healthy app
+ * as broken, and a stale copy in the linker rewrote every asset reference on
+ * the next link. */
+function assetVersion() {
+  const match = /\?v=(\d+)/.exec(pageHtml);
+  return match ? Number(match[1]) : 0;
+}
+
 /* Tab/panel pairs in page order, for fixtures that mirror the real drawer. */
 function drawerTabPairs() {
   return Array.from(
@@ -190,6 +199,7 @@ function seedGameDom(env) {
 module.exports = {
   createEnvironment,
   appSource,
+  assetVersion,
   stylesSource,
   PET_KEY,
   GLYPH_KEY,

@@ -166,8 +166,14 @@ run("Ember Delve bounded route proof", () => {
   const env = boot();
   // A broken loop must fail within a bounded check instead of hanging the
   // entire harness. Both explicit and default sample counts must terminate.
-  vm.runInContext("window.__stairSpans = window.CapitalConvert.delveLevels.map(function(level) { return window.CapitalConvert.delveStairSpan(level, 2); }); window.__defaultSpan = window.CapitalConvert.delveStairSpan(window.CapitalConvert.delveLevels[0]);", env.sandbox, { timeout: 1500 });
-  check("Ember Delve bounded route proof", "every sampled level respects its four-step stair bound", env.window.__stairSpans.length === 5 && env.window.__stairSpans.every((distance) => distance >= 2 && distance <= 4));
+  vm.runInContext("window.__delveCount = window.CapitalConvert.delveLevels.length; window.__stairSpans = window.CapitalConvert.delveLevels.map(function(level) { return window.CapitalConvert.delveStairSpan(level, 2); }); window.__defaultSpan = window.CapitalConvert.delveStairSpan(window.CapitalConvert.delveLevels[0]);", env.sandbox, { timeout: 1500 });
+  // One span per level, counted from the table so the ladder can keep growing.
+  check("Ember Delve bounded route proof", `all ${env.window.__delveCount} levels sampled, none skipped`,
+    env.window.__stairSpans.length === env.window.__delveCount && env.window.__delveCount >= 5,
+    `spans ${env.window.__stairSpans.length} vs levels ${env.window.__delveCount}`);
+  check("Ember Delve bounded route proof", "every sampled level respects its four-step stair bound",
+    env.window.__stairSpans.every((distance) => distance >= 2 && distance <= 4),
+    env.window.__stairSpans.join(","));
   check("Ember Delve bounded route proof", "the default proof terminates within the same route bound", env.window.__defaultSpan >= 2 && env.window.__defaultSpan <= 4);
 });
 

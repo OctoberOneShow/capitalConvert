@@ -74,6 +74,98 @@
       avoid: ["2,2", "3,2", "2,3", "3,3"],
       authored: [{ x: 0, y: 0 }, { x: 1, y: 2 }, { x: 4, y: 1 }, { x: 0, y: 4 }],
     },
+    {
+      id: "f6",
+      labelKey: "shfS6",
+      side: 6,
+      wants: 3,
+      par: 4,
+      intended: [
+        { axis: "v", line: 3 },
+        { axis: "v", line: 7 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 7 },
+      ],
+      /* Two creases per axis, four apart: each stamp blooms a three by three
+       * block, because the two bands of an axis overlap on the middle column.
+       * Drop any crease and the blocks break apart into more ink than the
+       * tray can hold, so all four have to be pulled. */
+      authored: [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 0, y: 1 }],
+    },
+    {
+      id: "f7",
+      labelKey: "shfS7",
+      side: 6,
+      wants: 5,
+      par: 4,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 9 },
+        { axis: "h", line: 3 },
+      ],
+      /* Three creases on one axis, so their bands overlap into a single four
+       * column slab: the middle cells of the slab are the image of more than one
+       * crease. The two bare blocks are the ones a single crease already owns,
+       * so they must stay dry for the doubled band to matter. */
+      avoid: ["0,0", "4,4"],
+      authored: [{ x: 0, y: 1 }, { x: 0, y: 4 }, { x: 0, y: 5 }, { x: 4, y: 0 }, { x: 4, y: 1 }],
+    },
+    {
+      id: "f8",
+      labelKey: "shfS8",
+      side: 6,
+      wants: 5,
+      par: 4,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 7 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 7 },
+      ],
+      /* The creases hug opposite edges, so a stamp that sits away from them is
+       * not a solid square at all: it comes back as the four corners of a frame
+       * with the middle of it bare, and only two creases per axis reach it. */
+      avoid: ["2,2", "3,2", "2,3"],
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 2 }, { x: 2, y: 0 }, { x: 3, y: 0 }, { x: 3, y: 3 }],
+    },
+    {
+      id: "f9",
+      labelKey: "shfS9",
+      side: 6,
+      wants: 5,
+      par: 4,
+      intended: [
+        { axis: "v", line: 3 },
+        { axis: "v", line: 9 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 9 },
+      ],
+      /* A board of mirrored pairs: each stamp prints the corners of a square,
+       * the near crease folds two pairs at once and the far crease only owns the
+       * pair it faces - so the pair a single crease could fold alone is the one
+       * block that has to stay bare for the far crease to be needed. */
+      avoid: ["0,0", "1,0", "0,1"],
+      authored: [{ x: 0, y: 4 }, { x: 1, y: 1 }, { x: 1, y: 4 }, { x: 4, y: 0 }, { x: 4, y: 1 }],
+    },
+    {
+      id: "f10",
+      labelKey: "shfS10",
+      side: 6,
+      wants: 4,
+      par: 4,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+      ],
+      /* The gutter board: the slab looks like it wants one crease down its
+       * middle, but that line is not a gutter at all, so both flanking creases
+       * have to be pulled and the far corner block never reaches the ink. */
+      avoid: ["4,4", "5,4", "4,5", "5,5"],
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 4 }, { x: 0, y: 5 }, { x: 4, y: 0 }],
+    },
   ];
 
   function shfKey(x, y) {
@@ -746,6 +838,11 @@
       "shfS3": "Twin Creases",
       "shfS4": "Quarter Plate",
       "shfS5": "The Clean Crossing",
+      "shfS6": "Four Crease Bloom",
+      "shfS7": "The Overlapping Band",
+      "shfS8": "The Corner Stamp",
+      "shfS9": "Mirrored Pair",
+      "shfS10": "Off By One",
       "shfInkLabel": "Ink",
       "shfFoldLabel": "Creases",
       "shfSheetSelectLabel": "Pick a sheet",
@@ -773,7 +870,7 @@
       "shfAlready": "{name} is already pressed - take a new sheet.",
       "shfBestFolds": "best {n} creases",
       "shfNextSheet": "Next sheet unlocked.",
-      "shfCampaignDone": "Five sheets pressed clean.",
+      "shfCampaignDone": "Ten sheets pressed clean.",
       "shfLocked": "{name} is still folded away behind the sheet before it.",
       "shfHint": "Extra ink is a failure, so a crease you do not need is a trap - and the crossing cell of two creases often has to stay bare.",
       "logShadowFold": "Pressed a sheet on {n} creases",
@@ -785,6 +882,11 @@
       "shfS3": "双折痕",
       "shfS4": "四分印板",
       "shfS5": "干净的交叉",
+      "shfS6": "四折开花",
+      "shfS7": "重叠折带",
+      "shfS8": "四角空印",
+      "shfS9": "镜像双印",
+      "shfS10": "差一格的折线",
       "shfInkLabel": "墨点",
       "shfFoldLabel": "折痕",
       "shfSheetSelectLabel": "选择纸张",
@@ -812,7 +914,7 @@
       "shfAlready": "「{name}」已经拓好了——换一张纸再来。",
       "shfBestFolds": "最佳 {n} 道折痕",
       "shfNextSheet": "解锁下一张纸。",
-      "shfCampaignDone": "五张纸都拓干净了。",
+      "shfCampaignDone": "十张纸都拓干净了。",
       "shfLocked": "「{name}」还压在上一张纸后面。",
       "shfHint": "多出图案之外的墨就算失败，所以用不上的折痕是个陷阱；两条折线的交叉格常常必须留空。",
       "logShadowFold": "用 {n} 道折痕拓好了一张纸",

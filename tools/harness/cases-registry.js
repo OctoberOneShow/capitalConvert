@@ -10,7 +10,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { createEnvironment, appSource, boot, check, run } = require("./lib");
+const { createEnvironment, appSource, assetVersion, boot, check, run } = require("./lib");
 
 const CASE = "registry wiring";
 const root = path.join(__dirname, "..", "..");
@@ -182,18 +182,20 @@ run(CASE, () => {
     })(),
   );
 
+  const version = assetVersion();
   check(
     CASE,
-    "every registry game is loaded by all four pages",
-    PAGES.every((page) => {
-      const html = fs.readFileSync(path.join(root, page), "utf8");
-      return (
-        html.includes("assets/app/game-registry.js?v=62") &&
-        games.every((entry) =>
-          html.includes(`assets/app/${entry.name}.js?v=62`),
-        )
-      );
-    }),
+    `every registry game is loaded by all four pages at ?v=${version}`,
+    version > 0 &&
+      PAGES.every((page) => {
+        const html = fs.readFileSync(path.join(root, page), "utf8");
+        return (
+          html.includes(`assets/app/game-registry.js?v=${version}`) &&
+          games.every((entry) =>
+            html.includes(`assets/app/${entry.name}.js?v=${version}`),
+          )
+        );
+      }),
   );
 
   check(

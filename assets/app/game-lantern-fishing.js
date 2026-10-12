@@ -38,6 +38,17 @@
     { id: "l3", labelKey: "lfsZ3", need: 4, named: "lurker", namedNeed: 3, pool: ["lurker", "glintfin"], fuel: 110, starFuel: [40, 24, 10], band: 54 },
     { id: "l4", labelKey: "lfsZ4", need: 4, named: "glintfin", namedNeed: 2, pool: ["glintfin", "razor", "snatcher"], fuel: 110, starFuel: [36, 22, 8], band: 88 },
     { id: "l5", labelKey: "lfsZ5", need: 6, named: "lurker", namedNeed: 2, pool: ["glintfin", "razor", "lurker", "snatcher"], fuel: 140, starFuel: [40, 24, 8], band: 78 },
+    /* Rungs 6-10 each put one number under the microscope, so the ladder reads as
+     * five different nights rather than five longer ones. The fuel lines below
+     * were set by replaying the pure core (approach + tension steppers) against a
+     * scripted night that strikes 350ms late and feeds the reel 150ms late: every
+     * starFuel triple is the leftover of that run, stepped down, so 3 stars never
+     * asks for a frame-perfect strike. */
+    { id: "l6", labelKey: "lfsZ6", need: 6, named: "razor", namedNeed: 4, pool: ["razor", "razor", "razor"], fuel: 104, starFuel: [48, 38, 18], band: 96 },
+    { id: "l7", labelKey: "lfsZ7", need: 6, named: "lurker", namedNeed: 4, pool: ["lurker", "lurker", "lurker", "lurker", "glintfin"], fuel: 102, starFuel: [48, 30, 12], band: 48 },
+    { id: "l8", labelKey: "lfsZ8", need: 7, named: "razor", namedNeed: 2, pool: ["glintfin", "razor", "razor", "lurker", "glintfin", "lurker"], fuel: 130, starFuel: [58, 36, 14], band: 64 },
+    { id: "l9", labelKey: "lfsZ9", need: 7, named: "glintfin", namedNeed: 2, pool: ["snatcher", "glintfin", "razor", "glintfin", "razor", "glintfin"], fuel: 122, starFuel: [60, 42, 18], band: 84 },
+    { id: "l10", labelKey: "lfsZ10", need: 8, named: "lurker", namedNeed: 3, pool: ["glintfin", "razor", "lurker", "lurker", "lurker", "razor", "snatcher"], fuel: 130, starFuel: [54, 32, 8], band: 58 },
   ];
 
   /* --- pure core ---------------------------------------------------------- */
@@ -967,6 +978,11 @@
       "lfsZ3": "Black Trench",
       "lfsZ4": "Kelp Bed",
       "lfsZ5": "The Deep Lake",
+      "lfsZ6": "Razor Shoal",
+      "lfsZ7": "The Sunless Shelf",
+      "lfsZ8": "Crowded Reef",
+      "lfsZ9": "Thief Water",
+      "lfsZ10": "The Last Dredge",
       "lfsSpGlintfin": "Glintfin",
       "lfsSpRazor": "Razor",
       "lfsSpLurker": "Pale lurker",
@@ -1006,6 +1022,11 @@
       "lfsZ3": "黑海沟",
       "lfsZ4": "海藻床",
       "lfsZ5": "深湖",
+      "lfsZ6": "刀鱼群礁",
+      "lfsZ7": "无光岩阶",
+      "lfsZ8": "拥挤礁",
+      "lfsZ9": "夺口贼水",
+      "lfsZ10": "终夜拖网",
       "lfsSpGlintfin": "闪光鱼",
       "lfsSpRazor": "刀鱼",
       "lfsSpLurker": "白潜鱼",

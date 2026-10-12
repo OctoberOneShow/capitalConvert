@@ -3,7 +3,7 @@
  * Static acceptance checks for the pet companion change.
  *
  *   1. the four pages still expose exactly 49 game tabs / 49 game panels
- *   2. both shared assets are requested with ?v=64 on all four pages
+ *   2. both shared assets carry index.html's single ?v= token on all four pages
  *   3. only the cache-busting string changed on the asset lines of each page
  *   4. the pet markup is NOT present in any HTML file (it is JS-injected)
  *   5. UTF-8 / CJK integrity (BOM, no U+FFFD, no latin1 mojibake, sample strings)
@@ -156,6 +156,19 @@ check(
   ).join(","),
 );
 const STYLE_MODULES = Array.from(read("index.html").matchAll(/assets\/styles\/([a-z0-9-]+)\.css\?v=\d+/g), match => match[1]);
+/* The token is read off the manifest instead of restated here: a hardcoded copy
+ * had to be updated in this file, the harness and the linker on every bump, and
+ * one missed copy made a healthy tree look broken. Requiring a single distinct
+ * token in index.html keeps a half-bumped manifest page from hiding the rest. */
+const indexTokens = new Set(
+  Array.from(read("index.html").matchAll(/[?&]v=(\d+)/g), (match) => match[1]),
+);
+const CACHE = indexTokens.size === 1 ? Array.from(indexTokens)[0] : "0";
+check(
+  "index.html carries exactly one asset version token",
+  indexTokens.size === 1,
+  Array.from(indexTokens).join(","),
+);
 PAGES.forEach((page) => {
   const html = read(page);
   const tabs = countOccurrences(html, 'class="game-tab"');
@@ -163,12 +176,12 @@ PAGES.forEach((page) => {
   check(`${page}: exactly 49 game-tab`, tabs === 49, `found ${tabs}`);
   check(`${page}: exactly 49 game-panel`, panels === 49, `found ${panels}`);
   check(
-    `${page}: stylesheets requested as ?v=64`,
-    STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=64`)),
+    `${page}: stylesheets requested as ?v=${CACHE}`,
+    STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=${CACHE}`)),
   );
   check(
-    `${page}: scripts requested as ?v=64`,
-    APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=64`)),
+    `${page}: scripts requested as ?v=${CACHE}`,
+    APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=${CACHE}`)),
   );
   /* Collect every ?v= token on the page and require them all to equal
    * the current cache-busting version, so single-digit versions cannot
@@ -177,8 +190,8 @@ PAGES.forEach((page) => {
     (match) => match[1],
   );
   check(
-    `${page}: every asset token is ?v=64 with no stale versions left`,
-    pageVersions.length > 0 && pageVersions.every((v) => v === "64"),
+    `${page}: every asset token is ?v=${CACHE} with no stale versions left`,
+    pageVersions.length > 0 && pageVersions.every((v) => v === CACHE),
     Array.from(new Set(pageVersions)).join(",") || "none found",
   );
 
@@ -191,8 +204,8 @@ PAGES.forEach((page) => {
     `found ${assetLines.length}`,
   );
   check(
-    `${page}: all asset references are ?v=64`,
-    assetLines.every((line) => line.includes("?v=64")),
+    `${page}: all asset references are ?v=${CACHE}`,
+    assetLines.every((line) => line.includes("?v=" + CACHE)),
     assetLines.join(" | "),
   );
 
@@ -207,9 +220,9 @@ PAGES.forEach((page) => {
   // reference is versioned and every expected module is present.
   check(
     `${page}: asset lines are all versioned split modules`,
-    assetLines.every((line) => /\?v=64/.test(line)) &&
-      STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=64`)) &&
-      APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=64`)),
+    assetLines.every((line) => new RegExp("[?&]v=" + CACHE).test(line)) &&
+      STYLE_MODULES.every((name) => html.includes(`assets/styles/${name}.css?v=${CACHE}`)) &&
+      APP_MODULES.every((name) => html.includes(`assets/app/${name}.js?v=${CACHE}`)),
     "asset reference shape changed beyond version token",
   );
 });
@@ -4857,7 +4870,7 @@ console.log("\n== 6. registry games: injected, linked, bilingual, scoped ==");
     check(
       `${name}: loads on all four pages at the current version`,
       PAGES.every((page) =>
-        read(page).includes(`assets/app/${name}.js?v=64`),
+        read(page).includes(`assets/app/${name}.js?v=${CACHE}`),
       ),
     );
     check(
@@ -4917,6 +4930,30 @@ console.log("\n== 6. registry games: injected, linked, bilingual, scoped ==");
       `${name}: no pack key is shadowed by the shared dictionary`,
       shadowed.length === 0,
       shadowed.join(","),
+    );
+    /* Table copy reaches the screen through t(def.labelKey) and friends, which the
+     * literal t("key") audit below cannot see, so every row's copy key is resolved
+     * against both bodies here. Two modules shipped rows without theirs during the
+     * level expansion: ten new Microbe Lab labels, and five Switchboard Duo shifts
+     * whose names, briefs and six fault reports had never been written at all. */
+    const rowKeys = Array.from(
+      source.matchAll(
+        /\b(?:labelKey|twistKey|briefKey|nameKey|ruleKey|titleKey|stageKey):\s*"([A-Za-z0-9]+)"/g,
+      ),
+    ).map((match) => match[1]);
+    const rowMissing = Array.from(
+      new Set(
+        rowKeys.filter(
+          (key) =>
+            !(enKeys.includes(key) && zhKeys.includes(key)) &&
+            !sharedDict.has(key),
+        ),
+      ),
+    );
+    check(
+      `${name}: all ${rowKeys.length} row copy keys resolve in both languages`,
+      rowMissing.length === 0,
+      rowMissing.join(","),
     );
     const bare = Array.from(
       pack[1].matchAll(/^\s{6}([A-Za-z][A-Za-z0-9]*):/gm),
