@@ -56,6 +56,31 @@
       points: [{ x: 40, y: 356 }, { x: 200, y: 356 }, { x: 340, y: 350 }, { x: 384, y: 268 }, { x: 356, y: 180 }, { x: 240, y: 150 }, { x: 120, y: 180 }, { x: 56, y: 120 }, { x: 120, y: 52 }, { x: 250, y: 40 }],
       pads: [{ x: 270, y: 353 }, { x: 370, y: 224 }],
     },
+    {
+      id: "n6", labelKey: "nirZ6", width: 32, limit: 36, basePar: 11,
+      points: [
+        { x: 40, y: 360 }, { x: 160, y: 360 }, { x: 260, y: 310 }, { x: 350, y: 240 },
+        { x: 370, y: 160 }, { x: 300, y: 120 }, { x: 180, y: 140 }, { x: 100, y: 90 }, { x: 160, y: 45 }, { x: 310, y: 45 },
+      ],
+      pads: [{ x: 100, y: 360 }, { x: 240, y: 130 }],
+    },
+    {
+      id: "n7", labelKey: "nirZ7", width: 28, limit: 45, basePar: 23,
+      points: [
+        { x: 40, y: 360 }, { x: 360, y: 360 }, { x: 370, y: 280 }, { x: 120, y: 270 },
+        { x: 80, y: 200 }, { x: 340, y: 190 }, { x: 370, y: 120 }, { x: 140, y: 100 }, { x: 260, y: 50 },
+      ],
+      pads: [{ x: 200, y: 360 }, { x: 220, y: 190 }],
+    },
+    {
+      id: "n8", labelKey: "nirZ8", width: 30, limit: 42, basePar: 15,
+      points: [
+        { x: 40, y: 350 }, { x: 180, y: 360 }, { x: 320, y: 340 }, { x: 380, y: 260 },
+        { x: 340, y: 180 }, { x: 220, y: 200 }, { x: 120, y: 230 }, { x: 60, y: 170 },
+        { x: 90, y: 100 }, { x: 200, y: 70 }, { x: 330, y: 60 }, { x: 380, y: 110 },
+      ],
+      pads: [{ x: 120, y: 355 }, { x: 280, y: 190 }, { x: 260, y: 65 }],
+    },
   ];
 
   /* --- pure core ---------------------------------------------------------- */
@@ -983,6 +1008,9 @@
       "nirZ3": "Boost Chicane",
       "nirZ4": "No-Margin Tunnel",
       "nirZ5": "The Night Ring",
+      "nirZ6": "Cyber Chicane",
+      "nirZ7": "Neon Serpent",
+      "nirZ8": "Metropolis Loop",
       "nirClockLabel": "Clock",
       "nirGateLabel": "Gates",
       "nirScrapLabel": "Scrapes",
@@ -1014,6 +1042,9 @@
       "nirZ3": "加速连续弯",
       "nirZ4": "无余量隧道",
       "nirZ5": "夜晚环路",
+      "nirZ6": "赛博减速弯",
+      "nirZ7": "霓虹长蛇道",
+      "nirZ8": "大都会双环",
       "nirClockLabel": "计时",
       "nirGateLabel": "门",
       "nirScrapLabel": "撞墙",

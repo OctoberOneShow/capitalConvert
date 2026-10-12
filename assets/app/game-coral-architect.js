@@ -283,6 +283,27 @@
       stars: [100, 82, 62],
       offers: ["FPN", "SXF", "NPS", "FPN", "XSN", "NPS", "FNS", "SPX", "NFP", "SXF", "NPS", "FNS", "PNX", "SFP"],
     },
+    {
+      id: "c6",
+      labelKey: "corZ6",
+      turns: 14,
+      stars: [100, 80, 60],
+      offers: ["SNN", "NNS", "FSN", "NPS", "SNN", "NNS", "FPS", "XSN", "NNS", "SNN", "FNS", "PSN", "NNS", "SFN"],
+    },
+    {
+      id: "c7",
+      labelKey: "corZ7",
+      turns: 14,
+      stars: [90, 72, 54],
+      offers: ["PPX", "PSX", "XPP", "SPX", "FPS", "PPX", "SXF", "XPS", "PPX", "SPF", "PSX", "XPP", "FPX", "SPX"],
+    },
+    {
+      id: "c8",
+      labelKey: "corZ8",
+      turns: 15,
+      stars: [100, 82, 64],
+      offers: ["FPS", "NPS", "SXF", "FPN", "SPX", "NFS", "XSN", "FPN", "NPS", "SXF", "FNS", "PSX", "NFP", "SFP", "PNX"],
+    },
   ];
 
   function initCoralArchitectGame(panelEl) {
@@ -802,6 +823,9 @@
       "corZ3": "Fence the Urchin",
       "corZ4": "Nursery Chain",
       "corZ5": "The Full Lagoon",
+      "corZ6": "Nursery Bloom",
+      "corZ7": "The Deep Trench",
+      "corZ8": "The Great Barrier",
       "corTurnLabel": "Turn",
       "corScoreLabel": "Reef",
       "corHandLabel": "In hand",
@@ -852,6 +876,9 @@
       "corZ3": "围住海胆",
       "corZ4": "育苗链",
       "corZ5": "整片潟湖",
+      "corZ6": "保育繁盛",
+      "corZ7": "深渊海沟",
+      "corZ8": "大堡礁林",
       "corTurnLabel": "回合",
       "corScoreLabel": "珊瑚",
       "corHandLabel": "手上",
