@@ -4550,7 +4550,7 @@ check(
       const api = new Function(slice + "\nreturn { malRanks, malFresh, malBestMove, malSow };")();
       const { malRanks } = api;
       if (
-        malRanks.length !== 4 ||
+        malRanks.length < 4 ||
         !malRanks.every(
           (rank, index) =>
             index === 0 ||

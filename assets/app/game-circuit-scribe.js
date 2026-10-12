@@ -1,7 +1,11 @@
 /* Circuit Scribe - a gate-placement puzzle in the shared game drawer.
  * Each net is a hand-authored DAG with a target truth table, and the shipped
- * gate assignment is the one a brute-force pass proved cheapest, so every net
- * can be completed and the star line is honest. */
+ * gate assignment is the one a brute-force pass proved cheapest over the very
+ * sockets the net offers, so every net can be completed and the star line is
+ * honest. Ten nets, one new idea each: two-wire difference, a three-wire
+ * vote, a counted vote, an inhibited difference, a staged relay, then a
+ * steered pair, a half-specified strobe table, a difference two branches
+ * share, a four-wire consensus and a two-bit comparison. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
   var t = App.t;
@@ -18,7 +22,10 @@
 
   /* `a`/`b` name inputs or earlier slots; a slot without `b` only takes the
    * one-legged parts. `truth` lists the wanted output for every input row,
-   * counting A as the high bit. */
+   * counting A as the high bit. An `x` in that string is a don't-care row:
+   * the board never has to answer it, so a strobed net can be cheaper than
+   * the same net asked to gate its own strobe. `par` is the part count of the
+   * shipped `gates`, and no arity-legal seating beats it. */
   var cirLevels = [
     {
       id: "k1",
@@ -101,6 +108,107 @@
         { id: "s6", a: "s5" },
       ],
       gates: { s1: "xor", s2: "xor", s3: "or", s4: "or", s5: "xor", s6: "wire" },
+      par: 6,
+    },
+    {
+      /* S is a lever, not a fourth wire to vote with: high it passes B, low
+       * it passes A. The cheapest seating is the steering trick, not the two
+       * products a Karnaugh map would write down. */
+      id: "k6",
+      labelKey: "cirL6",
+      inputs: ["A", "B", "S"],
+      truth: "00011011",
+      out: "s3",
+      slots: [
+        { id: "s1", a: "A", b: "B" },
+        { id: "s2", a: "s1", b: "S" },
+        { id: "s3", a: "A", b: "s2" },
+        { id: "s4", a: "B", b: "S" },
+        { id: "s5", a: "s3" },
+      ],
+      gates: { s1: "xor", s2: "and", s3: "xor" },
+      par: 3,
+    },
+    {
+      /* The strobe pin only has to be answered on its own half of the table:
+       * the eight rows with S low are don't-care, so the quorum net gets away
+       * without ever wiring S into the output. */
+      id: "k7",
+      labelKey: "cirL7",
+      inputs: ["A", "B", "C", "S"],
+      truth: "x0x0x0x1x0x1x1x1",
+      out: "s4",
+      slots: [
+        { id: "s1", a: "A", b: "B" },
+        { id: "s2", a: "A", b: "B" },
+        { id: "s3", a: "s2", b: "C" },
+        { id: "s4", a: "s1", b: "s3" },
+        { id: "s5", a: "s4", b: "S" },
+        { id: "s6", a: "s5", b: "C" },
+      ],
+      gates: { s1: "and", s2: "or", s3: "and", s4: "or" },
+      par: 4,
+    },
+    {
+      /* One socket is the only place the A/B difference can be made, and both
+       * clauses read it: seat it once and spend the parts on the checking. */
+      id: "k8",
+      labelKey: "cirL8",
+      inputs: ["A", "B", "C", "D"],
+      truth: "1000000100011000",
+      out: "s5",
+      slots: [
+        { id: "s1", a: "A", b: "B" },
+        { id: "s2", a: "s1", b: "C" },
+        { id: "s3", a: "s1", b: "D" },
+        { id: "s4", a: "s2", b: "s3" },
+        { id: "s5", a: "s4" },
+        { id: "s6", a: "C", b: "D" },
+        { id: "s7", a: "s1", b: "s6" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "xor", s4: "or", s5: "not" },
+      par: 5,
+    },
+    {
+      /* Sixteen rows and four wires that have to agree. Three differences
+       * cover every disagreement between them, and one NOT reports the peace. */
+      id: "k9",
+      labelKey: "cirL9",
+      inputs: ["A", "B", "C", "D"],
+      truth: "1000000000000001",
+      out: "s6",
+      slots: [
+        { id: "s1", a: "A", b: "B" },
+        { id: "s2", a: "C", b: "D" },
+        { id: "s3", a: "A", b: "C" },
+        { id: "s4", a: "s1", b: "s2" },
+        { id: "s5", a: "s4", b: "s3" },
+        { id: "s6", a: "s5" },
+        { id: "s7", a: "B", b: "D" },
+        { id: "s8", a: "s6", b: "s7" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "xor", s4: "or", s5: "or", s6: "not" },
+      par: 6,
+    },
+    {
+      /* Two 2-bit numbers, A B over C D: the high difference decides, and only
+       * when the tops match does the low pair get to speak. */
+      id: "k10",
+      labelKey: "cirL10",
+      inputs: ["A", "B", "C", "D"],
+      truth: "0010000011001110",
+      out: "s6",
+      slots: [
+        { id: "s1", a: "D" },
+        { id: "s2", a: "B", b: "s1" },
+        { id: "s3", a: "A", b: "C" },
+        { id: "s4", a: "A", b: "s2" },
+        { id: "s5", a: "s3", b: "s4" },
+        { id: "s6", a: "s2", b: "s5" },
+        { id: "s7", a: "A", b: "s1" },
+        { id: "s8", a: "s6", b: "s7" },
+      ],
+      gates: { s1: "not", s2: "and", s3: "xor", s4: "xor", s5: "and", s6: "xor" },
       par: 6,
     },
   ];
@@ -202,19 +310,31 @@
         var shift = k - 1 - c;
         bits[level.inputs[c]] = (i >> shift) & 1;
       }
-      rows.push({ in: bits, out: parseInt(level.truth.charAt(i), 10) || 0, index: i });
+      var want = level.truth.charAt(i);
+      /* An `x` row asks nothing of the board, so it carries no wanted bit. */
+      var free = want === "x" || want === "X";
+      rows.push({
+        in: bits,
+        out: free ? 0 : parseInt(want, 10) || 0,
+        free: free,
+        index: i,
+      });
     }
     return rows;
   }
 
-  /* Pure: which required rows the current net already satisfies. */
+  /* Pure: which required rows the current net already satisfies. A don't-care
+   * row holds by definition - nothing is asked of it. */
   function cirRows(netlist, table) {
     var out = [];
     if (!table) {
       return out;
     }
     for (var i = 0; i < table.length; i += 1) {
-      out.push(cirEval(netlist, table[i].in) === (table[i].out ? 1 : 0));
+      out.push(
+        table[i].free === true ||
+          cirEval(netlist, table[i].in) === (table[i].out ? 1 : 0),
+      );
     }
     return out;
   }
@@ -521,17 +641,30 @@
         (best > 0 ? t("cirBestParts", { n: best }) : t("noBest"));
     }
 
+    /* Pure: the rows that actually ask something of the board, counting the
+     * don't-care rows as nothing. */
+    function pinnedRows(list) {
+      var n = 0;
+      for (var i = 0; i < list.length; i += 1) {
+        if (!list[i].free) {
+          n += 1;
+        }
+      }
+      return n;
+    }
+
     function render() {
       var signals = cirSignals(netlist, probe);
       var hits = cirRows(netlist, table);
       var pass = 0;
-      for (var i = 0; i < hits.length; i += 1) {
-        if (hits[i]) {
+      var need = pinnedRows(table);
+      for (var i = 0; i < table.length; i += 1) {
+        if (!table[i].free && hits[i]) {
           pass += 1;
         }
       }
       partsEl.textContent = t("cirPartsNow", { n: cirParts(gates), par: level.par });
-      rowsEl.textContent = t("cirRowsNow", { n: pass, max: hits.length });
+      rowsEl.textContent = t("cirRowsNow", { n: pass, max: need });
       for (var p = 0; p < level.inputs.length; p += 1) {
         var pin = level.inputs[p];
         var bit = probe[pin] ? 1 : 0;
@@ -561,7 +694,7 @@
       outValue.textContent = "\u2192 " + (signals[level.out] ? 1 : 0);
       var head = tableBox.firstChild;
       if (head) {
-        head.textContent = t("cirScore", { n: pass, max: hits.length });
+        head.textContent = t("cirScore", { n: pass, max: need });
       }
       for (var r = 0; r < table.length; r += 1) {
         var line = rowEls[r];
@@ -577,12 +710,14 @@
             label += " ";
           }
         }
-        line.textContent = t("cirRowLine", {
-          in: label,
-          w: want,
-          g: got,
-          m: hits[r] ? "\u2713" : "\u2717",
-        });
+        line.textContent = table[r].free
+          ? t("cirRowFree", { in: label, g: got })
+          : t("cirRowLine", {
+              in: label,
+              w: want,
+              g: got,
+              m: hits[r] ? "\u2713" : "\u2717",
+            });
         line.className = "cir-line" + (hits[r] ? " is-pass" : " is-fail");
       }
     }
@@ -637,12 +772,16 @@
       }
       picked = level.slots[0].id;
       solved = false;
+      var strobed = pinnedRows(table) < table.length;
+      var hintKey = strobed ? "cirHintFree" : "cirHint";
+      hint.setAttribute("data-i18n", hintKey);
+      hint.textContent = t(hintKey);
       buildBoard();
       refreshPicker();
       render();
       result.textContent = t("cirPrompt", {
         name: t(level.labelKey),
-        n: table.length,
+        n: pinnedRows(table),
         p: level.par,
       });
     }

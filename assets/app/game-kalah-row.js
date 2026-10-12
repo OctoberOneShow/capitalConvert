@@ -17,12 +17,31 @@
   var malAiStore = 7;
   /* starsFor() stops at the band it first clears, so a margin ladder runs from
    * the rout down to any win: three stars needs the measured top of the bench's
-   * beaten margins, one star only asks that you won at all. */
+   * beaten margins, one star only asks that you won at all.
+   * Every rung past m4 brings a new habit to the bench rather than another
+   * notch of depth, because depth past four hands stops paying for itself:
+   *   keep   refuses to empty its own row while behind, which is where a
+   *            finished round freezes the whole board over
+   *   book   plays a prepared opening sequence until it banks its first stone
+   *   threat builds star pits (one stone facing a loaded rival pit)
+   *   deny   will not leave the rival a star pit of its own
+   *   tempo  what a spare turn is worth on top of the stone it banks
+   *   count  once the row is short, searches the rest of the round out exactly
+   *   slip   a single repeatable tell instead of broad jitter, so a prepared
+   *            player still has a route to a rout
+   * Habits ride on the same (cells, who, depth, noise) entry point, so callers
+   * that pass no rank read as the shipped behaviour. */
   var malRanks = [
     { id: "m1", labelKey: "malR1", depth: 1, noise: 4, margin: [14, 8, 1] },
     { id: "m2", labelKey: "malR2", depth: 1, noise: 0, margin: [16, 10, 1] },
     { id: "m3", labelKey: "malR3", depth: 2, noise: 0, margin: [18, 12, 1] },
     { id: "m4", labelKey: "malR4", depth: 3, noise: 0, margin: [20, 14, 1] },
+    { id: "m5", labelKey: "malR5", depth: 3, noise: 0, keep: 4, margin: [22, 15, 1] },
+    { id: "m6", labelKey: "malR6", depth: 3, noise: 0, keep: 4, book: [3, 5], margin: [24, 16, 1] },
+    { id: "m7", labelKey: "malR7", depth: 3, noise: 0, keep: 4, book: [3, 5], threat: 1, deny: 1, margin: [26, 18, 1] },
+    { id: "m8", labelKey: "malR8", depth: 4, noise: 0, keep: 4, threat: 1, deny: 2, tempo: 2.5, margin: [28, 20, 1] },
+    { id: "m9", labelKey: "malR9", depth: 4, noise: 0, keep: 6, threat: 1.5, deny: 2, tempo: 2.5, count: 10, margin: [30, 22, 1] },
+    { id: "m10", labelKey: "malR10", depth: 4, noise: 0, keep: 6, threat: 2, deny: 3, tempo: 3, count: 12, slip: 0.05, margin: [32, 24, 1] },
   ];
 
   function malFresh() {
@@ -130,37 +149,173 @@
     return (who === "you" ? tally.you - tally.ai : tally.ai - tally.you);
   }
 
-  function malBestMove(cells, who, depth, noise) {
+  function malRivalOf(who) {
+    return who === "you" ? "ai" : "you";
+  }
+
+  /* A rank's habit, or the shipped default when the row does not carry it. */
+  function malHabit(style, key, fallback) {
+    if (!style || typeof style[key] !== "number" || !isFinite(style[key])) {
+      return fallback;
+    }
+    return style[key];
+  }
+
+  /* Pit ordinals count from the mover's own store, so a habit can be written
+   * once and read the same way on both rows. */
+  function malPitAt(who, ordinal) {
+    return who === "you" ? ordinal : malAiStore + ordinal;
+  }
+
+  /* The rows run in opposite directions, so facing pairs mirror around the
+   * middle of the ring - the same map the capture rule uses. */
+  function malFacing(index) {
+    return malPits * 2 + 2 - index;
+  }
+
+  /* A star pit holds one stone with the rival's facing pit loaded: dropping the
+   * pairing stone there next takes the whole stack. */
+  function malThreats(cells, who) {
+    var count = 0;
+    var index;
+    for (index = 0; index < cells.length; index += 1) {
+      if (malIsPit(index, who) && cells[index] === 1 && cells[malFacing(index)] > 0) {
+        count += 1;
+      }
+    }
+    return count;
+  }
+
+  /* The prepared sequence runs only while the bench has nothing banked and a
+   * full row to spend - past the opening the search takes over. */
+  function malBookPick(cells, who, style, moves) {
+    var book = style && style.book;
+    if (!book || !book.length) {
+      return null;
+    }
+    if (cells[malHome(who)] > 0 || malSideCount(cells, who) < malSeed * malPits) {
+      return null;
+    }
+    var step;
+    for (step = 0; step < book.length; step += 1) {
+      var index = malPitAt(who, book[step]);
+      if (moves.indexOf(index) !== -1) {
+        return index;
+      }
+    }
+    return null;
+  }
+
+  /* Leaf value is the material count plus what the count is blind to: a frozen
+   * board (the round ends the moment either row empties) and the star pits each
+   * side is carrying into the next sow. */
+  function malLeaf(cells, who, style) {
+    var rival = malRivalOf(who);
+    var value = malScore(cells, who);
+    var keep = malHabit(style, "keep", 0);
+    if (keep > 0 && malOver(cells)) {
+      value += value > 0 ? keep / 2 : -keep;
+    }
+    var threat = malHabit(style, "threat", 0);
+    if (threat > 0) {
+      value += threat * (malThreats(cells, who) - malThreats(cells, rival));
+    }
+    var deny = malHabit(style, "deny", 0);
+    if (deny > 0) {
+      value -= deny * malThreats(cells, rival);
+    }
+    return value;
+  }
+
+  /* One ply of the ring: the mover's own best at its nodes, the rival's worst at
+   * the rival's. A spare turn is worth more than the stone it banks. */
+  function malSearch(cells, mover, who, plies, style, budget) {
+    var count = malHabit(style, "count", 0);
+    var short =
+      count > 0 &&
+      malSideCount(cells, "you") + malSideCount(cells, "ai") <= count * 2;
+    if (malOver(cells) || budget.left <= 0 || (plies <= 0 && !short)) {
+      return malLeaf(cells, who, style);
+    }
+    var moves = malLegal(cells, mover);
+    if (!moves.length) {
+      return malLeaf(cells, who, style);
+    }
+    var mine = mover === who;
+    var bestValue = mine ? -Infinity : Infinity;
+    var next = short ? Math.max(1, plies - 1) : plies - 1;
+    var step;
+    for (step = 0; step < moves.length; step += 1) {
+      if (budget.left <= 0) {
+        break;
+      }
+      budget.left -= 1;
+      var out = malSow(cells, moves[step], mover);
+      var value = malSearch(
+        out.cells,
+        out.extra ? mover : malRivalOf(mover),
+        who,
+        next,
+        style,
+        budget,
+      );
+      if (out.extra) {
+        value += malHabit(style, "tempo", 1.5);
+      }
+      if (mine ? value > bestValue : value < bestValue) {
+        bestValue = value;
+      }
+    }
+    return bestValue;
+  }
+
+  /* Read the ring `depth` hands deep. The (cells, who, depth, noise) shape stays
+   * the contract for callers that have no rank in hand. */
+  function malBestMove(cells, who, depth, noise, style) {
     var moves = malLegal(cells, who);
     if (!moves.length) {
       return null;
     }
-    var rival = who === "you" ? "ai" : "you";
+    var rival = malRivalOf(who);
+    var plies = Math.max(1, Math.min(4, Math.round(depth || 1)));
+    var prepared = malBookPick(cells, who, style, moves);
+    if (prepared !== null) {
+      return prepared;
+    }
+    var budget = { left: malHabit(style, "nodes", 900) };
     var best = -Infinity;
     var pick = moves[0];
+    var scored = [];
     moves.forEach(function (index) {
       var step = malSow(cells, index, who);
-      var value;
-      if (depth > 1 && !malOver(step.cells) && !step.extra) {
-        var worst = Infinity;
-        malLegal(step.cells, rival).forEach(function (reply) {
-          var after = malSow(step.cells, reply, rival);
-          worst = Math.min(worst, malScore(after.cells, who));
-        });
-        value = worst === Infinity ? malScore(step.cells, who) : worst;
-      } else {
-        value = malScore(step.cells, who);
-      }
+      var value = malSearch(
+        step.cells,
+        step.extra ? who : rival,
+        who,
+        plies - 1,
+        style,
+        budget,
+      );
       /* A spare turn is worth more than the raw count it banks. */
       if (step.extra) {
-        value += 1.5;
+        value += malHabit(style, "tempo", 1.5);
       }
       value += Math.random() * noise;
+      scored.push({ index: index, value: value });
       if (value > best) {
         best = value;
         pick = index;
       }
     });
+    var slip = malHabit(style, "slip", 0);
+    if (slip > 0 && scored.length > 1 && Math.random() < slip) {
+      /* The tell is narrow and repeatable: the runner-up sow, so a player who
+       * has learned it still has a road to a rout. */
+      var ordered = scored.slice().sort(function (a, b) {
+        return b.value - a.value;
+      });
+      return ordered[1].index;
+    }
     return pick;
   }
 
@@ -309,7 +464,7 @@
     function aiMove() {
       var guard = 0;
       while (!over) {
-        var index = malBestMove(cells, "ai", rank.depth, rank.noise);
+        var index = malBestMove(cells, "ai", rank.depth, rank.noise, rank);
         if (index === null) {
           if (malOver(cells)) {
             finish();
@@ -397,6 +552,29 @@
 
     newRound(rank);
   }
+
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js does
+   * not already own, so the four shipped rung names stay in the shared
+   * dictionary and only the six new ones ride here. */
+  App.addStrings({
+    en: {
+      "malR5": "Stone Wall",
+      "malR6": "Book Pupil",
+      "malR7": "Star Trapper",
+      "malR8": "Four-Hand Reader",
+      "malR9": "Stone Counter",
+      "malR10": "Ring Sovereign",
+    },
+    zh: {
+      "malR5": "石墙凳",
+      "malR6": "背谱凳",
+      "malR7": "夺星手",
+      "malR8": "四路读手",
+      "malR9": "数石客",
+      "malR10": "环上王",
+    },
+  });
 
 
   /* Exported for the other modules. */

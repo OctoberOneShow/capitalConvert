@@ -34,6 +34,30 @@
       rest: 0.15, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 3 }, stepMs: 260 },
     { id: "d5", labelKey: "drmP5", seed: 4505, voices: ["bass", "str", "bell"], beats: [0, 2, 4, 6, 8, 10, 12, 14],
       rest: 0.1, rules: { bassRun: 1, strRun: 2, bellRun: 1, bellGap: 4 }, stepMs: 240 },
+    /* Rungs 6-10 each add one rule the engine already models instead of more
+     * steps, and their bands stay measured: the piece is dealt from a legal
+     * line, so the note count of that line is the par.
+     * d6 - the tightest voice budget: bells alone, a two-row register, and no
+     *      other voice to cover a mark, so the rest rule itself deletes beats.
+     * d7 - adjacent marked beats, which makes the run cap bind: strings answer
+     *      singly while the bass doubles inside each pair.
+     * d8 - the doubled bell figure: bells may ring twice in a row, with the gap
+     *      leash at its loosest so the run rule is the only bell limit.
+     * d9 - the widest rest in the ladder: a bell must wait half the bar, so it
+     *      can ring at most twice and the lower voices carry the phrase.
+     * d10 - the long loop: every step of the bar is marked but two, so the
+     *       three voices must keep rotating and never sit on a cap. */
+    { id: "d6", labelKey: "drmP6", seed: 4606, voices: ["bell"], beats: [0, 2, 4, 5, 6, 8, 10, 12, 14],
+      rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 2 }, stepMs: 230 },
+    { id: "d7", labelKey: "drmP7", seed: 4707, voices: ["bass", "str"], beats: [0, 1, 4, 5, 8, 9, 12, 13, 14],
+      rest: 0, rules: { bassRun: 2, strRun: 1, bellRun: 1, bellGap: 3 }, stepMs: 220 },
+    { id: "d8", labelKey: "drmP8", seed: 4808, voices: ["bass", "str", "bell"], beats: [0, 1, 2, 5, 6, 7, 10, 11, 12, 15],
+      rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 2, bellGap: 1 }, stepMs: 210 },
+    { id: "d9", labelKey: "drmP9", seed: 4909, voices: ["bass", "str", "bell"], beats: [0, 2, 3, 5, 6, 8, 9, 11, 12, 14, 15],
+      rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 8 }, stepMs: 200 },
+    { id: "d10", labelKey: "drmP10", seed: 5010, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 14],
+      rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 5 }, stepMs: 190 },
   ];
 
   function mulberry32(seed) {
@@ -840,6 +864,11 @@
       "drmP3": "Bell Gardens",
       "drmP4": "Mirror Canon",
       "drmP5": "The Full Dream",
+      "drmP6": "Bells Alone",
+      "drmP7": "Echo in Eighths",
+      "drmP8": "Twin Bells",
+      "drmP9": "The Waiting Bell",
+      "drmP10": "Dream on Sixteen",
       "drmVBass": "Bass",
       "drmVStr": "Strings",
       "drmVBell": "Bells",
@@ -869,7 +898,7 @@
       "drmWon": "{name} matches every marked beat with {n} notes - {s} stars!",
       "drmPaused": "Playback stopped while you were away; the score is untouched.",
       "drmNextPiece": "Next piece unlocked.",
-      "drmAllPieces": "All five pieces scored.",
+      "drmAllPieces": "All ten pieces scored.",
       "drmHint": "Fewer notes earn more stars: place only what the target asks for. The playhead reads as text, so the puzzle works on mute.",
       "logDreamOrchestra": "Scored {name} with {n} notes",
     },
@@ -880,6 +909,11 @@
       "drmP3": "钟琴庭院",
       "drmP4": "镜像卡农",
       "drmP5": "完整梦境",
+      "drmP6": "孤钟独鸣",
+      "drmP7": "八分回声",
+      "drmP8": "双钟和鸣",
+      "drmP9": "待响之钟",
+      "drmP10": "十六步梦",
       "drmVBass": "低音",
       "drmVStr": "弦乐",
       "drmVBell": "钟琴",
@@ -909,7 +943,7 @@
       "drmWon": "{name}全部重拍命中，用了 {n} 个音符——获得 {s} 星！",
       "drmPaused": "离开时已停止播放；你的乐谱原封不动。",
       "drmNextPiece": "解锁下一首乐曲。",
-      "drmAllPieces": "五首乐曲全部编完。",
+      "drmAllPieces": "十首乐曲全部编完。",
       "drmHint": "音符越少星越多：只放目标要求的音。播放头有文字显示，静音也能解谜。",
       "logDreamOrchestra": "为{name}编了 {n} 个音符",
     },
