@@ -30,6 +30,8 @@
     { id: "i6", labelKey: "glL6", w: 10, h: 8, stars: 3, minPar: 8, maxPar: 18 },
     { id: "i7", labelKey: "glL7", w: 11, h: 9, stars: 4, minPar: 9, maxPar: 19 },
     { id: "i8", labelKey: "glL8", w: 12, h: 9, stars: 5, minPar: 10, maxPar: 21 },
+    { id: "i9", labelKey: "glL9", w: 13, h: 10, stars: 4, minPar: 12, maxPar: 30 },
+    { id: "i10", labelKey: "glL10", w: 14, h: 11, stars: 4, minPar: 10, maxPar: 26 },
   ];
 
   /* Pure generator + solver, exported for the static checks. Board walls

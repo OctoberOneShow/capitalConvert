@@ -7,7 +7,7 @@
 const fs = require("fs");
 const path = require("path");
 const lib = require("./lib");
-const { createEnvironment, run, check } = lib;
+const { createEnvironment, appSource, run, check } = lib;
 const appRoot = path.join(__dirname, "..", "..", "assets", "app");
 
 function read(name) {
@@ -154,6 +154,101 @@ run("lights out paints the winning cross", () => {
   env.dispatch(cells[0], "click");
   check(name, "the completed board visibly goes dark", cells.every((cell) => !cell.classList.contains("is-on") && cell.getAttribute("aria-pressed") === "false"));
   check(name, "one completion is rewarded", rewards.length === 1 && env.byId("litMoves").textContent === "1");
+});
+
+/* One GF(2) solve per rung: the ladder is only playable if every shuffle depth
+ * still deals a board the cross-toggle algebra can clear. */
+function lightsSolution(state) {
+  const n = 25;
+  const rows = [];
+  for (let cell = 0; cell < n; cell += 1) {
+    const row = new Array(n + 1).fill(0);
+    row[cell] = 1;
+    const x = cell % 5;
+    const y = Math.floor(cell / 5);
+    [[1, 0], [-1, 0], [0, 1], [0, -1]].forEach((d) => {
+      const nx = x + d[0];
+      const ny = y + d[1];
+      if (nx >= 0 && nx < 5 && ny >= 0 && ny < 5) row[ny * 5 + nx] = 1;
+    });
+    row[n] = state[cell] ? 1 : 0;
+    rows.push(row);
+  }
+  const where = [];
+  let rowIdx = 0;
+  for (let col = 0; col < n && rowIdx < n; col += 1) {
+    let sel = -1;
+    for (let r = rowIdx; r < n; r += 1) {
+      if (rows[r][col]) { sel = r; break; }
+    }
+    if (sel === -1) continue;
+    const tmp = rows[sel]; rows[sel] = rows[rowIdx]; rows[rowIdx] = tmp;
+    for (let r = 0; r < n; r += 1) {
+      if (r !== rowIdx && rows[r][col]) {
+        for (let c = 0; c <= n; c += 1) rows[r][c] ^= rows[rowIdx][c];
+      }
+    }
+    where[col] = rowIdx;
+    rowIdx += 1;
+  }
+  const solution = new Array(n).fill(0);
+  for (let col = 0; col < n; col += 1) {
+    if (where[col] !== undefined) solution[col] = rows[where[col]][n];
+  }
+  return solution;
+}
+
+run("every lights out rung deals a solvable board", () => {
+  const name = "every lights out rung deals a solvable board";
+  const rungs = (() => {
+    const source = appSource;
+    const block = /var litLevels = \[([\s\S]*?)\];/.exec(source);
+    return block ? Array.from(block[1].matchAll(/presses:\s*(\d+)/g)).map((m) => Number(m[1])) : [];
+  })();
+  check(name, "the ladder is readable from the app source", rungs.length >= 8, String(rungs.length));
+  rungs.forEach((presses, index) => {
+    const rung = index + 1;
+    const store = new Map([["lights-out-best", JSON.stringify({ level: rung, bests: {} })]]);
+    const { env, rewards } = fixture("game-lights", "initLightsGame", { store });
+    const cells = env.byId("litGrid").children;
+    const state = Array.from(cells).map((cell) => cell.classList.contains("is-on"));
+    lightsSolution(state).forEach((press, cell) => {
+      if (press) env.dispatch(cells[cell], "click");
+    });
+    check(name, `rung ${rung} (${presses} presses) clears through the real handlers`,
+      cells.length === 25 &&
+        Array.from(cells).every((cell) => !cell.classList.contains("is-on")) &&
+        rewards.length === 1 &&
+        /litSolved/.test(env.byId("litResult").textContent),
+      env.byId("litResult").textContent);
+    check(name, `rung ${rung} reads ${rung}/${rungs.length}`, env.byId("litLevel").textContent === rung + "/" + rungs.length, env.byId("litLevel").textContent);
+  });
+});
+
+run("ink sort lays its largest racks over three rows", () => {
+  const name = "ink sort lays its largest racks over three rows";
+  [9, 10].forEach((rung) => {
+    const cleared = {};
+    for (let i = 1; i < rung; i += 1) cleared["q" + i] = { stars: 1, best: 10 };
+    const store = new Map([["ink-sort-campaign", JSON.stringify({ v: 1, cleared })]]);
+    const { env } = fixture("game-ink-sort", "initInkSortGame", {
+      store,
+      probe: (source) => source.replace(
+        "    loadLevel(sortLevels[campaign.indexOf(campaign.nextLevelId())]);",
+        "    App.__puzzleTest = { tubes: function () { return tubes; }, layout: tubeLayout, level: function () { return level; } };\n    loadLevel(sortLevels[campaign.indexOf(campaign.nextLevelId())]);",
+      ),
+    });
+    const probe = env.window.CapitalConvert.__puzzleTest;
+    const lay = probe.layout();
+    const wantTubes = rung === 9 ? 13 : 14;
+    check(name, `q${rung} racks ${wantTubes} vials`, probe.tubes().length === wantTubes, String(probe.tubes().length));
+    check(name, `q${rung} uses three rows with a positive gap`, lay.rows === 3 && lay.gap > 0 && lay.perRow <= 5, JSON.stringify(lay));
+    check(name, `q${rung} keeps every vial inside the board`,
+      lay.perRow * lay.tubeW + (lay.perRow - 1) * lay.gap <= 320 &&
+        lay.y0 + lay.rows * lay.rowH + (lay.rows - 1) * 14 <= 320,
+      JSON.stringify(lay));
+    check(name, `q${rung} is the vial on screen`, probe.level().id === "q" + rung, probe.level().id);
+  });
 });
 
 run("traffic cars move in both directions", () => {

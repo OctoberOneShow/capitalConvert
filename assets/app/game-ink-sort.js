@@ -28,6 +28,8 @@
     { id: "q6", labelKey: "sorL6", tubes: 10, colors: 7, shuffle: 50, starMoves: [24, 36, 50] },
     { id: "q7", labelKey: "sorL7", tubes: 11, colors: 8, shuffle: 56, starMoves: [28, 42, 58] },
     { id: "q8", labelKey: "sorL8", tubes: 12, colors: 8, shuffle: 62, starMoves: [32, 46, 62] },
+    { id: "q9", labelKey: "sorL9", tubes: 13, colors: 9, shuffle: 68, starMoves: [36, 52, 70] },
+    { id: "q10", labelKey: "sorL10", tubes: 14, colors: 10, shuffle: 74, starMoves: [40, 58, 78] },
   ];
 
   /* Pure deal generator with a built-in solver: shuffle the colour units
@@ -232,7 +234,9 @@
     var clockRunning = false;
 
     function tubeLayout() {
-      var rows = tubes.length > 5 ? 2 : 1;
+      /* Past twelve vials a second row would squeeze the tubes negative gaps,
+       * so the largest deals lay the rack out over three rows instead. */
+      var rows = tubes.length > 12 ? 3 : tubes.length > 5 ? 2 : 1;
       var perRow = Math.ceil(tubes.length / rows);
       var gap = Math.min(18, (sortSize - 24) / perRow - 46);
       var tubeW = 46;

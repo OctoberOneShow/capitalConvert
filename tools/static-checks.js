@@ -2512,12 +2512,16 @@ check(
     const block = /var auroraLevels = \[([\s\S]*?)\n  \];/.exec(src);
     if (!block) return false;
     const sizes = Array.from(block[1].matchAll(/size:\s*(\d+)/g)).map((m) => Number(m[1]));
-    const pairSets = Array.from(block[1].matchAll(/pairs:\s*\[([\s\S]*?)\]/g)).map(
-      (m) => Array.from(m[1].matchAll(/\[(\d+), (\d+), (\d+), (\d+)\]/g)).map(
+    /* The pair list is a nested array: capture whole rows, not up to the first
+     * inner bracket, or every set parses empty and the check passes vacuously. */
+    const pairSets = Array.from(
+      block[1].matchAll(/pairs:\s*\[((?:\[\d+, \d+, \d+, \d+\],? ?)+)\]/g),
+    ).map((m) =>
+      Array.from(m[1].matchAll(/\[(\d+), (\d+), (\d+), (\d+)\]/g)).map(
         (p) => p.slice(1).map(Number),
       ),
     );
-    if (sizes.length !== 8 || pairSets.length !== 8) return false;
+    if (sizes.length !== 10 || pairSets.length !== 10) return false;
     return pairSets.every((pairs, index) => {
       const size = sizes[index];
       const seen = new Set();
@@ -2534,6 +2538,97 @@ check(
         });
       });
     });
+  })(),
+);
+check(
+  "every Aurora Flow board has a disjoint path solution under the game's rules",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-aurora-flow.js"),
+      "utf8",
+    );
+    const block = /var auroraLevels = \[([\s\S]*?)\n  \];/.exec(src);
+    if (!block) return false;
+    const sizes = Array.from(block[1].matchAll(/size:\s*(\d+)/g)).map((m) => Number(m[1]));
+    const pairSets = Array.from(
+      block[1].matchAll(/pairs:\s*\[((?:\[\d+, \d+, \d+, \d+\],? ?)+)\]/g),
+    ).map((m) =>
+      Array.from(m[1].matchAll(/\[(\d+), (\d+), (\d+), (\d+)\]/g)).map(
+        (p) => p.slice(1).map(Number),
+      ),
+    );
+    /* Exhaustive backtracking over the shipped rules: a ribbon may not enter a
+     * cell owned by another ribbon, nor any other pair's endpoint. */
+    function solvable(size, pairs) {
+      const n = size * size;
+      const idx = (x, y) => y * size + x;
+      const xy = (c) => [c % size, Math.floor(c / size)];
+      const nbrs = (c) => {
+        const [x, y] = xy(c);
+        const out = [];
+        if (x > 0) out.push(c - 1);
+        if (x < size - 1) out.push(c + 1);
+        if (y > 0) out.push(c - size);
+        if (y < size - 1) out.push(c + size);
+        return out;
+      };
+      const pc = pairs.map((p) => [idx(p[0], p[1]), idx(p[2], p[3])]);
+      const endpointOf = new Array(n).fill(-1);
+      pc.forEach(([a, b], i) => {
+        endpointOf[a] = i;
+        endpointOf[b] = i;
+      });
+      const owner = new Array(n).fill(-1);
+      let steps = 0;
+      function place(i) {
+        if (i === pc.length) return true;
+        const [a, b] = pc[i];
+        const [bx, by] = xy(b);
+        const stack = [a];
+        const onPath = new Array(n).fill(false);
+        onPath[a] = true;
+        function dfs(c) {
+          steps += 1;
+          if (steps > 3000000) throw new Error("search cap");
+          if (c === b) {
+            for (const cell of stack) owner[cell] = i;
+            if (place(i + 1)) return true;
+            for (const cell of stack) owner[cell] = -1;
+            return false;
+          }
+          const options = nbrs(c)
+            .filter((nb) => {
+              if (onPath[nb]) return false;
+              if (owner[nb] !== -1 && owner[nb] !== i) return false;
+              if (endpointOf[nb] !== -1 && endpointOf[nb] !== i) return false;
+              return true;
+            })
+            .sort((p, q) => {
+              const [px, py] = xy(p);
+              const [qx, qy] = xy(q);
+              return (
+                Math.abs(px - bx) + Math.abs(py - by) -
+                (Math.abs(qx - bx) + Math.abs(qy - by))
+              );
+            });
+          for (const nb of options) {
+            onPath[nb] = true;
+            stack.push(nb);
+            if (dfs(nb)) return true;
+            stack.pop();
+            onPath[nb] = false;
+          }
+          return false;
+        }
+        return dfs(a);
+      }
+      try {
+        return place(0);
+      } catch (error) {
+        return false;
+      }
+    }
+    return pairSets.every((pairs, index) => solvable(sizes[index], pairs));
   })(),
 );
 check(
@@ -2671,7 +2766,7 @@ check(
       if (!block) return false;
       const gravities = Array.from(block[1].matchAll(/gravity:\s*(\d+)/g)).map((m) => Number(m[1]));
       const fuels = Array.from(block[1].matchAll(/fuel:\s*(\d+)/g)).map((m) => Number(m[1]));
-      if (gravities.length !== 8 || fuels.length !== 8) return false;
+      if (gravities.length !== 10 || fuels.length !== 10) return false;
       return (
         gravities.every((g) => g < 235) &&
         gravities.every((g, i) => i === 0 || g > gravities[i - 1]) &&
@@ -2756,6 +2851,7 @@ check(
     )();
     const configs = [
       [3, 5, 8], [4, 6, 14], [4, 7, 20], [5, 8, 28], [6, 9, 38], [7, 10, 50],
+      [8, 11, 56], [8, 12, 62], [9, 13, 68], [10, 14, 74],
     ];
     return configs.every(([colors, tubeCount, depth]) => {
       for (var trial = 0; trial < 12; trial += 1) {
@@ -3564,6 +3660,7 @@ check(
       [8, 6, 0, 3, 5], [8, 6, 1, 4, 7], [9, 7, 2, 5, 9],
       [9, 7, 2, 7, 11], [10, 8, 3, 7, 15], [10, 8, 3, 8, 18],
       [11, 9, 4, 9, 19], [12, 9, 5, 10, 21],
+      [13, 10, 4, 12, 30], [14, 11, 4, 10, 26],
     ];
     return configs.every(([w, h, stars, minPar, maxPar]) => {
       for (let trial = 0; trial < 8; trial += 1) {

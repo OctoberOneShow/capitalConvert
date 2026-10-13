@@ -21,6 +21,9 @@
     { pairs: 10, cols: 5 },
     { pairs: 11, cols: 6 },
     { pairs: 12, cols: 6 },
+    { pairs: 13, cols: 6 },
+    { pairs: 14, cols: 6 },
+    { pairs: 15, cols: 6 },
   ];
   /* Glyph pool: the first six are the original board's glyphs, the rest widen
    * the pool so the largest rung has enough distinct faces. */
@@ -37,6 +40,9 @@
     "\u96f7",
     "\u7389",
     "\u7384",
+    "\u7084",
+    "\u6cc9",
+    "\u68ee",
   ];
   /* One identity per glyph: a motif from the art bank plus the hue its plate is
    * bevelled in. The character stays the fact a pair is matched on - the motif
@@ -55,6 +61,9 @@
     "\u96f7": { icon: "bolt", hue: 312 }, // thunder
     "\u7389": { icon: "gem", hue: 128 }, // jade
     "\u7384": { icon: "prism", hue: 342 }, // the dark and unknowable
+    "\u7084": { icon: "flame", hue: 14 }, // flame
+    "\u6cc9": { icon: "wave", hue: 190 }, // spring
+    "\u68ee": { icon: "tree", hue: 105 }, // forest
   };
   var memoryFaceFallback = { icon: "gem", hue: 196 };
   /* The deck's own back colour. It matches the --gp-hue the shared art-direction
