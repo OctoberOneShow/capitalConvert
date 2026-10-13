@@ -13,13 +13,18 @@
   var spotStoreVersion = 2;
   var spotPenaltyMs = 2000;
   /* The ladder: more planted damage per rung, and the mutation pool grows
-   * sneakier - case flips join on rung 2, look-alike homoglyphs on rung 3. */
+   * sneakier - case flips join on rung 2, look-alike homoglyphs on rung 3.
+   * The last three rungs keep every trick on the table and simply plant more
+   * of them: eight, nine, then ten breaks in one line. */
   var spotLevels = [
     { diffs: 3, caseFlips: false, homoglyphs: false },
     { diffs: 4, caseFlips: true, homoglyphs: false },
     { diffs: 5, caseFlips: true, homoglyphs: true },
     { diffs: 6, caseFlips: true, homoglyphs: true },
     { diffs: 7, caseFlips: true, homoglyphs: true },
+    { diffs: 8, caseFlips: true, homoglyphs: true },
+    { diffs: 9, caseFlips: true, homoglyphs: true },
+    { diffs: 10, caseFlips: true, homoglyphs: true },
   ];
   /* Every mutation is one the site's own tools know how to undo, so the
    * planted damage is exactly the kind of noise the toolkit hunts. */
@@ -62,6 +67,11 @@
     "Don't let a stray quote or a doubled space survive the pass.",
     "Lisp-like tools slice the ISO blobs into clean, closed lines.",
     "Zero bugs slip past the sieve when the batch looks twice.",
+    "Punctuation is a dial, not a switch: nudge the comma, and the sentence changes key.",
+    "Batch jobs love idempotence: run the sweeper twice, and the output stays golden.",
+    "Every regex is a small contract - keep it boring, tested, and easy to delete.",
+    "The pipeline sorts, sweeps, and seals; nobody touches the text by hand anymore.",
+    "A careful pass at midnight beats three careless ones before lunch.",
   ];
 
   function spotShuffle(list) {

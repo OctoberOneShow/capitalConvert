@@ -2804,7 +2804,7 @@ check(
     const block = /var croLevels = \[([\s\S]*?)\n  \];/.exec(src);
     if (!block) return false;
     const laneSets = Array.from(block[1].matchAll(/lanes:\s*\[([\s\S]*?)\]\s*,\s*\n\s*starTimes/g));
-    if (laneSets.length !== 6) return false;
+    if (laneSets.length !== 9) return false;
     const speeds = [];
     const ok = laneSets.every((set) => {
       const lanes = Array.from(set[1].matchAll(/row:\s*(\d+),\s*dir:\s*(-?\d+),\s*speed:\s*(\d+)/g));
@@ -3109,7 +3109,7 @@ check(
     const arts = Array.from(block[1].matchAll(/art:\s*\[([\s\S]*?)\]/g)).map((m) =>
       Array.from(m[1].matchAll(/"([^"]*)"/g)).map((x) => x[1]),
     );
-    if (arts.length !== 6) return false;
+    if (arts.length !== 8) return false;
     function lineOptions(line, clue) {
       const n = line.length;
       const out = [];

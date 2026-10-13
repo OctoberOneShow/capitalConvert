@@ -46,6 +46,9 @@
     { id: "a3", labelKey: "arcZ3", goal: "roof" },
     { id: "a4", labelKey: "arcZ4", goal: "clues" },
     { id: "a5", labelKey: "arcZ5", goal: "secret" },
+    { id: "a6", labelKey: "arcZ6", goal: "tea" },
+    { id: "a7", labelKey: "arcZ7", goal: "roofFull" },
+    { id: "a8", labelKey: "arcZ8", goal: "ledgerFull" },
   ];
 
   /* A choice may ask for an item, a flag or one named clue; a room hands back
@@ -430,6 +433,18 @@
     if (goal === "clues") {
       return arcCount(state.clues) >= arcClueTotal;
     }
+    /* The later nights combine a way out with what you are still carrying:
+     * the thermos has to come with you, or the ending has to arrive with the
+     * whole clue set in the log rather than only the tiles the door wanted. */
+    if (goal === "tea") {
+      return !!state.items.tea;
+    }
+    if (goal === "roofFull") {
+      return ending === "roof" && arcCount(state.clues) >= arcClueTotal;
+    }
+    if (goal === "ledgerFull") {
+      return ending === "ledger" && arcCount(state.clues) >= arcClueTotal;
+    }
     return ending === goal;
   }
 
@@ -474,7 +489,7 @@
         queue.push(next);
       }
     }
-    var goals = ["any", "ledger", "roof", "clues", "secret"];
+    var goals = ["any", "ledger", "roof", "clues", "secret", "tea", "roofFull", "ledgerFull"];
     var turns = {};
     var i;
     for (i = 0; i < goals.length; i += 1) {
@@ -1259,6 +1274,9 @@
       "arcZ3": "The Roof Night",
       "arcZ4": "All Five Tiles",
       "arcZ5": "The Wrong Year",
+      "arcZ6": "The Thermos Night",
+      "arcZ7": "The Collector's Night",
+      "arcZ8": "The Full Ledger Night",
       "arcTurnLabel": "Turns",
       "arcClueLabel": "Clues",
       "arcRoomLabel": "Room",
@@ -1285,7 +1303,7 @@
       "arcEndingOff": "You reached {g} in {n} turns, but tonight asked for {want}. Walk it again.",
       "arcFiled": "{g}, filed in {n} turns - {s} stars.",
       "arcNextNight": "Next night unlocked.",
-      "arcAllNights": "Five nights, five ways out of it.",
+      "arcAllNights": "Eight nights, eight ways out of it.",
       "arcPaused": "Paused at turn {n}. The archive keeps your place.",
       "arcGraphBroken": "The story map failed its own solvability proof. Report it.",
       "arcObjective": "{name}: {want}. The route is known to take {p} turns, so shorter is better.",
@@ -1314,6 +1332,9 @@
       "arcGoalRoof": "reach the roof ending",
       "arcGoalClues": "finish holding all five clues",
       "arcGoalSecret": "reach the secret ending",
+      "arcGoalTea": "escape still holding the thermos",
+      "arcGoalRoofFull": "reach the roof ending holding all five clues",
+      "arcGoalLedgerFull": "reach the ledger ending holding all five clues",
       "arcEndLedger": "Ledger ending",
       "arcEndRoof": "Roof ending",
       "arcEndSecret": "Secret ending",
@@ -1325,6 +1346,9 @@
       "arcZ3": "屋顶之夜",
       "arcZ4": "五块牌片",
       "arcZ5": "错误的一年",
+      "arcZ6": "保温壶之夜",
+      "arcZ7": "收藏家之夜",
+      "arcZ8": "满账之夜",
       "arcTurnLabel": "步数",
       "arcClueLabel": "线索",
       "arcRoomLabel": "房间",
@@ -1351,7 +1375,7 @@
       "arcEndingOff": "你用了 {n} 步走到{g}，可今夜要的是{want}。再走一遍。",
       "arcFiled": "{g}，用了 {n} 步 - 获得 {s} 星。",
       "arcNextNight": "解锁下一夜。",
-      "arcAllNights": "五个夜晚，五种出来的法子。",
+      "arcAllNights": "八个夜晚，八种出来的法子。",
       "arcPaused": "停在第 {n} 步。档案楼替你看住位置。",
       "arcGraphBroken": "故事图没通过它自己的可解性校验，请报告。",
       "arcObjective": "{name}：{want}。已测出这条路最短要 {p} 步，越少越好。",
@@ -1380,6 +1404,9 @@
       "arcGoalRoof": "走到屋顶结局",
       "arcGoalClues": "带着五条线索结束",
       "arcGoalSecret": "走到隐藏结局",
+      "arcGoalTea": "带着保温壶逃出去",
+      "arcGoalRoofFull": "带着五条线索走到屋顶结局",
+      "arcGoalLedgerFull": "带着五条线索走到台账结局",
       "arcEndLedger": "台账结局",
       "arcEndRoof": "屋顶结局",
       "arcEndSecret": "隐藏结局",
@@ -1401,7 +1428,7 @@
         '<text x="93" y="40" font-size="10" fill="#ffd166" text-anchor="middle">5?</text>' +
         '<text x="30" y="68" font-size="8" fill="#b9c1cc">1 desk  2 stair  3 lift</text></svg>',
       en: [
-        "Goal: get out of the closed archive - the five nights each ask for a different way out.",
+        "Goal: get out of the closed archive - the eight nights each ask for a different way out.",
         "Action: click a choice or press its number 1-4; Backspace retraces one passage and L reads your clue log aloud.",
         "Rule: a greyed choice is not a dead end, it names the item, flag or clue it still wants; the mapped rooms, satchel and clues stay on screen so you never have to remember.",
         "Turns: a shorter route scores better, so a run that walks the whole map will finish - it just will not shine.",
@@ -1409,7 +1436,7 @@
         "Before the night is dealt the story graph is checked by machine: every passage reachable, both standard endings reachable, no passage without a way onward.",
       ],
       zh: [
-        "目标：从夜里关门的档案楼里出去——五个夜晚，各要你走一种不同的出去法。",
+        "目标：从夜里关门的档案楼里出去——八个夜晚，各要你走一种不同的出去法。",
         "操作：点选项，或按它前面的数字 1-4；退格键退回一段，L 键把线索日志念出来。",
         "规则：灰掉的选项不是死路，它会写明还缺哪件东西、哪个状态或哪条线索；已探明的房间、口袋和线索一直摆在屏上，不用你记。",
         "步数：路线越短分越高，所以把整栋楼走完也能通关——只是不会太亮眼。",

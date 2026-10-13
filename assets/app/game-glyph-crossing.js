@@ -93,6 +93,42 @@
       ],
       starTimes: [55, 80, 115],
     },
+    {
+      id: "c7", labelKey: "croL7",
+      lanes: [
+        { row: 1, dir: -1, speed: 68, len: 80, gap: 160 },
+        { row: 2, dir: 1, speed: 80, len: 80, gap: 155 },
+        { row: 3, dir: -1, speed: 92, len: 80, gap: 155 },
+        { row: 5, dir: 1, speed: 102, len: 70, gap: 155 },
+        { row: 6, dir: -1, speed: 112, len: 70, gap: 150 },
+        { row: 7, dir: 1, speed: 124, len: 80, gap: 150 },
+      ],
+      starTimes: [60, 88, 125],
+    },
+    {
+      id: "c8", labelKey: "croL8",
+      lanes: [
+        { row: 1, dir: 1, speed: 76, len: 80, gap: 152 },
+        { row: 2, dir: -1, speed: 90, len: 80, gap: 148 },
+        { row: 3, dir: 1, speed: 104, len: 80, gap: 148 },
+        { row: 5, dir: -1, speed: 114, len: 70, gap: 148 },
+        { row: 6, dir: 1, speed: 124, len: 70, gap: 144 },
+        { row: 7, dir: -1, speed: 138, len: 80, gap: 144 },
+      ],
+      starTimes: [66, 96, 138],
+    },
+    {
+      id: "c9", labelKey: "croL9",
+      lanes: [
+        { row: 1, dir: -1, speed: 84, len: 80, gap: 148 },
+        { row: 2, dir: 1, speed: 100, len: 80, gap: 144 },
+        { row: 3, dir: -1, speed: 116, len: 80, gap: 144 },
+        { row: 5, dir: 1, speed: 126, len: 70, gap: 144 },
+        { row: 6, dir: -1, speed: 136, len: 70, gap: 140 },
+        { row: 7, dir: 1, speed: 152, len: 80, gap: 140 },
+      ],
+      starTimes: [72, 105, 150],
+    },
   ];
   var STREAK_COLORS = ["#f472b6", "#fb7185", "#fbbf24", "#a78bfa"];
 

@@ -29,6 +29,8 @@
     { id: "tw5", labelKey: "towL5", discs: 7, starMoves: [128, 135, 155] },
     { id: "tw6", labelKey: "lvlNum6", discs: 8, starMoves: [256, 266, 290] },
     { id: "tw7", labelKey: "lvlNum7", discs: 9, starMoves: [512, 526, 560] },
+    { id: "tw8", labelKey: "lvlNum8", discs: 10, starMoves: [1024, 1052, 1116] },
+    { id: "tw9", labelKey: "lvlNum9", discs: 11, starMoves: [2048, 2080, 2176] },
   ];
 
   /* Pure optimum, exported for the static checks. */
