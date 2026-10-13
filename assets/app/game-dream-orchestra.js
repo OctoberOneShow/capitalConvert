@@ -51,7 +51,7 @@
       rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 2 }, stepMs: 230 },
     { id: "d7", labelKey: "drmP7", seed: 4707, voices: ["bass", "str"], beats: [0, 1, 4, 5, 8, 9, 12, 13, 14],
       rest: 0, rules: { bassRun: 2, strRun: 1, bellRun: 1, bellGap: 3 }, stepMs: 220 },
-    { id: "d8", labelKey: "drmP8", seed: 4808, voices: ["bass", "str", "bell"], beats: [0, 1, 2, 5, 6, 7, 10, 11, 12, 15],
+    { id: "d8", labelKey: "drmP8", seed: 4728, voices: ["bass", "str", "bell"], beats: [0, 1, 2, 5, 6, 7, 10, 11, 12, 15],
       rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 2, bellGap: 1 }, stepMs: 210 },
     { id: "d9", labelKey: "drmP9", seed: 4909, voices: ["bass", "str", "bell"], beats: [0, 2, 3, 5, 6, 8, 9, 11, 12, 14, 15],
       rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 8 }, stepMs: 200 },

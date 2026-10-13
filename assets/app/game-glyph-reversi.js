@@ -300,7 +300,7 @@
         var nextId = outcome.unlockedNext || level.id;
         loadLevel(revLevels[campaign.indexOf(nextId)]);
       } else if (margin === 0) {
-        message = t("revDraw") + " " + t("revRetry");
+        message = t("revDraw", { n: score.player }) + " " + t("revRetry");
       } else {
         message = t("revLoss", { n: score.player, m: score.ai }) + " " + t("revRetry");
       }

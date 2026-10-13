@@ -13,14 +13,21 @@
   var bjFaces = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
   /* Every table keeps the same shape - a top bet a quarter of the bankroll and
    * a target half again above it - so one sits at the table for about the same
-   * number of hands whatever the stakes. Deeper shoes take the counting edge
-   * away, so their star bands tighten instead of the session growing. */
+   * number of hands whatever the stakes: the race is always two top bets of net
+   * luck. Deeper shoes take the counting edge away, so the last five tables let
+   * the bankroll double while the star bands hold and then tighten; on the
+   * deepest felt a three-star is a lucky session, not the ordinary one. */
   var bjTables = [
     { id: "b1", labelKey: "bjT1", decks: 1, start: 100, bets: [5, 10, 25], target: 150, starHands: [8, 16, 32] },
     { id: "b2", labelKey: "bjT2", decks: 2, start: 200, bets: [10, 20, 50], target: 300, starHands: [9, 18, 36] },
     { id: "b3", labelKey: "bjT3", decks: 4, start: 400, bets: [25, 50, 100], target: 600, starHands: [10, 20, 40] },
     { id: "b4", labelKey: "bjT4", decks: 6, start: 800, bets: [50, 100, 200], target: 1200, starHands: [11, 22, 44] },
     { id: "b5", labelKey: "bjT5", decks: 8, start: 1600, bets: [100, 200, 400], target: 2400, starHands: [12, 24, 48] },
+    { id: "b6", labelKey: "bjT6", decks: 10, start: 3200, bets: [160, 320, 800], target: 4800, starHands: [12, 25, 50] },
+    { id: "b7", labelKey: "bjT7", decks: 12, start: 6400, bets: [320, 640, 1600], target: 9600, starHands: [12, 24, 48] },
+    { id: "b8", labelKey: "bjT8", decks: 14, start: 12800, bets: [640, 1280, 3200], target: 19200, starHands: [11, 23, 46] },
+    { id: "b9", labelKey: "bjT9", decks: 16, start: 25600, bets: [1280, 2560, 6400], target: 38400, starHands: [11, 22, 44] },
+    { id: "b10", labelKey: "bjT10", decks: 18, start: 51200, bets: [2560, 5120, 12800], target: 76800, starHands: [10, 21, 42] },
   ];
 
   /* Presentation beats, in milliseconds: the hole card turns after the deal has
@@ -523,7 +530,7 @@
         won = -bet;
         line = t("bjYouLose", { you: you, house: house, n: bet });
       } else {
-        line = t("bjPush");
+        line = t("bjPush", { you: you });
       }
       chips += won;
       revealDelay = naturalDeal ? BJ_DEAL_REVEAL_MS : BJ_REVEAL_MS;

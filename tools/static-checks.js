@@ -4538,8 +4538,9 @@ check(
     }
   })(),
 );
+const kalahStats = [];
 check(
-  "Kalah Row: the top bench plays without luck and the ranks unlock in order",
+  "Kalah Row: every rank is winnable and its top band is inside the measured margin",
   (() => {
     try {
       const src = read("assets/app/game-kalah-row.js").replace(/^﻿/, "");
@@ -4547,27 +4548,81 @@ check(
         src.indexOf("var malPits"),
         src.indexOf("function initMancalaGame"),
       );
-      const api = new Function(slice + "\nreturn { malRanks, malFresh, malBestMove, malSow };")();
-      const { malRanks } = api;
+      const api = new Function(
+        slice +
+          "\nreturn { malRanks, malFresh, malSow, malOver, malScore, malBestMove, malRivalOf };",
+      )();
+      const { malRanks, malFresh, malSow, malOver, malScore, malBestMove, malRivalOf } = api;
+      if (malRanks.length < 4) return false;
       if (
-        malRanks.length < 4 ||
         !malRanks.every(
-          (rank, index) =>
-            index === 0 ||
-            (rank.depth >= malRanks[index - 1].depth &&
-              rank.margin[0] > malRanks[index - 1].margin[0]),
+          (rank, index) => index === 0 || rank.depth >= malRanks[index - 1].depth,
         ) ||
-        malRanks.some((rank) => rank.depth < 1 || rank.noise > 0 && rank.depth === 3)
+        malRanks.some((rank) => rank.depth < 1 || (rank.noise > 0 && rank.depth === 3)) ||
+        malRanks.some((rank) => !(rank.margin[0] > rank.margin[1] && rank.margin[1] > rank.margin[2]))
       ) {
         return false;
       }
-      /* the master bench has to pick a legal pit out of a real board */
-      const pick = api.malBestMove(api.malFresh(), "ai", 3, 0);
-      return pick !== null && pick > 7;
+      /* The bench is driven exactly as the game drives it: the rank object IS the
+       * habit style, so passing rank.style alone measures a stronger opponent than
+       * ships and quietly invalidates every number below. */
+      const human = { keep: 4, threat: 1, deny: 1, tempo: 2.5, count: 10 };
+      const realRandom = Math.random;
+      let seed = 20261013;
+      Math.random = () => {
+        seed = (seed * 1103515245 + 12345) % 2147483648;
+        return seed / 2147483648;
+      };
+      try {
+        const playOne = (depth, rank) => {
+          let cells = malFresh();
+          let mover = "you";
+          for (let guard = 0; guard < 4000 && !malOver(cells); guard += 1) {
+            const move =
+              mover === "you"
+                ? malBestMove(cells, "you", depth, 0, human)
+                : malBestMove(cells, "ai", rank.depth, rank.noise, rank);
+            if (move === null || move === undefined) break;
+            const step = malSow(cells, move, mover);
+            cells = step.cells;
+            if (!step.extra) mover = malRivalOf(mover);
+          }
+          return malScore(cells, "you");
+        };
+        /* A median of 14 games against a jittered bench is too noisy to anchor a
+         * band with - it called the easiest rank unreachable on one stream and
+         * fine on another - so score the SHARE of games won by at least the band,
+         * over a larger deterministically seeded sample: the same standard the
+         * Morse and parlor audits already use, and stable across runs. */
+        const verdicts = malRanks.map((rank) => {
+          const margins = [];
+          for (const depth of [3, 4]) {
+            seed = 987654321 + depth * 7717;
+            for (let trial = 0; trial < 20; trial += 1) margins.push(playOne(depth, rank));
+          }
+          const share = (need) =>
+            (100 * margins.filter((m) => m >= need).length) / margins.length;
+          const top = share(rank.margin[0]);
+          const winnable = share(1);
+          /* unwinnable awards nothing, and a band under 15% of games is a
+           * lottery. There is deliberately no "too easy" ceiling here: this
+           * reference player searches 3-4 plies without erring, so it wins the
+           * teaching ranks by a landslide that a first-time player never sees. */
+          const fair = winnable >= 5 && top >= 15;
+          kalahStats.push(
+            `${rank.id}${fair ? "" : " *"} band ${rank.margin[0]} at ${top.toFixed(0)}% (wins ${winnable.toFixed(0)}%)`,
+          );
+          return fair;
+        });
+        return verdicts.every(Boolean);
+      } finally {
+        Math.random = realRandom;
+      }
     } catch (error) {
       return false;
     }
   })(),
+  kalahStats.join(" | ") || "seeded self-play at 3 and 4 plies",
 );
 check(
   "Twenty-One Parlor: aces drop to one only when the hand needs it",
@@ -5043,6 +5098,33 @@ console.log("\n== 6. registry games: injected, linked, bilingual, scoped ==");
           countOccurrences(read(page), 'class="game-panel"') === 49,
       ),
     `registry ${registryModules.length}`,
+  );
+})();
+
+console.log("\n== 6. every placeholder gets its argument ==");
+/* A key can exist in both languages and still print a literal {you}, because
+ * the call site passed no arguments - which is how every blackjack push shipped
+ * raw placeholder text. The key-existence audit above cannot see this class, so
+ * the argument list is checked against the text the key actually carries. */
+(() => {
+  const textOf = new Map();
+  for (const line of appJs.split("\n")) {
+    const m = /^ {6}"([A-Za-z0-9]+)": "([^"]*)",?$/.exec(line);
+    if (m && !textOf.has(m[1])) {
+      textOf.set(m[1], m[2]);
+    }
+  }
+  const victims = [];
+  for (const call of appJs.matchAll(/\bt\("([A-Za-z0-9]+)"\s*\)/g)) {
+    const body = textOf.get(call[1]);
+    if (body !== undefined && /\{[A-Za-z0-9]+\}/.test(body)) {
+      victims.push(`${call[1]} -> ${body.slice(0, 36)}`);
+    }
+  }
+  check(
+    `no bare t(key) call prints an unrendered placeholder (${textOf.size} keyed texts read)`,
+    victims.length === 0,
+    victims.join(" | ") || "every argument-less call resolves to plain text",
   );
 })();
 console.log("\n== summary ==");

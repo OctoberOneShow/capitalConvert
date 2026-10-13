@@ -40,16 +40,20 @@
     warden: { glyph: "\u271a", hp: 22, armor: 1, pattern: [{ k: "strike", v: 4 }, { k: "summon" }, { k: "guard" }] },
   };
 
-  /* Five seeds, each one monster mix plus one rule twist. */
+  /* One row per rung: a monster mix plus the one rule twist the resolver reads.
+   * armour is a floor over a species' own shell and regen is mended per round,
+   * so the last two rungs push past the innate armour of every beast. */
   var edlLevels = [
-    { id: "d1", labelKey: "edlZ1", twistKey: "edlTwist1", seed: 20260107, kinds: ["imp", "adder"], count: 2, armor: 0, regen: 0, starTurns: [27, 34, 46] },
+    { id: "d1", labelKey: "edlZ1", twistKey: "edlTwist1", seed: 20260107, kinds: ["imp", "adder"], count: 2, armor: 0, regen: 0, starTurns: [30, 34, 46] },
     { id: "d2", labelKey: "edlZ2", twistKey: "edlTwist2", seed: 20260213, kinds: ["imp", "husk"], count: 3, armor: 2, regen: 0, starTurns: [28, 36, 48] },
-    { id: "d3", labelKey: "edlZ3", twistKey: "edlTwist3", seed: 20260321, kinds: ["adder", "imp"], count: 3, armor: 0, regen: 2, starTurns: [27, 34, 46] },
+    { id: "d3", labelKey: "edlZ3", twistKey: "edlTwist3", seed: 20260321, kinds: ["adder", "imp"], count: 3, armor: 0, regen: 2, starTurns: [28, 34, 46] },
     { id: "d4", labelKey: "edlZ4", twistKey: "edlTwist4", seed: 20260409, kinds: ["warden", "imp"], count: 3, armor: 0, regen: 0, starTurns: [30, 38, 50] },
-    { id: "d5", labelKey: "edlZ5", twistKey: "edlTwist5", seed: 20260505, kinds: ["husk", "adder", "warden", "imp"], count: 3, armor: 1, regen: 1, starTurns: [28, 36, 48] },
+    { id: "d5", labelKey: "edlZ5", twistKey: "edlTwist5", seed: 20260505, kinds: ["husk", "adder", "warden", "imp"], count: 3, armor: 1, regen: 1, starTurns: [31, 36, 48] },
     { id: "d6", labelKey: "edlZ6", twistKey: "edlTwist6", seed: 20260618, kinds: ["warden", "husk"], count: 3, armor: 2, regen: 0, starTurns: [29, 37, 49] },
     { id: "d7", labelKey: "edlZ7", twistKey: "edlTwist7", seed: 20260722, kinds: ["warden", "adder"], count: 3, armor: 0, regen: 3, starTurns: [30, 38, 50] },
     { id: "d8", labelKey: "edlZ8", twistKey: "edlTwist8", seed: 20260830, kinds: ["warden", "husk", "adder", "imp"], count: 4, armor: 2, regen: 2, starTurns: [32, 40, 52] },
+    { id: "d9", labelKey: "edlZ9", twistKey: "edlTwist9", seed: 20260914, kinds: ["husk", "adder", "warden"], count: 4, armor: 3, regen: 0, starTurns: [34, 42, 54] },
+    { id: "d10", labelKey: "edlZ10", twistKey: "edlTwist10", seed: 20261026, kinds: ["warden", "husk", "adder", "imp"], count: 4, armor: 4, regen: 0, starTurns: [36, 44, 56] },
   ];
 
   function edlInt(value) {
@@ -1040,6 +1044,8 @@
       "edlZ6": "Obsidian Vault",
       "edlZ7": "Ember Spire",
       "edlZ8": "The Abyssal Core",
+      "edlZ9": "Hollow Foundry",
+      "edlZ10": "Adamant Crucible",
       "edlTwist1": "plain run",
       "edlTwist2": "armoured strikers",
       "edlTwist3": "biters that mend",
@@ -1048,6 +1054,8 @@
       "edlTwist6": "wardens with innate armor",
       "edlTwist7": "wardens that regenerate",
       "edlTwist8": "dense packs with armor and mend",
+      "edlTwist9": "a plated trio that never mends",
+      "edlTwist10": "every species in harder plate",
       "edlDepthLabel": "Depth",
       "edlVitalLabel": "Vitals",
       "edlTurnLabel": "Turns left",
@@ -1125,6 +1133,8 @@
       "edlZ6": "黑曜宝库",
       "edlZ7": "余烬尖塔",
       "edlZ8": "深渊熔核",
+      "edlZ9": "空洞铸炉",
+      "edlZ10": "精金熔炉",
       "edlTwist1": "规则如常",
       "edlTwist2": "来袭者披甲",
       "edlTwist3": "撕咬者能自愈",
@@ -1133,6 +1143,8 @@
       "edlTwist6": "狱卒自带厚甲",
       "edlTwist7": "狱卒每回合自愈",
       "edlTwist8": "密集群落披甲且自愈",
+      "edlTwist9": "三族重甲不愈",
+      "edlTwist10": "全族皆披硬甲",
       "edlDepthLabel": "层数",
       "edlVitalLabel": "体力",
       "edlTurnLabel": "剩余回合",

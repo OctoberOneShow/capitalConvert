@@ -5,8 +5,8 @@
  * and the only way to change the open route is to flip the live ball through a
  * one-way switch zone - so opening one route closes another.
  * Physics: fixed-step swept integrator, sub-stepped, clamped, no tunnelling.
- * The three extended tables ship stored input programs; the prover replays
- * them through the same step function before their par is trusted. */
+ * Every table ships a stored input line; the prover replays each one through
+ * the same step function the panel drives before that table's par is trusted. */
 (function (App) {
   var t = App.t;
   var logAction = App.logAction;
@@ -273,18 +273,23 @@
   }
 
   /* ---------------- tables ---------------- */
-  function pbcTable(id, labelKey, manifest, balls, startRoute, program) {
+  /* powers is optional: a rung can ship a shorter plunger arc, which drops the
+   * ball lower on the sorter rail and so changes which shafts it can reach. */
+  function pbcTable(id, labelKey, manifest, balls, startRoute, program, powers) {
     return {
       id: id, labelKey: labelKey, manifest: manifest, balls: balls,
-      startRoute: startRoute, powers: [770, 850, 930], program: program || [],
+      startRoute: startRoute, powers: powers || [770, 850, 930], program: program || [],
       segs: pbcSegs(), circles: pbcCircles(), zones: pbcZones(),
     };
   }
 
-  /* Stored input scripts for the three extended tables. Each was built tick by
-   * tick against this step function; the prover replays it through the same
-   * step function before the table's par is trusted, so the measured par
-   * climbs 5, 6, 7 launches - one launch per stop. */
+  /* Stored input lines. The three extended rungs were built tick by tick
+   * against this step function, and every other rung now ships one too, so no
+   * par below is a guess: the prover replays the line and reads its launches.
+   * The floor a line can reach is fixed by the engine, not by taste: a launch
+   * clears the scanned flag, so one ball is read at most once, and the gate
+   * only moves while a ball is live - therefore a manifest costs at least one
+   * launch per stop, plus one more when the rail does not open on stop 1. */
   var pbcProg4 = [
     { launch: true, dur: 1 },
     { dur: 128 },
@@ -396,13 +401,120 @@
     { dur: 185 },
   ];
 
+  /* A witness line in short form: [ticks, input] pairs, where input 0 rests,
+   * 1 is the left flipper, 2 the right flipper, 4 both together and 3 is the
+   * plunger. pbcScript expands it into the items pbcStep reads, so the prover
+   * replays exactly the ticks the line was measured on. */
+  function pbcScript(steps) {
+    var out = [];
+    var i;
+    for (i = 0; i < steps.length; i += 1) {
+      var item = { dur: Math.max(1, steps[i][0]) };
+      if (steps[i][1] === 1 || steps[i][1] === 4) { item.flipL = true; }
+      if (steps[i][1] === 2 || steps[i][1] === 4) { item.flipR = true; }
+      if (steps[i][1] === 3) { item.launch = true; }
+      out.push(item);
+    }
+    return out;
+  }
+
+  /* The three opening rungs, now on measured lines instead of the fallback par.
+   * Ridge (gate 1) is the cheap stop to leave - the ball drops into the left
+   * gutter fast - and Market (gate 3) is the one a ball cannot steer out of on
+   * a short plunger, which is what makes the rungs below bite. */
+  var pbcLine1 = pbcScript([
+    [1, 3], [99, 0], [3, 1], [27, 0], [1, 1], [2, 4], [11, 2], [84, 0],
+    [22, 2], [1, 4], [4, 1], [1, 3], [322, 0], [14, 2], [77, 0], [24, 2],
+    [48, 0], [1, 1], [2, 4], [1, 3], [259, 0],
+  ]);
+
+  var pbcLine2 = pbcScript([
+    [1, 3], [137, 0], [3, 1], [1, 3], [162, 0], [10, 2], [114, 0], [21, 2],
+    [11, 0], [27, 2], [32, 0], [20, 1], [4, 0], [1, 3], [128, 0], [10, 1],
+    [154, 0], [1, 1], [69, 0], [5, 2], [31, 0], [1, 1], [2, 0], [3, 2],
+    [1, 3], [259, 0],
+  ]);
+
+  var pbcLine3 = pbcScript([
+    [1, 3], [99, 0], [3, 1], [27, 0], [1, 1], [2, 4], [11, 2], [84, 0],
+    [22, 2], [1, 4], [4, 1], [1, 3], [128, 0], [10, 1], [154, 0], [1, 1],
+    [69, 0], [5, 2], [31, 0], [1, 1], [2, 0], [3, 2], [1, 3], [137, 0],
+    [3, 1], [1, 3], [259, 0],
+  ]);
+
+  /* Tight Lane: the weakest plunger in the campaign. The ball lands low on the
+   * sorter rail, and a ball that drops down the Market shaft can never be
+   * lifted through a switch field again - so Market has to be the last stop. */
+  var pbcLine7 = pbcScript([
+    [1, 3], [190, 0], [7, 2], [57, 0], [10, 2], [2, 4], [18, 1], [125, 0],
+    [2, 2], [5, 0], [1, 3], [165, 0], [28, 1], [4, 0], [22, 1], [125, 0],
+    [17, 2], [75, 0], [36, 1], [29, 0], [1, 1], [35, 0], [1, 3], [190, 0],
+    [7, 2], [57, 0], [10, 2], [2, 4], [18, 1], [125, 0], [2, 2], [5, 0],
+    [1, 3], [165, 0], [28, 1], [4, 0], [22, 1], [125, 0], [17, 2], [75, 0],
+    [36, 1], [29, 0], [1, 1], [35, 0], [1, 3], [190, 0], [7, 2], [57, 0],
+    [10, 2], [2, 4], [18, 1], [125, 0], [2, 2], [5, 0], [1, 3], [165, 0],
+    [28, 1], [4, 0], [22, 1], [125, 0], [17, 2], [75, 0], [36, 1], [29, 0],
+    [1, 1], [35, 0], [1, 3], [211, 0], [2, 2], [105, 0], [2, 2], [1, 0],
+    [18, 1], [31, 0], [6, 2], [125, 0], [3, 1], [6, 0], [1, 3], [259, 0],
+  ]);
+
+  /* Double Drop: three stops are asked for twice in a row, and the gate must
+   * not move between them - a ball has to come back down the same shaft
+   * without touching either switch field on the way. */
+  var pbcLine8 = pbcScript([
+    [1, 3], [137, 0], [3, 1], [1, 3], [295, 0], [1, 3], [162, 0], [10, 2],
+    [114, 0], [21, 2], [11, 0], [27, 2], [32, 0], [20, 1], [4, 0], [1, 3],
+    [289, 0], [6, 1], [32, 0], [28, 2], [28, 0], [20, 2], [11, 0], [8, 1],
+    [3, 0], [8, 1], [25, 0], [1, 3], [128, 0], [10, 1], [154, 0], [1, 1],
+    [69, 0], [5, 2], [31, 0], [1, 1], [2, 0], [3, 2], [1, 3], [88, 0],
+    [10, 1], [33, 0], [8, 1], [24, 0], [24, 2], [3, 1], [1, 3], [99, 0],
+    [3, 1], [27, 0], [1, 1], [2, 4], [11, 2], [84, 0], [22, 2], [1, 4],
+    [4, 1], [1, 3], [322, 0], [14, 2], [77, 0], [24, 2], [48, 0], [1, 1],
+    [2, 4], [1, 3], [259, 0],
+  ]);
+
+  /* Side Gate: the rail opens on Market, so the first ball is spent steering
+   * the gate onto the manifest instead of delivering anything. */
+  var pbcLine9 = pbcScript([
+    [1, 3], [290, 0], [20, 2], [1, 0], [2, 1], [12, 0], [29, 2], [43, 0],
+    [6, 2], [25, 0], [3, 1], [1, 3], [137, 0], [3, 1], [1, 3], [290, 0],
+    [20, 2], [1, 0], [2, 1], [12, 0], [29, 2], [43, 0], [6, 2], [25, 0],
+    [3, 1], [1, 3], [137, 0], [3, 1], [1, 3], [162, 0], [10, 2], [114, 0],
+    [21, 2], [11, 0], [27, 2], [32, 0], [20, 1], [4, 0], [1, 3], [128, 0],
+    [10, 1], [154, 0], [1, 1], [69, 0], [5, 2], [31, 0], [1, 1], [2, 0],
+    [3, 2], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1], [2, 4], [11, 2],
+    [84, 0], [22, 2], [1, 4], [4, 1], [1, 3], [322, 0], [14, 2], [77, 0],
+    [24, 2], [48, 0], [1, 1], [2, 4], [1, 3], [290, 0], [20, 2], [1, 0],
+    [2, 1], [12, 0], [29, 2], [43, 0], [6, 2], [25, 0], [3, 1], [1, 3],
+    [259, 0],
+  ]);
+
+  /* Long Haul: the eleven-stop route, one launch per stop and no slack. */
+  var pbcLine10 = pbcScript([
+    [1, 3], [137, 0], [3, 1], [1, 3], [290, 0], [20, 2], [1, 0], [2, 1],
+    [12, 0], [29, 2], [43, 0], [6, 2], [25, 0], [3, 1], [1, 3], [137, 0],
+    [3, 1], [1, 3], [290, 0], [20, 2], [1, 0], [2, 1], [12, 0], [29, 2],
+    [43, 0], [6, 2], [25, 0], [3, 1], [1, 3], [99, 0], [3, 1], [27, 0],
+    [1, 1], [2, 4], [11, 2], [84, 0], [22, 2], [1, 4], [4, 1], [1, 3],
+    [128, 0], [10, 1], [154, 0], [1, 1], [69, 0], [5, 2], [31, 0], [1, 1],
+    [2, 0], [3, 2], [1, 3], [137, 0], [3, 1], [1, 3], [290, 0], [20, 2],
+    [1, 0], [2, 1], [12, 0], [29, 2], [43, 0], [6, 2], [25, 0], [3, 1],
+    [1, 3], [99, 0], [3, 1], [27, 0], [1, 1], [2, 4], [11, 2], [84, 0],
+    [22, 2], [1, 4], [4, 1], [1, 3], [128, 0], [10, 1], [154, 0], [1, 1],
+    [69, 0], [5, 2], [31, 0], [1, 1], [2, 0], [3, 2], [1, 3], [259, 0],
+  ]);
+
   var pbcTables = [
-    pbcTable("pbcT1", "pbcTbl1", [0, 1, 2], 4, 0),
-    pbcTable("pbcT2", "pbcTbl2", [2, 1, 0], 5, 0),
-    pbcTable("pbcT3", "pbcTbl3", [1, 0, 2], 5, 0),
+    pbcTable("pbcT1", "pbcTbl1", [0, 1, 2], 4, 0, pbcLine1),
+    pbcTable("pbcT2", "pbcTbl2", [2, 1, 0], 5, 0, pbcLine2),
+    pbcTable("pbcT3", "pbcTbl3", [1, 0, 2], 5, 0, pbcLine3),
     pbcTable("pbcT4", "pbcTbl4", [0, 1, 2, 1, 0], 6, 0, pbcProg4),
     pbcTable("pbcT5", "pbcTbl5", [0, 1, 0, 2, 1, 0], 7, 0, pbcProg5),
     pbcTable("pbcT6", "pbcTbl6", [0, 1, 2, 1, 0, 2, 1], 8, 0, pbcProg6),
+    pbcTable("pbcT7", "pbcTbl7", [1, 0, 1, 0, 1, 0, 1, 2], 10, 1, pbcLine7, [770, 810, 850]),
+    pbcTable("pbcT8", "pbcTbl8", [0, 2, 2, 1, 1, 0, 0, 1, 2], 11, 0, pbcLine8),
+    pbcTable("pbcT9", "pbcTbl9", [0, 2, 0, 2, 1, 0, 1, 2, 0], 12, 2, pbcLine9),
+    pbcTable("pbcT10", "pbcTbl10", [0, 2, 0, 2, 0, 1, 0, 2, 0, 1, 0], 13, 0, pbcLine10),
   ];
 
   function pbcFresh(table) {
@@ -1479,6 +1591,10 @@
       "pbcTbl4": "Round Trip",
       "pbcTbl5": "Cross Town",
       "pbcTbl6": "First Light",
+      "pbcTbl7": "Tight Lane",
+      "pbcTbl8": "Double Drop",
+      "pbcTbl9": "Side Gate",
+      "pbcTbl10": "Long Haul",
       "pbcTblSelectLabel": "Choose a table",
       "pbcBin1": "Ridge",
       "pbcBin2": "Curb",
@@ -1538,6 +1654,10 @@
       "pbcTbl4": "往返台面",
       "pbcTbl5": "穿城台面",
       "pbcTbl6": "破晓台面",
+      "pbcTbl7": "窄道台面",
+      "pbcTbl8": "双投台面",
+      "pbcTbl9": "侧闸台面",
+      "pbcTbl10": "长途台面",
       "pbcTblSelectLabel": "选择台面",
       "pbcBin1": "山脊",
       "pbcBin2": "路边",
@@ -1615,6 +1735,7 @@
       en: [
         "Goal: deliver every parcel in the order the manifest names, using one ball at a time on a pinball table.",
         "Action: press Space to plunger the ball up the right lane; the arc drops it onto the sorter rail at the top.",
+        "Strength: the plunger has three settings, and a weaker shot lands the ball lower on the rail - a ball that blows past the open gate reaches no shaft at all, and that launch is spent.",
         "Rule: only one rail gate is open at a time, so the ball drops down that route's shaft and is scanned there - Ridge, Curb or Market.",
         "Choice: a route only changes when the live ball is flipped up through a switch field, and opening one gate closes the others - the uphill gate also shuts the return rail.",
         "Watch out: arriving at the wrong stop is refused and the reason is printed; draining costs a ball, so plan the order before you launch.",
@@ -1624,6 +1745,7 @@
         [
           "目标：用一次一颗弹珠，按清单顺序把每个包裹送达。",
           "操作：按空格把球从右侧发射道弹射出去，顶部弧线会把球放到上方的分拣轨上。",
+          "力度：发射器分三档，力度越小球落在分拣轨上越靠右 - 越过开启闸门的球进不了任何投递井，这次发射就算白费了。",
           "规则：分拣轨上同时只开一道闸门，球只会顺该路线的投递井下落并被扫描 - 山脊、路边或市场。",
           "选择：只有把活球用挡板顶过切换区时路线才会改变，开一条就关另一条 - 上坡闸门还会关掉回球轨。",
           "小心：顺序错误会被拒绝并写明原因；落袋要扣一颗球，所以发射前先排好顺序。",

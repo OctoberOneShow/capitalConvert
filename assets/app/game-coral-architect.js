@@ -262,11 +262,17 @@
       stars: [80, 64, 48],
       offers: ["FPS", "SPF", "FPS", "PSF", "SFN", "FPS", "SPF", "NFS", "FPS", "SPF", "FNS", "PSF"],
     },
+    /* Urchin rung: the draft offers one of each kind every turn, so the reef
+     * is a sponge field with a fence around the urchin. Measured over 300 draft
+     * orders the score spectrum is narrow - a careful line plateaus at 84, and
+     * 87-90 only appears when a tied-best pick happens to land the one pillar
+     * the draft allows - so the band sits on that plateau instead of inside the
+     * gap above it, where three stars was a coin toss rather than a line. */
     {
       id: "c3",
       labelKey: "corZ3",
       turns: 12,
-      stars: [86, 70, 52],
+      stars: [84, 70, 52],
       offers: ["SFX", "XSF", "PSX", "SXF", "XPS", "FSX", "SXP", "XSF", "PSX", "SXF", "XPS", "FSX"],
     },
     {
@@ -303,6 +309,35 @@
       turns: 15,
       stars: [100, 82, 64],
       offers: ["FPS", "NPS", "SXF", "FPN", "SPX", "NFS", "XSN", "FPN", "NPS", "SXF", "FNS", "PSX", "NFP", "SFP", "PNX"],
+    },
+    /* Chain rung: two nurseries in nearly every offer and only two fans in the
+     * whole draft, and the chain rule does the crowding for the level - a
+     * second nursery only plants where it touches the blob, so every honest
+     * line is one compact colony. The band is cut inside the top of that
+     * cluster: the one-eye line spreads 117-221 across draft orders (177 on the
+     * dealt one), while a planned thicket reads 209-221 and clears 197 every
+     * time; a careless reef tops out near 120 and cannot clear 161. */
+    {
+      id: "c9",
+      labelKey: "corZ9",
+      turns: 15,
+      stars: [191, 183, 161],
+      offers: ["SNN", "NNS", "NNX", "SNN", "NNS", "FNN", "NNX", "SNN", "NNS", "XNN", "NNS", "FNN", "SNN", "NNS", "NNX"],
+    },
+    /* Squeeze rung: twelve turns of deep-water pillars with urchin bait in the
+     * offers. A pillar alone reads 2 and one walled in on four sides reads 10,
+     * so sprawl is punished twice over - the thin draft, then the thin tiles -
+     * and a planted urchin has to be parked where it reaches nothing. The band
+     * sits on the careful packing line (81), which two thirds of draft orders
+     * reach and a planner clears at 89-90; it used to read 86, a line only 12%
+     * of packing reefs found and one the reef's own proof could not reach.
+     * Scattered pillars still read 32 on average. */
+    {
+      id: "c10",
+      labelKey: "corZ10",
+      turns: 12,
+      stars: [81, 78, 62],
+      offers: ["PPX", "PPP", "SPX", "PPP", "XPP", "PPS", "PPP", "XPX", "PPP", "PPS", "XPP", "PPP"],
     },
   ];
 
@@ -577,7 +612,9 @@
         ? t("corUnfair", { name: t(def.labelKey) })
         : topLine < def.stars[2]
           ? t("corUnreachable", { name: t(def.labelKey), need: def.stars[2], hit: topLine })
-          : t("corPrompt", { name: t(def.labelKey), n: def.turns, need: def.stars[2], high: def.stars[0] });
+          : topLine < def.stars[0]
+            ? t("corUnreachable", { name: t(def.labelKey), need: def.stars[0], hit: topLine })
+            : t("corPrompt", { name: t(def.labelKey), n: def.turns, need: def.stars[2], high: def.stars[0] });
       startLoop();
       render();
     }
@@ -826,6 +863,8 @@
       "corZ6": "Nursery Bloom",
       "corZ7": "The Deep Trench",
       "corZ8": "The Great Barrier",
+      "corZ9": "Nursery Thicket",
+      "corZ10": "The Cramped Columns",
       "corTurnLabel": "Turn",
       "corScoreLabel": "Reef",
       "corHandLabel": "In hand",
@@ -879,6 +918,8 @@
       "corZ6": "保育繁盛",
       "corZ7": "深渊海沟",
       "corZ8": "大堡礁林",
+      "corZ9": "育苗密丛",
+      "corZ10": "柱礁逼仄",
       "corTurnLabel": "回合",
       "corScoreLabel": "珊瑚",
       "corHandLabel": "手上",

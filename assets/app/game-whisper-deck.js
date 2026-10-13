@@ -54,11 +54,13 @@
     thunder: { glyph: "\u26a1", resolve: 40, power: 8, waste: false },
   };
 
-  /* Five chambers: the starter deck, an extra echo card, a tighter breath, a
-   * card eating foe, and the full four act ladder. */
+  /* Ten chambers: the starter deck, an extra echo card, a tighter breath, a
+   * card eating foe, the full four act ladder, and two squeezes the engine
+   * already models - a deck where nothing arms an echo for free, and a deck
+   * shorter than the duel it has to be won with. */
   var wsdLevels = [
     {
-      id: "w1", labelKey: "wsdZ1", twistKey: "wsdTwist1", seed: 811, breath: 3, starResolve: [24, 18, 10],
+      id: "w1", labelKey: "wsdZ1", twistKey: "wsdTwist1", seed: 811, breath: 3, starResolve: [22, 18, 10],
       deck: ["gust", "gust", "gust", "claw", "claw", "fang", "fang", "wall", "wall", "lance", "sip", "airy"],
       foes: ["murmur", "caller", "choir", "deacon"],
     },
@@ -78,7 +80,7 @@
       foes: ["murmur", "hollow", "choir", "wraith"],
     },
     {
-      id: "w5", labelKey: "wsdZ5", twistKey: "wsdTwist5", seed: 2049, breath: 3, starResolve: [22, 15, 8],
+      id: "w5", labelKey: "wsdZ5", twistKey: "wsdTwist5", seed: 2049, breath: 3, starResolve: [20, 15, 8],
       deck: ["gust", "gust", "claw", "claw", "fang", "fang", "wall", "sidewall", "bulwark", "shell", "lance", "riposte", "sip", "airy", "hush"],
       foes: ["antiphon", "caller", "hollow", "thunder"],
     },
@@ -93,9 +95,19 @@
       foes: ["antiphon", "choir", "hollow", "deacon"],
     },
     {
-      id: "w8", labelKey: "wsdZ8", twistKey: "wsdTwist8", seed: 1000, breath: 3, starResolve: [17, 12, 6],
+      id: "w8", labelKey: "wsdZ8", twistKey: "wsdTwist8", seed: 1000, breath: 3, starResolve: [15, 12, 6],
       deck: ["gust", "gust", "claw", "claw", "fang", "fang", "lance", "lance", "riposte", "wall", "sidewall", "bulwark", "shell", "sip", "airy", "hush"],
       foes: ["deacon", "hollow", "wraith", "thunder"],
+    },
+    {
+      id: "w9", labelKey: "wsdZ9", twistKey: "wsdTwist9", seed: 3307, breath: 3, starResolve: [18, 13, 10],
+      deck: ["gust", "gust", "claw", "claw", "fang", "fang", "riposte", "wall", "sidewall", "bulwark", "airy", "airy", "hush", "lance"],
+      foes: ["choir", "hollow", "deacon", "thunder"],
+    },
+    {
+      id: "w10", labelKey: "wsdZ10", twistKey: "wsdTwist10", seed: 5507, breath: 3, starResolve: [9, 6, 4],
+      deck: ["gust", "gust", "claw", "fang", "wall", "wall", "lance", "sip", "airy", "hush", "riposte"],
+      foes: ["hollow", "wraith", "thunder"],
     },
   ];
 
@@ -941,6 +953,8 @@
       "wsdZ6": "Harmonic Vault",
       "wsdZ7": "Abyssal Chant",
       "wsdZ8": "Apocrypha",
+      "wsdZ9": "Echo Tax",
+      "wsdZ10": "The Dry Well",
       "wsdTwist1": "the starter deck",
       "wsdTwist2": "one more echo card",
       "wsdTwist3": "two breath a turn",
@@ -949,6 +963,8 @@
       "wsdTwist6": "twin spectres flanking the deacon",
       "wsdTwist7": "two breath against the choir",
       "wsdTwist8": "ultimate four-guardian trial",
+      "wsdTwist9": "nothing arms an echo for free",
+      "wsdTwist10": "eleven cards and a voice that returns",
       "wsdBreathLabel": "Breath",
       "wsdResolveLabel": "Resolve",
       "wsdDuelLabel": "Duel",
@@ -1037,6 +1053,8 @@
       "wsdZ6": "共鸣秘库",
       "wsdZ7": "深渊圣咏",
       "wsdZ8": "伪经绝响",
+      "wsdZ9": "回音税",
+      "wsdZ10": "枯井之声",
       "wsdTwist1": "起始牌组",
       "wsdTwist2": "多一张回音牌",
       "wsdTwist3": "每回合两口气",
@@ -1045,6 +1063,8 @@
       "wsdTwist6": "双生幽魂与大堂执事",
       "wsdTwist7": "稀薄之气迎战大合唱",
       "wsdTwist8": "终极四守护考验",
+      "wsdTwist9": "没有免费的回音",
+      "wsdTwist10": "十一张牌与归来之声",
       "wsdBreathLabel": "气息",
       "wsdResolveLabel": "心气",
       "wsdDuelLabel": "对决",

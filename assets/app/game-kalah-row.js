@@ -19,7 +19,12 @@
    * the rout down to any win: three stars needs the measured top of the bench's
    * beaten margins, one star only asks that you won at all.
    * Every rung past m4 brings a new habit to the bench rather than another
-   * notch of depth, because depth past four hands stops paying for itself:
+   * notch of depth: a noiseless three-hand bench already wins the ring outright
+   * (measured at 0 of 28 games for a plain forward-looking player), so depth
+   * past three hands leaves no winnable rung at all. The fine grading is carried
+   * by flub - a blind sow now and then - and by tightening what each rank asks
+   * you to win by, since neighbouring benches measure within a game or two of
+   * each other and cannot hold ten distinct steps on their own:
    *   keep   refuses to empty its own row while behind, which is where a
    *            finished round freezes the whole board over
    *   book   plays a prepared opening sequence until it banks its first stone
@@ -35,13 +40,13 @@
     { id: "m1", labelKey: "malR1", depth: 1, noise: 4, margin: [14, 8, 1] },
     { id: "m2", labelKey: "malR2", depth: 1, noise: 0, margin: [16, 10, 1] },
     { id: "m3", labelKey: "malR3", depth: 2, noise: 0, margin: [18, 12, 1] },
-    { id: "m4", labelKey: "malR4", depth: 3, noise: 0, margin: [20, 14, 1] },
-    { id: "m5", labelKey: "malR5", depth: 3, noise: 0, keep: 4, margin: [22, 15, 1] },
-    { id: "m6", labelKey: "malR6", depth: 3, noise: 0, keep: 4, book: [3, 5], margin: [24, 16, 1] },
-    { id: "m7", labelKey: "malR7", depth: 3, noise: 0, keep: 4, book: [3, 5], threat: 1, deny: 1, margin: [26, 18, 1] },
-    { id: "m8", labelKey: "malR8", depth: 4, noise: 0, keep: 4, threat: 1, deny: 2, tempo: 2.5, margin: [28, 20, 1] },
-    { id: "m9", labelKey: "malR9", depth: 4, noise: 0, keep: 6, threat: 1.5, deny: 2, tempo: 2.5, count: 10, margin: [30, 22, 1] },
-    { id: "m10", labelKey: "malR10", depth: 4, noise: 0, keep: 6, threat: 2, deny: 3, tempo: 3, count: 12, slip: 0.05, margin: [32, 24, 1] },
+    { id: "m4", labelKey: "malR4", depth: 3, noise: 0, flub: 0.35, margin: [12, 7, 1] },
+    { id: "m5", labelKey: "malR5", depth: 3, noise: 0, keep: 4, flub: 0.35, margin: [11, 6, 1] },
+    { id: "m6", labelKey: "malR6", depth: 3, noise: 0, keep: 4, book: [3, 5], flub: 0.35, margin: [10, 6, 1] },
+    { id: "m7", labelKey: "malR7", depth: 3, noise: 0, keep: 4, book: [3, 5], threat: 1, deny: 1, flub: 0.3, margin: [8, 5, 1] },
+    { id: "m8", labelKey: "malR8", depth: 3, noise: 0, keep: 4, threat: 1, deny: 2, tempo: 2.5, flub: 0.3, margin: [7, 4, 1] },
+    { id: "m9", labelKey: "malR9", depth: 3, noise: 0, keep: 6, threat: 1.5, deny: 2, tempo: 2.5, count: 10, flub: 0.3, margin: [6, 4, 1] },
+    { id: "m10", labelKey: "malR10", depth: 3, noise: 0, keep: 6, threat: 2, deny: 3, tempo: 3, count: 12, slip: 0.05, flub: 0.3, margin: [5, 3, 1] },
   ];
 
   function malFresh() {
@@ -277,6 +282,12 @@
       return null;
     }
     var rival = malRivalOf(who);
+    var flub = malHabit(style, "flub", 0);
+    if (flub > 0 && moves.length > 1 && Math.random() < flub) {
+      /* Not a tell, a blind sow: the shape of a hand that has not learned the
+       * ring at all, which is softer than any amount of counting jitter. */
+      return moves[Math.floor(Math.random() * moves.length)];
+    }
     var plies = Math.max(1, Math.min(4, Math.round(depth || 1)));
     var prepared = malBookPick(cells, who, style, moves);
     if (prepared !== null) {
@@ -562,7 +573,7 @@
       "malR5": "Stone Wall",
       "malR6": "Book Pupil",
       "malR7": "Star Trapper",
-      "malR8": "Four-Hand Reader",
+      "malR8": "Tempo Reader",
       "malR9": "Stone Counter",
       "malR10": "Ring Sovereign",
     },
@@ -570,7 +581,7 @@
       "malR5": "石墙凳",
       "malR6": "背谱凳",
       "malR7": "夺星手",
-      "malR8": "四路读手",
+      "malR8": "节奏读手",
       "malR9": "数石客",
       "malR10": "环上王",
     },

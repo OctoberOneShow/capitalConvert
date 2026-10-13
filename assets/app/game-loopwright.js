@@ -126,6 +126,80 @@
         ["W", "W", "F", "W", "F", "W", "F", "F"],
       ],
     },
+    /* The floor rewinds its crate between runs, but run one's ghost keeps the
+     * crate it pushed parked on the plate, so the plate stays held. */
+    {
+      id: "f7", labelKey: "lpwF7",
+      map: ["########",
+            "#...G..#",
+            "#..PD..#",
+            "#..P...#",
+            "#..C...#",
+            "#..W...#",
+            "#......#",
+            "########"],
+      doorPlates: [1], pistonOffsets: [],
+      programs: [
+        ["P"],
+        ["P", "P", "R", "F", "L", "F", "F"],
+      ],
+    },
+    /* The plate is five steps from the start and the door is one, so the door
+     * only opens once the ghost has finished walking: waits are the clock. */
+    {
+      id: "f8", labelKey: "lpwF8",
+      map: ["########",
+            "#P.....#",
+            "#......#",
+            "#......#",
+            "#......#",
+            "#......#",
+            "#WDG...#",
+            "########"],
+      doorPlates: [0], pistonOffsets: [],
+      programs: [
+        ["F", "F", "F", "F", "F"],
+        ["R", "W", "W", "W", "W", "F", "F"],
+      ],
+    },
+    /* Three doors, two plates: the top and bottom door are wired to the same
+     * plate, so one parked ghost is enough for both of them. */
+    {
+      id: "f9", labelKey: "lpwF9",
+      map: ["########",
+            "#..G...#",
+            "###D####",
+            "###D####",
+            "###D####",
+            "#..P...#",
+            "#.PW...#",
+            "########"],
+      doorPlates: [0, 1, 0], pistonOffsets: [],
+      programs: [
+        ["F"],
+        ["L", "F"],
+        ["F", "F", "F", "F", "F"],
+      ],
+    },
+    /* Four plates, one pad, two shifts: every run leaves both its own body on
+     * a plate and the pad it carried on another one. */
+    {
+      id: "f10", labelKey: "lpwF10",
+      map: ["########",
+            "#..G...#",
+            "#..D...#",
+            "#..P...#",
+            "#P.P...#",
+            "#P.S...#",
+            "#..W...#",
+            "########"],
+      doorPlates: [2], pistonOffsets: [],
+      programs: [
+        ["G", "F", "F", "D", "F"],
+        ["G", "F", "L", "F", "F", "D", "R", "F"],
+        ["W", "W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
   ];
 
   function mulberry32(seed) {
@@ -975,6 +1049,10 @@
       "lpwF4": "Two Ghosts, Two Doors",
       "lpwF5": "Pad Delivery",
       "lpwF6": "The Clockwork Floor",
+      "lpwF7": "The Crate Remembers",
+      "lpwF8": "Wait for Your Crew",
+      "lpwF9": "Shared Key",
+      "lpwF10": "One Pad, Two Jobs",
       "lpwOpF": "Forward",
       "lpwOpB": "Back",
       "lpwOpL": "Turn left",
@@ -1005,7 +1083,7 @@
       "lpwFailBudget": "The loop never ended. Everything rewound; the ghost keeps its walk.",
       "lpwFailShort": "The queue ran out short of the goal. Rewound - and that ghost is now your crew.",
       "lpwNextFloor": "Next floor unlocked.",
-      "lpwAllFloors": "All six floors are running.",
+      "lpwAllFloors": "All ten floors are running.",
       "lpwHint": "Keys 1-9 insert (9 is the loop marker; re-click it to change its target), arrows move the queue cursor, Enter inserts the armed chip, Backspace clears a slot, R runs, X rewinds. Empty slots act as waits. 3 stars: par runs AND no more than par instructions.",
       "logLoopwright": "Cleared {name} in {n} runs",
     },
@@ -1017,6 +1095,10 @@
       "lpwF4": "两个分身两扇门",
       "lpwF5": "递送压垫",
       "lpwF6": "机关楼层",
+      "lpwF7": "货箱记得",
+      "lpwF8": "等待工友",
+      "lpwF9": "共享钥匙",
+      "lpwF10": "一垫两用",
       "lpwOpF": "前进",
       "lpwOpB": "后退",
       "lpwOpL": "左转",
@@ -1047,7 +1129,7 @@
       "lpwFailBudget": "循环永远跑不完。全部倒回起点；分身保留了这段路程。",
       "lpwFailShort": "指令跑完时还没达成目标。已倒带——这个分身现在是你的一名工友。",
       "lpwNextFloor": "解锁下一层。",
-      "lpwAllFloors": "六层全部运转起来了。",
+      "lpwAllFloors": "十层全部运转起来了。",
       "lpwHint": "数字键 1-9 直接插入（9 是回环标记，再点一次可切换跳回的目标），方向键移动队列光标，回车插入选中的指令，退格清空槽位，R 运行，X 倒带。空槽按等待处理。三星条件：恰好标准运行数且指令数不超过标准。",
       "logLoopwright": "用 {n} 次运行通关{name}",
     },

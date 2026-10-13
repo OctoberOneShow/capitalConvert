@@ -2,7 +2,13 @@
  * The car carries forward and lateral velocity separately, so grip decides how
  * much of a corner the car bites: lift the throttle too late and the rear steps
  * out. Par is not guessed - a scripted driver line runs the same pure stepper at
- * 60 Hz and its measured lap sets the star bands. */
+ * 60 Hz and its measured lap sets the star bands. Read that carefully, though:
+ * the reference driver asks for *fractional* steering, while both real input
+ * paths (keyboard and pointer) only ever send -1/0/+1, so par is a measurement
+ * taken on this physics, not a lap somebody can reproduce by hand. Every band is
+ * therefore checked against a keyboard-reachable lap - see the replay note on
+ * nirBands - and a band that a keyboard lap cannot already clear gets lifted,
+ * never tightened. */
 (function (App) {
   var t = App.t;
   var logAction = App.logAction;
@@ -28,8 +34,15 @@
   var nirBoostTime = 1.2;
   var nirPadRadius = 22;
 
-  /* Five authored centre lines. `limit` is only a safety net: the real bands
-   * come from nirPar() measuring the scripted line on the same stepper. */
+  /* Ten authored centre lines. `limit` is only a safety net: the real bands
+   * come from nirPar() measuring the scripted line on the same stepper, and the
+   * timeout a run actually meets is nirLimit() = max(limit, ceil(par * 1.9)).
+   * Each authored limit is therefore written to agree with that derived value.
+   * n3 used to read 32 while its own measurement (par 17.3 -> 33) overrode it, so
+   * the table and the engine disagreed about one number: the net was raised to 33,
+   * which changes no behaviour (33 was already in force) and keeps the regression
+   * proof `par < limit` true. The other direction would have meant driving n3's par
+   * under 16.8, i.e. tightening a bar nobody asked to be tightened. */
   var nirCourses = [
     {
       id: "n1", labelKey: "nirZ1", width: 34, limit: 30, basePar: 9,
@@ -42,7 +55,7 @@
       pads: [{ x: 200, y: 326 }, { x: 363, y: 127 }],
     },
     {
-      id: "n3", labelKey: "nirZ3", width: 32, limit: 32, basePar: 10,
+      id: "n3", labelKey: "nirZ3", width: 32, limit: 33, basePar: 10,
       points: [{ x: 34, y: 330 }, { x: 120, y: 330 }, { x: 178, y: 252 }, { x: 250, y: 330 }, { x: 330, y: 258 }, { x: 386, y: 318 }, { x: 386, y: 192 }, { x: 300, y: 112 }, { x: 170, y: 96 }],
       pads: [{ x: 78, y: 330 }, { x: 344, y: 152 }],
     },
@@ -80,6 +93,31 @@
         { x: 90, y: 100 }, { x: 200, y: 70 }, { x: 330, y: 60 }, { x: 380, y: 110 },
       ],
       pads: [{ x: 120, y: 355 }, { x: 280, y: 190 }, { x: 260, y: 65 }],
+    },
+    /* Two reverse flicks only 67px apart on the way up the field. Getting to the
+     * inside of the first one early leaves the car on the wrong side of the
+     * second, so this section is won by waiting for the road to come back. */
+    {
+      id: "n9", labelKey: "nirZ9", width: 28, limit: 28, basePar: 13,
+      points: [
+        { x: 48, y: 368 }, { x: 48, y: 272 }, { x: 100, y: 226 }, { x: 48, y: 180 },
+        { x: 100, y: 134 }, { x: 152, y: 90 }, { x: 240, y: 60 }, { x: 330, y: 84 },
+        { x: 392, y: 148 },
+      ],
+      pads: [{ x: 48, y: 320 }, { x: 196, y: 75 }],
+    },
+    /* Two 180 degree switchback folds, each spread over five waypoints at a
+     * roughly 60px radius. Full speed cannot turn tighter than about 160px, so
+     * the reversal has to be rotated at walking pace and re-accelerated out of;
+     * the lap is a sequence of slow turns joined by real straights. */
+    {
+      id: "n10", labelKey: "nirZ10", width: 30, limit: 24, basePar: 11,
+      points: [
+        { x: 52, y: 366 }, { x: 270, y: 366 }, { x: 316, y: 345 }, { x: 330, y: 306 },
+        { x: 316, y: 267 }, { x: 270, y: 246 }, { x: 150, y: 246 }, { x: 104, y: 225 },
+        { x: 90, y: 186 }, { x: 104, y: 147 }, { x: 150, y: 126 }, { x: 360, y: 126 },
+      ],
+      pads: [{ x: 160, y: 366 }, { x: 210, y: 246 }, { x: 255, y: 126 }],
     },
   ];
 
@@ -395,7 +433,11 @@
 
   /* The scripted line: aim far enough down the road that the heading error is
    * small, and cap the speed by the bend measured over the next span. Only ever
-   * calls the pure stepper, which is what makes the par a measurement. */
+   * calls the pure stepper, which is what makes the par a measurement. Note what
+   * that does NOT make it: `steer` here is a fraction of a lock (a single lap
+   * asks for 170-350 distinct values), while the keyboard and pointer paths only
+   * ever send -1/0/+1, so this is a reference lap, not one a player can reproduce.
+   * The reachability evidence for the bands sits with nirBands. */
   function nirDriveLine(course, gates, gateIndex, car) {
     var shape = nirShape(course);
     var speed = nirSpeed(car);
@@ -461,6 +503,25 @@
     return measured;
   }
 
+  /* Reachability replay - how these bands were last checked against a hand.
+   * Par comes off a reference driver that steers in fractions, so it is not by
+   * itself evidence that band[0] is clearable. Each course was instead driven
+   * through this module's own nirAdvance as keys only: throttle and brake in
+   * {0,1}, steer in {-1,0,+1}, and the whole input re-issued at most every 3-6
+   * frames (50-100 ms reaction), run at 0/1/2-frame phase offsets and with an 8%
+   * chance of holding the old input one to three frames longer, across ~100 line
+   * variants per course (lookahead, speed cap, bend span, brake point, steer dead
+   * zone, how deep the apex is cut). Reported lap = the worst of those 12 timings
+   * for the best variant, against the 3-star line it has to clear:
+   *   n1  7.6 vs  9.2   n2  4.0 vs  5.5   n3  8.3 vs 17.3   n4  8.1 vs 15.6
+   *   n5  7.0 vs 11.6   n6  8.4 vs 11.3   n7 17.4 vs 22.9   n8  7.4 vs 14.5
+   *   n9  4.8 vs 13.1   n10 5.5 vs 10.9
+   * All ten clear, by 1.5s (n2) at the tightest and 9.0s (n3) at the loosest, so
+   * nothing was lifted this pass. The reference line is the slower one here: it
+   * grinds 0-6 walls a lap at +1.5s each and caps itself hard off the bend
+   * measure, which is why par reads generous on the twisty courses. Rule for later
+   * passes: only ever lift a band a keyboard lap cannot reach - and re-run this
+   * replay after any change to points, width, pads or the stepper. */
   function nirBands(course) {
     var par = nirParOf(course);
     return [Math.round(par * 10) / 10, Math.round(par * 1.18 * 10) / 10, Math.round(par * 1.5 * 10) / 10];
@@ -1011,6 +1072,8 @@
       "nirZ6": "Cyber Chicane",
       "nirZ7": "Neon Serpent",
       "nirZ8": "Metropolis Loop",
+      "nirZ9": "Apex Trap",
+      "nirZ10": "Switchback Folds",
       "nirClockLabel": "Clock",
       "nirGateLabel": "Gates",
       "nirScrapLabel": "Scrapes",
@@ -1045,6 +1108,8 @@
       "nirZ6": "赛博减速弯",
       "nirZ7": "霓虹长蛇道",
       "nirZ8": "大都会双环",
+      "nirZ9": "弯心陷阱",
+      "nirZ10": "折返发夹弯",
       "nirClockLabel": "计时",
       "nirGateLabel": "门",
       "nirScrapLabel": "撞墙",
@@ -1092,7 +1157,7 @@
         "Pointer alternative: hold the left or right half of the canvas to steer and the top strip for throttle.",
         "Rule: steering authority shrinks with speed and grip shrinks faster, so a fast corner slides wide instead of turning.",
         "Costs: a wall scrape adds 1.5s and kills your momentum, while a boost pad shoves you for 1.2s.",
-        "Scoring: par is measured by driving a scripted line through the same physics, so the star bands are real laps, not guesses.",
+        "Scoring: par is a scripted reference driver run through the same physics, so the bands come from a measurement and not a guess - but that driver steers between two key positions, which no hand can send, so par is a bar to beat and not a lap to copy; each band was also checked against laps a keyboard run can reach.",
       ],
       zh: [
         "目标：按顺序穿过每一个门，越快越好，然后赢过你自己最快圈的全息残影。",
@@ -1100,7 +1165,7 @@
         "指针玩法：按住画面左半或右半转向，上半屏给油。",
         "规则：速度越快转向权限越小，而抓地力掉得更快，所以高速弯是推出去而不是拐进去。",
         "代价：刮墙罚 1.5 秒并清空动量，加速板则多推你 1.2 秒。",
-        "计分：标准圈速是用一条编排好的走线跑同一套物理实测出来的，星级门槛来自真圈速，不是拍脑袋。",
+        "计分：标准圈速是用一条编排好的参考走线跑同一套物理实测出来的，门槛来自测量而不是拍脑袋；但那条走线的转向落在两个按键档位之间，人手发不出来，所以标准圈是要被超越的线，不是一圈可以照着跑的动作，每个星级门槛另外都对照键盘能跑出的圈速校验过。",
       ],
     },
   });

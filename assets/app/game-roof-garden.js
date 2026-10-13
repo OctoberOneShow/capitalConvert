@@ -14,13 +14,46 @@
   /* Growth is read from the clock rather than a timer, so a garden keeps
    * ripening while the drawer is closed and nothing polls in the background.
    * `start` must cover one `cost` or the bed cannot be sown at all; starTimes
-   * are seconds from the first sow to meeting the goal. */
+   * are seconds from the first sow to meeting the goal.
+   *
+   * Three of these fields set the shape of a rung, and cost alone does not:
+   * Math.floor(start / cost) is how many of the four plots sow on tick zero,
+   * crop / cost is what a harvest pays back on its seed, and growMs is both the
+   * wait and the length of the animation that draws it. Rungs 1-5 all open two
+   * plots, return under two for one and grow the wait with the goal, so they
+   * read as one curve. Rungs 6-10 break one lever each instead of scaling the
+   * ladder, which is why their three-star lines are not comparable across beds:
+   * a bigger goal can still be the quicker bed. */
   var gdnBeds = [
     { id: "g1", labelKey: "gdnB1", cost: 5, crop: 8, start: 12, growMs: 12000, goal: 60, starTimes: [95, 140, 210] },
     { id: "g2", labelKey: "gdnB2", cost: 8, crop: 14, start: 20, growMs: 16000, goal: 140, starTimes: [160, 230, 340] },
     { id: "g3", labelKey: "gdnB3", cost: 12, crop: 22, start: 28, growMs: 21000, goal: 280, starTimes: [240, 340, 490] },
     { id: "g4", labelKey: "gdnB4", cost: 18, crop: 34, start: 40, growMs: 27000, goal: 520, starTimes: [390, 540, 760] },
     { id: "g5", labelKey: "gdnB5", cost: 26, crop: 50, start: 56, growMs: 34000, goal: 880, starTimes: [560, 760, 1060] },
+    /* Opens all four plots on tick zero and leaves the pocket empty: the board,
+     * not the money, sets the pace, so this rung banks a goal larger than any
+     * before it in barely over half the clock rung 5 needs, on 24 harvests
+     * against rung 5's 42. */
+    { id: "g6", labelKey: "gdnB6", cost: 32, crop: 96, start: 128, growMs: 30000, goal: 1500, starTimes: [215, 295, 400] },
+    /* One vine at a time: start covers a single sowing, the turnover is the
+     * fattest on the ladder and the window is the longest, so the run is a
+     * handful of huge harvests instead of a grind of small ones. */
+    { id: "g7", labelKey: "gdnB7", cost: 44, crop: 198, start: 66, growMs: 72000, goal: 2200, starTimes: [420, 570, 800] },
+    /* The even ledger: the harvest is exactly three seeds and the goal is
+     * exactly twenty harvests, the one rung whose seed, crop and target divide
+     * into each other, so a playthrough crosses on a ripe plot with the bank
+     * landing on the number itself and not a coin over it. */
+    { id: "g8", labelKey: "gdnB8", cost: 56, crop: 168, start: 168, growMs: 36000, goal: 3360, starTimes: [340, 460, 650] },
+    /* The market garden: an eighteen-second window and two seeds back per seed
+     * sown, so a plot is worth three percent of the target - the thinnest
+     * harvest on the ladder. It takes four times the crops rung 7 asks for on
+     * twice its goal, and reads as a long chain of cheap rounds. */
+    { id: "g9", labelKey: "gdnB9", cost: 66, crop: 132, start: 132, growMs: 18000, goal: 4400, starTimes: [380, 515, 720] },
+    /* The capstone starts on the exact edge of the sowing rule, start equal to
+     * cost, so tick zero is one plot and an empty pocket and only a harvest can
+     * widen the board; it is the longest run in the garden and the deepest
+     * target, more than seventy-five of its own seeds. */
+    { id: "g10", labelKey: "gdnB10", cost: 78, crop: 273, start: 78, growMs: 54000, goal: 6000, starTimes: [570, 770, 1080] },
   ];
 
   function gdnRipe(plots, index, now, bed) {
@@ -247,6 +280,26 @@
     loadBed(bed);
   }
 
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, and the shared dictionary named rungs 1-5 first, so
+   * only the five new beds ride here. */
+  App.addStrings({
+    en: {
+      "gdnB6": "Greenhouse Row",
+      "gdnB7": "Tower Trellis",
+      "gdnB8": "Cloud Terrace",
+      "gdnB9": "Stratosphere Plot",
+      "gdnB10": "Star Canopy",
+    },
+    zh: {
+      "gdnB6": "\u6e29\u5ba4\u5784",
+      "gdnB7": "\u5854\u67b6\u85e4",
+      "gdnB8": "\u4e91\u9732\u53f0",
+      "gdnB9": "\u5e73\u6d41\u7566",
+      "gdnB10": "\u661f\u51a0\u56ed",
+    },
+  });
 
   /* Exported for the other modules. */
   App.gardenSecondsToGoal = gdnSecondsToGoal;
