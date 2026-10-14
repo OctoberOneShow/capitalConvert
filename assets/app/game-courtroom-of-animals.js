@@ -17,7 +17,7 @@
   var ctaTrustMax = 5;
   var ctaHasOwn = Object.prototype.hasOwnProperty;
 
-  /* --- the docket: eight authored cases ---------------------------------- */
+  /* --- the docket: ten authored cases ------------------------------------ */
   var ctaCases = [
     {
       id: "k1", labelKey: "ctaCase1", time: 8, culprit: "rat",
@@ -455,6 +455,124 @@
         { id: "k8c1", accused: "vole", statements: ["k8s1", "k8s2", "k8s3", "k8s6"], exhibits: ["k8e1", "k8e2", "k8e3"], en: "Mops came off the lid, ate the count and re-cut the tally one mouthful at a time", zh: "莫普斯从坑盖上下来，一口一口把数目吃掉、把计棍重刻" },
         { id: "k8c2", accused: "hare", statements: ["k8s4", "k8s5"], exhibits: ["k8e3", "k8e4"], en: "Havick crossed the pit on his hind feet and re-cut the tally with his own teeth", zh: "哈维克后腿越过坑，用自己的牙重刻了计棍" },
         { id: "k8c3", accused: "owl", statements: ["k8s1", "k8s4"], exhibits: ["k8e4", "k8e2"], en: "Stoop heard the cutting all night and kept the silence for his own counting", zh: "斯图普听了一夜刻痕，把沉默留下来算自己的账" },
+      ],
+    },
+    {
+      id: "k9", labelKey: "ctaCase9", time: 14, culprit: "badger",
+      bar: { strength: 11, trust: 4 },
+      charge: {
+        en: "Four sacks of seed went onto the miller's I.O.U. last autumn, and one morning the name was scratched out of the counting-room copy. Two of these witnesses have never carried a charge for this bench, and the bench prices a charge before it votes on one.",
+        zh: "去年秋天，四袋种子上了磨坊主那张欠条。一天早上，账房底单上的名字被人划掉了。庭上有两位证人从来没被这群法官信过，而他们投票之前，会先把一条指控的价钱报给你。",
+      },
+      suspects: [
+        { id: "badger", en: "Bram the Badger", zh: "獾布拉姆" },
+        { id: "hedgehog", en: "Pip the Hedgehog", zh: "刺猬皮普" },
+        { id: "newt", en: "Nell the Newt", zh: "蝾螈内尔" },
+      ],
+      exhibits: [
+        { id: "k9e1", weight: 3, en: "The I.O.U. copy: the name scratched through four times, slow and deep, and every tally figure under it left untouched.", zh: "欠条的底单：名字被划了四下，又慢又深，底下一个数目都没动。" },
+        { id: "k9e2", weight: 3, en: "The counting-room sill, one wet print in it and a smear of fish-silt carried up out of the mill pond.", zh: "账房的窗台，上面一个湿印，还有一道从磨坊塘里带上来的鱼泥。" },
+        { id: "k9e3", weight: 2, en: "The miller's own copy of the same debt: four sacks, and in the corner a seal pressed in the shape of a broad back.", zh: "磨坊主自己留的那张债单：四袋种子，角上一个印子，压出一条宽背的形状。" },
+        { id: "k9e4", weight: 1, en: "A hedgehog's quill in the door hasp, dry and curled, where it has sat since the hasp was last oiled.", zh: "门鼻上卡着一根刺猬的刺，干了也卷了，从门鼻上回油那天起就卡在那儿。" },
+        { id: "k9e5", weight: 2, en: "Newt skin shed on the sill stone that same week, and a mud track running from the pond wall to the sill.", zh: "窗台石上留着那周蜕下的蝾螈皮，塘墙到窗台还有一条泥道。" },
+      ],
+      witnesses: [
+        {
+          id: "k9w1", trust: 3, en: "Nell the Newt", zh: "蝾螈内尔",
+          statements: [
+            { id: "k9s1", claim: "k9c1", en: "I lay on that sill the whole of the moonless night, and I heard the scratching: four strokes, slow, and then the door.", zh: "那一夜没有月亮，我整夜趴在那道窗台上。我听见划字的声音：四下，很慢，然后门响了。" },
+            { id: "k9s2", contra: ["k9e4"], en: "Nobody went in at the door. A dry quill in a shut hasp proves somebody closed it, not that anybody opened it.", zh: "没有人从门进去。门鼻关着，上头一根干刺，只能证明有人把门带上过，不能证明有人推开过。" },
+          ],
+        },
+        {
+          id: "k9w2", trust: 3, en: "Pip the Hedgehog", zh: "刺猬皮普",
+          statements: [
+            { id: "k9s3", claim: "k9c1", en: "Bram owed the miller four sacks and would not own it once in the market. I kept that tally for him all autumn, and a debt kept by proxy is a debt with a witness to it.", zh: "布拉姆欠磨坊主四袋，集上死活不认。那年秋天那笔账是我替他记的。托人记账的债，本身就带着知情人。" },
+            { id: "k9s4", claim: "k9c2", contra: ["k9e1"], en: "A name goes through scratch by scratch, and a hedgehog scratches once with a hind foot and then goes.", zh: "划名字是一道一道划的。刺猬只用后腿划一道，划完就走。" },
+          ],
+        },
+        {
+          id: "k9w3", trust: 4, en: "Bram the Badger", zh: "獾布拉姆",
+          statements: [
+            { id: "k9s5", lie: true, en: "I have not been into a counting room since that debt was written, and my name in a ledger is a name any animal could copy.", zh: "那张欠条写下之后，我一步没进过账房。账上的名字，随便哪只动物都能照抄。" },
+            { id: "k9s6", claim: "k9c3", en: "That sill is Nell's road in and out, and if she says she stood there all night she stood there all night. I will not argue with a wet print.", zh: "那道窗台本来就是内尔进出的路。她说她整夜在那儿，那就是整夜在那儿。我不跟一个湿脚印犟嘴。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k9p1", witness: "k9w3", with: "k9e3", contra: ["k9s5"], claim: "k9c1", cost: 1, en: "You have not been in since the debt was written, and yet your own back is pressed into the corner of the miller's copy.", zh: "你说欠条写下之后你就没进过账房。可磨坊主那张底单的角上，压着的正是你那条背。" },
+        { id: "k9p2", witness: "k9w3", with: "k9e2", contra: ["k9s5"], exposes: "k9s5", claim: "k9c1", cost: 1, en: "Fish-silt came up the pond wall on a wet back to that sill, and four slow strokes are a patience no hedgehog and no newt has any use for.", zh: "鱼泥是顺着一副湿背从塘墙爬上那道窗台的。四下又慢又深的划痕，是刺猬和蝾螈都用不着的耐心。" },
+        { id: "k9p3", witness: "k9w2", with: "k9e1", contra: ["k9s4"], claim: "k9c1", cost: 2, en: "You kept his tally, so you know the figures, and you know four deep strokes through a name is not a foot's work at all.", zh: "那笔账是你替他记的，所以你认得这些数目，也认得划穿名字的四道深痕根本不是脚划出来的。" },
+        { id: "k9p4", witness: "k9w1", with: "k9e4", contra: ["k9s2"], claim: "k9c2", cost: 1, en: "You heard the door and you say nobody used it, which is a thing heard from a sill and never from a hinge.", zh: "你听见了门，又说没人用过它。这是趴在窗台上听得出的话，贴在门轴上才听不出。" },
+      ],
+      vouches: [
+        { id: "k9v1", witness: "k9w1", exhibit: "k9e5", claim: "k9c1", en: "Skin shed on that stone the same week and a mud track from the pond: the bench is given a road the witness walked, not only a story she told.", zh: "同一周蜕在那块石头上的皮，加上一条从塘边来的泥道：法庭拿到的是这位证人走过的路，不只是她说过的一段话。" },
+        { id: "k9v2", witness: "k9w2", exhibit: "k9e3", claim: "k9c1", en: "The counter-tally is written on the back of the miller's copy, and no animal writes down a debt he never carried.", zh: "对账的字就写在磨坊主那张底单的背面。没有谁会把一笔自己从没背过的债写下来。" },
+        { id: "k9v3", witness: "k9w3", exhibit: "k9e4", claim: "k9c2", en: "A quill in the hasp is a hedgehog standing at that door, and the door is the only road this tally ever admits.", zh: "门鼻上的刺就是刺猬站在那道门口。而那笔账从头到尾只认门这一条路。" },
+      ],
+      claims: [
+        { id: "k9c1", accused: "badger", statements: ["k9s1", "k9s3"], exhibits: ["k9e1", "k9e2", "k9e3"], en: "Bram came over the sill, scratched his own name off the copy and left the debt standing", zh: "布拉姆翻过窗台，把自己的名字从底单上划掉，把债留在原处" },
+        { id: "k9c2", accused: "hedgehog", statements: ["k9s4"], exhibits: ["k9e1", "k9e4"], en: "Pip opened the door he was never at and scratched the name for a share of the four sacks", zh: "皮普开了那道他根本没到过的门，划掉名字，好分那四袋种子" },
+        { id: "k9c3", accused: "newt", statements: ["k9s2", "k9s6"], exhibits: ["k9e2", "k9e5"], en: "Nell lay on her own sill all night, knew the whole of it and said nothing until she was asked", zh: "内尔整夜趴在自己那道窗台上，什么都知道，不问一句就不开口" },
+      ],
+    },
+    {
+      id: "k10", labelKey: "ctaCase10", time: 14, culprit: "pike",
+      bar: { strength: 12, trust: 4 },
+      charge: {
+        en: "The last stone of the stone weir came over on the flood night and the village's winter eels went down the race with the gap. One witness here stood in that water all night, and the loudest thing the court can do to him is the one thing that loses the case.",
+        zh: "发大水那夜，石坝上最后一块石头翻了，村里过冬的鳝鱼顺着豁口全下了水道。这堂上有一位证人整夜就站在那片水里。法庭能对他做得最响的一件事，恰恰是把这案子输掉的那一件事。",
+      },
+      suspects: [
+        { id: "pike", en: "Percival the Pike", zh: "狗鱼珀西" },
+        { id: "ram", en: "Grieve the Ram", zh: "公羊格里夫" },
+        { id: "wagtail", en: "Tib the Wagtail", zh: "鹡鸰蒂布" },
+      ],
+      exhibits: [
+        { id: "k10e1", weight: 3, en: "The last weir stone, laid down with its wet face to the race and one end out of the mud it sat in for eleven summers.", zh: "坝上最后一块石头，潮的那一面朝水道放着，一头已经脱出了它待过十一个夏天的淤泥。" },
+        { id: "k10e2", weight: 2, en: "The flood-mark on the weir post: the water stood a hand below a standing ram's chest the whole night through.", zh: "坝柱上的洪痕：整夜的水位，就在站着的公羊胸口底下那一掌。" },
+        { id: "k10e3", weight: 2, en: "A broken toe-hold on the slick stone and a crescent of horn-scour braced there, old and fresh in the one crescent.", zh: "那块滑石上一个磕坏的趾窝，一弯角磨出来的痕。同一弯里，旧的新的都有。" },
+        { id: "k10e4", weight: 3, en: "The eel-basket off the weir shelf: its withy lid bitten open from the inside, and no print of a foot on that shelf.", zh: "坝架上那只鳝篓：藤条盖是从里面咬开的，架子上却一个脚印都没有。" },
+        { id: "k10e5", weight: 1, en: "Wagtail marks along the crest, every one of them dry: a bird that walked the top of the weir while the water went under it.", zh: "坝顶上一路鹡鸰的脚印，个个是干的：水在下面过的时候，这只鸟一直走在坝顶。" },
+      ],
+      witnesses: [
+        {
+          id: "k10w1", trust: 3, en: "Grieve the Ram", zh: "公羊格里夫",
+          statements: [
+            { id: "k10s1", claim: "k10c1", en: "I stood braced on that stone the whole flood night, because the eel-basket sat under it and the basket is the village's winter.", zh: "那一整夜我撑开腿站在那块石头上。鳝篓就压在石头底下，那篓子是全村过冬的口粮。" },
+            { id: "k10s2", claim: "k10c1", en: "The water came over the last stone from the deep side, and a long head went through the gap, widening it as it went.", zh: "水是从深那一侧漫过最后一块石头的。一个长头的东西从豁口钻过去，一边钻一边把它顶大。" },
+          ],
+        },
+        {
+          id: "k10w2", trust: 4, en: "Tib the Wagtail", zh: "鹡鸰蒂布",
+          statements: [
+            { id: "k10s3", claim: "k10c1", en: "That gap was leaned open from inside the race. Nothing with feet stood in that water at that hour, and no bird can shoulder a weir stone with his breast.", zh: "那道豁口是从水道里面被顶开的。那个钟头，水里没有一只长脚的东西站过。而鸟的胸口也顶不动一块坝石。" },
+            { id: "k10s4", claim: "k10c2", contra: ["k10e2"], en: "I held the crest all night and never once came down to the stones, so the dry marks are mine and the wet ones are somebody else's.", zh: "我整夜都在坝顶上，一次都没下到石头那儿。所以干印子是我的，湿印子是别人的。" },
+          ],
+        },
+        {
+          id: "k10w3", trust: 2, en: "Percival the Pike", zh: "狗鱼珀西",
+          statements: [
+            { id: "k10s5", lie: true, en: "I lay under the far root the whole flood, where every pike lies when the water runs brown, and the water never came up to my head.", zh: "整场大水我都趴在对面那个树根底下——水一浑，狗鱼都趴在那儿。水头一直没到我这颗头。" },
+            { id: "k10s6", claim: "k10c3", en: "The ram will swear he saw a head in the water. He saw my back going up the race at dusk, and in brown water a back is a head to anything that is frightened.", zh: "公羊赌咒说他在水里看见一个头。他看见的是我傍晚顺着水道上去的背。水浑的时候，心里发毛的，谁都能把背看成头。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k10p1", witness: "k10w3", with: "k10e1", contra: ["k10s5"], claim: "k10c1", cost: 1, en: "A pike that lay under a root all flood had no need of a moved stone, and less need of a lid bitten open from the inside.", zh: "整夜趴在树根底下的狗鱼，用不着一块被人搬开的石头。而从里面咬开的盖子，他更用不着。" },
+        { id: "k10p2", witness: "k10w3", with: "k10s3", contra: ["k10s5"], claim: "k10c1", cost: 1, en: "You say the water never reached your head, and the gap was leaned from inside the race, where only a swimmer can get a shoulder under.", zh: "你说水头没到你这颗头。可那道豁口是从水道里面顶开的——在那儿，只有会游的才把得住肩膀。" },
+        { id: "k10p3", witness: "k10w1", with: "k10e2", contra: ["k10s1"], exposes: "k10s2", claim: "k10c1", cost: 1, en: "The flood stood a hand below your chest all night, so what you saw of a stone's wet underside was the water over it and nothing else.", zh: "整夜的水位就在你胸口下面一掌。那块石头潮的那一面，你看见的只能是压在上头的水，别的一样也看不见。" },
+        { id: "k10p4", witness: "k10w2", with: "k10e5", contra: ["k10s4"], claim: "k10c3", cost: 1, en: "Dry marks, a crest all night, and a gap that opened under your own eyes without one word coming off you.", zh: "印子是干的，你整夜在坝顶上，豁口就在你眼皮底下开起来，而你一个字都没说。" },
+      ],
+      vouches: [
+        { id: "k10v1", witness: "k10w1", exhibit: "k10e3", claim: "k10c1", en: "A broken toe-hold and a night of horn-scour on the one stone: the bench is shown where a witness stood, which is more than most oaths carry.", zh: "同一块石头上一道磕坏的趾窝、一整夜的角磨痕：法庭看见的是这位证人站在哪儿。这比多数赌咒扛得住。" },
+        { id: "k10v2", witness: "k10w2", exhibit: "k10e5", claim: "k10c1", en: "Dry marks along the crest are a witness who could see the whole of that weir and could not move one stone of it.", zh: "坝顶那一路干印子，说的是这位证人看得见整座坝，却搬不动坝上一块石头。" },
+        { id: "k10v3", witness: "k10w3", exhibit: "k10e4", claim: "k10c2", en: "A lid bitten from the inside is a pike's own work, and this bench will corroborate a suspect who tells the shape of one thing truly.", zh: "从里面咬开的盖子是狗鱼自己干的活。这位嫌疑犯把一样东西的形状说对了，法庭就把这一分给他。" },
+      ],
+      claims: [
+        { id: "k10c1", accused: "pike", statements: ["k10s1", "k10s2", "k10s3"], exhibits: ["k10e1", "k10e2", "k10e4"], en: "Percival went in on the flood and leaned the last stone over to run the eels down the race", zh: "珀西趁着大水进去，把最后一块石头顶翻，把鳝鱼放进水道" },
+        { id: "k10c2", accused: "ram", statements: ["k10s4", "k10s6"], exhibits: ["k10e3", "k10e4"], en: "Grieve stood on the stone, leaned it over himself and named a fish to cover the wet print", zh: "格里夫站在那块石头上，自己把石头顶翻，又指一条鱼来盖住那个湿印" },
+        { id: "k10c3", accused: "wagtail", statements: ["k10s5"], exhibits: ["k10e1", "k10e5"], en: "Tib walked the crest, saw the gap made and let the night's count fall on a pike", zh: "蒂布在坝顶走着，眼看着豁口开起来，却把这夜的账推到一条狗鱼身上" },
       ],
     },
   ];
@@ -1991,6 +2109,8 @@
       "ctaCase6": "The Greased Sill",
       "ctaCase7": "The Changed Fleece",
       "ctaCase8": "The Altered Tally",
+      "ctaCase9": "The Scratched Name",
+      "ctaCase10": "The Weir Gap",
       "ctaCaseSelectLabel": "Take a case from the docket",
       "ctaTimeLabel": "Court time",
       "ctaWordsLabel": "Testimony",
@@ -2094,6 +2214,8 @@
       "ctaCase6": "抹了油的窗台",
       "ctaCase7": "被换掉的羊毛",
       "ctaCase8": "重刻的计棍",
+      "ctaCase9": "划掉的名字",
+      "ctaCase10": "决口的石坝",
       "ctaCaseSelectLabel": "从案卷里挑一件案子",
       "ctaTimeLabel": "庭上时间",
       "ctaWordsLabel": "证词",
@@ -2206,7 +2328,7 @@
         '<rect x="72" y="46" width="34" height="16" rx="3" fill="none" stroke="#ff6b35" stroke-width="2"/>' +
         '<text x="89" y="57" font-size="8" fill="#ff6b35" text-anchor="middle">trust</text></svg>',
       en: [
-        "Goal: close one of eight cases with a verdict the numbers behind it actually support.",
+        "Goal: close one of ten cases with a verdict the numbers behind it actually support.",
         "Action: click a witness to take their testimony in order, click an exhibit to mark it, then press 1 to 4 to spend an action, Enter to confirm, Escape back to the bench, L to read out everything you have established.",
         "Two numbers: claim strength comes from testimony, exhibit weight and contradictions; witness trust is separate, starts at the case's own value, and is what the bench will believe.",
         "The trade-off: pressing a witness adds 2 to the charge it serves and costs that witness 1 trust; corroborating a witness with a marked exhibit adds 1 to both.",
@@ -2214,7 +2336,7 @@
         "Scoring: the verdict quality is the gate, the case strength of your closing sets the stars, and the bands are measured from each case's own best-play line.",
       ],
       zh: [
-        "目标：在八件案子里结一件，判决要能被它背后的数字真正撑住。",
+        "目标：在十件案子里结一件，判决要能被它背后的数字真正撑住。",
         "操作：点证人按顺序取他的证词，点物证把它呈堂，再按 1 到 4 花掉一次庭上动作，回车确认，Esc 回证人席，L 键念出你已确立的一切。",
         "两个数字：指控强度来自证词、物证分量与矛盾；证人信任是另一回事，由案子自己给定，那才是法庭愿意信多少。",
         "取舍：逼一个证人，替他服务的那条指控加 2，可这位证人的信任减 1；用已呈堂的物证为他旁证，两边各加 1。",

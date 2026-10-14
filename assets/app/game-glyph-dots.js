@@ -12,7 +12,15 @@
   var dotsYou = 1;
   var dotsAi = 2;
   /* `boxes` per side; the rank may blunder on purpose so the first board is
-   * beatable and the last one is not. Margin bands are boxes won over the AI. */
+   * beatable and the last one is not. Margin bands are boxes won over the AI.
+   * The last two ranks buy their strength with a habit, not a number: `setup`
+   * and `count` both play out the plate before they lay a safe stick, the first
+   * over the fourteen sticks it reads, the second over all of them. Two other
+   * habits were built and measured and are not here: an opening chosen by the
+   * endgame count (it always agrees with the shortest chain once the sticks are
+   * counted) and leaving two boxes to buy the opening beat (it gives the rival
+   * five to twelve boxes a game). Every field below is read by dotsAiMove or
+   * newRound; nothing ships as decoration. */
   var dotRanks = [
     { id: "d1", labelKey: "dotsL1", boxes: 3, blunder: 0.4, margin: [3, 2, 1] },
     { id: "d2", labelKey: "dotsL2", boxes: 3, blunder: 0.15, margin: [4, 2, 1] },
@@ -22,6 +30,22 @@
     { id: "d6", labelKey: "dotsL6", boxes: 5, blunder: 0, margin: [9, 6, 3] },
     { id: "d7", labelKey: "dotsL7", boxes: 3, blunder: 0, margin: [5, 3, 1] },
     { id: "d8", labelKey: "dotsL8", boxes: 4, blunder: 0, margin: [8, 6, 3] },
+    {
+      id: "d9",
+      labelKey: "dotsL9",
+      boxes: 4,
+      blunder: 0.1,
+      setup: true,
+      margin: [6, 3, 1],
+    },
+    {
+      id: "d10",
+      labelKey: "dotsL10",
+      boxes: 5,
+      blunder: 0.08,
+      count: true,
+      margin: [5, 3, 1],
+    },
   ];
 
   function dotsIndex(y, x, width) {
@@ -157,7 +181,144 @@
     return taken;
   }
 
-  function dotsAiMove(state, who, blunder) {
+  /* An unclaimed box with three sides is one stick from ours, and that stick is
+   * the only place a gift can come from: read straight off the plate, with no
+   * clone and no probe, which is what makes the endgame score affordable. */
+  function dotsGifts(state) {
+    var boxes = state.boxes;
+    var gifts = [];
+    for (var box = 0; box < state.owner.length; box += 1) {
+      if (state.owner[box] || dotsSides(state, box) !== 3) {
+        continue;
+      }
+      var y = Math.floor(box / boxes);
+      var x = box % boxes;
+      var edges = [
+        { kind: "h", index: dotsIndex(y, x, boxes) },
+        { kind: "h", index: dotsIndex(y + 1, x, boxes) },
+        { kind: "v", index: dotsIndex(y, x, boxes + 1) },
+        { kind: "v", index: dotsIndex(y, x + 1, boxes + 1) },
+      ];
+      for (var i = 0; i < edges.length; i += 1) {
+        if (!state[edges[i].kind][edges[i].index]) {
+          gifts.push(edges[i]);
+          break;
+        }
+      }
+    }
+    return gifts;
+  }
+
+  /* Boxes the rival collects if we open here - the same answer dotsChainCost
+   * gives, walked off the gift list instead of probed stick by stick, which is
+   * what makes an endgame score cheap enough to ask for on every stick. */
+  function dotsOpenCost(state, move, who) {
+    var board = dotsClone(state);
+    var foe = who === dotsYou ? dotsAi : dotsYou;
+    var taken = 0;
+    var guard = 0;
+    dotsApply(board, move, who);
+    while (guard < 200) {
+      var gifts = dotsGifts(board);
+      if (!gifts.length) {
+        break;
+      }
+      taken += dotsApply(board, gifts[0], foe).length;
+      guard += 1;
+    }
+    return taken;
+  }
+
+  /* The rival this game has always been: take every gift, else lay a safe
+   * stick, else hand over the shortest chain - and never a thought for the
+   * parity. Played out to the last stick so a counting rank can score an
+   * opening by the boxes it leaves behind, not by the boxes it gives away.
+   * Fully deterministic: the plate answers the same way every time. */
+  function dotsPlainMove(state, who) {
+    var legal = dotsLegal(state);
+    var gifts = dotsGifts(state);
+    var i;
+    if (gifts.length) {
+      return gifts[0];
+    }
+    var safe = [];
+    for (i = 0; i < legal.length; i += 1) {
+      if (dotsSafe(state, legal[i])) {
+        safe.push(legal[i]);
+      }
+    }
+    if (safe.length) {
+      return safe[0];
+    }
+    var cheapest = legal[0];
+    var cheapestCost = Infinity;
+    for (i = 0; i < legal.length; i += 1) {
+      var cost = dotsOpenCost(state, legal[i], who);
+      if (cost < cheapestCost) {
+        cheapestCost = cost;
+        cheapest = legal[i];
+      }
+    }
+    return cheapest;
+  }
+
+  /* Final tally, from the first stick onwards: {you, ai} boxes when the plate
+   * is empty and both rivals play the shipped habit. */
+  function dotsPlayout(state, mover, first) {
+    var board = dotsClone(state);
+    var foe = mover === dotsYou ? dotsAi : dotsYou;
+    var turn = mover;
+    var closed = dotsApply(board, first, turn);
+    if (!closed.length) {
+      turn = foe;
+    }
+    var guard = 0;
+    while (dotsLegal(board).length && guard < 400) {
+      var move = dotsPlainMove(board, turn);
+      if (!move) {
+        break;
+      }
+      if (!dotsApply(board, move, turn).length) {
+        turn = turn === dotsYou ? dotsAi : dotsYou;
+      }
+      guard += 1;
+    }
+    return { you: dotsCount(board, dotsYou), ai: dotsCount(board, dotsAi) };
+  }
+
+  /* Which of these sticks leaves the counting rival ahead once the whole plate
+   * has been handed out? The answer comes from playing the plate out, so the
+   * rank is choosing a final score instead of a chain length: it will leave a
+   * box on the table, or open a three-box chain instead of a two-box one, when
+   * the count says that is the line that wins. Deterministic, and the first
+   * best stick wins a tie, which keeps the shipped ordering when nothing is. */
+  function dotsCountedScore(state, who, move) {
+    var out = dotsPlayout(state, who, move);
+    return who === dotsYou ? out.you - out.ai : out.ai - out.you;
+  }
+
+  function dotsCountedChoice(state, who, candidates, cap) {
+    var best = null;
+    var bestScore = null;
+    var limit = Math.min(candidates.length, cap);
+    for (var i = 0; i < limit; i += 1) {
+      var score = dotsCountedScore(state, who, candidates[i]);
+      if (bestScore === null || score > bestScore) {
+        bestScore = score;
+        best = candidates[i];
+      }
+    }
+    return best;
+  }
+
+  /* `habit` is the rank row exactly as aiTurn passes it, because blunder, setup
+   * and count are one rival: a probe that handed over only the blunder rate
+   * measured a weaker opponent than the ladder ships. A bare number still means
+   * the old blunder rate, which is what the audits in tools/ call it with, and
+   * it keeps the shipped rival for ranks 1-8. */
+  function dotsAiMove(state, who, habit) {
+    var rank = habit && typeof habit === "object" ? habit : { blunder: habit };
+    var blunder = rank.blunder || 0;
     var legal = dotsLegal(state);
     if (!legal.length) {
       return null;
@@ -166,21 +327,44 @@
       return legal[Math.floor(Math.random() * legal.length)];
     }
     var i;
-    /* 1. take any box on the table. */
+    var closing = [];
+    var safe = [];
     for (i = 0; i < legal.length; i += 1) {
       var probe = dotsClone(state);
       if (dotsApply(probe, legal[i], who).length) {
-        return legal[i];
+        closing.push(legal[i]);
+      } else if (dotsSafe(state, legal[i])) {
+        safe.push(legal[i]);
       }
     }
+    /* 1. take any box on the table. */
+    if (closing.length) {
+      return closing[0];
+    }
     /* 2. otherwise play without handing a box over. */
-    var safe = legal.filter(function (move) {
-      return dotsSafe(state, move);
-    });
     if (safe.length) {
+      /* Ranks 1-8 pick one of these at random, which is how a chain gets built
+       * for the rival: the set-up rank plays the stick whose endgame count
+       * comes out ahead, so it decides what is left to open, not just what is
+       * safe now. It reads fourteen sticks - the last rank reads the whole
+       * plate, and on a 5x5 that is worth four boxes a game, because the good
+       * stick is usually past the fifteenth. */
+      if (rank.setup || rank.count) {
+        var picked = dotsCountedChoice(
+          state,
+          who,
+          safe,
+          rank.count ? safe.length : 14,
+        );
+        if (picked) {
+          return picked;
+        }
+      }
       return safe[Math.floor(Math.random() * safe.length)];
     }
-    /* 3. forced to open something: give away the shortest chain. */
+    /* 3. forced to open something: give away the shortest chain. Ranks 9 and 10
+     * never argue with it: counted against the whole plate, the shortest chain
+     * is the answer every time, which is why no row carries an opening habit. */
     var cheapest = null;
     var cheapestCost = Infinity;
     for (i = 0; i < legal.length; i += 1) {
@@ -672,7 +856,7 @@
     function aiTurn() {
       var guard = 0;
       while (dotsLegal(state).length && guard < 200) {
-        var move = dotsAiMove(state, dotsAi, rank.blunder);
+        var move = dotsAiMove(state, dotsAi, rank);
         if (!move) {
           break;
         }
@@ -691,7 +875,9 @@
       renderHud();
     }
 
-    function play(index, kind) {
+    /* The click handler hands over the axis first, the way commit() takes it,
+     * so a stick lands on the edge the player actually chose. */
+    function play(kind, index) {
       if (over || !yourTurn || state[kind][index]) {
         return;
       }
@@ -742,6 +928,23 @@
 
     newRound(rank);
   }
+
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so the eight shipped rung names stay in the shared
+   * dictionary and only the two new ones ride here. The names say what the two
+   * rivals do: one builds the chains it wants to be holding, the other reads
+   * the whole plate before it lays a stick. */
+  App.addStrings({
+    en: {
+      "dotsL9": "Chainwright",
+      "dotsL10": "Plate Reader",
+    },
+    zh: {
+      "dotsL9": "织链匠",
+      "dotsL10": "读盘师",
+    },
+  });
 
 
   /* Exported for the other modules. */

@@ -90,10 +90,19 @@
 
   /* hazardWeights is [clear, cold, thirst, blizzard], chill is the card floor
    * and spread the day spread the planner measured across other seeds; carry,
-   * food and days are the three dials of an expedition. Ten expeditions,
-   * ordered by the par the planner measures on each shipped seed; f2 was
-   * re-seeded off 812, which measured a day harder than f3, so the ladder
-   * rises 3, 4, 4, 4, 5, 5, 6, 7, 8, 8 and every original id stands. */
+   * food and days are the three dials of an expedition. The map is fixed -
+   * twelve nodes, nineteen ways - so a rung cannot ask for more ground, only
+   * for a different question: which hazard mix the pack must answer, which
+   * carry limit or narrow way decides what may be carried at all, how far
+   * ahead the reach gate lets the party read, and which node is the goal.
+   * Fifteen expeditions, the first ten ordered by the par the planner measures
+   * on each shipped seed; f2 was re-seeded off 812, which measured a day
+   * harder than f3, so the original ladder rises 3, 4, 4, 4, 5, 5, 6, 7, 8, 8
+   * and every original id stands. The last five each change the question:
+   * f11 a carry limit under coat plus crampons, f12 one readable card unless
+   * the lamp is paid for, f13 an objective every way into which is ice, f14 a
+   * trek run backwards from the hut where the rations and not the day cap are
+   * the deadline, f15 a forecast with no clear card in it at all. */
   var dfzLevels = [
     { id: "f1", labelKey: "dfzE1", seed: 201, start: 0, goal: 8, days: 5, spread: 0,
       cap: 7, food: 4, reach: 2, chill: 1, hazardWeights: [6, 0, 0, 0] },
@@ -114,7 +123,17 @@
     { id: "f9", labelKey: "dfzE9", seed: 256, start: 0, goal: 11, days: 10, spread: 1,
       cap: 7, food: 6, reach: 2, chill: 3, hazardWeights: [1, 3, 3, 0] },
     { id: "f10", labelKey: "dfzE10", seed: 107, start: 0, goal: 11, days: 9, spread: 1,
-      cap: 7, food: 6, reach: 2, chill: 3, hazardWeights: [1, 3, 3, 0] }
+      cap: 7, food: 6, reach: 2, chill: 3, hazardWeights: [1, 3, 3, 0] },
+    { id: "f11", labelKey: "dfzE11", seed: 7, start: 0, goal: 11, days: 9, spread: 1,
+      cap: 4, food: 5, reach: 2, chill: 2, hazardWeights: [2, 3, 0, 1] },
+    { id: "f12", labelKey: "dfzE12", seed: 33, start: 0, goal: 9, days: 8, spread: 1,
+      cap: 5, food: 5, reach: 1, chill: 2, hazardWeights: [2, 0, 1, 4] },
+    { id: "f13", labelKey: "dfzE13", seed: 515, start: 0, goal: 6, days: 7, spread: 1,
+      cap: 5, food: 5, reach: 2, chill: 3, hazardWeights: [1, 3, 2, 1] },
+    { id: "f14", labelKey: "dfzE14", seed: 88, start: 11, goal: 0, days: 9, spread: 1,
+      cap: 6, food: 7, reach: 2, chill: 2, hazardWeights: [2, 3, 1, 0] },
+    { id: "f15", labelKey: "dfzE15", seed: 1201, start: 0, goal: 11, days: 10, spread: 2,
+      cap: 5, food: 7, reach: 2, chill: 3, hazardWeights: [0, 2, 2, 3] }
   ];
 
   function mulberry32(seed) {
@@ -1178,6 +1197,11 @@
       "dfzE8": "Gale Shelf",
       "dfzE9": "Deep Winter",
       "dfzE10": "The Last Window",
+      "dfzE11": "Coat Or Crampons",
+      "dfzE12": "The Unread Week",
+      "dfzE13": "The Serac Gate",
+      "dfzE14": "The Long Way Back",
+      "dfzE15": "Blizzard Ledger",
       "dfzN0": "Base Camp",
       "dfzN1": "Moraine Shelf",
       "dfzN2": "Frozen Creek",
@@ -1274,9 +1298,9 @@
       "dfzLostWarmth": "Warmth hit zero on day {d}, {place}. The cold won.",
       "dfzLostFood": "The last ration went on day {d}, {place}. There was nothing left to eat.",
       "dfzLostFatigue": "Fatigue stayed maxed three days running, so the party had to halt on day {d}, {place}.",
-      "dfzLostDays": "The {n}-day cap ran out on day {d}, {place}. The hut stayed hidden.",
+      "dfzLostDays": "The {n}-day cap ran out on day {d}, {place}. The destination stayed out of reach.",
       "dfzNextExp": "Next expedition unlocked.",
-      "dfzAllExps": "All ten expeditions crossed.",
+      "dfzAllExps": "All fifteen expeditions crossed.",
       "dfzPrompt": "{name}: reach {place} within {d} days. Carry limit {cap} kg, {f} rations, warmth 10.",
       "logDeepFreeze": "Reached {place} in {n} days on the ice",
     },
@@ -1292,6 +1316,11 @@
       "dfzE8": "狂风台地",
       "dfzE9": "深冬冰原",
       "dfzE10": "最后窗口",
+      "dfzE11": "大衣或冰爪",
+      "dfzE12": "未读的风雪",
+      "dfzE13": "冰塔之门",
+      "dfzE14": "风雪归途",
+      "dfzE15": "风雪账本",
       "dfzN0": "大本营",
       "dfzN1": "冰碛台地",
       "dfzN2": "冻溪口",
@@ -1388,9 +1417,9 @@
       "dfzLostWarmth": "第 {d} 天，{place}，体温归零——是寒冷赢了。",
       "dfzLostFood": "第 {d} 天，{place}，吃掉了最后一份口粮，再也没有可吃的了。",
       "dfzLostFatigue": "疲劳连续三天顶在极限，第 {d} 天，{place}，被迫停下。",
-      "dfzLostDays": "{n} 天期限已到，第 {d} 天，{place}，小屋始终没露面。",
+      "dfzLostDays": "{n} 天期限已到，第 {d} 天，{place}，目标点始终没露面。",
       "dfzNextExp": "解锁下一段远征。",
-      "dfzAllExps": "十段远征全部走完。",
+      "dfzAllExps": "十五段远征全部走完。",
       "dfzPrompt": "「{name}」：{d} 天内抵达{place}。限重 {cap} 公斤，起始口粮 {f} 份，体温 10。",
       "logDeepFreeze": "在冰原上走了 {n} 天抵达{place}",
     }
@@ -1440,7 +1469,7 @@
         '<text x="62" y="15" font-size="7" fill="#94a3b8" text-anchor="middle">cold</text>' +
         '<path d="M14 68h92" stroke="rgba(148,163,184,.5)"/></svg>',
       en: [
-        "Aim: reach the rescue hut inside the expedition's day cap with warmth, food and fatigue all still above ruin.",
+        "Aim: reach the expedition's destination inside its day cap with warmth, food and fatigue all still above ruin.",
         "Action: pack at the bench, read the forecast cards, pick a way out of camp and set out; or make camp a day to buy warmth and rest back.",
         "Rule: every item weighs something, weight is paid as fatigue on every step, and each item answers only the one hazard its note names.",
         "Rule: an ice way stands closed without crampons and a narrow way closes to a heavy pack, so the pack you choose chooses the route you get.",
@@ -1448,7 +1477,7 @@
         "Scoring: stars count days used - three stars is the shortest line our own planner proved on that map, and every expedition replays identically from its seed.",
       ],
       zh: [
-        "目标：在远征天数上限内抵达救援小屋，并且体温、食物、疲劳都没走到尽头。",
+        "目标：在远征天数上限内抵达该次远征的目标点，并且体温、食物、疲劳都没走到尽头。",
         "操作：先在装备台打包，再读预报卡，选一条出营的路出发；也可以扎营一天，用一天换回体温与体力。",
         "规则：每件装备都有重量，重量会在每一步变成疲劳，而每件装备只应对它说明里那一种灾害。",
         "规则：冰面路没有冰爪就走不了，窄路背重了就关门，所以你选的背包决定了你能走的路。",

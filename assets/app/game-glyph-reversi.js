@@ -20,9 +20,16 @@
     [1, 0], [-1, 0], [0, 1], [0, -1],
     [1, 1], [1, -1], [-1, 1], [-1, -1],
   ];
-  /* Ranks: noise = chance the AI ignores its judgement for a lower pick;
-   * depth 2+ searches opponent replies. Stars are margins
-   * [3-star, 2-star, 1-star] on the final disc lead. */
+  /* Ranks. Two fields change what the rival can do, because orderValue() below
+   * never calls itself: depth <= 0 is the static positional read (it values the
+   * corners from REV_WEIGHTS only), depth >= 1 switches on the one reply/denial
+   * search the engine has - it rewards owning the last square of a line, rewards
+   * +40 for leaving you no legal reply and +60 for answering your reply - so
+   * depth 2 through 5 are the SAME rival as depth 1, not a deeper one. noise is
+   * the other lever: the chance of trading its best pick for a 2nd-to-4th one.
+   * So the ladder reaches its ceiling at r5 and r9/r10 cannot raise it; they hold
+   * that plateau rival and demand a wider final disc lead instead. starMargin is
+   * [3-star, 2-star, 1-star] on the margin, measured by seeded self-play. */
   var revLevels = [
     { id: "r1", labelKey: "revL1", noise: 0.5, depth: 0, starMargin: [18, 10, 4] },
     { id: "r2", labelKey: "revL2", noise: 0.3, depth: 0, starMargin: [16, 9, 3] },
@@ -32,6 +39,8 @@
     { id: "r6", labelKey: "revL6", noise: 0, depth: 3, starMargin: [8, 4, 2] },
     { id: "r7", labelKey: "revL7", noise: 0, depth: 4, starMargin: [8, 4, 2] },
     { id: "r8", labelKey: "revL8", noise: 0, depth: 5, starMargin: [8, 4, 2] },
+    { id: "r9", labelKey: "revL9", noise: 0, depth: 1, starMargin: [11, 6, 2] },
+    { id: "r10", labelKey: "revL10", noise: 0, depth: 1, starMargin: [12, 7, 3] },
   ];
   var REV_WEIGHTS = [
     120, -20, 10, 5, 5, 10, -20, 120,
@@ -178,6 +187,20 @@
   App.glyphReversiApply = revApply;
   App.glyphReversiPick = revPick;
   App.glyphReversiScore = revScore;
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js does
+   * not already own, so the eight shipped rung names stay in the shared
+   * dictionary and only the two new ones ride here. */
+  App.addStrings({
+    en: {
+      "revL9": "Immortal",
+      "revL10": "Ascendant",
+    },
+    zh: {
+      "revL9": "不朽者",
+      "revL10": "登峰者",
+    },
+  });
 
   function initGlyphReversiGame() {
     var canvas = getElement("revCanvas");

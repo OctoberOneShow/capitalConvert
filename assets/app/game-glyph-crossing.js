@@ -129,6 +129,25 @@
       ],
       starTimes: [72, 105, 150],
     },
+    /* Cross-traffic: the ladder so far only ever sped the same six-row template
+     * up, one lane per flow row. This rung keeps that tempo ramp but leans on a
+     * second thing the engine already models - props are matched by row, not by
+     * lane, so two specs sharing row 6 put two opposing streak trains through
+     * one lane. The window is then the intersection of two independent gap
+     * cycles, which no single-lane rung in the ladder can ask for. */
+    {
+      id: "c10", labelKey: "croL10",
+      lanes: [
+        { row: 1, dir: 1, speed: 92, len: 80, gap: 140 },
+        { row: 2, dir: -1, speed: 108, len: 80, gap: 138 },
+        { row: 3, dir: 1, speed: 126, len: 80, gap: 136 },
+        { row: 5, dir: -1, speed: 138, len: 70, gap: 140 },
+        { row: 6, dir: 1, speed: 96, len: 62, gap: 158 },
+        { row: 6, dir: -1, speed: 150, len: 70, gap: 136 },
+        { row: 7, dir: 1, speed: 166, len: 80, gap: 136 },
+      ],
+      starTimes: [78, 114, 162],
+    },
   ];
   var STREAK_COLORS = ["#f472b6", "#fb7185", "#fbbf24", "#a78bfa"];
 
@@ -611,4 +630,16 @@
 
   /* Exported for the other modules. */
   App.initGlyphCrossingGame = initGlyphCrossingGame;
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already hold, so the shared dictionary stays the authority for
+   * the drawer chrome and the nine shipped rung names. */
+  App.addStrings({
+    en: {
+      "croL10": "Two-Way Street",
+    },
+    zh: {
+      "croL10": "双向街",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

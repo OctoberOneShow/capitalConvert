@@ -18,7 +18,7 @@ function boot(options, live) {
       callbacks.forEach(fn => fn(env.window.performance.now()));
     };
   }
-  env.load("window.CapitalConvert = { petNotifyGame: function () {} };");
+  env.load("window.CapitalConvert = { petNotifyGame: function () {}, addStrings: function () {} };");
   env.load(source);
   if (live) {
     const mount = env.window.CapitalConvert.mountLdsCombat;

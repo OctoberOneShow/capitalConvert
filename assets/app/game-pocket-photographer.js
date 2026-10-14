@@ -107,16 +107,22 @@
     },
   };
 
-  /* Ten outings. `need` is the album target (distinct species with a behaviour
+  /* Fifteen outings. `need` is the album target (distinct species with a behaviour
    * shot), `budget` the frames on the roll, `momentScale` how generous the
    * behaviour window is and `drift` how fast focus wanders on its own.
    * The rungs are ordered by the album a scripted best play actually measures
    * (see pphBestLine), so the ladder climbs rung by rung and every star band
    * sits on a number someone really reached. Past "Reedy Corner" the ponds get
    * harder by demanding better frames rather than luckier ones: the roll
-   * shortens against the target, the window narrows, the wind freshens, the
-   * viewfinder shrinks, the water fills with extra birds - and the quality bar
-   * rises, which is what lifts the measured best play from rung to rung. */
+   * shortens against the target, the window narrows, the focus ring drifts
+   * further, the viewfinder shrinks, the water fills with extra birds - and the
+   * quality bar rises, which is what lifts the measured best play from rung to
+   * rung. `wind` is a reading of the pond, not a law of it: the ring drifts by
+   * `drift` either way, so a windy row is one whose `drift` is already raised.
+   * The last five rungs stop raising the number and start changing the shape:
+   * three of one species on the water, the near-miss mercy behind a porthole,
+   * drift past the fine-focus rate, a roll with no spare frame on it, and a
+   * viewfinder wide enough that one bad shutter puts the whole pond up. */
   var pphLevels = [
     {
       id: "pph1", labelKey: "pphZ1", seed: 4711, budget: 10, need: 1,
@@ -191,6 +197,86 @@
       momentScale: 0.86, drift: 0.08, wind: true, scoreMin: 82, behaviourMin: 28,
       frameW: 124, frameH: 90, start: { x: 200, y: 180, focus: 0.42 },
       roster: [{ sp: "coot", n: 1 }, { sp: "warbler", n: 2 }, { sp: "heron", n: 1 }, { sp: "otter", n: 2 }],
+    },
+    /* --- the third tier: fifteen stops on the tour ------------------------
+     * These five change the shape of the pond rather than the size of the
+     * number, because the number is spent. The album is a sum of at most four
+     * per-species bests, each capped by that species' behaviour quality, and the
+     * scripted line will not fire until six points clear of `scoreMin`: 84 is the
+     * highest bar a four-species roll passes, 86 replays to an empty album. So
+     * the measured line saturates near 360-370 - these rungs are ordered by the
+     * band0 each one really measures (350 / 355 / 358 / 359 / 366), which means
+     * band0 steps down once, from "Last Roll" to here, and climbs from then on.
+     * Every seed below was chosen so at least half the rounds that pond actually
+     * deals (seed + round x 131, 24 rounds replayed) reach its own band0. */
+    {
+      /* Drift past the fine-focus rate: the ring wanders at 0.24 against a fine
+       * increment of 0.2, so creeping can no longer hold the plane - only the
+       * coarse ring outruns it, and the shot lives on the swing rather than being
+       * parked on it. The glass is taller than it is wide, the first portrait
+       * viewfinder on the tour, which moves the whole composition argument onto
+       * the axis the frame covers worst.
+       * Measured best play: 350 (warbler 90, heron 94, otter 86, coot 80), four
+       * exposures, five frames left. Band0 35005, reached by 58% of rounds. */
+      id: "pph11", labelKey: "pphZ11", seed: 9355, budget: 9, need: 4,
+      momentScale: 0.86, drift: 0.24, wind: true, scoreMin: 70, behaviourMin: 26,
+      frameW: 112, frameH: 118, start: { x: 200, y: 180, focus: 0.42 },
+      roster: [{ sp: "coot", n: 1 }, { sp: "warbler", n: 2 }, { sp: "heron", n: 1 }, { sp: "otter", n: 2 }],
+    },
+    {
+      /* Three warblers on one reed line: the first triple the tour deals out.
+       * The album still wants a single warbler, so the two extra are noise and
+       * panic - seven creatures on the water, and one shutter fired off the
+       * moment puts as many as four of them up at once (measured with photoTake
+       * over 21 of this row's rounds; "Last Roll" reaches four of six).
+       * Measured best play: 355 (heron 97, otter 93, coot 83, warbler 82), four
+       * frames left. Band0 35504, reached by 50% of rounds. */
+      id: "pph12", labelKey: "pphZ12", seed: 2087, budget: 8, need: 4,
+      momentScale: 0.85, drift: 0.062, wind: true, scoreMin: 72, behaviourMin: 26,
+      frameW: 130, frameH: 94, start: { x: 200, y: 180, focus: 0.42 },
+      roster: [{ sp: "coot", n: 1 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 1 }, { sp: "otter", n: 2 }],
+    },
+    {
+      /* The porthole: the smallest viewfinder on the tour, and the only pond
+       * above the teaching water that still grants `assist`. That mercy is
+       * written as a multiple of frame width, so it shrinks with the glass -
+       * 75 px of grace here against the 101 the second pond hands out. A small
+       * frame is also a quiet one: a miss puts up at most three of the four,
+       * where the wide water below scatters six.
+       * Measured best play: 358 (heron 96, otter 88, coot 87, warbler 87), five
+       * frames left. Band0 35805, reached by 88% of rounds. */
+      id: "pph13", labelKey: "pphZ13", seed: 5278, budget: 9, need: 4,
+      momentScale: 0.86, drift: 0.055, wind: true, scoreMin: 78, behaviourMin: 26,
+      assist: true,
+      frameW: 104, frameH: 86, start: { x: 210, y: 190, focus: 0.4 },
+      roster: [{ sp: "coot", n: 1 }, { sp: "warbler", n: 1 }, { sp: "heron", n: 1 }, { sp: "otter", n: 1 }],
+    },
+    {
+      /* Four species, four frames: the first roll on the tour with no spare on
+       * it, so every exposure either files or ends the outing and the crowded
+       * water of the rungs above never waits. The scripted line still clears it
+       * because it never fires outside a moment; a hand is not that patient, and
+       * this is the one pond where a single greedy press is unrecoverable.
+       * Measured best play: 359 (heron 97, otter 89, coot 88, warbler 85), zero
+       * frames left. Band0 35900, reached by 75% of rounds. */
+      id: "pph14", labelKey: "pphZ14", seed: 3612, budget: 4, need: 4,
+      momentScale: 0.86, drift: 0.08, wind: true, scoreMin: 78, behaviourMin: 26,
+      frameW: 132, frameH: 98, start: { x: 200, y: 180, focus: 0.42 },
+      roster: [{ sp: "coot", n: 1 }, { sp: "warbler", n: 1 }, { sp: "heron", n: 1 }, { sp: "otter", n: 1 }],
+    },
+    {
+      /* Wide glass, the summit: 196 across carries the whole pond in the
+       * viewfinder, so composition is the easiest it has ever been - and the
+       * scare radius is w x 0.55 + 12, so one shutter fired off the moment puts
+       * six of the seven creatures up on a reedier line with a shorter window
+       * for the rest of the outing. The bar is the highest a four-species roll
+       * can pass, which is what lifts the line to 366.
+       * Measured best play: 366 (otter 93, coot 90, heron 93, warbler 90), four
+       * frames left. Band0 36604, reached by 54% of rounds. */
+      id: "pph15", labelKey: "pphZ15", seed: 7441, budget: 8, need: 4,
+      momentScale: 0.84, drift: 0.09, wind: true, scoreMin: 84, behaviourMin: 26,
+      frameW: 196, frameH: 150, start: { x: 210, y: 170, focus: 0.42 },
+      roster: [{ sp: "coot", n: 1 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 1 }, { sp: "otter", n: 2 }],
     },
   ];
 
@@ -1736,6 +1822,11 @@
       "pphZ8": "Two Warblers",
       "pphZ9": "Narrow Light",
       "pphZ10": "Last Roll",
+      "pphZ11": "Runaway Ring",
+      "pphZ12": "Crowded Reedbed",
+      "pphZ13": "The Porthole",
+      "pphZ14": "No Spare Frame",
+      "pphZ15": "Wide Glass",
       "pphSpCoot": "Coot",
       "pphSpWarbler": "Warbler",
       "pphSpHeron": "Heron",
@@ -1848,6 +1939,11 @@
       "pphZ8": "双莺争枝",
       "pphZ9": "一线天光",
       "pphZ10": "最后一卷",
+      "pphZ11": "脱手焦环",
+      "pphZ12": "群莺闹苇塘",
+      "pphZ13": "方寸舷窗",
+      "pphZ14": "张张入册",
+      "pphZ15": "一览全塘",
       "pphSpCoot": "骨顶鸡",
       "pphSpWarbler": "苇莺",
       "pphSpHeron": "苍鹭",

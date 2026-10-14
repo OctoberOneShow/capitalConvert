@@ -213,25 +213,77 @@
       id: "s12", labelKey: "ttsS12", briefKey: "ttsB12",
       fuel: 150, cable: 50, snap: 340, need: 3,
       tug: { x: 30, y: 162, angle: 0 },
-      dock: { x: 250, y: 56, r: 26 },
+      dock: { x: 250, y: 56, r: 28 },
       cargos: [
         { shape: "slab", x: 112, y: 104 },
         { shape: "shell", x: 112, y: 224 },
         { shape: "spar", x: 206, y: 172 },
       ],
       hazards: [
-        { x: 52, y: 62, r: 11 }, { x: 52, y: 250, r: 11 }, { x: 170, y: 150, r: 10 },
+        { x: 52, y: 62, r: 11 }, { x: 52, y: 250, r: 11 }, { x: 150, y: 104, r: 10 },
       ],
       program: [
         { go: "cargo", thr: 1, stop: "reach", max: 700 },
         { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
-        { go: "lead", thr: 0.8, reel: 3, stop: "docked", max: 1400 },
+        { go: "lead", thr: 0.8, reel: 3, stop: "docked", max: 1800 },
         { go: "cargo", thr: 1, stop: "reach", max: 700 },
         { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
-        { go: "lead", thr: 0.8, reel: 3, stop: "docked", max: 1600 },
+        { go: "lead", thr: 0.8, reel: 3, stop: "docked", max: 520 },
         { go: "cargo", thr: 0.9, stop: "reach", max: 800 },
         { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
         { go: "lead", thr: 0.8, reel: 3, stop: "docked", max: 1800 },
+      ],
+    },
+    /* Three rungs past the standard, each hung on a lever the first twelve left
+     * alone: `snap` as the budget instead of `fuel`, a well whose `g` is negative
+     * so it shoves bodies away instead of gathering them, and `need` set below
+     * the cargo count so which wrecks you abandon is the actual decision. */
+    {
+      id: "s13", labelKey: "ttsS13", briefKey: "ttsB13",
+      fuel: 70, cable: 88, snap: 240, need: 1,
+      tug: { x: 46, y: 254, angle: -0.6 },
+      dock: { x: 232, y: 96, r: 26 },
+      cargos: [{ shape: "slab", x: 116, y: 186 }],
+      hazards: [{ x: 66, y: 92, r: 12 }],
+      program: [
+        { go: "cargo", thr: 0.9, stop: "reach", max: 700 },
+        { go: "stay", hook: 1, thr: 0.25, stop: "hooked", max: 260 },
+        { go: "lead", thr: 0.35, reel: 3, stop: "docked", max: 1600 },
+      ],
+    },
+    {
+      id: "s14", labelKey: "ttsS14", briefKey: "ttsB14",
+      fuel: 76, cable: 58, snap: 330, need: 1,
+      tug: { x: 44, y: 262, angle: -1 },
+      dock: { x: 258, y: 66, r: 27 },
+      cargos: [{ shape: "shell", x: 112, y: 196 }],
+      wells: [{ x: 185, y: 131, g: -52000, r: 16 }],
+      hazards: [{ x: 60, y: 80, r: 13 }, { x: 250, y: 224, r: 13 }],
+      program: [
+        { go: "cargo", thr: 1, stop: "reach", max: 700 },
+        { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
+        { go: "lead", thr: 0.7, reel: 4, stop: "docked", max: 1500 },
+      ],
+    },
+    {
+      id: "s15", labelKey: "ttsS15", briefKey: "ttsB15",
+      fuel: 84, cable: 52, snap: 340, need: 2,
+      tug: { x: 34, y: 160, angle: 0 },
+      dock: { x: 236, y: 62, r: 26 },
+      cargos: [
+        { shape: "shell", x: 96, y: 118 },
+        { shape: "slab", x: 108, y: 216 },
+        { shape: "spar", x: 258, y: 196 },
+        { shape: "shell", x: 292, y: 282 },
+      ],
+      hazards: [{ x: 186, y: 232, r: 14 }, { x: 300, y: 176, r: 12 }],
+      program: [
+        { go: "cargo", thr: 1, stop: "reach", max: 700 },
+        { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
+        { go: "lead", thr: 0.75, reel: 4, stop: "docked", max: 1300 },
+        { go: "cargo", thr: 1, stop: "reach", max: 700 },
+        { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
+        { go: "lead", thr: 0.75, reel: 4, stop: "docked", max: 1600 },
       ],
     },
   ];
@@ -933,6 +985,13 @@
   var ttsProven = ttsScenes.filter(function (scene) {
     return ttsBestOf(scene).won;
   });
+  /* A rung the proof pass rejects used to vanish with no trace, so a table of
+   * twelve could ship as eleven and nothing downstream could tell the two
+   * apart. Keep the rejects visible: they are a shipped-content defect with an
+   * id, not a row that was never written. */
+  var ttsUnproven = ttsScenes.filter(function (scene) {
+    return ttsProven.indexOf(scene) < 0;
+  });
   ttsProven.sort(function (a, b) {
     return ttsBestOf(a).ticks - ttsBestOf(b).ticks;
   });
@@ -959,6 +1018,7 @@
   App.tetherTowed = ttsTowed;
   App.tetherDocked = ttsDocked;
   App.tetherScenes = ttsScenes;
+  App.tetherUnproven = ttsUnproven;
   App.tetherShapes = ttsShapes;
   App.tetherRng = ttsRng;
   App.tetherField = { w: ttsW, h: ttsH, pad: ttsPad };
@@ -1375,7 +1435,7 @@
         if (outcome.unlockedNext) {
           message += " " + t("ttsNextScene");
         } else if (campaign.clearedCount() === ttsScenes.length) {
-          message += " " + t("ttsCampaignDone");
+          message += " " + t("ttsCampaignDone", { n: ttsScenes.length });
         }
         result.textContent = message;
         logAction(t("logTetherSalvage", { n: t(scene.labelKey), f: left }));
@@ -1534,6 +1594,9 @@
       "ttsS10": "Second Pass",
       "ttsS11": "Deep Water",
       "ttsS12": "Full Manifest",
+      "ttsS13": "Redline Spool",
+      "ttsS14": "Dead Field",
+      "ttsS15": "Cargo Triage",
       "ttsB1": "An open tow: learn what the line costs you.",
       "ttsB2": "Thread the belt; a wide swing puts the load on a rock.",
       "ttsB3": "Three tonnes of slab sail past the dock if you do not slow them.",
@@ -1546,6 +1609,9 @@
       "ttsB10": "A short line means a close escort: one wreck, then the other.",
       "ttsB11": "The well holds the shell while the spar has to be worked around it.",
       "ttsB12": "Three salvage runs on one cable, and a tank that stops counting.",
+      "ttsB13": "A long line on a weak cable: the tension number, not the tank, decides how hard you may pull.",
+      "ttsB14": "The dead field shoves everything away from it. Route around it; thrust into it only spends fuel.",
+      "ttsB15": "Four wrecks, two berths, one tank. Choose which salvage you are willing to leave drifting.",
       "ttsFuelLabel": "Fuel",
       "ttsTensionLabel": "Tension",
       "ttsMassLabel": "Cargo",
@@ -1575,7 +1641,7 @@
       "ttsWin": "Docked with {n} fuel left - {s} stars.",
       "ttsFailTail": "Salvage delivered {n}/{max}.",
       "ttsNextScene": "Next scene unlocked.",
-      "ttsCampaignDone": "All twelve recoveries logged.",
+      "ttsCampaignDone": "All {n} recoveries logged.",
       "ttsPaused": "Scene frozen - the tow is intact. Press a key to resume.",
       "ttsNoStars": "No salvage logged yet.",
       "ttsHint": "Reel in before the dock: a long line leaves the wreck outside the ring, and a tension number near the limit means the cable is about to go.",
@@ -1595,6 +1661,9 @@
       "ttsS10": "第二趟",
       "ttsS11": "深水回收",
       "ttsS12": "满载清单",
+      "ttsS13": "红线缆索",
+      "ttsS14": "斥力死场",
+      "ttsS15": "弃货取舍",
       "ttsB1": "一次开阔的拖带：先弄明白绳索让你付出了什么。",
       "ttsB2": "穿过碎石带；转弯幅度一大，货物就会撞上石块。",
       "ttsB3": "三吨重的板块若不减速，会直接冲过船坞。",
@@ -1607,6 +1676,9 @@
       "ttsB10": "绳索一短就得贴身押运：先把一件停进船坞，再回去取另一件。",
       "ttsB11": "引力井拽着浮舱，同时还得把长桁从旁边绕过去。",
       "ttsB12": "一根绳索跑三趟回收，而燃料眼看就要见底。",
+      "ttsB13": "长绳配低限值：真正限制你出力的不是燃料，而是绳索上的张力数字。",
+      "ttsB14": "这片死场把周围的一切都推开。绕着它走，硬顶进去只会烧掉燃料。",
+      "ttsB15": "四艘残骸、两个泊位、一箱燃料。决定哪些货物你愿意让它继续漂着。",
       "ttsFuelLabel": "燃料",
       "ttsTensionLabel": "张力",
       "ttsMassLabel": "货物",
@@ -1636,7 +1708,7 @@
       "ttsWin": "入坞时还剩 {n} 燃料 - 获得 {s} 星。",
       "ttsFailTail": "已回收 {n}/{max}。",
       "ttsNextScene": "解锁下一个场景。",
-      "ttsCampaignDone": "十二次回收全部记录在案。",
+      "ttsCampaignDone": "{n} 次回收全部记录在案。",
       "ttsPaused": "场景已冻结——拖带还在。按任意键继续。",
       "ttsNoStars": "还没有回收记录。",
       "ttsHint": "进坞前要收绳：绳太长，货物会停在船坞圈外；张力数字逼近限值，说明绳索快断了。",

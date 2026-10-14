@@ -13,7 +13,12 @@
   /* dir: 0 right, 1 down, 2 left, 3 up. "/" maps right->up, down->right,
    * left->down, up->left; "\" is the transpose. Mirrors start on the given
    * slope and toggle on click; a board clears when every target glows.
-   * Star times are [3-star, 2-star, 1-star] seconds. */
+   * Star times are [3-star, 2-star, 1-star] seconds.
+   * Rungs 1-8 all fire rightward and never put a target on a mirror cell.
+   * p9 fires downward, lights a target that is itself a mirror and stops its
+   * last leg on a wall; p10 fires leftward and runs the route back across its
+   * own outgoing leg at (5,3), which the trace allows because its guard keys
+   * on cell plus direction rather than on the cell alone. */
   var prismLevels = [
     {
       id: "p1", labelKey: "prismL1", w: 5, h: 5,
@@ -105,6 +110,33 @@
         { x: 2, y: 6, slope: 0 },
       ],
       starTimes: [34, 52, 74],
+    },
+    {
+      id: "p9", labelKey: "prismL9", w: 7, h: 7,
+      emitter: { x: 3, y: 0, dir: 1 },
+      targets: [[3, 2], [4, 2], [5, 4], [4, 5], [2, 5], [1, 3]],
+      walls: [[2, 2], [1, 1]],
+      mirrors: [
+        { x: 3, y: 2, slope: 0 },
+        { x: 5, y: 2, slope: 1 },
+        { x: 5, y: 5, slope: 1 },
+        { x: 1, y: 5, slope: 1 },
+      ],
+      starTimes: [72, 112, 158],
+    },
+    {
+      id: "p10", labelKey: "prismL10", w: 7, h: 7,
+      emitter: { x: 6, y: 3, dir: 2 },
+      targets: [[5, 3], [3, 5], [2, 5], [1, 3], [3, 1], [5, 5]],
+      walls: [[4, 2], [6, 5]],
+      mirrors: [
+        { x: 4, y: 3, slope: 0 },
+        { x: 4, y: 5, slope: 1 },
+        { x: 1, y: 5, slope: 1 },
+        { x: 1, y: 1, slope: 1 },
+        { x: 5, y: 1, slope: 1 },
+      ],
+      starTimes: [96, 150, 212],
     },
   ];
   /* "/" is slope 1, "\" is slope 0. */
@@ -519,6 +551,19 @@
     loadLevel(prismLevels[campaign.indexOf(campaign.nextLevelId())]);
   }
 
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so the shared dictionary stays authoritative. */
+  App.addStrings({
+    en: {
+      "prismL9": "Deadfall",
+      "prismL10": "Overpass",
+    },
+    zh: {
+      "prismL9": "落石阱",
+      "prismL10": "立交桥",
+    },
+  });
 
   /* Exported for the other modules. */
   App.initPrismPathGame = initPrismPathGame;

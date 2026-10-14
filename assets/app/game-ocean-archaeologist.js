@@ -48,9 +48,18 @@
    * makes depth stop separating fragments from dive 3 on. The air economy tightens
    * down the ladder: the share of the site's ceiling (3 points a find) the best
    * measured line still reaches falls 0.999, 0.940, 0.848, 0.710, 0.593, 0.501,
-   * 0.473, 0.443, 0.410, 0.370 for d1..d10, so no later dive lets a weaker line
-   * score what an earlier one managed. At air 64 dive 1 never scores below 11 of
-   * its 12; at air 92 dive 10 never scores above 12 of its 30. */
+   * 0.473, 0.443, 0.410, 0.370, 0.294, 0.260, 0.249, 0.236, 0.202 for d1..d15, so
+   * no later dive lets a weaker line score what an earlier one managed. At air 64
+   * dive 1 never scores below 11 of its 12; at air 92 dive 10 never scores above 12
+   * of its 30; at air 84 dive 11 never scores above 9; at air 100 dive 15 never
+   * carries more than 2 of its 10 fragments.
+   * Where the ladder stops: display quality moves in steps of 3 (one record) while
+   * the ceiling is pinned at 10 finds by ocnParts, so past dive 11 the top band can
+   * only hold at 6 - what keeps falling is the share of the ceiling the best line
+   * reaches and the number of fragments it can afford. pingRadius, base and slope
+   * never enter a line's bill (the prover charges one ping per leg whatever its
+   * radius), so they are player-information levers only, and depth costs no air at
+   * all: a rung built on them alone is a rung the measurement cannot see. */
   var ocnLevels = [
     { id: "d1", labelKey: "ocnZ1", w: 12, h: 9, finds: 4, base: 6, slope: 3, debris: 9, spread: 5, air: 64,
       pingRadius: 3, pingCost: 2, docCost: 4, liftCost: 2, silt: 0, bays: 0, ambig: 0, quickReach: 6, starQuality: [11, 8, 2] },
@@ -72,6 +81,41 @@
       pingRadius: 2, pingCost: 6, docCost: 8, liftCost: 3, silt: 0, bays: 1, ambig: 7, quickReach: 6, starQuality: [10, 4, 1] },
     { id: "d10", labelKey: "ocnZ10", w: 20, h: 14, finds: 10, base: 34, slope: 1, debris: 32, spread: 4, air: 92,
       pingRadius: 2, pingCost: 6, docCost: 9, liftCost: 3, silt: 1, bays: 1, ambig: 8, quickReach: 6, starQuality: [9, 4, 1] },
+    /* d11 turns the gauge off as evidence. slope 0 is a value the ten never ran:
+     * all ten berths then span the same one metre, so every reading fits every
+     * berth (a bagged fragment shows "fits 10 berths") and only a record can place
+     * anything - which silt then takes away, and ambig 10 demands the whole site be
+     * look-alikes on every dealt wreck. */
+    { id: "d11", labelKey: "ocnZ11", w: 20, h: 14, finds: 10, base: 42, slope: 0, debris: 32, spread: 5, air: 84,
+      pingRadius: 2, pingCost: 7, docCost: 11, liftCost: 3, silt: 1, bays: 1, ambig: 10, quickReach: 6, starQuality: [7, 3, 1] },
+    /* d12 pairs slope 3 with bays, a pairing the ten never ran: bays grow a berth
+     * outward across a steep site, so a band spans fourteen metres on average
+     * against the widest shipped site's four, and the lo-to-hi readout stops being
+     * evidence a bagged fragment can argue from. All three action prices (record 12,
+     * ping 8, bag 4) sit above every value the ten used at the same time. */
+    { id: "d12", labelKey: "ocnZ12", w: 21, h: 15, finds: 10, base: 26, slope: 3, debris: 40, spread: 5, air: 86,
+      pingRadius: 3, pingCost: 8, docCost: 12, liftCost: 4, silt: 0, bays: 1, ambig: 9, quickReach: 6, starQuality: [6, 3, 1] },
+    /* d13 is the hull choke: the widest site on the ladder with nearly twice the
+     * shipped debris, so the swim to a find averages 18 cells against a 14-cell pull
+     * home and air per passable cell falls to 0.34 - the thinnest of the fifteen,
+     * against 0.50 on dive 10. quickReach 5 strands the hurried sweep on the shelf. */
+    { id: "d13", labelKey: "ocnZ13", w: 24, h: 16, finds: 10, base: 30, slope: 1, debris: 60, spread: 5, air: 84,
+      pingRadius: 2, pingCost: 7, docCost: 12, liftCost: 4, silt: 0, bays: 1, ambig: 7, quickReach: 5, starQuality: [6, 3, 1] },
+    /* d14 spends the money on sight: pingRadius 1 - under any shipped value - reads
+     * a one-cell circle, and pingCost 12 doubles the dearest ping the ten charged
+     * while liftCost 6 makes every bag the dearest on the ladder. Sight, not the
+     * sand, is what the diver is short of: the efficiency policy overtakes the
+     * record policy as the measured best line on 301 of 360 digs. quickReach 8 is
+     * the loosest yet and the hurried sweep still only drags home one point. */
+    { id: "d14", labelKey: "ocnZ14", w: 21, h: 15, finds: 10, base: 44, slope: 2, debris: 40, spread: 5, air: 104,
+      pingRadius: 1, pingCost: 12, docCost: 15, liftCost: 6, silt: 1, bays: 1, ambig: 10, quickReach: 8, starQuality: [6, 3, 1] },
+    /* d15 inverts the price of the choice the whole game turns on: docCost 28 against
+     * liftCost 5 makes one record cost the air of five bags, so points per air favour
+     * the bag - and the measured bag line climbs back to 4 while the best line still
+     * files two records for 6. The haul is the thinnest on the ladder: exactly 2 of
+     * the site's 10 fragments come up on every one of the 360 replayed digs. */
+    { id: "d15", labelKey: "ocnZ15", w: 20, h: 14, finds: 10, base: 38, slope: 1, debris: 34, spread: 5, air: 100,
+      pingRadius: 3, pingCost: 6, docCost: 28, liftCost: 5, silt: 0, bays: 1, ambig: 8, quickReach: 5, starQuality: [6, 4, 1] },
   ];
 
   /* --- pure core ---------------------------------------------------------
@@ -1455,6 +1499,11 @@
       "ocnZ8": "The Silt Choke",
       "ocnZ9": "The Muted Drop",
       "ocnZ10": "The Abyss Gate",
+      "ocnZ11": "The Flat Read",
+      "ocnZ12": "Wide Bands",
+      "ocnZ13": "The Debris Maze",
+      "ocnZ14": "The Blackout",
+      "ocnZ15": "A Record's Price",
       "ocnAirLabel": "Air",
       "ocnDepthLabel": "Depth",
       "ocnAscentLabel": "Ascent",
@@ -1563,6 +1612,11 @@
       "ocnZ8": "淤塞峡",
       "ocnZ9": "哑声深沟",
       "ocnZ10": "深渊之门",
+      "ocnZ11": "同深难辨",
+      "ocnZ12": "宽带交叠",
+      "ocnZ13": "碎壳迷宫",
+      "ocnZ14": "黑水盲潜",
+      "ocnZ15": "记录天价",
       "ocnAirLabel": "气瓶",
       "ocnDepthLabel": "深度",
       "ocnAscentLabel": "返程",

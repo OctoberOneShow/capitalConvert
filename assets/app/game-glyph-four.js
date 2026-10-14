@@ -18,8 +18,13 @@
   var C4_EMPTY = 0;
   var C4_PLAYER = 1;
   var C4_AI = 2;
-  /* Ranks: depth of alpha-beta search plus noise. Star thresholds are
-   * your disc counts on the board when you win - sharper wins shine. */
+  /* Ranks are two levers deep, because that is all the engine reads: `depth`
+   * is the horizon of the alpha-beta search - how many moves off a fork the
+   * rival can see - and `noise` is its tempo, the share of turns it answers
+   * the board with its second or third best column instead of the best one.
+   * `depth` is sight, `noise` is restraint; nothing else here changes what an
+   * opponent can do. Star thresholds are your disc counts on the board when
+   * you win - sharper wins shine. */
   var c4Levels = [
     { id: "f1", labelKey: "c4L1", depth: 0, noise: 0.55, starMoves: [8, 10, 13] },
     { id: "f2", labelKey: "c4L2", depth: 1, noise: 0.3, starMoves: [8, 10, 13] },
@@ -29,6 +34,16 @@
     { id: "f6", labelKey: "c4L6", depth: 5, noise: 0, starMoves: [6, 8, 11] },
     { id: "f7", labelKey: "c4L7", depth: 6, noise: 0, starMoves: [6, 8, 10] },
     { id: "f8", labelKey: "c4L8", depth: 7, noise: 0, starMoves: [6, 8, 10] },
+    /* Sight past every shipped rank - a fork that resolves on ply eight is on
+     * the board for it before rank eight can even answer it - and it pays a
+     * quarter of its turns in tempo, developing a flank instead of dropping the
+     * move its own search rates best. That concession is the whole reason a
+     * rival this deep can still be beaten. */
+    { id: "f9", labelKey: "c4L9", depth: 8, noise: 0.25, starMoves: [6, 8, 10] },
+    /* One ply deeper again, and it keeps more of that tempo: it reads the trap
+     * row forming three moves off, sidesteps it, and gives up only one turn in
+     * five to build its own shape instead of answering yours. */
+    { id: "f10", labelKey: "c4L10", depth: 9, noise: 0.2, starMoves: [6, 8, 10] },
   ];
 
   /* Pure rules, exported for the static checks. */
@@ -274,6 +289,20 @@
   App.glyphFourWinLine = c4WinLine;
   App.glyphFourPick = c4Pick;
   App.glyphFourFull = c4Full;
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so the names it holds for rungs one to eight stay in
+   * the shared dictionary and only the two new rung names ride here. */
+  App.addStrings({
+    en: {
+      "c4L9": "Sibyl",
+      "c4L10": "Ascendant",
+    },
+    zh: {
+      "c4L9": "占卜者",
+      "c4L10": "飞升者",
+    },
+  });
 
   /* =========================================================== feel layer ===
    * Everything under this line is presentation.

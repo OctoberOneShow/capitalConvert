@@ -4,7 +4,7 @@ const { createEnvironment, check, run } = require("./lib");
 const names = ["i18n", "core", "game-campaign", "game-registry", "love-deepspace-combat", "love-deepspace-home", "love-deepspace-release", "love-deepspace-starpath", "love-deepspace-dates", "game-love-deepspace"];
 const source = names.map(name => fs.readFileSync(path.join(__dirname, "../../assets/app", name + ".js"), "utf8")).join("\n");
 function boot(options) {
-  const env = createEnvironment(options); env.load("window.CapitalConvert={petNotifyGame:function(){}};"); env.load(source);
+  const env = createEnvironment(options); env.load("window.CapitalConvert={petNotifyGame:function(){},addStrings:function(){}};"); env.load(source);
   env.window.CapitalConvert.initRegistryGames(); env.panel = env.byId("gamePanelLoveDeepspace"); env.panel.hidden = false;
   return env;
 }

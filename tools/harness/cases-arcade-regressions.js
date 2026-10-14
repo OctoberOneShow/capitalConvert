@@ -17,6 +17,8 @@ function arcade(name) {
     getElement: (id) => env.byId(id),
     logAction() {}, createConfetti() {}, petNotifyGame() {},
     storage: env.localStorage, isMotionOff: () => false, setStatus() {},
+    /* Games shipping their own copy pack must stay loadable here. */
+    addStrings: () => {}, registerGame: () => {},
   };
   const frames = new Map();
   let nextFrame = 1;
@@ -45,9 +47,23 @@ function arcade(name) {
     env.byId("gameModal").appendChild(dialog);
   }
   env.load(fs.readFileSync(path.join(root, "assets", "app", "game-campaign.js"), "utf8"));
-  const marker = /\r?\n  }\r?\n\r?\n\r?\n  \/\* Exported/;
-  if (!marker.test(source)) throw new Error("inspection marker missing: " + name);
-  env.load(source.replace(marker, "\n    App.arcadeInspect = function (code) { return eval(code); };\n  }\n\n\n  /* Exported"));
+  /* The hook has to land INSIDE the initializer, because these probes reach
+   * into its locals (update, die, level, frog...). Splicing on the shape that
+   * used to sit next to the export banner broke the moment a module's tail
+   * became a call - App.addStrings({...}); - so walk back to the last
+   * top-level closing brace and insert before it instead. */
+  const rows = source.split(/\r?\n/);
+  const banner = rows.findIndex((row) => /^ {2}\/\* Exported/.test(row));
+  let close = -1;
+  for (let index = banner - 1; index >= 0; index -= 1) {
+    if (rows[index] === "  }") {
+      close = index;
+      break;
+    }
+  }
+  if (close < 0) throw new Error("inspection marker missing: " + name);
+  rows.splice(close, 0, "    App.arcadeInspect = function (code) { return eval(code); };");
+  env.load(rows.join("\n"));
   const initializer = /App\.(init\w+) =/.exec(source)[1];
   App[initializer]();
   if (!App.arcadeInspect) throw new Error("fixture failed to initialize: " + name);

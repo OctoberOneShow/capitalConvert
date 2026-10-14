@@ -34,6 +34,10 @@ function fixture(slug, init, options = {}) {
     createConfetti() {},
     petNotifyGame: (best) => rewards.push(best),
     storage: env.localStorage,
+    /* Hand-wired modules now carry their own bilingual pack, and the copy gate
+     * asks for it, so the stub has to tolerate the call rather than throw. */
+    addStrings: () => {},
+    registerGame: () => {},
   });
   const frames = [];
   env.window.requestAnimationFrame = (handler) => {

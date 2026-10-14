@@ -40,22 +40,39 @@
     plate: { station: "pass", word: "kchPlateWord", held: 0, idle: 0, ok: [1, 1], perfect: [1, 1] },
   };
 
-  /* Four recipes, each a small ordered set of steps. */
+  /* Five recipes. The first four are one-pass dishes; `pot` is the one that
+   * makes the hands leave the pan and come back: its sear has to be carried to
+   * the rack, the cut finished in between, and the second window opened on the
+   * same pan afterwards. */
   var kchRecipes = {
     garden: { id: "garden", nameKey: "kchRGarden", price: 9, steps: [{ kind: "chop", count: 5 }] },
     fillet: { id: "fillet", nameKey: "kchRFillet", price: 12, steps: [{ kind: "sear" }] },
     duck: { id: "duck", nameKey: "kchRDuck", price: 17, steps: [{ kind: "chop", count: 4 }, { kind: "sear" }, { kind: "simmer" }] },
     sauce: { id: "sauce", nameKey: "kchRSauce", price: 15, steps: [{ kind: "sear" }, { kind: "simmer", idle: 0.1 }] },
+    pot: { id: "pot", nameKey: "kchRPot", price: 18, steps: [{ kind: "sear", held: 0.6, idle: 0.05 }, { kind: "chop", count: 3 }, { kind: "simmer", held: 0.4, idle: 0.09 }] },
   };
 
-  /* Ten services: window, seeded queue, walking cost, rack size and the jam
+  /* Fifteen services: window, seeded queue, walking cost, rack size and the jam
    * script. The starCovers band is filled in by kchBands from the scripted line,
    * and the chain runs in the order that line measures - 8, 10, 11, 11, 13, 14,
-   * 15, 16, 17, 18 covers - so svc3 sits ahead of svc2 because it covers less,
-   * not because of the number in its id. Every service keeps the same 120 second
-   * window and the same two-place rack, so the ticket count is also the
-   * tickets-per-second pressure, and the dials that tighten with it are the
-   * arrival gap, the deadline lead, the hold window and the jam script. */
+   * 15, 16, 17, 18 covers for the first ten, so svc3 sits ahead of svc2 because
+   * it covers less, not because of the number in its id. Every service keeps the
+   * same 120 second window, and the pressure is count against every: how many
+   * tickets open and how fast they open. The first ten move the arrival gap, the
+   * deadline lead and the jam script only. The last five each move a dial the
+   * first ten never touch, and the rack is no longer fixed at two places:
+   *   svc11 one place rack - the rescue valve holds a single dish;
+   *   svc12 the two-heat pot - a dish that needs the pan, then the board with
+   *     its sear still on the heat, then the pan again, and a rack slot in
+   *     between, so three places are needed to keep it moving;
+   *   svc13 a pass jam that takes over two seconds to work loose, long enough
+   *     that a plated dish reaches the end of its hold window behind it;
+   *   svc14 a six second hold window - parking anything is a loss, so plate and
+   *     serve have to happen back to back;
+   *   svc15 a walk that costs 0.45s of dead hands per station change, so the
+   *     hands have to be batched by station instead of ping-ponged.
+   * Bands for those five are replayed, not guessed; see the measured numbers
+   * below the array. */
   var kchLevels = [
     { id: "svc1", labelKey: "kchS1", window: 120, seed: 101, count: 8, every: 12, jitter: 2, lead: 32, recipes: ["garden", "fillet"], rack: 2, moveTime: 0.35, holdWin: 18, jams: [] },
     { id: "svc3", labelKey: "kchS3", window: 120, seed: 303, count: 10, every: 11, jitter: 1.5, lead: 34, recipes: ["sauce", "duck", "sauce"], rack: 2, moveTime: 0.35, holdWin: 15, jams: [] },
@@ -67,6 +84,11 @@
     { id: "svc8", labelKey: "kchS8", window: 120, seed: 808, count: 16, every: 6.4, jitter: 1.1, lead: 26, recipes: ["sauce", "duck", "sauce", "fillet"], rack: 2, moveTime: 0.3, holdWin: 13, jams: [{ at: 24, station: "pan", need: 1.4 }, { at: 56, station: "pass", need: 1.5 }] },
     { id: "svc9", labelKey: "kchS9", window: 120, seed: 909, count: 17, every: 6.4, jitter: 1, lead: 26, recipes: ["duck", "sauce", "fillet", "garden"], rack: 2, moveTime: 0.3, holdWin: 12, jams: [{ at: 24, station: "pan", need: 1.5 }, { at: 52, station: "board", need: 1.4 }, { at: 84, station: "pass", need: 1.6 }] },
     { id: "svc10", labelKey: "kchS10", window: 120, seed: 1010, count: 18, every: 6, jitter: 1, lead: 24, recipes: ["garden", "fillet", "duck", "sauce"], rack: 2, moveTime: 0.3, holdWin: 11, jams: [{ at: 26, station: "pan", need: 1.5 }, { at: 56, station: "board", need: 1.4 }, { at: 88, station: "pass", need: 1.6 }] },
+    { id: "svc11", labelKey: "kchS11", window: 120, seed: 1111, count: 23, every: 5, jitter: 1, lead: 26, recipes: ["garden", "fillet", "duck", "sauce"], rack: 1, moveTime: 0.3, holdWin: 13, jams: [{ at: 40, station: "pan", need: 1.5 }] },
+    { id: "svc12", labelKey: "kchS12", window: 120, seed: 1212, count: 24, every: 5, jitter: 1, lead: 34, recipes: ["pot", "garden", "fillet", "sauce"], rack: 3, moveTime: 0.3, holdWin: 14, jams: [] },
+    { id: "svc13", labelKey: "kchS13", window: 120, seed: 1313, count: 24, every: 5, jitter: 1, lead: 30, recipes: ["garden", "fillet", "duck", "sauce"], rack: 3, moveTime: 0.3, holdWin: 12, jams: [{ at: 44, station: "pass", need: 2.2 }] },
+    { id: "svc14", labelKey: "kchS14", window: 120, seed: 1414, count: 26, every: 4.6, jitter: 1, lead: 26, recipes: ["fillet", "garden", "duck", "garden"], rack: 2, moveTime: 0.3, holdWin: 6, jams: [{ at: 52, station: "pan", need: 1.6 }] },
+    { id: "svc15", labelKey: "kchS15", window: 120, seed: 1515, count: 25, every: 4.8, jitter: 1, lead: 28, recipes: ["garden", "garden", "fillet", "sauce"], rack: 2, moveTime: 0.45, holdWin: 16, jams: [] },
   ];
 
   var kchQuiet = null;
@@ -1196,10 +1218,16 @@
       "kchS8": "Sauce Chain",
       "kchS9": "Jammed Line",
       "kchS10": "Closing Rush",
+      "kchS11": "One-Slot Rack",
+      "kchS12": "Two Heat Pots",
+      "kchS13": "Pass Closed",
+      "kchS14": "Cold Fast",
+      "kchS15": "Long Walk",
       "kchRGarden": "garden salad",
       "kchRFillet": "seared fillet",
       "kchRDuck": "duck with orange",
       "kchRSauce": "sauce pot",
+      "kchRPot": "two-heat pot",
       "kchClockLabel": "Clock",
       "kchCoversLabel": "Covers",
       "kchPointsLabel": "Paid",
@@ -1288,10 +1316,16 @@
       "kchS8": "酱汁连环",
       "kchS9": "全线卡灶",
       "kchS10": "打烊冲刺",
+      "kchS11": "单格保温架",
+      "kchS12": "一煲两火",
+      "kchS13": "封死出菜口",
+      "kchS14": "凉得飞快",
+      "kchS15": "传菜长途",
       "kchRGarden": "田园沙拉",
       "kchRFillet": "香煎鱼排",
       "kchRDuck": "橙香鸭胸",
       "kchRSauce": "酱汁锅",
+      "kchRPot": "两火煲",
       "kchClockLabel": "时间",
       "kchCoversLabel": "出单",
       "kchPointsLabel": "收入",
@@ -1393,14 +1427,14 @@
         "Goal: cover as many tickets as you can before the two minute service closes, without losing three tickets.",
         "Action: 1/2/3 or Tab picks a station and Space or Enter works it - the board takes one press per cut, the pan is a hold you release inside the band, the pass plates and then serves.",
         "Twist: everything on the heat keeps cooking while your hands are somewhere else, so the sauce you left to save another dish is the one that crosses into burnt.",
-        "Rescue: a sear that is in its band but not yet dinner comes off the heat onto the rack - the rack holds two dishes and resting food still goes cold.",
+        "Rescue: a sear that is in its band but not yet dinner comes off the heat onto the rack - the rack is small, its capacity changes service to service, and resting food still goes cold.",
         "Scoring: paid tickets are covers, a step stopped inside its perfect band pays tips, and a burnt or walked ticket costs points plus one of your three chances.",
       ],
       zh: [
         "目标：在两分钟的服务结束前尽可能多出单，同时别连丢三张单。",
         "操作：1/2/3 或 Tab 选灶台，空格或回车操作它 - 砧板按一下切一刀，煎锅要按住并在合格区间松手，出菜口先装盘再上菜。",
         "关键：你走开的时候锅上照样在熟，为了救另一道菜而离开的那几秒，正好会把酱汁煎糊。",
-        "抢救：已经到位但整道菜还没做完的，要离火放上保温架 - 架子只放两份，放着不管一样会凉。",
+        "抢救：已经到位但整道菜还没做完的，要离火放上保温架 - 架子很小，每场服务能放几份都写在保温架那一行，放着不管一样会凉。",
         "计分：结账的单据数就是出单数，步骤停在完美区间里给小费，煎糊或超时要扣分并吃掉三次机会里的一次。",
       ],
     },
@@ -1421,3 +1455,4 @@
     if (kchQuiet) { kchQuiet(); }
   };
 })(window.CapitalConvert = window.CapitalConvert || {});
+

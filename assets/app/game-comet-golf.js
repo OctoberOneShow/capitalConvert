@@ -92,6 +92,33 @@
       ],
       starShots: [2, 3, 4],
     },
+    {
+      /* One well caps the mouth of the ring on the tee side, so the lazy
+       * straight shot burns on the guardian: the only way in is the slow arc
+       * that bends around its far shoulder. Remove it and the direct line
+       * opens right up, which is the whole point of the hole. */
+      id: "g9", labelKey: "cgfL9",
+      tee: { x: 36, y: 240 }, target: { x: 284, y: 120, r: 14 },
+      wells: [
+        { x: 240, y: 150, m: 1.1, r: 13 },
+        { x: 130, y: 150, m: 1.2, r: 12 },
+        { x: 60, y: 90, m: 0.8, r: 10 },
+      ],
+      starShots: [2, 4, 6],
+    },
+    {
+      /* The same warding, doubled and on the opposite diagonal: two guardians
+       * close two of the ring's approach sides, so a single door is left and
+       * the flight has to be curved in through it. */
+      id: "g10", labelKey: "cgfL10",
+      tee: { x: 36, y: 120 }, target: { x: 284, y: 240, r: 13 },
+      wells: [
+        { x: 244, y: 216, m: 1.1, r: 13 },
+        { x: 276, y: 200, m: 0.9, r: 11 },
+        { x: 150, y: 110, m: 1.2, r: 12 },
+      ],
+      starShots: [2, 4, 7],
+    },
   ];
   /* A fixed starfield so the sky does not flicker between frames. */
   var cgfStars = [];
@@ -544,6 +571,24 @@
 
     loadLevel(cgfLevels[campaign.indexOf(campaign.nextLevelId())]);
   }
+
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already hold, so the picker never prints a raw key. */
+  App.addStrings({
+    en: {
+      "cgfL7": "Reverse Cut",
+      "cgfL8": "Sky Ladder",
+      "cgfL9": "Guarded Ring",
+      "cgfL10": "Two Sentinels",
+    },
+    zh: {
+      "cgfL7": "逆向切",
+      "cgfL8": "登高梯",
+      "cgfL9": "守环口",
+      "cgfL10": "双岗哨",
+    },
+  });
 
 
   /* Exported for the other modules. */

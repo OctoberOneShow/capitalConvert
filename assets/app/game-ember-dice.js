@@ -20,15 +20,34 @@
     "\u2685",
   ];
   /* Each table is a house rule, not a bigger number: more burn faces,
-   * a banking tax, or two dice whose risk you share. */
+   * a banking tax, a bank that pays you instead, or two dice whose risk
+   * you share. Rows are DP-measured over (turns left, bank, stake) with
+   * optimal stopping: the three-star line is clearing inside seven of the
+   * ten turns, and every rung from the second upward is tuned to land that
+   * line between 15% and 50% while staying clearable inside ten. Rung 1 is
+   * deliberately outside that window: measured with a naive bank-when-ahead
+   * player it clears for 90% and three-stars for 62-76%, which is what the
+   * rung that teaches the bank is for. Two burn faces on two dice
+   * only ever pays at all once a bank also carries a bounty, because a burn
+   * lands on 5 of 9 rolls; so the bounties, not the targets, do the lifting.
+   * ruleKey travels with the rule: diceRule2b..7b ship here because i18n.js
+   * owns diceRule1..7 and addStrings never overrides a shared key. */
   var diceTables = [
     { id: "t1", labelKey: "diceTable1", ruleKey: "diceRule1", target: 40, burn: [1], tax: 0, pairs: false },
-    { id: "t2", labelKey: "diceTable2", ruleKey: "diceRule2", target: 55, burn: [1, 6], tax: 0, pairs: false },
+    { id: "t2", labelKey: "diceTable2", ruleKey: "diceRule2b", target: 65, burn: [1, 6], tax: -8, pairs: false },
     { id: "t3", labelKey: "diceTable3", ruleKey: "diceRule3", target: 70, burn: [1], tax: 5, pairs: false },
     { id: "t4", labelKey: "diceTable4", ruleKey: "diceRule4", target: 90, burn: [1], tax: 0, pairs: true },
-    { id: "t5", labelKey: "diceTable5", ruleKey: "diceRule5", target: 120, burn: [1, 6], tax: 5, pairs: true },
-    { id: "t6", labelKey: "diceTable6", ruleKey: "diceRule6", target: 140, burn: [1], tax: 5, pairs: true },
-    { id: "t7", labelKey: "diceTable7", ruleKey: "diceRule7", target: 160, burn: [1, 6], tax: 5, pairs: true },
+    { id: "t5", labelKey: "diceTable5", ruleKey: "diceRule5b", target: 100, burn: [1, 6], tax: -20, pairs: true },
+    { id: "t6", labelKey: "diceTable6", ruleKey: "diceRule6b", target: 108, burn: [1], tax: -8, pairs: true },
+    { id: "t7", labelKey: "diceTable7", ruleKey: "diceRule7b", target: 120, burn: [1, 6], tax: -30, pairs: true },
+    /* A negative tax is the same bank maths paying you instead of the house:
+     * the bounty only lands on a bank, so it is unbankable points. Raising the
+     * bounty is also the only way this engine can lift a target and keep the
+     * three-star line (clear with three turns spare) reachable: a bigger
+     * bounty needs fewer banks, so fewer rolls have to survive. */
+    { id: "t8", labelKey: "diceTable8", ruleKey: "diceRule8", target: 125, burn: [1], tax: -12, pairs: false },
+    { id: "t9", labelKey: "diceTable9", ruleKey: "diceRule9", target: 130, burn: [1, 2], tax: -20, pairs: false },
+    { id: "t10", labelKey: "diceTable10", ruleKey: "diceRule10", target: 170, burn: [1], tax: -24, pairs: true },
   ];
 
   function initEmberDiceGame() {
@@ -113,7 +132,7 @@
       if (outcome.unlockedNext) {
         message += " " + t("diceNextTable");
       } else if (campaign.clearedCount() === diceTables.length) {
-        message += " " + t("diceCampaignDone");
+        message += " " + t("diceAllTables", { n: diceTables.length });
       }
       resultEl.textContent = message;
       logAction(t("logDice", { n: bank }));
@@ -148,15 +167,19 @@
         return;
       }
       var faces = table.pairs ? [rollFace(), rollFace()] : [rollFace()];
-      var burned = faces.some(function (face) {
-        return table.burn.indexOf(face) !== -1;
+      var burnedBy;
+      faces.forEach(function (face) {
+        if (burnedBy === undefined && table.burn.indexOf(face) !== -1) {
+          burnedBy = face;
+        }
       });
       faceEl.textContent = diceFaces[faces[0]];
-      pad.classList.toggle("is-ember", burned);
+      pad.classList.toggle("is-ember", burnedBy !== undefined);
 
-      if (burned) {
+      if (burnedBy !== undefined) {
         stake = 0;
-        resultEl.textContent = t("diceBurn");
+        resultEl.textContent =
+          burnedBy === 1 ? t("diceBurn") : t("diceBurns", { f: burnedBy });
         renderHud();
         nextTurn();
         return;
@@ -226,6 +249,46 @@
     loadTable(diceTables[campaign.indexOf(campaign.nextLevelId())]);
   }
 
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so a rung that is re-tuned ships its own b-suffixed
+   * rule line here instead of leaving the shared one describing a hazard it no
+   * longer has. Rungs 3, 4 and 8-10 still read the shared/matched wording.
+   * diceAllTables replaces the stale hard-coded "five tables" line with one
+   * that reads the ladder length. */
+  App.addStrings({
+    en: {
+      /* The four retuned rungs, in ladder order: each line states the faces
+       * that burn, the dice it rolls and what a bank costs or pays, because
+       * the ladder's shares are only honest if the rule text matches fields. */
+      "diceRule2b": "Twin Embers: 1 AND 6 burn the stake, and every bank pays you an extra 8. Target {t}.",
+      "diceRule5b": "Gambler's Table: two dice add together, a 1 or a 6 on either die burns the stake, and every bank pays you an extra 20. Target {t}.",
+      "diceRule6b": "High Stakes: two dice add together, any 1 burns the stake, and every bank pays you an extra 8. Target {t}.",
+      "diceRule7b": "The Abyss: two dice add together, a 1 or a 6 on either die burns the stake, and every bank pays you an extra 30. Target {t}.",
+      "diceTable8": "The Bounty Board",
+      "diceTable9": "Cold Deuce",
+      "diceTable10": "Ashfall Twins",
+      "diceRule8": "The Bounty Board: a bank pays 12 bounty embers, but only a bank collects. Target {t}.",
+      "diceRule9": "Cold Deuce: 2 burns right alongside 1, and the bounty climbs to 20. Target {t}.",
+      "diceRule10": "Ashfall Twins: two dice, any 1 burns them both, and each bank pays a 24 bounty. Target {t}.",
+      "diceBurns": "A {f}! The stake burns to ash.",
+      "diceAllTables": " All {n} tables are yours!",
+    },
+    zh: {
+      "diceRule2b": "双火桌：1 和 6 都会烧光赌注，每次「收下」额外给 8。目标 {t}。",
+      "diceRule5b": "赌徒桌：两颗骰子相加，任何一颗掷出 1 或 6 就烧光赌注，每次「收下」额外给 20。目标 {t}。",
+      "diceRule6b": "豪赌局：两颗骰子相加，任何 1 点都会烧光赌注，每次「收下」额外给 8。目标 {t}。",
+      "diceRule7b": "深渊局：两颗骰子相加，任何一颗掷出 1 或 6 就烧光赌注，每次「收下」额外给 30。目标 {t}。",
+      "diceTable8": "赏金桌",
+      "diceTable9": "冷二桌",
+      "diceTable10": "灰烬双骰",
+      "diceRule8": "赏金桌：「收下」额外给 12 簇赏金，只有收下才拿得到。目标 {t}。",
+      "diceRule9": "冷二桌：2 点和 1 点一样烧注，赏金涨到 20。目标 {t}。",
+      "diceRule10": "灰烬双骰：两颗骰子，任何 1 点全烧，每次收下赏 24。目标 {t}。",
+      "diceBurns": "掷出 {f}！赌注化为灰烬。",
+      "diceAllTables": " {n} 张牌桌都是你的了！",
+    },
+  });
 
   /* Exported for the other modules. */
   App.initEmberDiceGame = initEmberDiceGame;

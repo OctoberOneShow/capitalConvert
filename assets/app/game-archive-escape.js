@@ -26,20 +26,24 @@
   /* One motif per room, ending, item and clue tile, so the satchel reads as
    * objects rather than sentences. Keys are story data names - the maps only
    * choose pictures, never behaviour. */
-  var arcRoomArt = { front: "lantern", plant: "gear", stacks: "book", ledger: "chest", roof: "moon" };
+  var arcRoomArt = { front: "lantern", plant: "gear", stacks: "book", ledger: "chest", roof: "moon", yard: "valve" };
   var arcSceneArt = {
     front: { icon: "lantern", minis: ["envelope", "key"], pattern: "felt" },
     plant: { icon: "gear", minis: ["bolt", "valve"], pattern: "planks" },
     stacks: { icon: "book", minis: ["scroll", "quill"], pattern: "weave" },
     ledger: { icon: "chest", minis: ["book", "coin"], pattern: "marble" },
     roof: { icon: "moon", minis: ["rain", "cloud"], pattern: "stars" },
+    yard: { icon: "valve", minis: ["chain", "coin"], pattern: "marble" },
   };
-  var arcEndingArt = { ledger: "book", roof: "moon", secret: "crystal" };
+  var arcEndingArt = { ledger: "book", roof: "moon", secret: "crystal", yard: "chain" };
   var arcItemArt = { key: "key", card: "card", lamp: "lantern", rope: "chain", chit: "stamp", tea: "flask", ledger: "book" };
   var arcClueArt = { c1: "card", c2: "map", c3: "scroll", c4: "magnifier", c5: "wave" };
 
-  /* Same map, five escalating nights; the star bands are measured off the
-   * solved minimum turn count for each goal, not authored here. */
+  /* Same map, ten escalating nights. The first eight are graded purely off the
+   * solved minimum turn count for each goal; the two chute nights are graded off
+   * their stored solution line, whose hop count is band0, so replaying the line
+   * as written earns exactly three stars. `solution` is the node path, joined on
+   * ">"; arcWalk replays it through arcApply and counts the hops. */
   var arcLevels = [
     { id: "a1", labelKey: "arcZ1", goal: "any" },
     { id: "a2", labelKey: "arcZ2", goal: "ledger" },
@@ -49,6 +53,20 @@
     { id: "a6", labelKey: "arcZ6", goal: "tea" },
     { id: "a7", labelKey: "arcZ7", goal: "roofFull" },
     { id: "a8", labelKey: "arcZ8", goal: "ledgerFull" },
+    {
+      id: "a9",
+      labelKey: "arcZ9",
+      goal: "yard",
+      solution: "lobby>desk>stair>landing>aisles>toolbox>aisles>landing>stair>breaker>shelf>sump>shelf>stokers>chutetop>yardGate>endYard",
+      starTurns: [16, 20, 26],
+    },
+    {
+      id: "a10",
+      labelKey: "arcZ10",
+      goal: "yardLedger",
+      solution: "lobby>desk>drawer>stair>landing>aisles>plaques>aisles>toolbox>aisles>landing>ledgerDoor>turnstile>ledgerRoom>strongbox>ledgerOpen>landing>stair>breaker>shelf>sump>shelf>stokers>chutetop>yardGate>endYard",
+      starTurns: [25, 29, 35],
+    },
   ];
 
   /* A choice may ask for an item, a flag or one named clue; a room hands back
@@ -131,6 +149,7 @@
       zh: "饼干盒里装保险丝，架子上一盏手提灯还带着线，旁边一块板夹着最后一份冷却液记录。灯是好的——这比饼干盒强。",
       choices: [
         { to: "sump", need: { item: "lamp" }, en: "Take the lamp down to the sump", zh: "带灯下到集水坑" },
+        { to: "stokers", need: { item: "lamp" }, en: "Follow the pipe run behind the boiler", zh: "沿管道绕到锅炉后面" },
         { to: "breaker", en: "Back to the panel", zh: "回配电屏" },
         { to: "stair", en: "Up the stair to the lobby", zh: "经楼梯上大厅" },
       ],
@@ -152,6 +171,34 @@
       choices: [
         { to: "catwalk", need: { item: "rope" }, en: "Rig the cable and go up", zh: "挂上缆绳爬上去" },
         { to: "sump", need: { item: "lamp" }, en: "Down to the sump again", zh: "再下到集水坑" },
+      ],
+    },
+    {
+      id: "stokers", room: "plant", set: "flue",
+      en: "Behind the boiler the stokers' passage runs low and black, and you go along it with your shoulder in the soot. The flue cover has been left standing open on its hook, and the draft coming up out of it is warm and smells of coal dust. The chute is clear, and it goes down.",
+      zh: "锅炉后面是一条又矮又黑的司炉通道，你得侧着肩在烟灰里走。烟道盖被人挂在钩子上敞着，从下面上来的风是暖的，带着煤灰味。滑道是通的，而且一直通到下面。",
+      choices: [
+        { to: "chutetop", need: { item: "rope" }, en: "Rig the cable to the chute's pull ring", zh: "把缆绳系上滑道的拉环" },
+        { to: "shelf", en: "Back along the pipes to the shelf", zh: "顺管道回架子" },
+        { to: "breaker", en: "Back out to the panel", zh: "绕回配电屏" },
+      ],
+    },
+    {
+      id: "chutetop", room: "plant",
+      en: "The mouth of the coal chute is a square of cold galvanised light. A pull ring is bolted to the sill, a canvas tarp lies under it that nobody has ever folded away, and the whole shoot goes down at about forty degrees into dark. Dropping in is easy. Getting out again is the climb.",
+      zh: "输煤滑道的口是一块四方的冷镀锌铁皮光。边沿上钉着一只拉环，底下摊着一张从没人叠起来的帆布垫；整条滑道以大约四十度的坡度向下通进黑暗。跳下去容易，再上来就是爬了。",
+      choices: [
+        { to: "yardGate", en: "Sit on the sill and go down", zh: "坐上边沿，滑下去" },
+        { to: "stokers", en: "Back up into the passage", zh: "退回通道" },
+      ],
+    },
+    {
+      id: "yardGate", room: "yard",
+      en: "The chute empties you into the coal yard: hard standing, one weighbridge, one gate. The gate is the first thing in this whole building wearing a proper sign, and it works - it reads a chit, counts you as one, and only then remembers that it is also a door.",
+      zh: "滑道把你倒进堆煤场：硬地面，一台地磅，一道门。这道门是整栋楼里第一块挂了正经牌子的东西，而且它好用——它先读通行证，把你算作一个人，然后才想起自己也是一扇门。",
+      choices: [
+        { to: "endYard", need: { item: "chit" }, en: "Give the gate its chit", zh: "把通行证交给门" },
+        { to: "chutetop", en: "Climb back up the chute", zh: "顺着滑道爬回去" },
       ],
     },
     {
@@ -305,6 +352,15 @@
         { to: "lobby", en: "Begin again and check your work", zh: "从头再来，检查一下自己" },
       ],
     },
+    {
+      id: "endYard", room: "yard", ending: "yard",
+      en: "The gate takes the chit, counts you once and lets you into the delivery yard, then closes behind you like a drawer going home. Nobody stops you, because nobody is supposed to be here at all. The coal you landed in keeps the shape of you for about as long as it takes to rain flat.",
+      zh: "门收下通行证，数了你一次，把你放进卸货场，然后在身后合上——像一只抽屉被推回原位。没人拦你，因为这种时候本不该有人在这儿。你砸出来的那个煤坑，能保持你的形状，直到被雨浇平为止。",
+      choices: [
+        { to: "lobby", en: "Start the night over, properly", zh: "把这一夜重新走一遍" },
+        { to: "yardGate", en: "Back in through the gate", zh: "从门里再进去" },
+      ],
+    },
   ];
 
   /* --- pure core ---------------------------------------------------------- */
@@ -445,6 +501,15 @@
     if (goal === "ledgerFull") {
       return ending === "ledger" && arcCount(state.clues) >= arcClueTotal;
     }
+    /* The chute nights leave by the coal yard, which no earlier night walks:
+     * the gate there spends a night chit, and the long one spends it still
+     * carrying the spring ledger. */
+    if (goal === "yard") {
+      return ending === "yard";
+    }
+    if (goal === "yardLedger") {
+      return ending === "yard" && !!state.items.ledger;
+    }
     return ending === goal;
   }
 
@@ -478,6 +543,9 @@
         endings[node.ending] = state.turns;
       }
       for (var c = 0; c < node.choices.length; c += 1) {
+        if (!arcCan(state, node.choices[c])) {
+          continue;
+        }
         var next = arcApply(state, node.choices[c]);
         var key = arcStateKey(next);
         guard += 1;
@@ -489,7 +557,7 @@
         queue.push(next);
       }
     }
-    var goals = ["any", "ledger", "roof", "clues", "secret", "tea", "roofFull", "ledgerFull"];
+    var goals = ["any", "ledger", "roof", "clues", "secret", "tea", "roofFull", "ledgerFull", "yard", "yardLedger"];
     var turns = {};
     var i;
     for (i = 0; i < goals.length; i += 1) {
@@ -572,6 +640,7 @@
         unsatisfied.length === 0 &&
         !!endings.ledger &&
         !!endings.roof &&
+        !!endings.yard &&
         countReached(reached) === arcNodes.length,
       states: queue.length,
       reached: countReached(reached),
@@ -589,14 +658,55 @@
     return arcKeys(reached).split(",").filter(Boolean).length;
   }
 
-  /* Bands come out of the solved minimum turns, never out of a guess. */
-  function arcBands(goal) {
+  /* Bands come out of measurement, never out of a guess: either a rung ships
+   * the line it was measured with, or it takes the solved minimum for its goal. */
+  function arcBands(level) {
+    if (level && level.starTurns && level.starTurns.length === 3) {
+      return level.starTurns.slice();
+    }
     var proof = arcSolve();
-    var min = proof.turns[goal];
+    var min = proof.turns[level ? level.goal : ""];
     if (!(min > 0)) {
       min = 24;
     }
     return [min + 3, min + 7, min + 13];
+  }
+
+  /* Replay a stored solution line - the node path a rung shipped with, joined
+   * on ">" - against the same pure rules the player walks. It answers three
+   * questions at once: is every hop legal, where does it land, and how many
+   * turns does the line measure. Bands for those rungs are pinned to that. */
+  function arcWalk(line, goal) {
+    var hops = String(line || "").split(">").filter(Boolean);
+    var state = arcStart();
+    var i;
+    if (!hops.length || hops[0] !== state.node) {
+      return { ok: false, turns: 0, node: state.node, why: "start", miss: 0 };
+    }
+    for (i = 1; i < hops.length; i += 1) {
+      var node = arcNode(state.node);
+      var wanted = null;
+      for (var c = 0; node && c < node.choices.length; c += 1) {
+        if (node.choices[c].to === hops[i] && !wanted) {
+          wanted = node.choices[c];
+        }
+      }
+      if (!wanted) {
+        return { ok: false, turns: i - 1, node: state.node, why: "passage", miss: i };
+      }
+      if (!arcCan(state, wanted)) {
+        return { ok: false, turns: i - 1, node: state.node, why: "locked", miss: i };
+      }
+      state = arcApply(state, wanted);
+    }
+    var landed = arcNode(state.node);
+    return {
+      ok: !!landed && (!goal || arcGoalMet(goal, state)),
+      turns: state.turns,
+      node: state.node,
+      why: landed && landed.ending ? landed.ending : "open",
+      miss: 0,
+    };
   }
 
   App.archiveGraph = arcGraph;
@@ -605,6 +715,8 @@
   App.archiveCan = arcCan;
   App.archiveStart = arcStart;
   App.archiveNode = arcNode;
+  App.archiveWalk = arcWalk;
+  App.archiveBands = arcBands;
   App.archiveLevels = arcLevels;
 
   function initArchiveEscapeGame(panelEl) {
@@ -618,7 +730,7 @@
     var proof = arcSolve();
     var state = arcStart();
     var trail = [];
-    var bands = arcBands(level.goal);
+    var bands = arcBands(level);
     var over = false;
 
     var art = App.art;
@@ -884,7 +996,7 @@
 
     function renderLedger(visited) {
       var roomChips = [];
-      var order = ["front", "plant", "stacks", "ledger", "roof"];
+      var order = ["front", "plant", "stacks", "ledger", "roof", "yard"];
       for (var i = 0; i < order.length; i += 1) {
         if (visited[order[i]]) {
           roomChips.push({ icon: arcRoomArt[order[i]], label: roomLabel(order[i]) });
@@ -1196,7 +1308,7 @@
 
     function startNight(def) {
       level = def;
-      bands = arcBands(level.goal);
+      bands = arcBands(level);
       state = arcStart();
       trail = [];
       over = false;
@@ -1277,6 +1389,8 @@
       "arcZ6": "The Thermos Night",
       "arcZ7": "The Collector's Night",
       "arcZ8": "The Full Ledger Night",
+      "arcZ9": "The Chute Night",
+      "arcZ10": "The Carrier's Night",
       "arcTurnLabel": "Turns",
       "arcClueLabel": "Clues",
       "arcRoomLabel": "Room",
@@ -1303,7 +1417,7 @@
       "arcEndingOff": "You reached {g} in {n} turns, but tonight asked for {want}. Walk it again.",
       "arcFiled": "{g}, filed in {n} turns - {s} stars.",
       "arcNextNight": "Next night unlocked.",
-      "arcAllNights": "Eight nights, eight ways out of it.",
+      "arcAllNights": "Ten nights, ten ways out of it.",
       "arcPaused": "Paused at turn {n}. The archive keeps your place.",
       "arcGraphBroken": "The story map failed its own solvability proof. Report it.",
       "arcObjective": "{name}: {want}. The route is known to take {p} turns, so shorter is better.",
@@ -1314,6 +1428,7 @@
       "arcRoomStacks": "Stacks",
       "arcRoomLedger": "Ledger",
       "arcRoomRoof": "Roof",
+      "arcRoomYard": "Yard",
       "arcItKey": "\u26ff brass key",
       "arcItCard": "\u25ae keycard",
       "arcItLamp": "\u2609 hand lamp",
@@ -1322,6 +1437,7 @@
       "arcItTea": "\u2668 thermos",
       "arcItLedger": "\u2263 spring ledger",
       "arcFlagPower": "backup power",
+      "arcFlagFlue": "the open flue",
       "arcClue1": "\u2500 tram ticket",
       "arcClue2": "\u2502 true aisle",
       "arcClue3": "\u250c coolant log",
@@ -1335,9 +1451,12 @@
       "arcGoalTea": "escape still holding the thermos",
       "arcGoalRoofFull": "reach the roof ending holding all five clues",
       "arcGoalLedgerFull": "reach the ledger ending holding all five clues",
+      "arcGoalYard": "get out through the coal yard, which needs the cable, the open flue and the gate's chit",
+      "arcGoalYardLedger": "get out through the coal yard still carrying the spring ledger",
       "arcEndLedger": "Ledger ending",
       "arcEndRoof": "Roof ending",
       "arcEndSecret": "Secret ending",
+      "arcEndYard": "Yard ending",
     },
     zh: {
       "tabArchiveEscape": "档案楼脱身",
@@ -1349,6 +1468,8 @@
       "arcZ6": "保温壶之夜",
       "arcZ7": "收藏家之夜",
       "arcZ8": "满账之夜",
+      "arcZ9": "滑道之夜",
+      "arcZ10": "扛账之夜",
       "arcTurnLabel": "步数",
       "arcClueLabel": "线索",
       "arcRoomLabel": "房间",
@@ -1375,7 +1496,7 @@
       "arcEndingOff": "你用了 {n} 步走到{g}，可今夜要的是{want}。再走一遍。",
       "arcFiled": "{g}，用了 {n} 步 - 获得 {s} 星。",
       "arcNextNight": "解锁下一夜。",
-      "arcAllNights": "八个夜晚，八种出来的法子。",
+      "arcAllNights": "十个夜晚，十种出来的法子。",
       "arcPaused": "停在第 {n} 步。档案楼替你看住位置。",
       "arcGraphBroken": "故事图没通过它自己的可解性校验，请报告。",
       "arcObjective": "{name}：{want}。已测出这条路最短要 {p} 步，越少越好。",
@@ -1386,6 +1507,7 @@
       "arcRoomStacks": "书架区",
       "arcRoomLedger": "台账室",
       "arcRoomRoof": "屋顶",
+      "arcRoomYard": "煤场",
       "arcItKey": "\u26ff 铜钥匙",
       "arcItCard": "\u25ae 门禁卡",
       "arcItLamp": "\u2609 手提灯",
@@ -1394,6 +1516,7 @@
       "arcItTea": "\u2668 保温壶",
       "arcItLedger": "\u2263 春季台账",
       "arcFlagPower": "备用电源",
+      "arcFlagFlue": "敞开的烟道",
       "arcClue1": "\u2500 电车月票",
       "arcClue2": "\u2502 真正的巷道",
       "arcClue3": "\u250c 冷却液记录",
@@ -1407,9 +1530,12 @@
       "arcGoalTea": "带着保温壶逃出去",
       "arcGoalRoofFull": "带着五条线索走到屋顶结局",
       "arcGoalLedgerFull": "带着五条线索走到台账结局",
+      "arcGoalYard": "从堆煤场走出去——要吊缆、敞开的烟道，还有交给门的那张通行证",
+      "arcGoalYardLedger": "抱着春季台账从堆煤场走出去",
       "arcEndLedger": "台账结局",
       "arcEndRoof": "屋顶结局",
       "arcEndSecret": "隐藏结局",
+      "arcEndYard": "煤场结局",
     },
   });
 
@@ -1428,20 +1554,20 @@
         '<text x="93" y="40" font-size="10" fill="#ffd166" text-anchor="middle">5?</text>' +
         '<text x="30" y="68" font-size="8" fill="#b9c1cc">1 desk  2 stair  3 lift</text></svg>',
       en: [
-        "Goal: get out of the closed archive - the eight nights each ask for a different way out.",
+        "Goal: get out of the closed archive - the ten nights each ask for a different way out.",
         "Action: click a choice or press its number 1-4; Backspace retraces one passage and L reads your clue log aloud.",
         "Rule: a greyed choice is not a dead end, it names the item, flag or clue it still wants; the mapped rooms, satchel and clues stay on screen so you never have to remember.",
         "Turns: a shorter route scores better, so a run that walks the whole map will finish - it just will not shine.",
-        "Endings: a ledger ending, a roof ending, and one secret ending that only the five clue tiles together will open.",
-        "Before the night is dealt the story graph is checked by machine: every passage reachable, both standard endings reachable, no passage without a way onward.",
+        "Endings: a ledger ending, a roof ending, a coal-yard ending reached by rigging the hoist cable to the chute behind the boiler, and one secret ending that only the five clue tiles together will open.",
+        "Before the night is dealt the story graph is checked by machine: every passage reachable, all three standard endings reachable, no passage without a way onward.",
       ],
       zh: [
-        "目标：从夜里关门的档案楼里出去——八个夜晚，各要你走一种不同的出去法。",
+        "目标：从夜里关门的档案楼里出去——十个夜晚，各要你走一种不同的出去法。",
         "操作：点选项，或按它前面的数字 1-4；退格键退回一段，L 键把线索日志念出来。",
         "规则：灰掉的选项不是死路，它会写明还缺哪件东西、哪个状态或哪条线索；已探明的房间、口袋和线索一直摆在屏上，不用你记。",
         "步数：路线越短分越高，所以把整栋楼走完也能通关——只是不会太亮眼。",
-        "结局：一个台账结局、一个屋顶结局，还有一个必须五块线索牌凑齐才会开的隐藏结局。",
-        "开局前，机器会先校验这张故事图：每段都可达、两个常规结局都可达、没有任何一段进去就出不来。",
+        "结局：一个台账结局、一个屋顶结局、一个把吊缆系上锅炉后滑道才能走到的煤场结局，还有一个必须五块线索牌凑齐才会开的隐藏结局。",
+        "开局前，机器会先校验这张故事图：每段都可达、三个常规结局都可达、没有任何一段进去就出不来。",
       ],
     },
   });

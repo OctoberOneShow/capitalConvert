@@ -108,6 +108,35 @@
         ".##..##.",
       ],
     },
+    {
+      id: "e9", labelKey: "skL9", starTimes: [105, 160, 250],
+      art: [
+        "#########",
+        "#########",
+        "##.....##",
+        "##.....##",
+        "##..#..##",
+        "##.....##",
+        "##.....##",
+        "#########",
+        "#########",
+      ],
+    },
+    {
+      id: "e10", labelKey: "skL10", starTimes: [120, 180, 290],
+      art: [
+        "##########",
+        "#...##...#",
+        "#...##...#",
+        "#..####..#",
+        "####..####",
+        "####..####",
+        "#..####..#",
+        "#...##...#",
+        "#...##...#",
+        "##########",
+      ],
+    },
   ];
 
   function initGlyphSketchGame() {
@@ -441,6 +470,21 @@
 
     loadLevel(sketchLevels[campaign.indexOf(campaign.nextLevelId())]);
   }
+
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so the eight original rung names stay in the shared
+   * dictionary and only the two new ones ride here. */
+  App.addStrings({
+    en: {
+      "skL9": "Target",
+      "skL10": "Rose Window",
+    },
+    zh: {
+      "skL9": "同心靶",
+      "skL10": "玫瑰窗",
+    },
+  });
 
 
   /* Exported for the other modules. */

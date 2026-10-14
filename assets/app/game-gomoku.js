@@ -16,8 +16,18 @@
   var gmEmpty = 0;
   var gmHuman = 1;
   var gmAi = 2;
-  /* Three ranks, three campaigns: the novice blinks, the reader
-   * defends, the fortune does both and counts your tempo. */
+  /* Ten ranks, ten habits. Ranks 1-6 differ only in how much they weight the
+   * one-ply read they already have (noise = how often they blink, defense = how
+   * much they fear your shape). Ranks 7-10 each learn something the six below
+   * cannot see at all:
+   *   r7 The Gap Reader  - holes: a line with a hole in it is a shape, not a gap;
+   *   r8 The Twin Fork    - fork: it plays for the pile of four-makers a stone
+   *                        leaves standing, not for the single longest line;
+   *   r9 The Early Block  - sente: it takes the point your fork needs, one turn
+   *                        before that fork exists, with nothing to block yet;
+   *   r10 The Patient Hand- tempo + four plies: it declines the forcing four whose
+   *                        line dies under the answer, keeps only the fork still
+   *                        alive three answers later, and chases no loose makers. */
   var gmRanks = [
     { id: "r1", labelKey: "gomokuRank1", noise: 260, defense: 0.55, starMoves: [14, 20, 30] },
     { id: "r2", labelKey: "gomokuRank2", noise: 60, defense: 0.95, starMoves: [18, 26, 38] },
@@ -25,6 +35,10 @@
     { id: "r4", labelKey: "gomokuRank4", noise: 0, defense: 1.7, starMoves: [26, 38, 54] },
     { id: "r5", labelKey: "gomokuRank5", noise: 0, defense: 2.6, starMoves: [30, 44, 62] },
     { id: "r6", labelKey: "gomokuRank6", noise: 0, defense: 4, starMoves: [34, 50, 70] },
+    { id: "r7", labelKey: "gomokuRank7", noise: 0, defense: 4, holes: 1, starMoves: [38, 56, 78] },
+    { id: "r8", labelKey: "gomokuRank8", noise: 0, defense: 4, holes: 1, fork: 1, starMoves: [42, 62, 86] },
+    { id: "r9", labelKey: "gomokuRank9", noise: 0, defense: 4, holes: 1, fork: 1, sente: 1, depth: 2, starMoves: [46, 68, 94] },
+    { id: "r10", labelKey: "gomokuRank10", noise: 0, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 1, depth: 4, starMoves: [50, 74, 102] },
   ];
   var gmDirs = [[1, 0], [0, 1], [1, 1], [1, -1]];
 
@@ -62,62 +76,94 @@
   }
 
   /* One pass over the four axes through (x, y), pretending `who`
-   * plays there: run length plus how many ends of it stay open. */
-  function gmAxisScore(board, x, y, dx, dy, who) {
+   * plays there: run length plus how many ends of it stay open.
+   * With `holes`, the run may also be stitched across ONE empty gap on each
+   * side - the broken shapes (XX_XX, XXX_X) that read as nothing to the six
+   * bottom ranks. A stitched run is never five, only a four waiting on its
+   * gap, so it is capped below the win constant and gmHasWon cannot be fooled
+   * by it. */
+  function gmAxisScore(board, x, y, dx, dy, who, holes) {
     var run = 1;
     var openEnds = 0;
+    var stitched = false;
+    var side;
     var step;
+    var sx;
+    var sy;
     var nx;
     var ny;
-    for (step = 1; step < 6; step += 1) {
-      nx = x + dx * step;
-      ny = y + dy * step;
-      if (!gmInBounds(nx, ny)) {
-        break;
-      }
-      if (board[nx + ny * gmSize] === who) {
-        run += 1;
-      } else {
-        if (board[nx + ny * gmSize] === gmEmpty) {
+    var jumped;
+    var value;
+    var ahead;
+    for (side = 0; side < 2; side += 1) {
+      sx = side === 0 ? dx : -dx;
+      sy = side === 0 ? dy : -dy;
+      jumped = false;
+      for (step = 1; step < 6; step += 1) {
+        nx = x + sx * step;
+        ny = y + sy * step;
+        if (!gmInBounds(nx, ny)) {
+          break;
+        }
+        value = board[nx + ny * gmSize];
+        if (value === who) {
+          run += 1;
+          if (jumped) {
+            stitched = true;
+          }
+          continue;
+        }
+        if (value === gmEmpty && holes && !jumped) {
+          ahead = gmInBounds(nx + sx, ny + sy)
+            ? board[nx + sx + (ny + sy) * gmSize]
+            : gmEmpty;
+          if (ahead === who) {
+            /* the line continues past one hole: hold the walk, spend the gap */
+            jumped = true;
+            continue;
+          }
+        }
+        if (value === gmEmpty) {
           openEnds += 1;
         }
         break;
       }
     }
-    for (step = 1; step < 6; step += 1) {
-      nx = x - dx * step;
-      ny = y - dy * step;
-      if (!gmInBounds(nx, ny)) {
-        break;
-      }
-      if (board[nx + ny * gmSize] === who) {
-        run += 1;
-      } else {
-        if (board[nx + ny * gmSize] === gmEmpty) {
-          openEnds += 1;
-        }
-        break;
-      }
-    }
+    return gmShapeValue(run, openEnds, stitched);
+  }
+
+  /* The valuation table, shared by the plain and the stitched walk: five beats
+   * open four beats blocked four beats open three, and a stitched line is worth
+   * the four it becomes the moment its gap is filled. */
+  function gmShapeValue(run, openEnds, stitched) {
     if (run >= 5) {
-      return 10000000;
+      return stitched ? 100000 : 10000000;
     }
     if (run === 4) {
+      if (stitched) {
+        return 100000;
+      }
       return openEnds === 2 ? 1000000 : openEnds === 1 ? 100000 : 0;
     }
     if (run === 3) {
+      if (stitched) {
+        return openEnds === 2 ? 9000 : openEnds === 1 ? 900 : 0;
+      }
       return openEnds === 2 ? 10000 : openEnds === 1 ? 1000 : 0;
     }
     if (run === 2) {
+      if (stitched) {
+        return openEnds === 2 ? 90 : openEnds === 1 ? 9 : 0;
+      }
       return openEnds === 2 ? 100 : openEnds === 1 ? 10 : 0;
     }
     return openEnds ? 1 : 0;
   }
 
-  function gmCellScore(board, x, y, who) {
+  function gmCellScore(board, x, y, who, holes) {
     var total = 0;
     gmDirs.forEach(function (axis) {
-      total += gmAxisScore(board, x, y, axis[0], axis[1], who);
+      total += gmAxisScore(board, x, y, axis[0], axis[1], who, holes);
     });
     return total;
   }
@@ -160,6 +206,376 @@
       }
     }
     return longest.length >= 5 ? longest : [];
+  }
+
+  /* ------------------------------------------------------------ the engine */
+  /* The reading itself lives above initGomokuGame and touches no node, which is
+   * what lets the ladder be measured against itself: a rank is a bundle of
+   * capabilities, and the table a probe reads is the one the drawer plays. */
+
+  var gmFourFloor = 100000; /* a point that is one move from five */
+  var gmOpenThree = 10000; /* an open three, plain */
+  var gmGapThree = 9000; /* an open three stitched across a hole */
+
+  function gmFreshBoard() {
+    var flat = [];
+    for (var index = 0; index < gmSize * gmSize; index += 1) {
+      flat.push(gmEmpty);
+    }
+    return flat;
+  }
+
+  /* The opening stone: the empty crossing nearest tengen, because a rank that
+   * has nothing to read yet should still play the middle of the wood. */
+  function gmOpenPoint(board) {
+    var best = -1;
+    var bestGap = Infinity;
+    for (var index = 0; index < board.length; index += 1) {
+      if (board[index] !== gmEmpty) {
+        continue;
+      }
+      var x = index % gmSize;
+      var y = Math.floor(index / gmSize);
+      var gap = Math.abs(x - (gmSize - 1) / 2) + Math.abs(y - (gmSize - 1) / 2);
+      if (gap < bestGap) {
+        bestGap = gap;
+        best = index;
+      }
+    }
+    return best;
+  }
+
+  function gmCenterBias(x, y) {
+    return 6 - Math.max(Math.abs(x - gmSize / 2), Math.abs(y - gmSize / 2));
+  }
+
+  /* Only fight near the action; the far empty board is noise. */
+  function gmNearAction(board, index, radius) {
+    var reach = radius || 2;
+    var x = index % gmSize;
+    var y = Math.floor(index / gmSize);
+    for (var dy = -reach; dy <= reach; dy += 1) {
+      for (var dx = -reach; dx <= reach; dx += 1) {
+        var nx = x + dx;
+        var ny = y + dy;
+        if (gmInBounds(nx, ny) && board[nx + ny * gmSize] !== gmEmpty) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /* How many points finish the game for `who` right now: `kills` counts the
+   * cells that make five, `open` the cells that make an open four. Counted
+   * across the whole board rather than down the axes of one cell, because the
+   * shape a player should fear is usually two half-lines on two different
+   * lines - a summed one-ply score cannot see it.
+   * Note that ONE live three already contributes two `open` cells (each end
+   * extends it to an open four), so `open` alone is not a fork: the double
+   * threat is two kills, or a kill and an open four to come. */
+  function gmKillPoints(board, who, holes, radius) {
+    var kills = 0;
+    var open = 0;
+    var fours = 0;
+    for (var index = 0; index < board.length; index += 1) {
+      if (board[index] !== gmEmpty || !gmNearAction(board, index, radius)) {
+        continue;
+      }
+      var value = gmCellScore(
+        board,
+        index % gmSize,
+        Math.floor(index / gmSize),
+        who,
+        holes,
+      );
+      if (value >= 10000000) {
+        kills += 1;
+      } else if (value >= 1000000) {
+        open += 1;
+      } else if (value >= gmFourFloor) {
+        fours += 1;
+      }
+      if (kills >= 2) {
+        break;
+      }
+    }
+    return { kills: kills, open: open, fours: fours };
+  }
+
+  /* What a stone laid on (x, y) would build, counted per axis rather than summed:
+   * how many lines of four it opens and how many live threes. Two fours, a four
+   * with a live three, or two live threes on one stone is a fork - the other
+   * side gets one block and no more. */
+  function gmPointBand(board, x, y, who, holes) {
+    var fours = 0;
+    var threes = 0;
+    for (var axis = 0; axis < gmDirs.length; axis += 1) {
+      var value = gmAxisScore(
+        board,
+        x,
+        y,
+        gmDirs[axis][0],
+        gmDirs[axis][1],
+        who,
+        holes,
+      );
+      if (value >= gmFourFloor) {
+        fours += 1;
+      } else if (value === gmOpenThree || value === gmGapThree) {
+        threes += 1;
+      }
+    }
+    return { fours: fours, threes: threes };
+  }
+
+  function gmDecisive(band) {
+    return band.fours >= 2 || (band.fours >= 1 && band.threes >= 1);
+  }
+
+  /* Two live threes out of one stone: it threatens nothing yet, which is exactly
+   * why a wall that only answers finished threats waves it through. */
+  function gmDoubleThree(band) {
+    return band.fours === 0 && band.threes >= 2;
+  }
+
+  function gmIsFork(band) {
+    return gmDecisive(band) || gmDoubleThree(band);
+  }
+
+  /* The best shape `who` can build on its next stone, which is the quantity a
+   * deep rank is really buying: an open four scores a million here, a five point
+   * ten million, and a blocked line scores nothing worth having. */
+  function gmBestShape(board, who, holes, radius) {
+    var best = 0;
+    for (var index = 0; index < board.length; index += 1) {
+      if (board[index] !== gmEmpty || !gmNearAction(board, index, radius)) {
+        continue;
+      }
+      var value = gmCellScore(
+        board,
+        index % gmSize,
+        Math.floor(index / gmSize),
+        who,
+        holes,
+      );
+      if (value > best) {
+        best = value;
+      }
+    }
+    return best;
+  }
+
+  /* Candidate points, richest first. `fears` is how much the side to move
+   * weighs the shape the other side would build on the same point. */
+  function gmShortList(board, rank, who, rival, fears) {
+    var holes = !!rank.holes;
+    var list = [];
+    for (var index = 0; index < board.length; index += 1) {
+      if (board[index] !== gmEmpty || !gmNearAction(board, index, rank.radius)) {
+        continue;
+      }
+      var x = index % gmSize;
+      var y = Math.floor(index / gmSize);
+      var attack = gmCellScore(board, x, y, who, holes);
+      var defense = rival === null ? 0 : gmCellScore(board, x, y, rival, holes);
+      list.push({
+        index: index,
+        attack: attack,
+        value:
+          attack + defense * fears + gmCenterBias(x, y) + Math.random() * rank.noise,
+      });
+    }
+    list.sort(function (a, b) {
+      return b.value - a.value;
+    });
+    return list;
+  }
+
+  /* What the side to move still holds after the rival gets `plies` answers:
+   * the rival takes the answer that leaves the least, and between answers the
+   * side plays its own richest point. A rank's depth is bought here - an open
+   * four survives any single answer (one end is always still a five), a one-eye
+   * four does not, and that is the whole difference between a threat and a
+   * bluff. The rival's own shape is deliberately not in this term: the root's
+   * `defense` weight already pays for it, and asking twice makes a wall of
+   * everything. */
+  function gmHold(board, rank, who, rival, plies, budget) {
+    if (plies <= 0) {
+      return gmBestShape(board, who, rank.holes, rank.radius);
+    }
+    var answers = gmShortList(board, rank, rival, who, rank.defense);
+    if (!answers.length) {
+      return gmBestShape(board, who, rank.holes, rank.radius);
+    }
+    var worst = Infinity;
+    for (var step = 0; step < answers.length && step < budget; step += 1) {
+      board[answers[step].index] = rival;
+      var left;
+      if (plies >= 2) {
+        left = -Infinity;
+        var mine = gmShortList(board, rank, who, rival, rank.defense);
+        for (var back = 0; back < mine.length && back < budget; back += 1) {
+          board[mine[back].index] = who;
+          var held = gmHold(board, rank, who, rival, plies - 2, budget);
+          board[mine[back].index] = gmEmpty;
+          if (held > left) {
+            left = held;
+          }
+        }
+        if (left === -Infinity) {
+          left = gmBestShape(board, who, rank.holes, rank.radius);
+        }
+      } else {
+        left = gmBestShape(board, who, rank.holes, rank.radius);
+      }
+      board[answers[step].index] = gmEmpty;
+      if (left < worst) {
+        worst = left;
+      }
+    }
+    return worst;
+  }
+
+  /* THE move chooser. Ranks without the new fields take the identical one-ply
+   * walk they always did; ranks 7-10 pay for a capability with the shape they
+   * then owns, never with a bigger number. */
+  function gmAiPick(board, rank, who) {
+    var me = who || gmAi;
+    var foe = me === gmAi ? gmHuman : gmAi;
+    var holes = !!rank.holes;
+    var deep = !!(rank.fork || rank.sente || rank.tempo || rank.depth > 1);
+    var bestScore = -1;
+    var best = -1;
+    if (!deep) {
+      for (var index = 0; index < board.length; index += 1) {
+        if (board[index] !== gmEmpty || !gmNearAction(board, index, rank.radius)) {
+          continue;
+        }
+        var x = index % gmSize;
+        var y = Math.floor(index / gmSize);
+        var value =
+          gmCellScore(board, x, y, me, holes) +
+          gmCellScore(board, x, y, foe, holes) * rank.defense +
+          gmCenterBias(x, y) +
+          Math.random() * rank.noise;
+        if (value > bestScore) {
+          bestScore = value;
+          best = index;
+        }
+      }
+      if (best === -1) {
+        for (var spare = 0; spare < board.length; spare += 1) {
+          if (board[spare] === gmEmpty) {
+            return spare;
+          }
+        }
+      }
+      return best;
+    }
+    /* The four new capabilities are read at the root, over the ranks' own short
+     * list, so the fork logic never has to touch the shipped one-ply path. */
+    var roots = gmShortList(board, rank, me, foe, rank.defense);
+    var rivalForks = [];
+    if (rank.sente) {
+      /* Nothing is threatened yet, so nothing raises the alarm a one-ply wall
+       * answers: look for the point your double threat would be built on and
+       * take it now. Only a five already on the board outranks this. */
+      var now = gmKillPoints(board, me, holes, rank.radius);
+      if (now.kills === 0) {
+        var rivals = gmShortList(board, rank, foe, me, 1);
+        for (var scan = 0; scan < rivals.length && scan < (rank.narrow || 4) * 3; scan += 1) {
+          var spot = rivals[scan].index;
+          if (gmIsFork(gmPointBand(board, spot % gmSize, Math.floor(spot / gmSize), foe, holes))) {
+            rivalForks.push(spot);
+          }
+        }
+      }
+    }
+    var ceiling = rank.width || 8;
+    /* A five on the board is played, not contemplated: ranks that weigh the
+     * rival's shape above finishing their own line lose games they have won. */
+    for (var cash = 0; cash < roots.length; cash += 1) {
+      if (roots[cash].attack >= 10000000) {
+        return roots[cash].index;
+      }
+    }
+    var makersBefore = rank.tempo
+      ? gmKillPoints(board, me, holes, rank.radius)
+      : null;
+    var fourWasOnOffer = !!(
+      makersBefore &&
+      makersBefore.kills + makersBefore.fours > 0
+    );
+    for (var step = 0; step < roots.length && step < ceiling; step += 1) {
+      var cell = roots[step].index;
+      var cx = cell % gmSize;
+      var cy = Math.floor(cell / gmSize);
+      var score = roots[step].value;
+      var band = gmPointBand(board, cx, cy, me, holes);
+      var standing = null;
+      var makers = 0;
+      var held = 0;
+      if (rank.fork || rank.tempo || rank.depth > 1) {
+        board[cell] = me;
+        if (rank.fork || rank.tempo) {
+          standing = gmKillPoints(board, me, holes, rank.radius);
+          makers = standing.kills + standing.open + standing.fours;
+        }
+        if (rank.depth > 1) {
+          held = gmHold(board, rank, me, foe, rank.depth - 1, rank.narrow || 3);
+        }
+        board[cell] = gmEmpty;
+      }
+      /* fork: it plays the stone that leaves two lines alive, not the one that
+       * leaves one line merely long. Board-wide, because the second threat
+       * usually sits on a line that does not run through this cell, and paid by
+       * how many four-makers stand afterwards - that is the read a player feels
+       * as "it has two ways to make a four and I only have one block". */
+      if (rank.fork) {
+        score += rank.fork * (rank.spread === undefined ? 12000 : rank.spread) * makers;
+        if (
+          gmIsFork(band) ||
+          (standing &&
+            (standing.kills >= 2 ||
+              (standing.kills >= 1 && standing.open >= 1)))
+        ) {
+          score += rank.fork * 1200000;
+        }
+      }
+      /* tempo: and it declines the forcing four whose line dies under the
+       * answer, keeping the fork that is still alive after the answer. */
+      if (
+        rank.tempo &&
+        fourWasOnOffer &&
+        band.fours === 0 &&
+        makers >= 2 &&
+        held >= gmFourFloor
+      ) {
+        score += rank.tempo * 300000;
+      }
+      /* sente: it takes the point your fork would be built on one turn early,
+       * while there is nothing yet for a one-ply wall to lean against. */
+      if (rank.sente && rivalForks.indexOf(cell) > -1) {
+        score += rank.sente * 900000;
+      }
+      /* depth: the stone is only played if the shape it promises survives the
+       * best answer to it, not merely the first answer it looks like. */
+      if (rank.depth > 1) {
+        score += (rank.hold === undefined ? 1 : rank.hold) * held;
+      }
+      if (score > bestScore) {
+        bestScore = score;
+        best = cell;
+      }
+    }
+    if (best === -1 && roots.length) {
+      best = roots[0].index;
+    }
+    if (best === -1) {
+      return gmOpenPoint(board);
+    }
+    return best;
   }
 
   function initGomokuGame() {
@@ -618,10 +1034,7 @@
         dismissRound = null;
       }
       rank = rankDef || rank;
-      board = [];
-      for (var index = 0; index < gmSize * gmSize; index += 1) {
-        board.push(gmEmpty);
-      }
+      board = gmFreshBoard();
       history = [];
       moves = 0;
       over = false;
@@ -635,52 +1048,10 @@
       say(t("gomokuPrompt", { name: t(rank.labelKey) }));
     }
 
+    /* The drawer asks the engine and nothing else, which is what lets the same
+     * rank table be measured outside the DOM. */
     function aiPick() {
-      var bestScore = -1;
-      var best = -1;
-      for (var index = 0; index < board.length; index += 1) {
-        if (board[index] !== gmEmpty) {
-          continue;
-        }
-        var x = index % gmSize;
-        var y = Math.floor(index / gmSize);
-        /* Only fight near the action; the far empty board is noise. */
-        var nearStone = false;
-        for (var dy = -2; dy <= 2 && !nearStone; dy += 1) {
-          for (var dx = -2; dx <= 2; dx += 1) {
-            var nx = x + dx;
-            var ny = y + dy;
-            if (
-              gmInBounds(nx, ny) &&
-              board[nx + ny * gmSize] !== gmEmpty
-            ) {
-              nearStone = true;
-              break;
-            }
-          }
-        }
-        if (!nearStone) {
-          continue;
-        }
-        var attack = gmCellScore(board, x, y, gmAi);
-        var defense = gmCellScore(board, x, y, gmHuman);
-        var centerBias =
-          6 - Math.max(Math.abs(x - gmSize / 2), Math.abs(y - gmSize / 2));
-        var value =
-          attack + defense * rank.defense + centerBias + Math.random() * rank.noise;
-        if (value > bestScore) {
-          bestScore = value;
-          best = index;
-        }
-      }
-      if (best === -1) {
-        for (var free = 0; free < board.length; free += 1) {
-          if (board[free] === gmEmpty) {
-            return free;
-          }
-        }
-      }
-      return best;
+      return gmAiPick(board, rank);
     }
 
     function place(index, who) {
@@ -875,6 +1246,24 @@
     newGame(rank);
   }
 
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so ranks 1-6 keep the shared dictionary's wording and
+   * only the four new habits are carried here. */
+  App.addStrings({
+    en: {
+      "gomokuRank7": "The Gap Reader",
+      "gomokuRank8": "The Twin Fork",
+      "gomokuRank9": "The Early Block",
+      "gomokuRank10": "The Patient Hand",
+    },
+    zh: {
+      "gomokuRank7": "读断点",
+      "gomokuRank8": "双活三",
+      "gomokuRank9": "提前堵",
+      "gomokuRank10": "弃四留三",
+    },
+  });
 
   /* Exported for the other modules. */
   App.initGomokuGame = initGomokuGame;

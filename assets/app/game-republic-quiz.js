@@ -12,8 +12,17 @@
   var createCampaign = App.createCampaign;
   var fillCampaignPicker = App.fillCampaignPicker;
   var starsFor = App.starsFor;
-  /* `a` is the zero-based index of the right option; `stars` are the counts of
-   * correct answers worth 3, 2 and 1 star. */
+  /* Row fields the engine actually reads - a field nothing reads is not a lever:
+   *   id        the unlock chain plus the progress record key (game-campaign.js)
+   *   labelKey  the deck's picker label, resolved through t() in both languages
+   *   stars     [3-star, 2-star, 1-star] lines handed to starsFor(score, ..., high)
+   *   cards     the round: cards.length is the HUD total, the score denominator
+   *             and the number of clicks a sitting takes.
+   * That is the whole list. This engine has no per-row round timer, wager, joker
+   * budget, category lock or wrong-answer cost field, and the Streak in the HUD
+   * is one global localStorage counter that scoring never consults, so a rung can
+   * only ever change two things: how many cards a round deals and where its three
+   * bands sit within that length. Difficulty itself is knowledge. */
   var rqDecks = [
     {
       id: "q1",
@@ -266,6 +275,168 @@
         },
       ],
     },
+    /* Rung eight: the first round longer than it is hard. Six cards instead of
+     * the four every shipped deck deals, and the three-star line sits at five,
+     * so one miss no longer ends the chance of a full band. */
+    {
+      id: "q8",
+      labelKey: "rqD8",
+      stars: [5, 4, 3],
+      cards: [
+        {
+          q: { en: "The tea house Chunshui Tang, which claims to have invented bubble milk tea, opened in which city?", zh: "宣称发明珍珠奶茶的春水堂茶馆，是在哪座城市开设的？" },
+          o: [{ en: "Tainan", zh: "台南" }, { en: "Taichung", zh: "台中" },
+              { en: "Taipei", zh: "台北" }, { en: "Kaohsiung", zh: "高雄" }],
+          a: 1,
+          note: { en: "Chunshui Tang dates its iced milk tea with tapioca pearls to the 1980s in Taichung; a Tainan tea house puts forward a rival claim.", zh: "春水堂把加珍珠的冰奶茶追到1980年代的台中；台南一家茶馆则提出另一种说法。" },
+        },
+        {
+          q: { en: "Setting wishes on a paper sky lantern and letting it go is the signature custom of which district?", zh: "把心愿写在纸天灯上放飞，是哪一带的标志性习俗？" },
+          o: [{ en: "Pingxi", zh: "平溪" }, { en: "Beipu", zh: "北埔" },
+              { en: "Lukang", zh: "鹿港" }, { en: "Meinong", zh: "美浓" }],
+          a: 0,
+          note: { en: "The lanterns rose from the Pingxi coal valley, where families floated them to signal that the paths home were safe; the town's public release dates from the late 1990s.", zh: "天灯出于平溪煤矿聚落，居民曾放灯告知家人道路已安；当地的集体施放始于1990年代末。" },
+        },
+        {
+          q: { en: "The long annual walking pilgrimage from Dajia's Zhenlan Temple honours which deity?", zh: "大甲镇澜宫每年举行的徒步绕境进香，奉祀的是哪位神明？" },
+          o: [{ en: "Guan Yu", zh: "关公" }, { en: "Guanyin", zh: "观音" },
+              { en: "Shennong", zh: "神农" }, { en: "Mazu", zh: "妈祖" }],
+          a: 3,
+          note: { en: "Mazu, the sea goddess, is the deity of the Dajia pilgrimage, which walks some three hundred kilometres over nine days and gathers hundreds of thousands of participants.", zh: "大甲绕境奉海神妈祖，九天行程逾三百公里，参与人数常达数十万。" },
+        },
+        {
+          q: { en: "Which is the largest of the Republic's officially recognised indigenous peoples?", zh: "中华民国官方认定的原住民族中，人口最多的是哪一族？" },
+          o: [{ en: "Paiwan", zh: "排湾族" }, { en: "Amis", zh: "阿美族" },
+              { en: "Atayal", zh: "泰雅族" }, { en: "Thao", zh: "邵族" }],
+          a: 1,
+          note: { en: "The Pangcah, long recorded as the Amis, number well over two hundred thousand and live mostly along the eastern coast.", zh: "阿美族自称Pangcah，人口逾二十万，多分布于东部海岸。" },
+        },
+        {
+          q: { en: "The island's indigenous languages belong to which language family?", zh: "岛上各族原住民的语言属于哪一语系？" },
+          o: [{ en: "Sino-Tibetan", zh: "汉藏语系" }, { en: "Japonic", zh: "日本语系" },
+              { en: "Austroasiatic", zh: "南亚语系" }, { en: "Austronesian", zh: "南岛语系" }],
+          a: 3,
+          note: { en: "The Formosan languages are the oldest branches of Austronesian, the family that later spread across the Pacific and into the Indian Ocean.", zh: "台湾南岛诸语属于南岛语系中最古老的分支，该语系后来扩散至太平洋与印度洋。" },
+        },
+        {
+          q: { en: "Which partly oxidised tea, sitting between green and black, is the Republic's best-known leaf?", zh: "发酵程度介于绿茶与红茶之间、最具代表性的茶是哪一种？" },
+          o: [{ en: "Oolong", zh: "乌龙茶" }, { en: "Pu-erh", zh: "普洱" },
+              { en: "Matcha", zh: "抹茶" }, { en: "Longjing", zh: "龙井" }],
+          a: 0,
+          note: { en: "Oolong is rolled and bruised part-way through oxidation; Dongding in Nantou and Jishan in Hsinchu are among its best-known homes.", zh: "乌龙茶经部分发酵与揉捻成形，南投冻顶、新竹宝山皆为其著名产区。" },
+        },
+      ],
+    },
+    /* Rung nine: five cards of arts and letters, and the deck's real rule is its
+     * floor. Three stars still forgives one miss (4 of 5), but a single correct
+     * card earns a star here, where the shipped decks need two. */
+    {
+      id: "q9",
+      labelKey: "rqD9",
+      stars: [4, 3, 1],
+      cards: [
+        {
+          q: { en: "Which 1989 film by Hou Hsiao-hsien won the Golden Lion at the Venice Film Festival?", zh: "侯孝贤1989年的哪部电影获得威尼斯影展金狮奖？" },
+          o: [{ en: "A City of Sadness", zh: "悲情城市" }, { en: "Yi Yi", zh: "一一" },
+              { en: "Crouching Tiger, Hidden Dragon", zh: "卧虎藏龙" }, { en: "A Brighter Summer Day", zh: "牯岭街少年杀人事件" }],
+          a: 0,
+          note: { en: "Hou's postwar family drama took Venice's top prize in 1989; Edward Yang's Yi Yi followed eleven years later, and Yang also directed A Brighter Summer Day.", zh: "《悲情城市》获1989年威尼斯最高奖；杨德昌的《一一》在其十一年后问世，《牯岭街少年杀人事件》亦出自杨德昌。" },
+        },
+        {
+          q: { en: "Who directed Crouching Tiger, Hidden Dragon, the 2000 film that won the Academy Award for best foreign-language film?", zh: "2000年获奥斯卡最佳外语片的《卧虎藏龙》由谁执导？" },
+          o: [{ en: "Tsai Ming-liang", zh: "蔡明亮" }, { en: "Hou Hsiao-hsien", zh: "侯孝贤" },
+              { en: "Ang Lee", zh: "李安" }, { en: "Edward Yang", zh: "杨德昌" }],
+          a: 2,
+          note: { en: "Ang Lee took the award for that film and later won consecutive Best Director Oscars for Life of Pi and The Revenant.", zh: "李安凭此片获奖，其后以《少年Pi的奇幻漂流》与《神鬼猎人》连续获得最佳导演奖。" },
+        },
+        {
+          q: { en: "Among the National Palace Museum's three most-photographed pieces, which is jadeite carved as a vegetable?", zh: "台北故宫人气最高的三件藏品中，以翡翠雕成蔬菜的是哪一件？" },
+          o: [{ en: "The Meat-shaped Stone", zh: "肉形石" }, { en: "The Jadeite Cabbage", zh: "翠玉白菜" },
+              { en: "Travelers among Mountains and Streams", zh: "谿山行旅图" }, { en: "The Duke Mao Tripod", zh: "毛公鼎" }],
+          a: 1,
+          note: { en: "The cabbage and the meat-shaped stone play on the colours natural to jadeite and agate; the Duke Mao tripod completes the trio with the longest inscription cast on any bronze.", zh: "翠玉白菜与肉形石利用石材天然色泽成形；毛公鼎以铭文最长的青铜器并列第三。" },
+        },
+        {
+          q: { en: "Which poet is remembered above all for the four-stanza poem Nostalgia, long set reading in the Republic's schools?", zh: "以四节短诗《乡愁》闻名、长期入选中华民国教材的诗人是谁？" },
+          o: [{ en: "Yang Mu", zh: "杨牧" }, { en: "Ling Yu", zh: "洛夫" },
+              { en: "Wang Tuo", zh: "王文兴" }, { en: "Yu Guangzhong", zh: "余光中" }],
+          a: 3,
+          note: { en: "Yu Guangzhong (1928-2017) wrote Nostalgia in the early 1970s, measuring four separations across the strait in a single short poem.", zh: "余光中（1928-2017）于1970年代初写作《乡愁》，以四节写尽海峡两端的别离。" },
+        },
+        {
+          q: { en: "Which stage art puts the performer's hand inside a cloth figure, so it moves on those fingers?", zh: "表演者的手伸入布制戏偶之中、偶随指头动作的是哪种舞台艺术？" },
+          o: [{ en: "Glove puppetry", zh: "布袋戏" }, { en: "Shadow puppetry", zh: "皮影戏" },
+              { en: "Peking opera", zh: "京剧" }, { en: "Kua-a-hi opera", zh: "歌仔戏" }],
+          a: 0,
+          note: { en: "The cloth bag the hand wears gives the art its name; the performer speaks and chants the roles in Hokkien.", zh: "手套入布偶因而得名，表演者以闽南语口白兼饰各角。" },
+        },
+      ],
+    },
+    /* Rung ten: the capstone is the widest round in the ladder — seven cards —
+     * and the bands widen with it. Three stars forgives two misses (5 of 7),
+     * the two-star line sits at four, and only a blank sheet earns nothing. */
+    {
+      id: "q10",
+      labelKey: "rqD10",
+      stars: [5, 4, 2],
+      cards: [
+        {
+          q: { en: "Which of these events came first in the Republic's story?", zh: "下列事件中，最早发生的是哪一个？" },
+          o: [{ en: "The Xingzhonghui is founded in Honolulu", zh: "兴中会在檀香山成立" },
+              { en: "The Wuchang uprising", zh: "武昌起义" },
+              { en: "The Northern Expedition begins", zh: "北伐开始" },
+              { en: "The constitution takes effect", zh: "宪法施行" }],
+          a: 0,
+          note: { en: "Sun Yat-sen's Xingzhonghui, the first republican society, was organised in Honolulu in November 1894; the others fall in 1911, 1926 and 1947.", zh: "孙中山的兴中会为首个共和团体，1894年11月成立于檀香山；其余三事分别见于1911年、1926年与1947年。" },
+        },
+        {
+          q: { en: "Which of these events came last?", zh: "下列事件中，最晚发生的是哪一个？" },
+          o: [{ en: "The first direct presidential election", zh: "总统首次公民直选" },
+              { en: "The Provisional Constitution is promulgated", zh: "临时约法公布" },
+              { en: "The northeast changes its flag", zh: "东北易帜" },
+              { en: "Martial law is lifted", zh: "解除戒严" }],
+          a: 0,
+          note: { en: "Martial law ended in 1987 and the March 1996 election followed, the first in which voters in the Republic chose their own president.", zh: "1987年解除戒严，1996年3月举行的选举是中华民国民众首次直选总统。" },
+        },
+        {
+          q: { en: "Which physicist shared the 1957 Nobel Prize in Physics with Tsung-Dao Lee?", zh: "与李政道共同获得1957年诺贝尔物理学奖的是哪位物理学家？" },
+          o: [{ en: "Tsien Hsue-shen", zh: "钱学森" }, { en: "Samuel C. C. Ting", zh: "丁肇中" },
+              { en: "Chen-Ning Yang", zh: "杨振宁" }, { en: "Shing-Tung Yau", zh: "丘成桐" }],
+          a: 2,
+          note: { en: "Their 1956 paper showed that the weak interaction does not respect mirror symmetry; Chien-Shiung Wu's cobalt-60 experiment confirmed it.", zh: "两人1956年的论文指出弱交互作用不遵守镜像对称，吴健雄的钴60实验证实了这一点。" },
+        },
+        {
+          q: { en: "Which of the five yuan exercises the Republic's legislative power in a single chamber?", zh: "五院之中以单一议会行使国家立法权的是哪一院？" },
+          o: [{ en: "The Control Yuan", zh: "监察院" }, { en: "The Legislative Yuan", zh: "立法院" },
+              { en: "The Judicial Yuan", zh: "司法院" }, { en: "The Examination Yuan", zh: "考试院" }],
+          a: 1,
+          note: { en: "The Legislative Yuan is unicameral, seating 113 members elected for four-year terms.", zh: "立法院为单选区与政党票选出的113席，任期四年。" },
+        },
+        {
+          q: { en: "In which sport did Chinese Taipei win its first Olympic gold medal, at the 2004 Athens Games?", zh: "2004年雅典奥运，中华台北在哪个项目夺得史上首面奥运金牌？" },
+          o: [{ en: "Archery", zh: "射箭" }, { en: "Weightlifting", zh: "举重" },
+              { en: "Taekwondo", zh: "跆拳道" }, { en: "Table tennis", zh: "乒乓球" }],
+          a: 2,
+          note: { en: "Chen Shih-hsin took the women's finweight taekwondo title in Athens, the first gold won under the Chinese Taipei name.", zh: "陈诗欣在雅典夺得女子轻量级跆拳道金牌，是中华台北名义下的首面奥运金牌。" },
+        },
+        {
+          q: { en: "The 1943 Cairo Declaration was issued by the United States, the United Kingdom and which third government?", zh: "1943年《开罗宣言》由美国、英国与哪一个政府共同发表？" },
+          o: [{ en: "The Soviet Union", zh: "苏联" }, { en: "France", zh: "法国" },
+              { en: "Canada", zh: "加拿大" }, { en: "The Republic of China", zh: "中华民国" }],
+          a: 3,
+          note: { en: "Roosevelt, Churchill and Chiang Kai-shek met in Cairo in November 1943 and published the statement on 1 December.", zh: "罗斯福、丘吉尔与蒋介石于1943年11月会于开罗，12月1日发表宣言。" },
+        },
+        {
+          q: { en: "Which Taipei university opened as an imperial university in 1928 and took its present name in 1945?", zh: "哪所台北的大学于1928年以帝国大学创立、1945年改用现名？" },
+          o: [{ en: "National Chengchi University", zh: "国立政治大学" },
+              { en: "National Taiwan University", zh: "国立台湾大学" },
+              { en: "National Tsing Hua University", zh: "国立清华大学" },
+              { en: "National Cheng Kung University", zh: "国立成功大学" }],
+          a: 1,
+          note: { en: "Founded as Taihoku Imperial University, it has carried the name National Taiwan University since the 1945 renaming.", zh: "该校前身为台北帝国大学，1945年改称国立台湾大学。" },
+        },
+      ],
+    },
   ];
 
   function rqText(pair) {
@@ -479,6 +650,23 @@
     startRound(deck);
   }
 
+
+  /* The ten-deck ladder: rungs one to seven are named in i18n.js, the three new
+   * ones travel with this file. addStrings only fills keys the shared dictionary
+   * does not already hold, and card copy (question, options, note) is carried
+   * bilingually inside each deck row, so nothing here shadows i18n.js. */
+  App.addStrings({
+    en: {
+      "rqD8": "Faith & Festivals",
+      "rqD9": "Letters & Screens",
+      "rqD10": "Across the Centuries",
+    },
+    zh: {
+      "rqD8": "信俗篇",
+      "rqD9": "文艺篇",
+      "rqD10": "贯通篇",
+    },
+  });
 
   /* Exported for the other modules. */
   App.republicDecks = rqDecks;

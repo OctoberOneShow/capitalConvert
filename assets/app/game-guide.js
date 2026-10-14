@@ -1048,14 +1048,14 @@
         "Controls: click one of the four choices, then press Next card to turn over.",
         "Rules: every card reveals a short note once answered, so a miss still teaches the fact.",
         "Watch out: choices are shuffled each round, so memorising the order does not help.",
-        "Scoring: correct cards set your stars - four out of four is the three-star line, and clearing a deck opens the next.",
+        "Scoring: correct cards set your stars and each deck shows its own three-star line, so a longer deck is not automatically harsher - clearing a deck opens the next.",
       ],
       zh: [
         "目标：答完一整套关于中华民国的历史与文化题卡。",
         "操作：从四个选项中点击其一，再按“下一题”翻卡。",
         "规则：每题答完都会显示一条注解，答错也能学到史实。",
         "小心：每轮的题序与选项都会重新洗牌，死记顺序没有用。",
-        "计分：答对题数决定星级——四题全对即三星，答毕一套就解锁下一套。",
+        "计分：答对题数决定星级，每套题都标出自己的三星线，题多不代表更严；答毕一套就解锁下一套。",
       ],
     },
     dots: {

@@ -19,8 +19,9 @@
   var fillCampaignPicker = App.fillCampaignPicker;
   var starsFor = App.starsFor;
   var towSize = 320;
-  /* Levels: disc count per tower. Star thresholds are move counts
-   * [3-star, 2-star, 1-star], always above the 2^n - 1 optimum. */
+  /* Levels: disc count per tower - the one axis the row schema carries, since
+   * the board reads only id / labelKey / discs / starMoves. Star thresholds are
+   * move counts [3-star, 2-star, 1-star] at or above the 2^n - 1 optimum. */
   var towLevels = [
     { id: "tw1", labelKey: "towL1", discs: 3, starMoves: [8, 10, 14] },
     { id: "tw2", labelKey: "towL2", discs: 4, starMoves: [16, 19, 25] },
@@ -31,6 +32,7 @@
     { id: "tw7", labelKey: "lvlNum7", discs: 9, starMoves: [512, 526, 560] },
     { id: "tw8", labelKey: "lvlNum8", discs: 10, starMoves: [1024, 1052, 1116] },
     { id: "tw9", labelKey: "lvlNum9", discs: 11, starMoves: [2048, 2080, 2176] },
+    { id: "tw10", labelKey: "towL10", discs: 12, starMoves: [4095, 4223, 4607] },
   ];
 
   /* Pure optimum, exported for the static checks. */
@@ -1741,6 +1743,19 @@
     loadLevel(towLevels[campaign.indexOf(campaign.nextLevelId())]);
   }
 
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already hold, so the shared dictionary stays the authority for the
+   * drawer chrome and the nine shipped rung names. Rung ten is the first whose
+   * 3-star bar is the optimum itself, and its name says that in both languages. */
+  App.addStrings({
+    en: {
+      "towL10": "Zero Tolerance",
+    },
+    zh: {
+      "towL10": "零公差塔",
+    },
+  });
 
   /* Exported for the other modules. */
   App.initGlyphTowerGame = initGlyphTowerGame;
