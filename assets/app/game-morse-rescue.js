@@ -72,7 +72,23 @@
     { id: "m9", labelKey: "mrsL9", vocab: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"], groups: 6, noise: 4, deducible: 0,
       battery: 4, attempts: 6, window: 54, drain: 7, unit: 0.8, seed: 909, starCost: [1, 4, 18] },
     { id: "m10", labelKey: "mrsL10", vocab: ["S", "U", "R", "W", "K", "D", "O", "M", "A"], groups: 6, noise: 4, deducible: 0,
-      battery: 4, attempts: 6, window: 50, drain: 7, unit: 0.8, seed: 1010, starCost: [4, 10, 18] }
+      battery: 4, attempts: 6, window: 50, drain: 7, unit: 0.8, seed: 1010, starCost: [4, 10, 18] },
+    /* m11: every legend neighbour is one element apart, so static usually leaves
+     * the group intact and only the eaten mark is in question. */
+    { id: "m11", labelKey: "mrsL11", vocab: ["E", "T", "I", "A", "N", "M", "S", "U", "D", "K"], groups: 6, noise: 4, deducible: 1,
+      battery: 4, attempts: 6, window: 48, drain: 7, unit: 0.8, seed: 1111, starCost: [4, 10, 19] },
+    /* m12: one mark length, one dash each, so the count is the only readout. */
+    { id: "m12", labelKey: "mrsL12", vocab: ["5", "6", "7", "8", "9", "0"], groups: 6, noise: 5, deducible: 1,
+      battery: 5, attempts: 6, window: 47, drain: 8, unit: 0.8, seed: 1212, starCost: [4, 11, 19] },
+    /* m13: five units in the bank, but the window only pays for two replays. */
+    { id: "m13", labelKey: "mrsL13", vocab: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"], groups: 7, noise: 5, deducible: 0,
+      battery: 5, attempts: 6, window: 52, drain: 14, unit: 0.8, seed: 1313, starCost: [7, 12, 19] },
+    /* m14: the broadcast outlasts its own window, so the last groups must be
+     * read from the mark bar and the coordinate sent before the tape runs out. */
+    { id: "m14", labelKey: "mrsL14", vocab: ["S", "O", "E", "T", "4", "5", "6", "7", "N", "M", "I", "A"], groups: 7, noise: 5, deducible: 0,
+      battery: 5, attempts: 6, window: 51, drain: 10, unit: 1.3, seed: 1414, starCost: [7, 13, 19] },
+    { id: "m15", labelKey: "mrsL15", vocab: ["A", "N", "M", "S", "U", "R", "W", "K", "D", "O"], groups: 7, noise: 5, deducible: 0,
+      battery: 5, attempts: 6, window: 50, drain: 10, unit: 0.8, seed: 1515, starCost: [10, 14, 20] }
   ];
 
   /* --- pure core, exported for the harness ---------------------------------
@@ -1072,6 +1088,11 @@
       "mrsL8": "Six Group Coordinate",
       "mrsL9": "Number Storm",
       "mrsL10": "Last Broadcast",
+      "mrsL11": "One Mark Apart",
+      "mrsL12": "Count The Dashes",
+      "mrsL13": "Two Replays Only",
+      "mrsL14": "Send Before The End",
+      "mrsL15": "Marks Out Of Order",
       "mrsWindowLabel": "Window",
       "mrsBatteryLabel": "Battery",
       "mrsTryLabel": "Sends",
@@ -1143,6 +1164,11 @@
       "mrsL8": "六组坐标",
       "mrsL9": "数字风暴",
       "mrsL10": "最后一次播发",
+      "mrsL11": "一字之差",
+      "mrsL12": "数划辨号",
+      "mrsL13": "只许两次重播",
+      "mrsL14": "结束前发送",
+      "mrsL15": "符号乱序",
       "mrsWindowLabel": "窗口",
       "mrsBatteryLabel": "电量",
       "mrsTryLabel": "发送",

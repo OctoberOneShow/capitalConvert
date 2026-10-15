@@ -1,7 +1,9 @@
 /* Glyph Bastion - the small-footprint tower defence in the shared game drawer.
- * A 9x6 field with one authored path per level (a fork on level two), a build
- * phase between waves, and a tick simulation that is a pure function of
- * (level, towers, ticks) so every authored solution can be proven to hold. */
+ * A 9x6 field whose fifteen authored maps vary the shape of the problem: one
+ * road, a fork, two roads that share a tail, three that merge twice, plus a
+ * per-map budget, tower cap and leak allowance. A build phase sits between
+ * waves, and the tick simulation is a pure function of (level, towers, ticks)
+ * so every authored solution can be proven to hold. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
   var t = App.t;
@@ -187,6 +189,110 @@
         { x: 6, y: 1, kind: "snare" }, { x: 2, y: 4, kind: "piercer" },
         { x: 4, y: 4, kind: "snare" }, { x: 5, y: 4, kind: "piercer" },
         { x: 7, y: 1, kind: "piercer" }, { x: 1, y: 4, kind: "smoulder" },
+      ],
+    },
+    /* Two roads, one gate: the routes merge at [4,3] and share the whole tail,
+     * so the map is won by whoever owns the junction instead of both heads. */
+    {
+      id: "g11", labelKey: "gstZ11", twistKey: "gstTwist11", budget: 18, maxTowers: 6, leaks: 3, starGlyphs: [15, 19, 23],
+      paths: [
+        [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [4, 1], [4, 2], [4, 3], [5, 3], [6, 3], [7, 3], [8, 3]],
+        [[0, 5], [1, 5], [2, 5], [3, 5], [4, 5], [4, 4], [4, 3], [5, 3], [6, 3], [7, 3], [8, 3]],
+      ],
+      waves: [
+        { start: 0, gap: 5, count: 7, kind: "runner" },
+        { start: 45, gap: 5, count: 7, kind: "plate" },
+        { start: 95, gap: 4, count: 9, kind: "grunt" },
+        { start: 155, gap: 6, count: 5, kind: "husk" },
+        { start: 215, gap: 0, count: 1, kind: "choir" },
+      ],
+      solution: [
+        { x: 1, y: 3, kind: "piercer" }, { x: 3, y: 1, kind: "piercer" },
+        { x: 5, y: 2, kind: "piercer" }, { x: 3, y: 4, kind: "snare" },
+        { x: 5, y: 4, kind: "smoulder" },
+      ],
+    },
+    /* Four waves, four different right answers: a veil vanguard only a snare
+     * can light, husks that shrug off the splash that vanguard tempts you to
+     * buy, splitters, and a rank that mends faster than splash can bite. */
+    {
+      id: "g12", labelKey: "gstZ12", twistKey: "gstTwist12", budget: 12, maxTowers: 5, leaks: 3, starGlyphs: [14, 17, 21],
+      paths: [
+        [[0, 2], [1, 2], [2, 2], [3, 2], [3, 1], [3, 0], [4, 0], [5, 0], [5, 1], [5, 2], [5, 3], [4, 3], [3, 3], [3, 4], [4, 4], [5, 4], [6, 4], [7, 4], [7, 3], [7, 2], [8, 2]],
+      ],
+      waves: [
+        { start: 0, gap: 6, count: 5, kind: "wisp" },
+        { start: 55, gap: 5, count: 6, kind: "husk" },
+        { start: 115, gap: 6, count: 5, kind: "cutter" },
+        { start: 170, gap: 8, count: 4, kind: "bloom" },
+      ],
+      solution: [
+        { x: 4, y: 1, kind: "snare" }, { x: 6, y: 3, kind: "piercer" },
+        { x: 2, y: 3, kind: "snare" }, { x: 4, y: 2, kind: "piercer" },
+        { x: 6, y: 5, kind: "smoulder" },
+      ],
+    },
+    /* The cap binds, not the purse: two towers on a 22-cell serpentine, so a
+     * tower has to pay for itself twice and the middle pocket is a decoy. */
+    {
+      id: "g13", labelKey: "gstZ13", twistKey: "gstTwist13", budget: 8, maxTowers: 2, leaks: 3, starGlyphs: [7, 8, 11],
+      paths: [
+        [[0, 0], [1, 0], [2, 0], [3, 0], [3, 1], [3, 2], [2, 2], [1, 2], [1, 3], [1, 4], [2, 4], [3, 4], [4, 4], [5, 4], [5, 3], [5, 2], [5, 1], [6, 1], [7, 1], [7, 2], [7, 3], [8, 3]],
+      ],
+      waves: [
+        { start: 0, gap: 7, count: 4, kind: "grunt" },
+        { start: 40, gap: 6, count: 5, kind: "runner" },
+        { start: 90, gap: 7, count: 4, kind: "plate" },
+        { start: 140, gap: 0, count: 1, kind: "choir" },
+      ],
+      solution: [
+        { x: 4, y: 2, kind: "piercer" }, { x: 6, y: 2, kind: "piercer" },
+      ],
+    },
+    /* A short lane and a leak allowance of two: splinters cross in eleven ticks,
+     * so the purse is spent either on dwell time or on damage, never both. */
+    {
+      id: "g14", labelKey: "gstZ14", twistKey: "gstTwist14", budget: 14, maxTowers: 5, leaks: 2, starGlyphs: [13, 16, 20],
+      paths: [
+        [[0, 4], [1, 4], [2, 4], [3, 4], [4, 4], [4, 3], [5, 3], [6, 3], [7, 3], [8, 3]],
+      ],
+      waves: [
+        { start: 0, gap: 5, count: 5, kind: "cutter" },
+        { start: 40, gap: 4, count: 6, kind: "cutter" },
+        { start: 90, gap: 3, count: 8, kind: "runner" },
+        { start: 140, gap: 4, count: 6, kind: "plate" },
+        { start: 190, gap: 4, count: 7, kind: "cutter" },
+      ],
+      solution: [
+        { x: 2, y: 2, kind: "piercer" }, { x: 3, y: 2, kind: "snare" },
+        { x: 5, y: 2, kind: "piercer" }, { x: 6, y: 2, kind: "smoulder" },
+        { x: 5, y: 4, kind: "snare" },
+      ],
+    },
+    /* Three roads, two junctions, and no slip at all: the allowance is one
+     * leak, so the middle lane - the shortest of the three - is the clock. */
+    {
+      id: "g15", labelKey: "gstZ15", twistKey: "gstTwist15", budget: 30, maxTowers: 10, leaks: 1, starGlyphs: [26, 30, 34],
+      paths: [
+        [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [4, 1], [4, 2], [4, 3], [5, 3], [6, 3], [7, 3], [8, 3]],
+        [[0, 3], [1, 3], [2, 3], [3, 3], [4, 3], [5, 3], [6, 3], [7, 3], [8, 3]],
+        [[0, 5], [1, 5], [2, 5], [3, 5], [4, 5], [4, 4], [4, 3], [5, 3], [6, 3], [7, 3], [8, 3]],
+      ],
+      waves: [
+        { start: 0, gap: 4, count: 9, kind: "runner" },
+        { start: 50, gap: 4, count: 9, kind: "wisp" },
+        { start: 105, gap: 4, count: 9, kind: "plate" },
+        { start: 160, gap: 4, count: 9, kind: "cutter" },
+        { start: 215, gap: 5, count: 7, kind: "husk" },
+        { start: 265, gap: 6, count: 6, kind: "bloom" },
+        { start: 320, gap: 0, count: 1, kind: "choir" },
+      ],
+      solution: [
+        { x: 3, y: 1, kind: "snare" }, { x: 3, y: 4, kind: "snare" },
+        { x: 5, y: 2, kind: "piercer" }, { x: 3, y: 2, kind: "piercer" },
+        { x: 5, y: 4, kind: "piercer" }, { x: 2, y: 2, kind: "smoulder" },
+        { x: 6, y: 2, kind: "smoulder" }, { x: 7, y: 2, kind: "piercer" },
+        { x: 6, y: 4, kind: "piercer" }, { x: 2, y: 4, kind: "snare" },
       ],
     },
   ];
@@ -769,6 +875,7 @@
         twist: t(levelDef.twistKey),
         b: run.glyphs,
         w: (levelDef.waves || []).length,
+        l: leakLimit(),
       });
       render();
     }
@@ -1114,6 +1221,16 @@
       "gstTwist8": "two gates, one purse - pick a side",
       "gstTwist9": "six glyphs: two towers, not three",
       "gstTwist10": "veils, splitters and iron at once",
+      "gstZ11": "Confluence Gate",
+      "gstZ12": "Four Right Answers",
+      "gstZ13": "Twin Pillars",
+      "gstZ14": "One Slip",
+      "gstZ15": "Threefold Siege",
+      "gstTwist11": "two roads share one tail - the junction is the map",
+      "gstTwist12": "every wave wants a different tower",
+      "gstTwist13": "the field carries two towers: coverage decides",
+      "gstTwist14": "two leaks and it falls - splinters are already fast",
+      "gstTwist15": "three roads, two junctions, one leak allowed",
       "gstGlyphLabel": "Glyphs",
       "gstLeakLabel": "Leaks",
       "gstWaveLabel": "Wave",
@@ -1134,7 +1251,7 @@
       "gstDescsmoulder": "6 damage in a splash; the only thing that strips a shield, and husks shrug it off",
       "gstDescsnare": "no damage: halves the speed of anything near it and reveals cloaked ranks",
       "gstLegend": "P piercer / S smoulder / N snare / dot on a grass cell is a build slot / the pale road is the path",
-      "gstPrompt": "{name} - {twist}. {b} glyphs, {w} waves. Three leaks and the bastion falls.",
+      "gstPrompt": "{name} - {twist}. {b} glyphs, {w} waves. {l} leaks and the bastion falls.",
       "gstOnPath": "You cannot build on the road.",
       "gstFull": "This map only carries {n} towers - sell one first.",
       "gstBroke": "That costs {n} glyphs and you hold {g}.",
@@ -1189,6 +1306,16 @@
       "gstTwist8": "两道进门，一份钱——只能守一边",
       "gstTwist9": "开局六枚符文：够两塔，不够三塔",
       "gstTwist10": "蒙纱、裂殖、铁甲同时压上",
+      "gstZ11": "合流隘口",
+      "gstZ12": "四浪四招",
+      "gstZ13": "只容双塔",
+      "gstZ14": "许漏一只",
+      "gstZ15": "三路围垒",
+      "gstTwist11": "两条路共用一段尾——胜负在汇合点",
+      "gstTwist12": "每一波要的塔都不一样",
+      "gstTwist13": "全场只容两座塔：覆盖决定一切",
+      "gstTwist14": "漏满两只即陷落——分裂体本就跑得飞快",
+      "gstTwist15": "三条路、两道汇合，只许漏一只",
       "gstGlyphLabel": "符文",
       "gstLeakLabel": "漏怪",
       "gstWaveLabel": "波次",
@@ -1209,7 +1336,7 @@
       "gstDescsmoulder": "范围溅射 6 点伤害；唯一能剥掉护盾的塔，但空壳对它近乎免疫",
       "gstDescsnare": "不造伤害：让身边的一切减速一半，并照出隐身单位",
       "gstLegend": "P 穿刺 / S 熔散 / N 缚影 / 草地上的点是建塔位 / 浅色路面是敌行经之路",
-      "gstPrompt": "{name}——{twist}。{b} 枚符文，{w} 波。漏满三只，壁垒即陷落。",
+      "gstPrompt": "{name}——{twist}。{b} 枚符文，{w} 波。漏满 {l} 只，壁垒即陷落。",
       "gstOnPath": "路面上不能建塔。",
       "gstFull": "这张图只容得下 {n} 座塔——先拆一座。",
       "gstBroke": "它要 {n} 枚符文，你手里还有 {g} 枚。",
@@ -1260,7 +1387,7 @@
         '<text x="60" y="30" font-size="8" fill="#fbbf24">\u25cd24</text>' +
         '<text x="96" y="54" font-size="8" fill="#e2e8f0">\u25a3</text></svg>',
       en: [
-        "Aim: hold every wave on the map. Three leaks and the bastion falls.",
+        "Aim: hold every wave on the map. The leak allowance is printed on the map itself - reach it and the bastion falls.",
         "Build: between waves pick a tower with 1, 2, 3 (or click it), move the cursor with the arrows, and press Enter on a grass cell. Enter on one of your towers picks it up so the next Enter moves it; Backspace sells it for full price.",
         "Rock paper: Piercer is the single-target damage, Smoulder is the only thing that strips a boss shield, Snare does no damage but slows and reveals cloaked ranks - a wisp walks untouched past everything else.",
         "Traits printed on the unit: armour eats the first 3 of every hit, husks shrug splash, cutters split into two sprigs, blooms mend each tick, and the choir hides behind 18 shield.",
@@ -1268,7 +1395,7 @@
         "Scoring: leaks first, glyphs spent second, both lower is better. Every wave you hold sends 3 more glyphs, so a lean layout is never a dead end.",
       ],
       zh: [
-        "目标：守住地图上的每一波。漏满三只，壁垒陷落。",
+        "目标：守住地图上的每一波。漏怪上限标在地图自己那行里，到了数壁垒就陷落。",
         "建造：两波之间用 1、2、3（或直接点击）选塔，方向键移动光标，在草地格按回车放下。在自己塔上按回车会把它捧起来，下一次回车就挪过去；退格按原价拆回。",
         "相克：穿刺负责单体高伤，熔散是唯一能剥掉首领护盾的塔，缚影不打伤害但减速并照出隐身——否则蒙纱单位会从所有塔旁边安然走过。",
         "单位特性都写在脸上：护甲吃掉每次打击的前 3 点，空壳无视溅射，裂殖死时分成两只嫩芽，花期每拍回血，合唱队藏着 18 点护盾。",

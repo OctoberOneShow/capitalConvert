@@ -6,7 +6,7 @@
  *
  * Cases are dealt from a ground-truth verdict list, then carved row by row while
  * App.counterfeitSolutions still reports exactly ONE satisfying assignment, so
- * every hall of the ten is provably decidable and the star budget is measured.
+ * every hall of the fifteen is provably decidable and the star budget is measured.
  * A deal only ships when the three kinds of evidence still need each other: no
  * hall closes on wear, pigment or ledger lines alone, and none of the three can
  * be taken away without reopening it. Registered through the game registry, so it
@@ -34,11 +34,12 @@
   /* Halls: mix is the ground-truth census, twin deals two exhibits that differ
    * in a single line, decoyLog lets the restoration record mislead, clue prints
    * a lot note the solver must respect. The measured forcing minimum - the lines
-   * left standing after the carve - runs 8, 14, 14, 14, 15, 20, 21, 24, 25, 28
-   * across the ten halls, which is what the three star bands are made of, so any
-   * change here has to re-measure them. The lot note stays a hall-five device:
-   * a printed census is exactly what lets one kind of evidence carry a case
-   * alone, and the interlock bar below is what rejects that. */
+   * left standing after the carve - runs 8, 14, 14, 14, 15, 20, 21, 24, 25, 28,
+   * 29, 30, 31, 36, 39 across the fifteen halls, which is what the three star
+   * bands are made of, so any change here has to re-measure them. A printed lot
+   * note CHEAPENS a case (hall thirteen's census drops from 31 lines to 24 the
+   * moment the note prints), so clue stays 0 except in the halls whose whole
+   * point is the counting argument: five, fourteen and fifteen. */
   var cfmLevels = [
     { id: "cfm1", labelKey: "cfmHall1", count: 4, verdicts: ["genuine", "forgery"],
       mix: [{ v: "genuine", n: 2 }, { v: "forgery", n: 2 }], twin: false, decoyLog: false, clue: 0 },
@@ -60,6 +61,34 @@
       mix: [{ v: "genuine", n: 4 }, { v: "restored", n: 3 }, { v: "forgery", n: 4 }], twin: true, decoyLog: true, clue: 0 },
     { id: "cfm10", labelKey: "cfmHall10", count: 12, verdicts: ["genuine", "restored", "forgery"],
       mix: [{ v: "genuine", n: 5 }, { v: "restored", n: 3 }, { v: "forgery", n: 4 }], twin: true, decoyLog: true, clue: 0 },
+    /* Hall eleven deals no untouched piece at all. Measured: before any line is
+     * read all thirteen cards still admit "genuine", and after the carve none
+     * does - so the hall is renewal against fabrication, and only a reading tells
+     * them apart, since a decoy log sits on the forgeries too. */
+    { id: "cfm11", labelKey: "cfmHall11", count: 13, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "restored", n: 8 }, { v: "forgery", n: 5 }], twin: false, decoyLog: true, clue: 0 },
+    /* Hall twelve deals no restoration but still prints the third button, with no
+     * lot note to fall back on: between two and six of its fourteen cards carry a
+     * log and read "restored" until the wear line refutes it, card by card. */
+    { id: "cfm12", labelKey: "cfmHall12", count: 14, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 8 }, { v: "forgery", n: 6 }], twin: false, decoyLog: true, clue: 0 },
+    /* Hall thirteen hides exactly one renewed surface among seven forgeries that
+     * also carry logs: three to seven cards tempt the renewal reading and exactly
+     * one survives it - in seven deals out of ten because a late pigment is truly
+     * covered by its logged renewal, a restock you have to notice. */
+    { id: "cfm13", labelKey: "cfmHall13", count: 15, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 7 }, { v: "restored", n: 1 }, { v: "forgery", n: 7 }], twin: false, decoyLog: true, clue: 0 },
+    /* Hall fourteen is the thin note: four forgeries in sixteen cards, and three
+     * to six cards still admit the renewal reading after every printed line -
+     * the obvious verdict needs the note and the arithmetic to give way. */
+    { id: "cfm14", labelKey: "cfmHall14", count: 16, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 10 }, { v: "restored", n: 2 }, { v: "forgery", n: 4 }], twin: false, decoyLog: true, clue: 4 },
+    /* Top rung: all eighteen cards read forgery before you look and the lines
+     * narrow them to the note's five. The twin pair shares its pigment and ledger
+     * lines, so one reading covers both cards and neither ever holds a forgery -
+     * the census only closes once the two have been compared. */
+    { id: "cfm15", labelKey: "cfmHall15", count: 18, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 6 }, { v: "restored", n: 7 }, { v: "forgery", n: 5 }], twin: true, decoyLog: true, clue: 5 },
   ];
 
   /* Ledger artists: the working window is what rule 3 checks. */
@@ -1134,6 +1163,8 @@
       "cfmHall4": "Donor Gallery", "cfmHall5": "The Vault", "cfmHall6": "Print Room",
       "cfmHall7": "Conservation Studio", "cfmHall8": "Confiscated Wing", "cfmHall9": "Long Gallery",
       "cfmHall10": "Founder's Bequest",
+      "cfmHall11": "Second-Hand Wing", "cfmHall12": "Attic Reserve", "cfmHall13": "Restorer's Bench",
+      "cfmHall14": "Portrait Corridor", "cfmHall15": "Registrar's Strongroom",
       "cfmHallLabel": "Hall", "cfmSurveyLabel": "Survey", "cfmOpenLabel": "Opened", "cfmMarkLabel": "Marked",
       "cfmHallSelectLabel": "Choose a hall", "cfmOpenCount": "{n}/{max} lines", "cfmMarkCount": "{n}/{max}",
       "cfmRule1": "Rule 1 wear: scratches only collect on genuine surfaces - under 25 marks per century the top layer is new, over 95 the marks were forced.",
@@ -1178,6 +1209,8 @@
       "cfmHall4": "捐赠厅", "cfmHall5": "地下库房", "cfmHall6": "版画厅",
       "cfmHall7": "修复工作室", "cfmHall8": "查没文物厅", "cfmHall9": "长廊画廊",
       "cfmHall10": "创始人遗赠厅",
+      "cfmHall11": "二手厅", "cfmHall12": "阁楼库", "cfmHall13": "修复台",
+      "cfmHall14": "肖像回廊", "cfmHall15": "登记处密室",
       "cfmHallLabel": "展厅", "cfmSurveyLabel": "普查", "cfmOpenLabel": "展阅", "cfmMarkLabel": "判定",
       "cfmHallSelectLabel": "选择展厅", "cfmOpenCount": "已开 {n}/{max} 行", "cfmMarkCount": "{n}/{max}",
       "cfmRule1": "规则一 磨损：划痕只在真品表面累积——每百年少于 25 道说明表层是新做的，多于 95 道就是人为刻出来的。",
@@ -1235,14 +1268,14 @@
         '<text x="90" y="54" font-size="8" fill="#ff6b35" text-anchor="middle">1921</text>' +
         '<path d="M12 64h36M72 64h36" stroke="rgba(148,163,184,.4)"/></svg>',
       en: [
-        "Aim: mark every exhibit genuine, later restoration or forgery, and close the hall with all of them right - 10 halls run from 4 exhibits to 12.",
+        "Aim: mark every exhibit genuine, later restoration or forgery, and close the hall with all of them right - 15 halls run from 4 exhibits to 18.",
         "Action: press a line to inspect it - wear, pigment, ledger - then press a verdict button; arrows jump between exhibits, 1 to 3 mark, i inspects the next line.",
         "Rule: a genuine piece needs all three to agree - marks between 25 and 95 per century, a pigment older than the object, and an artist who was working when it was dated.",
         "Watch out: a perfect scratch pattern cannot save a ledger that names an artist after the object's date, and a restoration log only excuses what it postdates.",
         "Scoring: the ledger prints how many lines decide the case; closing it inside that budget earns three stars.",
       ],
       zh: [
-        "\u76ee\u6807\uff1a\u7ed9\u6bcf\u4ef6\u5c55\u54c1\u5224\u5b9a\u771f\u54c1\u3001\u540e\u4ee3\u4fee\u590d\u6216\u4f2a\u9020\uff0c\u5168\u90e8\u5224\u5bf9\u624d\u80fd\u7ed3\u6848\u2014\u2014\u5341\u4e2a\u5c55\u5385\uff0c\u5c55\u54c1\u4ece 4 \u4ef6\u5230 12 \u4ef6\u3002",
+        "\u76ee\u6807\uff1a\u7ed9\u6bcf\u4ef6\u5c55\u54c1\u5224\u5b9a\u771f\u54c1\u3001\u540e\u4ee3\u4fee\u590d\u6216\u4f2a\u9020\uff0c\u5168\u90e8\u5224\u5bf9\u624d\u80fd\u7ed3\u6848\u2014\u2014\u5341\u4e94\u4e2a\u5c55\u5385\uff0c\u5c55\u54c1\u4ece 4 \u4ef6\u5230 18 \u4ef6\u3002",
         "\u64cd\u4f5c\uff1a\u70b9\u51fb\u4e00\u884c\u5c55\u5f00\u8bc1\u636e\u2014\u2014\u78e8\u635f\u3001\u989c\u6599\u3001\u5f52\u85cf\u53f0\u8d26\u2014\u2014\u518d\u70b9\u5224\u5b9a\u6309\u94ae\uff1b\u65b9\u5411\u952e\u5207\u6362\u5c55\u54c1\uff0c1 \u5230 3 \u5224\u5b9a\uff0ci \u5c55\u5f00\u4e0b\u4e00\u884c\u3002",
         "\u89c4\u5219\uff1a\u771f\u54c1\u8981\u4e09\u6761\u5168\u5bf9\u4e0a\u2014\u2014\u6bcf\u767e\u5e74 25 \u5230 95 \u9053\u5212\u75d5\u3001\u989c\u6599\u65e9\u4e8e\u5c55\u54c1\u5e74\u4ee3\u3001\u4e14\u767b\u8bb0\u7684\u753b\u5bb6\u5728\u5f53\u5e74\u786e\u5b9e\u5728\u4e16\u3002",
         "\u5c0f\u5fc3\uff1a\u5212\u75d5\u518d\u50cf\u771f\u54c1\u4e5f\u6551\u4e0d\u4e86\u4e00\u4efd\u63d0\u5230\u540e\u4e16\u753b\u5bb6\u7684\u5f52\u85cf\u8bb0\u5f55\uff1b\u4fee\u590d\u65e5\u5fd7\u53ea\u80fd\u89e3\u91ca\u5b83\u4e4b\u540e\u7684\u75d5\u8ff9\u3002",

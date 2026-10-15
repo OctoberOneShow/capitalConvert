@@ -362,6 +362,153 @@
         { at: 49, lane: 2, speed: 58 },
       ],
     },
+    /* A turned shear band: one deck drifts up the screen instead of down it, so
+     * the approach is head-on and the aim point moves the other way. */
+    {
+      id: "k11", labelKey: "kctF11", noteKey: "kctN11", lineMin: 84, lineMax: 232, turn: 450, grab: 21,
+      start: 21, bonus: 2.5, shear: 1.6, basePar: 14,
+      rival: { gain: 1, lead: 1, speed: 196, react: 0.04, lane: 2 },
+      stream: [
+        { at: 0.5, lane: 0, speed: 62 },
+        { at: 2.4, lane: 1, speed: -46 },
+        { at: 4.3, lane: 2, speed: 58 },
+        { at: 6.2, lane: 1, speed: -52 },
+        { at: 8.1, lane: 0, speed: 66 },
+        { at: 10, lane: 1, speed: -44 },
+        { at: 11.9, lane: 2, speed: 60 },
+        { at: 13.8, lane: 1, speed: -50 },
+        { at: 15.7, lane: 0, speed: 64 },
+        { at: 17.6, lane: 1, speed: -46 },
+        { at: 19.5, lane: 2, speed: 58 },
+        { at: 21.4, lane: 1, speed: -52 },
+        { at: 23.3, lane: 0, speed: 66 },
+        { at: 25.2, lane: 1, speed: -44 },
+        { at: 27.1, lane: 2, speed: 60 },
+        { at: 29, lane: 1, speed: -50 },
+      ],
+    },
+    /* The rival is let off its deck: it works the whole sky faster than the
+     * reference line can reach, so a grab is only yours if you arrive closer. */
+    {
+      id: "k12", labelKey: "kctF12", noteKey: "kctN12", lineMin: 80, lineMax: 238, turn: 455, grab: 20,
+      start: 22, bonus: 2.3, shear: 1.9, basePar: 11,
+      rival: { gain: 1, lead: 1.15, speed: 206, react: 0, lane: -1 },
+      stream: [
+        { at: 0.5, lane: 0, speed: 58 },
+        { at: 2.5, lane: 1, speed: 62 },
+        { at: 4.5, lane: 2, speed: 66 },
+        { at: 6.5, lane: 1, speed: 70 },
+        { at: 8.5, lane: 2, speed: 58 },
+        { at: 10.5, lane: 0, speed: 62 },
+        { at: 12.5, lane: 0, speed: 66 },
+        { at: 14.5, lane: 1, speed: 70 },
+        { at: 16.5, lane: 2, speed: 58 },
+        { at: 18.5, lane: 1, speed: 62 },
+        { at: 20.5, lane: 2, speed: 66 },
+        { at: 22.5, lane: 0, speed: 70 },
+        { at: 24.5, lane: 0, speed: 58 },
+        { at: 26.5, lane: 1, speed: 62 },
+        { at: 28.5, lane: 2, speed: 66 },
+        { at: 30.5, lane: 1, speed: 70 },
+        { at: 32.5, lane: 2, speed: 58 },
+        { at: 34.5, lane: 0, speed: 62 },
+        { at: 36.5, lane: 0, speed: 66 },
+        { at: 38.5, lane: 1, speed: 70 },
+      ],
+    },
+    /* Two bonus gates in the stream. A gated ribbon scores like any other but
+     * only buys air time if the kite reaches it without hooking first. */
+    {
+      id: "k13", labelKey: "kctF13", noteKey: "kctN13", lineMin: 78, lineMax: 240, turn: 455, grab: 20,
+      start: 20, bonus: 2.2, shear: 1.8, basePar: 13,
+      rival: { gain: 1, lead: 1, speed: 198, react: 0.05, lane: 0 },
+      stream: [
+        { at: 0.6, lane: 0, speed: 62 },
+        { at: 2.2, lane: 1, speed: 64 },
+        { at: 3.8, lane: 0, speed: 66 },
+        { at: 8.2, lane: 2, speed: 56, gate: 6, pay: 8 },
+        { at: 10.4, lane: 1, speed: 62 },
+        { at: 12, lane: 0, speed: 68 },
+        { at: 13.6, lane: 1, speed: 60 },
+        { at: 18, lane: 2, speed: 54, gate: 6, pay: 8 },
+        { at: 20.2, lane: 0, speed: 66 },
+        { at: 21.8, lane: 1, speed: 64 },
+        { at: 23.4, lane: 0, speed: 60 },
+        { at: 25, lane: 1, speed: 66 },
+        { at: 29.4, lane: 2, speed: 56, gate: 6, pay: 8 },
+        { at: 31.6, lane: 0, speed: 64 },
+        { at: 33.2, lane: 1, speed: 62 },
+        { at: 34.8, lane: 0, speed: 68 },
+      ],
+    },
+    /* The sky is handed out in single-deck blocks with dead windows between
+     * them: the only way through a window is to change deck while nothing is
+     * on the wing. */
+    {
+      id: "k14", labelKey: "kctF14", noteKey: "kctN14", lineMin: 74, lineMax: 242, turn: 460, grab: 20,
+      start: 21, bonus: 2.3, shear: 2.05, basePar: 15,
+      rival: { gain: 1, lead: 1, speed: 200, react: 0.04, lane: 1 },
+      stream: [
+        { at: 0.5, lane: 2, speed: 60 },
+        { at: 2.1, lane: 2, speed: 64 },
+        { at: 3.7, lane: 2, speed: 58 },
+        { at: 5.3, lane: 2, speed: 62 },
+        { at: 6.9, lane: 2, speed: 60 },
+        { at: 15, lane: 0, speed: 66 },
+        { at: 16.4, lane: 0, speed: 70 },
+        { at: 17.8, lane: 0, speed: 64 },
+        { at: 19.2, lane: 0, speed: 68 },
+        { at: 20.6, lane: 0, speed: 66 },
+        { at: 28.6, lane: 2, speed: 58 },
+        { at: 30.2, lane: 2, speed: 62 },
+        { at: 31.8, lane: 2, speed: 60 },
+        { at: 33.4, lane: 2, speed: 64 },
+        { at: 35, lane: 2, speed: 58 },
+        { at: 43, lane: 0, speed: 68 },
+        { at: 44.4, lane: 0, speed: 64 },
+        { at: 45.8, lane: 0, speed: 70 },
+      ],
+    },
+    /* Clock-bound: the stream is denser than the air time can ever clear, so
+     * the flight ends on the meter, not on an empty sky, and every dry spell is
+     * fatal. */
+    {
+      id: "k15", labelKey: "kctF15", noteKey: "kctN15", lineMin: 90, lineMax: 244, turn: 465, grab: 19,
+      start: 11, bonus: 1.9, shear: 2.2, basePar: 9,
+      rival: { gain: 1, lead: 1, speed: 204, react: 0.03, lane: 1 },
+      stream: [
+        { at: 0.5, lane: 0, speed: 76 },
+        { at: 1.9, lane: 2, speed: 70 },
+        { at: 3.3, lane: 1, speed: 74 },
+        { at: 4.7, lane: 0, speed: 78 },
+        { at: 6.1, lane: 2, speed: 68 },
+        { at: 7.5, lane: 1, speed: 76 },
+        { at: 8.9, lane: 0, speed: 72 },
+        { at: 10.3, lane: 2, speed: 70 },
+        { at: 11.7, lane: 1, speed: 78 },
+        { at: 13.1, lane: 0, speed: 74 },
+        { at: 14.5, lane: 2, speed: 68 },
+        { at: 15.9, lane: 1, speed: 76 },
+        { at: 17.3, lane: 0, speed: 72 },
+        { at: 18.7, lane: 2, speed: 70 },
+        { at: 20.1, lane: 1, speed: 78 },
+        { at: 21.5, lane: 0, speed: 74 },
+        { at: 22.9, lane: 2, speed: 68 },
+        { at: 24.3, lane: 1, speed: 76 },
+        { at: 25.7, lane: 0, speed: 72 },
+        { at: 27.1, lane: 2, speed: 70 },
+        { at: 28.5, lane: 1, speed: 78 },
+        { at: 29.9, lane: 0, speed: 74 },
+        { at: 31.3, lane: 2, speed: 68 },
+        { at: 32.7, lane: 1, speed: 76 },
+        { at: 34.1, lane: 0, speed: 72 },
+        { at: 35.5, lane: 2, speed: 70 },
+        { at: 36.9, lane: 1, speed: 78 },
+        { at: 38.3, lane: 0, speed: 74 },
+        { at: 39.7, lane: 2, speed: 68 },
+        { at: 41.1, lane: 1, speed: 76 },
+      ],
+    },
   ];
 
   /* --- pure core ---------------------------------------------------------- */
@@ -570,6 +717,8 @@
       at: rb.at,
       lane: rb.lane,
       speed: rb.speed,
+      gate: kctNumber(rb.gate),
+      pay: kctNumber(rb.pay),
       alt: deck.low + ((index * deck.step) % deck.span),
       sway: rb.lane === 1 ? 10 : 6,
       phase: rb.at * 0.7 + rb.lane,
@@ -580,13 +729,19 @@
     };
   }
 
+  /* Where a ribbon sits at a clock reading. A deck drifting downwind enters from
+   * the left edge as it always has; a deck whose speed is negative has caught the
+   * return shear and enters from the right, so the whole plate is read the other
+   * way round. Only the starting edge and the direction of travel differ. */
   function kctLayRibbon(rb, tsec) {
     var since = tsec - rb.at;
-    var x = since > 0 ? -24 + rb.speed * since : -60;
+    var travel = since > 0 ? rb.speed * since : 0;
     return {
-      x: x,
+      x: since > 0
+        ? (rb.speed < 0 ? kctW + 24 + travel : -24 + travel)
+        : (rb.speed < 0 ? kctW + 60 : -60),
       y: kctAy - rb.alt - rb.sway * Math.sin(rb.phase + tsec * 1.1),
-      gone: rb.speed * since > kctCross,
+      gone: since > 0 && Math.abs(travel) > kctCross,
     };
   }
 
@@ -596,6 +751,8 @@
       at: rb.at,
       lane: rb.lane,
       speed: rb.speed,
+      gate: kctNumber(rb.gate),
+      pay: kctNumber(rb.pay),
       alt: rb.alt,
       sway: rb.sway,
       phase: rb.phase,
@@ -637,6 +794,9 @@
     return {
       t: 0,
       clock: def.start,
+      /* When the kite last hooked something. A gated ribbon reads the quiet run
+       * back from here, so arriving empty is a state of the sky, not a promise. */
+      grabAt: 0,
       you: kctStart(def, 0.42, def.lineMin + 46),
       foe: kctStart(def, -0.3, def.lineMin + 30),
       stream: stream,
@@ -652,12 +812,13 @@
     var out = {
       t: kctNumber(world.t) + tick,
       clock: kctNumber(world.clock) - tick,
+      grabAt: kctNumber(world.grabAt),
       you: kctClone(world.you),
       foe: kctClone(world.foe),
       stream: [],
       over: false,
     };
-    var events = { got: 0, stolen: 0, snags: 0, over: false };
+    var events = { got: 0, stolen: 0, snags: 0, pay: 0, over: false };
     for (var i = 0; i < world.stream.length; i += 1) {
       out.stream.push(kctCloneRibbon(world.stream[i], out.t));
     }
@@ -674,7 +835,7 @@
     out.clock -= events.snags * kctSnag;
     for (var r = 0; r < out.stream.length; r += 1) {
       var rb = out.stream[r];
-      if (rb.taken || rb.gone || rb.x < -20) {
+      if (rb.taken || rb.gone || rb.at > out.t || rb.x < -20) {
         continue;
       }
       var yours = kctDist(out.you.x, out.you.y, rb.x, rb.y);
@@ -682,7 +843,13 @@
       if (yours <= def.grab && yours <= theirs) {
         rb.taken = "you";
         out.you.score += 1;
-        out.clock += kctNumber(def.bonus);
+        /* A gated ribbon scores either way: only a kite that reaches it with a
+         * quiet line converts it into air time. */
+        var quiet = out.t - out.grabAt;
+        var paid = rb.gate > 0 ? (quiet >= rb.gate ? rb.pay : 0) : def.bonus;
+        out.clock += kctNumber(paid);
+        out.grabAt = out.t;
+        events.pay += kctNumber(paid);
         events.got += 1;
       } else if (theirs <= def.grab) {
         rb.taken = "foe";
@@ -1106,8 +1273,20 @@
       draw();
     }
 
+    /* Read the gate back off the stream, so the brief can never quote numbers
+     * the row does not actually carry. */
+    function gateOf(def) {
+      for (var i = 0; i < def.stream.length; i += 1) {
+        if (kctNumber(def.stream[i].gate) > 0) {
+          return { g: def.stream[i].gate, p: def.stream[i].pay };
+        }
+      }
+      return { g: 0, p: 0 };
+    }
+
     function objective() {
-      return t("kctObjective", {
+      var gate = gateOf(flight);
+      var line = t("kctObjective", {
         name: t(flight.labelKey),
         p: par,
         three: bands[0],
@@ -1115,6 +1294,10 @@
         s: flight.bonus,
         n: flight.stream.length,
       });
+      if (flight.noteKey) {
+        line += " " + t(flight.noteKey, { g: gate.g, p: gate.p });
+      }
+      return line;
     }
 
     function loadFlight(def) {
@@ -1242,11 +1425,16 @@
       world = step.world;
       if (step.events.got) {
         var rect = canvas.getBoundingClientRect();
-        readout.textContent = t("kctCaught", {
-          n: world.you.score,
-          s: flight.bonus,
-          left: kctRemaining(world),
-        });
+        readout.textContent = step.events.pay > 0
+          ? t("kctCaught", {
+            n: world.you.score,
+            s: step.events.pay,
+            left: kctRemaining(world),
+          })
+          : t("kctGateShut", {
+            n: world.you.score,
+            left: kctRemaining(world),
+          });
         createConfetti(rect.left + world.you.x, rect.top + world.you.y);
         if (!isMotionOff()) {
           sparks.push({ x: world.you.x, y: world.you.y, age: 0 });
@@ -1705,6 +1893,16 @@
       "kctF8": "Long Line Reach",
       "kctF9": "Shear Ladder",
       "kctF10": "Festival Finale",
+      "kctF11": "Against The Drift",
+      "kctF12": "The Rival Unbound",
+      "kctF13": "Quiet Line Gate",
+      "kctF14": "Deck Change",
+      "kctF15": "Out Of Air",
+      "kctN11": "One deck has caught the return shear and drifts up the sky instead of down it, so meet it head-on rather than chase it.",
+      "kctN12": "The rival is off its own deck and works the whole sky faster than you can reach: give up the ribbons it gets to first.",
+      "kctN13": "Two gated ribbons only pay {p} seconds of air if your line has been quiet for {g} seconds, so the ones before them go unhooked.",
+      "kctN14": "The stream arrives in single-deck blocks with a dead window between them, and that empty stretch is your only chance to change deck.",
+      "kctN15": "The sky will not empty before your air time does: every ribbon is a refuel, and one dry spell lands you.",
       "kctClockLabel": "Air Time",
       "kctCatchLabel": "You / Rival",
       "kctLineLabel": "Line",
@@ -1730,9 +1928,10 @@
       "kctLayerMid": "mid",
       "kctLayerHigh": "high",
       "kctFieldLabel": "Kite sky: left and right swing the kite across the wind, up hauls the line in, down pays it out, space toggles pumping, and dragging the sky steers toward the point",
-      "kctObjective": "{name}: a rival kite works this sky too. Measured par is {p} ribbons and {three} wins three stars. You get {b} of air time, every ribbon adds {s}, and the stream holds {n}.",
+      "kctObjective": "{name}: a rival kite works this sky too. Measured par is {p} ribbons and {three} wins three stars. You get {b} of air time, an ordinary ribbon adds {s}, and the stream holds {n}.",
       "kctArmed": "{n} ribbons will fly this sky. The hook reaches {w}px.",
       "kctCaught": "Ribbon {n} hooked - {s} more seconds of air, {left} still out there.",
+      "kctGateShut": "Ribbon {n} hooked on a dirty line - no air time bought, {left} still out there.",
       "kctStolen": "The rival took one: {n} to it.",
       "kctSnagged": "Wingtip in the rooftops: {s} seconds gone.",
       "kctLanded": "{n} ribbons against the rival's {r}, par was {p} - {s} stars.",
@@ -1756,6 +1955,16 @@
       "kctF8": "长线远天",
       "kctF9": "切变阶梯",
       "kctF10": "风筝节压轴",
+      "kctF11": "逆风飘带",
+      "kctF12": "对手无界",
+      "kctF13": "空手门",
+      "kctF14": "换层窗口",
+      "kctF15": "留空终章",
+      "kctN11": "有一层飘带撞上了返切变，是从下往上飘的，要正面去迎它，不是追着它跑。",
+      "kctN12": "对手不再只守一层，整片天空都归它跑，还比你先到：它先碰到的那些就放手别抢。",
+      "kctN13": "两条带门的飘带只有在你空手满 {g} 秒之后才给 {p} 秒留空，所以门前那几条得忍着不钩。",
+      "kctN14": "飘带按层成块地放出来，块与块之间是一段空窗；换层只能在那段谁都不在场的时间里做。",
+      "kctN15": "天空不会先空，先耗尽的是留空：每钩到一条都是续命，断一手就落地。",
       "kctClockLabel": "留空",
       "kctCatchLabel": "你 / 对手",
       "kctLineLabel": "线长",
@@ -1781,9 +1990,10 @@
       "kctLayerMid": "中层",
       "kctLayerHigh": "高层",
       "kctFieldLabel": "纸鸢天空：左右让鸢横穿风向，上收线，下放线，空格切换抽线；在天上拖动就是朝那一点飞",
-      "kctObjective": "{name}：对手的鸢也在这片天上。实测标准 {p} 条，{three} 条可拿三星。留空 {b}，每抓到一条再加 {s} 秒，一共放出 {n} 条。",
+      "kctObjective": "{name}：对手的鸢也在这片天上。实测标准 {p} 条，{three} 条可拿三星。留空 {b}，寻常一条再加 {s} 秒，一共放出 {n} 条。",
       "kctArmed": "这场会放出 {n} 条飘带。钩取范围 {w} 像素。",
       "kctCaught": "钩到第 {n} 条——多留空 {s} 秒，外面还有 {left} 条。",
+      "kctGateShut": "钩到第 {n} 条，但线不干净——没换来留空，外面还有 {left} 条。",
       "kctStolen": "被对手抢走一条：它已有 {n} 条。",
       "kctSnagged": "鸢角擦到屋顶：损失 {s} 秒。",
       "kctLanded": "{n} 条，对手 {r} 条，标准 {p} 条 - 获得 {s} 星。",
@@ -1822,7 +2032,7 @@
         "Rule: three wind layers blow at different speeds, and only the line you have paid out reaches the high decks.",
         "Rule: a long line is a wide turning radius, and steering pull comes from apparent wind, so sweep across the sky to build speed.",
         "Costs: dipping under the rooftop line costs 2 seconds, and pumping drains the line strength the gauge shows.",
-        "Scoring: par is measured by flying a scripted line through this same physics, while the rival - the square kite marked R - works one deck of the sky and lets the others be."
+        "Scoring: par is measured by flying a scripted line through this same physics, while the rival - the square kite marked R - works one deck of the sky in the early flights and lets the others be, until a later flight takes it off that deck."
       ],
       zh: [
         "目标：在留空耗尽前钩下顺风的飘带；每抓到一条就多几秒。",
@@ -1830,7 +2040,7 @@
         "规则：三层风速度不同，只有放出去的线才够得着高层的飘带。",
         "规则：线越长转弯半径越大，而转向的力气来自相对风，所以先横着扫出去攒速度。",
         "代价：鸢角擦到屋顶线罚 2 秒，抽线会消耗仪表上的线力。",
-        "计分：标准是用一条编排好的线跑同一套物理实测出来的；而对手（标着 R 的方形鸢）只守着一层飘带，其余两层归你抢。"
+        "计分：标准是用一条编排好的线跑同一套物理实测出来的；而对手（标着 R 的方形鸢）在前几场只守着一层飘带，其余两层归你抢，到后面的场次它才会满场乱抢。"
       ],
     },
   });
