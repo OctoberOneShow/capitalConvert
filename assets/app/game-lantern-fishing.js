@@ -49,6 +49,9 @@
     { id: "l8", labelKey: "lfsZ8", need: 7, named: "razor", namedNeed: 2, pool: ["glintfin", "razor", "razor", "lurker", "glintfin", "lurker"], fuel: 130, starFuel: [58, 36, 14], band: 64 },
     { id: "l9", labelKey: "lfsZ9", need: 7, named: "glintfin", namedNeed: 2, pool: ["snatcher", "glintfin", "razor", "glintfin", "razor", "glintfin"], fuel: 122, starFuel: [60, 42, 18], band: 84 },
     { id: "l10", labelKey: "lfsZ10", need: 8, named: "lurker", namedNeed: 3, pool: ["glintfin", "razor", "lurker", "lurker", "lurker", "razor", "snatcher"], fuel: 130, starFuel: [54, 32, 8], band: 58 },
+    { id: "l11", labelKey: "lfsZ11", need: 8, named: "lurker", namedNeed: 4, pool: ["lurker", "lurker", "razor", "lurker", "glintfin", "lurker"], fuel: 138, starFuel: [58, 38, 18], band: 52 },
+    { id: "l12", labelKey: "lfsZ12", need: 8, named: "razor", namedNeed: 4, pool: ["razor", "razor", "snatcher", "glintfin", "razor", "razor"], fuel: 140, starFuel: [56, 36, 16], band: 90 },
+    { id: "l13", labelKey: "lfsZ13", need: 8, named: "lurker", namedNeed: 3, pool: ["glintfin", "razor", "lurker", "snatcher", "lurker", "razor", "glintfin"], fuel: 144, starFuel: [58, 38, 16], band: 58 },
   ];
 
   /* --- pure core ---------------------------------------------------------- */
@@ -983,6 +986,9 @@
       "lfsZ8": "Crowded Reef",
       "lfsZ9": "Thief Water",
       "lfsZ10": "The Last Dredge",
+      "lfsZ11": "Abyssal Rift",
+      "lfsZ12": "Frenzy Shoal",
+      "lfsZ13": "Midnight Trench",
       "lfsSpGlintfin": "Glintfin",
       "lfsSpRazor": "Razor",
       "lfsSpLurker": "Pale lurker",
@@ -1027,6 +1033,9 @@
       "lfsZ8": "拥挤礁",
       "lfsZ9": "夺口贼水",
       "lfsZ10": "终夜拖网",
+      "lfsZ11": "深渊海沟裂隙",
+      "lfsZ12": "暴食浅滩",
+      "lfsZ13": "子夜海槽",
       "lfsSpGlintfin": "闪光鱼",
       "lfsSpRazor": "刀鱼",
       "lfsSpLurker": "白潜鱼",

@@ -34,6 +34,9 @@
     { id: "c8", labelKey: "echZ8", style: "fork", pings: 12, quota: 7, starPings: [7, 9, 11], fish: 0 },
     { id: "c9", labelKey: "echZ9", style: "deep", pings: 12, quota: 8, starPings: [7, 9, 11], fish: 2 },
     { id: "c10", labelKey: "echZ10", style: "pinch", pings: 12, quota: 9, starPings: [7, 9, 11], fish: 0 },
+    { id: "c11", labelKey: "echZ11", style: "rooms", pings: 13, quota: 8, starPings: [7, 9, 11], fish: 1 },
+    { id: "c12", labelKey: "echZ12", style: "fork", pings: 14, quota: 9, starPings: [8, 10, 12], fish: 2 },
+    { id: "c13", labelKey: "echZ13", style: "deep", pings: 14, quota: 10, starPings: [8, 11, 13], fish: 2 },
   ];
 
   /* --- pure core ----------------------------------------------------------
@@ -1091,6 +1094,9 @@
       "echZ8": "Knife Forks",
       "echZ9": "Blind Shoal",
       "echZ10": "The Long Squeeze",
+      "echZ11": "Resonant Labyrinth",
+      "echZ12": "Twin Abyssal Fork",
+      "echZ13": "Abyssal Cathedrals",
       "echPingLabel": "Ink",
       "echFossilLabel": "Fossils",
       "echStepLabel": "Steps",
@@ -1130,6 +1136,9 @@
       "echZ8": "刀锋岔道",
       "echZ9": "盲鱼回廊",
       "echZ10": "绵长窄道",
+      "echZ11": "共振迷宫",
+      "echZ12": "双生深渊岔道",
+      "echZ13": "深渊圣殿",
       "echPingLabel": "墨量",
       "echFossilLabel": "化石",
       "echStepLabel": "步数",
