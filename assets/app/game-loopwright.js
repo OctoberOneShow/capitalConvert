@@ -200,6 +200,64 @@
         ["W", "W", "W", "F", "F", "F", "F", "F"],
       ],
     },
+    /* Two crates and two pressure doors: each side must be cleared and parked
+     * on its plate before the center corridor unlocks for the final dash. */
+    {
+      id: "f11", labelKey: "lpwF11",
+      map: ["########",
+            "#..G...#",
+            "#..D...#",
+            "#..D...#",
+            "#P...P.#",
+            "#C...C.#",
+            "#..W...#",
+            "########"],
+      doorPlates: [1, 0], pistonOffsets: [],
+      programs: [
+        ["L", "F", "F", "R", "P"],
+        ["R", "F", "F", "L", "P"],
+        ["W", "W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
+    /* Symmetric pad relay: each wing carries its portable pressure pad and drops
+     * it onto the matching terminal, clearing the twin security airlock. */
+    {
+      id: "f12", labelKey: "lpwF12",
+      map: ["########",
+            "#...G..#",
+            "#...D..#",
+            "#...D..#",
+            "#......#",
+            "#.PSWSP#",
+            "#......#",
+            "########"],
+      doorPlates: [0, 1], pistonOffsets: [],
+      programs: [
+        ["L", "G", "F", "F", "D"],
+        ["R", "G", "F", "F", "D"],
+        ["W", "W", "W", "W", "F", "F", "F", "F"],
+      ],
+    },
+    /* Citadel gate: three coordinated ghost workers hold the outer, middle, and
+     * inner pressure contacts before the runner sprints the final straight. */
+    {
+      id: "f13", labelKey: "lpwF13",
+      map: ["########",
+            "#...G..#",
+            "#...D..#",
+            "#...D..#",
+            "#...D..#",
+            "#P.PWP.#",
+            "#......#",
+            "########"],
+      doorPlates: [0, 1, 2], pistonOffsets: [],
+      programs: [
+        ["L", "F", "F", "F"],
+        ["R", "F"],
+        ["L", "F"],
+        ["W", "W", "W", "W", "F", "F", "F", "F"],
+      ],
+    },
   ];
 
   function mulberry32(seed) {
@@ -1053,6 +1111,9 @@
       "lpwF8": "Wait for Your Crew",
       "lpwF9": "Shared Key",
       "lpwF10": "One Pad, Two Jobs",
+      "lpwF11": "Double Squeeze",
+      "lpwF12": "Dual Pad Relay",
+      "lpwF13": "Citadel Gate",
       "lpwOpF": "Forward",
       "lpwOpB": "Back",
       "lpwOpL": "Turn left",
@@ -1099,6 +1160,9 @@
       "lpwF8": "等待工友",
       "lpwF9": "共享钥匙",
       "lpwF10": "一垫两用",
+      "lpwF11": "双箱对推",
+      "lpwF12": "双垫接力",
+      "lpwF13": "三重门禁",
       "lpwOpF": "前进",
       "lpwOpB": "后退",
       "lpwOpL": "左转",

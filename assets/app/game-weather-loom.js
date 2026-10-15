@@ -60,6 +60,10 @@
     return { x: x, y: y, kind: "s", dir: 0 };
   }
 
+  function wlkHeat(x, y) {
+    return { x: x, y: y, kind: "h", dir: 0 };
+  }
+
   function wlkVillage(x, y, min, max) {
     return { x: x, y: y, min: min, max: max };
   }
@@ -161,6 +165,77 @@
       villages: [wlkVillage(1, 1, 21, 45), wlkVillage(2, 3, 21, 45), wlkVillage(2, 6, 21, 45), wlkVillage(1, 7, 21, 45), wlkVillage(3, 4, 21, 45), wlkVillage(7, 2, 48, 78)],
       plan: [wlkWind(0, 1), wlkShade(1, 1), wlkWind(0, 3), wlkWind(1, 3), wlkShade(2, 3), wlkWind(0, 6), wlkWind(1, 6), wlkShade(2, 6),
         wlkWind(0, 7), wlkShade(1, 7), wlkWind(0, 4), wlkWind(1, 4), wlkWind(2, 4), wlkShade(3, 4), wlkWind(7, 4, 3), wlkWind(7, 3, 3), wlkWind(7, 1, 1)],
+    },
+    /* Archipelago Trade Winds: two mountain pillars flank the central valley;
+     * canals sweep along the far northern and southern rims while an eastern
+     * lagoon lake carries the outer settlement. */
+    {
+      id: "w11", labelKey: "wlkZ11", points: 19, ticks: 20,
+      cfg: { source: 8, lakeSource: 6 },
+      ridge: [wlkSpot(3, 2), wlkSpot(3, 3), wlkSpot(3, 4), wlkSpot(6, 2), wlkSpot(6, 3), wlkSpot(6, 4)],
+      lake: [wlkSpot(8, 5)],
+      villages: [
+        wlkVillage(2, 1, 50, 82),
+        wlkVillage(2, 5, 50, 82),
+        wlkVillage(5, 1, 22, 48),
+        wlkVillage(5, 5, 22, 48),
+        wlkVillage(8, 2, 50, 82),
+      ],
+      plan: [
+        wlkWind(0, 1), wlkWind(1, 1),
+        wlkWind(0, 5), wlkWind(1, 5),
+        wlkWind(0, 0), wlkWind(1, 0), wlkWind(2, 0), wlkWind(3, 0), wlkWind(4, 0), wlkWind(5, 0, 1),
+        wlkWind(0, 6), wlkWind(1, 6), wlkWind(2, 6), wlkWind(3, 6), wlkWind(4, 6), wlkWind(5, 6, 3),
+        wlkWind(8, 5, 3), wlkWind(8, 4, 3), wlkWind(8, 3, 3),
+      ],
+    },
+    /* Thermal Lift Basin: dual lakes and high mountain saddles; moisture is drawn
+     * through thermal lifting past the ridge gap into the interior basin. */
+    {
+      id: "w12", labelKey: "wlkZ12", points: 19, ticks: 20,
+      cfg: { source: 7, lakeSource: 3.2, lift: 0.45, heater: 6 },
+      ridge: [wlkSpot(4, 1), wlkSpot(4, 2), wlkSpot(4, 5), wlkSpot(4, 6)],
+      lake: [wlkSpot(8, 2), wlkSpot(8, 6)],
+      villages: [
+        wlkVillage(3, 2, 45, 80),
+        wlkVillage(3, 6, 45, 80),
+        wlkVillage(6, 3, 22, 48),
+        wlkVillage(6, 2, 45, 80),
+        wlkVillage(6, 6, 45, 80),
+      ],
+      plan: [
+        wlkWind(0, 2), wlkWind(1, 2), wlkWind(2, 2),
+        wlkWind(0, 6), wlkWind(1, 6), wlkWind(2, 6),
+        wlkWind(0, 4), wlkWind(1, 4), wlkWind(2, 4), wlkWind(3, 4),
+        wlkHeat(4, 4),
+        wlkWind(4, 3), wlkWind(5, 3),
+        wlkWind(8, 2, 2), wlkWind(7, 2, 2),
+        wlkWind(8, 6, 2), wlkWind(7, 6, 2),
+      ],
+    },
+    /* Crown Divide: six villages spread across the watershed; balanced canals
+     * and triple lake feeds ensure steady harvest across the continental divide. */
+    {
+      id: "w13", labelKey: "wlkZ13", points: 19, ticks: 20,
+      cfg: { source: 7, lakeSource: 3.2, ambient: 54 },
+      ridge: [wlkSpot(4, 2), wlkSpot(4, 3), wlkSpot(4, 4), wlkSpot(4, 5)],
+      lake: [wlkSpot(6, 3), wlkSpot(8, 2), wlkSpot(7, 5)],
+      villages: [
+        wlkVillage(2, 1, 48, 80),
+        wlkVillage(2, 6, 48, 80),
+        wlkVillage(3, 3, 48, 80),
+        wlkVillage(6, 1, 48, 80),
+        wlkVillage(6, 5, 48, 80),
+        wlkVillage(8, 4, 48, 80),
+      ],
+      plan: [
+        wlkWind(0, 1), wlkWind(1, 1),
+        wlkWind(0, 6), wlkWind(1, 6),
+        wlkWind(0, 3), wlkWind(1, 3), wlkWind(2, 3),
+        wlkWind(6, 3, 3), wlkWind(6, 2, 3),
+        wlkWind(8, 2, 1), wlkWind(8, 3, 1),
+        wlkWind(7, 5, 2),
+      ],
     },
   ];
 
@@ -1007,6 +1082,9 @@
       "wlkZ8": "Opposite Air",
       "wlkZ9": "Chasing Front",
       "wlkZ10": "Drought Week",
+      "wlkZ11": "Archipelago Trade Winds",
+      "wlkZ12": "Thermal Lift Basin",
+      "wlkZ13": "Crown Divide",
       "wlkSeasonLabel": "Season",
       "wlkPointsLabel": "Loom",
       "wlkFedLabel": "Fed",
@@ -1059,6 +1137,9 @@
       "wlkZ8": "一热两需",
       "wlkZ9": "逐锋之季",
       "wlkZ10": "旱周抢水",
+      "wlkZ11": "群岛信风",
+      "wlkZ12": "热力盆地",
+      "wlkZ13": "皇冠分水岭",
       "wlkSeasonLabel": "季度",
       "wlkPointsLabel": "织点",
       "wlkFedLabel": "灌足",
