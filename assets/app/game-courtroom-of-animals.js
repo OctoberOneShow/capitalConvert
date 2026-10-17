@@ -17,7 +17,7 @@
   var ctaTrustMax = 5;
   var ctaHasOwn = Object.prototype.hasOwnProperty;
 
-  /* --- the docket: ten authored cases ------------------------------------ */
+  /* --- the docket: twenty authored cases --------------------------------- */
   var ctaCases = [
     {
       id: "k1", labelKey: "ctaCase1", time: 8, culprit: "rat",
@@ -573,6 +573,583 @@
         { id: "k10c1", accused: "pike", statements: ["k10s1", "k10s2", "k10s3"], exhibits: ["k10e1", "k10e2", "k10e4"], en: "Percival went in on the flood and leaned the last stone over to run the eels down the race", zh: "珀西趁着大水进去，把最后一块石头顶翻，把鳝鱼放进水道" },
         { id: "k10c2", accused: "ram", statements: ["k10s4", "k10s6"], exhibits: ["k10e3", "k10e4"], en: "Grieve stood on the stone, leaned it over himself and named a fish to cover the wet print", zh: "格里夫站在那块石头上，自己把石头顶翻，又指一条鱼来盖住那个湿印" },
         { id: "k10c3", accused: "wagtail", statements: ["k10s5"], exhibits: ["k10e1", "k10e5"], en: "Tib walked the crest, saw the gap made and let the night's count fall on a pike", zh: "蒂布在坝顶走着，眼看着豁口开起来，却把这夜的账推到一条狗鱼身上" },
+      ],
+    },
+    {
+      id: "k11", labelKey: "ctaCase11", time: 12, culprit: "stoat",
+      bar: { strength: 10, trust: 2 },
+      charge: {
+        en: "A lamb went out of the fold at dark and the latch was found bent, not broken. This bench believes a witness it has pressed less than a witness it has corroborated, and it prices that difference in front of you.",
+        zh: "天黑时一只羊羔从圈里出去了，门闩找到时是弯的，不是断的。这群法官信被逼问过的证人，远不如信被佐证过的证人，而这个价钱他们会当你的面报出来。",
+      },
+      suspects: [
+        { id: "stoat", en: "Niv the Stoat", zh: "白鼬尼夫" },
+        { id: "pika", en: "Munt the Pika", zh: "鼠兔芒特" },
+        { id: "wren", en: "Tuck the Wren", zh: "鹪鹩塔克" },
+      ],
+      exhibits: [
+        { id: "k11e1", weight: 3, en: "The latch iron, bent outward in one slow curve: the bend a shoulder makes, and no hand and no bill can make.", zh: "门闩的铁向外弯成一道慢弧。那是肩膀弯得出的弧，手和嘴都弯不出来。" },
+        { id: "k11e2", weight: 2, en: "A drag under the gate rail one low body wide, the grass laid flat going out and standing everywhere coming in.", zh: "门栏底下一道拖痕，一个低身子那么宽。出去的草被压平了，回来的地方草全立着。" },
+        { id: "k11e3", weight: 2, en: "The wool on the gate post rubbed off on one side only, at the height of a running stoat's flank.", zh: "门柱上的羊毛只磨掉了一边，高度正是一只跑着的白鼬的肋侧。" },
+        { id: "k11e4", weight: 1, en: "Munt's own food-hole under that post: husk to the back of it, and not one thread of lamb.", zh: "门柱底下芒特自己的粮洞：一直通到后头，全是壳，一星羊肉的丝都没有。" },
+      ],
+      witnesses: [
+        {
+          id: "k11w1", trust: 4, en: "Perrin the Ewe", zh: "母羊佩林",
+          statements: [
+            { id: "k11s1", claim: "k11c1", en: "I stood in that fold till the last bell. A latch does not bend itself, and what bent it had no hands to leave and no wings to lift.", zh: "最后一声钟之前我一直待在圈里。门闩不会自己弯。把它弯下去的，既没有手可留，也没有翅膀可抬。" },
+            { id: "k11s2", contra: ["k11e4"], en: "Nothing went out of my fold through the ground. A hole under a post is a hole, and it is not a gate.", zh: "我圈里没一样东西是从地底下出去的。柱子底下那个洞是个洞，可它不是门。" },
+          ],
+        },
+        {
+          id: "k11w2", trust: 2, en: "Niv the Stoat", zh: "白鼬尼夫",
+          statements: [
+            { id: "k11s3", lie: true, en: "I have not been in that yard since the barley was cut. Ask the bird on the post: he saw the whole of my going and my coming.", zh: "大麦割完以后我就没进过那个院子。柱子上那只鸟你问去，我什么时候去的、什么时候走的，他全看见了。" },
+            { id: "k11s4", claim: "k11c2", en: "A pika goes under a rail as easily as I do, and a pika has a lamb's taste and none of a lamb's luck.", zh: "栏底下的缝，鼠兔跟我一样钻得过去。鼠兔既尝过羊羔的味道，又没有羊羔的运气。" },
+          ],
+        },
+        {
+          id: "k11w3", trust: 2, en: "Munt the Pika", zh: "鼠兔芒特",
+          statements: [
+            { id: "k11s5", claim: "k11c1", en: "What went under that rail went in flat on its belly. I am short in the back and I cannot lay myself down that long, and he can.", zh: "从栏底下过去的那位，是整个肚皮贴地钻的。我背短，趴不成那么长的一条。他倒能。" },
+            { id: "k11s6", claim: "k11c3", contra: ["k11e1"], en: "The wren has sat on that gate post three days running. A latch turned by a bill is a thing a bird does and a pika does not.", zh: "鹪鹩连着三天都蹲在那根门柱上。用嘴把闩拧开，是鸟干得出来、鼠兔干不出来的事。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k11p1", witness: "k11w3", with: "k11e1", contra: ["k11s6"], claim: "k11c1", cost: 1, en: "You say a bill turned that iron, and yet the curve is one slow bend outward, which no beak has ever left.", zh: "你说是嘴把那块铁拧开的。可那弧是慢慢往外的一道弯，天底下没有嘴能留下这种印子。" },
+        { id: "k11p2", witness: "k11w2", with: "k11e2", contra: ["k11s3"], claim: "k11c2", cost: 1, en: "The grass lies flat going out and stands coming in, so whoever you have seen in that yard, he came back.", zh: "出去的草是倒的，回来的草立着。所以你在院里见过的那位，是又回来了的。" },
+        { id: "k11p3", witness: "k11w2", with: "k11e1", contra: ["k11s3"], exposes: "k11s3", claim: "k11c3", cost: 1, en: "You have not been in the yard, yet the wool on that post is at the height of your flank and no other animal's.", zh: "你说你没进过院子。可柱子上那层羊毛的高度正是你这副肋侧，别家的都不到。" },
+      ],
+      vouches: [
+        { id: "k11v1", witness: "k11w3", exhibit: "k11e4", claim: "k11c1", en: "A food-hole clean of lamb and stuffed with husk is a pika written off by his own winter, and the bench reads a larder before a grudge.", zh: "粮洞里只有壳、没有羊肉，那是芒特自己的过冬在替他说话。法庭宁可信一仓粮，也不赌一口气。" },
+        { id: "k11v2", witness: "k11w2", exhibit: "k11e3", claim: "k11c2", en: "The rubbed wool sits at the height of a passing body, and the passing body here was named before it spoke.", zh: "磨掉的那层羊毛正到一个过路身子的高度，而过路的那位，还没开口就先被人点了名。" },
+      ],
+      claims: [
+        { id: "k11c1", accused: "stoat", statements: ["k11s1", "k11s5"], exhibits: ["k11e1", "k11e2", "k11e3"], en: "Niv went under the rail on his belly and turned the latch with his own shoulder", zh: "尼夫肚皮贴地从门栏下钻过去，用自己的肩膀把闩顶开" },
+        { id: "k11c2", accused: "pika", statements: ["k11s4"], exhibits: ["k11e2", "k11e3"], en: "Munt is low enough for that gap and went out through it with the lamb", zh: "芒特的身板配得上那道缝，羊羔是他带着从缝里出去的" },
+        { id: "k11c3", accused: "wren", statements: ["k11s3", "k11s6"], exhibits: ["k11e1", "k11e4"], en: "Tuck turned the latch with his bill and left the yard to somebody else", zh: "塔克用嘴拧开门闩，把院子留给别人" },
+      ],
+    },
+    {
+      id: "k12", labelKey: "ctaCase12", time: 12, culprit: "rook",
+      bar: { strength: 12, trust: 3 },
+      charge: {
+        en: "The seed was sown in eleven rows on Sunday and by Monday the rows were crossed with a dragging line. Nothing in this case can be forced out of a witness: the bench will only lift it if an exhibit stands beside the mouth that says it.",
+        zh: "周日种子下成十一行，周一那些行上就多了一道拖出来的横线。这一案里，任何东西都从证人嘴里逼不出来：除非证物站在那张嘴旁边，否则法庭一分也不给。",
+      },
+      suspects: [
+        { id: "rook", en: "Pell the Rook", zh: "秃鼻乌鸦佩尔" },
+        { id: "marten", en: "Rookmund the Marten", zh: "黄貂鲁克蒙" },
+        { id: "hare", en: "Sim the Hare", zh: "野兔西姆" },
+      ],
+      exhibits: [
+        { id: "k12e1", weight: 3, en: "The crossed line: seed dragged out of the furrow in a straight thread, the thread of something flown low and heavy.", zh: "那道横线：种子被从垄里拖出来，拉成一条直线——那是贴着地、驮着分量飞的东西才拖得出的线。" },
+        { id: "k12e2", weight: 2, en: "The seed bag, its neck stretched into a wide gullet and the twine worn through where a breast rubbed it.", zh: "种子袋的袋口被撑成一条宽嗓子，麻绳在胸口蹭过的那一处已经磨穿了。" },
+        { id: "k12e3", weight: 2, en: "One row left whole at the end of the field, and its grain turned the other way from all the rest.", zh: "地头剩下一行没动，那一行的谷粒朝向跟其余十行全都相反。" },
+        { id: "k12e4", weight: 1, en: "Pell's own store of acorns under the ridge, sixty of them, and not one grain of barley.", zh: "佩尔在山脊下自己藏的橡子，六十颗，一粒大麦都没有。" },
+        { id: "k12e5", weight: 1, en: "A marten print at the field corner, dry, and older than Sunday's sowing by a day of rain.", zh: "田角上一个黄貂的印子，是干的，比周日下种那天早一场雨。" },
+      ],
+      witnesses: [
+        {
+          id: "k12w1", trust: 4, en: "Pell the Rook", zh: "秃鼻乌鸦佩尔",
+          statements: [
+            { id: "k12s1", claim: "k12c1", en: "A rook carries in his bill and drops it standing. What crossed those rows dragged, and a thing that drags had the whole of it in its crop.", zh: "乌鸦用嘴叼东西，落地就丢。把那些行横着拖过去的，是拖着的。会拖的，整份分量都还在嗓子眼里。" },
+            { id: "k12s2", claim: "k12c2", en: "Rookmund came to the corner on the night. I have a marten's print in my own field and I say it out loud.", zh: "鲁克蒙当夜到过田角。我自己地里就有黄貂的印子，这话我敢大声说。" },
+          ],
+        },
+        {
+          id: "k12w2", trust: 3, en: "Bess the Sower", zh: "播种人贝丝",
+          statements: [
+            { id: "k12s3", claim: "k12c1", en: "I sowed eleven rows and I left one whole at the headland, and the whole row was the one that flies look at before they settle.", zh: "十一行是我下的，地头留了一行没动。会飞的东西落下来之前，先看的正是那一行。" },
+            { id: "k12s4", lie: true, en: "The bag was tied with the twine still whole when I shut the store, and no animal of the air came at it.", zh: "我锁库房的时候，袋口的绳还是整的。天上飞的没有一个碰过它。" },
+          ],
+        },
+        {
+          id: "k12w3", trust: 2, en: "Rookmund the Marten", zh: "黄貂鲁克蒙",
+          statements: [
+            { id: "k12s5", claim: "k12c3", en: "The crossed line runs out of the field, not into it. Whoever made it was carrying the seed away from the sowing, and I only took what lay loose at the corner.", zh: "那道横线是从田里拖出去的，不是拖进来的。画它的东西把种子往田外带。我只捡了田角散着的那点。" },
+            { id: "k12s6", claim: "k12c1", en: "My print at that corner is Sunday's and it is dry. I was there before the sowing and I went before the crossing was made.", zh: "我田角那个印子是周日的，是干的。下种之前我就在那儿，横线画成之前我就走了。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k12p1", witness: "k12w3", with: "k12e5", contra: ["k12s5"], claim: "k12c2", cost: 1, en: "You were at the corner before the sowing, and the line was drawn after it, which leaves your print and your absence in the same day.", zh: "你说下种前你就在田角。可那道线是下种之后拖出来的。这样你的印子你的不在场，就落在同一天里了。" },
+        { id: "k12p2", witness: "k12w1", with: "k12e4", contra: ["k12s1"], claim: "k12c3", cost: 1, en: "You teach the bench how a rook carries, and your own store is sixty acorns with never a grain of barley in it.", zh: "你教法庭乌鸦怎么搬东西。可你自己的囤是六十颗橡子，一粒大麦也没有。" },
+      ],
+      vouches: [
+        { id: "k12v1", witness: "k12w1", exhibit: "k12e4", claim: "k12c1", en: "A store of another animal's winter is a throat proved full of something else, and the bench will take a larder over a lecture.", zh: "囤里装的是别家的过冬，那就等于把嗓子证明满了别的东西。法庭宁肯信一仓粮，不信一堂讲义。" },
+        { id: "k12v2", witness: "k12w2", exhibit: "k12e2", claim: "k12c1", en: "The twine worn through at the height of a breast is a second mouth on that bag, and the sower who read it is the sower who wrote it.", zh: "麻绳磨穿的地方正到胸口的高度，那就是袋子上第二张嘴。读出这一点的播种人，也正是写下这一点的人。" },
+        { id: "k12v3", witness: "k12w3", exhibit: "k12e3", claim: "k12c1", en: "A row left whole and turned the wrong way is a mark made by an eye, and the marten who named it had no reason in the world to look.", zh: "留下一行、还把谷粒朝反了放，那是一双眼睛做的记号。说出这句的黄貂，本来一点理由都不必去看。" },
+      ],
+      claims: [
+        { id: "k12c1", accused: "rook", statements: ["k12s1", "k12s3", "k12s6"], exhibits: ["k12e1", "k12e2", "k12e3"], en: "Pell lightened the bag at the store and drew the seed out across the rows", zh: "佩尔在库房把袋子掏轻，把种子横着拖过了十一行" },
+        { id: "k12c2", accused: "marten", statements: ["k12s2"], exhibits: ["k12e2", "k12e5"], en: "Rookmund came over the corner and dragged the seed to his own hole", zh: "鲁克蒙从田角过来，把种子拖回自己的洞" },
+        { id: "k12c3", accused: "hare", statements: ["k12s4", "k12s5"], exhibits: ["k12e1", "k12e4"], en: "Sim crossed the rows from below and the whole row at the headland is his leavings", zh: "西姆从下头横过那些行，地头留下的整一行是他的剩饭" },
+      ],
+    },
+    {
+      id: "k13", labelKey: "ctaCase13", time: 11, culprit: "heron",
+      bar: { strength: 12, trust: 3 },
+      charge: {
+        en: "The salmon yard's first spawn-stone was lifted off the shallows and set down in the reeds, and the water ran out from under the eggs by morning. To break the lying account in this case costs a coin of trust, and the coin is paid to the witness you need most.",
+        zh: "产卵滩上第一块孵卵石被人从浅处搬起来，扔进芦苇里，早上水就从卵底下走光了。这一案要戳穿那句谎话，就得赔上一枚信任的钱币，而赔的正是你最靠得住的那位证人。",
+      },
+      suspects: [
+        { id: "heron", en: "Sarka the Heron", zh: "苍鹭萨尔卡" },
+        { id: "otter", en: "Lys the Otter", zh: "水獭丽丝" },
+        { id: "dipper", en: "Hob the Dipper", zh: "河乌霍布" },
+      ],
+      exhibits: [
+        { id: "k13e1", weight: 3, en: "The spawn-stone out in the reeds, its under-face still wet on one side only, and the reeds about it unbroken.", zh: "芦苇里那块孵卵石，底面只有一边还是湿的，四周的芦苇一根没折。" },
+        { id: "k13e2", weight: 2, en: "A long leg-print in the wet sand of the shallows, three toes, and the hollow where a knee rested.", zh: "浅滩湿沙上一个长腿印子，三个趾，外加膝盖撑过的一坑。" },
+        { id: "k13e3", weight: 2, en: "The mark the stone left on the bed: a seat pressed two hands deep, dry all the previous week.", zh: "石头在河床上留下的坑：两个手深，前一个整星期都是干的。" },
+        { id: "k13e4", weight: 1, en: "Sarka's own feathers laid along the reed bed, where she stood a full hour and never stirred.", zh: "芦苇荡里落着萨尔卡自己的羽毛——她在那儿站了整整一个钟头，一步没动。" },
+        { id: "k13e5", weight: 2, en: "A fish-head buried at the head of the spawn-stone, and no gull and no bird of prey on this water takes heads.", zh: "孵卵石上头埋着一个鱼头。这片水上的鸥和鹰类，没有一样吃鱼头的。" },
+      ],
+      witnesses: [
+        {
+          id: "k13w1", trust: 4, en: "Sarka the Heron", zh: "苍鹭萨尔卡",
+          statements: [
+            { id: "k13s1", claim: "k13c1", en: "I stood on that stone's seat all evening and the water was over it. What moved it moved it after dark, and after dark nothing on this water walks but me.", zh: "那块石头的坑边我站了整个傍晚，那时候水还盖着它。挪动它的，是天黑以后挪的。入夜这片水上会走的只有我。" },
+            { id: "k13s2", claim: "k13c3", en: "The dipper dives to that stone every morning and stacks its chips on the brim. His work is on it and mine is nowhere on it.", zh: "河乌每天早上都潜到那块石头，把碎壳堆在沿上。他做的活在上头，我做的活哪儿都没有。" },
+          ],
+        },
+        {
+          id: "k13w2", trust: 3, en: "Lys the Otter", zh: "水獭丽丝",
+          statements: [
+            { id: "k13s3", lie: true, en: "I was off the shallows entirely that night. My slide is up the bank and dry at the top, and a dry top is a beast that never came down.", zh: "那夜我压根没到浅滩来。我滑水的道子在岸上，顶上还是干的。顶上干，就是从没下来的畜。" },
+            { id: "k13s4", claim: "k13c1", en: "There is a knee-hollow in that sand at the height of a standing bird, and otter knees go under a body, not beside it.", zh: "沙上那坑膝盖撑过的窝，高正好到一只站着的鸟。水獭的膝盖是压在身子底下的，不是撑在身旁的。" },
+          ],
+        },
+        {
+          id: "k13w3", trust: 3, en: "Hob the Dipper", zh: "河乌霍布",
+          statements: [
+            { id: "k13s5", claim: "k13c2", en: "I have built at the head of that stone two seasons and I know its weight in water, which is nothing; out of water it is a horse's labour.", zh: "那块石头上头我垒了两季巢。它在水里没什么分量，离了水那就是一匹马的力气。" },
+            { id: "k13s6", claim: "k13c1", en: "Whoever went over that sand had one long leg and put a knee down. He put it down on the side the stone was carried to, and lifted it up on the side it came from.", zh: "过那片沙的那位一条长腿，还跪了一下。他跪在石头被搬去的那一头，抬脚在石头来时的这一头。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k13p1", witness: "k13w2", with: "k13e1", contra: ["k13s3"], exposes: "k13s3", claim: "k13c1", cost: 1, en: "The stone lay on one wet face in standing reeds, so it was carried and not rolled, and it came down where something knelt.", zh: "石头一面朝湿地躺在没有折断的芦苇里，说明它是被抬来而不是滚来的。放下来的那一处，有东西跪过。" },
+        { id: "k13p2", witness: "k13w3", with: "k13e3", contra: ["k13s5"], claim: "k13c2", cost: 1, en: "You know the stone's weight and its seat, and you have sat on both; a bird who lifts nothing still knows exactly what lifting is.", zh: "这块石头多重、原来的坑多深你都知道，而且那两样你都坐过。一只抬不动东西的鸟，对抬起来是什么感觉倒是一清二楚。" },
+        { id: "k13p3", witness: "k13w1", with: "k13e2", contra: ["k13s2"], claim: "k13c3", cost: 2, en: "You stood on that seat all evening with the water over it, and the stone went out into the reeds without one reed being broken.", zh: "你整个傍晚都站在那坑边上，水还盖着它。石头后来进了芦苇荡，可一根芦苇都没折断。" },
+      ],
+      vouches: [
+        { id: "k13v1", witness: "k13w2", exhibit: "k13e5", claim: "k13c1", en: "A fish-head buried at a spawn-stone is heron's housekeeping, and the otter who found it had eaten hers elsewhere.", zh: "孵卵石上头埋着鱼头，那是苍鹭过日子的做派。发现它的这只水獭，自己那一顿是在别处吃的。" },
+        { id: "k13v2", witness: "k13w3", exhibit: "k13e4", claim: "k13c1", en: "Feathers laid along one bed for an hour are a stand recorded by the stand itself, and the bench can read a shape it can see.", zh: "一片羽毛顺着一个巢荡落了一个钟头，那就是那份站立自己记下的站立。法庭读的是看得见的形状。" },
+      ],
+      claims: [
+        { id: "k13c1", accused: "heron", statements: ["k13s1", "k13s4", "k13s6"], exhibits: ["k13e1", "k13e2", "k13e3"], en: "Sarka lifted the spawn-stone after dark and set it in the reeds to drain the eggs", zh: "萨尔卡天黑后把孵卵石搬起来放进芦苇，把卵下的水放干" },
+        { id: "k13c2", accused: "otter", statements: ["k13s3", "k13s5"], exhibits: ["k13e3", "k13e5"], en: "Lys dragged over the seat and the water went out wherever she slid", zh: "丽丝从坑上拖过去，水从她滑过的每一处走了" },
+        { id: "k13c3", accused: "dipper", statements: ["k13s2"], exhibits: ["k13e1", "k13e2"], en: "Hob stacked his chips to raise the stone and let the race take the spawn", zh: "霍布把碎壳垒起来撬起那块石头，让水道把卵带走" },
+      ],
+    },
+    {
+      id: "k14", labelKey: "ctaCase14", time: 12, culprit: "jay",
+      bar: { strength: 13, trust: 3 },
+      charge: {
+        en: "The drying-loft window stood open with the latch up and four of the twelve skeins were gone by dawn, cut from the same side every one. Four animals have been named for this bench and only one of the four charges can be stood on without a witness pulling against his own shelf.",
+        zh: "晾房的窗开着，闩支了起来，天亮时十二条纱线少了四条，每一条都是从同一头割下来的。法庭点了四个名字，可这四条指控里只有一条站得住——站得住的那条，证人不会和自己面前的证物互相打架。",
+      },
+      suspects: [
+        { id: "jay", en: "Jesup the Jay", zh: "松鸦杰瑟普" },
+        { id: "marten", en: "Mardoc the Pine Marten", zh: "紫貂马多克" },
+        { id: "squirrel", en: "Kitthe the Squirrel", zh: "松鼠基茜" },
+        { id: "crow", en: "Corvin the Crow", zh: "乌鸦科尔文" },
+      ],
+      exhibits: [
+        { id: "k14e1", weight: 3, en: "The four cut skeins: one edge of wool severed at the same slant, and no second start in any of the four cuts.", zh: "那四条被割下来的纱：毛断的斜度一模一样，每一刀都没有第二次的起头。" },
+        { id: "k14e2", weight: 3, en: "The window's latch, raised from the outside with something that had a hooked upper foot and could hold it up while it worked.", zh: "窗闩是从外头支起来的，支它的东西上脚带钩，还能一边支着一边干活。" },
+        { id: "k14e3", weight: 2, en: "The loft floor under the window: one line of dust broken, and the break goes to the beam and stops dead there.", zh: "窗下晾房的地：一道灰被踩断了，断口走到横梁那儿就断了。" },
+        { id: "k14e4", weight: 2, en: "A jay's cache under the beam, four knots of wool and no more, buried the same night.", zh: "横梁底下松鸦藏的粮：正好四团毛线，别的一样没有，是当夜埋的。" },
+        { id: "k14e5", weight: 1, en: "The marten's own shears from the tool shelf, oiled and shut, with no wool in the joint.", zh: "工具架上黄貂自己的剪子，上了油、合着口，缝里一毛不挂。" },
+      ],
+      witnesses: [
+        {
+          id: "k14w1", trust: 4, en: "Jesup the Jay", zh: "松鸦杰瑟普",
+          statements: [
+            { id: "k14s1", claim: "k14c1", en: "A one-cut slant is a mouth and a foot together. A bird has the mouth and no foot to hold the latch, and the animal who had both has been on that sill this season.", zh: "一刀下来的斜口，是一张嘴加一只脚一块儿干的。鸟有嘴，可没有能支闩的脚。两样齐全的这位，这一季就在那道窗台上待过。" },
+            { id: "k14s2", claim: "k14c2", contra: ["k14e5"], en: "The marten keeps the shears and the shears were on the shelf shut and clean. A clean tool is a tool that was used somewhere else.", zh: "剪子是黄貂的。剪子在架子上合着口、干干净净。干净的家伙是别处用过的家伙。" },
+          ],
+        },
+        {
+          id: "k14w2", trust: 3, en: "Mardoc the Pine Marten", zh: "紫貂马多克",
+          statements: [
+            { id: "k14s3", claim: "k14c3", contra: ["k14e1"], en: "The squirrel runs the beam and takes what she can carry in her fore paws, and four skeins is a body's load, not a paw's.", zh: "松鼠走横梁，前爪抓得住的才拿。四条纱是一副身子的分量，不是一只爪的分量。" },
+            { id: "k14s4", lie: true, en: "I was on the roof of the storehouse till the second bell and the loft window was shut at the passing of it.", zh: "二更之前我在库房顶上，路过的时候晾房的窗还是关着的。" },
+          ],
+        },
+        {
+          id: "k14w3", trust: 2, en: "Kitthe the Squirrel", zh: "松鼠基茜",
+          statements: [
+            { id: "k14s5", claim: "k14c2", contra: ["k14e3"], en: "My line on that beam is old and unbroken, and dust that has not been walked in is dust that has not been walked in.", zh: "我梁上那条道又旧又没断。灰上没踩过，就是没踩过。" },
+            { id: "k14s6", claim: "k14c1", en: "Whoever went in at that window went in hook-first and came out the same way, and he took only what was cut and not what was pulled.", zh: "从那儿进去的，是先挂住钩子进去，再原样出来。他拿走的都是割下来的，一件不是扯下来的。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k14p1", witness: "k14w2", with: "k14e1", contra: ["k14s4"], claim: "k14c1", cost: 1, en: "You were on the storehouse roof till second bell and you swear the window was shut at the passing, which is a thing seen from a sill and not from a roof.", zh: "你说二更前在库房顶上，路过时窗还关着。这是趴在窗台上才看得出的事，在房顶上看不出来。" },
+        { id: "k14p2", witness: "k14w1", with: "k14e2", contra: ["k14s1"], claim: "k14c1", cost: 1, en: "You have taught this bench what a one-cut slant costs in feet, and you were the one bird here seen on that sill all season.", zh: "你教过法庭一刀斜口要搭进去几只脚。这一庭上这一季在窗台出现过的鸟，只有你。" },
+        { id: "k14p3", witness: "k14w3", with: "k14e5", contra: ["k14s2"], claim: "k14c4", cost: 2, en: "You say a clean tool was used elsewhere. Name the elsewhere, and name the wool that is not in it.", zh: "你说干净的家伙是在别处用过的。那就把那个别处说出来，再把不在别处的毛说出来。" },
+      ],
+      vouches: [
+        { id: "k14v1", witness: "k14w3", exhibit: "k14e4", claim: "k14c1", en: "A cache of four knots buried that same night is a tally kept by the digger, and the bench will weigh a hole against a hedge.", zh: "当夜埋下的四团线，是挖坑的人自己记的账。法庭宁可拿一个洞去比一句搪塞。" },
+        { id: "k14v2", witness: "k14w1", exhibit: "k14e3", claim: "k14c1", en: "The broken line of dust goes to the beam and stops, which is exactly where the one who watched it said he would never be walked.", zh: "断掉的那道灰走到横梁就停。而那位盯着看过的证人，说的正是自己绝不会被踩到的地方。" },
+      ],
+      claims: [
+        { id: "k14c1", accused: "jay", statements: ["k14s1", "k14s6"], exhibits: ["k14e1", "k14e2", "k14e4"], en: "Jesup held the latch with a hooked foot and cut four skeins for his own nest", zh: "杰瑟普用带钩的脚支住闩，割下四条纱给自己垒巢" },
+        { id: "k14c2", accused: "marten", statements: ["k14s2", "k14s5"], exhibits: ["k14e2", "k14e5"], en: "Mardoc cut from the sill with his own shears and laid the cut where a bird would be found", zh: "马多克用自己的剪子在窗台上割，把割口放在一只鸟会被找到的地方" },
+        { id: "k14c3", accused: "squirrel", statements: ["k14s3"], exhibits: ["k14e3", "k14e1"], en: "Kitthe came along the beam and lifted the four skeins whole", zh: "基茜顺着梁过来，把四条纱整个搬走" },
+        { id: "k14c4", accused: "crow", statements: ["k14s4"], exhibits: ["k14e2", "k14e4"], en: "Corvin watched the loft from the roof and kept the four skeins for his own cache", zh: "科尔文在房顶上看着晾房，那四条纱是他自己藏的" },
+      ],
+    },
+    {
+      id: "k15", labelKey: "ctaCase15", time: 13, culprit: "otter",
+      bar: { strength: 14, trust: 4 },
+      charge: {
+        en: "The salmon weir's paddle was found stacked open and the night's catch was gone out of the box. This docket has no spare action in it and the bench will not lower its bar for the sake of your time: what you spend you cannot borrow back.",
+        zh: "拦鱼坝的挡板被发现支开了，一夜的鱼空了箱子。这本案卷里没有一次多余的动作，而法庭不会为了你的工夫把标准放低：花掉的动作，借不回来。",
+      },
+      suspects: [
+        { id: "otter", en: "Nessa the Otter", zh: "水獭妮莎" },
+        { id: "ram", en: "Grieve the Ram", zh: "公羊格里夫" },
+        { id: "otterhound", en: "Kip the Otter-Hound", zh: "水猎犬基普" },
+      ],
+      exhibits: [
+        { id: "k15e1", weight: 3, en: "The paddle stacked open with a withy through the hasp, and the withy bitten through at one end by small teeth.", zh: "挡板被支住，门销里插了一根柳条，柳条一头被小牙咬断。" },
+        { id: "k15e2", weight: 2, en: "The fish box, its lid lifted straight off and set back on the same way, and one salmon left under it scaled at the belly.", zh: "鱼箱的盖整个抬起又整个放回，同一种放法。盖下剩一条鲑鱼，肚子上掉了鳞。" },
+        { id: "k15e3", weight: 2, en: "A slide from the water to the box, wet at the top and dry at the bottom, which is the track of something going up with a load.", zh: "一道从水面到箱子的滑道，上头湿、下头干。那是驮着东西往上去的走法。" },
+        { id: "k15e4", weight: 1, en: "Kip's own collar found at the weir head with a notch in the leather, and the notch not made by a fish.", zh: "坝头上找到水猎犬自己的项圈，皮上豁了一个口，豁口不是鱼弄的。" },
+        { id: "k15e5", weight: 3, en: "The weir-man's tally board: the box was locked at first bell and the key was on the nail until dawn.", zh: "管坝人的记账板：一更时鱼箱是锁的，钥匙在钉子上挂到天亮。" },
+      ],
+      witnesses: [
+        {
+          id: "k15w1", trust: 5, en: "Nessa the Otter", zh: "水獭妮莎",
+          statements: [
+            { id: "k15s1", claim: "k15c1", en: "A paddle stacked with a withy needs two feet and a mouth. I have the mouth and the fore paws, and the withy bitten at one end is the mouth's part of the work.", zh: "用柳条支起挡板，需要两只脚加一张嘴。嘴和前爪我都有，而柳条被咬断的一头，正是那张嘴干的活。" },
+            { id: "k15s2", claim: "k15c2", contra: ["k15e4"], en: "The dog went the length of the water all night and his collar came off in the slide, which is the one place a collar comes off.", zh: "狗整夜沿水边走，项圈正是在滑道上掉的。项圈会掉，就只在那一处会掉。" },
+          ],
+        },
+        {
+          id: "k15w2", trust: 4, en: "Kip the Otter-Hound", zh: "水猎犬基普",
+          statements: [
+            { id: "k15s3", claim: "k15c3", en: "I put my nose to that box and there was no fish on the wood, only water, and a dog who found water on a box has been where the water came from.", zh: "我在箱子上闻过，木头上没有鱼味，只有水。箱子上有水，就等于它到过水上。" },
+            { id: "k15s4", claim: "k15c1", en: "Whoever lifted that lid lifted it square and laid it square back. Nothing with claws lays a lid square, and nothing worried by a dog lays it at all.", zh: "抬那个盖的东西抬得正、放得也正。有爪的放不正，被狗撵的压根放不了。" },
+          ],
+        },
+        {
+          id: "k15w3", trust: 2, en: "Grieve the Ram", zh: "公羊格里夫",
+          statements: [
+            { id: "k15s5", lie: true, en: "I stood on the weir head from dusk to the locked hour and I saw nobody come out of the water.", zh: "从天黑到落锁我一直站在坝头，没看见一样东西从水里出来。" },
+            { id: "k15s6", claim: "k15c2", en: "The notch in that leather is a withy's notch, and an animal who was never at the paddle cannot know how a withy bites.", zh: "皮上的豁口是柳条豁的。从没碰过挡板的畜，不知道柳条是怎么咬住东西的。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k15p1", witness: "k15w3", with: "k15e1", contra: ["k15s5"], claim: "k15c1", cost: 1, en: "You stood on the weir head till the locking and you never once saw a slide made wet going up.", zh: "你在坝头站到落锁，可滑道往上那一段是湿的，你一次都没看见。" },
+        { id: "k15p2", witness: "k15w1", with: "k15e3", contra: ["k15s2"], claim: "k15c1", cost: 1, en: "The slide is wet at the top and dry at the bottom, which is a road going out of the water with a load, not a road of a collar falling.", zh: "滑道上头湿、下头干，那是一条驮着东西出水的路，不是一条项圈掉落的路。" },
+        { id: "k15p3", witness: "k15w2", with: "k15e5", contra: ["k15s3"], claim: "k15c2", cost: 1, en: "The box was locked at first bell and the key was on its nail, so whatever you put your nose to, it was not the night's fish.", zh: "鱼箱一更就锁了，钥匙在钉子上。所以你凑上去闻的那只箱子，跟一夜的鱼没有关系。" },
+        { id: "k15p4", witness: "k15w2", with: "k15e2", contra: ["k15s4"], claim: "k15c3", cost: 2, en: "You say a worried animal lays no lid. You also say you found water on the wood, which you could not know standing off it.", zh: "你说被撵的动物不会放盖。可你又说木头上有水——离得远远的，你没法知道这件事。" },
+      ],
+      vouches: [
+        { id: "k15v1", witness: "k15w2", exhibit: "k15e5", claim: "k15c1", en: "A dog who came back off a locked box with nothing in his mouth is a dog read as honest by the lock, not by himself.", zh: "一只对着锁着的箱子回来、嘴里空空的狗，他的老实是锁说的，不是他自己说的。" },
+        { id: "k15v2", witness: "k15w3", exhibit: "k15e4", claim: "k15c2", en: "A collar with a withy notch in it is a body held where the withy was worked, and the bench reads a strap before a story.", zh: "项圈上豁着柳条的口，那就是身子被柳条拴住的地方。法庭先读一条皮带，再读一段话。" },
+        { id: "k15v3", witness: "k15w1", exhibit: "k15e1", claim: "k15c3", en: "The bitten withy and the dog's notch are the same bite, and the one mouth here that was proved at that paddle has told on itself.", zh: "被咬断的柳条和项圈上的豁口是同一个口。在这儿被证明碰过挡板的那张嘴，把自己说了出来。" },
+      ],
+      claims: [
+        { id: "k15c1", accused: "otter", statements: ["k15s1", "k15s2", "k15s4"], exhibits: ["k15e1", "k15e3", "k15e5"], en: "Nessa stacked the paddle with a withy and slid the night's catch up the bank", zh: "妮莎用柳条支起挡板，把一夜的鱼从滑道上拖上岸" },
+        { id: "k15c2", accused: "ram", statements: ["k15s6", "k15s5"], exhibits: ["k15e2", "k15e4"], en: "Grieve went down the slide himself, took the box and told the standing he had kept", zh: "格里夫自己下了滑道，搬了箱子，还说他就站在坝上" },
+        { id: "k15c3", accused: "otterhound", statements: ["k15s3"], exhibits: ["k15e2", "k15e4"], en: "Kip broke his own collar on the hasp and lifted the lid to lay the notch on a fish", zh: "基普的项圈挣在门销上，抬盖是为了把那个豁口推给一条鱼" },
+      ],
+    },
+    {
+      id: "k16", labelKey: "ctaCase16", time: 12, culprit: "magpie",
+      bar: { strength: 15, trust: 3 },
+      charge: {
+        en: "The churchwarden's tin box came off the vestry nail with the money in it, and the only mouth on this bench that was in that room that night is the mouth of the accused. Nothing here can be forced: a pressed suspect is a suspect nobody further believes.",
+        zh: "教堂管事人的铁皮箱从祭衣室的钉子上下来了，钱还在里头。这一庭上那夜在那个屋子里的唯一一张嘴，就是被告的嘴。这案子里什么也逼不出来：被硬逼的被告，往后谁也不再多信一句。",
+      },
+      suspects: [
+        { id: "magpie", en: "Odric the Magpie", zh: "喜鹊奥德里克" },
+        { id: "jackdaw", en: "Ness the Jackdaw", zh: "寒鸦妮丝" },
+        { id: "stoat", en: "Cobb the Stoat", zh: "白鼬科布" },
+      ],
+      exhibits: [
+        { id: "k16e1", weight: 3, en: "The vestry nail, bent down and not out, with the box's own hanging-wear still bright on one side.", zh: "祭衣室那根钉子，是往下压弯的，不是往外掰的。箱子上常年挂出来的那面还亮着。" },
+        { id: "k16e2", weight: 3, en: "A coin under the form: one silver piece rolled to the seam of the boards, and the seam too tight for a bill.", zh: "长凳底下一枚钱：一块银币滚进板缝里，那道缝窄得嘴叼不住。" },
+        { id: "k16e3", weight: 2, en: "The box lid found in the yard, its hasp worked from the wrong side, which is the side of a body standing on the box.", zh: "箱盖在院里找到，门销是从反的那一头拨开的——那是站在箱子上才够得着的一头。" },
+        { id: "k16e4", weight: 2, en: "Silver filings on the sill stone, and a magpie takes bright metal and leaves its dust where it worked.", zh: "窗台石上有银屑。喜鹊拿走发亮的金属，做活的地方就留下屑。" },
+        { id: "k16e5", weight: 1, en: "Odric's own hoard in the churchyard yew: six buttons, two nails, and no coin at all.", zh: "奥德里克在教堂墓园紫杉里藏的：六颗扣子、两颗钉，一枚钱也没有。" },
+      ],
+      witnesses: [
+        {
+          id: "k16w1", trust: 2, en: "Odric the Magpie", zh: "喜鹊奥德里克",
+          statements: [
+            { id: "k16s1", claim: "k16c1", en: "I will say the room and say the hour, since the room is the one place I am not believed for being. The nail went down, not out, and a bird pulls.", zh: "既然那间屋子正是我去了也没人信的地方，那我就说屋子、说时辰。那钉子是往下塌的，不是往外掰的。鸟只会拽。" },
+            { id: "k16s2", claim: "k16c3", contra: ["k16e4"], en: "The silver dust on that sill is a bird's dust, and a bird who worked a hasp leaves dust where he stood and not in the weather.", zh: "窗台上的银屑是鸟的屑。在门销上干过活的鸟，屑留在他站过的地方，不会留在外头受风吹的地方。" },
+          ],
+        },
+        {
+          id: "k16w2", trust: 4, en: "Ness the Jackdaw", zh: "寒鸦妮丝",
+          statements: [
+            { id: "k16s3", claim: "k16c1", en: "I was on the tower loop and I saw the vestry door stand whole and dark till third bell. Nothing left that room by the door, and a thing that leaves no way out went out by the way it came in.", zh: "我在塔眼上看着，祭衣室的门一直到三更都是好好的、黑的。没有什么东西从门出去。没留下出路的东西，就是从进来的那条路出去的。" },
+            { id: "k16s4", claim: "k16c2", en: "A hasp worked from the wrong side wants a foot on the lid and a bill at the pin. I have the bill and the lid is a weight I do not stand on.", zh: "从反头拨门销，得一只脚踩盖、一张嘴对销。嘴我有，可盖子那种东西我从不站上去。" },
+          ],
+        },
+        {
+          id: "k16w3", trust: 3, en: "Cobb the Stoat", zh: "白鼬科布",
+          statements: [
+            { id: "k16s5", lie: true, en: "I never once went into that yard, and the lid lying there is a lid any child could put in the wrong place.", zh: "那个院子我一次都没进过。盖扔在那儿，扔错地方这种事随便哪个孩子都干得出来。" },
+            { id: "k16s6", claim: "k16c1", en: "The seam under the form is too tight for a bill and too tight for a paw, and a coin in a tight seam went there from a mouth that was shut on it and opened over the boards.", zh: "长凳底下那道缝，嘴叼不住，爪也夹不住。钱进那么窄的缝，是从一张含着它、又在板子上头张开的那张嘴里掉的。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k16p1", witness: "k16w3", with: "k16e3", contra: ["k16s5"], claim: "k16c1", cost: 1, en: "You have never been in that yard, and yet you know the hasp was worked from the wrong side, which a body knows only by standing on the lid.", zh: "你说那个院子你从没进过。可你连门销是从反头拨的都清楚——这种事，只有踩过盖子的人才知道。" },
+        { id: "k16p2", witness: "k16w1", with: "k16e2", contra: ["k16s1"], claim: "k16c2", cost: 1, en: "You describe the seam and the coin in it to a bench that never said the coin was found, and you were the only mouth in that room.", zh: "板缝里那枚钱，你说得比法庭还细——而法庭从头到尾没说过这枚钱被找到了。那间屋子里，只有你一张嘴。" },
+        { id: "k16p3", witness: "k16w2", with: "k16e1", contra: ["k16s4"], claim: "k16c3", cost: 2, en: "You watched that door whole till third bell and you also tell the bench how a hasp is worked on the inside of it.", zh: "你说那门好好的直到三更。可你也把一门门销从里头怎么拨说得一清二楚。" },
+      ],
+      vouches: [
+        { id: "k16v1", witness: "k16w1", exhibit: "k16e5", claim: "k16c1", en: "A hoard of buttons and nails with no coin in it is a thief who never came off with silver, and this is the one suspect whose own store can be opened.", zh: "囤里全是扣子和钉、一枚钱没有，那就是没带着银子跑过的贼。这庭上只有这位被告的自家窝是打得开的。" },
+        { id: "k16v2", witness: "k16w2", exhibit: "k16e1", claim: "k16c1", en: "The nail bent down and the jackdaw's dark whole door are one room read from two ends, and the bench will believe the two ends before the middle.", zh: "往下塌的钉子，和寒鸦看见的那扇一直黑着的门，是一间屋子读出的两头。法庭信两头，不信中间。" },
+        { id: "k16v3", witness: "k16w3", exhibit: "k16e4", claim: "k16c1", en: "Silver dust on the sill stone is a place, and the stoat who was not in the yard has given the bench a place he was.", zh: "窗台上的银屑是一处地方。说院子没进过的白鼬，等于给法庭交出他自己在那儿待过的地方。" },
+      ],
+      claims: [
+        { id: "k16c1", accused: "magpie", statements: ["k16s1", "k16s3", "k16s6"], exhibits: ["k16e1", "k16e2", "k16e3", "k16e4"], en: "Odric took the box off the nail in the room he alone was in and let one coin fall at the seam", zh: "奥德里克在他独自待过的屋子里把箱子从钉子上取下来，一枚钱掉在板缝里" },
+        { id: "k16c2", accused: "jackdaw", statements: ["k16s2", "k16s4"], exhibits: ["k16e2", "k16e3"], en: "Ness worked the hasp from the wrong side and put the lid in the yard to be found", zh: "妮丝从反头拨开门销，把盖子扔到院里等人来捡" },
+        { id: "k16c3", accused: "stoat", statements: ["k16s5"], exhibits: ["k16e1", "k16e4"], en: "Cobb stood on the box in the yard, bent the nail down and rolled the coin under the form", zh: "科布在院里站上箱子，把钉子压弯，把钱滚到长凳底下" },
+      ],
+    },
+    {
+      id: "k17", labelKey: "ctaCase17", time: 11, culprit: "mole",
+      bar: { strength: 14, trust: 3 },
+      charge: {
+        en: "The seed drill's copper hopper was taken out of the tool shed and the shed door was never opened. Two of these presses are worth the same two points, and one of them costs the bench a witness it cannot buy back.",
+        zh: "播种机的铜斗从工具房里被搬走，工具房的门却一次也没开过。这庭上有两次逼问一样值钱，都值两分。可其中那一次，法庭要赔进去一位再也买不回来的证人。",
+      },
+      suspects: [
+        { id: "mole", en: "Barny the Mole", zh: "鼹鼠巴尼" },
+        { id: "vole", en: "Mops the Vole", zh: "田鼠莫普斯" },
+        { id: "shrew", en: "Fan the Shrew", zh: "鼩鼱范" },
+      ],
+      exhibits: [
+        { id: "k17e1", weight: 3, en: "The drill's own runway: a hole under the shed wall, pushed from the inside of the shed, with the cut root of a couch grass in the lip of it.", zh: "播种机那条道：工具房墙根底下那个洞是从房里往外推开的，洞沿上带着一截被咬断的匍根草。" },
+        { id: "k17e2", weight: 2, en: "The copper hopper in the field, one edge scratched with soil grains and the scratching all on the underside.", zh: "田里那只铜斗，边上叫土粒划出道来，划痕全在底下这一面。" },
+        { id: "k17e3", weight: 2, en: "The shed floor: no track across it and one mound of fresh cast at the wall, thrown up toward the drill.", zh: "工具房地上一道印子没有，墙根却有一堆新翻的土，翻的方向正冲着播种机。" },
+        { id: "k17e4", weight: 1, en: "Fan's own tunnel, six inches under the shed, and the six inches never broken from the shed side.", zh: "范自己的地道在工具房底下六寸，那六寸从没从工具房这一头破开过。" },
+        { id: "k17e5", weight: 3, en: "A pile of couch-grass root ends in the mole's gallery, cut the same day as the root in the hole's lip.", zh: "鼹鼠的洞里一堆匍根草根头，割断的日子和洞沿上那截是同一日。" },
+      ],
+      witnesses: [
+        {
+          id: "k17w1", trust: 4, en: "Fan the Shrew", zh: "鼩鼱范",
+          statements: [
+            { id: "k17s1", claim: "k17c1", en: "I work six inches under that shed and I have never once broken up into it. What broke into the shed broke up from below at the wall, and that is a mole's road and a mole's cast.", zh: "我在那工具房底下六寸做工，从来没往房里破过一层。闯进房的那位是从墙根底下往上破的。那是鼹鼠的路，也是鼹鼠翻的土。" },
+            { id: "k17s2", claim: "k17c2", contra: ["k17e5"], en: "There is cut root lying in that hole and cut root is what a vole banks his own gallery with, so the hole was made by a mouth that keeps roots.", zh: "那洞里就有一截断根。断根是田鼠垒自己洞用的东西，所以洞是张爱存根子的嘴挖的。" },
+          ],
+        },
+        {
+          id: "k17w2", trust: 3, en: "Mops the Vole", zh: "田鼠莫普斯",
+          statements: [
+            { id: "k17s3", claim: "k17c1", en: "A copper hopper cannot be dragged over a sill and cannot be flown, and the only animal here that goes under a wall with a load on its back is the one who throws a cast doing it.", zh: "铜斗抬不过门槛，也叼不起来。这儿唯一能在墙底下驮着东西走的，就是那种边走边翻土的东西。" },
+            { id: "k17s4", lie: true, en: "I know nothing of that hole and I have not been under the shed since the drill was taken in for the autumn.", zh: "那洞我一无所知。播种机秋里推进房以后，我就没到房底下来过。" },
+          ],
+        },
+        {
+          id: "k17w3", trust: 2, en: "Barny the Mole", zh: "鼹鼠巴尼",
+          statements: [
+            { id: "k17s5", claim: "k17c3", en: "A cast thrown toward the drill is a cast thrown at the thing that was taken, and whoever threw it knew what he was coming for before he broke the root.", zh: "土往播种机那一边翻，就是奔着被搬走的东西翻的。翻土的在咬断草根之前就知道自己要来取什么。" },
+            { id: "k17s6", claim: "k17c2", en: "The scratching on that copper is all underneath, which is the way a hopper is carried on a back and not on a bill or in a paw.", zh: "铜斗上的划痕全在底下。那是驮在背上的样子，不是叼在嘴上、也不是抱在爪里的样子。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k17p1", witness: "k17w3", with: "k17e3", contra: ["k17s5"], claim: "k17c1", cost: 1, en: "You describe the direction of that cast for a bench that has not been told the cast was thrown toward anything.", zh: "你说那堆土是朝着什么翻的——而法庭从头到尾还没说过那堆土有个方向。" },
+        { id: "k17p2", witness: "k17w1", with: "k17e4", contra: ["k17s1"], claim: "k17c1", cost: 1, en: "You have never broken up into the shed, and yet you have read the hole's lip, the root in it and the way the cast lies.", zh: "你说你从没往房里破过一层。可洞沿、上头的断根、土翻的方向，你一样一样都读出来了。" },
+        { id: "k17p3", witness: "k17w2", with: "k17e1", contra: ["k17s4"], exposes: "k17s4", claim: "k17c1", cost: 2, en: "The root cut in that lip is dated by your own heap of cut roots, and a mouth that banks with a root knows the day it was cut.", zh: "洞沿上那截断根，日期就记在你自己那堆断根上。用根子垒洞的嘴，认得它是哪天断的。" },
+      ],
+      vouches: [
+        { id: "k17v1", witness: "k17w2", exhibit: "k17e5", claim: "k17c1", en: "A vole who keeps roots and can name a cut root is a witness about roots, and this bench will hear the trade it can prove.", zh: "田鼠存根子，又认得断根，那就是关于根子的内行。法庭要听一门拿得出货的内行。" },
+        { id: "k17v2", witness: "k17w1", exhibit: "k17e2", claim: "k17c1", en: "The shrew who has never once come up into that shed is the only mouth here with a clean claim to the road below it.", zh: "从没往那房里上来过的鼩鼱，是这庭上唯一对底下那条道说得清、又说得干净的一张嘴。" },
+      ],
+      claims: [
+        { id: "k17c1", accused: "mole", statements: ["k17s1", "k17s3"], exhibits: ["k17e1", "k17e2", "k17e3", "k17e4"], en: "Barny broke up under the shed wall and carried the hopper out on his back", zh: "巴尼从墙根底下破上来，把铜斗驮在背上搬走" },
+        { id: "k17c2", accused: "vole", statements: ["k17s2", "k17s6"], exhibits: ["k17e1", "k17e5"], en: "Mops made that hole to bank his own gallery and took the copper for the lining of it", zh: "莫普斯为了垒自己的洞挖开那条道，把铜搬回去衬洞" },
+        { id: "k17c3", accused: "shrew", statements: ["k17s5"], exhibits: ["k17e3", "k17e4"], en: "Fan went up from six inches under and threw the cast to hide a road he alone could read", zh: "范从底下六寸上来，把土翻出去，好盖住只有他读得懂的那条道" },
+      ],
+    },
+    {
+      id: "k18", labelKey: "ctaCase18", time: 12, culprit: "hare",
+      bar: { strength: 15, trust: 3 },
+      charge: {
+        en: "The stack of winter turnips was opened at the foot and forty bushels stood out in the frost. Two animals hold an alibi for each other and both alibis are true, which is the trouble: the only way to reach one of them is to press a witness this case cannot afford to press.",
+        zh: "过冬的萝卜垛从底下被掏开，四十桶萝卜冻在外头。有两头牲口互相为对方作证，而那两份证词句句是真——麻烦就在这儿。要够到其中一份，就只能逼问一位这个案子根本逼不起的证人。",
+      },
+      suspects: [
+        { id: "hare", en: "Havick the Hare", zh: "野兔哈维克" },
+        { id: "ram", en: "Broun the Ram", zh: "公羊布劳恩" },
+        { id: "weasel", en: "Tams the Weasel", zh: "黄鼬塔姆" },
+      ],
+      exhibits: [
+        { id: "k18e1", weight: 3, en: "The foot of the stack, opened in a hollow the width of a sitting body and roofed with clean snow under it.", zh: "垛底下被掏开一个洞，一只坐着的身子那么宽，洞顶上一层雪干干净净。" },
+        { id: "k18e2", weight: 3, en: "Forty bushels laid in a row in the frost, every one turned top-heavy, which is a row made by something going back and forth.", zh: "四十桶萝卜在霜里排成一行，每一桶都头重脚轻。来回跑的东西才排得出这样一行。" },
+        { id: "k18e3", weight: 2, en: "The run from the stack to the hedge, three feet wide at the middle and pinched at both ends.", zh: "从垛到篱笆的那条跑道，两头窄，当中宽出三尺。" },
+        { id: "k18e4", weight: 1, en: "Broun's own wet patch on the barn floor where he lay the whole of the frost night.", zh: "谷仓地上布劳自己趴了一夜的那片潮印，整夜霜天他都在那儿。" },
+        { id: "k18e5", weight: 2, en: "Tams's print in the hollow at the stack foot, and the print laid before the snow roof formed.", zh: "垛脚洞里塔姆的印子，而这印子比顶上那层雪早。" },
+      ],
+      witnesses: [
+        {
+          id: "k18w1", trust: 3, en: "Broun the Ram", zh: "公羊布劳恩",
+          statements: [
+            { id: "k18s1", claim: "k18c3", en: "I lay on the barn floor from dusk and Tams lay by the door, and the two of us can name every bell of that night to each other.", zh: "从天黑我就趴在谷仓地上，塔姆趴在门口。那一夜每一声钟，我们两个都能替对方报出来。" },
+            { id: "k18s2", claim: "k18c1", en: "A hollow roofed with clean snow was dug from inside the stack and the digger had to come out low and backwards, which is the way a hare leaves a hole he made with his own body.", zh: "顶上盖着净雪的那个洞，是从垛里头掏出来的。挖它的得倒退着低低地爬出来——那正是野兔用自己身子窝出来的洞的走法。" },
+          ],
+        },
+        {
+          id: "k18w2", trust: 4, en: "Tams the Weasel", zh: "黄鼬塔姆",
+          statements: [
+            { id: "k18s3", claim: "k18c2", en: "I know the shape of a body that goes three feet wide in the middle and pinched at both ends, and it is not the shape of anything with a back to bend.", zh: "两头窄、当中三尺宽的那种走法我认得。那不是会弯腰的东西的走法。" },
+            { id: "k18s4", claim: "k18c1", en: "The print in that hollow is mine and I say so. I went in at dusk for the warmth and came out before the frost, and the bushels were standing in a row when I went.", zh: "洞里头那个印子是我的，我自己认。我天黑进去取暖，霜下来之前就出来了。我走的时候桶已经排成一行。" },
+          ],
+        },
+        {
+          id: "k18w3", trust: 2, en: "Havick the Hare", zh: "野兔哈维克",
+          statements: [
+            { id: "k18s5", claim: "k18c2", contra: ["k18e3"], en: "A hare goes straight and does not turn a run out wide in the middle. Whatever made that run was carrying something at the turning and putting it down.", zh: "兔子走的道是一条直线，不会在当中鼓出三尺。把道走宽的，是拐那一下正驮着东西、把它放下来的那位。" },
+            { id: "k18s6", claim: "k18c1", en: "Turnips top-heavy in a row means the row was laid by a body that came back for the next one, and a back that goes low at the foot of a stack is a body going in on itself.", zh: "萝卜排成头重的一行，说明排它的那位一趟一趟回头取。在垛底下把背压低的，就是把自己塞进洞去的那位。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k18p1", witness: "k18w2", with: "k18e5", contra: ["k18s3"], exposes: "k18s3", claim: "k18c1", cost: 1, en: "You knew the width of that run before the bench was told of it, and your own print sits in the stack foot under a roof of snow you say you did not see laid.", zh: "那条道多宽，法庭还不知道，你先说出来了。你自己那个印子就在垛脚，顶上那层雪你说没看见它是怎么盖上的。" },
+        { id: "k18p2", witness: "k18w1", with: "k18e4", contra: ["k18s1"], claim: "k18c2", cost: 1, en: "You lay on that floor and you also name every bell to a witness who was not in the barn, which is a clock kept for somebody.", zh: "你趴在谷仓地上，却把每一声钟都报给一位不在仓里的证人——这台钟是替谁走的。" },
+        { id: "k18p3", witness: "k18w2", with: "k18e2", contra: ["k18s4"], claim: "k18c3", cost: 2, en: "You went out before the frost and the bushels were in a row, and forty bushels do not row themselves before anything has carried them.", zh: "你说霜前就出来了，桶那时已经排好。四十桶萝卜不会自己排队，得先有东西把它们一趟趟搬过去。" },
+      ],
+      vouches: [
+        { id: "k18v1", witness: "k18w3", exhibit: "k18e1", claim: "k18c1", en: "A hollow the width of a sitting body is a hole dug by the body that sits in it, and the accused who owns that measure has told the bench the rest.", zh: "一只坐着的身子那么宽的洞，就是坐得进去的那副身子掏的。被告的身材正合这个尺寸，而别的话都是他自己交上来的。" },
+        { id: "k18v2", witness: "k18w1", exhibit: "k18e3", claim: "k18c1", en: "The ram's wet patch held him in the barn all night, and a road he watched being pinched at both ends is a road he is given credit for seeing.", zh: "谷仓地上那片潮印把公羊一夜钉在仓里。而他看见的那条两头窄的道，法庭就按他看见的算。" },
+        { id: "k18v3", witness: "k18w2", exhibit: "k18e5", claim: "k18c1", en: "A print owned out loud before anyone thought to ask is the one print on this docket nobody has had to argue into the ground.", zh: "没人问就先把自己印子认下来的，这本案卷上只有这一个。这个印子不用人跟到地里去争。" },
+      ],
+      claims: [
+        { id: "k18c1", accused: "hare", statements: ["k18s2", "k18s4", "k18s6"], exhibits: ["k18e1", "k18e2", "k18e3"], en: "Havick hollowed the stack foot from inside and laid the bushels back and forth", zh: "哈维克从垛里头把底下窝空，一趟一趟把萝卜排成一行" },
+        { id: "k18c2", accused: "ram", statements: ["k18s1", "k18s3"], exhibits: ["k18e3", "k18e4"], en: "Broun kept the bells and the run both, and the wide middle was made turning for him", zh: "钟声和跑道布劳都攥着，当中那三尺宽是替他拐出来的" },
+        { id: "k18c3", accused: "weasel", statements: ["k18s5"], exhibits: ["k18e1", "k18e5"], en: "Tams went in the hollow for the warmth and left the stack to be opened after him", zh: "塔姆钻进洞取暖，出来之后那垛就被人掏开了" },
+      ],
+    },
+    {
+      id: "k19", labelKey: "ctaCase19", time: 11, culprit: "lynx",
+      bar: { strength: 14, trust: 5 },
+      charge: {
+        en: "The counting-room candle and the tally board went out together in the dark, and one animal on this bench is believed outright by everybody in the village. That belief is the only coin this case can be paid in, and a bench that has been made to doubt it will not take it back.",
+        zh: "账房的蜡烛和计板在黑暗里一块儿没了。庭上这位证人，是全村信到底的那一位。这份信任是这案子唯一付得出的钱币——而一旦让法官起了疑，他们就不打算再收回去。",
+      },
+      suspects: [
+        { id: "lynx", en: "Kessel the Lynx", zh: "猞猁凯塞尔" },
+        { id: "cat", en: "Malkin the Cat", zh: "猫马尔金" },
+        { id: "marten", en: "Sable the Pine Marten", zh: "紫貂萨贝尔" },
+      ],
+      exhibits: [
+        { id: "k19e1", weight: 3, en: "The tally board on the beam outside, its cord cut with something that sheathed the blade, and no splinter on the sill where it was taken up.", zh: "计板落在外头的梁上，挂它的绳是被带鞘的刃割断的，取走的窗台上一根木刺都没留。" },
+        { id: "k19e2", weight: 3, en: "The candle stub in the snow: one guttered side and a pair of tufted ears burned flat at the tips where the flame stood.", zh: "雪里那截蜡头：一面淌焦。一对耳尖带着毛烧秃了，烧的时候正立在火苗旁边。" },
+        { id: "k19e3", weight: 2, en: "A print in the gutter outside the counting room, broad at the heel and closed-toed, with the claw marks not showing at all.", zh: "账房外那道水沟里的印子：脚跟宽、趾头并着，一个爪尖都没露。" },
+        { id: "k19e4", weight: 2, en: "The sheath of the counting-room knife, found on the sill, and its strap buckled by somebody who had done it before.", zh: "账房那把刀的鞘在窗台上找到，鞘带上的扣，扣它的手法是一扣就成的熟手。" },
+        { id: "k19e5", weight: 1, en: "A tuft of lynx ear-fur in the beam's chink, and no fur of any other animal in it.", zh: "梁缝里卡着一撮猞猁耳尖的毛，别家的毛一星没有。" },
+      ],
+      witnesses: [
+        {
+          id: "k19w1", trust: 4, en: "Malkin the Cat", zh: "猫马尔金",
+          statements: [
+            { id: "k19s1", claim: "k19c1", en: "I was in that room at the counting and I heard the cord go: one draw of a blade that was covered, and the flame bent toward a body coming up off the sill.", zh: "数账的时候我就在屋里。我听见那根绳断的声音——是带鞘的刃拉的一下。火苗朝一个从窗台往上来的身子偏过去。" },
+            { id: "k19s2", claim: "k19c2", en: "The claw I do not show on a sill, and the claw Kessel does not show either. A cat's print and a lynx's print are the same print at two sizes, and this yard has one animal of the larger size.", zh: "我在窗台上不留爪印，凯塞尔也不留。猫和猞猁的印子是同一个印子的两个尺寸，而这个场院里大尺寸的那只只有一只。" },
+          ],
+        },
+        {
+          id: "k19w2", trust: 3, en: "Kessel the Lynx", zh: "猞猁凯塞尔",
+          statements: [
+            { id: "k19s3", lie: true, en: "I never once put a foot in that gutter, and I have not been past the counting-room since the board was hung.", zh: "那道水沟我一步都没踩过。计板挂上去以后，账房门口我一次都没过。" },
+            { id: "k19s4", claim: "k19c3", en: "A covered blade is a tool of the house and not of the field, and the house keeps its knife on a nail that was found empty.", zh: "带鞘的刃是屋里的家伙，不是地里的。屋里那把刀挂在钉子上——那根钉子被人找到时是空的。" },
+          ],
+        },
+        {
+          id: "k19w3", trust: 2, en: "Sable the Pine Marten", zh: "紫貂萨贝尔",
+          statements: [
+            { id: "k19s5", claim: "k19c2", en: "The flame bent off the sill toward the beam, and the beam is the one place in this village a cat would not leave a print and a lynx would.", zh: "火苗从窗台那头朝梁上偏。全村只有那一处，是猫不留印、猞猁才留印的地方。" },
+            { id: "k19s6", claim: "k19c3", contra: ["k19e1"], en: "A cord cut with no splinter on the sill was cut by a hand at work above the sill, and a mouth cannot keep a sheath buckled.", zh: "窗台上一根刺都没断的绳，是在窗台以上干活的手割的。一张嘴扣不住一副鞘带。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k19p1", witness: "k19w2", with: "k19e3", contra: ["k19s3"], exposes: "k19s3", claim: "k19c1", cost: 1, en: "There is a broad closed-toed print in that gutter with no claw in it, and the only animal here who keeps his claws sheathed at the heel is the one who denied the gutter.", zh: "水沟里一个脚跟宽、趾头并着、不露爪的印子。这儿脚跟不露爪的那位，恰恰是赖过水沟的那位。" },
+        { id: "k19p2", witness: "k19w3", with: "k19e2", contra: ["k19s5"], claim: "k19c1", cost: 1, en: "You saw which way a candle flame bent in a room you were not in, and you knew the beam before anybody told you the board was on it.", zh: "你没在那间屋里，可你看清了蜡火朝哪边偏。没人告诉你计板落在梁上，你先就认得那道梁。" },
+        { id: "k19p3", witness: "k19w1", with: "k19e4", contra: ["k19s2"], claim: "k19c2", cost: 1, en: "You tell the bench what a lynx's print is from the inside of his foot, and you were standing at that sill when the cord went.", zh: "你把猞猁的印子讲得像从他自己脚里头看出去的。绳断的时候，你正站在那道窗台边上。" },
+      ],
+      vouches: [
+        { id: "k19v1", witness: "k19w1", exhibit: "k19e5", claim: "k19c1", en: "A witness this village believes without counting is a coin spent once in a lifetime, and the tuft in the beam is the bench's own receipt that she was there.", zh: "全村不数就信的一位证人，一辈子只花得出去一次。梁缝里那撮毛，就是法庭收她的凭据：她确实在那儿。" },
+        { id: "k19v2", witness: "k19w1", exhibit: "k19e4", claim: "k19c1", en: "The sheath buckled by a practiced hand and found on the sill under the witness who heard the cut are one sill read twice, once by an ear and once by a hand.", zh: "一副熟手扣上的鞘，在听见割断的那位证人脚底下的窗台上找到。同一道窗台被读了两遍：一遍用耳朵，一遍用手。" },
+      ],
+      claims: [
+        { id: "k19c1", accused: "lynx", statements: ["k19s1", "k19s2"], exhibits: ["k19e1", "k19e2", "k19e3", "k19e4"], en: "Kessel came up off the sill with a covered blade, cut the board's cord and carried it to the beam", zh: "凯塞尔带着一把藏了刃的刀从窗台上来，割断计板的绳，把它架上梁" },
+        { id: "k19c2", accused: "cat", statements: ["k19s5"], exhibits: ["k19e3", "k19e5"], en: "Malkin took the board by borrowing a larger print and the flame bent toward her own sill", zh: "马尔金借了一个更大号的印子拿走计板，火苗正朝她那道窗台偏" },
+        { id: "k19c3", accused: "marten", statements: ["k19s3", "k19s6"], exhibits: ["k19e1", "k19e4"], en: "Sable cut at the cord from above the sill and set the board on the beam for a footed animal to be blamed for", zh: "萨贝尔从窗台以上割绳，把计板架上梁，好推给一只带爪的畜" },
+      ],
+    },
+    {
+      id: "k20", labelKey: "ctaCase20", time: 12, culprit: "wren",
+      bar: { strength: 20, trust: 3 },
+      charge: {
+        en: "The village key-board was emptied of the three storehouse keys and the board's own peg was found pushed in from the far side. Three charges are written on this docket, the clock has no slack in it, and every one of the three witnesses must be believed at the bar while two of them have been pulled down to it.",
+        zh: "全村的钥匙板上三把库房钥匙一起没了，板上那根木闩是从外那一头推进去的。这案卷上写着三条指控，钟点一次富余也没有。三位证人都得被信到门槛上，而其中两位是先被压下去、再被抬回门槛的。",
+      },
+      suspects: [
+        { id: "wren", en: "Tib the Wren", zh: "鹪鹩蒂布" },
+        { id: "mouse", en: "Pip the Harvest Mouse", zh: "巢鼠皮普" },
+        { id: "hound", en: "Kip the Otter-Hound", zh: "水猎犬基普" },
+      ],
+      exhibits: [
+        { id: "k20e1", weight: 3, en: "The board's peg pushed in from the far side, and the wood on that side worn bright in a circle the size of a perched body.", zh: "板上那根木闩是从外那一头推进去的。那一面的木头被磨得发亮，一圈，正是落着一只身子的地方。" },
+        { id: "k20e2", weight: 3, en: "Three keys off one board, and the ring they hung on found laid open at the seam, not broken.", zh: "一块板上掉了三把钥匙。挂它们的环是顺着缝被摊开的，不是掰断的。" },
+        { id: "k20e3", weight: 3, en: "A thread of board-hangings in the eaves above the board, wound twice, and the knot of it a bird's knot.", zh: "钥匙板上头那道檐口里绞着一根木花丝，绞了两道，结是鸟打的结。" },
+        { id: "k20e4", weight: 2, en: "The storehouse door opened with the key and not with a mouth: no scratch on the lock and no bent ward.", zh: "库房门是用钥匙开的，不是用嘴开的。锁上一道划都没有，齿也没歪。" },
+        { id: "k20e5", weight: 1, en: "Pip's nest under the board with three husks and no metal in it, and a mouse carries metal if she can carry anything.", zh: "板底下皮普的窝，三片壳，一星金属也没有。皮普要是能搬动东西，是连金属也搬的。" },
+        { id: "k20e6", weight: 2, en: "The hound's own print under the board, and the peg-mark of his collar caught in the board's edge.", zh: "板底下基普自己的印子，板边上还挂住他项圈上那根小闩的印子。" },
+      ],
+      witnesses: [
+        {
+          id: "k20w1", trust: 3, en: "Pip the Harvest Mouse", zh: "巢鼠皮普",
+          statements: [
+            { id: "k20s1", claim: "k20c1", en: "The peg went in from the far side, so whoever set it had to stand where the wood is worn, and the wear is a perched body's wear and a bill's reach at once.", zh: "木闩是从外那头推进去的，推它的就得站在那圈磨亮的地方。那磨亮是一只在落住的身子磨的，也是一张够得着的嘴够的。" },
+            { id: "k20s2", claim: "k20c2", contra: ["k20e3"], en: "A thread of hangings wound twice over the board is a nest's thread, and a mouse's nest is under the board, not above it.", zh: "板子上一根绞了两道的木花丝，是窝里的丝。而我的窝在板底下，不在板上头。" },
+          ],
+        },
+        {
+          id: "k20w2", trust: 2, en: "Kip the Otter-Hound", zh: "水猎犬基普",
+          statements: [
+            { id: "k20s3", claim: "k20c3", en: "I lay under that board most nights and never once did a key come off it into my mouth. A dog opens a lock with his nose and gets nothing for it, and I was not hungry enough to be silly.", zh: "多数夜里我都趴在那块板底下，可没有一把钥匙从我嘴边下来过。狗开锁靠鼻子，开了什么也落不着。我还没傻到那个饿法。" },
+            { id: "k20s4", lie: true, en: "I have not been at the storehouse since the autumn keying, and my print under the board is old and weathered out.", zh: "秋里上钥匙以后我就没到库房来过。板底下那个印子是旧的，早叫天气磨平了。" },
+          ],
+        },
+        {
+          id: "k20w3", trust: 5, en: "Tib the Wren", zh: "鹪鹩蒂布",
+          statements: [
+            { id: "k20s5", claim: "k20c3", en: "A ring laid open at the seam is a ring that was worked, not broken, and only a bill works a seam. I have watched a bill do it and I can put my own in the same shape.", zh: "顺着缝摊开的环，是被人拨开的，不是掰断的。缝只有嘴能拨。我见过嘴这么干，我自己也能把环拨成那个形状。" },
+            { id: "k20s6", claim: "k20c1", en: "The wear on the far side of that peg is at the height of a perched bird, and the three keys went off the board in the one hour the eaves above it were empty.", zh: "木闩外那面的磨亮，高正是一只在落住的鸟。三把钥匙下来的那一个钟头，它上头那道檐口是空的。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k20p1", witness: "k20w3", with: "k20e3", contra: ["k20s5"], claim: "k20c1", cost: 1, en: "You can put your own bill in the shape that opened that ring, and you knew the hour the eaves were empty before anybody asked you what you had seen.", zh: "你说你能把嘴摆成拨开那个环的形状。可檐口空着是哪一个钟头，还没人问你看见了什么，你先就说出来了。" },
+        { id: "k20p2", witness: "k20w1", with: "k20e1", contra: ["k20s1"], claim: "k20c1", cost: 1, en: "You read the far side of that peg, the wear on it and a bill's reach, from a nest under the board that never once went above it.", zh: "木闩外那面、上头的磨亮、一张嘴能够多远——你全是从板底下那个从没上到板上头去的窝里读出来的。" },
+        { id: "k20p3", witness: "k20w2", with: "k20e6", contra: ["k20s4"], exposes: "k20s4", claim: "k20c1", cost: 1, en: "The peg-mark of your collar is in the edge of the board you never stood under in the autumn, and the print you call weathered is sharp at one heel.", zh: "你项圈上小闩的印子挂在板边上——那块板你秋里从没站到过。你叫它磨平了的那个印子，脚跟一头还清清楚楚。" },
+      ],
+      vouches: [
+        { id: "k20v1", witness: "k20w1", exhibit: "k20e5", claim: "k20c1", en: "A nest of husks with no metal in it is a mouth proved off metal by its own hoard, and the bench will believe a hole it can look into.", zh: "窝里只有壳、一星金属没有，那是自己那仓替这张嘴作的保。法庭信一个它看得见底的洞。" },
+        { id: "k20v2", witness: "k20w2", exhibit: "k20e4", claim: "k20c1", en: "The lock was opened without a scratch, which is a key's work, and the one animal here with a nose for a keyhole has told the bench he was not hungry enough to be silly.", zh: "锁开得一道划痕没有，那是钥匙的活。这儿唯一闻得出锁眼的这位，自己说了他还没饿到发傻。" },
+        { id: "k20v3", witness: "k20w3", exhibit: "k20e3", claim: "k20c1", en: "A thread wound twice in the eaves with a bird's knot in it is a road marked by the feet that marked it, and the eaves above that board are the only post this charge has ever had.", zh: "檐口里绞了两道、打了个鸟结的丝，是踩它的那双脚留下的路。这块板上头那道檐口，是这条指控从头到尾仅有的一处落脚点。" },
+      ],
+      claims: [
+        { id: "k20c1", accused: "wren", statements: ["k20s1", "k20s6"], exhibits: ["k20e1", "k20e2", "k20e3", "k20e4"], en: "Tib came down to the far side of the board, opened the ring at the seam and took the three keys for the storehouse door", zh: "蒂布落到板子外那一头，顺着缝摊开环，取下三把钥匙去开库房" },
+        { id: "k20c2", accused: "mouse", statements: ["k20s2", "k20s5"], exhibits: ["k20e1", "k20e5"], en: "Pip went up from her nest to the board and wound the thread to hold the peg in from the far side", zh: "皮普从窝上到板上，把丝绞住，从外那头把闩顶进去" },
+        { id: "k20c3", accused: "hound", statements: ["k20s3", "k20s4"], exhibits: ["k20e2", "k20e6"], en: "Kip laid the ring open with his teeth and let the three keys fall where a bird would be named", zh: "基普用牙把环摊开，让三把钥匙落在一只鸟会被点名的地方" },
       ],
     },
   ];
@@ -2111,6 +2688,16 @@
       "ctaCase8": "The Altered Tally",
       "ctaCase9": "The Scratched Name",
       "ctaCase10": "The Weir Gap",
+      "ctaCase11": "The Loosened Latch",
+      "ctaCase12": "The Crossed Seed Rows",
+      "ctaCase13": "The Moved Spawn-Stone",
+      "ctaCase14": "The Four Names",
+      "ctaCase15": "The Stacked Paddle",
+      "ctaCase16": "The Only Mouth in the Room",
+      "ctaCase17": "The Cast at the Wall",
+      "ctaCase18": "The Paired Alibi",
+      "ctaCase19": "Believed Outright",
+      "ctaCase20": "No Slack in the Clock",
       "ctaCaseSelectLabel": "Take a case from the docket",
       "ctaTimeLabel": "Court time",
       "ctaWordsLabel": "Testimony",
@@ -2216,6 +2803,16 @@
       "ctaCase8": "重刻的计棍",
       "ctaCase9": "划掉的名字",
       "ctaCase10": "决口的石坝",
+      "ctaCase11": "松了的门闩",
+      "ctaCase12": "拖过种子行的那道线",
+      "ctaCase13": "搬走的孵卵石",
+      "ctaCase14": "四个名字",
+      "ctaCase15": "支起来的挡板",
+      "ctaCase16": "屋里唯一的那张嘴",
+      "ctaCase17": "墙根下那堆新土",
+      "ctaCase18": "互相作证的两位",
+      "ctaCase19": "信到底的证人",
+      "ctaCase20": "没有富余的钟点",
       "ctaCaseSelectLabel": "从案卷里挑一件案子",
       "ctaTimeLabel": "庭上时间",
       "ctaWordsLabel": "证词",
@@ -2328,7 +2925,7 @@
         '<rect x="72" y="46" width="34" height="16" rx="3" fill="none" stroke="#ff6b35" stroke-width="2"/>' +
         '<text x="89" y="57" font-size="8" fill="#ff6b35" text-anchor="middle">trust</text></svg>',
       en: [
-        "Goal: close one of ten cases with a verdict the numbers behind it actually support.",
+        "Goal: close one of twenty cases with a verdict the numbers behind it actually support.",
         "Action: click a witness to take their testimony in order, click an exhibit to mark it, then press 1 to 4 to spend an action, Enter to confirm, Escape back to the bench, L to read out everything you have established.",
         "Two numbers: claim strength comes from testimony, exhibit weight and contradictions; witness trust is separate, starts at the case's own value, and is what the bench will believe.",
         "The trade-off: pressing a witness adds 2 to the charge it serves and costs that witness 1 trust; corroborating a witness with a marked exhibit adds 1 to both.",
@@ -2336,7 +2933,7 @@
         "Scoring: the verdict quality is the gate, the case strength of your closing sets the stars, and the bands are measured from each case's own best-play line.",
       ],
       zh: [
-        "目标：在十件案子里结一件，判决要能被它背后的数字真正撑住。",
+        "目标：在二十件案子里结一件，判决要能被它背后的数字真正撑住。",
         "操作：点证人按顺序取他的证词，点物证把它呈堂，再按 1 到 4 花掉一次庭上动作，回车确认，Esc 回证人席，L 键念出你已确立的一切。",
         "两个数字：指控强度来自证词、物证分量与矛盾；证人信任是另一回事，由案子自己给定，那才是法庭愿意信多少。",
         "取舍：逼一个证人，替他服务的那条指控加 2，可这位证人的信任减 1；用已呈堂的物证为他旁证，两边各加 1。",

@@ -274,14 +274,68 @@
 
   /* ---------------- tables ---------------- */
   /* powers is optional: a rung can ship a shorter plunger arc, which drops the
-   * ball lower on the sorter rail and so changes which shafts it can reach. */
-  function pbcTable(id, labelKey, manifest, balls, startRoute, program, powers) {
+   * ball lower on the sorter rail and so changes which shafts it can reach.
+   * geo is optional too, and it is the whole layout lever the engine reads:
+   * segs (walls and the three route gates), circles (posts, bumpers, slings and
+   * the route-dependent return pad) and zones (the three scan windows plus the
+   * two ratchet corridors). Everything else - the shell, the flippers, the
+   * gravity, the kick strengths - is shared by every table in the drawer.
+   * A rung that passes nothing gets exactly the geometry it always had. */
+  function pbcTable(id, labelKey, manifest, balls, startRoute, program, powers, geo) {
+    var shape = geo || {};
     return {
       id: id, labelKey: labelKey, manifest: manifest, balls: balls,
       startRoute: startRoute, powers: powers || [770, 850, 930], program: program || [],
-      segs: pbcSegs(), circles: pbcCircles(), zones: pbcZones(),
+      segs: shape.segs || pbcSegs(),
+      circles: shape.circles || pbcCircles(),
+      zones: shape.zones || pbcZones(),
     };
   }
+
+  /* Layout variants. Each one starts from the shared table and moves one piece,
+   * so the diff a rung makes is the mechanic it teaches. A rung may compose
+   * several fixers; they are applied left to right. */
+  function pbcZonesWith() {
+    var zones = pbcZones();
+    var i;
+    for (i = 0; i < arguments.length; i += 1) { arguments[i](zones); }
+    return zones;
+  }
+
+  function pbcCirclesWith(fixer) {
+    var circles = pbcCircles();
+    fixer(circles);
+    return circles;
+  }
+
+  function pbcSegsWith(extra) {
+    return pbcSegs().concat(extra);
+  }
+
+  function pbcSegsWithWalls(fixer) {
+    var segs = pbcSegs();
+    fixer(segs);
+    return segs;
+  }
+
+  /* The moves themselves. */
+  var pbcBackTight = function (z) {
+    z[4].ax = 86; z[4].bx = 130; z[4].ay = 300; z[4].by = 340;
+  };
+  var pbcCurbSlit = function (z) { z[1].ax = 150; };
+  var pbcMarketSlit = function (z) { z[2].bx = 224; };
+  var pbcRidgeSlit = function (z) { z[0].ax = 74; };
+  var pbcStackLeft = function (z) {
+    z[3].ax = 64; z[3].bx = 120; z[3].ay = 214; z[3].by = 272;
+    z[4].ax = 64; z[4].bx = 120;
+  };
+  var pbcLowCorridors = function (z) {
+    z[3].ay = 322; z[3].by = 372; z[4].ay = 322; z[4].by = 372;
+  };
+  var pbcMarketMouth = function (z) { z[2].bx = 262; };
+  /* The Market grate: a second hold 3 panel, so it is solid on every route
+   * except Market - a parcel can only be read on the way down. */
+  var pbcGrateSeg = [[208, 196, 254, 196, 3]];
 
   /* Stored input lines. The three extended rungs were built tick by tick
    * against this step function, and every other rung now ships one too, so no
@@ -504,6 +558,185 @@
     [69, 0], [5, 2], [31, 0], [1, 1], [2, 0], [3, 2], [1, 3], [259, 0],
   ]);
 
+  /* ---------------- the new tier ---------------- *
+   * Every rung below moves one real piece of the table, and the line under it
+   * was replayed through pbcStep until it ran the ledger without a refusal.
+   * What each move does to the route graph was read off the engine, not asked
+   * for: which of the nine from/to climbs still exist, and what they cost.
+   * A stored line has to finish inside PBC_CAP ticks, so the late rungs buy
+   * their difficulty with a tighter ball budget rather than a longer ledger.  */
+
+  /* Wide Shaft: the Market shaft is opened up to 62px and the Curb window is
+   * cut to its right 24px. Market stops get dearer - 618 / 877 / 628 ticks
+   * where the stock table pays 522 / 492 / 386 - and 6 of the 20 stored lines
+   * lose their scan entirely. */
+  var pbcLine11 = pbcScript([
+    [1, 3], [276, 0], [16, 2], [27, 0], [2, 2], [64, 0], [24, 2], [26, 0],
+    [14, 2], [4, 0], [18, 2], [25, 0], [31, 2], [90, 0], [1, 3], [88, 0],
+    [10, 1], [33, 0], [8, 1], [24, 0], [24, 2], [3, 1], [90, 0], [1, 3],
+    [99, 0], [3, 1], [27, 0], [1, 1], [2, 4], [11, 2], [84, 0], [22, 2],
+    [1, 4], [4, 1], [90, 0], [1, 3], [289, 0], [6, 1], [32, 0], [28, 2],
+    [28, 0], [20, 2], [11, 0], [8, 1], [3, 0], [8, 1], [115, 0], [1, 3],
+    [322, 0], [14, 2], [77, 0], [24, 2], [48, 0], [1, 1], [2, 4], [90, 0],
+    [1, 3], [165, 0], [28, 1], [4, 0], [22, 1], [125, 0], [17, 2], [75, 0],
+    [36, 1], [29, 0], [1, 1], [125, 0], [1, 3], [276, 0], [16, 2], [27, 0],
+    [2, 2], [64, 0], [24, 2], [26, 0], [14, 2], [4, 0], [18, 2], [25, 0],
+    [31, 2], [90, 0], [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0],
+    [24, 2], [3, 1], [90, 0],
+  ]);
+
+  /* Gutter Post: the return pad is gone and a post stands in its place, so a
+   * ball that trickles into the left gutter is dead instead of saved - and the
+   * backward ratchet window is cut from 74x60 to 44x40. */
+  var pbcLine12 = pbcScript([
+    [1, 3], [289, 0], [6, 1], [32, 0], [28, 2], [28, 0], [20, 2], [11, 0],
+    [8, 1], [3, 0], [8, 1], [115, 0], [1, 3], [128, 0], [10, 1], [154, 0],
+    [1, 1], [69, 0], [5, 2], [31, 0], [1, 1], [2, 0], [3, 2], [90, 0],
+    [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0], [24, 2], [3, 1],
+    [90, 0], [1, 3], [137, 0], [3, 1], [90, 0], [1, 3], [290, 0], [20, 2],
+    [1, 0], [2, 1], [12, 0], [29, 2], [43, 0], [6, 2], [25, 0], [3, 1],
+    [90, 0], [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0], [24, 2],
+    [3, 1], [90, 0], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1], [2, 4],
+    [11, 2], [84, 0], [22, 2], [1, 4], [4, 1], [90, 0], [1, 3], [289, 0],
+    [6, 1], [32, 0], [28, 2], [28, 0], [20, 2], [11, 0], [8, 1], [3, 0],
+    [8, 1], [115, 0],
+  ]);
+
+  /* Two Slits: the Ridge shaft is narrowed to 42px and the Curb window to its
+   * right 24px. Ridge can be delivered but never left - the graph drops to
+   * seven climbs and 5 of the 20 stored lines stop scanning. */
+  var pbcLine13 = pbcScript([
+    [1, 3], [162, 0], [10, 2], [114, 0], [21, 2], [11, 0], [27, 2], [32, 0],
+    [20, 1], [94, 0], [1, 3], [289, 0], [6, 1], [32, 0], [28, 2], [28, 0],
+    [20, 2], [11, 0], [8, 1], [3, 0], [8, 1], [115, 0], [1, 3], [289, 0],
+    [6, 1], [32, 0], [28, 2], [28, 0], [20, 2], [11, 0], [8, 1], [3, 0],
+    [8, 1], [115, 0], [1, 3], [322, 0], [14, 2], [77, 0], [24, 2], [48, 0],
+    [1, 1], [2, 4], [90, 0], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1],
+    [2, 4], [11, 2], [84, 0], [22, 2], [1, 4], [4, 1], [131, 0], [1, 3],
+    [99, 0], [3, 1], [27, 0], [1, 1], [2, 4], [11, 2], [84, 0], [22, 2],
+    [1, 4], [4, 1], [131, 0], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1],
+    [2, 4], [11, 2], [84, 0], [22, 2], [1, 4], [4, 1], [131, 0], [1, 3],
+    [99, 0], [3, 1], [27, 0], [1, 1], [2, 4], [11, 2], [84, 0], [22, 2],
+    [1, 4], [4, 1], [131, 0],
+  ]);
+
+  /* Sunken Switches: a softer plunger (890 at full draw) lands the ball lower
+   * on the rail and both corridors are sunk onto the flipper line, which costs
+   * the forward climb 1012 ticks and leaves six climbs out of nine. */
+  var pbcLine14 = pbcScript([
+    [1, 3], [290, 0], [20, 2], [1, 0], [2, 1], [12, 0], [29, 2], [43, 0],
+    [6, 2], [25, 0], [3, 1], [197, 0], [1, 3], [290, 0], [20, 2], [1, 0],
+    [2, 1], [12, 0], [29, 2], [43, 0], [6, 2], [25, 0], [3, 1], [197, 0],
+    [1, 3], [322, 0], [14, 2], [77, 0], [24, 2], [48, 0], [1, 1], [2, 4],
+    [90, 0], [1, 3], [165, 0], [28, 1], [4, 0], [22, 1], [125, 0], [17, 2],
+    [75, 0], [36, 1], [29, 0], [1, 1], [242, 0], [1, 3], [317, 0], [1, 3],
+    [317, 0], [1, 3], [317, 0], [1, 3], [317, 0],
+  ]);
+
+  /* Left Hand: both switch corridors are moved into the left column, the
+   * forward one stacked above the backward one, and the Ridge window is cut to
+   * its right 20px. Only five climbs survive and Ridge is a dead end. */
+  var pbcLine15 = pbcScript([
+    [1, 3], [162, 0], [10, 2], [114, 0], [21, 2], [11, 0], [27, 2], [32, 0],
+    [20, 1], [94, 0], [1, 3], [322, 0], [14, 2], [77, 0], [24, 2], [48, 0],
+    [1, 1], [2, 4], [90, 0], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1],
+    [2, 4], [11, 2], [84, 0], [22, 2], [1, 4], [4, 1], [131, 0], [1, 3],
+    [162, 0], [10, 2], [114, 0], [21, 2], [11, 0], [27, 2], [32, 0],
+    [20, 1], [94, 0], [1, 3], [128, 0], [10, 1], [154, 0], [1, 1], [69, 0],
+    [5, 2], [31, 0], [1, 1], [2, 0], [3, 2], [90, 0], [1, 3], [137, 0],
+    [3, 1], [90, 0], [1, 3], [137, 0], [3, 1], [90, 0], [1, 3], [137, 0],
+    [3, 1], [90, 0],
+  ]);
+
+  /* Market Grate: a shutter laid across the Market shaft that is solid unless
+   * Market is the open route, over a Ridge window cut to its right third. */
+  var pbcLine16 = pbcScript([
+    [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0], [24, 2], [3, 1],
+    [90, 0], [1, 3], [137, 0], [3, 1], [90, 0], [1, 3], [99, 0], [3, 1],
+    [27, 0], [1, 1], [2, 4], [11, 2], [84, 0], [22, 2], [1, 4], [4, 1],
+    [131, 0], [1, 3], [162, 0], [10, 2], [114, 0], [21, 2], [11, 0],
+    [27, 2], [32, 0], [20, 1], [94, 0], [1, 3], [289, 0], [6, 1], [32, 0],
+    [28, 2], [28, 0], [20, 2], [11, 0], [8, 1], [3, 0], [8, 1], [115, 0],
+    [1, 3], [128, 0], [10, 1], [154, 0], [1, 1], [69, 0], [5, 2], [31, 0],
+    [1, 1], [2, 0], [3, 2], [90, 0], [1, 3], [88, 0], [10, 1], [33, 0],
+    [8, 1], [24, 0], [24, 2], [3, 1], [90, 0], [1, 3], [137, 0], [3, 1],
+    [90, 0], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1], [2, 4], [11, 2],
+    [84, 0], [22, 2], [1, 4], [4, 1], [131, 0],
+  ]);
+
+  /* Half Rail: the backward corridor narrowed and the Market window cut to
+   * 16px of its shaft, so a Market parcel dropped on the right lip is never
+   * read and the ledger has to keep returning to it. */
+  var pbcLine17 = pbcScript([
+    [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0], [24, 2], [3, 1],
+    [90, 0], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1], [2, 4], [11, 2],
+    [84, 0], [22, 2], [1, 4], [4, 1], [90, 0], [1, 3], [289, 0], [6, 1],
+    [32, 0], [28, 2], [28, 0], [20, 2], [11, 0], [8, 1], [3, 0], [8, 1],
+    [115, 0], [1, 3], [322, 0], [14, 2], [77, 0], [24, 2], [48, 0], [1, 1],
+    [2, 4], [90, 0], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1], [2, 4],
+    [11, 2], [84, 0], [22, 2], [1, 4], [4, 1], [131, 0], [1, 3], [290, 0],
+    [20, 2], [1, 0], [2, 1], [12, 0], [29, 2], [43, 0], [6, 2], [25, 0],
+    [3, 1], [90, 0], [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0],
+    [24, 2], [3, 1], [90, 0], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1],
+    [2, 4], [11, 2], [84, 0], [22, 2], [1, 4], [4, 1], [90, 0], [1, 3],
+    [289, 0], [6, 1], [32, 0], [28, 2], [28, 0], [20, 2], [11, 0], [8, 1],
+    [3, 0], [8, 1], [115, 0],
+  ]);
+
+  /* Four Cuts: the grate, the Curb slit, the Market slit and the narrowed
+   * back corridor on one table - a nine stop ledger with one spare ball. */
+  var pbcLine18 = pbcScript([
+    [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0], [24, 2], [3, 1],
+    [90, 0], [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0], [24, 2],
+    [3, 1], [90, 0], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1], [2, 4],
+    [11, 2], [84, 0], [22, 2], [1, 4], [4, 1], [90, 0], [1, 3], [289, 0],
+    [6, 1], [32, 0], [28, 2], [28, 0], [20, 2], [11, 0], [8, 1], [3, 0],
+    [8, 1], [115, 0], [1, 3], [322, 0], [14, 2], [77, 0], [24, 2], [48, 0],
+    [1, 1], [2, 4], [90, 0], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1],
+    [2, 4], [11, 2], [84, 0], [22, 2], [1, 4], [4, 1], [131, 0], [1, 3],
+    [290, 0], [20, 2], [1, 0], [2, 1], [12, 0], [29, 2], [43, 0], [6, 2],
+    [25, 0], [3, 1], [90, 0], [1, 3], [88, 0], [10, 1], [33, 0], [8, 1],
+    [24, 0], [24, 2], [3, 1], [90, 0], [1, 3], [88, 0], [10, 1], [33, 0],
+    [8, 1], [24, 0], [24, 2], [3, 1], [90, 0],
+  ]);
+
+  /* One Hand Led: the left column stack again, but the whole ledger runs
+   * Curb and Market and closes on four Ridge parcels that cannot be repeated
+   * any other way. Ten stops, ten launches, eleven balls. */
+  var pbcLine19 = pbcScript([
+    [1, 3], [162, 0], [10, 2], [114, 0], [21, 2], [11, 0], [27, 2], [32, 0],
+    [20, 1], [94, 0], [1, 3], [322, 0], [14, 2], [77, 0], [24, 2], [48, 0],
+    [1, 1], [2, 4], [90, 0], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1],
+    [2, 4], [11, 2], [84, 0], [22, 2], [1, 4], [4, 1], [131, 0], [1, 3],
+    [99, 0], [3, 1], [27, 0], [1, 1], [2, 4], [11, 2], [84, 0], [22, 2],
+    [1, 4], [4, 1], [131, 0], [1, 3], [162, 0], [10, 2], [114, 0], [21, 2],
+    [11, 0], [27, 2], [32, 0], [20, 1], [94, 0], [1, 3], [128, 0], [10, 1],
+    [154, 0], [1, 1], [69, 0], [5, 2], [31, 0], [1, 1], [2, 0], [3, 2],
+    [90, 0], [1, 3], [137, 0], [3, 1], [90, 0], [1, 3], [137, 0], [3, 1],
+    [90, 0], [1, 3], [137, 0], [3, 1], [90, 0], [1, 3], [137, 0], [3, 1],
+    [90, 0],
+  ]);
+
+  /* Narrow Back: the longest ledger in the drawer - twelve stops, twelve
+   * launches, thirteen balls, one spare - with the backward corridor cut to
+   * 44x40 so the last two refusals cost the route rather than the ball. */
+  var pbcLine20 = pbcScript([
+    [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0], [24, 2], [3, 1],
+    [90, 0], [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0], [24, 2],
+    [3, 1], [90, 0], [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0],
+    [24, 2], [3, 1], [90, 0], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1],
+    [2, 4], [11, 2], [84, 0], [22, 2], [1, 4], [4, 1], [90, 0], [1, 3],
+    [128, 0], [10, 1], [154, 0], [1, 1], [69, 0], [5, 2], [31, 0], [1, 1],
+    [2, 0], [3, 2], [90, 0], [1, 3], [88, 0], [10, 1], [33, 0], [8, 1],
+    [24, 0], [24, 2], [3, 1], [90, 0], [1, 3], [88, 0], [10, 1], [33, 0],
+    [8, 1], [24, 0], [24, 2], [3, 1], [90, 0], [1, 3], [88, 0], [10, 1],
+    [33, 0], [8, 1], [24, 0], [24, 2], [3, 1], [90, 0], [1, 3], [137, 0],
+    [3, 1], [90, 0], [1, 3], [290, 0], [20, 2], [1, 0], [2, 1], [12, 0],
+    [29, 2], [43, 0], [6, 2], [25, 0], [3, 1], [90, 0], [1, 3], [137, 0],
+    [3, 1], [90, 0], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1], [2, 4],
+    [11, 2], [84, 0], [22, 2], [1, 4], [4, 1], [131, 0],
+  ]);
+
   var pbcTables = [
     pbcTable("pbcT1", "pbcTbl1", [0, 1, 2], 4, 0, pbcLine1),
     pbcTable("pbcT2", "pbcTbl2", [2, 1, 0], 5, 0, pbcLine2),
@@ -515,6 +748,59 @@
     pbcTable("pbcT8", "pbcTbl8", [0, 2, 2, 1, 1, 0, 0, 1, 2], 11, 0, pbcLine8),
     pbcTable("pbcT9", "pbcTbl9", [0, 2, 0, 2, 1, 0, 1, 2, 0], 12, 2, pbcLine9),
     pbcTable("pbcT10", "pbcTbl10", [0, 2, 0, 2, 0, 1, 0, 2, 0, 1, 0], 13, 0, pbcLine10),
+    /* Wide Market shaft, slit Curb window: 44 of the 60 stored-line probes
+     * still deliver, and every Market climb costs 96 to 385 ticks more. */
+    pbcTable("pbcT11", "pbcTbl11", [2, 0, 0, 1, 1, 2, 2, 0], 12, 2, pbcLine11, null, {
+      segs: pbcSegsWithWalls(function (s) { s[22] = [264, 167, 264, 214, 0]; }),
+      zones: pbcZonesWith(pbcMarketMouth, pbcCurbSlit),
+    }),
+    /* No return pad, a post in the gutter, narrowed back corridor. */
+    pbcTable("pbcT12", "pbcTbl12", [1, 1, 0, 0, 2, 0, 0, 1], 11, 1, pbcLine12, null, {
+      circles: pbcCirclesWith(function (c) {
+        c.splice(5, 1);
+        c.push([26, 420, 8, 0, 0]);
+      }),
+      zones: pbcZonesWith(pbcBackTight),
+    }),
+    /* Two slits: Ridge delivered through a 42px shaft, Curb through the right
+     * half of its window - seven climbs out of nine survive. */
+    pbcTable("pbcT13", "pbcTbl13", [2, 1, 1, 1, 2, 2, 2, 2], 10, 2, pbcLine13, null, {
+      segs: pbcSegsWithWalls(function (s) { s[18] = [88, 140, 88, 214, 0]; }),
+      zones: pbcZonesWith(pbcCurbSlit, function (z) { z[0].bx = 86; }),
+    }),
+    /* A softer plunger and both corridors sunk to the flipper line: six climbs
+     * out of nine, and eight parcels on nine balls. */
+    pbcTable("pbcT14", "pbcTbl14", [1, 1, 1, 0, 2, 2, 2, 2], 9, 1, pbcLine14, [790, 860, 890], {
+      zones: pbcZonesWith(pbcLowCorridors),
+    }),
+    /* Left column stack plus the Ridge slit: the right flipper cannot reach a
+     * switch at all, and Ridge is a dead end once it is open. */
+    pbcTable("pbcT15", "pbcTbl15", [2, 1, 2, 2, 1, 0, 0, 0], 9, 2, pbcLine15, null, {
+      zones: pbcZonesWith(pbcStackLeft, pbcRidgeSlit),
+    }),
+    /* The Market grate over a slit Ridge window. */
+    pbcTable("pbcT16", "pbcTbl16", [0, 0, 2, 2, 1, 1, 0, 0, 2], 11, 0, pbcLine16, null, {
+      segs: pbcSegsWith(pbcGrateSeg),
+      zones: pbcZonesWith(pbcRidgeSlit),
+    }),
+    /* Narrowed back corridor and the Market window cut to 16px of its shaft. */
+    pbcTable("pbcT17", "pbcTbl17", [0, 0, 1, 1, 2, 2, 0, 0, 1], 11, 0, pbcLine17, null, {
+      zones: pbcZonesWith(pbcBackTight, pbcMarketSlit),
+    }),
+    /* Four moves on one table: grate, both slits and the tight back corridor,
+     * nine parcels on ten balls. */
+    pbcTable("pbcT18", "pbcTbl18", [0, 0, 0, 1, 1, 2, 2, 0, 0], 10, 0, pbcLine18, null, {
+      segs: pbcSegsWith(pbcGrateSeg),
+      zones: pbcZonesWith(pbcCurbSlit, pbcMarketSlit, pbcBackTight),
+    }),
+    /* The left hand ledger run long: ten parcels, ten launches, one spare. */
+    pbcTable("pbcT19", "pbcTbl19", [2, 1, 2, 2, 2, 1, 0, 0, 0, 0], 11, 2, pbcLine19, null, {
+      zones: pbcZonesWith(pbcStackLeft),
+    }),
+    /* Top of the ladder: twelve parcels, twelve launches, thirteen balls. */
+    pbcTable("pbcT20", "pbcTbl20", [0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 2], 13, 0, pbcLine20, null, {
+      zones: pbcZonesWith(pbcBackTight),
+    }),
   ];
 
   function pbcFresh(table) {
@@ -1595,6 +1881,16 @@
       "pbcTbl8": "Double Drop",
       "pbcTbl9": "Side Gate",
       "pbcTbl10": "Long Haul",
+      "pbcTbl11": "Low Arc",
+      "pbcTbl12": "Market Dead End",
+      "pbcTbl13": "One Hand Led",
+      "pbcTbl14": "Bumper Chain",
+      "pbcTbl15": "One Way Town",
+      "pbcTbl16": "Curb Slit",
+      "pbcTbl17": "Cellar Switches",
+      "pbcTbl18": "Right Hand Run",
+      "pbcTbl19": "No Safety Net",
+      "pbcTbl20": "Last Ledger",
       "pbcTblSelectLabel": "Choose a table",
       "pbcBin1": "Ridge",
       "pbcBin2": "Curb",
@@ -1658,6 +1954,16 @@
       "pbcTbl8": "双投台面",
       "pbcTbl9": "侧闸台面",
       "pbcTbl10": "长途台面",
+      "pbcTbl11": "矮弧台面",
+      "pbcTbl12": "市场死路台面",
+      "pbcTbl13": "单手引线台面",
+      "pbcTbl14": "弹柱连击台面",
+      "pbcTbl15": "单行道台面",
+      "pbcTbl16": "路边窄窗台面",
+      "pbcTbl17": "底层开关台面",
+      "pbcTbl18": "右手台面",
+      "pbcTbl19": "无回球台面",
+      "pbcTbl20": "末班账台面",
       "pbcTblSelectLabel": "选择台面",
       "pbcBin1": "山脊",
       "pbcBin2": "路边",

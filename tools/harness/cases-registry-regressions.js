@@ -194,3 +194,65 @@ run("Whisper Deck documented echo chain", () => {
   const guide = App.getRegisteredGames().find((game) => game.name === "whisperDeck").guide;
   check("Whisper Deck documented echo chain", "English guidance describes the demonstrated same-turn chain", guide.en.some((line) => line.startsWith("Echo:") && line.includes("same turn")) && App.t("wsdEchoWord", { y: "flow", v: "+3 power" }).includes("this turn"));
 });
+
+/* A rung a game can prove but does not is a rung a player may never clear, and
+ * campaign.record() clears on any win regardless of stars (game-campaign.js), so
+ * an unwinnable rung silently locks every rung above it. Whale Parliament shipped
+ * five rows with empty authored lines that way: parliamentSolvable reported
+ * solved:false and measureBands clamped them to [1,1,1], which both paid three
+ * stars for any score and proved nothing. Row counts are never asserted here -
+ * ladders grow - and every convention below was confirmed against its own module. */
+run("Every rung its own game can prove is proven", () => {
+  const env = boot();
+  const App = env.window.CapitalConvert;
+  const caseName = "Every rung its own game can prove is proven";
+
+  const proofs = App.parliamentProofs || [];
+  proofs.forEach((proof) => {
+    const band = proof.bands || [];
+    check(caseName, proof.id + " carries a proven, bounded parliament",
+      proof.solved === true && proof.binds === true && band.join(",") !== "1,1,1" && band[0] > band[1] && band[1] > band[2],
+      JSON.stringify(proof));
+  });
+  (App.parliamentLevels || []).forEach((level) => {
+    const line = (level.lines || {}).high || [];
+    const replay = App.parliamentReplay(level, line);
+    const state = replay && replay.state ? replay.state : replay;
+    check(caseName, level.id + " replays its authored high line to a win",
+      !!state && state.status === "won" && state.score >= level.need, JSON.stringify(state && state.status));
+  });
+
+  const districts = (App.mayorProof && App.mayorProof.districts) || [];
+  districts.forEach((district) => {
+    check(caseName, district.id + " is beatable at its own plan", district.ok === true && district.plan >= district.target, JSON.stringify(district));
+  });
+
+  (App.badmintonLevels || []).forEach((level) => {
+    check(caseName, level.id + " is winnable by rally", App.badmintonSolvable(level) === true);
+  });
+  (App.courierTables || []).forEach((table) => {
+    check(caseName, table.id + " delivers every parcel inside the cap", App.courierSolvable(table) === true);
+  });
+  (App.courtCases || []).forEach((item) => {
+    const verdict = App.courtSolvable(item);
+    check(caseName, item.id + " can be won in court", verdict === true || !!(verdict && verdict.ok), JSON.stringify(verdict));
+  });
+  (App.teaLevels || []).forEach((level) => {
+    check(caseName, level.id + " soothes every guest it seats",
+      App.teaBeatable(level) === true && App.teaSolve(level).ok === true);
+  });
+  (App.bodyRooms || []).forEach((room) => {
+    const solved = App.bodySolvable(room);
+    check(caseName, room.id + " carries the flag", solved === true || !!(solved && (solved.solved || solved.ok)), JSON.stringify(solved));
+  });
+  (App.auctionLevels || []).forEach((level) => {
+    check(caseName, level.id + " survives a best bid line", App.auctionSurvivable(App.auctionRun(level)) === true);
+  });
+  (App.ruleLevels || []).forEach((level) => {
+    const answer = App.ruleSolve(App.ruleSetup(level), 11);
+    const want = Math.ceil(answer.plies / 2);
+    check(caseName, level.id + " is a proven forced win for the mover at its own band",
+      answer.proven === true && answer.forced === true && answer.winner === 1 && level.starMoves[0] === want,
+      JSON.stringify(answer) + " band " + JSON.stringify(level.starMoves));
+  });
+});

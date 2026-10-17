@@ -12,7 +12,7 @@
  * (one faction's vote), parliamentRound (the whole turn: amendments, votes,
  * obligations, trust, walkouts), parliamentTrustFloor, parliamentLedgerFlips
  * (whether a pod's ballot actually rests on its ledger) and parliamentSolvable.
- * Ten parliaments climb the ladder, each one dealt by the same construction
+ * Twenty parliaments climb the ladder, each one dealt by the same construction
  * path from a seeded PRNG only, so a session replays bit for bit, and each
  * rung's star bands are the scores its own scripted lines reach when replayed
  * through that resolver - measured, never invented. Turn-based: no timers, no
@@ -88,6 +88,14 @@
     split: ["whpPlanSplit", 6, ["deep", "open"], { kelp: "o", ice: "t", deep: "go", reef: "t" }],
     tuskRun: ["whpPlanTuskRun", 5, ["reef", "mine"], { kelp: "-", ice: "t", deep: "t", reef: "t" }],
     bothWays: ["whpPlanBoth", 6, ["kelp", "open"], { kelp: "go", ice: "-", deep: "a", reef: "to" }],
+    /* Unfinished motions: every one of these four lands on the floor with its
+     * goal unmet, so the three goal points are bought with an amendment or not
+     * at all. No shipped rung deals them. */
+    crossTrench: ["whpPlanCross", 6, ["deep", "mine"], { kelp: "o", ice: "-", deep: "go", reef: "t" }],
+    twoBays: ["whpPlanTwoBays", 5, ["kelp", "mine"], { kelp: "go", ice: "o", deep: "-", reef: "t" }],
+    lockstep: ["whpPlanLock", 7, ["reef", "shut"], { kelp: "gt", ice: "to", deep: "go", reef: "g" }],
+    narrowRun: ["whpPlanNarrow", 6, ["ice", "open"], { kelp: "-", ice: "g", deep: "t", reef: "o" }],
+    twinGates: ["whpPlanTwin", 6, ["kelp", "shut"], { kelp: "to", ice: "g", deep: "-", reef: "a" }],
   };
 
   /* --- Offer cards: [kind, corridor, pod, trust cost per crossed wish]. --- */
@@ -97,13 +105,17 @@
     });
   }
 
-  /* --- The ten parliaments: generous priorities, a clash over the trench, a
+  /* --- The twenty parliaments: generous priorities, a clash over the trench, a
    * debt-heavy start, a hall where a walked-out pod can be won back, the
    * deep-water treaty that combines all three, and then five deeper halls where
-   * the ledger tightens rung by rung. Each carries three scripted lines,
-   * replayed below to measure its star bands: the bands are what those lines
-   * score through App.parliamentRound, never numbers written by hand, and the
-   * treaty target climbs while the points per adopted package fall. --- */
+   * the ledger tightens rung by rung. From the Single Whip onward every hall
+   * bends a different part of the rules - the whip budget, who owns a goal,
+   * which wishes a bloc can be bought with, which ledger tools the hand is
+   * missing, how many seats the treaty has to survive on. Each carries three
+   * scripted lines, replayed below to measure its star bands: the bands are what
+   * those lines score through App.parliamentRound, never numbers written by
+   * hand, and the treaty target climbs while the points per adopted package
+   * fall. --- */
   var whpLevels = [
     {
       id: "w1", labelKey: "whpP1", twistKey: "whpTwist1", maxCards: 2, need: 3, mercy: false, seed: 20261003,
@@ -168,79 +180,251 @@
       lines: { high: [[1], [], [], [6], [], [2, 3]], mid: [[1], [], [], [6], [3], []], low: [[], [4, 6], [], [], [], [2, 3]] },
     },
     {
-      /* Favour Tide owes every pod from the first ballot: each package that
-       * passes bypasses somebody's top wish, so the debt grows faster than the
-       * hall forgets it, and no offer short of a promise or a waiver clears. */
+      /* Favour Tide owes every pod from the first ballot: two pods want the trench
+       * open and the third wants it shut with the ice quiet, so every package that
+       * passes bypasses somebody and writes a fresh favour against them - the
+       * drifters pick up four of them on the way to the treaty - and the only ways
+       * left to pay a favour down are to serve that pod's own top wish or to waive
+       * it and leave a grudge behind. */
       id: "w6", labelKey: "whpP6", twistKey: "whpTwist6", maxCards: 2, need: 4, mercy: false, seed: 314159,
-      decks: ["quiet", "nursery", "strait", "hunters", "cold", "tuskRun", "bothWays"],
+      decks: ["wide", "hunters", "strait", "quiet", "nursery", "tuskRun", "bothWays"],
       hand: whpHand([["grant", "deep", "orca", 1], ["grant", "reef", "gray", 1], ["restrict", "ice", "tusk", 1], ["pledge", "", "orca", 0], ["waive", "", "tusk", 0], ["waive", "", "gray", 0]]),
       prio: {
-        gray: [["reef", "open", 3], ["deep", "open", 2], ["ice", "shut", 1]],
-        tusk: [["kelp", "shut", 3], ["ice", "shut", 2], ["deep", "shut", 1]],
-        orca: [["deep", "mine", 3], ["reef", "mine", 2], ["kelp", "open", 1]],
+        gray: [["reef", "mine", 3], ["deep", "open", 2], ["ice", "shut", 1]],
+        tusk: [["ice", "shut", 3], ["kelp", "shut", 2], ["deep", "shut", 1]],
+        orca: [["deep", "open", 3], ["kelp", "open", 2], ["reef", "shut", 1]],
       },
       start: [{ id: "gray", trust: 46, owed: 2 }, { id: "tusk", trust: 44, owed: 3 }, { id: "orca", trust: 44, owed: 2 }],
-      lines: { high: [], mid: [], low: [] },
+      lines: { high: [[2], [4], [3], [], [], []], mid: [[], [4], [3], [], [], [2, 1]], low: [[6], [4], [3], [2], [], []] },
     },
     {
       /* The Promise Hall deals the same trench twice over: a pledge made here is
        * crossed by a later package more often than not, so the grudge it leaves
        * behind shuts the pod off from every promise after it. */
       id: "w7", labelKey: "whpP7", twistKey: "whpTwist7", maxCards: 2, need: 4, mercy: false, seed: 271828,
-      decks: ["hunters", "sealed", "strait", "split", "wide", "tuskRun", "cold"],
+      decks: ["hunters", "bothWays", "strait", "split", "wide", "tuskRun", "cold"],
       hand: whpHand([["grant", "deep", "gray", 1], ["grant", "reef", "orca", 2], ["restrict", "ice", "tusk", 1], ["pledge", "", "tusk", 0], ["pledge", "", "orca", 0], ["waive", "", "gray", 0]]),
       prio: {
         gray: [["deep", "open", 3], ["kelp", "open", 2], ["reef", "shut", 1]],
         tusk: [["ice", "shut", 3], ["reef", "shut", 2], ["kelp", "shut", 1]],
-        orca: [["reef", "mine", 3], ["deep", "open", 2], ["ice", "shut", 1]],
+        orca: [["deep", "open", 3], ["reef", "mine", 2], ["ice", "shut", 1]],
       },
       start: [{ id: "gray", trust: 48, owed: 1 }, { id: "tusk", trust: 46, owed: 2 }, { id: "orca", trust: 40, owed: 3 }],
-      lines: { high: [], mid: [], low: [] },
+      lines: { high: [[6, 2], [4], [5], [3, 1], [], []], mid: [[6, 4], [], [5], [3, 1], [], []], low: [[6, 5], [4, 3], [], [1], [], []] },
     },
     {
       /* Thin Ice seats two pods on a thread: the herd walks out inside three
-       * rounds, and the treaty needs it back in the second seat - which only an
-       * offer serving the very wish it left over will do. */
+       * rounds, and the treaty needs it back in the second seat - which only a
+       * package serving the very wish it left over will do. */
       id: "w8", labelKey: "whpP8", twistKey: "whpTwist8", maxCards: 2, need: 5, mercy: true, seed: 161803,
       decks: ["wide", "quiet", "hunters", "strait", "halfGate", "split", "free"],
       hand: whpHand([["grant", "deep", "gray", 1], ["grant", "reef", "orca", 1], ["restrict", "ice", "tusk", 2], ["pledge", "", "tusk", 0], ["waive", "", "orca", 0], ["waive", "", "gray", 0]]),
       prio: {
-        gray: [["deep", "open", 3], ["reef", "open", 2], ["kelp", "mine", 1]],
+        gray: [["deep", "open", 3], ["reef", "open", 2], ["kelp", "shut", 1]],
         tusk: [["ice", "shut", 3], ["kelp", "shut", 2], ["deep", "shut", 1]],
-        orca: [["reef", "mine", 3], ["ice", "shut", 2], ["deep", "open", 1]],
+        orca: [["reef", "open", 3], ["deep", "open", 2], ["ice", "shut", 1]],
       },
-      start: [{ id: "gray", trust: 34, owed: 2 }, { id: "tusk", trust: 12, owed: 2 }, { id: "orca", trust: 30, owed: 1 }],
-      lines: { high: [], mid: [], low: [] },
+      start: [{ id: "gray", trust: 42, owed: 2 }, { id: "tusk", trust: 6, owed: 2 }, { id: "orca", trust: 16, owed: 1 }],
+      lines: { high: [[6, 4], [], [1], [5, 3], [], []], mid: [[6, 4], [], [1], [], [], [5, 3]], low: [[5], [4], [], [3], [], []] },
     },
     {
-      /* Winter Ledger deals nothing but cheap water: five points is the most any
-       * package is worth, the hall starts deep in favours, and a walkout still
-       * ends the session, so the treaty has to be carried on unpaid debts. */
+      /* Winter Ledger deals nothing but cheap water: every motion on the shelf is
+       * worth four or five points, so five points is the most any package can be
+       * worth and the hall starts deep in favours. A walkout still ends the
+       * session, the pods want the bays shut, and only the clan still hopes for
+       * open water, so the treaty has to be carried on unpaid debts. */
       id: "w9", labelKey: "whpP9", twistKey: "whpTwist9", maxCards: 2, need: 5, mercy: false, seed: 112358,
-      decks: ["sealed", "cold", "quiet", "nursery", "tuskRun", "halfGate", "strait"],
+      decks: ["quiet", "nursery", "cold", "sealed", "tuskRun", "halfGate"],
       hand: whpHand([["grant", "deep", "orca", 2], ["grant", "kelp", "gray", 1], ["restrict", "deep", "tusk", 1], ["pledge", "", "gray", 0], ["waive", "", "orca", 0], ["waive", "", "tusk", 0]]),
       prio: {
-        gray: [["kelp", "open", 3], ["deep", "open", 2], ["reef", "shut", 1]],
-        tusk: [["ice", "shut", 3], ["deep", "shut", 2], ["reef", "shut", 1]],
-        orca: [["deep", "mine", 3], ["reef", "mine", 2], ["kelp", "shut", 1]],
+        gray: [["ice", "shut", 3], ["deep", "shut", 2], ["reef", "shut", 1]],
+        tusk: [["ice", "shut", 3], ["kelp", "shut", 2], ["deep", "shut", 1]],
+        orca: [["kelp", "shut", 3], ["ice", "shut", 2], ["deep", "open", 1]],
       },
       start: [{ id: "gray", trust: 44, owed: 3 }, { id: "tusk", trust: 42, owed: 2 }, { id: "orca", trust: 40, owed: 3 }],
-      lines: { high: [], mid: [], low: [] },
+      lines: { high: [[4], [3], [], [], [], []], mid: [[6], [3], [], [1], [], []], low: [[6], [3], [], [1], [], [2]] },
     },
     {
       /* The last hall is the whole ledger at once: the trench is claimed by two
        * pods as their top wish, the herd sits on six points of trust, and every
        * promise made here is answered by the water that follows it. */
       id: "w10", labelKey: "whpP10", twistKey: "whpTwist10", maxCards: 2, need: 5, mercy: true, seed: 141421,
-      decks: ["wide", "hunters", "strait", "sealed", "tuskRun", "bothWays", "nursery"],
+      decks: ["wide", "hunters", "strait", "split", "bothWays", "quiet", "free"],
       hand: whpHand([["grant", "deep", "gray", 2], ["restrict", "deep", "tusk", 2], ["grant", "reef", "orca", 1], ["pledge", "", "gray", 0], ["pledge", "", "tusk", 0], ["waive", "", "orca", 0]]),
       prio: {
-        gray: [["deep", "open", 3], ["reef", "open", 2], ["kelp", "mine", 1]],
-        tusk: [["ice", "shut", 3], ["deep", "shut", 3], ["kelp", "shut", 1]],
-        orca: [["reef", "mine", 3], ["deep", "mine", 2], ["ice", "shut", 1]],
+        gray: [["deep", "open", 3], ["reef", "open", 2], ["kelp", "shut", 1]],
+        tusk: [["ice", "shut", 3], ["kelp", "shut", 2], ["deep", "shut", 1]],
+        orca: [["deep", "open", 3], ["kelp", "open", 2], ["reef", "shut", 1]],
       },
-      start: [{ id: "gray", trust: 36, owed: 2 }, { id: "tusk", trust: 10, owed: 3 }, { id: "orca", trust: 34, owed: 2 }],
-      lines: { high: [], mid: [], low: [] },
+      start: [{ id: "gray", trust: 44, owed: 2 }, { id: "tusk", trust: 6, owed: 3 }, { id: "orca", trust: 40, owed: 2 }],
+      lines: { high: [[4], [5, 2], [], [], [], []], mid: [[5], [], [], [], [], [3]], low: [[5], [], [2], [], [], [3]] },
+    },
+    {
+      /* Single Whip cuts the speaker's firepower to one offer a round: the trench
+       * is claimed by two pods, the herd wants the gate and the bay quiet, and a
+       * round can still only be amended once - the card spent opening the deep is
+       * not also available to close the ice, so a whip has to be spent rather
+       * than stacked. */
+      id: "w11", labelKey: "whpP11", twistKey: "whpTwist11", maxCards: 1, need: 4, mercy: false, seed: 830532,
+      decks: ["quiet", "strait", "tuskRun", "hunters", "split", "twinGates", "free"],
+      hand: whpHand([["grant", "deep", "orca", 1], ["restrict", "ice", "tusk", 1], ["pledge", "", "gray", 0], ["waive", "", "tusk", 0]]),
+      prio: {
+        gray: [["deep", "open", 3], ["ice", "shut", 2], ["kelp", "shut", 1]],
+        tusk: [["kelp", "shut", 3], ["ice", "shut", 2], ["reef", "open", 1]],
+        orca: [["deep", "open", 3], ["kelp", "mine", 2], ["ice", "shut", 1]],
+      },
+      start: [{ id: "gray", trust: 54, owed: 0 }, { id: "tusk", trust: 45, owed: 0 }, { id: "orca", trust: 52, owed: 1 }],
+      lines: { high: [[], [1], [3], [], [2], []], mid: [[], [], [3], [], [], []], low: [[], [1], [], [], [], []] },
+    },
+    {
+      /* Unfinished Bills deals only motions that arrive with their goal unmet:
+       * the trench is shared, the gate is half-open, the strait is claimed by two
+       * pods. Three points of every round sit behind an amendment the speaker
+       * must buy, so a carried package and a carried purpose stop being the
+       * same event. */
+      id: "w12", labelKey: "whpP12", twistKey: "whpTwist12", maxCards: 2, need: 4, mercy: false, seed: 195367,
+      decks: ["crossTrench", "twoBays", "split", "twinGates", "narrowRun", "bothWays", "lockstep"],
+      hand: whpHand([["grant", "deep", "orca", 0], ["grant", "kelp", "tusk", 0], ["grant", "reef", "gray", 0], ["restrict", "reef", "orca", 1], ["pledge", "", "tusk", 0], ["waive", "", "gray", 0]]),
+      prio: {
+        gray: [["deep", "open", 3], ["ice", "shut", 2], ["kelp", "open", 1]],
+        tusk: [["reef", "open", 3], ["deep", "shut", 2], ["kelp", "open", 1]],
+        orca: [["kelp", "open", 3], ["deep", "open", 2], ["ice", "shut", 1]],
+      },
+      start: [{ id: "gray", trust: 54, owed: 1 }, { id: "tusk", trust: 46, owed: 2 }, { id: "orca", trust: 55, owed: 0 }],
+      lines: { high: [[], [], [3, 5], [2], [], []], mid: [[], [], [2, 5], [], [], [1, 3]], low: [[], [], [], [], [], [1, 3]] },
+    },
+    {
+      /* The Exclusive Bloc seats two pods whose every wish is "ours alone": open
+       * water can never carry them, only shutting a rival out of a claimed bay
+       * will, and each such closure writes a grievance against the pod that
+       * loses the water. The friendly seat is the only one that will back open
+       * water at all. */
+      id: "w13", labelKey: "whpP13", twistKey: "whpTwist13", maxCards: 2, need: 4, mercy: false, seed: 688861,
+      decks: ["narrowRun", "lockstep", "halfGate", "hunters", "nursery", "strait", "crossTrench"],
+      hand: whpHand([["restrict", "deep", "orca", 2], ["grant", "reef", "tusk", 1], ["grant", "kelp", "tusk", 1], ["restrict", "kelp", "gray", 1], ["pledge", "", "orca", 0], ["waive", "", "gray", 0]]),
+      prio: {
+        gray: [["deep", "open", 3], ["kelp", "shut", 2], ["ice", "shut", 1]],
+        tusk: [["ice", "mine", 3], ["kelp", "mine", 3], ["reef", "mine", 1]],
+        orca: [["kelp", "mine", 3], ["deep", "mine", 2], ["ice", "mine", 2]],
+      },
+      start: [{ id: "gray", trust: 52, owed: 1 }, { id: "tusk", trust: 51, owed: 0 }, { id: "orca", trust: 53, owed: 1 }],
+      lines: { high: [[3], [2, 5], [1], [], [4], []], mid: [[3], [], [], [], [2, 4], []], low: [[3, 5], [1], [], [], [2, 4], []] },
+    },
+    {
+      /* Paid at the Ballot strips the ledger tools from the hand: no promise and
+       * no waiver, only grants and closures. Favours sit at three and four, the
+       * debt penalty is already maxed out, and the one way left to pay it is to
+       * carry a package that serves the pod's own top wish. */
+      id: "w14", labelKey: "whpP14", twistKey: "whpTwist14", maxCards: 2, need: 4, mercy: false, seed: 686743,
+      decks: ["strait", "wide", "hunters", "twinGates", "tuskRun", "quiet", "twoBays"],
+      hand: whpHand([["grant", "deep", "gray", 1], ["grant", "reef", "orca", 1], ["restrict", "ice", "tusk", 1], ["restrict", "deep", "tusk", 2], ["grant", "kelp", "tusk", 1], ["restrict", "reef", "gray", 2]]),
+      prio: {
+        gray: [["deep", "open", 3], ["reef", "open", 2], ["kelp", "shut", 1]],
+        tusk: [["reef", "open", 3], ["ice", "shut", 2], ["kelp", "shut", 1]],
+        orca: [["deep", "open", 3], ["reef", "open", 2], ["kelp", "open", 1]],
+      },
+      start: [{ id: "gray", trust: 52, owed: 3 }, { id: "tusk", trust: 47, owed: 4 }, { id: "orca", trust: 52, owed: 4 }],
+      lines: { high: [[], [], [], [1, 3], [], [2]], mid: [[], [], [], [], [3, 4], [2]], low: [[], [], [5, 6], [1, 2], [3, 4], []] },
+    },
+    {
+      /* The Promise Bank prices every amendment at two points of trust against a
+       * hall that starts thin, so the only cheap currency left is a pledge: +3
+       * goodwill when made, +4 and a cleared favour when the next packages
+       * deliver it, -8 and a grudge when they cross it, and it dies of its own
+       * age two rounds after a miss. */
+      id: "w15", labelKey: "whpP15", twistKey: "whpTwist15", maxCards: 2, need: 5, mercy: true, seed: 539297,
+      decks: ["narrowRun", "lockstep", "quiet", "twinGates", "crossTrench", "tuskRun", "split"],
+      hand: whpHand([["pledge", "", "gray", 0], ["pledge", "", "tusk", 0], ["pledge", "", "orca", 0], ["grant", "deep", "gray", 2], ["grant", "reef", "orca", 2], ["restrict", "ice", "tusk", 2]]),
+      prio: {
+        gray: [["kelp", "shut", 3], ["deep", "open", 2], ["ice", "shut", 1]],
+        tusk: [["kelp", "shut", 3], ["ice", "shut", 2], ["deep", "shut", 1]],
+        orca: [["kelp", "shut", 3], ["deep", "open", 2], ["ice", "shut", 1]],
+      },
+      start: [{ id: "gray", trust: 25, owed: 3 }, { id: "tusk", trust: 25, owed: 2 }, { id: "orca", trust: 29, owed: 2 }],
+      lines: { high: [[5, 6], [], [1], [2, 3], [4], []], mid: [[1, 6], [], [2], [3, 4], [], []], low: [[1, 6], [], [2, 3], [5], [4], []] },
+    },
+    {
+      /* The Fatal Floor seats the herd on four points of trust in a hall with no
+       * mercy: a round lost is a point off the seat, an amendment that crosses
+       * its wish costs more, and a pod that reaches zero leaves with the treaty
+       * behind it. The thin seat has to be carried, not merely survived. */
+      id: "w16", labelKey: "whpP16", twistKey: "whpTwist16", maxCards: 2, need: 5, mercy: false, seed: 829369,
+      decks: ["halfGate", "split", "tuskRun", "nursery", "crossTrench", "quiet", "wide"],
+      hand: whpHand([["grant", "reef", "gray", 1], ["grant", "deep", "orca", 1], ["restrict", "ice", "tusk", 1], ["restrict", "deep", "gray", 2], ["pledge", "", "tusk", 0], ["waive", "", "tusk", 0]]),
+      prio: {
+        gray: [["ice", "shut", 3], ["deep", "open", 2], ["kelp", "open", 1]],
+        tusk: [["ice", "shut", 3], ["kelp", "shut", 2], ["deep", "open", 1]],
+        orca: [["deep", "open", 3], ["ice", "shut", 2], ["kelp", "mine", 1]],
+      },
+      start: [{ id: "gray", trust: 47, owed: 2 }, { id: "tusk", trust: 4, owed: 1 }, { id: "orca", trust: 47, owed: 2 }],
+      lines: { high: [[3], [1, 5], [4], [], [], [2]], mid: [[3], [], [], [], [], [2]], low: [[], [3], [], [4], [], [1, 2]] },
+    },
+    {
+      /* Favour Tide Rises seats a hall already four to six favours deep on trust
+       * in the thirties and forties, and hands the speaker three waivers: each one
+       * cancels a favour, costs three trust and leaves a grudge that deafens the
+       * pod to every promise after it, while every package carried writes a fresh
+       * favour against whoever was bypassed. */
+      id: "w17", labelKey: "whpP17", twistKey: "whpTwist17", maxCards: 2, need: 5, mercy: false, seed: 481393,
+      decks: ["hunters", "twinGates", "quiet", "strait", "halfGate", "nursery", "bothWays"],
+      hand: whpHand([["waive", "", "tusk", 0], ["waive", "", "orca", 0], ["waive", "", "gray", 0], ["grant", "deep", "gray", 1], ["grant", "reef", "orca", 1], ["restrict", "kelp", "tusk", 1]]),
+      prio: {
+        gray: [["deep", "open", 3], ["ice", "shut", 2], ["reef", "open", 1]],
+        tusk: [["ice", "shut", 3], ["reef", "open", 2], ["kelp", "shut", 1]],
+        orca: [["ice", "shut", 3], ["reef", "open", 2], ["kelp", "shut", 1]],
+      },
+      start: [{ id: "gray", trust: 42, owed: 6 }, { id: "tusk", trust: 42, owed: 4 }, { id: "orca", trust: 35, owed: 5 }],
+      lines: { high: [[2, 4], [], [], [], [], [3, 5]], mid: [[2, 4], [], [], [], [], []], low: [[2, 6], [], [], [1], [], []] },
+    },
+    {
+      /* The Two-Seat Hall starts with the clan on seven points of trust and four
+       * favours unpaid, in a parliament where a walkout does not end the session:
+       * lose that seat and the hall runs on two, and a hall of two needs both of
+       * its yeas for every package. Only a bill serving a pod's left-over wish
+       * brings it back, and it comes home at twenty-five trust. */
+      id: "w18", labelKey: "whpP18", twistKey: "whpTwist18", maxCards: 2, need: 5, mercy: true, seed: 681105,
+      decks: ["crossTrench", "lockstep", "halfGate", "wide", "strait", "free", "cold"],
+      hand: whpHand([["grant", "kelp", "orca", 1], ["grant", "deep", "gray", 1], ["restrict", "ice", "tusk", 1], ["grant", "reef", "tusk", 1], ["pledge", "", "orca", 0], ["waive", "", "tusk", 0]]),
+      prio: {
+        gray: [["deep", "open", 3], ["kelp", "open", 2], ["ice", "shut", 1]],
+        tusk: [["kelp", "open", 3], ["reef", "open", 2], ["deep", "open", 1]],
+        orca: [["deep", "open", 3], ["reef", "open", 2], ["ice", "open", 1]],
+      },
+      start: [{ id: "gray", trust: 44, owed: 1 }, { id: "tusk", trust: 38, owed: 1 }, { id: "orca", trust: 7, owed: 4 }],
+      lines: { high: [[3, 5], [], [], [], [], [1, 4]], mid: [[], [], [], [1, 5], [], [4]], low: [[], [], [], [1, 5], [], [3, 4]] },
+    },
+    {
+      /* Poor House deals nothing but four and five point motions, so a carried
+       * round is worth barely half again what a greedy one pays and the three
+       * goal points decide whether the treaty has any margin at all. */
+      id: "w19", labelKey: "whpP19", twistKey: "whpTwist19", maxCards: 2, need: 5, mercy: false, seed: 936364,
+      decks: ["halfGate", "quiet", "nursery", "cold", "tuskRun", "sealed", "twoBays"],
+      hand: whpHand([["grant", "deep", "gray", 1], ["restrict", "deep", "orca", 1], ["restrict", "kelp", "tusk", 1], ["pledge", "", "orca", 0], ["pledge", "", "gray", 0], ["waive", "", "tusk", 0]]),
+      prio: {
+        gray: [["kelp", "shut", 3], ["ice", "shut", 2], ["reef", "shut", 1]],
+        tusk: [["ice", "shut", 3], ["reef", "shut", 2], ["kelp", "open", 1]],
+        orca: [["kelp", "shut", 3], ["deep", "open", 2], ["reef", "shut", 1]],
+      },
+      start: [{ id: "gray", trust: 34, owed: 5 }, { id: "tusk", trust: 35, owed: 5 }, { id: "orca", trust: 37, owed: 5 }],
+      lines: { high: [[4], [], [], [1, 5], [], []], mid: [[2, 4], [], [], [1, 5], [], []], low: [[2, 4], [], [1], [3], [], []] },
+    },
+    {
+      /* The last hall is the whole ladder at once: the treaty needs every one of
+       * the six packages carried, there is no mercy in the hall, and only the
+       * expensive motions are dealt at all. Two pods claim the open trench as
+       * their top wish while the herd wants the ice bay quiet, so the same hand
+       * that carries one pair crosses the third, and every crossing is paid for
+       * out of a trust cushion that starts in the thirties and low forties. */
+      id: "w20", labelKey: "whpP20", twistKey: "whpTwist20", maxCards: 2, need: 6, mercy: false, seed: 398283,
+      decks: ["hunters", "narrowRun", "strait", "wide", "bothWays", "lockstep", "free"],
+      hand: whpHand([["grant", "deep", "gray", 1], ["grant", "deep", "orca", 1], ["restrict", "deep", "tusk", 2], ["restrict", "ice", "tusk", 1], ["pledge", "", "gray", 0], ["waive", "", "tusk", 0]]),
+      prio: {
+        gray: [["deep", "open", 3], ["kelp", "open", 2], ["reef", "open", 1]],
+        tusk: [["ice", "shut", 3], ["deep", "mine", 2], ["kelp", "shut", 1]],
+        orca: [["deep", "open", 3], ["ice", "shut", 2], ["kelp", "open", 1]],
+      },
+      start: [{ id: "gray", trust: 38, owed: 0 }, { id: "tusk", trust: 43, owed: 1 }, { id: "orca", trust: 37, owed: 1 }],
+      lines: { high: [[], [4, 5], [1, 2], [], [], []], mid: [[], [4, 5], [1, 2], [3], [], []], low: [[], [4, 5], [1, 2], [], [3], []] },
     },
   ];
 
@@ -1316,18 +1500,35 @@
       "whpP4": "The Second Seat", "whpP5": "Deep Water Treaty",
       "whpP6": "Favour Tide", "whpP7": "Broken Pledge", "whpP8": "Thin Ice",
       "whpP9": "Winter Ledger", "whpP10": "Ledger of the Deep",
+      "whpP11": "Single Whip", "whpP12": "Unfinished Bills", "whpP13": "The Exclusive Bloc",
+      "whpP14": "Paid at the Ballot", "whpP15": "The Promise Bank", "whpP16": "Fatal Floor",
+      "whpP17": "Favour Tide Rises", "whpP18": "The Two-Seat Hall", "whpP19": "Poor House",
+      "whpP20": "Six of Six",
       "whpTwist1": "Generous priorities", "whpTwist2": "Two pods clash over the trench",
       "whpTwist3": "The hall starts in debt", "whpTwist4": "A walked-out pod can be won back",
       "whpTwist5": "Clash, debt and a second seat",
       "whpTwist6": "Every pod holds a favour", "whpTwist7": "Promises get crossed here",
       "whpTwist8": "Two pods hang by a thread", "whpTwist9": "Cheap water, heavy debt",
       "whpTwist10": "The whole ledger at once",
+      "whpTwist11": "One offer per round, no second remedy",
+      "whpTwist12": "Every bill lands with its goal unmet",
+      "whpTwist13": "Two pods will only back water they hold alone",
+      "whpTwist14": "No promise, no waiver: debts paid only by votes",
+      "whpTwist15": "Amendments cost trust, promises are the currency",
+      "whpTwist16": "A four-point seat in a hall with no mercy",
+      "whpTwist17": "Waivers buy relief and leave a grudge",
+      "whpTwist18": "Lose the thin seat and both survivors must agree",
+      "whpTwist19": "Penny motions, so the goal bonus decides",
+      "whpTwist20": "Every round must pass, or nothing does",
       "whpFGray": "Grey Drifters", "whpFTusk": "Tusk Herd", "whpFOrca": "Orca Clan",
       "whpCkelp": "Kelp Gate", "whpCice": "Ice Bay", "whpCdeep": "Deep Trench", "whpCreef": "Reef Strait",
       "whpPlanWide": "Wide Water", "whpPlanQuiet": "Quiet Ice", "whpPlanHunters": "Hunter's Deep",
       "whpPlanNursery": "Nursery Guard", "whpPlanStrait": "Strait Passage", "whpPlanCold": "Cold Current",
       "whpPlanFree": "All Open Water", "whpPlanSealed": "Sealed Water", "whpPlanHalf": "Half Open Gate",
       "whpPlanSplit": "Split Tide", "whpPlanTuskRun": "Tusk Corridor", "whpPlanBoth": "Both Ways",
+      "whpPlanCross": "Trench Alone", "whpPlanTwoBays": "Two Private Bays",
+      "whpPlanLock": "Lockstep Waters", "whpPlanNarrow": "Narrow Ice Run",
+      "whpPlanTwin": "Twin Gates",
       "whpWantOpen": "open water", "whpWantShut": "kept quiet", "whpWantMine": "ours alone",
       "whpStanceYea": "Yea", "whpStanceNay": "Nay", "whpStanceEven": "Even",
       "whpTrustWarm": "Warm", "whpTrustSteady": "Steady", "whpTrustCool": "Cool",
@@ -1364,7 +1565,7 @@
       "whpPledgeBroken": "{fac} calls your promise broken.", "whpPledgeLost": "{fac}'s pledge ran out: nothing delivered.",
       "whpWalkout": "{fac} walks out.", "whpReturn": "{fac} takes the second seat again.",
       "whpWon": "Treaty adopted with {n} points - {s} stars.", "whpNextHall": "Next parliament open.",
-      "whpCampaignDone": "All ten parliaments seated.",
+      "whpCampaignDone": "All twenty parliaments seated.",
       "whpLostTrust": "The {fac} left the hall: no coalition is possible.",
       "whpLostEmpty": "Too few seats remain to pass anything.",
       "whpLostTreaty": "Six rounds gone with {n}/{need} adopted - the treaty dies.",
@@ -1377,18 +1578,35 @@
       "whpP4": "第二把座椅", "whpP5": "深水条约",
       "whpP6": "人情潮", "whpP7": "背誓之厅", "whpP8": "薄冰之席",
       "whpP9": "冬日账簿", "whpP10": "深渊总账",
+      "whpP11": "单鞭议会", "whpP12": "未竟议案", "whpP13": "独占同盟",
+      "whpP14": "表决偿债", "whpP15": "承诺钱庄", "whpP16": "致命下限",
+      "whpP17": "人情潮再涨", "whpP18": "两席之厅", "whpP19": "薄水院",
+      "whpP20": "六案全数",
       "whpTwist1": "诉求宽松", "whpTwist2": "两族在深海沟上对立",
       "whpTwist3": "开局便欠着人情", "whpTwist4": "离席的族群可以请回",
       "whpTwist5": "对立、债务与第二把座椅俱全",
       "whpTwist6": "每个族群手里都攥着人情", "whpTwist7": "在这里承诺常被违逆",
       "whpTwist8": "两族的席位悬于一线", "whpTwist9": "水道便宜，人情昂贵",
       "whpTwist10": "整本账一次清算",
+      "whpTwist11": "每轮只许一张牌，再无第二味药",
+      "whpTwist12": "每份议案上桌时目标都未完成",
+      "whpTwist13": "两族只支持独占的水道",
+      "whpTwist14": "无承诺无勾销，人情只能靠表决偿还",
+      "whpTwist15": "改案伤信任，承诺才是通货",
+      "whpTwist16": "无情议场里只剩四点信任的席位",
+      "whpTwist17": "勾销能减债，却留下成见",
+      "whpTwist18": "丢了那把薄席，剩下两席都得赞成",
+      "whpTwist19": "议案皆薄值，目标奖励定生死",
+      "whpTwist20": "六轮一轮不容有失",
       "whpFGray": "灰鲸群", "whpFTusk": "角鲸群", "whpFOrca": "虎鲸群",
       "whpCkelp": "海藻门", "whpCice": "冰海湾", "whpCdeep": "深海沟", "whpCreef": "礁海峡",
       "whpPlanWide": "宽阔水域", "whpPlanQuiet": "静寂冰海", "whpPlanHunters": "猎者深沟",
       "whpPlanNursery": "育幼护锁", "whpPlanStrait": "海峡通行", "whpPlanCold": "寒流通道",
       "whpPlanFree": "全数开放", "whpPlanSealed": "全线封锁", "whpPlanHalf": "半开之门",
       "whpPlanSplit": "分流之潮", "whpPlanTuskRun": "角鲸长廊", "whpPlanBoth": "双向水道",
+      "whpPlanCross": "独占深沟", "whpPlanTwoBays": "两处私湾",
+      "whpPlanLock": "同步水域", "whpPlanNarrow": "窄冰道",
+      "whpPlanTwin": "双门水道",
       "whpWantOpen": "向全体开放", "whpWantShut": "保持安静", "whpWantMine": "归我独用",
       "whpStanceYea": "赞成", "whpStanceNay": "反对", "whpStanceEven": "持平",
       "whpTrustWarm": "热络", "whpTrustSteady": "稳固", "whpTrustCool": "冷淡",
@@ -1425,7 +1643,7 @@
       "whpPledgeBroken": "{fac}指你背弃承诺。", "whpPledgeLost": "{fac}的承诺落空：迟迟未兑现。",
       "whpWalkout": "{fac}离席。", "whpReturn": "{fac}重回第二把座椅。",
       "whpWon": "条约缔结，得 {n} 分——{s} 星。", "whpNextHall": "下一届议会已开启。",
-      "whpCampaignDone": "十届议会全部坐稳。",
+      "whpCampaignDone": "二十届议会全部坐稳。",
       "whpLostTrust": "{fac}拂袖而去：再无多数可言。",
       "whpLostEmpty": "在席者太少，任何议案都通不过。",
       "whpLostTreaty": "六轮过去，仅通过 {n}/{need}，条约作废。",

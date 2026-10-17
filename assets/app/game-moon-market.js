@@ -23,7 +23,8 @@
   ];
   /* Event kinds in draw order: dust storm (route shut), embargo (halves a
    * price), bloom (floods supply), heat wave (spikes ice). eventWeights and
-   * amp reshape the same generator per seat instead of writing ten rulesets. */
+   * amp reshape the same generator per seat instead of writing a ruleset for
+   * every seat the ladder grew. */
   var mktKinds = ["storm", "embargo", "bloom", "heat"];
 
   var mktLevels = [
@@ -54,6 +55,39 @@
     { id: "m10", labelKey: "mktS10", seed: 854, start: 220, cap: 40, fee: 3,
       amp: [2.4, 2.4, 2.4, 2.4], eventWeights: [1, 1, 1, 2], target: 760,
       starCredits: [1660, 1210, 760] },
+    /* Seats 11..20 each bend one lever the generator already reads into a new
+     * mechanic and ship the band measured off a line replayed through mktStep:
+     * the top rung always sits above what that seat's own greedy run banks. */
+    { id: "m11", labelKey: "mktS11", seed: 142, start: 90, cap: 3, fee: 1,
+      amp: [1.6, 1.6, 1.6, 1.6], eventWeights: [1, 1, 1, 3], target: 170,
+      starCredits: [320, 255, 170] },
+    { id: "m12", labelKey: "mktS12", seed: 634, start: 400, cap: 20, fee: 9,
+      amp: [0.5, 0.5, 0.5, 0.5], eventWeights: [1, 1, 1, 1], target: 460,
+      starCredits: [740, 550, 460] },
+    { id: "m13", labelKey: "mktS13", seed: 839, start: 200, cap: 12, fee: 2,
+      amp: [1.3, 1.3, 1.3, 0], eventWeights: [1, 1, 5, 1], target: 390,
+      starCredits: [495, 450, 390] },
+    { id: "m14", labelKey: "mktS14", seed: 1003, start: 240, cap: 14, fee: 1,
+      amp: [1.6, 1.6, 1.6, 1.6], eventWeights: [7, 1, 1, 1], target: 510,
+      starCredits: [660, 595, 510] },
+    { id: "m15", labelKey: "mktS15", seed: 593, start: 420, cap: 10, fee: 6,
+      amp: [0.3, 0.3, 2.6, 0.3], eventWeights: [1, 1, 2, 1], target: 990,
+      starCredits: [1150, 1060, 990] },
+    { id: "m16", labelKey: "mktS16", seed: 757, start: 300, cap: 18, fee: 10,
+      amp: [1.8, 1.8, 1.8, 1.8], eventWeights: [1, 1, 2, 1], target: 345,
+      starCredits: [450, 420, 345] },
+    { id: "m17", labelKey: "mktS17", seed: 265, start: 240, cap: 28, fee: 4,
+      amp: [0.25, 3, 0.25, 0.25], eventWeights: [1, 2, 3, 1], target: 335,
+      starCredits: [865, 625, 335] },
+    { id: "m18", labelKey: "mktS18", seed: 265, start: 320, cap: 12, fee: 4,
+      amp: [0, 0.4, 0, 2.2], eventWeights: [3, 3, 3, 1], target: 740,
+      starCredits: [1120, 950, 740] },
+    { id: "m19", labelKey: "mktS19", seed: 347, start: 220, cap: 16, fee: 4,
+      amp: [0, 0, 0.4, 0.4], eventWeights: [0, 0, 0, 7], target: 525,
+      starCredits: [785, 670, 525] },
+    { id: "m20", labelKey: "mktS20", seed: 1741, start: 240, cap: 18, fee: 2,
+      amp: [1.5, 1.5, 1.5, 1.5], eventWeights: [1, 7, 1, 1], target: 390,
+      starCredits: [541, 465, 390] },
   ];
 
   function mulberry32(seed) {
@@ -347,7 +381,7 @@
    * A seat whose own greedy run falls short of its target leaves this formula
    * with almost nothing to split, so the three steps are pushed apart here
    * rather than handed back flat - starsFor reads a strictly descending ladder.
-   * m6..m10 do not use this fallback: they ship the band the harness measured. */
+   * m6..m20 do not use this fallback: they ship the band the harness measured. */
   function mktBand(level) {
     var ceiling = mktCeiling(level);
     var top = ceiling > level.target ? ceiling : level.target + Math.max(10, Math.round(level.target * 0.1));
@@ -749,6 +783,16 @@
       "mktS8": "The Single Slot",
       "mktS9": "The Slow Burn",
       "mktS10": "The Big Board",
+      "mktS11": "The Pawn Seat",
+      "mktS12": "The Rent Trap",
+      "mktS13": "The Rot Bin",
+      "mktS14": "Storm Lock",
+      "mktS15": "The Alloy Vault",
+      "mktS16": "Seizure Row",
+      "mktS17": "The Flooded Hold",
+      "mktS18": "The Long Famine",
+      "mktS19": "The Ice Staircase",
+      "mktS20": "The Price War",
       "mktIce": "Moon Ice",
       "mktGrain": "Hydro Grain",
       "mktAlloy": "Regolith Alloy",
@@ -789,7 +833,7 @@
       "mktShort": "Missed the target: {n} of {t} credits.",
       "mktBankrupt": "The storage fee due on day {n} outran your credits - the colony seizes the cargo.",
       "mktNextSeat": "Next seat unlocked.",
-      "mktAllSeats": "All ten seats traded.",
+      "mktAllSeats": "All twenty seats traded.",
       "mktHint": "Arrows pick a commodity, +/- size the lot, Enter buys, Shift+Enter sells, D ends the day; positions are force-sold on day 7.",
       "logMoonMarket": "Banked {n} credits at the moon market",
     },
@@ -805,6 +849,16 @@
       "mktS8": "唯一货舱",
       "mktS9": "慢牛长持",
       "mktS10": "大盘满舱",
+      "mktS11": "当铺席位",
+      "mktS12": "仓租陷阱",
+      "mktS13": "腐货舱",
+      "mktS14": "风暴封锁",
+      "mktS15": "合金金库",
+      "mktS16": "没收街",
+      "mktS17": "水漫货舱",
+      "mktS18": "漫长饥荒",
+      "mktS19": "冰价长阶",
+      "mktS20": "价格战",
       "mktIce": "月冰",
       "mktGrain": "水培谷物",
       "mktAlloy": "月壤合金",
@@ -845,7 +899,7 @@
       "mktShort": "没达标：只有 {n}/{t} 信用点。",
       "mktBankrupt": "第 {n} 天的仓储费超出了你的信用点——殖民地没收了货物。",
       "mktNextSeat": "解锁下一个席位。",
-      "mktAllSeats": "十个席位全部交易完毕。",
+      "mktAllSeats": "二十个席位全部交易完毕。",
       "mktHint": "方向键选商品，加减号调批量，回车买入，Shift+回车卖出，D 结束当天；第 7 天所有持仓会被强制卖出。",
       "logMoonMarket": "在月球市场赚到了 {n} 信用点",
     },
