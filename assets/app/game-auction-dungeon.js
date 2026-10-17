@@ -149,7 +149,7 @@
     warden: { key: "audFoeWarden", gl: "#", hp: 22, soak: 3, pattern: [{ k: "hit", n: 6 }, { k: "rend", n: 5 }, { k: "guard", n: 5 }] }
   };
 
-  /* Ten runs: each level owns its lot pool, its rivals' nerve, its purse and
+  /* Twenty runs: each level owns its lot pool, its rivals' nerve, its purse and
    * its doors, so the three pressures (greedy rivals, jockeys, rests) stack.
    * `buff` is the one extra knob the back half of the ladder uses: it bolts hit
    * points onto every foe behind a door, so a late run demands a harder kit for
@@ -157,8 +157,9 @@
    * numbers look like: each rung's star band comes from the richest surviving
    * line (audBand -> audMeasure), and down the ladder that line burns a bigger
    * share of the purse - 43 per cent at Stall Fares, 92 per cent at The Last
-   * Hammer - while the coins it can still keep fall 25, 25, 26, 22, 21, 17, 16,
-   * 12, 9, 7. */
+   * Hammer, 97 per cent at The Last Ledger - while the coins it can still keep
+   * fall 25, 25, 26, 22, 21, 17, 16, 12, 9, 7, then 16, 13, 12, 9, 8, 7, 6, 5,
+   * 4, 3 through the deeper tier. */
   var audLevels = [
     { id: "a1", labelKey: "audR1", twistKey: "audTwist1", seed: 20260711, purse: 44, hp: 26, slots: 4, step: 2, reserve: 1,
       pool: ["dirk", "buckler", "canteen"], packs: [["rat"], ["adder"], ["hook"]],
@@ -189,7 +190,50 @@
       restPrice: 9, restHeal: 8, rests: 2, rivalPurse: 78, greed: 1.3, jockey: 1.5, miser: 0.75, miserRaises: 3 },
     { id: "a10", labelKey: "audR10", twistKey: "audTwist10", seed: 20260801, purse: 85, hp: 32, slots: 6, step: 2, reserve: 1.3, buff: 4,
       pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern", "canteen"], packs: [["hook", "hook", "adder"], ["brute", "warden"], ["warden", "brute", "hook"]],
-      restPrice: 9, restHeal: 8, rests: 2, rivalPurse: 82, greed: 1.32, jockey: 1.55, miser: 0.78, miserRaises: 3 }
+      restPrice: 9, restHeal: 8, rests: 2, rivalPurse: 82, greed: 1.32, jockey: 1.55, miser: 0.78, miserRaises: 3 },
+    /* The deeper tier. These ten rungs change the question the counter asks
+     * instead of the size of the purse: rivals with nothing to bid, doors that
+     * soak and guard, doors whose rend eats a brace, two slots for eight lots, a
+     * miser who will not stop lifting his paddle, a four-coin step, a run with
+     * no fire at either camp, three crates against three doors, the warden at
+     * the first door, and a sale that opens every crate in the top of its band.
+     * Every band here is anchored to a line the planner replayed through
+     * auctionRound and audAdvance - the richest surviving keep falls 16, 13, 12,
+     * 9, 8, 7, 6, 5, 4, 3 - and no rung is a lottery: at least three per cent of
+     * the legal lines an exhaustive walk of those same resolvers reaches clear
+     * the rung at its own three-star purse. A measured clear burns 72 per cent
+     * of the purse at the front of the tier and 97 per cent at The Last Ledger,
+     * whose greedy line buys everything down to 12 coins and a fallen party. */
+    { id: "a11", labelKey: "audR11", twistKey: "audTwist11", seed: 20260912, purse: 58, hp: 30, slots: 3, step: 2, reserve: 0.85, buff: 2,
+      pool: ["dirk", "buckler", "cloak", "vial", "lantern", "canteen"], packs: [["adder"], ["hook", "adder"], ["brute", "hook"]],
+      restPrice: 9, restHeal: 8, rests: 2, rivalPurse: 16, greed: 1.2, jockey: 1.2, miser: 0.7, miserRaises: 2 },
+    { id: "a12", labelKey: "audR12", twistKey: "audTwist12", seed: 20260630, purse: 68, hp: 34, slots: 4, step: 2, reserve: 1.1, buff: 2,
+      pool: ["dirk", "axe", "buckler", "cloak", "lantern", "goad"], packs: [["adder", "adder"], ["brute", "hook"], ["brute", "hook", "adder"]],
+      restPrice: 9, restHeal: 8, rests: 2, rivalPurse: 66, greed: 1.3, jockey: 1.4, miser: 0.72, miserRaises: 3 },
+    { id: "a13", labelKey: "audR13", twistKey: "audTwist13", seed: 20260729, purse: 78, hp: 36, slots: 5, step: 2, reserve: 1.1, buff: 3,
+      pool: ["dirk", "axe", "cloak", "vial", "buckler", "lantern"], packs: [["adder"], ["warden", "hook"], ["warden", "brute"]],
+      restPrice: 9, restHeal: 9, rests: 2, rivalPurse: 72, greed: 1.32, jockey: 1.45, miser: 0.75, miserRaises: 3 },
+    { id: "a14", labelKey: "audR14", twistKey: "audTwist14", seed: 20260307, purse: 56, hp: 30, slots: 2, step: 2, reserve: 1.2, buff: 2,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern", "canteen"], packs: [["adder", "adder"], ["hook", "adder"], ["brute", "warden"]],
+      restPrice: 8, restHeal: 8, rests: 2, rivalPurse: 70, greed: 1.25, jockey: 1.4, miser: 0.7, miserRaises: 2 },
+    { id: "a15", labelKey: "audR15", twistKey: "audTwist15", seed: 20260615, purse: 66, hp: 32, slots: 5, step: 2, reserve: 1, buff: 3,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "lantern"], packs: [["adder"], ["hook", "hook"], ["warden", "hook", "adder"]],
+      restPrice: 9, restHeal: 8, rests: 2, rivalPurse: 96, greed: 1.28, jockey: 1.15, miser: 0.95, miserRaises: 5 },
+    { id: "a16", labelKey: "audR16", twistKey: "audTwist16", seed: 20261007, purse: 54, hp: 34, slots: 4, step: 4, reserve: 1.25, buff: 2,
+      pool: ["dirk", "axe", "buckler", "cloak", "lantern"], packs: [["adder"], ["brute", "hook"], ["warden", "hook"]],
+      restPrice: 10, restHeal: 10, rests: 2, rivalPurse: 60, greed: 1.3, jockey: 1.35, miser: 0.7, miserRaises: 2 },
+    { id: "a17", labelKey: "audR17", twistKey: "audTwist17", seed: 20261015, purse: 60, hp: 34, slots: 4, step: 2, reserve: 1.1, buff: 2,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "canteen"], packs: [["adder"], ["hook", "hook"], ["warden", "brute"]],
+      restPrice: 7, restHeal: 12, rests: 0, rivalPurse: 68, greed: 1.3, jockey: 1.42, miser: 0.72, miserRaises: 3 },
+    { id: "a18", labelKey: "audR18", twistKey: "audTwist18", seed: 20260606, purse: 50, hp: 32, slots: 3, step: 2, reserve: 1.35, buff: 2,
+      pool: ["axe", "lantern", "vial"], packs: [["adder"], ["hook", "adder"], ["brute", "hook"]],
+      restPrice: 9, restHeal: 9, rests: 2, rivalPurse: 52, greed: 1.3, jockey: 1.3, miser: 0.7, miserRaises: 2 },
+    { id: "a19", labelKey: "audR19", twistKey: "audTwist19", seed: 20260703, purse: 74, hp: 36, slots: 5, step: 2, reserve: 1.05, buff: 3,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern", "canteen"], packs: [["warden", "brute"], ["warden", "hook", "adder"], ["brute", "hook", "adder"]],
+      restPrice: 10, restHeal: 8, rests: 2, rivalPurse: 76, greed: 1.34, jockey: 1.5, miser: 0.76, miserRaises: 3 },
+    { id: "a20", labelKey: "audR20", twistKey: "audTwist20", seed: 20261111, purse: 100, hp: 34, slots: 5, step: 2, reserve: 1.45, buff: 5,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern", "canteen"], packs: [["hook", "hook", "adder"], ["warden", "brute", "adder"], ["warden", "warden", "hook"]],
+      restPrice: 11, restHeal: 9, rests: 2, rivalPurse: 110, greed: 1.45, jockey: 1.65, miser: 0.85, miserRaises: 3 }
   ];
 
   function audInt(value) {
@@ -1865,6 +1909,16 @@
       "audR8": "Three at the Last Door",
       "audR9": "Warden's Early Round",
       "audR10": "The Last Hammer",
+      "audR11": "The Leftover Crate",
+      "audR12": "The Guarded Door",
+      "audR13": "Rend and Ruin",
+      "audR14": "Two Slots Deep",
+      "audR15": "The Miser's Spree",
+      "audR16": "Four a Paddle",
+      "audR17": "No Fire at Camp",
+      "audR18": "One Crate a Door",
+      "audR19": "The Warden First",
+      "audR20": "The Last Ledger",
       "audTwist1": "three honest lots, one soft door",
       "audTwist2": "Margra sets every price against you",
       "audTwist3": "the healer's vial is in the pool and a rest decides the run",
@@ -1875,6 +1929,16 @@
       "audTwist8": "Ost lifts his paddle three times over, Margra follows higher than ever, and three foes stand at the last door",
       "audTwist9": "three foes wait behind the very first door and the warden walks one door early",
       "audTwist10": "eight lots, two doors of three, and only what you saved can heal you",
+      "audTwist11": "the rivals hold barely a purse between them, so every crate goes cheap and every crate you haul costs you coins at the door",
+      "audTwist12": "adders open the sale and then the doors fill with brutes and hooks that brace before they swing - the lantern that ignores a brace costs coins you may want back",
+      "audTwist13": "the warden's rend goes straight through your guard, so the answer has to be bought as damage, not as a shield",
+      "audTwist14": "eight lots and two slots: every paddle you raise spends a better lot you will not be able to carry",
+      "audTwist15": "Ost lifts five paddles at near the stated worth and the shelf is empty before your price is",
+      "audTwist16": "one paddle raises four coins, so the price jumps clean over your purse and the lot goes to another seat",
+      "audTwist17": "no fire at either camp, so the canteen on the shelf buys you nothing and only the mending you carry can mend you",
+      "audTwist18": "three crates in the whole sale, one before each door, and your purse cannot cover all three",
+      "audTwist19": "the warden and the brute stand at the very first door: the three crates of the opening phase are all the answer you get",
+      "audTwist20": "every crate opens in the top of its own band, six foes stand behind the last two doors, and the purse is spent before the last hammer falls",
       "audItDirk": "Iron Dirk",
       "audItAxe": "Splitter Axe",
       "audItBuckler": "Tin Buckler",
@@ -1994,7 +2058,7 @@
       "audLostHp": "The party fell at encounter {n}. Run {seed} replays this auction - pass more and spend it on rests.",
       "audLostStall": "Encounter {n} would not break: {cap} rounds and the door still stood. Run {seed} - your kit was too blunt to clear it.",
       "audNextRun": "Next run unlocked.",
-      "audAllRuns": "All ten runs cleared.",
+      "audAllRuns": "All twenty runs cleared.",
       "audBands": "Three stars keeps {three}; one star keeps {one}.",
       "audBest": "Best keep: {n}.",
       "audHint": "Passing is a bid too: every coin left between encounters buys the only healing the run has.",
@@ -2012,6 +2076,16 @@
       "audR8": "三敌守门",
       "audR9": "狱卒的早巡",
       "audR10": "最后落槌",
+      "audR11": "尾货木箱",
+      "audR12": "架防之门",
+      "audR13": "撕裂与破财",
+      "audR14": "两格行囊",
+      "audR15": "奥斯特散财",
+      "audR16": "四枚一档",
+      "audR17": "营地无火",
+      "audR18": "一门一箱",
+      "audR19": "狱卒当先",
+      "audR20": "最后的账簿",
       "audTwist1": "三件实在货，一扇软门",
       "audTwist2": "玛格丽特专门针对你抬价",
       "audTwist3": "治疗师小瓶在货架上，一次扎营决定成败",
@@ -2022,6 +2096,16 @@
       "audTwist8": "奥斯特一连举三次牌，玛格丽特跟得比以往都高，最后一道门后站着三个敌人",
       "audTwist9": "第一道门后就站着三个敌人，狱卒还提前一道门出场",
       "audTwist10": "八件货，两扇三门，能救你的只有省下的钱",
+      "audTwist11": "对手们的钱袋都空得可怜，每件货都便宜得离谱——而你搬走的每一件，都要在门后用钱币偿还",
+      "audTwist12": "开场是一对地窖蝰，之后的门里全是出招前先架防的壮汉与铁钩手——那盏无视架防的提灯，要花掉你可能想留下的钱",
+      "audTwist13": "狱卒的撕裂径直穿过你的格挡——所以这一趟要在拍卖里把答案买成输出，而不是买成盾牌",
+      "audTwist14": "八件货，两个格子：每一次举牌，都在买一件你根本带不走的更好货",
+      "audTwist15": "奥斯特连着举五块牌，价钱几乎贴着标称价值，等你开口，货架已经空了",
+      "audTwist16": "一次举牌加四枚钱币，价一跳就跳过你的钱袋，货便落到别的席上",
+      "audTwist17": "两处营地都生不起火，货架上的铜水囊什么都换不来，只有你带在身上的缝合能治伤",
+      "audTwist18": "整场拍卖只有三件货，每件开在一扇门之前，而你的钱袋买不下三件",
+      "audTwist19": "狱卒与壮汉就守在第一道门后：开场那三件货，就是你全部的解法",
+      "audTwist20": "每件货都开在自家价位带的顶端，最后两道门后站着六个敌人，而落槌之前钱袋就得花空",
       "audItDirk": "铁匕首",
       "audItAxe": "劈裂斧",
       "audItBuckler": "锡圆盾",
@@ -2141,7 +2225,7 @@
       "audLostHp": "队伍倒在第 {n} 关。种子 {seed} 可完整重放这趟拍卖——多放弃几次，把钱留给扎营。",
       "audLostStall": "第 {n} 关打不穿：{cap} 轮过去门还立着。种子 {seed}——你的装备太钝，啃不下它。",
       "audNextRun": "解锁下一趟拍卖。",
-      "audAllRuns": "十趟拍卖全部打通。",
+      "audAllRuns": "二十趟拍卖全部打通。",
       "audBands": "三星需要剩下 {three}；一星只需剩下 {one}。",
       "audBest": "最佳结余：{n}。",
       "audHint": "放弃也是一种出价：关卡之间剩下的每一枚钱币，都是这趟旅程唯一的医术。",
@@ -2177,19 +2261,19 @@
         "Aim: clear the run's three encounters with the party alive and keep as many coins as you can - the purse you finish with is the score, its stars are measured from the exported planner line, and the same seed replays the same auction.",
         "Bid: a lot comes up with its stated band and reserve; press B to raise, P to pass, and keys 1, 2 and 3 choose whether one, two or four steps go on the paddle.",
         "Reveal: after every sale the panel prints what each named bidder bid and what they walked away with, so the prices rivals refuse to cross teach you the hidden worth.",
-        "Rivals: Greed the Cox bids until he cannot pay, Margra the Setter only raises while you are still in and quits the moment you do, Ost the Miser lifts his paddle twice at half worth.",
+        "Rivals: Greed the Cox bids until he cannot pay, Margra the Setter only raises while you are still in and quits the moment you do, Ost the Miser lifts a set number of paddles at his own share of the worth and then hoards - and each run sets that number and that share.",
         "Fight: foes telegraph their intent - hits, bites, guards and rends. Strike, Brace and Patch cost the round's actions, and 16 rounds without a break drives you off.",
         "Rest: coins only turn into healing between encounters, at the run's price per rest - take every lot and you will meet the last door bleeding.",
-        "Ladder: ten runs, from Stall Fares to The Last Hammer, and every rung's stars are the planner's own measured line - a clear that keeps coins burns four in ten of the purse at the front of the ladder and nine in ten at the back.",
+        "Ladder: twenty runs, from Stall Fares to The Last Ledger, and every rung's stars are the planner's own measured line - a clear that keeps coins burns four in ten of the purse at the front of the ladder and twenty-six in twenty-seven at the back.",
       ],
       zh: [
         "目标：让队伍活着打通这趟拍卖的三个关卡，并且尽量把钱留在袋里——终局钱袋就是分数；星级由导出的规划器实测得出，同一个种子完全重放同一趟拍卖。",
         "竞拍：每件货物都标出价值带与底价；按 B 举牌加价，按 P 放弃，数字键 1、2、3 决定牌子上加一档、两档还是四档。",
         "揭示：每次成交后面板会印出每位有名字的对手叫到哪里、离场时带走什么，所以对手不愿越过的那些价，就是在教你货品的真实成色。",
-        "对手：贪心的科克斯一直叫到付不起；设局的玛格丽特只在你还在场时抬价，你一撤她立刻收手；吝啬的奥斯特半价举两次牌就抱着钱不动。",
+        "对手：贪心的科克斯一直叫到付不起；设局的玛格丽特只在你还在场时抬价，你一撤她立刻收手；吝啬的奥斯特只按本趟设定的次数举牌，只出他自己那一份价值，之后就抱着钱不动——举几次、出几成，每一趟都由这一趟的规则定。",
         "战斗：敌人会预告意图——重打、撕咬、架防、撕裂。劈砍、格挡、包扎消耗本轮行动数，16 轮打不穿就被赶下门。",
         "扎营：钱币只在关卡之间变成治疗，每处营地按本趟价格收费——每件货物都抢，最后一道门你就会流着血进去。",
-        "阶梯：从摊位小市到最后落槌一共十趟，每一趟的星级都由规划器实测得出——一次合法的通关，在阶梯前半段要烧掉钱袋的十之三四，走到最后一趟几乎要烧掉十之八九。",
+        "阶梯：从摊位小市到最后的账簿一共二十趟，每一趟的星级都由规划器实测得出——一次合法的通关，在阶梯前半段要烧掉钱袋的十之三四，走到最后一趟要烧掉二十七份里的二十六。",
       ]
     }
   });
@@ -2209,6 +2293,10 @@
   App.auctionKit = audKit;
   App.auctionIntent = audIntent;
   App.auctionEnter = audEnter;
+  /* The step and camp functions the planner walks with, exported so a measured
+   * line can be replayed through the engine itself rather than a re-reading. */
+  App.auctionAdvance = audAdvance;
+  App.auctionRest = audRest;
   App.auctionTactic = audTactic;
   App.auctionFoes = audFoes;
   App.auctionRun = audBuildRun;

@@ -34,7 +34,7 @@
   var gbmG = [{ x: 0, y: 1 }, { x: -1, y: 0 }, { x: 0, y: -1 }, { x: 1, y: 0 }];
   var gbmDirKeys = ["gbmPullDown", "gbmPullLeft", "gbmPullUp", "gbmPullRight"];
 
-  /* Ten opponents, all data, so a level can be replayed and measured:
+  /* Twenty opponents, all data, so a level can be replayed and measured:
    *   speed/reach/height  baseline slide, reach, and the height it can swing at
    *   lock                gravity indexes where it never miscues (the wall)
    *   offLock             its speed multiplier while the pull is sideways
@@ -116,6 +116,131 @@
       react: 0.12, spread: 1, lock: [0, 2], targets: [46, 96, 24], baseBands: [6, 8, 10],
       line: [{ u: 68, target: 240, track: true }, { u: 56, target: 134, track: true },
         { u: 84, target: 202, track: true }, { u: 24, target: 152, track: true }],
+    },
+
+    /* b11-b20: the far half of the ladder. Every rung here changes the mechanic
+     * it is read with - a new style, a new set of locked pulls, a court that
+     * punishes the sideways pull instead of excusing it, a cap that runs out
+     * before the gifts do - and never merely a bigger number. The shipped ten
+     * above are untouched, so old saves still land on the same rung, and each
+     * baseBands below is the band the rung's own line measured through gbmPar. */
+
+    /* b11: the gateway, and a ceiling you can stand under. Its swing stops low,
+     * so a lifted shuttle is simply unhittable for it - but it has the arms of a
+     * much taller foe and it hits harder than any of the ten rungs before it. */
+    {
+      id: "b11", labelKey: "gbmL11", style: "sitter", seed: 13581, cap: 36,
+      speed: 235, reach: 40, height: 50, power: 1.35, err: 0.01, offLock: 1, freeze: 0,
+      react: 0.04, spread: 2.2, lock: [], targets: [6, 117], baseBands: [1, 3, 5],
+      line: [{ u: 74, target: 240, track: true }, { u: 44, target: 134, track: true },
+        { u: 84, target: 202, track: true }, { u: 60, target: 152, track: true },
+        { u: 24, target: 226, track: true }, { u: 36, target: 144, track: true }],
+    },
+
+    /* b12: the counter that is only dangerous crosswise. It is locked on the two
+     * sideways pulls - where a counter also reaches six further and hits sixteen
+     * percent harder - so the vertical pulls are the only court it can be beaten
+     * on, and it plants itself opposite you and answers your corner with its own. */
+    {
+      id: "b12", labelKey: "gbmL12", style: "counter", seed: 24691, cap: 36,
+      speed: 240, reach: 40, height: 84, power: 1.3, err: 0.05, offLock: 1, freeze: 0.05,
+      react: 0.04, spread: 2.2, lock: [1, 3], targets: [8, 116], baseBands: [0, 2, 4],
+      line: [{ u: 68, target: 240, track: true }, { u: 56, target: 134, track: true },
+        { u: 20, target: 132, track: true }, { u: 24, target: 152, track: true }],
+    },
+
+    /* b13: no gifts and a short leash. Locked on all four pulls it never sails one
+     * out, so every point has to be won outright - and the match is called after
+     * ten rallies, which is barely more than the seven points it is played to. */
+    {
+      id: "b13", labelKey: "gbmL13", style: "sitter", seed: 13591, cap: 10,
+      speed: 215, reach: 38, height: 78, power: 1.3, err: 0, offLock: 1, freeze: 0,
+      react: 0.06, spread: 2.2, lock: [0, 1, 2, 3], targets: [6, 117], baseBands: [0, 2, 4],
+      line: [{ u: 84, target: 198, track: true }, { u: 20, target: 170, track: true },
+        { u: 20, target: 170, track: true }, { u: 24, target: 152, track: true }],
+    },
+
+    /* b14: a mover that works both extremes of your half at once, so the demand
+     * is full-length coverage, and that runs to where your shuttle is going
+     * instead of standing its ground - a shot you point at a corner is a shot it
+     * is already walking to, so it has to be beaten with arrival time. */
+    {
+      id: "b14", labelKey: "gbmL14", style: "mover", seed: 31339, cap: 40,
+      speed: 140, reach: 16, height: 56, power: 0.85, err: 0.2, offLock: 1, freeze: 0,
+      react: 0.07, spread: 1.6, lock: [], targets: [10, 118], baseBands: [3, 5, 7],
+      line: [{ u: 60, target: 214, track: true }, { u: 24, target: 134, track: true },
+        { u: 74, target: 202, track: true }, { u: 24, target: 152, track: true }],
+    },
+
+    /* b15: it does not run, it spreads. A fifty-unit swing and a ceiling over the
+     * whole court on a slide slower than yours, so the only ground it leaves is
+     * the two ends of its own arms - and you must alternate them to find them. */
+    {
+      id: "b15", labelKey: "gbmL15", style: "sitter", seed: 13597, cap: 36,
+      speed: 90, reach: 50, height: 110, power: 1.35, err: 0.01, offLock: 1, freeze: 0,
+      react: 0.15, spread: 2.2, lock: [], targets: [6, 117], baseBands: [3, 5, 7],
+      line: [{ u: 36, target: 132, track: true }, { u: 44, target: 134, track: true },
+        { u: 84, target: 202, track: true }, { u: 60, target: 152, track: true },
+        { u: 24, target: 226, track: true }, { u: 36, target: 144, track: true }],
+    },
+
+    /* b16: the reader with no patience. It re-reads your aim almost instantly, so
+     * a shot planned early is a shot met: hold one line on the racket and change
+     * it on the way in. It also parks for a third of a second after you strike,
+     * which is the only window the ladder gives you to answer it. */
+    {
+      id: "b16", labelKey: "gbmL16", style: "reader", seed: 55511, cap: 40,
+      speed: 140, reach: 18, height: 56, power: 1, err: 0.1, offLock: 1, freeze: 0.3,
+      react: 0.03, spread: 1.5, lock: [], targets: [20, 114, 66], baseBands: [2, 4, 6],
+      line: [{ u: 68, target: 198, track: true }, { u: 24, target: 134, track: true },
+        { u: 74, target: 202, track: true }, { u: 24, target: 152, track: true }],
+    },
+
+    /* b17: it freezes in place as your shot leaves, then sprints. The pause is
+     * half a second, so the point is decided by when you hit, not where. */
+    {
+      id: "b17", labelKey: "gbmL17", style: "mover", seed: 60319, cap: 40,
+      speed: 225, reach: 18, height: 62, power: 1.05, err: 0.06, offLock: 1, freeze: 0.5,
+      react: 0.04, spread: 1.6, lock: [], targets: [28, 104], baseBands: [2, 4, 6],
+      line: [{ u: 20, target: 132, track: true }, { u: 64, target: 134, track: true },
+        { u: 68, target: 226, track: true }, { u: 64, target: 152, track: true }],
+    },
+
+    /* b18: the blind-side wall. Locked and clean on the two vertical pulls, but
+     * on a sideways pull it drops to two fifths of its pace and starts heaving
+     * every shot long: half the rotation is the only court it can be beaten on. */
+    {
+      id: "b18", labelKey: "gbmL18", style: "wall", seed: 81239, cap: 40,
+      speed: 115, reach: 18, height: 58, power: 0.9, err: 0.4, offLock: 0.4, freeze: 0,
+      react: 0.1, spread: 1.3, lock: [0, 2], targets: [46, 96, 24], baseBands: [2, 4, 6],
+      line: [{ u: 56, target: 240, track: true }, { u: 56, target: 134, track: true },
+        { u: 84, target: 202, track: true }, { u: 40, target: 152, track: true },
+        { u: 68, target: 226, track: true }, { u: 50, target: 144, track: true }],
+    },
+
+    /* b19: the baseline that never blinks. Locked on all four pulls it has no bad
+     * court and gives away nothing, and its sprint covers the full depth of its
+     * half, so pace alone - a shot that arrives before it does - has to beat it. */
+    {
+      id: "b19", labelKey: "gbmL19", style: "mover", seed: 60337, cap: 42,
+      speed: 225, reach: 18, height: 60, power: 1.1, err: 0.4, offLock: 1, freeze: 0,
+      react: 0.03, spread: 1.9, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [2, 4, 6],
+      line: [{ u: 28, target: 132, track: true }, { u: 108, target: 132, track: true },
+        { u: 84, target: 202, track: true }, { u: 60, target: 152, track: true },
+        { u: 24, target: 226, track: true }, { u: 36, target: 144, track: true }],
+    },
+
+    /* b20: the final rung, and the lie it tells. It is a wall whose sideways pull
+     * is not its bad court but its best - it runs a quarter faster crosswise -
+     * while the vertical pulls are locked, its swing reaches above the loft, its
+     * shots go to both extremes and the match is called at thirty-four rallies. */
+    {
+      id: "b20", labelKey: "gbmL20", style: "wall", seed: 81241, cap: 34,
+      speed: 150, reach: 18, height: 62, power: 1.15, err: 0.26, offLock: 1.25, freeze: 0.1,
+      react: 0.05, spread: 2.1, lock: [0, 2], targets: [46, 96, 24, 8], baseBands: [1, 3, 5],
+      line: [{ u: 92, target: 230, track: true }, { u: 20, target: 132, track: true },
+        { u: 108, target: 132, track: true }, { u: 24, target: 152, track: true },
+        { u: 100, target: 226, track: true }, { u: 30, target: 144, track: true }],
     },
   ];
 
@@ -1266,6 +1391,16 @@
       "gbmL8": "Baseline Sprinter",
       "gbmL9": "Rotation Reader",
       "gbmL10": "Turning Bulwark",
+      "gbmL11": "Low-Swing Sitter",
+      "gbmL12": "Cross-Pull Counter",
+      "gbmL13": "Zero-Gift Sentinel",
+      "gbmL14": "Wide-Angle Mover",
+      "gbmL15": "Spreading Canopy",
+      "gbmL16": "Hair-Trigger Reader",
+      "gbmL17": "Standstill Charger",
+      "gbmL18": "Blind-Side Bulwark",
+      "gbmL19": "Relentless Runner",
+      "gbmL20": "Mirror Bulwark",
       "gbmScoreLabel": "Score",
       "gbmPullLabel": "Pull",
       "gbmPowerLabel": "Power",
@@ -1306,7 +1441,7 @@
       "gbmYouLose": "Match lost {a}-{b}. {name} reads the rotation better.",
       "gbmCapHit": "The rally cap of {n} was reached at {a}-{b}, so the match is dropped.",
       "gbmNextFoe": "Next opponent unlocked.",
-      "gbmAllBeat": "All ten opponents beaten.",
+      "gbmAllBeat": "All twenty opponents beaten.",
       "gbmHint":
         "Read the arrow, not the memory: every rally turns the court. Slide under the shuttle, raise the aim, then smash.",
       "logGravityBadminton": "Beat {name} in gravity badminton {a}-{b}",
@@ -1323,6 +1458,16 @@
       "gbmL8": "底线疾行者",
       "gbmL9": "旋转读线者",
       "gbmL10": "转向壁垒",
+      "gbmL11": "低挥站桩者",
+      "gbmL12": "斜向反击手",
+      "gbmL13": "零失误哨卫",
+      "gbmL14": "大角度跑动者",
+      "gbmL15": "展臂华盖",
+      "gbmL16": "瞬发读线者",
+      "gbmL17": "静立冲锋者",
+      "gbmL18": "盲区壁垒",
+      "gbmL19": "不歇奔跑者",
+      "gbmL20": "镜面壁垒",
       "gbmScoreLabel": "比分",
       "gbmPullLabel": "引力",
       "gbmPowerLabel": "力量",
@@ -1362,7 +1507,7 @@
       "gbmYouLose": "以 {a}-{b} 落败。「{name}」更懂得利用旋转。",
       "gbmCapHit": "打到 {n} 回合的上限，比分 {a}-{b}，本局作废。",
       "gbmNextFoe": "解锁下一位对手。",
-      "gbmAllBeat": "十位对手全部取胜。",
+      "gbmAllBeat": "二十位对手全部取胜。",
       "gbmHint": "要看箭头而不是凭记忆：每一回合球场都会旋转。跑到球下，抬高瞄准角，再扣杀。",
       "logGravityBadminton": "在重力羽毛球中以 {a}-{b} 战胜了「{name}」",
     },

@@ -21,12 +21,45 @@
 
   /* want = deal flavour, minPar/maxPar bound the measured par, slack turns that
    * par into a probe budget, tries = how many submissions the level allows.
-   * Ten rungs, and no rung loosens anything the rung before it asked for: the
-   * measured par window never drops, the wasted-probe allowance (slack) never
-   * grows, submissions never grow and the solid never shrinks. Three slices of
-   * one axis already cover all 27 cells, so par saturates at 4 once the solid
-   * sits at the crowded mid density where the free count pins nothing; past
-   * that ceiling the rungs tighten on solid size and on allowed guesses. */
+   * Twenty rungs. The first ten climb on par, solid size and allowed guesses.
+   * What the measurements say about the eleventh and beyond:
+   * - three slices of one axis already cover all 27 cells, so ANY solid is
+   *   rebuilt in three probes and every rung at par 3 or above hands its top
+   *   band to that blind sweep. Rungs 11-20 sit at minPar = maxPar = 2, so two
+   *   cuts is the ask, the star line is a deduction, and the sweep still
+   *   finishes the run - at two stars, never three.
+   * - a solid the prover closes in two probes is a solid some pair of slices
+   *   already contains, and that is rare. Over 20,000 deals per rung the
+   *   full-cube flavours reach the band on 33% of deals at seven blocks, 18% at
+   *   eight, 10% at nine, 5% at ten, 2% at eleven and under 1% from twelve up;
+   *   past that sculptorGenerate spends all 400 tries and silently returns
+   *   bldFixedMask with its par-3 free band. The full-cube rungs stop at ten
+   *   blocks: eleven was measured and rejected (it survived 600 re-deals, but
+   *   with only 2.25% of deals reaching the band the fallback is due about once
+   *   in nine thousand rounds) and twelve fell back on 13 of 600 re-deals. The
+   *   two-height flavour holds the band far longer because its pool is only two
+   *   layers deep: 100% at eleven, 87% at twelve, 16% at thirteen, 0% at
+   *   fourteen.
+   * - there are two real flavours here, not four. Over 600 re-deals every
+   *   par-2 solid out of the full cube both floats a block over an empty cell
+   *   and shares its top view with a second solid, so "overhang", "topview" and
+   *   the plain filter all select the same population and cannot carry three
+   *   shape families. The tier climbs on solid size, probes and submissions.
+   * - ordering uses two structural numbers measured per deal over 600 re-deals,
+   *   never a solver's success share: the doors, meaning how many of the 36
+   *   unordered slice pairs close the solid at all (1.435 +/- 0.028 at seven
+   *   blocks on two shelves, 1.358 at seven out of the full cube, down to 1.007
+   *   and 1.012 at eleven and twelve - the last step is inside its own error
+   *   bars, so fog carries it), and the fog sculptorCandidates reports before
+   *   any probe: 888,030 solids at seven blocks up to 17,383,860 at twelve.
+   *   Front rungs get several closing pairs and a thin fog; the tail gets one
+   *   closing pair (99% of its deals have exactly one), a fog of millions,
+   *   three probes and a single submission. Thirteen blocks on two shelves
+   *   would still hold the band, but its doors climb back to 1.21: in 88 of 88
+   *   multi-door deals one shelf is packed to all nine cells, so the free count
+   *   finishes that layer and a second pair of cuts closes the solid too. It is
+   *   the last rung that gets easier on structure instead of harder, so it is
+   *   not shipped. */
   var bldLevels = [
     { id: "b1", labelKey: "bldL1", noteKey: "bldN1", blocks: 3, want: "flat", minPar: 1, maxPar: 2, slack: 2, tries: 3, seed: 11 },
     { id: "b2", labelKey: "bldL2", noteKey: "bldN2", blocks: 4, want: "two", minPar: 2, maxPar: 3, slack: 2, tries: 3, seed: 212 },
@@ -38,6 +71,16 @@
     { id: "b8", labelKey: "bldL8", noteKey: "bldN8", blocks: 10, want: "order", minPar: 3, maxPar: 3, slack: 1, tries: 2, seed: 888 },
     { id: "b9", labelKey: "bldL9", noteKey: "bldN9", blocks: 13, want: "topview", minPar: 4, maxPar: 4, slack: 1, tries: 1, seed: 999 },
     { id: "b10", labelKey: "bldL10", noteKey: "bldN10", blocks: 14, want: "order", minPar: 4, maxPar: 5, slack: 1, tries: 1, seed: 1010 },
+    { id: "b11", labelKey: "bldL11", noteKey: "bldN11", blocks: 7, want: "two", minPar: 2, maxPar: 2, slack: 2, tries: 3, seed: 172 },
+    { id: "b12", labelKey: "bldL12", noteKey: "bldN12", blocks: 7, want: "topview", minPar: 2, maxPar: 2, slack: 2, tries: 3, seed: 1156 },
+    { id: "b13", labelKey: "bldL13", noteKey: "bldN13", blocks: 8, want: "two", minPar: 2, maxPar: 2, slack: 2, tries: 2, seed: 77 },
+    { id: "b14", labelKey: "bldL14", noteKey: "bldN14", blocks: 8, want: "topview", minPar: 2, maxPar: 2, slack: 2, tries: 2, seed: 97 },
+    { id: "b15", labelKey: "bldL15", noteKey: "bldN15", blocks: 9, want: "two", minPar: 2, maxPar: 2, slack: 1, tries: 2, seed: 1 },
+    { id: "b16", labelKey: "bldL16", noteKey: "bldN16", blocks: 9, want: "topview", minPar: 2, maxPar: 2, slack: 1, tries: 2, seed: 639 },
+    { id: "b17", labelKey: "bldL17", noteKey: "bldN17", blocks: 10, want: "topview", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 429 },
+    { id: "b18", labelKey: "bldL18", noteKey: "bldN18", blocks: 10, want: "two", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 104 },
+    { id: "b19", labelKey: "bldL19", noteKey: "bldN19", blocks: 11, want: "two", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 134 },
+    { id: "b20", labelKey: "bldL20", noteKey: "bldN20", blocks: 12, want: "two", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 1761 },
   ];
 
   /* --- geometry, all pure --- */
@@ -1216,6 +1259,26 @@
       "bldN8": "Ten blocks stand on more than one height: the free count does half the work.",
       "bldN9": "Thirteen blocks share their top view with another solid, so the count alone settles nothing.",
       "bldN10": "Fourteen blocks is past half the cube - the crowded middle, where the count narrows least.",
+      "bldL11": "Seven on Two Shelves",
+      "bldL12": "A Silhouette With a Twin",
+      "bldL13": "Eight on Two Shelves",
+      "bldL14": "The Floating Block",
+      "bldL15": "Nine on Two Shelves",
+      "bldL16": "Four Million Solids",
+      "bldL17": "Ten Blocks, One Submission",
+      "bldL18": "Ten Crowded Shelves",
+      "bldL19": "Eleven, One Door Left",
+      "bldL20": "The Last Two Cuts",
+      "bldN11": "Seven blocks never rise above two shelves, and those two shelves are the pair that closes them - four probes and three submissions to learn the habit.",
+      "bldN12": "Seven blocks scattered through the cube still share their top view with a second solid, so a silhouette is not a shape: two cuts for the stars, four to fall back on.",
+      "bldN13": "Eight blocks fill two shelves and never a third: read those two and the free count does the rest.",
+      "bldN14": "Eight blocks, one of them hanging over empty air: the twin silhouette is the trap, and no single cut is ever enough.",
+      "bldN15": "Nine blocks on two shelves, three probes in hand: two cuts win the stars, the third only saves the run.",
+      "bldN16": "Nine blocks leave over four million solids standing, and roughly one deal in four closes for no pair of cuts on the same axis.",
+      "bldN17": "Ten blocks, one submission and a twin top view: the three-cut sweep pays two stars, so the top band belongs to a pair that need not share an axis.",
+      "bldN18": "Ten blocks crowd two shelves: find the shelves and you have found your two cuts; waste one probe and a single submission is all you have left.",
+      "bldN19": "Eleven blocks on two shelves leave one pair of cuts that finishes the shape, three probes and one submission to find it.",
+      "bldN20": "Twelve blocks out of seventeen million shapes, standing on two shelves: nothing short of that pair of cuts earns three stars.",
       "bldProbeLabel": "Probes",
       "bldTargetLabel": "Blocks",
       "bldPlacedLabel": "Placed",
@@ -1275,7 +1338,7 @@
       "bldPrompt": "{name}: {blocks} blocks hidden, {probes} probes, par {par} of them. {note}",
       "bldDone": "This solid is finished - start a new round or pick another one.",
       "bldNextBlock": "Next solid unlocked.",
-      "bldCampaignDone": "Ten solids, all rebuilt blind.",
+      "bldCampaignDone": "Twenty solids, all rebuilt blind.",
       "bldLocked": "{name} waits until the solid before it is rebuilt.",
       "bldLayerNow": "Building height {n}.",
       "bldEscape": "{left} probes left, {placed} blocks placed, {shapes} shapes still fit (par {par}).",
@@ -1305,6 +1368,26 @@
       "bldN8": "十个方块不止占一个高度：免费的方块数能替你办一半的事。",
       "bldN9": "十三个方块与另一个立体俯视图相同，光靠数量定不下来。",
       "bldN10": "十四块已超过半个立方体，正是最挤的中间密度，数量筛掉的东西最少。",
+      "bldL11": "两层七块",
+      "bldL12": "带双影的轮廓",
+      "bldL13": "两层八块",
+      "bldL14": "悬空的那一块",
+      "bldL15": "两层九块",
+      "bldL16": "四百万种形状",
+      "bldL17": "十方一次提交",
+      "bldL18": "两层挤十方",
+      "bldL19": "十一块只剩一道门",
+      "bldL20": "最后两刀",
+      "bldN11": "七个方块绝不超出两层，而这两层正是收尾的那对切面——四刀可花、三次提交，够你把习惯练出来。",
+      "bldN12": "散在立方体里的七个方块照样与另一个立体共用俯视图，所以轮廓不是形状：两刀定星级，四刀是保底。",
+      "bldN13": "八个方块填满两层，绝不留到第三层：读这两层，剩下的交给那个免费的数目。",
+      "bldN14": "八个方块里就有一块悬在空位之上：双影的轮廓是陷阱，任何单独一刀都不够。",
+      "bldN15": "两个层上的九个方块，手里三次探针：两刀赢星级，第三刀只求保住这一局。",
+      "bldN16": "九个方块还留下四百多万种可能的形状，而且大约每四局就有一局，同轴的两刀根本收不了口。",
+      "bldN17": "十个方块、一次提交、还有一个双影轮廓：横扫三刀只值两星，所以三星归那一对切面，而它未必同轴。",
+      "bldN18": "十个方块挤在两层里：找着这两层就找到了你那两刀；浪费一刀，剩下的就只有这一次提交。",
+      "bldN19": "两层上的十一个方块只剩一对切面能收尾：三刀可花、一次提交，就为了找着那一对。",
+      "bldN20": "一千七百三十八万种形状里，十二个方块站在两层上：差那一对切面，三星就拿不到。",
       "bldProbeLabel": "探针",
       "bldTargetLabel": "方块数",
       "bldPlacedLabel": "已放",
@@ -1364,7 +1447,7 @@
       "bldPrompt": "{name}：藏着 {blocks} 个方块，给你 {probes} 次探针，标准 {par} 次。{note}",
       "bldDone": "这个立体已经重建好了——换下一个或者开一局新的。",
       "bldNextBlock": "解锁下一个立体。",
-      "bldCampaignDone": "十个立体全部盲眼重建完毕。",
+      "bldCampaignDone": "二十个立体全部盲眼重建完毕。",
       "bldLocked": "「{name}」要等前一个立体重建完才开放。",
       "bldLayerNow": "正在搭建第 {n} 层。",
       "bldEscape": "还剩 {left} 次探针，已放 {placed} 块，仍有 {shapes} 种形状符合（标准 {par} 次）。",

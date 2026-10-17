@@ -150,6 +150,136 @@
       stations: [{ edge: "b", pos: 4, colour: 0 }, { edge: "t", pos: 4, colour: 1 }],
       trains: [{ c: 0, row: 1, tick: 0 }, { c: 1, row: 5, tick: 2 }, { c: 1, row: 1, tick: 5 }, { c: 0, row: 5, tick: 8 }, { c: 0, row: 1, tick: 11 }, { c: 1, row: 5, tick: 14 }, { c: 1, row: 1, tick: 17 }, { c: 0, row: 5, tick: 20 }, { c: 0, row: 1, tick: 23 }, { c: 1, row: 5, tick: 26 }],
     },
+    {
+      /* The falling stair: each road can be dropped a level, and a train let go
+       * a tick too early runs straight past the platform it was due at. */
+      id: "d11",
+      labelKey: "cwkZ11",
+      limit: 66,
+      hold: 2,
+      tickMs: 430,
+      rows: ["####.####", ".........", "####.####", ".........", "####.####", ".........", "####.####"],
+      cells: [{ x: 4, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 4, y: 3, kind: "p", a: 0, b: 3, init: 0 }, { x: 4, y: 5, kind: "p", a: 0, b: 3, init: 0 }, { x: 1, y: 1, kind: "s", init: 0 }, { x: 1, y: 3, kind: "s", init: 0 }, { x: 1, y: 5, kind: "s", init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 1 }, { edge: "r", pos: 3, colour: 2 }, { edge: "r", pos: 5, colour: 0 }, { edge: "b", pos: 4, colour: 2 }],
+      trains: [{ c: 1, row: 1, tick: 0 }, { c: 2, row: 3, tick: 3 }, { c: 0, row: 5, tick: 6 }, { c: 0, row: 1, tick: 9 }, { c: 2, row: 1, tick: 12 }, { c: 0, row: 3, tick: 15 }, { c: 1, row: 1, tick: 18 }, { c: 2, row: 3, tick: 21 }, { c: 0, row: 5, tick: 24 }, { c: 0, row: 1, tick: 27 }, { c: 2, row: 1, tick: 30 }, { c: 0, row: 3, tick: 33 }, { c: 1, row: 1, tick: 36 }, { c: 2, row: 3, tick: 39 }, { c: 0, row: 5, tick: 42 }, { c: 0, row: 1, tick: 45 }, { c: 2, row: 1, tick: 48 }],
+    },
+    {
+      /* The balloon: out along the high road, down the column, back west along
+       * the low road and up the other column, so the loop holds one train only. */
+      id: "d12",
+      labelKey: "cwkZ12",
+      limit: 78,
+      hold: 2,
+      tickMs: 420,
+      rows: ["#########", ".........", "##.####.#", "##.####.#", "##......#", "#######.#", "#######.#"],
+      cells: [{ x: 2, y: 1, kind: "p", a: 2, b: 0, init: 0 }, { x: 7, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 7, y: 4, kind: "p", a: 3, b: 2, init: 0 }, { x: 2, y: 4, kind: "p", a: 0, b: 1, init: 0 }],
+      stations: [{ edge: "l", pos: 1, colour: 0 }, { edge: "r", pos: 1, colour: 1 }, { edge: "b", pos: 7, colour: 2 }],
+      trains: [{ c: 2, row: 1, tick: 0 }, { c: 0, row: 1, tick: 6 }, { c: 1, row: 1, tick: 13 }, { c: 2, row: 1, tick: 19 }, { c: 0, row: 1, tick: 26 }, { c: 0, row: 1, tick: 32 }, { c: 1, row: 1, tick: 39 }, { c: 2, row: 1, tick: 45 }, { c: 0, row: 1, tick: 52 }, { c: 2, row: 1, tick: 58 }, { c: 0, row: 1, tick: 65 }],
+    },
+    {
+      /* Quick work: the same points are wanted back and forth every few ticks,
+       * so the timetable is won by whoever flips first and flips often. */
+      id: "d13",
+      labelKey: "cwkZ13",
+      limit: 70,
+      hold: 2,
+      tickMs: 410,
+      rows: ["####.####", ".........", "####.####", ".........", "####.####", ".........", "####.####"],
+      cells: [{ x: 4, y: 1, kind: "p", a: 0, b: 1, init: 0 }, { x: 4, y: 3, kind: "p", a: 0, b: 1, init: 0 }, { x: 4, y: 5, kind: "p", a: 0, b: 3, init: 0 }, { x: 6, y: 5, kind: "p", a: 0, b: 1, init: 0 }, { x: 1, y: 3, kind: "s", init: 0 }],
+      stations: [{ edge: "t", pos: 4, colour: 1 }, { edge: "r", pos: 3, colour: 0 }, { edge: "r", pos: 5, colour: 0 }, { edge: "b", pos: 4, colour: 2 }],
+      trains: [{ c: 0, row: 3, tick: 0 }, { c: 1, row: 1, tick: 3 }, { c: 2, row: 5, tick: 6 }, { c: 1, row: 3, tick: 9 }, { c: 0, row: 5, tick: 12 }, { c: 1, row: 1, tick: 15 }, { c: 0, row: 3, tick: 18 }, { c: 1, row: 1, tick: 21 }, { c: 2, row: 5, tick: 24 }, { c: 1, row: 3, tick: 27 }, { c: 0, row: 5, tick: 30 }, { c: 1, row: 1, tick: 33 }, { c: 0, row: 3, tick: 36 }, { c: 1, row: 1, tick: 39 }, { c: 2, row: 5, tick: 42 }, { c: 1, row: 3, tick: 45 }, { c: 0, row: 5, tick: 48 }, { c: 1, row: 1, tick: 51 }, { c: 0, row: 3, tick: 54 }, { c: 1, row: 1, tick: 57 }],
+    },
+    {
+      /* The long descent: two columns and three roads, and a train handed on one
+       * tick late has to run the whole board again to reach its platform. */
+      id: "d14",
+      labelKey: "cwkZ14",
+      limit: 70,
+      hold: 2,
+      tickMs: 400,
+      rows: ["###.##.##", ".........", "###.##.##", "###.##.##", "###.##.##", ".........", "###.##.##"],
+      cells: [{ x: 3, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 3, y: 5, kind: "p", a: 0, b: 3, init: 0 }, { x: 6, y: 5, kind: "p", a: 0, b: 1, init: 0 }, { x: 1, y: 1, kind: "s", init: 0 }, { x: 4, y: 5, kind: "s", init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 0 }, { edge: "r", pos: 5, colour: 1 }, { edge: "t", pos: 6, colour: 2 }, { edge: "b", pos: 3, colour: 2 }],
+      trains: [{ c: 0, row: 1, tick: 0 }, { c: 1, row: 5, tick: 4 }, { c: 2, row: 1, tick: 8 }, { c: 1, row: 1, tick: 12 }, { c: 2, row: 5, tick: 16 }, { c: 0, row: 1, tick: 20 }, { c: 1, row: 5, tick: 24 }, { c: 2, row: 1, tick: 28 }, { c: 0, row: 1, tick: 32 }, { c: 1, row: 5, tick: 36 }, { c: 2, row: 5, tick: 40 }, { c: 1, row: 1, tick: 44 }, { c: 2, row: 1, tick: 48 }, { c: 1, row: 5, tick: 52 }, { c: 0, row: 1, tick: 56 }],
+    },
+    {
+      /* Two lifts and three roads: a climb needs both points of its column set
+       * the same way, so one flip early strands the train on the road above. */
+      id: "d15",
+      labelKey: "cwkZ15",
+      limit: 58,
+      hold: 2,
+      tickMs: 395,
+      rows: ["##.###.##", ".........", "##.###.##", ".........", "##.###.##", ".........", "##.###.##"],
+      cells: [{ x: 2, y: 1, kind: "p", a: 0, b: 1, init: 0 }, { x: 2, y: 3, kind: "p", a: 0, b: 1, init: 0 }, { x: 6, y: 5, kind: "p", a: 0, b: 1, init: 0 }, { x: 1, y: 1, kind: "s", init: 0 }, { x: 5, y: 3, kind: "s", init: 0 }],
+      stations: [{ edge: "t", pos: 2, colour: 1 }, { edge: "t", pos: 6, colour: 2 }, { edge: "r", pos: 1, colour: 0 }, { edge: "r", pos: 3, colour: 2 }, { edge: "r", pos: 5, colour: 1 }],
+      trains: [{ c: 0, row: 1, tick: 0 }, { c: 1, row: 3, tick: 3 }, { c: 2, row: 5, tick: 6 }, { c: 1, row: 1, tick: 9 }, { c: 0, row: 3, tick: 12 }, { c: 1, row: 5, tick: 15 }, { c: 2, row: 3, tick: 18 }, { c: 0, row: 1, tick: 21 }, { c: 1, row: 3, tick: 24 }, { c: 2, row: 5, tick: 27 }, { c: 1, row: 1, tick: 30 }, { c: 0, row: 3, tick: 33 }, { c: 1, row: 5, tick: 36 }, { c: 2, row: 3, tick: 39 }, { c: 0, row: 1, tick: 42 }, { c: 1, row: 3, tick: 45 }],
+    },
+    {
+      /* One column, one direction at a time: turning it about means setting all
+       * three points afresh, and the banks hold the traffic while it does. */
+      id: "d16",
+      labelKey: "cwkZ16",
+      limit: 56,
+      hold: 2,
+      tickMs: 390,
+      rows: ["####.####", ".........", "####.####", "####.####", "####.####", ".........", "####.####"],
+      cells: [{ x: 4, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 4, y: 3, kind: "p", a: 1, b: 3, init: 0 }, { x: 4, y: 5, kind: "p", a: 0, b: 1, init: 0 }, { x: 1, y: 1, kind: "s", init: 0 }, { x: 1, y: 5, kind: "s", init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 0 }, { edge: "r", pos: 5, colour: 1 }],
+      trains: [{ c: 1, row: 1, tick: 0 }, { c: 0, row: 5, tick: 4 }, { c: 0, row: 1, tick: 8 }, { c: 1, row: 5, tick: 12 }, { c: 1, row: 1, tick: 16 }, { c: 0, row: 5, tick: 20 }, { c: 0, row: 1, tick: 24 }, { c: 1, row: 5, tick: 28 }, { c: 1, row: 1, tick: 32 }],
+    },
+    {
+      /* Two lifts and one upper platform apiece: whichever column is thrown open
+       * takes the next train up, and the other bank waits in its own siding. */
+      id: "d17",
+      labelKey: "cwkZ17",
+      limit: 74,
+      hold: 2,
+      tickMs: 380,
+      rows: ["##.###.##", ".........", "##.###.##", "##.###.##", "##.###.##", ".........", "##.###.##"],
+      cells: [{ x: 2, y: 1, kind: "p", a: 0, b: 1, init: 0 }, { x: 6, y: 1, kind: "p", a: 0, b: 1, init: 0 }, { x: 2, y: 5, kind: "p", a: 0, b: 1, init: 0 }, { x: 6, y: 5, kind: "p", a: 0, b: 1, init: 0 }, { x: 4, y: 1, kind: "s", init: 0 }, { x: 1, y: 5, kind: "s", init: 0 }],
+      stations: [{ edge: "t", pos: 2, colour: 0 }, { edge: "t", pos: 6, colour: 0 }, { edge: "r", pos: 1, colour: 1 }, { edge: "r", pos: 5, colour: 2 }],
+      trains: [{ c: 1, row: 1, tick: 0 }, { c: 2, row: 5, tick: 4 }, { c: 0, row: 5, tick: 8 }, { c: 0, row: 1, tick: 12 }, { c: 1, row: 1, tick: 16 }, { c: 2, row: 5, tick: 20 }, { c: 0, row: 1, tick: 24 }, { c: 0, row: 5, tick: 28 }, { c: 1, row: 1, tick: 32 }, { c: 2, row: 5, tick: 36 }, { c: 0, row: 5, tick: 40 }, { c: 0, row: 1, tick: 44 }, { c: 1, row: 1, tick: 48 }, { c: 2, row: 5, tick: 52 }, { c: 0, row: 1, tick: 56 }, { c: 0, row: 5, tick: 60 }],
+    },
+    {
+      /* One column works uphill only: the bank below is a siding, and the road
+       * above has to be held clear for the whole ascent to run through it. */
+      id: "d18",
+      labelKey: "cwkZ18",
+      limit: 70,
+      hold: 2,
+      tickMs: 370,
+      rows: ["#####.###", ".........", "#####.###", ".........", "#####.###", ".........", "#####.###"],
+      cells: [{ x: 5, y: 1, kind: "p", a: 0, b: 1, init: 0 }, { x: 5, y: 3, kind: "p", a: 1, b: 3, init: 0 }, { x: 5, y: 5, kind: "p", a: 0, b: 1, init: 0 }, { x: 2, y: 1, kind: "s", init: 0 }, { x: 2, y: 3, kind: "s", init: 0 }, { x: 2, y: 5, kind: "s", init: 0 }],
+      stations: [{ edge: "t", pos: 5, colour: 1 }, { edge: "r", pos: 1, colour: 0 }, { edge: "r", pos: 5, colour: 2 }],
+      trains: [{ c: 0, row: 1, tick: 0 }, { c: 2, row: 5, tick: 4 }, { c: 1, row: 3, tick: 8 }, { c: 0, row: 1, tick: 12 }, { c: 1, row: 5, tick: 16 }, { c: 2, row: 3, tick: 20 }, { c: 0, row: 1, tick: 24 }, { c: 1, row: 3, tick: 28 }, { c: 2, row: 5, tick: 32 }, { c: 0, row: 1, tick: 36 }, { c: 1, row: 5, tick: 40 }, { c: 2, row: 3, tick: 44 }, { c: 0, row: 1, tick: 48 }, { c: 1, row: 3, tick: 52 }, { c: 2, row: 5, tick: 56 }],
+    },
+    {
+      /* The turnback: a train runs out to the head of the line, is pulled back
+       * west, and only the yard below takes it off the road it came in on. */
+      id: "d19",
+      labelKey: "cwkZ19",
+      limit: 70,
+      hold: 2,
+      tickMs: 360,
+      rows: ["#########", ".........", "##.######", "##.######", ".........", "#########", "#########"],
+      cells: [{ x: 2, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 1, kind: "p", a: 2, b: 0, init: 0 }, { x: 2, y: 4, kind: "p", a: 0, b: 2, init: 1 }],
+      stations: [{ edge: "l", pos: 4, colour: 0 }, { edge: "r", pos: 4, colour: 1 }, { edge: "r", pos: 1, colour: 2 }],
+      trains: [{ c: 0, row: 1, tick: 0 }, { c: 1, row: 1, tick: 4 }, { c: 2, row: 1, tick: 9 }, { c: 0, row: 1, tick: 13 }, { c: 1, row: 1, tick: 18 }, { c: 2, row: 1, tick: 22 }, { c: 0, row: 1, tick: 27 }, { c: 1, row: 1, tick: 31 }, { c: 2, row: 1, tick: 36 }, { c: 0, row: 1, tick: 40 }, { c: 1, row: 1, tick: 45 }, { c: 2, row: 1, tick: 49 }, { c: 0, row: 1, tick: 54 }],
+    },
+    {
+      /* The general yard: a lift, a turnback, a stair and two berths on one board,
+       * and the solver's own plan is the only clock the line can afford. */
+      id: "d20",
+      labelKey: "cwkZ20",
+      limit: 76,
+      hold: 2,
+      tickMs: 340,
+      rows: ["##.###.##", ".........", "##.###.##", ".........", "##.###.##", ".........", "##.###.##"],
+      cells: [{ x: 2, y: 1, kind: "p", a: 0, b: 1, init: 0 }, { x: 7, y: 1, kind: "p", a: 2, b: 0, init: 0 }, { x: 2, y: 5, kind: "p", a: 0, b: 1, init: 0 }, { x: 6, y: 3, kind: "p", a: 0, b: 3, init: 0 }, { x: 6, y: 5, kind: "p", a: 0, b: 3, init: 0 }, { x: 4, y: 3, kind: "s", init: 0 }, { x: 4, y: 5, kind: "s", init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 0 }, { edge: "t", pos: 2, colour: 1 }, { edge: "r", pos: 5, colour: 2 }, { edge: "b", pos: 6, colour: 1 }, { edge: "r", pos: 3, colour: 0 }],
+      trains: [{ c: 0, row: 1, tick: 0 }, { c: 2, row: 5, tick: 4 }, { c: 1, row: 3, tick: 8 }, { c: 0, row: 3, tick: 12 }, { c: 1, row: 1, tick: 16 }, { c: 2, row: 3, tick: 20 }, { c: 0, row: 5, tick: 24 }, { c: 1, row: 5, tick: 28 }, { c: 0, row: 1, tick: 32 }, { c: 2, row: 5, tick: 36 }, { c: 1, row: 3, tick: 40 }, { c: 0, row: 3, tick: 44 }, { c: 1, row: 1, tick: 48 }, { c: 2, row: 3, tick: 52 }, { c: 0, row: 1, tick: 56 }, { c: 1, row: 3, tick: 60 }],
+    },
   ];
 
   function cwkBoard(level) {
@@ -1167,6 +1297,16 @@
       "cwkZ8": "Two Platforms",
       "cwkZ9": "Either Way Arrives",
       "cwkZ10": "The One Line",
+      "cwkZ11": "The Falling Stair",
+      "cwkZ12": "The Balloon Loop",
+      "cwkZ13": "The Quick Work",
+      "cwkZ14": "The Long Descent",
+      "cwkZ15": "Two Lifts",
+      "cwkZ16": "Down Then Up",
+      "cwkZ17": "Four Lifts",
+      "cwkZ18": "One Way Up",
+      "cwkZ19": "The Turnback",
+      "cwkZ20": "The Grand Interchange",
       "cwkClockLabel": "Clock",
       "cwkCrashLabel": "Wrecks",
       "cwkHaulLabel": "Haul",
@@ -1212,6 +1352,16 @@
       "cwkZ8": "两处货台",
       "cwkZ9": "殊途同归",
       "cwkZ10": "单线会让",
+      "cwkZ11": "逐级下坡",
+      "cwkZ12": "环线回送",
+      "cwkZ13": "连环快扳",
+      "cwkZ14": "远线下行",
+      "cwkZ15": "双梯提升",
+      "cwkZ16": "先下后上",
+      "cwkZ17": "四梯同台",
+      "cwkZ18": "单向上行",
+      "cwkZ19": "尽头折返",
+      "cwkZ20": "全局枢纽",
       "cwkClockLabel": "时钟",
       "cwkCrashLabel": "事故",
       "cwkHaulLabel": "运量",

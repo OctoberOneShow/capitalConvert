@@ -1,4 +1,4 @@
-/* One-Minute Mayor - the ten-turn town-planning game in the shared game drawer.
+/* One-Minute Mayor - the short-ledger town-planning game in the shared game drawer.
  * Five blueprint types go on a 6x6 grid and every one of them both helps and
  * hurts: a tap that waters a row of homes burns the lot a worksite wanted, a
  * worksite employs two homes and fouls the four it fronts, a stop is worth
@@ -53,10 +53,11 @@
     });
   }
 
-  /* Ten districts, always the same ten: open land, a river of water, a
+  /* Twenty districts, always the same twenty: open land, a river of water, a
    * brownfield of foul ground, a listed corner that bans worksites, the full
-   * city with all three at once, and then five tighter layouts that squeeze the
-   * same knobs with a smaller margin each time. stars/plan/proof are filled by
+   * city with all three at once, and then a back ladder of twenty-rung shape -
+   * cuts, lattices, banned rings and shorter ledgers that squeeze the same
+   * knobs with a smaller margin each time. stars/plan/proof are filled by
    * omvProveAll(), from the measured plan - no band here is invented. */
   function omvDistrict(id, labelKey, slack, blocked, fouled, heritage) {
     return {
@@ -64,6 +65,16 @@
       blocked: blocked || [], fouled: fouled || [], heritage: heritage || [],
       stars: [0, 0, 0], plan: 0, proof: null,
     };
+  }
+
+  /* The back ladder spends its ledger before it runs out of land, so the turn
+   * budget becomes a knob there. It delegates to omvDistrict and then sets one
+   * field, which keeps every district - old and new - the same shape the engine
+   * already reads: turns, slack, blocked, fouled, heritage. */
+  function omvFarDistrict(id, labelKey, turns, slack, blocked, fouled, heritage) {
+    var def = omvDistrict(id, labelKey, slack, blocked, fouled, heritage);
+    def.turns = turns;
+    return def;
   }
 
   var omvRiver = omvXY([[2, 0], [2, 1], [3, 1], [3, 2], [3, 3], [4, 3], [4, 4]]);
@@ -85,6 +96,31 @@
   var omvCapitalWater = omvXY([[2, 0], [2, 1], [3, 1], [3, 2], [5, 4], [5, 5], [0, 2]]);
   var omvCapitalFoul = omvXY([[1, 2], [2, 2], [3, 2], [4, 3]]);
   var omvCapitalLand = omvXY([[0, 5]]);
+  /* Rungs 11-20: one new shape per rung, and the shape is the mechanic. Listed
+   * lots go into `blocked` as well as `heritage`, exactly as district 4 does, so
+   * the landmark keeps its own open lot while banning worksites within two.
+   * Every layout here was measured through omvPlan/omvBands before it was kept. */
+  var omvCanalCut = omvXY([[2, 0], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5]]);
+  var omvCanalFoul = omvXY([[4, 1], [1, 4]]);
+  var omvSewerPool = omvXY([[5, 3]]);
+  var omvSewerRow = omvXY([[3, 0], [3, 1], [3, 2], [3, 3], [3, 4], [3, 5]]);
+  var omvMarketListing = omvXY([[3, 2]]);
+  var omvMarketFoul = omvXY([[1, 4], [4, 1]]);
+  var omvQuarryWater = omvXY([[0, 0], [0, 1], [1, 0], [5, 5]]).concat(omvMarketListing);
+  var omvQuarryFoul = omvXY([[2, 3], [4, 2]]);
+  var omvLeveeWater = omvXY([[0, 3], [1, 3], [2, 3], [3, 3], [4, 3], [5, 3], [3, 4], [3, 5]]);
+  var omvLeveeFoul = omvXY([[2, 1], [4, 2]]);
+  var omvRedoubtWater = omvXY([[1, 1], [1, 2], [2, 1], [4, 4], [4, 5], [5, 4]]);
+  var omvRedoubtFoul = omvXY([[3, 0], [0, 3]]);
+  var omvPondsWater = omvXY([[1, 1], [1, 2], [2, 1], [4, 3], [4, 4], [3, 4]]);
+  var omvPondsFoul = omvXY([[0, 5], [5, 0]]);
+  var omvChannelsWater = omvXY([[1, 0], [1, 1], [1, 2], [1, 3], [1, 4], [1, 5]])
+    .concat(omvXY([[4, 0], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5]]));
+  var omvChannelsFoul = omvXY([[2, 2], [3, 3]]);
+  var omvTwinListings = omvXY([[0, 0], [5, 5]]);
+  var omvTwinFoul = omvXY([[2, 3], [3, 2]]);
+  var omvShelfPool = omvXY([[5, 0]]);
+  var omvShelfRow = omvXY([[0, 2], [1, 2], [2, 2], [3, 2], [4, 2]]);
   var omvDistricts = [
     omvDistrict("o1", "omvZ1", 0.34),
     omvDistrict("o2", "omvZ2", 0.32, omvRiver),
@@ -96,6 +132,28 @@
     omvDistrict("o8", "omvZ8", 0.12, omvLakes, omvLakesFoul),
     omvDistrict("o9", "omvZ9", 0.1, omvDocks, omvDocksFoul),
     omvDistrict("o10", "omvZ10", 0.09, omvCapitalWater, omvCapitalFoul, omvCapitalLand),
+    /* The back ladder. Every rung changes the rule it plays by, not just the
+     * quota: a cut that splits the grid, a fouled spine that kills the taps
+     * standing in it, a single listing that prices worksites out of the middle,
+     * quarry water and a listing and foul ground at once, a flooded row that
+     * pushes the town above it, water notches that wall off two corners, two
+     * listings at opposite corners, a shelf of fouled ground with a short
+     * ledger, two channels that leave three thin strips, and pond blocks that
+     * cut both diagonals out from under the taps - the thinnest margin the band
+     * factory can cut.
+     * slack is the only band knob and it never rises down the ladder; turns are
+     * spent where the map needs more room per lot. stars/plan/proof stay
+     * measured - omvProveAll() fills them from omvBeatable() at load. */
+    omvFarDistrict("o11", "omvZ11", 10, 0.16, omvCanalCut, omvCanalFoul),
+    omvFarDistrict("o12", "omvZ12", 9, 0.16, omvSewerPool, omvSewerRow),
+    omvFarDistrict("o13", "omvZ13", 10, 0.13, omvMarketListing, omvMarketFoul, omvMarketListing),
+    omvFarDistrict("o14", "omvZ14", 9, 0.13, omvQuarryWater, omvQuarryFoul, omvMarketListing),
+    omvFarDistrict("o15", "omvZ15", 9, 0.1, omvLeveeWater, omvLeveeFoul),
+    omvFarDistrict("o16", "omvZ16", 10, 0.1, omvRedoubtWater, omvRedoubtFoul),
+    omvFarDistrict("o17", "omvZ17", 10, 0.09, omvTwinListings, omvTwinFoul, omvTwinListings),
+    omvFarDistrict("o18", "omvZ18", 8, 0.09, omvShelfPool, omvShelfRow),
+    omvFarDistrict("o19", "omvZ19", 10, 0.06, omvChannelsWater, omvChannelsFoul),
+    omvFarDistrict("o20", "omvZ20", 10, 0.05, omvPondsWater, omvPondsFoul),
   ];
 
   /* --- grid helpers -------------------------------------------------------- */
@@ -585,7 +643,8 @@
     };
   }
 
-  /* Proof runs at load, for all ten districts, through the exported scorer. */
+  /* Proof runs at load, for every district in the table, through the exported
+   * scorer - a rung with no proof would lock the whole ladder behind it. */
   function omvProveAll() {
     var results = [];
     var allOk = true;
@@ -1059,6 +1118,16 @@
       "omvZ8": "Twin Lakes",
       "omvZ9": "Dock Quarter",
       "omvZ10": "The Old Capital",
+      "omvZ11": "Canal Ward",
+      "omvZ12": "Sewer Row",
+      "omvZ13": "Old Market",
+      "omvZ14": "Quarry Listing",
+      "omvZ15": "The Levee",
+      "omvZ16": "The Redoubt",
+      "omvZ17": "Twin Landmarks",
+      "omvZ18": "Cinder Row",
+      "omvZ19": "Two Channels",
+      "omvZ20": "Sunken Quarter",
       "omvTurnLabel": "Placements",
       "omvScoreLabel": "District",
       "omvGoalLabel": "Bands",
@@ -1125,7 +1194,7 @@
       "omvShort": "The district reached {n} points and needed {need}, short by {gap}. The unmet need: {why}",
       "omvNoNeed": "no single need went unmet - the town is simply too small, so build more homes and the worksites and taps they need.",
       "omvNextDistrict": "Next district unlocked.",
-      "omvCampaignDone": "All ten districts are planned.",
+      "omvCampaignDone": "All twenty districts are planned.",
       "omvLockedDistrict": "That district is still sealed - clear the one before it.",
       "omvUnproven": "{name} could not be proven clearable by the measured plan, so it is on hold.",
       "omvHint": "Every blueprint solves one need and opens another: a tap waters three homes but burns the lot a worksite wanted, a worksite employs two homes and fouls the four it fronts, and a stop pays only for a home that had no job within three streets. Nothing is random - rerun a district and it is dealt the same.",
@@ -1143,6 +1212,16 @@
       "omvZ8": "双湖",
       "omvZ9": "码头区",
       "omvZ10": "故都",
+      "omvZ11": "运河区",
+      "omvZ12": "污水渠",
+      "omvZ13": "老集市",
+      "omvZ14": "石场老宅",
+      "omvZ15": "大堤",
+      "omvZ16": "堡垒街区",
+      "omvZ17": "双角老宅",
+      "omvZ18": "焦土排",
+      "omvZ19": "双运河",
+      "omvZ20": "沉水区",
       "omvTurnLabel": "放置",
       "omvScoreLabel": "城区",
       "omvGoalLabel": "分档",
@@ -1209,7 +1288,7 @@
       "omvShort": "城区只有 {n} 分，要 {need} 分才过关，差 {gap} 分。没被满足的需求：{why}",
       "omvNoNeed": "没有哪一项单独拖了后腿——就是城太小，多盖住宅，再补上它们要的水站和工作地。",
       "omvNextDistrict": "解锁下一个城区。",
-      "omvCampaignDone": "十个城区都规划完了。",
+      "omvCampaignDone": "二十个城区都规划完了。",
       "omvLockedDistrict": "这个城区还没开放——先过掉前一个。",
       "omvUnproven": "{name} 没能被实测规划证明可以过关，所以暂缓开放。",
       "omvHint": "每种图纸都解决一个需求、同时制造另一个：一个水站供三户，却占掉工作地要的那块；工作地招两户，却污染四面；公交站只有让 3 格外的人家找到活才值钱。这里没有随机——同一个城区每次都长一个样，重来就能更好。",
@@ -1236,18 +1315,18 @@
         '<text x="60" y="73" font-size="7" fill="#94a3b8" text-anchor="middle">T+1 -2 W+3 R+2 G+8</text></svg>',
       en: [
         "Aim: build a district whose ledger reaches the target shown in the HUD - three stars is the measured plan.",
-        "Action: pick a blueprint with keys 1 to 5 or its button, move the cursor with the arrows, then click or press Enter to build. Ten placements close the ledger.",
+        "Action: pick a blueprint with keys 1 to 5 or its button, move the cursor with the arrows, then click or press Enter to build. The ledger closes when the district's placements run out, and the HUD prints how many it allows.",
         "Rule: a home pays 2 for standing, +3 for water within 2 streets, +4 for a job within 3 (5 with a stop beside it); a tap must be staffed by a home or a stop within 2 or it reads idle.",
         "Watch out: nothing is free. The tap that waters your row sits on the lot a worksite wanted, a worksite employs only two homes and fouls the four lots it fronts, and a green beside a worksite pays nothing.",
-        "Undo: keys u, z or Backspace lift the last building off, and the ledger re-reads after every one of your ten placements.",
+        "Undo: keys u, z or Backspace lift the last building off, and the ledger re-reads after every placement you make.",
         "Scoring: the ledger prints every point in words and digits - homes, watered, employed, jobless, idle taps, quiet greens - each with its own sum, and the number in a cell is exactly what that lot contributes.",
       ],
       zh: [
         "目标：把城区的账本刷到 HUD 显示的过关线——三星就是实测规划那条线。",
-        "操作：用 1 到 5 或图纸按钮选建筑，方向键移动光标，点击或回车开盖。十手之后账本结账。",
+        "操作：用 1 到 5 或图纸按钮选建筑，方向键移动光标，点击或回车开盖。手数用完账本就结账，这一关给几手写在 HUD 上。",
         "规则：住宅建成 2 分，2 格内有水再加 3 分，3 格内有工位再加 4 分（旁边有公交站就按 5 格算）；给水站若 2 格内没有住宅或公交站就是空守，读作“没人值守”。",
         "小心：没有白给的东西。替你那一排住宅供水的水站，正踩在工作地想要的那块地上；工作地只招两户，还污染紧邻四面；贴着工作地的绿地一分不得。",
-        "悔手：u、z 或退格键能把上一手取回来，十手里的每一手都会让账本当场重算。",
+        "悔手：u、z 或退格键能把上一手取回来，每一手都会让账本当场重算。",
         "计分：账本把每一分都写成文字加数字——住着几户、通水几户、就业几户、失业几户、几个空守水站、几块不涨分的绿地——每格上的数字就是这块地自己的贡献。",
       ],
     },
