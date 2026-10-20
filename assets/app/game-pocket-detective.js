@@ -35,6 +35,20 @@
     { id: "c8", labelKey: "pdkC8", n: 5, clues: 20, starTimes: [210, 305, 420] },
     { id: "c9", labelKey: "pdkC9", n: 5, clues: 22, starTimes: [225, 315, 425] },
     { id: "c10", labelKey: "pdkC10", n: 5, clues: 25, starTimes: [245, 350, 470] },
+    /* Volume two lengthens the brief instead of widening the grid. The
+     * four-name board returns for half the steps so reading and cross-checking
+     * carry the difficulty, and the last two cases stay wide for the biggest
+     * briefs in the campaign. */
+    { id: "c11", labelKey: "pdkC11", n: 5, clues: 26, starTimes: [260, 370, 495] },
+    { id: "c12", labelKey: "pdkC12", n: 4, clues: 27, starTimes: [245, 350, 465] },
+    { id: "c13", labelKey: "pdkC13", n: 5, clues: 27, starTimes: [270, 385, 515] },
+    { id: "c14", labelKey: "pdkC14", n: 4, clues: 28, starTimes: [250, 355, 475] },
+    { id: "c15", labelKey: "pdkC15", n: 5, clues: 28, starTimes: [280, 400, 530] },
+    { id: "c16", labelKey: "pdkC16", n: 4, clues: 29, starTimes: [260, 370, 495] },
+    { id: "c17", labelKey: "pdkC17", n: 5, clues: 29, starTimes: [290, 410, 550] },
+    { id: "c18", labelKey: "pdkC18", n: 4, clues: 30, starTimes: [270, 385, 515] },
+    { id: "c19", labelKey: "pdkC19", n: 5, clues: 31, starTimes: [310, 440, 590] },
+    { id: "c20", labelKey: "pdkC20", n: 5, clues: 32, starTimes: [320, 455, 610] },
   ];
   /* Removal order for the carve: the plainest clues go first so the mixed
    * negative / same-owner / hour-gap lines stay in the brief. */
@@ -290,6 +304,14 @@
     var directTake = Math.min(directShuffled.length, Math.max(1, want - flavour));
     var clues = directShuffled.slice(0, directTake);
     clues = clues.concat(otherShuffled.slice(0, Math.min(otherShuffled.length, flavour)));
+    /* Past 25 lines at n=5 (past 20 at n=4) the direct pool is already spent,
+     * so the old 40% flavour share would leave the brief short of the rung's
+     * count. Top it up from the mixed pool instead: the direct pins above
+     * already fix the one answer, so extra true lines cannot add a second
+     * solution, and pdkCarve can still trade plain lines for mixed ones. */
+    if (clues.length < want) {
+      clues = clues.concat(otherShuffled.slice(flavour, flavour + (want - clues.length)));
+    }
     var fill = directTake;
     var guard = 0;
     /* Plain "X did it" lines are the reliable pins: add them, one at a time,
@@ -406,11 +428,15 @@
         o = -1;
       }
     }
-    /* Swap: a plain "X did it" line only goes if a mixed line pins as hard. */
+    /* Swap: a plain "X did it" line only goes if a mixed line pins as hard.
+     * The bank keeps each category pair in canonical order so a swap cannot
+     * add the same line the brief already carries backwards. */
     var bank = [];
-    for (var cat = 0; cat < pdkCats; cat += 1) {
-      for (var who = 0; who < n; who += 1) {
-        bank.push({ kind: "same", ca: cat, cb: (cat + 1) % pdkCats, ia: solution[cat][who], ib: solution[(cat + 1) % pdkCats][who] });
+    for (var ca = 0; ca < pdkCats; ca += 1) {
+      for (var cb = ca + 1; cb < pdkCats; cb += 1) {
+        for (var who = 0; who < n; who += 1) {
+          bank.push({ kind: "same", ca: ca, cb: cb, ia: solution[ca][who], ib: solution[cb][who] });
+        }
       }
     }
     bank = pdkShuffle(bank);
@@ -419,13 +445,13 @@
       if (keep[i].kind !== "direct") {
         continue;
       }
-      var swap = keep.slice();
       var pick = bank[tries % bank.length];
-      swap[i] = pick;
       tries += 1;
-      if (indexOfClue(swap, pick) !== i) {
+      if (indexOfClue(keep, pick) !== -1) {
         continue;
       }
+      var swap = keep.slice();
+      swap[i] = pick;
       if (pdkCountSolutions(swap, { n: n }) === 1 && pdkMentioned(swap, n)) {
         keep = swap;
       }
@@ -984,6 +1010,16 @@
       "pdkC8": "Hung Jury",
       "pdkC9": "Beat the Clock",
       "pdkC10": "The Full Brief",
+      "pdkC11": "Cold Trail",
+      "pdkC12": "Cross Check",
+      "pdkC13": "Long Watch",
+      "pdkC14": "Narrow Margin",
+      "pdkC15": "Paper Storm",
+      "pdkC16": "Deep Ledger",
+      "pdkC17": "Silent Partner",
+      "pdkC18": "The Missing Hour",
+      "pdkC19": "Closing Net",
+      "pdkC20": "Final Verdict",
       "pdkTimeLabel": "Elapsed",
       "pdkBriefLabel": "Brief",
       "pdkRungSelectLabel": "Pick a rung",
@@ -1037,6 +1073,16 @@
       "pdkC8": "陪审僵局",
       "pdkC9": "限时追凶",
       "pdkC10": "完整卷宗",
+      "pdkC11": "冷线索",
+      "pdkC12": "交叉核对",
+      "pdkC13": "长夜蹲守",
+      "pdkC14": "毫厘之差",
+      "pdkC15": "卷宗如雪",
+      "pdkC16": "深层账目",
+      "pdkC17": "沉默同伙",
+      "pdkC18": "消失的一小时",
+      "pdkC19": "收网",
+      "pdkC20": "最终裁决",
       "pdkTimeLabel": "用时",
       "pdkBriefLabel": "卷宗",
       "pdkRungSelectLabel": "选择难度",
@@ -1073,7 +1119,7 @@
       "pdkBestTime": "最佳 {n} 秒",
       "pdkAlready": "「{name}」已经结案——换个难度或重开一件。",
       "pdkNextRung": "解锁下一档。",
-      "pdkCampaignDone": "十档全部办结，笔记本归你了。",
+      "pdkCampaignDone": "二十档全部办结，笔记本归你了。",
       "pdkLocked": "「{name}」还封存着——先办结前面那一档。",
       "pdkHint": "打一个勾，同行同列就都该是叉；只有当这一行再无别处可去时，勾才算稳。",
       "logPocketDetective": "办结了 {n} 条线索的案子",

@@ -2,10 +2,13 @@
  * Each net is a hand-authored DAG with a target truth table, and the shipped
  * gate assignment is the one a brute-force pass proved cheapest over the very
  * sockets the net offers, so every net can be completed and the star line is
- * honest. Ten nets, one new idea each: two-wire difference, a three-wire
+ * honest. Twenty nets, one new idea each: two-wire difference, a three-wire
  * vote, a counted vote, an inhibited difference, a staged relay, then a
  * steered pair, a half-specified strobe table, a difference two branches
- * share, a four-wire consensus and a two-bit comparison. */
+ * share, a four-wire consensus, a two-bit comparison, a four-wire quorum,
+ * a carry chain, a perfect square, strict alternation, a long month, a
+ * top-right bar, a rule of three, a prime nibble, four of five and twin
+ * rails. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
   var t = App.t;
@@ -219,6 +222,261 @@
       ],
       gates: { s1: "not", s2: "and", s3: "xor", s4: "xor", s5: "and", s6: "xor" },
       par: 6,
+    },
+    {
+      /* Four wires, three must agree. Each pair product checks the opposite
+       * pair, so the quorum is two products and the OR that joins them. */
+      id: "k11",
+      labelKey: "cirL11",
+      inputs: ["A", "B", "C", "D"],
+      truth: "0000000100010111",
+      out: "s7",
+      slots: [
+        { id: "s1", a: "A", b: "B" },
+        { id: "s2", a: "C", b: "D" },
+        { id: "s3", a: "C", b: "D" },
+        { id: "s4", a: "s1", b: "s3" },
+        { id: "s5", a: "A", b: "B" },
+        { id: "s6", a: "s2", b: "s5" },
+        { id: "s7", a: "s4", b: "s6" },
+        /* Spare rail: three sockets nothing reads, so they only cost parts. */
+        { id: "s8", a: "A", b: "s7" },
+        { id: "s9", a: "s4" },
+        { id: "s10", a: "B", b: "C" },
+      ],
+      gates: { s1: "and", s2: "and", s3: "or", s4: "and", s5: "or", s6: "and", s7: "or" },
+      par: 7,
+    },
+    {
+      /* Two two-bit numbers plus a carry-in. The low carry is a three-way
+       * vote, and the high carry is that same vote one column up. */
+      id: "k12",
+      labelKey: "cirL12",
+      inputs: ["A", "B", "C", "D", "E"],
+      truth: "00000001000001110001111101111111",
+      out: "s8",
+      slots: [
+        { id: "s1", a: "B", b: "D" },
+        { id: "s2", a: "B", b: "D" },
+        { id: "s3", a: "E", b: "s1" },
+        { id: "s4", a: "s2", b: "s3" },
+        { id: "s5", a: "A", b: "C" },
+        { id: "s6", a: "A", b: "C" },
+        { id: "s7", a: "s5", b: "s4" },
+        { id: "s8", a: "s6", b: "s7" },
+        /* Spare rail. */
+        { id: "s9", a: "A", b: "E" },
+        { id: "s10", a: "s5" },
+        { id: "s11", a: "s8", b: "D" },
+      ],
+      gates: { s1: "xor", s2: "and", s3: "and", s4: "or", s5: "xor", s6: "and", s7: "and", s8: "or" },
+      par: 8,
+    },
+    {
+      /* Perfect squares among the nibbles: 0, 1, 4 and 9. The low pair of
+       * differences catches 0, 1 and 4, while the NOT rail answers 9. */
+      id: "k13",
+      labelKey: "cirL13",
+      inputs: ["A", "B", "C", "D"],
+      truth: "1100100001000000",
+      out: "s8",
+      slots: [
+        { id: "s1", a: "C" },
+        { id: "s2", a: "B" },
+        { id: "s3", a: "D" },
+        { id: "s4", a: "A" },
+        { id: "s5", a: "s2", b: "D" },
+        { id: "s6", a: "s4", b: "s3" },
+        { id: "s7", a: "s5", b: "s6" },
+        { id: "s8", a: "s1", b: "s7" },
+        /* Spare rail: four unread sockets. */
+        { id: "s9", a: "s8", b: "B" },
+        { id: "s10", a: "s7" },
+        { id: "s11", a: "A", b: "s1" },
+        { id: "s12", a: "s2", b: "s3" },
+      ],
+      gates: { s1: "not", s2: "not", s3: "not", s4: "not", s5: "and", s6: "and", s7: "or", s8: "and" },
+      par: 8,
+    },
+    {
+      /* A five-wire clock line is good only when every neighbouring pair
+       * differs: four differences ANDed together, with no strobe to hide in. */
+      id: "k14",
+      labelKey: "cirL14",
+      inputs: ["A", "B", "C", "D", "E"],
+      truth: "00000000001000000000010000000000",
+      out: "s7",
+      slots: [
+        { id: "s1", a: "A", b: "B" },
+        { id: "s2", a: "B", b: "C" },
+        { id: "s3", a: "C", b: "D" },
+        { id: "s4", a: "D", b: "E" },
+        { id: "s5", a: "s1", b: "s2" },
+        { id: "s6", a: "s3", b: "s4" },
+        { id: "s7", a: "s5", b: "s6" },
+        /* Spare rail. */
+        { id: "s8", a: "s7", b: "A" },
+        { id: "s9", a: "D" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "xor", s4: "xor", s5: "and", s6: "and", s7: "and" },
+      par: 7,
+    },
+    {
+      /* Month numbers 1..12 on a nibble: high for the seven long months,
+       * and 14 (the only even high nibble with B and C set) must not leak. */
+      id: "k15",
+      labelKey: "cirL15",
+      inputs: ["A", "B", "C", "D"],
+      truth: "0101010110101000",
+      out: "s8",
+      slots: [
+        { id: "s1", a: "A" },
+        { id: "s2", a: "D" },
+        { id: "s3", a: "s1", b: "D" },
+        { id: "s4", a: "B", b: "C" },
+        { id: "s5", a: "s4" },
+        { id: "s6", a: "A", b: "s2" },
+        { id: "s7", a: "s6", b: "s5" },
+        { id: "s8", a: "s3", b: "s7" },
+        /* Spare rail. */
+        { id: "s9", a: "s8", b: "C" },
+        { id: "s10", a: "s3" },
+      ],
+      gates: { s1: "not", s2: "not", s3: "and", s4: "and", s5: "not", s6: "and", s7: "and", s8: "or" },
+      par: 8,
+    },
+    {
+      /* Seven-segment b bar for a BCD digit. It is dark on 5 and 6, and the
+       * out-of-range nibbles 10..15 are pinned dark by the AB and AC terms. */
+      id: "k16",
+      labelKey: "cirL16",
+      inputs: ["A", "B", "C", "D"],
+      truth: "1111100111000000",
+      out: "s9",
+      slots: [
+        { id: "s1", a: "A", b: "B" },
+        { id: "s2", a: "A", b: "C" },
+        { id: "s3", a: "s1", b: "s2" },
+        { id: "s4", a: "C", b: "D" },
+        { id: "s5", a: "A" },
+        { id: "s6", a: "s5", b: "B" },
+        { id: "s7", a: "s6", b: "s4" },
+        { id: "s8", a: "s3", b: "s7" },
+        { id: "s9", a: "s8" },
+        /* Spare rail. */
+        { id: "s10", a: "s9", b: "D" },
+        { id: "s11", a: "s4" },
+        { id: "s12", a: "B", b: "s3" },
+      ],
+      gates: { s1: "and", s2: "and", s3: "or", s4: "xor", s5: "not", s6: "and", s7: "and", s8: "or", s9: "not" },
+      par: 9,
+    },
+    {
+      /* Divisible by three: each two-bit half has a residue, and the answer
+       * is yes when the residues are both zero or both cross to the other. */
+      id: "k17",
+      labelKey: "cirL17",
+      inputs: ["A", "B", "C", "D"],
+      truth: "1001001001001001",
+      out: "s9",
+      slots: [
+        { id: "s1", a: "A", b: "B" },
+        { id: "s2", a: "C", b: "D" },
+        { id: "s3", a: "s1" },
+        { id: "s4", a: "s2" },
+        { id: "s5", a: "s3", b: "s4" },
+        { id: "s6", a: "s1", b: "s2" },
+        { id: "s7", a: "A", b: "C" },
+        { id: "s8", a: "s6", b: "s7" },
+        { id: "s9", a: "s5", b: "s8" },
+        /* Spare rail. */
+        { id: "s10", a: "s9", b: "B" },
+        { id: "s11", a: "s8" },
+        { id: "s12", a: "D", b: "s5" },
+        { id: "s13", a: "s7", b: "C" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "not", s4: "not", s5: "and", s6: "and", s7: "xor", s8: "and", s9: "or" },
+      par: 9,
+    },
+    {
+      /* Prime nibble: 2, 3, 5, 7, 11 and 13. The low half picks 2/3 or 5/7;
+       * the high half picks the two odd primes, both ending in D. */
+      id: "k18",
+      labelKey: "cirL18",
+      inputs: ["A", "B", "C", "D"],
+      truth: "0011010100010100",
+      out: "s10",
+      slots: [
+        { id: "s1", a: "A" },
+        { id: "s2", a: "B" },
+        { id: "s3", a: "s2", b: "C" },
+        { id: "s4", a: "B", b: "D" },
+        { id: "s5", a: "s3", b: "s4" },
+        { id: "s6", a: "s1", b: "s5" },
+        { id: "s7", a: "B", b: "C" },
+        { id: "s8", a: "A", b: "D" },
+        { id: "s9", a: "s8", b: "s7" },
+        { id: "s10", a: "s6", b: "s9" },
+        /* Spare rail. */
+        { id: "s11", a: "s10", b: "C" },
+        { id: "s12", a: "s7" },
+      ],
+      gates: { s1: "not", s2: "not", s3: "and", s4: "and", s5: "or", s6: "and", s7: "xor", s8: "and", s9: "and", s10: "or" },
+      par: 10,
+    },
+    {
+      /* At least four of five: the four-wire quorum as before, plus the
+       * fifth wire's single vote joined to the all-four product. */
+      id: "k19",
+      labelKey: "cirL19",
+      inputs: ["A", "B", "C", "D", "E"],
+      truth: "00000000000000010000000100010111",
+      out: "s10",
+      slots: [
+        { id: "s1", a: "A", b: "B" },
+        { id: "s2", a: "C", b: "D" },
+        { id: "s3", a: "C", b: "D" },
+        { id: "s4", a: "A", b: "B" },
+        { id: "s5", a: "s1", b: "s3" },
+        { id: "s6", a: "s2", b: "s4" },
+        { id: "s7", a: "s5", b: "s6" },
+        { id: "s8", a: "s1", b: "s2" },
+        { id: "s9", a: "E", b: "s7" },
+        { id: "s10", a: "s8", b: "s9" },
+        /* Spare rail: four unread sockets. */
+        { id: "s11", a: "s10", b: "A" },
+        { id: "s12", a: "s9" },
+        { id: "s13", a: "D", b: "E" },
+        { id: "s14", a: "s7", b: "D" },
+      ],
+      gates: { s1: "and", s2: "and", s3: "or", s4: "or", s5: "and", s6: "and", s7: "or", s8: "and", s9: "and", s10: "or" },
+      par: 10,
+    },
+    {
+      /* Twin rails: high when any two neighbouring wires are high. Four pair
+       * products, then two ORs of pairs and one OR to report the run. */
+      id: "k20",
+      labelKey: "cirL20",
+      inputs: ["A", "B", "C", "D", "E"],
+      truth: "00010011000111110001001111111111",
+      out: "s7",
+      slots: [
+        { id: "s1", a: "A", b: "B" },
+        { id: "s2", a: "B", b: "C" },
+        { id: "s3", a: "C", b: "D" },
+        { id: "s4", a: "D", b: "E" },
+        { id: "s5", a: "s1", b: "s2" },
+        { id: "s6", a: "s3", b: "s4" },
+        { id: "s7", a: "s5", b: "s6" },
+        /* Spare rail: five unread sockets. */
+        { id: "s8", a: "s7", b: "B" },
+        { id: "s9", a: "s5" },
+        { id: "s10", a: "A", b: "D" },
+        { id: "s11", a: "s6" },
+        { id: "s12", a: "s7", b: "E" },
+      ],
+      gates: { s1: "and", s2: "and", s3: "and", s4: "and", s5: "or", s6: "or", s7: "or" },
+      par: 7,
     },
   ];
 
@@ -858,6 +1116,16 @@
       "cirL8": "Double Check",
       "cirL9": "Four-Wire Chorus",
       "cirL10": "High-Low Compare",
+      "cirL11": "Four-Wire Quorum",
+      "cirL12": "Carry Chain",
+      "cirL13": "Perfect Square",
+      "cirL14": "Strict Alternation",
+      "cirL15": "Long Month",
+      "cirL16": "Top-Right Bar",
+      "cirL17": "Rule of Three",
+      "cirL18": "Prime Nibble",
+      "cirL19": "Four of Five",
+      "cirL20": "Twin Rails",
       "cirPartsLabel": "Parts",
       "cirRowsLabel": "Rows",
       "cirNetSelectLabel": "Pick a net",
@@ -895,7 +1163,7 @@
       "cirCleared": "Every row holds on {n} parts (par {p}) - {s} stars.",
       "cirBestParts": "best {n} parts",
       "cirNextNet": "Next net unlocked.",
-      "cirCampaignDone": "Ten nets, all truthing out.",
+      "cirCampaignDone": "Twenty nets, all truthing out.",
       "cirLocked": "{name} is taped over until the net before it works.",
       "cirHint": "A dead socket reads as 0, so an OR or XOR on a spare wire passes the live one straight through.",
       "cirHintFree": "Rows printed as don't care ask nothing of the board, so this net does not have to answer its strobe - spend those parts on the half that counts.",
@@ -913,6 +1181,16 @@
       "cirL8": "双线复核",
       "cirL9": "四线同声",
       "cirL10": "高低比较",
+      "cirL11": "四线公议",
+      "cirL12": "进位接力",
+      "cirL13": "完全平方",
+      "cirL14": "严格交替",
+      "cirL15": "长月旗标",
+      "cirL16": "右上灯条",
+      "cirL17": "三之律",
+      "cirL18": "质数探针",
+      "cirL19": "五中取四",
+      "cirL20": "双轨相邻",
       "cirPartsLabel": "元件",
       "cirRowsLabel": "行",
       "cirNetSelectLabel": "选择电路",
@@ -950,7 +1228,7 @@
       "cirCleared": "{n} 个元件让所有行都成立（标准 {p}）- 获得 {s} 星。",
       "cirBestParts": "最佳 {n} 个元件",
       "cirNextNet": "解锁下一张电路。",
-      "cirCampaignDone": "十张电路全部按预期出电平。",
+      "cirCampaignDone": "二十张电路全部按预期出电平。",
       "cirLocked": "「{name}」还被胶带封着——先让上一张电路工作。",
       "cirHint": "空插座读作 0，所以把多余的那一路接成或门或异或门，就等于让有效信号直通过去。",
       "cirHintFree": "写着不限的行不必成立：这半张表电路板无需回答，所以别把选通线接进输出，元件留给要紧的那一半。",

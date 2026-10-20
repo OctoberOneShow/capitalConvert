@@ -14,11 +14,15 @@
   var sortColors = [
     "#22d3ee", "#f472b6", "#a3e635", "#fbbf24",
     "#a78bfa", "#fb7185", "#38bdf8", "#4ade80",
+    "#f97316", "#e879f9", "#14b8a6", "#facc15",
+    "#818cf8", "#fb923c", "#2dd4bf",
   ];
   /* Boards: `tubes` vessels, `colors` of them start filled with four units.
    * `shuffle` reverse-pours scramble the solved state, so every deal is
    * provably winnable by replaying the walk. Star moves are
-   * [3-star, 2-star, 1-star]. */
+   * [3-star, 2-star, 1-star]. `maxPath` is the three-star gate: the dealer
+   * only accepts a shuffle whose recorded winning walk fits that budget, so
+   * the band the picker prints is a line the solver has actually replayed. */
   var sortLevels = [
     { id: "q1", labelKey: "sorL1", tubes: 5, colors: 3, shuffle: 8, starMoves: [8, 12, 18] },
     { id: "q2", labelKey: "sorL2", tubes: 6, colors: 4, shuffle: 14, starMoves: [12, 18, 26] },
@@ -30,7 +34,41 @@
     { id: "q8", labelKey: "sorL8", tubes: 12, colors: 8, shuffle: 62, starMoves: [32, 46, 62] },
     { id: "q9", labelKey: "sorL9", tubes: 13, colors: 9, shuffle: 68, starMoves: [36, 52, 70] },
     { id: "q10", labelKey: "sorL10", tubes: 14, colors: 10, shuffle: 74, starMoves: [40, 58, 78] },
+    /* The deeper rack. Each rung alternates a wider palette with a longer
+     * rack; the long racks ask for more setup pours before a colour can be
+     * sealed. `maxPath` is the solver's measured three-star budget - the
+     * dealer re-deals until its own winning walk fits, so every rung is
+     * reachable and the bands only tighten by one or two moves at a time. */
+    { id: "q11", labelKey: "sorL11", tubes: 15, colors: 10, shuffle: 78, starMoves: [50, 66, 84], maxPath: 50 },
+    { id: "q12", labelKey: "sorL12", tubes: 15, colors: 11, shuffle: 82, starMoves: [54, 70, 88], maxPath: 54 },
+    { id: "q13", labelKey: "sorL13", tubes: 16, colors: 11, shuffle: 86, starMoves: [58, 74, 92], maxPath: 58 },
+    { id: "q14", labelKey: "sorL14", tubes: 16, colors: 12, shuffle: 90, starMoves: [60, 78, 96], maxPath: 60 },
+    { id: "q15", labelKey: "sorL15", tubes: 17, colors: 12, shuffle: 94, starMoves: [64, 82, 100], maxPath: 64 },
+    { id: "q16", labelKey: "sorL16", tubes: 17, colors: 13, shuffle: 98, starMoves: [68, 86, 104], maxPath: 68 },
+    { id: "q17", labelKey: "sorL17", tubes: 18, colors: 13, shuffle: 102, starMoves: [72, 90, 108], maxPath: 72 },
+    { id: "q18", labelKey: "sorL18", tubes: 18, colors: 14, shuffle: 106, starMoves: [76, 94, 112], maxPath: 76 },
+    { id: "q19", labelKey: "sorL19", tubes: 19, colors: 14, shuffle: 110, starMoves: [80, 98, 118], maxPath: 80 },
+    { id: "q20", labelKey: "sorL20", tubes: 20, colors: 15, shuffle: 114, starMoves: [84, 104, 124], maxPath: 84 },
   ];
+
+  /* Bilingual copy for the deeper rack. addStrings only fills keys the shared
+   * dictionary does not already own, so the shipped names stay authoritative. */
+  App.addStrings({
+    en: {
+      "sorL11": "The Fifth Spare", "sorL12": "The Narrow Rack",
+      "sorL13": "The Sixteenth Vial", "sorL14": "The Dyer's Row",
+      "sorL15": "Cold Bloom", "sorL16": "Glass Orchard",
+      "sorL17": "The Long Rack", "sorL18": "Fourteen Tints",
+      "sorL19": "One Vial Shy", "sorL20": "The Final Palette",
+    },
+    zh: {
+      "sorL11": "\u7b2c\u4e94\u53ea\u7a7a\u74f6", "sorL12": "\u7a84\u67b6",
+      "sorL13": "\u7b2c\u5341\u516d\u53ea\u74f6", "sorL14": "\u67d3\u574a\u957f\u5217",
+      "sorL15": "\u51b7\u8272\u7efd\u653e", "sorL16": "\u73bb\u7483\u679c\u56ed",
+      "sorL17": "\u957f\u67b6", "sorL18": "\u5341\u56db\u8272",
+      "sorL19": "\u53ea\u5dee\u4e00\u74f6", "sorL20": "\u7ec8\u8272\u76d8",
+    },
+  });
 
   /* Pure deal generator with a built-in solver: shuffle the colour units
    * into a random permutation, then DFS-verify the deal can actually be
@@ -152,7 +190,7 @@
       : null;
   }
 
-  function sortGenerate(colors, tubeCount, depth) {
+  function sortGenerate(colors, tubeCount, depth, maxPath) {
     var attempt;
     for (attempt = 0; attempt < 60; attempt += 1) {
       var units = [];
@@ -181,7 +219,7 @@
         continue;
       }
       var solution = sortSolve(tubes, 30000);
-      if (solution && solution.length) {
+      if (solution && solution.length && (!maxPath || solution.length <= maxPath)) {
         return { tubes: tubes, solution: solution };
       }
     }
@@ -235,8 +273,10 @@
 
     function tubeLayout() {
       /* Past twelve vials a second row would squeeze the tubes negative gaps,
-       * so the largest deals lay the rack out over three rows instead. */
-      var rows = tubes.length > 12 ? 3 : tubes.length > 5 ? 2 : 1;
+       * so the largest deals lay the rack out over three rows instead; the
+       * twenty-vial end of the ladder needs a fourth row to keep daylight
+       * between the glass. */
+      var rows = tubes.length > 15 ? 4 : tubes.length > 12 ? 3 : tubes.length > 5 ? 2 : 1;
       var perRow = Math.ceil(tubes.length / rows);
       var gap = Math.min(18, (sortSize - 24) / perRow - 46);
       var tubeW = 46;
@@ -425,7 +465,7 @@
 
     function loadLevel(levelDef) {
       level = levelDef;
-      var deal = sortGenerate(level.colors, level.tubes, level.shuffle);
+      var deal = sortGenerate(level.colors, level.tubes, level.shuffle, level.maxPath);
       tubes = deal.tubes;
       moves = 0;
       solved = false;

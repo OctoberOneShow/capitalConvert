@@ -32,6 +32,21 @@
     { id: "i8", labelKey: "glL8", w: 12, h: 9, stars: 5, minPar: 10, maxPar: 21 },
     { id: "i9", labelKey: "glL9", w: 13, h: 10, stars: 4, minPar: 12, maxPar: 30 },
     { id: "i10", labelKey: "glL10", w: 14, h: 11, stars: 4, minPar: 10, maxPar: 26 },
+    /* The white rinks. Every one is dealt around a measured trail rather than
+     * random star cells, and the par window climbs from 10-26 to 20-44 while
+     * the board adds five columns. Five and six-star rinks demand a route that
+     * doubles back for one last socket; none is accepted unless the BFS finds
+     * that route inside the printed window. */
+    { id: "i11", labelKey: "glL11", w: 14, h: 11, stars: 4, minPar: 10, maxPar: 26, trail: true, density: 0.22 },
+    { id: "i12", labelKey: "glL12", w: 15, h: 11, stars: 5, minPar: 12, maxPar: 28, trail: true, density: 0.22 },
+    { id: "i13", labelKey: "glL13", w: 15, h: 12, stars: 5, minPar: 13, maxPar: 30, trail: true, density: 0.22 },
+    { id: "i14", labelKey: "glL14", w: 16, h: 12, stars: 5, minPar: 14, maxPar: 32, trail: true, density: 0.22 },
+    { id: "i15", labelKey: "glL15", w: 16, h: 13, stars: 6, minPar: 14, maxPar: 34, trail: true, density: 0.22 },
+    { id: "i16", labelKey: "glL16", w: 17, h: 13, stars: 5, minPar: 16, maxPar: 36, trail: true, density: 0.22 },
+    { id: "i17", labelKey: "glL17", w: 17, h: 14, stars: 6, minPar: 16, maxPar: 38, trail: true, density: 0.22 },
+    { id: "i18", labelKey: "glL18", w: 18, h: 14, stars: 5, minPar: 18, maxPar: 40, trail: true, density: 0.22 },
+    { id: "i19", labelKey: "glL19", w: 18, h: 15, stars: 6, minPar: 18, maxPar: 42, trail: true, density: 0.22 },
+    { id: "i20", labelKey: "glL20", w: 19, h: 15, stars: 6, minPar: 20, maxPar: 44, trail: true, density: 0.22 },
   ];
 
   /* Pure generator + solver, exported for the static checks. Board walls
@@ -150,8 +165,117 @@
     var fStars = [];
     return { wall: safe, start: fStart, goal: fGoal, stars: fStars, par: 2 };
   }
+  /* The deeper rinks are laid out around a measured trail instead of dropping
+   * stars at random. A random slide-walk supplies the route; its stops become
+   * the stars and the last stop the goal, then the BFS prices the shortest line
+   * that still collects every star. A deal only ships when that price lands in
+   * the rung's par window, so the printed par is always a line the solver has
+   * replayed. The old generator stays untouched for the shipped ten. */
+  function glideTrailGenerate(w, h, starCount, minPar, maxPar, density) {
+    for (var attempt = 0; attempt < 180; attempt += 1) {
+      var wall = [];
+      for (var i = 0; i < w * h; i += 1) {
+        var x = i % w;
+        var y = Math.floor(i / w);
+        wall.push(
+          x === 0 || y === 0 || x === w - 1 || y === h - 1 || Math.random() < density ? 1 : 0,
+        );
+      }
+      var cells = [];
+      for (var c = 0; c < w * h; c += 1) {
+        if (!wall[c]) {
+          cells.push(c);
+        }
+      }
+      if (cells.length < 20) {
+        continue;
+      }
+      var start = cells[Math.floor(Math.random() * cells.length)];
+      var target = maxPar + 4;
+      var pos = start;
+      var lastDir = -1;
+      var stops = [];
+      var guard = 0;
+      while (stops.length < target && guard < target * 10) {
+        guard += 1;
+        var options = [];
+        for (var d = 0; d < 4; d += 1) {
+          if (d !== lastDir) {
+            options.push(d);
+          }
+        }
+        var dir = options[Math.floor(Math.random() * options.length)];
+        var res = slideOn(wall, w, h, pos, dir);
+        if (!res.steps) {
+          continue;
+        }
+        pos = res.pos;
+        stops.push(pos);
+        lastDir = dir;
+      }
+      if (stops.length < target) {
+        continue;
+      }
+      var goal = stops[stops.length - 1];
+      var stars = [];
+      for (var s = 0; s < starCount; s += 1) {
+        var at = Math.floor(((s + 1) * stops.length) / (starCount + 1));
+        var stop = stops[at];
+        if (stop !== start && stop !== goal && stars.indexOf(stop) < 0) {
+          stars.push(stop);
+        }
+      }
+      if (stars.length < starCount) {
+        continue;
+      }
+      var par = glideSolve(wall, w, h, start, goal, stars);
+      if (par >= minPar && par <= maxPar) {
+        return { wall: wall, start: start, goal: goal, stars: stars, par: par };
+      }
+    }
+    /* Kept playable even if the rink refuses every trail. */
+    return glideGenerate(w, h, starCount, minPar, maxPar);
+  }
+
+  function slideOn(wall, w, h, pos, dir) {
+    var x = pos % w;
+    var y = Math.floor(pos / w);
+    var steps = 0;
+    for (;;) {
+      var nx = x + GLIDE_DIRS[dir][0];
+      var ny = y + GLIDE_DIRS[dir][1];
+      if (ny < 0 || ny >= h || nx < 0 || nx >= w || wall[ny * w + nx]) {
+        break;
+      }
+      x = nx;
+      y = ny;
+      steps += 1;
+    }
+    return { pos: y * w + x, steps: steps };
+  }
+
   App.glyphGlideGenerate = glideGenerate;
+  App.glyphGlideTrailGenerate = glideTrailGenerate;
   App.glyphGlideSolve = glideSolve;
+
+  /* Bilingual copy for the white rinks. The shipped ten names stay in the
+   * shared dictionary; addStrings only fills the keys it does not own. */
+  App.addStrings({
+    en: {
+      "glL11": "Rime Run", "glL12": "The Glass Stair", "glL13": "Frost Fingers",
+      "glL14": "The Hollow Flue", "glL15": "Six-Star Vault",
+      "glL16": "The Weeping Wall", "glL17": "Glacier Gate",
+      "glL18": "The Long Crevasse", "glL19": "Whiteout Gallery",
+      "glL20": "The Frozen Crown",
+    },
+    zh: {
+      "glL11": "\u971c\u75d5\u6ed1\u9053", "glL12": "\u7409\u7483\u9636",
+      "glL13": "\u971c\u6307", "glL14": "\u7a7a\u5fc3\u51b0\u9053",
+      "glL15": "\u516d\u661f\u51b0\u7a96", "glL16": "\u6cea\u5899",
+      "glL17": "\u51b0\u5ddd\u4e4b\u95e8", "glL18": "\u957f\u88c2\u9699",
+      "glL19": "\u767d\u76f2\u957f\u5eca", "glL20": "\u51b0\u5c01\u738b\u51a0",
+    },
+  });
 
   /* ------------------------------------------------------------------ feel */
   /* The shared layer is loaded before this module in every page, but a missing
@@ -1438,7 +1562,9 @@
     /* ------------------------------------------------------------------ deal */
     function loadLevel(levelDef) {
       level = levelDef;
-      var deal = glideGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar);
+      var deal = level.trail
+        ? glideTrailGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density)
+        : glideGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar);
       w = level.w;
       h = level.h;
       wall = deal.wall;

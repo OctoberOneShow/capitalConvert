@@ -39,7 +39,7 @@
   var arcItemArt = { key: "key", card: "card", lamp: "lantern", rope: "chain", chit: "stamp", tea: "flask", ledger: "book" };
   var arcClueArt = { c1: "card", c2: "map", c3: "scroll", c4: "magnifier", c5: "wave" };
 
-  /* Same map, ten escalating nights. The first eight are graded purely off the
+  /* Same map, twenty escalating nights. The first eight are graded purely off the
    * solved minimum turn count for each goal; the two chute nights are graded off
    * their stored solution line, whose hop count is band0, so replaying the line
    * as written earns exactly three stars. `solution` is the node path, joined on
@@ -67,7 +67,56 @@
       solution: "lobby>desk>drawer>stair>landing>aisles>plaques>aisles>toolbox>aisles>landing>ledgerDoor>turnstile>ledgerRoom>strongbox>ledgerOpen>landing>stair>breaker>shelf>sump>shelf>stokers>chutetop>yardGate>endYard",
       starTurns: [25, 29, 35],
     },
+    /* Nights eleven to twenty are case files: the same map, but the ending has
+     * to arrive with named evidence in the satchel and without the tools the
+     * earlier nights leaned on. Every case is proved by the same BFS below. */
+    { id: "a11", labelKey: "arcZ11", goal: "roofNoLamp" },
+    { id: "a12", labelKey: "arcZ12", goal: "yardTea" },
+    { id: "a13", labelKey: "arcZ13", goal: "ledgerTeaNoLamp" },
+    { id: "a14", labelKey: "arcZ14", goal: "everyItem" },
+    { id: "a15", labelKey: "arcZ15", goal: "secretTeaFull" },
+    { id: "a16", labelKey: "arcZ16", goal: "secretLedger" },
+    { id: "a17", labelKey: "arcZ17", goal: "roofTeaFull" },
+    { id: "a18", labelKey: "arcZ18", goal: "yardEveryItem" },
+    { id: "a19", labelKey: "arcZ19", goal: "yardLedgerFull" },
+    { id: "a20", labelKey: "arcZ20", goal: "yardEveryItemFull" },
   ];
+
+  /* The additive case-file layer. A goal named here is met only at its named
+   * ending (if any) with every listed clue, item and flag present and nothing
+   * from the ban list present. Goals that are not listed keep walking the
+   * original predicates untouched. */
+  var arcCases = {
+    roofNoLamp: { ending: "roof", ban: { items: ["lamp"] } },
+    yardTea: { ending: "yard", items: ["tea"] },
+    ledgerTeaNoLamp: { ending: "ledger", items: ["tea"], ban: { items: ["lamp"] } },
+    everyItem: { items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"] },
+    secretTeaFull: {
+      ending: "secret",
+      items: ["tea"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+    },
+    secretLedger: { ending: "secret", items: ["ledger"] },
+    roofTeaFull: {
+      ending: "roof",
+      items: ["tea"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+    },
+    yardEveryItem: {
+      ending: "yard",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+    },
+    yardLedgerFull: {
+      ending: "yard",
+      items: ["ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+    },
+    yardEveryItemFull: {
+      ending: "yard",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+    },
+  };
 
   /* A choice may ask for an item, a flag or one named clue; a room hands back
    * its own item, flag or clue the moment you step into it. Revisiting a room
@@ -510,6 +559,47 @@
     if (goal === "yardLedger") {
       return ending === "yard" && !!state.items.ledger;
     }
+    /* The case-file layer. Listed goals replace the single-ending test with a
+     * named ending plus required and banned evidence; unlisted goals fall
+     * through exactly as before. */
+    var caseFile = arcCases[goal];
+    if (caseFile) {
+      if (caseFile.ending && ending !== caseFile.ending) {
+        return false;
+      }
+      var must = caseFile.clues || [];
+      for (var m = 0; m < must.length; m += 1) {
+        if (!state.clues[must[m]]) {
+          return false;
+        }
+      }
+      var carry = caseFile.items || [];
+      for (var n = 0; n < carry.length; n += 1) {
+        if (!state.items[carry[n]]) {
+          return false;
+        }
+      }
+      var raised = caseFile.flags || [];
+      for (var f = 0; f < raised.length; f += 1) {
+        if (!state.flags[raised[f]]) {
+          return false;
+        }
+      }
+      var banned = caseFile.ban || {};
+      var bannedItems = banned.items || [];
+      for (var b = 0; b < bannedItems.length; b += 1) {
+        if (state.items[bannedItems[b]]) {
+          return false;
+        }
+      }
+      var bannedFlags = banned.flags || [];
+      for (var g = 0; g < bannedFlags.length; g += 1) {
+        if (state.flags[bannedFlags[g]]) {
+          return false;
+        }
+      }
+      return true;
+    }
     return ending === goal;
   }
 
@@ -557,7 +647,11 @@
         queue.push(next);
       }
     }
-    var goals = ["any", "ledger", "roof", "clues", "secret", "tea", "roofFull", "ledgerFull", "yard", "yardLedger"];
+    var goals = [
+      "any", "ledger", "roof", "clues", "secret", "tea", "roofFull", "ledgerFull", "yard", "yardLedger",
+      "roofNoLamp", "yardTea", "ledgerTeaNoLamp", "everyItem", "secretTeaFull",
+      "secretLedger", "roofTeaFull", "yardEveryItem", "yardLedgerFull", "yardEveryItemFull",
+    ];
     var turns = {};
     var i;
     for (i = 0; i < goals.length; i += 1) {
@@ -1391,6 +1485,16 @@
       "arcZ8": "The Full Ledger Night",
       "arcZ9": "The Chute Night",
       "arcZ10": "The Carrier's Night",
+      "arcZ11": "The Dark Roof",
+      "arcZ12": "The Yard Thermos",
+      "arcZ13": "The Lamp-Less Ledger",
+      "arcZ14": "The Full Satchel",
+      "arcZ15": "The Secret Thermos",
+      "arcZ16": "The Secret Ledger",
+      "arcZ17": "The Roof Thermos",
+      "arcZ18": "The Yard Satchel",
+      "arcZ19": "The Ledger File",
+      "arcZ20": "The Full Case",
       "arcTurnLabel": "Turns",
       "arcClueLabel": "Clues",
       "arcRoomLabel": "Room",
@@ -1417,7 +1521,7 @@
       "arcEndingOff": "You reached {g} in {n} turns, but tonight asked for {want}. Walk it again.",
       "arcFiled": "{g}, filed in {n} turns - {s} stars.",
       "arcNextNight": "Next night unlocked.",
-      "arcAllNights": "Ten nights, ten ways out of it.",
+      "arcAllNights": "Twenty nights, twenty ways out of it.",
       "arcPaused": "Paused at turn {n}. The archive keeps your place.",
       "arcGraphBroken": "The story map failed its own solvability proof. Report it.",
       "arcObjective": "{name}: {want}. The route is known to take {p} turns, so shorter is better.",
@@ -1453,6 +1557,16 @@
       "arcGoalLedgerFull": "reach the ledger ending holding all five clues",
       "arcGoalYard": "get out through the coal yard, which needs the cable, the open flue and the gate's chit",
       "arcGoalYardLedger": "get out through the coal yard still carrying the spring ledger",
+      "arcGoalRoofNoLamp": "reach the roof ending without the hand lamp",
+      "arcGoalYardTea": "get out through the coal yard still holding the thermos",
+      "arcGoalLedgerTeaNoLamp": "reach the ledger ending with the thermos and without the hand lamp",
+      "arcGoalEveryItem": "reach any ending still carrying every item in the building",
+      "arcGoalSecretTeaFull": "reach the secret ending with the thermos and all five clues",
+      "arcGoalSecretLedger": "reach the secret ending still carrying the spring ledger",
+      "arcGoalRoofTeaFull": "reach the roof ending with the thermos and all five clues",
+      "arcGoalYardEveryItem": "get out through the coal yard still carrying every item in the building",
+      "arcGoalYardLedgerFull": "get out through the coal yard with the spring ledger and all five clues",
+      "arcGoalYardEveryItemFull": "get out through the coal yard with every item and all five clues",
       "arcEndLedger": "Ledger ending",
       "arcEndRoof": "Roof ending",
       "arcEndSecret": "Secret ending",
@@ -1470,6 +1584,16 @@
       "arcZ8": "满账之夜",
       "arcZ9": "滑道之夜",
       "arcZ10": "扛账之夜",
+      "arcZ11": "暗顶之夜",
+      "arcZ12": "煤场暖壶",
+      "arcZ13": "无灯抱账",
+      "arcZ14": "满袋之夜",
+      "arcZ15": "密道暖壶",
+      "arcZ16": "密道抱账",
+      "arcZ17": "屋顶暖壶",
+      "arcZ18": "煤场满袋",
+      "arcZ19": "台账全卷",
+      "arcZ20": "全案之夜",
       "arcTurnLabel": "步数",
       "arcClueLabel": "线索",
       "arcRoomLabel": "房间",
@@ -1496,7 +1620,7 @@
       "arcEndingOff": "你用了 {n} 步走到{g}，可今夜要的是{want}。再走一遍。",
       "arcFiled": "{g}，用了 {n} 步 - 获得 {s} 星。",
       "arcNextNight": "解锁下一夜。",
-      "arcAllNights": "十个夜晚，十种出来的法子。",
+      "arcAllNights": "二十个夜晚，二十种出来的法子。",
       "arcPaused": "停在第 {n} 步。档案楼替你看住位置。",
       "arcGraphBroken": "故事图没通过它自己的可解性校验，请报告。",
       "arcObjective": "{name}：{want}。已测出这条路最短要 {p} 步，越少越好。",
@@ -1532,6 +1656,16 @@
       "arcGoalLedgerFull": "带着五条线索走到台账结局",
       "arcGoalYard": "从堆煤场走出去——要吊缆、敞开的烟道，还有交给门的那张通行证",
       "arcGoalYardLedger": "抱着春季台账从堆煤场走出去",
+      "arcGoalRoofNoLamp": "不带手提灯走到屋顶结局",
+      "arcGoalYardTea": "端着保温壶从堆煤场走出去",
+      "arcGoalLedgerTeaNoLamp": "不带手提灯、端着保温壶走到台账结局",
+      "arcGoalEveryItem": "带着楼里所有物件走到任意结局",
+      "arcGoalSecretTeaFull": "端着保温壶、带齐五条线索走到隐藏结局",
+      "arcGoalSecretLedger": "抱着春季台账走到隐藏结局",
+      "arcGoalRoofTeaFull": "端着保温壶、带齐五条线索走到屋顶结局",
+      "arcGoalYardEveryItem": "带着楼里所有物件从堆煤场走出去",
+      "arcGoalYardLedgerFull": "抱着春季台账、带齐五条线索从堆煤场走出去",
+      "arcGoalYardEveryItemFull": "带齐所有物件和五条线索从堆煤场走出去",
       "arcEndLedger": "台账结局",
       "arcEndRoof": "屋顶结局",
       "arcEndSecret": "隐藏结局",
@@ -1554,7 +1688,7 @@
         '<text x="93" y="40" font-size="10" fill="#ffd166" text-anchor="middle">5?</text>' +
         '<text x="30" y="68" font-size="8" fill="#b9c1cc">1 desk  2 stair  3 lift</text></svg>',
       en: [
-        "Goal: get out of the closed archive - the ten nights each ask for a different way out.",
+        "Goal: get out of the closed archive - the twenty nights each ask for a different way out.",
         "Action: click a choice or press its number 1-4; Backspace retraces one passage and L reads your clue log aloud.",
         "Rule: a greyed choice is not a dead end, it names the item, flag or clue it still wants; the mapped rooms, satchel and clues stay on screen so you never have to remember.",
         "Turns: a shorter route scores better, so a run that walks the whole map will finish - it just will not shine.",
@@ -1562,7 +1696,7 @@
         "Before the night is dealt the story graph is checked by machine: every passage reachable, all three standard endings reachable, no passage without a way onward.",
       ],
       zh: [
-        "目标：从夜里关门的档案楼里出去——十个夜晚，各要你走一种不同的出去法。",
+        "目标：从夜里关门的档案楼里出去——二十个夜晚，各要你走一种不同的出去法。",
         "操作：点选项，或按它前面的数字 1-4；退格键退回一段，L 键把线索日志念出来。",
         "规则：灰掉的选项不是死路，它会写明还缺哪件东西、哪个状态或哪条线索；已探明的房间、口袋和线索一直摆在屏上，不用你记。",
         "步数：路线越短分越高，所以把整栋楼走完也能通关——只是不会太亮眼。",

@@ -54,10 +54,13 @@
     thunder: { glyph: "\u26a1", resolve: 40, power: 8, waste: false },
   };
 
-  /* Ten chambers: the starter deck, an extra echo card, a tighter breath, a
+  /* Twenty chambers: the starter deck, an extra echo card, a tighter breath, a
    * card eating foe, the full four act ladder, and two squeezes the engine
    * already models - a deck where nothing arms an echo for free, and a deck
-   * shorter than the duel it has to be won with. */
+   * shorter than the duel it has to be won with. The later ten turn the same
+   * engine to wall attrition, riposte timing, sip-and-hush control, gust and
+   * lance pressure, mixed-foe escalation, gobbler feasts, crush soaking, echo
+   * chains, one-cost floods and a final twin-thunder chorus. */
   var wsdLevels = [
     {
       id: "w1", labelKey: "wsdZ1", twistKey: "wsdTwist1", seed: 811, breath: 3, starResolve: [22, 18, 10],
@@ -108,6 +111,56 @@
       id: "w10", labelKey: "wsdZ10", twistKey: "wsdTwist10", seed: 5507, breath: 3, starResolve: [9, 6, 4],
       deck: ["gust", "gust", "claw", "fang", "wall", "wall", "lance", "sip", "airy", "hush", "riposte"],
       foes: ["hollow", "wraith", "thunder"],
+    },
+    {
+      id: "w11", labelKey: "wsdZ11", twistKey: "wsdTwist11", seed: 18743, breath: 3, starResolve: [30, 18, 8],
+      deck: ["sidewall", "sidewall", "sidewall", "wall", "wall", "riposte", "riposte", "shell", "hush", "sip", "airy", "gust", "claw", "lance"],
+      foes: ["murmur", "choir", "deacon", "thunder"],
+    },
+    {
+      id: "w12", labelKey: "wsdZ12", twistKey: "wsdTwist12", seed: 6172, breath: 3, starResolve: [29, 18, 8],
+      deck: ["riposte", "riposte", "riposte", "wall", "wall", "sidewall", "sidewall", "hush", "hush", "gust", "claw", "lance", "sip", "airy"],
+      foes: ["caller", "antiphon", "hollow", "deacon"],
+    },
+    {
+      id: "w13", labelKey: "wsdZ13", twistKey: "wsdTwist13", seed: 6270, breath: 3, starResolve: [28, 17, 7],
+      deck: ["sip", "sip", "sip", "airy", "airy", "hush", "hush", "wall", "wall", "sidewall", "sidewall", "gust", "lance", "riposte"],
+      foes: ["murmur", "caller", "choir", "hollow"],
+    },
+    {
+      id: "w14", labelKey: "wsdZ14", twistKey: "wsdTwist14", seed: 11953, breath: 3, starResolve: [18, 11, 4],
+      deck: ["gust", "gust", "gust", "lance", "lance", "lance", "airy", "airy", "sip", "sip", "wall", "sidewall", "riposte", "hush"],
+      foes: ["antiphon", "deacon", "thunder", "wraith"],
+    },
+    {
+      id: "w15", labelKey: "wsdZ15", twistKey: "wsdTwist15", seed: 12050, breath: 3, starResolve: [29, 18, 8],
+      deck: ["gust", "claw", "fang", "lance", "riposte", "wall", "sidewall", "bulwark", "shell", "sip", "airy", "hush"],
+      foes: ["hollow", "antiphon", "wraith", "thunder"],
+    },
+    {
+      id: "w16", labelKey: "wsdZ16", twistKey: "wsdTwist16", seed: 6576, breath: 3, starResolve: [26, 16, 7],
+      deck: ["gust", "gust", "claw", "claw", "fang", "wall", "sidewall", "sidewall", "riposte", "sip", "sip", "airy", "hush"],
+      foes: ["hollow", "wraith", "hollow", "wraith"],
+    },
+    {
+      id: "w17", labelKey: "wsdZ17", twistKey: "wsdTwist17", seed: 6678, breath: 3, starResolve: [13, 8, 3],
+      deck: ["sidewall", "sidewall", "wall", "wall", "riposte", "riposte", "hush", "hush", "sip", "airy", "gust", "gust", "claw", "lance"],
+      foes: ["thunder", "deacon", "thunder", "deacon"],
+    },
+    {
+      id: "w18", labelKey: "wsdZ18", twistKey: "wsdTwist18", seed: 6772, breath: 3, starResolve: [21, 13, 5],
+      deck: ["claw", "claw", "claw", "fang", "fang", "gust", "gust", "lance", "sip", "sip", "airy", "wall", "sidewall", "hush"],
+      foes: ["choir", "hollow", "deacon", "thunder"],
+    },
+    {
+      id: "w19", labelKey: "wsdZ19", twistKey: "wsdTwist19", seed: 6876, breath: 3, starResolve: [28, 17, 7],
+      deck: ["gust", "gust", "gust", "claw", "claw", "fang", "fang", "wall", "wall", "sidewall", "bulwark", "sip", "sip", "airy"],
+      foes: ["murmur", "antiphon", "choir", "wraith"],
+    },
+    {
+      id: "w20", labelKey: "wsdZ20", twistKey: "wsdTwist20", seed: 13311, breath: 3, starResolve: [22, 14, 6],
+      deck: ["gust", "gust", "claw", "claw", "fang", "lance", "riposte", "wall", "sidewall", "sidewall", "shell", "sip", "airy", "hush"],
+      foes: ["deacon", "wraith", "thunder", "thunder"],
     },
   ];
 
@@ -955,6 +1008,16 @@
       "wsdZ8": "Apocrypha",
       "wsdZ9": "Echo Tax",
       "wsdZ10": "The Dry Well",
+      "wsdZ11": "Outer Wall",
+      "wsdZ12": "Riposte Litany",
+      "wsdZ13": "Sip and Hush",
+      "wsdZ14": "Gust and Lance",
+      "wsdZ15": "Stair of Voices",
+      "wsdZ16": "The Long Waste",
+      "wsdZ17": "Crushbreak",
+      "wsdZ18": "Echo Choir",
+      "wsdZ19": "Cheap Flood",
+      "wsdZ20": "Final Chorus",
       "wsdTwist1": "the starter deck",
       "wsdTwist2": "one more echo card",
       "wsdTwist3": "two breath a turn",
@@ -965,6 +1028,16 @@
       "wsdTwist8": "ultimate four-guardian trial",
       "wsdTwist9": "nothing arms an echo for free",
       "wsdTwist10": "eleven cards and a voice that returns",
+      "wsdTwist11": "wall attrition: three side walls stack the left lane while the foe chips in",
+      "wsdTwist12": "riposte timing: lead with a wall, then riposte so its guard echo adds 4 damage",
+      "wsdTwist13": "sip and hush control: zero-cost draw and cheap mend sustain a long grind",
+      "wsdTwist14": "gust and lance pressure: open with flow, then answer with a lance echo",
+      "wsdTwist15": "mixed-foe escalation: gobbler, antiphon, wraith and thunder in one run",
+      "wsdTwist16": "gobbler feast: two hollows and two wraiths swallow your dearest card",
+      "wsdTwist17": "crushbreak: soak thunder's fourth-turn crush behind stacked left-lane guard",
+      "wsdTwist18": "echo choir: claw into claw into fang, chaining strike echoes all duel",
+      "wsdTwist19": "cheap flood: a deck of one-cost cards and Sip, filling the left lane every turn",
+      "wsdTwist20": "final chorus: deacon, wraith and twin thunder ask for the whole deck",
       "wsdBreathLabel": "Breath",
       "wsdResolveLabel": "Resolve",
       "wsdDuelLabel": "Duel",
@@ -1055,6 +1128,16 @@
       "wsdZ8": "伪经绝响",
       "wsdZ9": "回音税",
       "wsdZ10": "枯井之声",
+      "wsdZ11": "外墙",
+      "wsdZ12": "还击连祷",
+      "wsdZ13": "小口与静默",
+      "wsdZ14": "阵风长枪",
+      "wsdZ15": "声音之阶",
+      "wsdZ16": "漫长吞噬",
+      "wsdZ17": "碎碾之御",
+      "wsdZ18": "回音合唱",
+      "wsdZ19": "廉价洪流",
+      "wsdZ20": "终曲合唱",
       "wsdTwist1": "起始牌组",
       "wsdTwist2": "多一张回音牌",
       "wsdTwist3": "每回合两口气",
@@ -1065,6 +1148,16 @@
       "wsdTwist8": "终极四守护考验",
       "wsdTwist9": "没有免费的回音",
       "wsdTwist10": "十一张牌与归来之声",
+      "wsdTwist11": "壁垒消耗：三张侧壁叠守左道，硬磨对手",
+      "wsdTwist12": "还击时机：先立壁垒再打还击，让格挡回音额外加 4 点伤害",
+      "wsdTwist13": "小口静默控场：零费抽牌与廉价回复撑起漫长消耗",
+      "wsdTwist14": "阵风长枪压制：先打流转，再用长枪回音回答",
+      "wsdTwist15": "混敌递进：吞牌者、交替圣咏、幽魂与雷霆连场",
+      "wsdTwist16": "吞牌盛宴：两只空洞与两只幽魂每三回合吞掉你最贵的牌",
+      "wsdTwist17": "碎碾之御：用叠起的左道防护吃下雷霆第四回合的碾击",
+      "wsdTwist18": "回音合唱：左爪接左爪再接右牙，整场连锁攻击回音",
+      "wsdTwist19": "廉价洪流：一费牌加小口，每回合把左道填满",
+      "wsdTwist20": "终曲合唱：执事、幽魂与双雷霆要你交出整副牌",
       "wsdBreathLabel": "气息",
       "wsdResolveLabel": "心气",
       "wsdDuelLabel": "对决",

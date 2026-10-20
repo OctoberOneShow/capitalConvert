@@ -2850,7 +2850,7 @@ check(
     countOccurrences(appJs, "quietResetGlyphCrossing()") === 2,
 );
 check(
-  "every Ink Sort deal replays its recorded walk back to a uniform state",
+  "every Ink Sort deal replays its recorded walk inside the printed three-star budget",
   (() => {
     const src = fs.readFileSync(
       path.join(root, "assets", "app", "game-ink-sort.js"),
@@ -2864,10 +2864,14 @@ check(
     const configs = [
       [3, 5, 8], [4, 6, 14], [4, 7, 20], [5, 8, 28], [6, 9, 38], [7, 10, 50],
       [8, 11, 56], [8, 12, 62], [9, 13, 68], [10, 14, 74],
+      [10, 15, 78, 50], [11, 15, 82, 54], [11, 16, 86, 58], [12, 16, 90, 60],
+      [12, 17, 94, 64], [13, 17, 98, 68], [13, 18, 102, 72],
+      [14, 18, 106, 76], [14, 19, 110, 80], [15, 20, 114, 84],
     ];
-    return configs.every(([colors, tubeCount, depth]) => {
-      for (var trial = 0; trial < 12; trial += 1) {
-        const deal = factory(colors, tubeCount, depth);
+    return configs.every(([colors, tubeCount, depth, maxPath]) => {
+      for (var trial = 0; trial < 6; trial += 1) {
+        const deal = factory(colors, tubeCount, depth, maxPath);
+        if (maxPath && deal.solution.length > maxPath) return false;
         const replay = deal.tubes.map((tube) => tube.slice());
         const cap = 4;
         const topRun = (tubes, i) => {
@@ -2932,7 +2936,7 @@ check(
   })(),
 );
 [
-  "tabInkSort", "sorLevelSelectLabel", "sorL1", "sorL6",
+  "tabInkSort", "sorLevelSelectLabel", "sorL1", "sorL6", "sorL11", "sorL20",
   "sorFieldLabel", "sorPrompt", "sorReady", "sorPaused", "sorCleared",
   "sorNextVial", "sorCampaignDone", "sorHint", "logInkSort",
   "tabGlyphCrossing", "croLevelSelectLabel", "croL1", "croL6",
@@ -3672,7 +3676,8 @@ check(
     const start = src.indexOf("var GLIDE_DIRS");
     const end = src.indexOf("App.glyphGlideGenerate");
     const api = new Function(
-      src.slice(start, end) + "\nreturn { glideGenerate: glideGenerate, glideSolve: glideSolve };",
+      src.slice(start, end) +
+        "\nreturn { glideGenerate: glideGenerate, glideTrailGenerate: glideTrailGenerate, glideSolve: glideSolve };",
     )();
     const configs = [
       [8, 6, 0, 3, 5], [8, 6, 1, 4, 7], [9, 7, 2, 5, 9],
@@ -3690,6 +3695,40 @@ check(
         /* The solver must confirm the quoted par on every deal, and the
          * graceful fallback must never quote a trivial one-slide board. */
         if (solved !== deal.par || solved < 2) {
+          return false;
+        }
+      }
+      return true;
+    });
+  })(),
+);
+check(
+  "every white-rink Glyph Glide trail prices inside its printed par window",
+  (() => {
+    const src = fs.readFileSync(
+      path.join(root, "assets", "app", "game-glyph-glide.js"),
+      "utf8",
+    );
+    const start = src.indexOf("var GLIDE_DIRS");
+    const end = src.indexOf("App.glyphGlideGenerate");
+    const api = new Function(
+      src.slice(start, end) +
+        "\nreturn { glideTrailGenerate: glideTrailGenerate, glideSolve: glideSolve };",
+    )();
+    const configs = [
+      [14, 11, 4, 10, 26], [15, 11, 5, 12, 28], [15, 12, 5, 13, 30],
+      [16, 12, 5, 14, 32], [16, 13, 6, 14, 34], [17, 13, 5, 16, 36],
+      [17, 14, 6, 16, 38], [18, 14, 5, 18, 40], [18, 15, 6, 18, 42],
+      [19, 15, 6, 20, 44],
+    ];
+    return configs.every(([w, h, stars, minPar, maxPar]) => {
+      for (let trial = 0; trial < 4; trial += 1) {
+        const deal = api.glideTrailGenerate(w, h, stars, minPar, maxPar, 0.22);
+        if (!deal || deal.stars.length !== stars) return false;
+        const solved = api.glideSolve(
+          deal.wall, w, h, deal.start, deal.goal, deal.stars,
+        );
+        if (solved !== deal.par || solved < minPar || solved > maxPar) {
           return false;
         }
       }
@@ -3758,7 +3797,7 @@ check(
   })(),
 );
 [
-  "tabGlyphGlide", "glLevelSelectLabel", "glL1", "glL6",
+  "tabGlyphGlide", "glLevelSelectLabel", "glL1", "glL6", "glL11", "glL20",
   "glFieldLabel", "glPrompt", "glReady", "glPaused", "glCleared",
   "glNextRink", "glCampaignDone", "glHint", "logGlyphGlide",
   "tabGlyphFour", "c4LevelSelectLabel", "c4L1", "c4L6",
@@ -5268,6 +5307,51 @@ console.log("\n== 6. registry games: injected, linked, bilingual, scoped ==");
       ),
     `registry ${registryModules.length}`,
   );
+})();
+
+console.log("\n== 5oa. Lost Language's drowned archive ==");
+(() => {
+  const src = fs.readFileSync(
+    path.join(root, "assets", "app", "game-lost-language.js"),
+    "utf8",
+  );
+  const start = src.indexOf("var lngMarkGlyph");
+  const end = src.indexOf("/* --- counterexamples");
+  const api = new Function(
+    "var App = { currentLang: 'en' };\nvar t = function (key) { return key; };\n" +
+      src.slice(start, end) +
+      "\nreturn { lngLevels, lngGenerate, lngAnalyses, lngPrefixCost, lngGlossOnlyFails };",
+  )();
+  check(
+    "Lost Language now ships twenty chambers",
+    api.lngLevels.length === 20,
+    String(api.lngLevels.length),
+  );
+  const deep = api.lngLevels.slice(10);
+  check(
+    "all ten drowned-archive chambers prove one analysis and a gloss-only failure on 400 deals",
+    deep.every((level) =>
+      Array.from({ length: 40 }, (_, index) => index + 1).every((seed) => {
+        const dig = api.lngGenerate(level, seed);
+        return (
+          !!dig &&
+          api.lngAnalyses(dig, 2) === 1 &&
+          api.lngGlossOnlyFails(dig) &&
+          api.lngPrefixCost(dig) === dig.budget
+        );
+      }),
+    ),
+    deep.map((level) => level.id).join(","),
+  );
+  ["lngChamber11", "lngChamber12", "lngChamber13", "lngChamber14",
+    "lngChamber15", "lngChamber16", "lngChamber17", "lngChamber18",
+    "lngChamber19", "lngChamber20"].forEach((key) => {
+    check(
+      `the "${key}" key exists in both languages`,
+      countOccurrences(appJs, `"${key}":`) === 2,
+      String(countOccurrences(appJs, `"${key}":`)),
+    );
+  });
 })();
 
 console.log("\n== 6. every placeholder gets its argument ==");

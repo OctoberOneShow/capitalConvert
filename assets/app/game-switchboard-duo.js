@@ -3,7 +3,7 @@
  * picture: seat A reads the dials and holds the valve page of the rulebook, seat B
  * reads the switchboard and holds the pump page. Every work order is split the
  * same way, so closing a fault needs somebody saying a number out loud.
- * Thirteen authored faults, ten shifts, one shared keyboard plus a real button
+ * Thirteen authored faults, twenty shifts, one shared keyboard plus a real button
  * behind every lever, and a seat swap so one person can always work the whole
  * shift. No timers anywhere: a beat is one decision, and the entire machine
  * resolves through the exported boardStep. Registered through the game registry,
@@ -177,7 +177,7 @@
     },
   };
 
-  /* Ten shifts, ordered by the par each one measures: the scripted line is
+  /* Twenty shifts, ordered by the par each one measures: the scripted line is
    * replayed for every shift and its beats are the ladder's rungs, so no rung
    * costs fewer beats than the one below it. "fails" is the order the log is
    * worked in, "chain" names the fault a cleared one wakes, "dim" moves the heat
@@ -196,6 +196,16 @@
     { id: "b8", labelKey: "swbS8", briefKey: "swbY8", budget: 3, dim: false, pages: "split", fails: ["overheat", "stifledHeader", "cavitation", "arcing", "starved", "flashedOver", "pumpPack"], chain: { pumpPack: "blackout" } },
     { id: "b9", labelKey: "swbS9", briefKey: "swbY9", budget: 2, dim: false, pages: "split", fails: ["stuckHeader", "arcing", "starved", "cavitation", "backpressure", "chokedStrainer", "hotBus", "flashedOver", "stifledHeader"], chain: { arcing: "lostPrime" } },
     { id: "b10", labelKey: "swbS10", briefKey: "swbY10", budget: 2, dim: false, pages: "split", fails: ["overheat", "stuckHeader", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "chokedStrainer", "pumpPack", "stifledHeader", "hotBus", "flashedOver"], chain: { flashedOver: "blackout" } },
+    { id: "b11", labelKey: "swbS11", briefKey: "swbY11", budget: 2, dim: false, pages: "split", fails: ["overheat", "stuckHeader", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "flashedOver", "stifledHeader", "pumpPack", "hotBus", "blackout", "arcing", "starved"], chain: {} },
+    { id: "b12", labelKey: "swbS12", briefKey: "swbY12", budget: 2, dim: true, pages: "split", fails: ["overheat", "stuckHeader", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "flashedOver", "stifledHeader", "pumpPack", "hotBus", "blackout", "hotBus"], chain: { hotBus: "chokedStrainer" } },
+    { id: "b13", labelKey: "swbS13", briefKey: "swbY13", budget: 2, dim: false, pages: "split", fails: ["stifledHeader", "overheat", "stuckHeader", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "flashedOver", "pumpPack", "blackout", "arcing", "pumpPack"], chain: { stifledHeader: "chokedStrainer", chokedStrainer: "hotBus" } },
+    { id: "b14", labelKey: "swbS14", briefKey: "swbY14", budget: 2, dim: true, pages: "split", fails: ["stifledHeader", "overheat", "stuckHeader", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "flashedOver", "hotBus", "blackout", "cavitation", "hotBus"], chain: { stifledHeader: "chokedStrainer", chokedStrainer: "pumpPack" } },
+    { id: "b15", labelKey: "swbS15", briefKey: "swbY15", budget: 1, dim: true, pages: "split", fails: ["overheat", "stuckHeader", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "flashedOver", "stifledHeader", "pumpPack", "hotBus", "flashedOver", "cavitation"], chain: { overheat: "chokedStrainer", chokedStrainer: "blackout" } },
+    { id: "b16", labelKey: "swbS16", briefKey: "swbY16", budget: 1, dim: false, pages: "split", fails: ["arcing", "overheat", "stuckHeader", "starved", "cavitation", "backpressure", "lostPrime", "flashedOver", "stifledHeader", "pumpPack", "cavitation", "backpressure", "stifledHeader"], chain: { arcing: "hotBus", hotBus: "chokedStrainer", chokedStrainer: "blackout" } },
+    { id: "b17", labelKey: "swbS17", briefKey: "swbY17", budget: 1, dim: true, pages: "split", fails: ["starved", "overheat", "stuckHeader", "arcing", "cavitation", "backpressure", "lostPrime", "flashedOver", "stifledHeader", "hotBus", "blackout", "flashedOver", "cavitation", "backpressure"], chain: { starved: "pumpPack", pumpPack: "chokedStrainer" } },
+    { id: "b18", labelKey: "swbS18", briefKey: "swbY18", budget: 1, dim: false, pages: "split", fails: ["overheat", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "flashedOver", "stifledHeader", "pumpPack", "hotBus", "blackout", "blackout", "flashedOver", "cavitation"], chain: { overheat: "stuckHeader", stuckHeader: "chokedStrainer" } },
+    { id: "b19", labelKey: "swbS19", briefKey: "swbY19", budget: 1, dim: true, pages: "split", fails: ["arcing", "overheat", "stuckHeader", "cavitation", "backpressure", "lostPrime", "flashedOver", "stifledHeader", "pumpPack", "blackout", "blackout", "flashedOver", "cavitation", "arcing"], chain: { arcing: "starved", starved: "chokedStrainer", chokedStrainer: "hotBus" } },
+    { id: "b20", labelKey: "swbS20", briefKey: "swbY20", budget: 1, dim: false, pages: "split", fails: ["flashedOver", "overheat", "stuckHeader", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "hotBus", "blackout", "blackout", "flashedOver", "cavitation", "hotBus", "arcing"], chain: { flashedOver: "stifledHeader", stifledHeader: "chokedStrainer", chokedStrainer: "pumpPack" } },
   ];
 
   /* --- pure helpers ---------------------------------------------------- */
@@ -243,12 +253,15 @@
   }
 
   /* The shift log: the authored orders plus whatever the cascade wakes, so the
-   * shift card can say out loud how many orders the desk really holds. */
+   * shift card can say out loud how many orders the desk really holds. A return
+   * order is authored a second time in "fails" and stays a second entry here;
+   * the shipped rows author each fault once, so their logs and plates are
+   * unchanged. */
   function swbShiftLog(def) {
     var log = [];
     if (!def) { return log; }
     swbIds(def.fails).forEach(function (id) {
-      if (log.indexOf(id) === -1) { log.push(id); }
+      log.push(id);
     });
     var chain = def.chain || {};
     Object.keys(chain).forEach(function (from) {
@@ -1045,6 +1058,7 @@
       lastNext = "";
       swbLive(state);
       refreshPicker();
+      render();
       result.textContent = t("swbPrompt", {
         name: t(shift.labelKey),
         g: t(shift.briefKey),
@@ -1054,7 +1068,6 @@
         i: swbPlate(shift),
         s: seatName(state.seat),
       });
-      render();
     }
 
     /* --- input: one key listener on the panel, two labelled clusters ----- */
@@ -1137,6 +1150,10 @@
      * exactly where the operators left them. */
     App.quietResetSwitchboardDuo = function () {
       if (state.won || state.over) { return; }
+      /* A fresh shift keeps its work-order intro: the shell pauses every
+       * game as it opens the tab, and that pause must not replace the only
+       * place the level's name and brief are printed. */
+      if (!state.beats && !state.stress && !state.done.length) { return; }
       result.textContent = t("swbPaused", {
         n: swbClamp(state.beats, 0, 9999),
         k: swbClamp(state.stress, 0, 99),
@@ -1165,6 +1182,26 @@
       "swbY8": "Seven orders, three stress events, and a packed pump wakes a blackout.",
       "swbY9": "Nine orders, two stress events, and an arc wakes a lost prime.",
       "swbY10": "Twelve orders, two stress events, and a flashover wakes the dark.",
+      "swbS11": "The arc returns",
+      "swbY11": "Fourteen orders, two stress events, and no cascade: the arc and the starved pump simply come back.",
+      "swbS12": "Dim return",
+      "swbY12": "Thirteen orders on dim glass, two stress events, and a hot bus wakes the choked strainer.",
+      "swbS13": "Two links down",
+      "swbY13": "Thirteen orders, two stress events, and a stifled header wakes the choked strainer, which wakes the hot bus.",
+      "swbS14": "Choke and pack",
+      "swbY14": "Thirteen orders on dim glass, two stress events, and a stifled header wakes a choke that packs both pumps.",
+      "swbS15": "One event only",
+      "swbY15": "Thirteen orders on dim glass, a budget of one stress event, and an overheat wakes a choke that blacks the desk out.",
+      "swbS16": "Three-deep cascade",
+      "swbY16": "Thirteen orders, one stress event, and an arc wakes a hot bus, the bus chokes the strainer, the choke blacks out.",
+      "swbS17": "Dim pack",
+      "swbY17": "Fourteen orders on dim glass, one stress event, and a starved pump wakes a double pack that chokes the strainer.",
+      "swbS18": "Dark return",
+      "swbY18": "Fourteen orders, one stress event, and an overheat wakes a stuck header whose relief chokes the strainer.",
+      "swbS19": "Arc to blackout",
+      "swbY19": "Fourteen orders on dim glass, one stress event, and an arc starves a pump, the starved pump chokes the strainer, and the choke calls the hot bus.",
+      "swbS20": "Full cascade",
+      "swbY20": "Fifteen orders, one stress event, and a flashover stifles the header, the stifled header chokes the strainer, and the choke packs both pumps.",
       "swbY1": "Every order prints both of its halves on your desk.",
       "swbY2": "Your page is your page: read it out, do not hand it over.",
       "swbY3": "Relieve the header and the arc wakes; a burning arc starves pump 2.",
@@ -1321,6 +1358,26 @@
       "swbY8": "七张工单、三次应力事件，而卡死的泵群会唤醒断电。",
       "swbY9": "九张工单、两次应力事件，而电弧会唤醒失引水。",
       "swbY10": "十二张工单、两次应力事件，而闪络会唤醒整桌断电。",
+      "swbS11": "电弧回头",
+      "swbY11": "十四张工单、两次应力事件，没有连环：电弧和断流的泵各自回头再来一次。",
+      "swbS12": "昏暗的回头",
+      "swbY12": "昏暗玻璃上十三张工单、两次应力事件，而发烫的母线唤醒堵死的滤网。",
+      "swbS13": "连环两扣",
+      "swbY13": "十三张工单、两次应力事件，而闷死的母管唤醒堵死的滤网，滤网再唤醒发烫的母线。",
+      "swbS14": "堵网并泵",
+      "swbY14": "昏暗玻璃上十三张工单、两次应力事件，而闷死的母管唤醒堵网，堵网把两台泵并挤在一起。",
+      "swbS15": "只容一次",
+      "swbY15": "昏暗玻璃上十三张工单，只容一次应力事件；而过热唤醒堵网，堵网让整桌断电。",
+      "swbS16": "三环连爆",
+      "swbY16": "十三张工单、一次应力事件；电弧唤醒发烫的母线，母线堵住滤网，滤网再拉下整桌断电。",
+      "swbS17": "昏暗并泵",
+      "swbY17": "昏暗玻璃上十四张工单、一次应力事件；断流的泵唤醒双泵并挤，并挤再堵死滤网。",
+      "swbS18": "黑暗回头",
+      "swbY18": "十四张工单、一次应力事件；过热唤醒憋死的母管，泄压时又堵死滤网。",
+      "swbS19": "电弧到断电",
+      "swbY19": "昏暗玻璃上十四张工单、一次应力事件；电弧让泵断流，断流唤醒堵网，堵网又叫来发烫的母线。",
+      "swbS20": "全链坠落",
+      "swbY20": "十五张工单、一次应力事件；闪络闷死母管，闷死的母管堵住滤网，堵网之后双泵并挤。",
       "swbY1": "每张工单在你这台控制台上都印出完整两半。",
       "swbY2": "你那一页只是你那一页：念出来，别递过去。",
       "swbY3": "泄压会唤醒电弧；烧着的电弧会让 2 号泵断流。",

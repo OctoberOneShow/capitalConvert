@@ -59,8 +59,10 @@
    * and both measured quantities - the honest bench cost App.tonguePrefixCost
    * (the three-star line) and the carved minimum App.tongueMinimal - were read
    * off the same deals. Mean honest cost climbs 3.9, 5.1, 6.4, 7.6, 8.2, 8.8,
-   * 9.6, 10.6, 10.8, 12.0 and mean carve 3.1, 3.4, 4.3, 5.2, 5.3, 6.0, 6.4,
-   * 6.8, 7.2, 8.1 chamber by chamber, with zero failed deals in all 2400. */
+   * 9.6, 10.6, 10.8, 12.0, 12.9, 13.8, 14.6, 14.9, 15.5, 15.7, 16.4, 17.1,
+   * 17.1, 17.7 and mean carve 3.1, 3.4, 4.3, 5.2, 5.3, 6.0, 6.4, 6.8, 7.2,
+   * 8.1, 9.1, 9.1, 9.5, 10.0, 10.0, 10.1, 10.1, 10.2, 10.1, 10.2 chamber by
+   * chamber, with zero failed deals in all 4800. */
   var lngLevels = [
     { id: "lng1", labelKey: "lngChamber1", nouns: 4, verbs: 2, scenes: 6, tests: 3, marks: ["none"], truth: "none", many: 0 },
     { id: "lng2", labelKey: "lngChamber2", nouns: 5, verbs: 3, scenes: 7, tests: 3, marks: lngMarkIds, truth: "many", many: 1 },
@@ -72,6 +74,22 @@
     { id: "lng8", labelKey: "lngChamber8", nouns: 10, verbs: 6, scenes: 12, tests: 5, marks: lngMarkIds, truth: "many", many: 2 },
     { id: "lng9", labelKey: "lngChamber9", nouns: 11, verbs: 6, scenes: 12, tests: 5, marks: lngMarkIds, truth: ["many", "doer", "object"], many: 2 },
     { id: "lng10", labelKey: "lngChamber10", nouns: 12, verbs: 7, scenes: 13, tests: 5, marks: lngMarkIds, truth: "many", many: 2 },
+    /* The drowned archive. These ten chambers add two nouns and one verb to the
+     * pool, so the deeper benches draw from a larger lexicon rather than only
+     * running longer. `wide` keeps the first ten chambers on the original
+     * pool, so their deals are byte-identical; the ladder then climbs from
+     * fourteen rubbings to twenty while the measured three-star line rises
+     * from 12.9 to 17.7 rubbings. */
+    { id: "lng11", labelKey: "lngChamber11", nouns: 13, verbs: 8, scenes: 14, tests: 5, marks: lngMarkIds, truth: ["many", "doer", "object"], many: 2, wide: true },
+    { id: "lng12", labelKey: "lngChamber12", nouns: 13, verbs: 8, scenes: 15, tests: 5, marks: lngMarkIds, truth: ["many", "doer"], many: 2, wide: true },
+    { id: "lng13", labelKey: "lngChamber13", nouns: 14, verbs: 8, scenes: 16, tests: 6, marks: lngMarkIds, truth: "many", many: 2, wide: true },
+    { id: "lng14", labelKey: "lngChamber14", nouns: 14, verbs: 9, scenes: 16, tests: 6, marks: lngMarkIds, truth: "many", many: 2, wide: true },
+    { id: "lng15", labelKey: "lngChamber15", nouns: 14, verbs: 9, scenes: 17, tests: 6, marks: lngMarkIds, truth: ["many", "doer"], many: 2, wide: true },
+    { id: "lng16", labelKey: "lngChamber16", nouns: 14, verbs: 9, scenes: 17, tests: 6, marks: lngMarkIds, truth: "many", many: 2, wide: true },
+    { id: "lng17", labelKey: "lngChamber17", nouns: 14, verbs: 9, scenes: 18, tests: 6, marks: lngMarkIds, truth: "many", many: 2, wide: true },
+    { id: "lng18", labelKey: "lngChamber18", nouns: 14, verbs: 9, scenes: 19, tests: 6, marks: lngMarkIds, truth: ["many", "doer"], many: 2, wide: true },
+    { id: "lng19", labelKey: "lngChamber19", nouns: 14, verbs: 9, scenes: 19, tests: 6, marks: lngMarkIds, truth: ["many", "doer", "object"], many: 2, wide: true },
+    { id: "lng20", labelKey: "lngChamber20", nouns: 14, verbs: 9, scenes: 20, tests: 6, marks: lngMarkIds, truth: "many", many: 2, wide: true },
   ];
 
   /* Participants and acts every chamber draws its words from. Plurals are
@@ -96,12 +114,24 @@
     { en: "fears", enPl: "fear", zh: "\u754f\u60e7" }, { en: "carries", enPl: "carry", zh: "\u8d1f\u8fd0" },
     { en: "wakes", enPl: "wake", zh: "\u5524\u9192" }, { en: "teaches", enPl: "teach", zh: "\u6559\u5bfc" },
   ];
+  /* The drowned archive draws from three extra words. They live apart from the
+   * shipped pools so chambers one to ten keep dealing the same hands; only a
+   * `wide` chamber concatenates them. */
+  var lngWideNouns = [
+    { en: "the mason", enPl: "the masons", zh: "\u77f3\u5320", zhPl: "\u51e0\u4f4d\u77f3\u5320" },
+    { en: "the pilgrim", enPl: "the pilgrims", zh: "\u671d\u5723\u8005", zhPl: "\u51e0\u4f4d\u671d\u5723\u8005" },
+  ];
+  var lngWideVerbs = [
+    { en: "guards", enPl: "guard", zh: "\u5b88\u62a4" },
+  ];
 
   /* The sound inventory: noun roots and verb roots never mix and no root is a
    * prefix of another, so the eye can always cut a line into words. */
   var lngRootsA = ["tal", "shen", "vor", "imre", "kessa", "nul", "odhan",
     "ruva", "senni", "tashka", "elik", "morna"];
   var lngRootsB = ["mir", "vel", "gor", "thune", "assa", "lek", "boru", "nesh"];
+  var lngWideRootsA = ["davan", "ithra"];
+  var lngWideRootsB = ["corin"];
 
   /* --- seeded random: a dig is reproducible from (level, seed) -------------- */
   function lngRng(seed) {
@@ -473,10 +503,14 @@
   function lngMakeDig(def, rng) {
     var i;
     /* 1. the lexicon: which root stands for which participant or act. */
-    var nouns = lngShuffle(rng, lngNounPool).slice(0, def.nouns);
-    var verbs = lngShuffle(rng, lngVerbPool).slice(0, def.verbs);
-    var nounRoots = lngShuffle(rng, lngRootsA).slice(0, def.nouns);
-    var verbRoots = lngShuffle(rng, lngRootsB).slice(0, def.verbs);
+    var nounPool = def.wide ? lngNounPool.concat(lngWideNouns) : lngNounPool;
+    var verbPool = def.wide ? lngVerbPool.concat(lngWideVerbs) : lngVerbPool;
+    var rootPoolA = def.wide ? lngRootsA.concat(lngWideRootsA) : lngRootsA;
+    var rootPoolB = def.wide ? lngRootsB.concat(lngWideRootsB) : lngRootsB;
+    var nouns = lngShuffle(rng, nounPool).slice(0, def.nouns);
+    var verbs = lngShuffle(rng, verbPool).slice(0, def.verbs);
+    var nounRoots = lngShuffle(rng, rootPoolA).slice(0, def.nouns);
+    var verbRoots = lngShuffle(rng, rootPoolB).slice(0, def.verbs);
     var lexemes = [];
     for (i = 0; i < nouns.length; i += 1) { lexemes.push(lngLex("n" + i, "noun", nouns[i], nounRoots[i])); }
     for (i = 0; i < verbs.length; i += 1) { lexemes.push(lngLex("v" + i, "verb", verbs[i], verbRoots[i])); }
@@ -1210,6 +1244,11 @@
       "lngChamber6": "Salt Vault", "lngChamber7": "Obsidian Gallery",
       "lngChamber8": "Processional Way", "lngChamber9": "Hall of Counts",
       "lngChamber10": "The Scribe's Tomb",
+      "lngChamber11": "The Drowned Archive", "lngChamber12": "Brine Gallery",
+      "lngChamber13": "Tide Court", "lngChamber14": "Wrecked Scriptorium",
+      "lngChamber15": "Coral Archive", "lngChamber16": "Deepwell Inscriptions",
+      "lngChamber17": "Sea-Fog Vault", "lngChamber18": "Hall of the Sunken Bell",
+      "lngChamber19": "Lightless Repository", "lngChamber20": "The Last Scribe",
       "lngChipsLabel": "Rubbings", "lngReadLabel": "Read", "lngGlossLabel": "Glosses",
       "lngRulesLabel": "Rules", "lngCount": "{n}", "lngSetCount": "{n}/{max}",
       "lngLevelSelectLabel": "Choose a chamber",
@@ -1269,6 +1308,11 @@
       "lngChamber6": "\u76d0\u7a96", "lngChamber7": "\u9ed1\u66dc\u77f3\u957f\u5eca",
       "lngChamber8": "\u4eea\u4ed7\u5927\u9053", "lngChamber9": "\u8ba1\u6570\u5927\u5385",
       "lngChamber10": "\u4e66\u540f\u4e4b\u5893",
+      "lngChamber11": "\u6eba\u6ca1\u7684\u6863\u6848", "lngChamber12": "\u76d0\u96fe\u56de\u5eca",
+      "lngChamber13": "\u6f6e\u6c50\u6cd5\u5ead", "lngChamber14": "\u6c89\u8239\u4e66\u623f",
+      "lngChamber15": "\u73ca\u745a\u7ecf\u5e93", "lngChamber16": "\u6df1\u4e95\u94ed\u6587",
+      "lngChamber17": "\u6d77\u96fe\u77f3\u5ba4", "lngChamber18": "\u6c89\u949f\u5927\u5385",
+      "lngChamber19": "\u65e0\u5149\u85cf\u5ba4", "lngChamber20": "\u6700\u540e\u4e00\u4f4d\u4e66\u540f",
       "lngChipsLabel": "\u62d3\u7247", "lngReadLabel": "\u5df2\u8bfb", "lngGlossLabel": "\u8bcd\u4e49",
       "lngRulesLabel": "\u8bed\u6cd5", "lngCount": "{n}", "lngSetCount": "{n}/{max}",
       "lngLevelSelectLabel": "\u9009\u62e9\u77f3\u5ba4",

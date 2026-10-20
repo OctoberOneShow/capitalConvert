@@ -25,8 +25,8 @@ Slash (swipe-to-cut arcade with combo trails and bombs), Peg Splash
 (Invaders-style formation shooter), Glyph Leap (vertical hopper with
 springs and drifting ledges), Aurora Flow (glowing numberlink ribbons on
 a starfield board), Comet Golf (gravity-well slingshot golf with a
-particle-trailing comet), Prism Path (laser-and-mirror puzzles with a
-live-traced beam), Starfall Lander (thrust-and-touchdown flight over
+particle-trailing comet), Prism Path (twenty laser-and-mirror boards with a
+live-traced beam, splitters and welded elements), Starfall Lander (thrust-and-touchdown flight over
 glowing pads), Ink Sort (pouring puzzles dealt by a built-in solver), Glyph
 Crossing (frogger-style lanes with log rides), Glyph Pusher (BFS-verified
 sokoban rooms with undo), Glyph Net (spanning-tree pipe rotations that
@@ -289,6 +289,24 @@ and strips, both story branches, mood journals, all three recipes for each
 partner, room unlocks, pause/resume, held inputs, and collection rewards.
 Run `node tools/verify-game.js --isolated game-love-deepspace` for its registry
 and translation checks.
+
+### Prism Path / 棱镜光路
+
+Twenty boards. The first ten are the tutorial ladder; the optics bench (11-20)
+adds a violet **beam splitter** (reflects the ray *and* lets it carry straight
+on, so one ray becomes two) and **welded** amber elements that never rotate.
+
+Every board was forged, not guessed:
+
+- `node tools/prism-forge.js verify` replays the beam over every reachable
+  orientation of every shipped board and proves the deal is not already solved,
+  that some orientation lights all targets, that 2-5 flips separate the two,
+  that at most four orientations solve it, and that the solution beam touches
+  each element.
+- `node tools/prism-forge.js forge [seed]` searches for new boards against the
+  same bar and prints them as source-ready literals.
+- `node tools/harness/cases-prism-path.js` drives all twenty boards through the
+  real panel in the stub DOM.
 
 ## Game checks and future ideas
 

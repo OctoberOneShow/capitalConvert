@@ -54,6 +54,49 @@
      * widen the board; it is the longest run in the garden and the deepest
      * target, more than seventy-five of its own seeds. */
     { id: "g10", labelKey: "gdnB10", cost: 78, crop: 273, start: 78, growMs: 54000, goal: 6000, starTimes: [570, 770, 1080] },
+    /* Rungs 11-20 replay the "one lever each" idea at a larger purse: the
+     * number of plots that open on tick zero, the share a harvest pays back on
+     * its seed, and the grow clock all move independently, so the last ten beds
+     * are ten rhythms rather than ten scaled copies of rung 10. */
+    /* Four plots open on tick zero and each harvest returns a little over three
+     * seeds, so the board runs itself: a steady chain of mid-sized harvests on
+     * a 30-second clock. */
+    { id: "g11", labelKey: "gdnB11", cost: 96, crop: 300, start: 384, growMs: 30000, goal: 7800, starTimes: [340, 440, 590] },
+    /* A single vine on tick zero and one of the fattest returns of the arc -
+     * six seeds for one - so the board fills after one heavy pick, but every
+     * round then waits a full minute. */
+    { id: "g12", labelKey: "gdnB12", cost: 118, crop: 708, start: 118, growMs: 60000, goal: 8600, starTimes: [345, 455, 615] },
+    /* The market stall: two seeds back per sowing, three plots open and the
+     * shortest clock of the arc, so the goal is a long chain of small harvests
+     * and the band is deliberately generous to reward fast hands. */
+    { id: "g13", labelKey: "gdnB13", cost: 142, crop: 284, start: 426, growMs: 15000, goal: 11500, starTimes: [370, 485, 650] },
+    /* Two plots and a sixfold crop on a 52-second clock: less than a quarter of
+     * the picks rung 13 asks for, despite the larger goal, so the run is a
+     * handful of heavy rounds rather than a stream of cheap ones. */
+    { id: "g14", labelKey: "gdnB14", cost: 168, crop: 1008, start: 336, growMs: 52000, goal: 13800, starTimes: [295, 385, 515] },
+    /* The low-yield grind: all four plots open but only 2.25 seeds come back,
+     * so the 16200 target is one of the longest chains in the arc, on a
+     * 32-second clock. */
+    { id: "g15", labelKey: "gdnB15", cost: 196, crop: 441, start: 784, growMs: 32000, goal: 16200, starTimes: [625, 820, 1100] },
+    /* Three plots, two and a half seeds back and a 24-second clock: a middle
+     * tempo between the cheap rounds below it and the heavy rounds above. */
+    { id: "g16", labelKey: "gdnB16", cost: 228, crop: 570, start: 684, growMs: 24000, goal: 19500, starTimes: [415, 540, 725] },
+    /* One plot on tick zero and the longest wait in the garden: the sixfold
+     * crop buys the full board after the first harvest, then each of the
+     * roughly nineteen harvests is a 90-second commitment. */
+    { id: "g17", labelKey: "gdnB17", cost: 264, crop: 1584, start: 264, growMs: 90000, goal: 23500, starTimes: [605, 795, 1070] },
+    /* The thin-margin rung: two plots open, only 1.5 seeds back and a
+     * 14-second clock, so the 28500 target is a long chain of cheap harvests -
+     * the most clicking and the longest greedy line in the garden. */
+    { id: "g18", labelKey: "gdnB18", cost: 304, crop: 456, start: 608, growMs: 14000, goal: 28500, starTimes: [785, 1030, 1380] },
+    /* The high-value canopy: all four plots open, three and a half seeds back
+     * and a 48-second clock, so a deep target still lands in about forty
+     * harvests. */
+    { id: "g19", labelKey: "gdnB19", cost: 348, crop: 1218, start: 1392, growMs: 48000, goal: 35000, starTimes: [595, 780, 1055] },
+    /* The capstone opens all four plots on tick zero, returns four seeds per
+     * sowing and asks for 43000: about thirty-six harvests on a 54-second
+     * clock, deeper than any bed before it. */
+    { id: "g20", labelKey: "gdnB20", cost: 396, crop: 1584, start: 1584, growMs: 54000, goal: 43000, starTimes: [615, 805, 1090] },
   ];
 
   function gdnRipe(plots, index, now, bed) {
@@ -283,7 +326,7 @@
 
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already own, and the shared dictionary named rungs 1-5 first, so
-   * only the five new beds ride here. */
+   * only the fifteen new beds ride here. */
   App.addStrings({
     en: {
       "gdnB6": "Greenhouse Row",
@@ -291,6 +334,16 @@
       "gdnB8": "Cloud Terrace",
       "gdnB9": "Stratosphere Plot",
       "gdnB10": "Star Canopy",
+      "gdnB11": "Herb Spiral",
+      "gdnB12": "Melon Arbor",
+      "gdnB13": "Moss Ladder",
+      "gdnB14": "Honey Trellis",
+      "gdnB15": "Bamboo Bank",
+      "gdnB16": "Orchid Shelf",
+      "gdnB17": "Gourd Tower",
+      "gdnB18": "Chili Rack",
+      "gdnB19": "Fig Canopy",
+      "gdnB20": "Moonlit Orchard",
     },
     zh: {
       "gdnB6": "\u6e29\u5ba4\u5784",
@@ -298,6 +351,16 @@
       "gdnB8": "\u4e91\u9732\u53f0",
       "gdnB9": "\u5e73\u6d41\u7566",
       "gdnB10": "\u661f\u51a0\u56ed",
+      "gdnB11": "香草螺旋",
+      "gdnB12": "甜瓜棚",
+      "gdnB13": "苔藓梯田",
+      "gdnB14": "蜜藤架",
+      "gdnB15": "竹林坡",
+      "gdnB16": "兰花架",
+      "gdnB17": "葫芦塔",
+      "gdnB18": "辣椒架",
+      "gdnB19": "无花果棚",
+      "gdnB20": "月下果园",
     },
   });
 

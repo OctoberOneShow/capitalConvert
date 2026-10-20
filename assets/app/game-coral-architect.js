@@ -339,6 +339,108 @@
       stars: [81, 78, 62],
       offers: ["PPX", "PPP", "SPX", "PPP", "XPP", "PPS", "PPP", "XPX", "PPP", "PPS", "XPP", "PPP"],
     },
+    /* Scaffold rung: twelve turns in which every offer carries a sponge, so
+     * the whole line is one spacing problem - twelve tiles have to stay apart
+     * on a 7x6 field. The fan is a five-point trap and the urchin a negative
+     * one, but neither is ever forced. */
+    {
+      id: "c11",
+      labelKey: "corZ11",
+      turns: 12,
+      stars: [84, 70, 58],
+      offers: ["SSF", "SFS", "FSS", "SSF", "SFX", "XSS", "SSF", "SFS", "FSS", "SSX", "SXS", "SSF"],
+    },
+    /* Twin-draft rung: every offer is three copies of one species, so the
+     * only decision is where the forced tile lands. Four nurseries and eight
+     * sponges is a compact colony beside an open field. */
+    {
+      id: "c12",
+      labelKey: "corZ12",
+      turns: 12,
+      stars: [94, 80, 64],
+      offers: ["NNN", "SSS", "SSS", "NNN", "SSS", "SSS", "NNN", "SSS", "SSS", "NNN", "SSS", "SSS"],
+    },
+    /* Tithe rung: two offers hold nothing but urchins, so the negative tile is
+     * compulsory. The rest of the draft pays in sponges, and every planted
+     * urchin has to be parked where no later sponge will touch it. */
+    {
+      id: "c13",
+      labelKey: "corZ13",
+      turns: 13,
+      stars: [73, 62, 48],
+      offers: ["XXX", "SSF", "SFS", "XXS", "FSS", "SSX", "SXS", "XXX", "SSF", "SFS", "FSS", "SSX", "SXS"],
+    },
+    /* Wall rung: fourteen turns of pillars and nothing else worth taking. A
+     * pillar is 8 in a two-row wall and 2 on its own, so the draft is a pure
+     * packing test in the four deep rows. */
+    {
+      id: "c14",
+      labelKey: "corZ14",
+      turns: 14,
+      stars: [104, 90, 74],
+      offers: ["PPP", "PPX", "PPP", "XPP", "PPP", "PPX", "PPP", "XPP", "PPP", "PPX", "PPP", "XPP", "PPP", "PPX"],
+    },
+    /* Commons rung: no sponge is dealt at all, so the cheap isolation trick is
+     * gone and every point has to come from a shallow fan layer and a packed
+     * pillar wall below it. */
+    {
+      id: "c15",
+      labelKey: "corZ15",
+      turns: 15,
+      stars: [103, 88, 70],
+      offers: ["FPP", "PPP", "PPX", "PPP", "FPP", "PPP", "XPP", "PPP", "FPP", "PPP", "PPX", "PPP", "FPP", "PPP", "PPX"],
+    },
+    /* Corridor rung: nurseries in nearly every offer, but each offer also
+     * carries a pillar or a sponge, so the chain has to be fed without losing
+     * the whole draft to the four-point nursery adjacency. */
+    {
+      id: "c16",
+      labelKey: "corZ16",
+      turns: 15,
+      stars: [205, 180, 150],
+      offers: ["NNP", "PNN", "NNP", "NNS", "SNN", "NNP", "PNN", "NNF", "FNN", "NNP", "PNN", "NNS", "SNN", "NNP", "PNF"],
+    },
+    /* Shelf rung: a full-spectrum draft with every species present. Fans only
+     * fit the top three rows, nurseries the middle three, and pillars the
+     * bottom four, so one reef has to be laid out in horizontal bands. */
+    {
+      id: "c17",
+      labelKey: "corZ17",
+      turns: 16,
+      stars: [111, 94, 76],
+      offers: ["FPS", "SPF", "NPS", "FPN", "SPX", "FNS", "NPS", "SPF", "FPN", "SXF", "NPS", "FNS", "SPF", "FPN", "NPS", "SFP"],
+    },
+    /* Meadow rung: a long, shallow draft of five-point fans with two urchin
+     * offers that cannot be dodged. Fans never crowd each other, so the whole
+     * problem is where the two urchins can be parked in a meadow that will
+     * fill the rest of the shallow band. */
+    {
+      id: "c18",
+      labelKey: "corZ18",
+      turns: 17,
+      stars: [71, 60, 46],
+      offers: ["FXX", "XFX", "XXF", "FXX", "XFX", "XXX", "XXF", "FXX", "XFX", "XXF", "FXX", "XFX", "XXX", "XXF", "FXX", "XFX", "XXF"],
+    },
+    /* Buttress rung: nursery turns and pillar turns alternate, so the chain
+     * lays a wall along the middle band and the pillars have to be packed
+     * directly beneath it, where every pillar also leans on a nursery. */
+    {
+      id: "c19",
+      labelKey: "corZ19",
+      turns: 18,
+      stars: [157, 138, 112],
+      offers: ["NNP", "PPP", "PNN", "PPP", "NNP", "PPP", "PNN", "PPP", "NNP", "PPP", "NNP", "PPP", "NNP", "PPP", "NNP", "PPP", "NNP", "PPP"],
+    },
+    /* Finale: the full roster with urchin pressure and eighteen turns. Every
+     * band has to be read at once - fans above, nurseries in the middle,
+     * pillars below, sponges only where their open sides survive. */
+    {
+      id: "c20",
+      labelKey: "corZ20",
+      turns: 18,
+      stars: [171, 150, 124],
+      offers: ["NPP", "PNN", "NNP", "NPN", "PNN", "NNP", "NPP", "NNP", "PNN", "NNP", "PXP", "SFP", "SPX", "PXP", "FSP", "SFP", "XXX", "SFP"],
+    },
   ];
 
   function initCoralArchitectGame(panelEl) {
@@ -865,6 +967,16 @@
       "corZ8": "The Great Barrier",
       "corZ9": "Nursery Thicket",
       "corZ10": "The Cramped Columns",
+      "corZ11": "Sponge Scaffold",
+      "corZ12": "Twin Draft",
+      "corZ13": "Urchin Tithe",
+      "corZ14": "The Column Wall",
+      "corZ15": "The Sponge-Free Commons",
+      "corZ16": "Nursery Corridor",
+      "corZ17": "The Layered Shelf",
+      "corZ18": "Fan Meadow",
+      "corZ19": "Nursery Buttress",
+      "corZ20": "The Mature Reef",
       "corTurnLabel": "Turn",
       "corScoreLabel": "Reef",
       "corHandLabel": "In hand",
@@ -920,6 +1032,16 @@
       "corZ8": "大堡礁林",
       "corZ9": "育苗密丛",
       "corZ10": "柱礁逼仄",
+      "corZ11": "海绵棚架",
+      "corZ12": "成对三选",
+      "corZ13": "海胆什一税",
+      "corZ14": "柱礁长墙",
+      "corZ15": "无海绵公地",
+      "corZ16": "育苗长廊",
+      "corZ17": "分层礁架",
+      "corZ18": "柳珊瑚草甸",
+      "corZ19": "育苗拱壁",
+      "corZ20": "满潮礁盘",
       "corTurnLabel": "回合",
       "corScoreLabel": "珊瑚",
       "corHandLabel": "手上",

@@ -30,6 +30,10 @@
   var REST_HEAL = 5;
   var FLEE_COST = 3;
   var HERO_VITALS = 30;
+  /* Twist keys whose rest is punished: the pack wakes in a room beside you and
+   * its first beast is tougher. d4/d5 keep their original rule; the later
+   * rungs that promise the same rule opt in here. */
+  var REST_TWISTS = { edlTwist4: true, edlTwist5: true, edlTwist11: true, edlTwist15: true, edlTwist20: true };
 
   /* Intents cycle through a fixed pattern per species, which is what makes the
    * telegraph readable: the shown intent is the one that will resolve. */
@@ -54,6 +58,16 @@
     { id: "d8", labelKey: "edlZ8", twistKey: "edlTwist8", seed: 20260830, kinds: ["warden", "husk", "adder", "imp"], count: 4, armor: 2, regen: 2, starTurns: [32, 40, 52] },
     { id: "d9", labelKey: "edlZ9", twistKey: "edlTwist9", seed: 20260914, kinds: ["husk", "adder", "warden"], count: 4, armor: 3, regen: 0, starTurns: [34, 42, 54] },
     { id: "d10", labelKey: "edlZ10", twistKey: "edlTwist10", seed: 20261026, kinds: ["warden", "husk", "adder", "imp"], count: 4, armor: 4, regen: 0, starTurns: [36, 44, 56] },
+    { id: "d11", labelKey: "edlZ11", twistKey: "edlTwist11", seed: 20261118, kinds: ["husk", "adder"], count: 4, armor: 2, regen: 1, starTurns: [35, 41, 53] },
+    { id: "d12", labelKey: "edlZ12", twistKey: "edlTwist12", seed: 20261207, kinds: ["adder", "imp"], count: 4, armor: 1, regen: 2, starTurns: [34, 40, 52] },
+    { id: "d13", labelKey: "edlZ13", twistKey: "edlTwist13", seed: 20261138, kinds: ["warden", "imp"], count: 4, armor: 2, regen: 0, starTurns: [35, 41, 53] },
+    { id: "d14", labelKey: "edlZ14", twistKey: "edlTwist14", seed: 20270119, kinds: ["husk", "imp"], count: 4, armor: 3, regen: 0, starTurns: [36, 42, 54] },
+    { id: "d15", labelKey: "edlZ15", twistKey: "edlTwist15", seed: 20270208, kinds: ["husk", "adder"], count: 4, armor: 3, regen: 1, starTurns: [37, 43, 55] },
+    { id: "d16", labelKey: "edlZ16", twistKey: "edlTwist16", seed: 20270223, kinds: ["imp", "adder", "husk"], count: 4, armor: 4, regen: 0, starTurns: [38, 44, 56] },
+    { id: "d17", labelKey: "edlZ17", twistKey: "edlTwist17", seed: 20270100, kinds: ["warden", "adder"], count: 4, armor: 2, regen: 1, starTurns: [38, 44, 56] },
+    { id: "d18", labelKey: "edlZ18", twistKey: "edlTwist18", seed: 20270327, kinds: ["husk", "adder", "imp"], count: 4, armor: 3, regen: 2, starTurns: [39, 45, 57] },
+    { id: "d19", labelKey: "edlZ19", twistKey: "edlTwist19", seed: 20270414, kinds: ["imp", "adder"], count: 4, armor: 4, regen: 1, starTurns: [39, 45, 57] },
+    { id: "d20", labelKey: "edlZ20", twistKey: "edlTwist20", seed: 20270430, kinds: ["imp", "adder", "husk"], count: 4, armor: 4, regen: 0, starTurns: [40, 46, 58] },
   ];
 
   function edlInt(value) {
@@ -674,7 +688,8 @@
       }
       run.hero.hp = Math.min(run.hero.maxHp, run.hero.hp + REST_HEAL);
       var rooms = run.floor.rooms;
-      var warden = run.level.twistKey === "edlTwist4" || run.level.twistKey === "edlTwist5";
+      var warden = !!REST_TWISTS[run.level.twistKey];
+      var curse = run.level.twistKey === "edlTwist4" || run.level.twistKey === "edlTwist5";
       var near = edlNeighbours(run.at);
       var pool = [];
       for (var index = 0; index < ROOMS; index += 1) {
@@ -699,7 +714,7 @@
           rooms[spot].beasts[0].maxHp = rooms[spot].beasts[0].hp;
           rooms[spot].seen = true;
         }
-        run.log = [t(warden ? "edlRestWarden" : "edlRestStir", { g: rooms[spot].beasts[0].glyph, n: REST_HEAL })];
+        run.log = [t(curse ? "edlRestWarden" : warden ? "edlRestNear" : "edlRestStir", { g: rooms[spot].beasts[0].glyph, n: REST_HEAL })];
       } else {
         run.log = [t("edlRestAlone", { n: REST_HEAL })];
       }
@@ -1046,6 +1061,16 @@
       "edlZ8": "The Abyssal Core",
       "edlZ9": "Hollow Foundry",
       "edlZ10": "Adamant Crucible",
+      "edlZ11": "Emberwatch Gate",
+      "edlZ12": "The Glass Warren",
+      "edlZ13": "The Plated Court",
+      "edlZ14": "Ironroot Hall",
+      "edlZ15": "The Mending Dark",
+      "edlZ16": "The Deep Anvil",
+      "edlZ17": "The Summoner's Choir",
+      "edlZ18": "The Sable Kiln",
+      "edlZ19": "The Last Bulwark",
+      "edlZ20": "Crown of Cinders",
       "edlTwist1": "plain run",
       "edlTwist2": "armoured strikers",
       "edlTwist3": "biters that mend",
@@ -1056,6 +1081,16 @@
       "edlTwist8": "dense packs with armor and mend",
       "edlTwist9": "a plated trio that never mends",
       "edlTwist10": "every species in harder plate",
+      "edlTwist11": "rest wakes a pack beside you; the pack mends",
+      "edlTwist12": "a swift pack in light plate, mending quickly",
+      "edlTwist13": "wardens call imps into plated ranks",
+      "edlTwist14": "husk guards and imps behind heavy plate",
+      "edlTwist15": "plated biters that mend; rest wakes a pack beside you",
+      "edlTwist16": "all three species in adamant plate",
+      "edlTwist17": "summoning wardens and mending adders",
+      "edlTwist18": "heavy plate and deep mending",
+      "edlTwist19": "swift beasts in adamant plate that mend",
+      "edlTwist20": "three species in adamant plate; rest wakes a pack beside you",
       "edlDepthLabel": "Depth",
       "edlVitalLabel": "Vitals",
       "edlTurnLabel": "Turns left",
@@ -1096,6 +1131,7 @@
       "edlQuiet": "The room is still.",
       "edlRestStir": "You heal {n}. Somewhere below {g} wakes.",
       "edlRestWarden": "The warden's curse: resting wakes {g} right beside you.",
+      "edlRestNear": "Rest wakes {g} right beside you.",
       "edlRestAlone": "You heal {n} and nothing stirs.",
       "edlDescended": "Depth {d}. The air gets thinner.",
       "edlNoStair": "The stair is sealed until this room's guardian falls.",
@@ -1135,6 +1171,16 @@
       "edlZ8": "深渊熔核",
       "edlZ9": "空洞铸炉",
       "edlZ10": "精金熔炉",
+      "edlZ11": "烬哨之门",
+      "edlZ12": "琉璃巢",
+      "edlZ13": "披甲之庭",
+      "edlZ14": "铁根厅",
+      "edlZ15": "愈合之暗",
+      "edlZ16": "深砧",
+      "edlZ17": "唤灵合唱",
+      "edlZ18": "黑砂窑",
+      "edlZ19": "最后壁垒",
+      "edlZ20": "烬冠",
       "edlTwist1": "规则如常",
       "edlTwist2": "来袭者披甲",
       "edlTwist3": "撕咬者能自愈",
@@ -1145,6 +1191,16 @@
       "edlTwist8": "密集群落披甲且自愈",
       "edlTwist9": "三族重甲不愈",
       "edlTwist10": "全族皆披硬甲",
+      "edlTwist11": "歇息会惊醒身旁的怪群，群兽还能自愈",
+      "edlTwist12": "迅捷兽群披轻甲，自愈更快",
+      "edlTwist13": "狱卒召来小鬼，皆列披甲之阵",
+      "edlTwist14": "重甲之后是架防的壳卫与小鬼",
+      "edlTwist15": "披甲撕咬者能自愈；歇息会惊醒身旁的怪群",
+      "edlTwist16": "三族皆披精金甲",
+      "edlTwist17": "召唤狱卒与自愈的蝰蛇",
+      "edlTwist18": "厚甲之下是极深的自愈",
+      "edlTwist19": "迅捷兽群披精金甲，且能自愈",
+      "edlTwist20": "三族皆披精金甲；歇息会惊醒身旁的怪群",
       "edlDepthLabel": "层数",
       "edlVitalLabel": "体力",
       "edlTurnLabel": "剩余回合",
@@ -1185,6 +1241,7 @@
       "edlQuiet": "房里一片安静。",
       "edlRestStir": "你回了 {n} 点体力，下方有 {g} 被吵醒。",
       "edlRestWarden": "狱卒的诅咒：这次歇息把 {g} 直接叫到你身边。",
+      "edlRestNear": "这次歇息把 {g} 直接叫到了你身边。",
       "edlRestAlone": "你歇了口气，回 {n} 点体力，没有东西醒来。",
       "edlDescended": "来到第 {d} 层，空气更稀薄了。",
       "edlNoStair": "守住这一间的怪物没倒，阶梯就打不开。",
@@ -1232,7 +1289,7 @@
         "Aim: reach depth 8 within 60 turns. Steps, rests and descents cost a turn; combat rounds are free.",
         "Move: click or Enter a revealed room next door. A monster in it starts a fight, and its next move is printed as an intent.",
         "Fight: three actions a round from Strike, Guard, Focus (two charges become a heavy blow) and Dodge. Armour soaks damage, so Focus punches through husks.",
-        "Rest: heal 5, but a wandering monster wakes - on the Warden's floor it wakes right beside you.",
+        "Rest: heal 5, but a wandering monster wakes - on cursed floors it wakes right beside you.",
         "Floor: you may always flee, and the wounds you dealt stay on the monster, so no fight can dead-end; the stair always sits 2 to 4 steps from the door.",
         "Scoring: fewer turns earn more stars. A run ends at depth 8, at 0 vitals, or at the 60 turn cap.",
       ],
@@ -1240,7 +1297,7 @@
         "目标：60 回合内打到第 8 层。移动、歇息、下潜各占一个回合，战斗轮次不计回合。",
         "移动：点击或用回车进入相邻的已探明房间。房间里有怪物就打一仗，而它下一步会以“意图”印在脸上。",
         "战斗：每轮三招，从劈砍、格挡、凝火（攒满 2 层打出重击）、闪避里挑。护甲会吃掉伤害，所以凝火才是穿甲的答案。",
-        "歇息：回 5 点体力，但会吵醒一只游荡的怪物——在狱卒那一层，它直接醒在你脚边。",
+        "歇息：回 5 点体力，但会吵醒一只游荡的怪物——在诅咒之层，它直接醒在你脚边。",
         "底线：打不过随时能脱离，而且你砍伤的额度会记在怪物身上，所以没有任何一场仗是死局；阶梯永远离门口只有 2 到 4 步。",
         "计分：回合越少星越高。抵达第 8 层、体力归零或打满 60 回合，本局都会结束。",
       ],
