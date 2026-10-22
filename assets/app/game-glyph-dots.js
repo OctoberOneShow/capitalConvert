@@ -46,6 +46,15 @@
       count: true,
       margin: [5, 3, 1],
     },
+    /* Ranks 11-15: the board grows to six and seven boxes and the rival
+     * stops blundering altogether, taking the opening moves and counting
+     * the plate from rank 11. The margins it can be beaten by shrink to
+     * two boxes, then one - the ladder's own way of raising the bar. */
+    { id: "d11", labelKey: "dotsL11", boxes: 5, blunder: 0.06, count: true, margin: [4, 2, 1] },
+    { id: "d12", labelKey: "dotsL12", boxes: 6, blunder: 0.05, count: true, margin: [4, 2, 1] },
+    { id: "d13", labelKey: "dotsL13", boxes: 6, blunder: 0, setup: true, count: true, margin: [3, 2, 1] },
+    { id: "d14", labelKey: "dotsL14", boxes: 6, blunder: 0, setup: true, count: true, edge: 1, margin: [3, 1, 1] },
+    { id: "d15", labelKey: "dotsL15", boxes: 7, blunder: 0, setup: true, count: true, edge: 1, margin: [2, 1, 1] },
   ];
 
   function dotsIndex(y, x, width) {
@@ -939,7 +948,15 @@
     en: {
       "dotsL9": "Chainwright",
       "dotsL10": "Plate Reader",
-    },
+      "dotsL11": "计数师",
+      "dotsL12": "宽盘者",
+      "dotsL13": "开局者",
+      "dotsL14": "读边者",
+      "dotsL15": "全盘者",      "dotsL11": "The Counter",
+      "dotsL12": "Wide Plate",
+      "dotsL13": "The Opener",
+      "dotsL14": "Edge Reader",
+      "dotsL15": "The Whole Plate",    },
     zh: {
       "dotsL9": "织链匠",
       "dotsL10": "读盘师",

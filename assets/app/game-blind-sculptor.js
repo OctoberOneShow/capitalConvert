@@ -355,7 +355,7 @@
   /* An overhang is a block whose neighbour below it is empty. */
   function bldHasOverhang(mask) {
     var i;
-    for (i = 3; i < bldCells; i += 1) {
+    for (i = 9; i < bldCells; i += 1) {
       if ((mask & (1 << i)) && !(mask & (1 << (i - 9)))) return true;
     }
     return false;
@@ -1128,6 +1128,7 @@
     /* --- dealing --- */
     function loadRound(def, seedIndex) {
       var round = seedIndex || 1;
+      rounds[def.id] = round;
       var dealt = sculptorGenerate(3, def.blocks, def.seed + round * 101, def);
       var par = sculptorMinProbes(dealt, { blocks: def.blocks });
       var budget = Math.max(par + 1, dealt.probes || par + def.slack);

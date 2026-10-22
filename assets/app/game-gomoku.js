@@ -39,6 +39,17 @@
     { id: "r8", labelKey: "gomokuRank8", noise: 0, defense: 4, holes: 1, fork: 1, starMoves: [42, 62, 86] },
     { id: "r9", labelKey: "gomokuRank9", noise: 0, defense: 4, holes: 1, fork: 1, sente: 1, depth: 2, starMoves: [46, 68, 94] },
     { id: "r10", labelKey: "gomokuRank10", noise: 0, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 1, depth: 4, starMoves: [50, 74, 102] },
+    /* Ranks 11-15: the same strength stack as the top of the ladder, with
+     * the search taken two plies further per rank. Sight alone would make
+     * them unbeatable, so each one also pays for it - the last three take a
+     * small random move and spend two turns in five building their own
+     * shape instead of answering yours, which is the concession every
+     * shipped rank above five makes too. */
+    { id: "r11", labelKey: "gomokuRank11", noise: 0, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 1, depth: 5, starMoves: [54, 80, 110] },
+    { id: "r12", labelKey: "gomokuRank12", noise: 0, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 1, depth: 6, starMoves: [58, 86, 118] },
+    { id: "r13", labelKey: "gomokuRank13", noise: 0.05, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 1, depth: 7, starMoves: [62, 92, 126] },
+    { id: "r14", labelKey: "gomokuRank14", noise: 0.08, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 2, depth: 8, starMoves: [66, 98, 134] },
+    { id: "r15", labelKey: "gomokuRank15", noise: 0.12, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 2, depth: 9, starMoves: [70, 104, 142] },
   ];
   var gmDirs = [[1, 0], [0, 1], [1, 1], [1, -1]];
 
@@ -1256,7 +1267,15 @@
       "gomokuRank8": "The Twin Fork",
       "gomokuRank9": "The Early Block",
       "gomokuRank10": "The Patient Hand",
-    },
+      "gomokuRank11": "深算手",
+      "gomokuRank12": "长梯手",
+      "gomokuRank13": "耐心织网",
+      "gomokuRank14": "静中筑势",
+      "gomokuRank15": "无尽棋盘",      "gomokuRank11": "The Deep Reader",
+      "gomokuRank12": "The Long Ladder",
+      "gomokuRank13": "The Patient Web",
+      "gomokuRank14": "The Quiet Build",
+      "gomokuRank15": "The Endless Board",    },
     zh: {
       "gomokuRank7": "读断点",
       "gomokuRank8": "双活三",

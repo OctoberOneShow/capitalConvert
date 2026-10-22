@@ -41,6 +41,15 @@
     { id: "r8", labelKey: "revL8", noise: 0, depth: 5, starMargin: [8, 4, 2] },
     { id: "r9", labelKey: "revL9", noise: 0, depth: 1, starMargin: [11, 6, 2] },
     { id: "r10", labelKey: "revL10", noise: 0, depth: 1, starMargin: [12, 7, 3] },
+    /* Ranks 11-15: the ladder's search climbs one ply at a time past the
+     * shipped top, and the margin the player is allowed to lose by narrows
+     * with it. The last rank keeps a flicker of noise, so a rival that
+     * deep still hands the board back now and then. */
+    { id: "r11", labelKey: "revL11", noise: 0, depth: 6, starMargin: [7, 4, 2] },
+    { id: "r12", labelKey: "revL12", noise: 0, depth: 7, starMargin: [7, 4, 2] },
+    { id: "r13", labelKey: "revL13", noise: 0, depth: 8, starMargin: [6, 3, 2] },
+    { id: "r14", labelKey: "revL14", noise: 0, depth: 9, starMargin: [6, 3, 1] },
+    { id: "r15", labelKey: "revL15", noise: 0.05, depth: 10, starMargin: [5, 3, 1] },
   ];
   var REV_WEIGHTS = [
     120, -20, 10, 5, 5, 10, -20, 120,
@@ -195,7 +204,15 @@
     en: {
       "revL9": "Immortal",
       "revL10": "Ascendant",
-    },
+      "revL11": "深井者",
+      "revL12": "长算者",
+      "revL13": "铁盘",
+      "revL14": "镜中主",
+      "revL15": "满盘者",      "revL11": "Deepwell",
+      "revL12": "The Long Count",
+      "revL13": "Iron Disc",
+      "revL14": "Mirror Master",
+      "revL15": "The Full Board",    },
     zh: {
       "revL9": "不朽者",
       "revL10": "登峰者",

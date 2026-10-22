@@ -77,6 +77,15 @@
     { id: "w8", labelKey: "twrR8", windowMs: 1900, predict: 0.93, rush: 0.94, greed: 1, noise: 0.038, starBeats: [12, 19, 28] },
     { id: "w9", labelKey: "twrR9", windowMs: 1800, predict: 0.96, rush: 0.97, greed: 1, noise: 0.032, starBeats: [13, 20, 30] },
     { id: "w10", labelKey: "twrR10", windowMs: 1700, predict: 1, rush: 1, greed: 1, noise: 0.026, starBeats: [14, 21, 32] },
+    /* Ranks 11-15: the ring tightens the window to 1.2 seconds and the
+     * rival stops guessing - prediction, rush and greed all sit at one.
+     * The last sliver of noise is the only opening left, so the player is
+     * reading a tell that is four thousandths wide by the top rank. */
+    { id: "w11", labelKey: "twrR11", windowMs: 1600, predict: 1, rush: 1, greed: 1, noise: 0.022, starBeats: [15, 22, 33] },
+    { id: "w12", labelKey: "twrR12", windowMs: 1500, predict: 1, rush: 1, greed: 1, noise: 0.018, starBeats: [16, 23, 34] },
+    { id: "w13", labelKey: "twrR13", windowMs: 1400, predict: 1, rush: 1, greed: 1, noise: 0.014, starBeats: [17, 24, 36] },
+    { id: "w14", labelKey: "twrR14", windowMs: 1300, predict: 1, rush: 1, greed: 1, noise: 0.01, starBeats: [18, 26, 38] },
+    { id: "w15", labelKey: "twrR15", windowMs: 1200, predict: 1, rush: 1, greed: 1, noise: 0.006, starBeats: [20, 28, 40] },
   ];
 
   /* --- pure core, exported for the checks -------------------------- */
@@ -982,7 +991,7 @@
     en: {
       "tabTinyWrestlers": "Tiny Wrestlers",
       "twrR1": "Rookie", "twrR2": "Slick", "twrR3": "Iron Arm", "twrR4": "Bulldog", "twrR5": "Champion",
-      "twrR6": "Ring Lord", "twrR7": "Shadow Grip", "twrR8": "Iron Wall", "twrR9": "Grand Master", "twrR10": "Legend",
+      "twrR6": "Ring Lord", "twrR7": "Shadow Grip", "twrR8": "Iron Wall", "twrR9": "Grand Master", "twrR10": "Legend", "twrR11": "Veteran", "twrR12": "Iron Grip", "twrR13": "The Wall", "twrR14": "Immovable", "twrR15": "Grand Champion",
       "twrBlueLabel": "Cyan", "twrRedLabel": "Red",
       "twrBeatLabel": "Exchange", "twrSpaceLabel": "Space", "twrLockLabel": "Locks", "twrWindowLabel": "Window",
       "twrModeSelectLabel": "Bout mode", "twrModeSolo": "Solo bout - you against the machine",
@@ -1054,7 +1063,7 @@
     },
     zh: {
       "tabTinyWrestlers": "小小摔跤手",       "twrR1": "新手", "twrR2": "滑头", "twrR3": "铁臂", "twrR4": "蛮牛", "twrR5": "冠军",
-      "twrR6": "擂台王", "twrR7": "暗手", "twrR8": "铁壁", "twrR9": "宗师", "twrR10": "传奇",
+      "twrR6": "擂台王", "twrR7": "暗手", "twrR8": "铁壁", "twrR9": "宗师", "twrR10": "传奇", "twrR11": "老将", "twrR12": "铁腕", "twrR13": "人墙", "twrR14": "不动如山", "twrR15": "至尊冠军",
       "twrBlueLabel": "青角", "twrRedLabel": "红角",
       "twrBeatLabel": "回合", "twrSpaceLabel": "距离", "twrLockLabel": "锁定", "twrWindowLabel": "窗口",
       "twrModeSelectLabel": "赛制", "twrModeSolo": "单人——对阵机器", "twrModeDuo": "双人——共用一块键盘",

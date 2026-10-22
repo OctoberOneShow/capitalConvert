@@ -7,6 +7,8 @@ Thumbs.db
 
 # Dev/test runtime artifacts (not source)
 tmp/
+tools/_*
+tools/_*.json
 tools/.chrome-profile/
 tools/.chrome-profile-*/
 tools/.staging/

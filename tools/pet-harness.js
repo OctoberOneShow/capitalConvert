@@ -19,6 +19,7 @@ require("./harness/cases-shell-regressions");
 require("./harness/cases-puzzle-regressions");
 require("./harness/cases-arcade-regressions");
 require("./harness/cases-registry-regressions");
+require("./harness/cases-sculptor-thieves");
 require("./harness/cases-love-deepspace");
 require("./harness/cases-love-starpath");
 require("./harness/cases-love-release");

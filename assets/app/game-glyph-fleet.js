@@ -35,6 +35,14 @@
     { id: "bf8", labelKey: "fltL8", skill: 5, starShots: [28, 37, 48] },
     { id: "bf9", labelKey: "fltL9", skill: 6, starShots: [32, 41, 51] },
     { id: "bf10", labelKey: "fltL10", skill: 7, starShots: [30, 39, 49] },
+    /* Ranks 11-15: the admiral's aim climbs four more steps. The shot
+     * budget falls to twenty-four, so a player has to find the whole fleet
+     * inside the ladder's tightest allowance yet. */
+    { id: "bf11", labelKey: "fltL11", skill: 8, starShots: [28, 37, 46] },
+    { id: "bf12", labelKey: "fltL12", skill: 9, starShots: [27, 35, 45] },
+    { id: "bf13", labelKey: "fltL13", skill: 10, starShots: [26, 34, 43] },
+    { id: "bf14", labelKey: "fltL14", skill: 11, starShots: [25, 33, 42] },
+    { id: "bf15", labelKey: "fltL15", skill: 12, starShots: [24, 32, 40] },
   ];
   var FLT_EMPTY = 0;
   var FLT_MISS = 1;
@@ -734,7 +742,15 @@
     en: {
       "fltL9": "Grand Admiral",
       "fltL10": "Lord High Admiral",
-    },
+      "fltL11": "舰队元帅",
+      "fltL12": "大舰长",
+      "fltL13": "铁海",
+      "fltL14": "阵线之主",
+      "fltL15": "沧海至尊",      "fltL11": "Fleet Marshal",
+      "fltL12": "Grand Admiral",
+      "fltL13": "The Iron Sea",
+      "fltL14": "Lord of the Line",
+      "fltL15": "High Seas Sovereign",    },
     zh: {
       "fltL9": "海军大将",
       "fltL10": "海上大元帅",

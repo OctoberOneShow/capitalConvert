@@ -148,6 +148,138 @@
       ],
       starTimes: [78, 114, 162],
     },
+    {
+      id: "c11", labelKey: "croL11",
+      lanes: [
+        { row: 1, dir: 1, speed: 50, len: 88, gap: 152 },
+        { row: 2, dir: -1, speed: 52, len: 76, gap: 152 },
+        { row: 3, dir: -1, speed: 48, len: 98, gap: 168 },
+        { row: 5, dir: 1, speed: 56, len: 94, gap: 154 },
+        { row: 6, dir: 1, speed: 56, len: 80, gap: 160 },
+        { row: 7, dir: -1, speed: 58, len: 92, gap: 174 },
+      ],
+      starTimes: [78, 117, 160],
+    },
+    {
+      id: "c12", labelKey: "croL12",
+      lanes: [
+        { row: 1, dir: -1, speed: 62, len: 76, gap: 150 },
+        { row: 2, dir: 1, speed: 56, len: 86, gap: 164 },
+        { row: 3, dir: 1, speed: 56, len: 84, gap: 146 },
+        { row: 5, dir: 1, speed: 58, len: 72, gap: 164 },
+        { row: 6, dir: 1, speed: 70, len: 72, gap: 158 },
+        { row: 7, dir: -1, speed: 58, len: 76, gap: 172 },
+      ],
+      starTimes: [84, 125, 171],
+    },
+    {
+      id: "c13", labelKey: "croL13",
+      lanes: [
+        { row: 1, dir: 1, speed: 66, len: 98, gap: 146 },
+        { row: 2, dir: -1, speed: 66, len: 96, gap: 144 },
+        { row: 3, dir: 1, speed: 82, len: 94, gap: 146 },
+        { row: 5, dir: -1, speed: 74, len: 92, gap: 144 },
+        { row: 6, dir: -1, speed: 66, len: 88, gap: 146 },
+        { row: 7, dir: -1, speed: 80, len: 88, gap: 148 },
+        { row: 6, dir: 1, speed: 78, len: 74, gap: 142 },
+      ],
+      starTimes: [89, 134, 182],
+    },
+    {
+      id: "c14", labelKey: "croL14",
+      lanes: [
+        { row: 1, dir: -1, speed: 72, len: 94, gap: 160 },
+        { row: 2, dir: 1, speed: 70, len: 94, gap: 160 },
+        { row: 3, dir: 1, speed: 72, len: 98, gap: 144 },
+        { row: 5, dir: -1, speed: 90, len: 88, gap: 158 },
+        { row: 6, dir: 1, speed: 78, len: 76, gap: 158 },
+        { row: 7, dir: 1, speed: 82, len: 76, gap: 152 },
+        { row: 6, dir: -1, speed: 114, len: 76, gap: 138 },
+      ],
+      starTimes: [95, 142, 194],
+    },
+    {
+      id: "c15", labelKey: "croL15",
+      lanes: [
+        { row: 1, dir: 1, speed: 90, len: 86, gap: 154 },
+        { row: 2, dir: -1, speed: 92, len: 86, gap: 136 },
+        { row: 3, dir: 1, speed: 84, len: 74, gap: 140 },
+        { row: 5, dir: -1, speed: 94, len: 90, gap: 132 },
+        { row: 6, dir: -1, speed: 92, len: 94, gap: 146 },
+        { row: 7, dir: 1, speed: 96, len: 80, gap: 148 },
+        { row: 6, dir: 1, speed: 126, len: 60, gap: 130 },
+      ],
+      starTimes: [100, 150, 205],
+    },
+    {
+      id: "c16", labelKey: "croL16",
+      lanes: [
+        { row: 1, dir: -1, speed: 102, len: 74, gap: 140 },
+        { row: 2, dir: -1, speed: 108, len: 94, gap: 124 },
+        { row: 3, dir: 1, speed: 92, len: 92, gap: 130 },
+        { row: 5, dir: -1, speed: 98, len: 72, gap: 142 },
+        { row: 6, dir: 1, speed: 88, len: 72, gap: 138 },
+        { row: 7, dir: -1, speed: 94, len: 90, gap: 128 },
+        { row: 6, dir: -1, speed: 106, len: 64, gap: 146 },
+      ],
+      starTimes: [106, 158, 216],
+    },
+    {
+      id: "c17", labelKey: "croL17",
+      lanes: [
+        { row: 1, dir: 1, speed: 114, len: 76, gap: 130 },
+        { row: 2, dir: 1, speed: 120, len: 98, gap: 134 },
+        { row: 3, dir: -1, speed: 106, len: 82, gap: 144 },
+        { row: 5, dir: 1, speed: 102, len: 88, gap: 130 },
+        { row: 6, dir: 1, speed: 122, len: 98, gap: 136 },
+        { row: 7, dir: -1, speed: 110, len: 98, gap: 132 },
+        { row: 6, dir: -1, speed: 104, len: 72, gap: 116 },
+        { row: 2, dir: -1, speed: 140, len: 68, gap: 140 },
+      ],
+      starTimes: [111, 167, 228],
+    },
+    {
+      id: "c18", labelKey: "croL18",
+      lanes: [
+        { row: 1, dir: -1, speed: 108, len: 76, gap: 114 },
+        { row: 2, dir: 1, speed: 112, len: 80, gap: 118 },
+        { row: 3, dir: -1, speed: 130, len: 76, gap: 132 },
+        { row: 5, dir: -1, speed: 110, len: 94, gap: 120 },
+        { row: 6, dir: 1, speed: 118, len: 82, gap: 142 },
+        { row: 7, dir: -1, speed: 104, len: 76, gap: 112 },
+        { row: 6, dir: -1, speed: 134, len: 66, gap: 124 },
+        { row: 2, dir: -1, speed: 124, len: 68, gap: 108 },
+      ],
+      starTimes: [117, 175, 239],
+    },
+    {
+      id: "c19", labelKey: "croL19",
+      lanes: [
+        { row: 1, dir: -1, speed: 138, len: 76, gap: 130 },
+        { row: 2, dir: -1, speed: 112, len: 72, gap: 112 },
+        { row: 3, dir: 1, speed: 130, len: 76, gap: 128 },
+        { row: 5, dir: 1, speed: 136, len: 74, gap: 138 },
+        { row: 6, dir: -1, speed: 136, len: 86, gap: 116 },
+        { row: 7, dir: -1, speed: 136, len: 94, gap: 104 },
+        { row: 6, dir: 1, speed: 130, len: 72, gap: 128 },
+        { row: 2, dir: 1, speed: 140, len: 66, gap: 114 },
+      ],
+      starTimes: [122, 183, 250],
+    },
+    {
+      id: "c20", labelKey: "croL20",
+      lanes: [
+        { row: 1, dir: -1, speed: 122, len: 98, gap: 132 },
+        { row: 2, dir: -1, speed: 120, len: 98, gap: 120 },
+        { row: 3, dir: -1, speed: 126, len: 78, gap: 124 },
+        { row: 5, dir: -1, speed: 120, len: 94, gap: 98 },
+        { row: 6, dir: 1, speed: 134, len: 80, gap: 108 },
+        { row: 7, dir: -1, speed: 130, len: 98, gap: 134 },
+        { row: 6, dir: -1, speed: 158, len: 66, gap: 102 },
+        { row: 2, dir: 1, speed: 172, len: 76, gap: 96 },
+      ],
+      starTimes: [128, 191, 261],
+    },
   ];
   var STREAK_COLORS = ["#f472b6", "#fb7185", "#fbbf24", "#a78bfa"];
 
@@ -369,6 +501,16 @@
     }
 
     function update(dt) {
+      /* Find support before moving the logs, then carry the frog with it.
+       * Checking its old position against moved logs drops trailing-edge riders. */
+      var riding = null;
+      if (flying && !dead && RIVER_ROWS.indexOf(frog.row) !== -1) {
+        props.forEach(function (prop) {
+          if (prop.row === frog.row && frog.x > prop.x && frog.x < prop.x + prop.len) {
+            riding = prop;
+          }
+        });
+      }
       level.lanes.forEach(function (lane, laneIndex) {
         props.forEach(function (prop) {
           if (prop.lane !== laneIndex) {
@@ -397,12 +539,6 @@
       var road = ROAD_ROWS.indexOf(frog.row) !== -1;
       if (river && lane) {
         /* Ride a log or drown. */
-        var riding = null;
-        props.forEach(function (prop) {
-          if (prop.row === frog.row && frog.x > prop.x && frog.x < prop.x + prop.len) {
-            riding = prop;
-          }
-        });
         if (!riding) {
           die("water");
           return;

@@ -2561,78 +2561,15 @@ check(
         (p) => p.slice(1).map(Number),
       ),
     );
-    /* Exhaustive backtracking over the shipped rules: a ribbon may not enter a
-     * cell owned by another ribbon, nor any other pair's endpoint. */
-    function solvable(size, pairs) {
-      const n = size * size;
-      const idx = (x, y) => y * size + x;
-      const xy = (c) => [c % size, Math.floor(c / size)];
-      const nbrs = (c) => {
-        const [x, y] = xy(c);
-        const out = [];
-        if (x > 0) out.push(c - 1);
-        if (x < size - 1) out.push(c + 1);
-        if (y > 0) out.push(c - size);
-        if (y < size - 1) out.push(c + size);
-        return out;
-      };
-      const pc = pairs.map((p) => [idx(p[0], p[1]), idx(p[2], p[3])]);
-      const endpointOf = new Array(n).fill(-1);
-      pc.forEach(([a, b], i) => {
-        endpointOf[a] = i;
-        endpointOf[b] = i;
-      });
-      const owner = new Array(n).fill(-1);
-      let steps = 0;
-      function place(i) {
-        if (i === pc.length) return true;
-        const [a, b] = pc[i];
-        const [bx, by] = xy(b);
-        const stack = [a];
-        const onPath = new Array(n).fill(false);
-        onPath[a] = true;
-        function dfs(c) {
-          steps += 1;
-          if (steps > 3000000) throw new Error("search cap");
-          if (c === b) {
-            for (const cell of stack) owner[cell] = i;
-            if (place(i + 1)) return true;
-            for (const cell of stack) owner[cell] = -1;
-            return false;
-          }
-          const options = nbrs(c)
-            .filter((nb) => {
-              if (onPath[nb]) return false;
-              if (owner[nb] !== -1 && owner[nb] !== i) return false;
-              if (endpointOf[nb] !== -1 && endpointOf[nb] !== i) return false;
-              return true;
-            })
-            .sort((p, q) => {
-              const [px, py] = xy(p);
-              const [qx, qy] = xy(q);
-              return (
-                Math.abs(px - bx) + Math.abs(py - by) -
-                (Math.abs(qx - bx) + Math.abs(qy - by))
-              );
-            });
-          for (const nb of options) {
-            onPath[nb] = true;
-            stack.push(nb);
-            if (dfs(nb)) return true;
-            stack.pop();
-            onPath[nb] = false;
-          }
-          return false;
-        }
-        return dfs(a);
-      }
-      try {
-        return place(0);
-      } catch (error) {
-        return false;
-      }
-    }
-    return pairSets.every((pairs, index) => solvable(sizes[index], pairs));
+    if (sizes.length < 8 || sizes.length !== pairSets.length) return false;
+    /* Every board is proved by tools/aurora-forge.js: its search holds the
+     * panel's own rules, and the answer is validated as a certificate, so
+     * shipping a board means shipping a written-out solution. */
+    const forge = require("./aurora-forge.js");
+    return pairSets.every((pairs, index) => {
+      const report = forge.checkBoard({ size: sizes[index], pairs: pairs });
+      return report.problems.length === 0;
+    });
   })(),
 );
 check(

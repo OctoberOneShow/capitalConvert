@@ -81,6 +81,81 @@
       pad: { x0: 0.16, x1: 0.28, y: 242 },
       starFuel: [22, 15, 8],
     },
+
+    /* ------------------------------------------------------------------
+     * The heavy-gravity tier (s11-s20). The first ten sectors teach the
+     * engines on gentle gravity with generous tanks; these carry the same
+     * engines into the regime where the tank decides the run. Gravity keeps
+     * climbing past the shipped ladder's 124 - 127 up to 154, which is still
+     * well inside the engine's 235 of thrust - while the tank shrinks from
+     * 76 to 68, and the terrain grows a sixth and seventh control point so
+     * the shelf is nested inside a ridge instead of being the whole field.
+     *
+     * Every sector here was flown before it shipped. tools/starfall-forge.js
+     * re-implements this module's flight exactly and lands a swarm of
+     * scripted pilots on each candidate; the rung ships only when one of
+     * them touches down inside the pad window with fuel still on the gauge,
+     * and the star bands are that measured landing's own line. */
+    {
+      id: "s11", labelKey: "lantL11", gravity: 127, fuel: 76,
+      terrain: [[0, 274], [0.135, 284], [0.365, 284], [0.5, 262], [0.75, 252], [1, 278]],
+      pad: { x0: 0.15, x1: 0.35, y: 284 },
+      starFuel: [31, 21, 11],
+    },
+    {
+      id: "s12", labelKey: "lantL12", gravity: 130, fuel: 75,
+      terrain: [[0, 270], [0.125, 310], [0.375, 310], [0.5, 276], [0.75, 276], [1, 304]],
+      pad: { x0: 0.14, x1: 0.36, y: 310 },
+      starFuel: [29, 20, 10],
+    },
+    {
+      id: "s13", labelKey: "lantL13", gravity: 133, fuel: 74,
+      terrain: [[0, 277], [0.25, 246], [0.383, 283], [0.617, 283], [0.75, 261], [1, 277]],
+      pad: { x0: 0.398, x1: 0.602, y: 283 },
+      starFuel: [20, 14, 7],
+    },
+    {
+      id: "s14", labelKey: "lantL14", gravity: 136, fuel: 73,
+      terrain: [[0, 305], [0.2, 273], [0.4, 225], [0.501, 311], [0.699, 311], [0.8, 261], [1, 255]],
+      pad: { x0: 0.516, x1: 0.684, y: 311 },
+      starFuel: [16, 11, 6],
+    },
+    {
+      id: "s15", labelKey: "lantL15", gravity: 139, fuel: 72,
+      terrain: [[0, 285], [0.2, 229], [0.293, 291], [0.507, 291], [0.6, 265], [0.8, 263], [1, 266]],
+      pad: { x0: 0.308, x1: 0.492, y: 291 },
+      starFuel: [21, 14, 7],
+    },
+    {
+      id: "s16", labelKey: "lantL16", gravity: 142, fuel: 71,
+      terrain: [[0, 277], [0.2, 278], [0.4, 280], [0.6, 268], [0.724, 308], [0.876, 308], [1, 299]],
+      pad: { x0: 0.739, x1: 0.861, y: 308 },
+      starFuel: [9, 6, 3],
+    },
+    {
+      id: "s17", labelKey: "lantL17", gravity: 145, fuel: 71,
+      terrain: [[0, 290], [0.167, 262], [0.333, 244], [0.406, 296], [0.594, 296], [0.667, 279], [0.833, 269], [1, 285]],
+      pad: { x0: 0.421, x1: 0.579, y: 296 },
+      starFuel: [16, 11, 6],
+    },
+    {
+      id: "s18", labelKey: "lantL18", gravity: 148, fuel: 70,
+      terrain: [[0, 288], [0.167, 239], [0.333, 255], [0.399, 294], [0.601, 294], [0.667, 262], [0.833, 281], [1, 243]],
+      pad: { x0: 0.414, x1: 0.586, y: 294 },
+      starFuel: [15, 10, 5],
+    },
+    {
+      id: "s19", labelKey: "lantL19", gravity: 151, fuel: 69,
+      terrain: [[0, 294], [0.167, 273], [0.333, 238], [0.372, 300], [0.628, 300], [0.667, 264], [0.833, 261], [1, 294]],
+      pad: { x0: 0.387, x1: 0.613, y: 300 },
+      starFuel: [14, 9, 5],
+    },
+    {
+      id: "s20", labelKey: "lantL20", gravity: 154, fuel: 68,
+      terrain: [[0, 272], [0.167, 273], [0.232, 301], [0.435, 301], [0.5, 274], [0.667, 296], [0.833, 271], [1, 295]],
+      pad: { x0: 0.247, x1: 0.42, y: 301 },
+      starFuel: [17, 12, 6],
+    },
   ];
 
   function initStarfallGame() {

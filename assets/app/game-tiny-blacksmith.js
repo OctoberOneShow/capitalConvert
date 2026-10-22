@@ -33,8 +33,9 @@
    * as the needle, so a hidden panel costs the forge nothing. */
   var tbsCoolTime = 0.24;
 
-  /* Levels, one per blade pattern. Doubled from six to twelve through the same
-   * construction path - every row is still plain data the panel reads:
+  /* Levels, one per blade pattern. Grown from six to twelve and then to twenty
+   * through the same construction path - every row is still plain data the
+   * panel reads:
    *   "targets"  the pattern each position has to come down to from the same
    *              starting thickness, so a 0 blow (target == start) is a real
    *              instruction: that section must be left standing
@@ -74,6 +75,14 @@
     { id: "f10", labelKey: "tbsL10", start: 11, targets: [2, 4, 6, 8, 11], band: [54, 82], core: [0.44, 0.82], quench: [50, 76], speed: 84, drift: 9, driftEvery: 2, slack: 2, stars: [92, 56, 28], line: [] },
     { id: "f11", labelKey: "tbsL11", start: 11, targets: [2, 4, 6, 7, 10], band: [58, 84], core: [0.42, 0.85], quench: [8, 34], speed: 86, drift: 10, driftEvery: 2, slack: 2, stars: [92, 50, 22], line: [] },
     { id: "f12", labelKey: "tbsL12", start: 12, targets: [1, 3, 7, 9, 11], band: [62, 86], core: [0.42, 0.9], quench: [26, 50], speed: 88, drift: 10, driftEvery: 2, slack: 2, stars: [92, 44, 10], line: [] },
+    { id: "f13", labelKey: "tbsL13", start: 12, targets: [1, 4, 6, 9, 9], band: [64, 88], core: [0.42, 0.88], quench: [54, 78], speed: 90, drift: 10, driftEvery: 2, slack: 2, stars: [92, 44, 4], line: [{ w: 50, s: 0 }, { w: 27, s: 1 }, { w: 113, s: 2 }, { w: 15, s: 3 }, { w: 112, s: 4 }, { w: 27, s: 0 }, { w: 99, s: 1 }, { w: 41, s: 2 }, { w: 15, s: 3 }, { w: 64, s: 4 }, { w: 67, s: 0 }, { w: 67, s: 1 }, { w: 73, s: 2 }, { w: 53, s: 0 }, { w: 87, s: 1 }, { w: 40, s: 0 }, { w: 108, s: 0 }, { w: 45, q: 1 }] },
+    { id: "f14", labelKey: "tbsL14", start: 13, targets: [1, 4, 6, 9, 12], band: [66, 88], core: [0.42, 0.88], quench: [52, 74], speed: 91, drift: 11, driftEvery: 2, slack: 2, stars: [92, 38, 0], line: [{ w: 50, s: 0 }, { w: 26, s: 1 }, { w: 113, s: 2 }, { w: 15, s: 3 }, { w: 15, s: 4 }, { w: 94, s: 0 }, { w: 35, s: 1 }, { w: 90, s: 2 }, { w: 49, s: 3 }, { w: 75, s: 0 }, { w: 64, s: 1 }, { w: 61, s: 2 }, { w: 78, s: 0 }, { w: 47, s: 1 }, { w: 99, s: 2 }, { w: 25, s: 0 }, { w: 112, s: 1 }, { w: 15, s: 0 }, { w: 27, q: 1 }] },
+    { id: "f15", labelKey: "tbsL15", start: 13, targets: [2, 3, 5, 8, 12], band: [68, 90], core: [0.42, 0.88], quench: [30, 50], speed: 92, drift: 11, driftEvery: 2, slack: 2, stars: [92, 38, 0], line: [{ w: 51, s: 0 }, { w: 23, s: 1 }, { w: 113, s: 2 }, { w: 15, s: 3 }, { w: 15, s: 4 }, { w: 93, s: 0 }, { w: 34, s: 1 }, { w: 89, s: 2 }, { w: 49, s: 3 }, { w: 74, s: 0 }, { w: 63, s: 1 }, { w: 61, s: 2 }, { w: 83, s: 3 }, { w: 40, s: 0 }, { w: 91, s: 1 }, { w: 32, s: 2 }, { w: 104, s: 0 }, { w: 21, s: 1 }, { w: 109, s: 0 }, { w: 34, q: 1 }] },
+    { id: "f16", labelKey: "tbsL16", start: 14, targets: [2, 3, 6, 9, 13], band: [70, 92], core: [0.44, 0.88], quench: [28, 46], speed: 92, drift: 12, driftEvery: 2, slack: 2, stars: [92, 32, 0], line: [{ w: 52, s: 0 }, { w: 21, s: 1 }, { w: 114, s: 2 }, { w: 15, s: 3 }, { w: 15, s: 4 }, { w: 92, s: 0 }, { w: 36, s: 1 }, { w: 87, s: 2 }, { w: 52, s: 3 }, { w: 71, s: 0 }, { w: 67, s: 1 }, { w: 55, s: 2 }, { w: 89, s: 3 }, { w: 34, s: 0 }, { w: 98, s: 1 }, { w: 24, s: 2 }, { w: 108, s: 0 }, { w: 22, s: 1 }, { w: 101, s: 0 }, { w: 31, s: 1 }, { w: 9, q: 1 }] },
+    { id: "f17", labelKey: "tbsL17", start: 14, targets: [2, 3, 6, 7, 13], band: [72, 94], core: [0.44, 0.88], quench: [46, 62], speed: 93, drift: 12, driftEvery: 1, slack: 2, stars: [92, 32, 0], line: [{ w: 53, s: 0 }, { w: 15, s: 1 }, { w: 109, s: 2 }, { w: 36, s: 3 }, { w: 15, s: 4 }, { w: 55, s: 0 }, { w: 82, s: 1 }, { w: 31, s: 2 }, { w: 107, s: 3 }, { w: 29, s: 0 }, { w: 84, s: 1 }, { w: 60, s: 2 }, { w: 54, s: 3 }, { w: 91, s: 0 }, { w: 22, s: 1 }, { w: 116, s: 2 }, { w: 26, s: 3 }, { w: 88, s: 0 }, { w: 50, s: 1 }, { w: 63, s: 0 }, { w: 88, s: 1 }, { w: 47, q: 1 }] },
+    { id: "f18", labelKey: "tbsL18", start: 14, targets: [1, 3, 5, 8, 12], band: [74, 96], core: [0.45, 0.89], quench: [24, 38], speed: 92, drift: 13, driftEvery: 1, slack: 2, stars: [92, 26, 0], line: [{ w: 55, s: 0 }, { w: 15, s: 1 }, { w: 108, s: 2 }, { w: 38, s: 3 }, { w: 76, s: 4 }, { w: 71, s: 0 }, { w: 42, s: 1 }, { w: 103, s: 2 }, { w: 30, s: 3 }, { w: 84, s: 0 }, { w: 64, s: 1 }, { w: 49, s: 2 }, { w: 98, s: 3 }, { w: 18, s: 0 }, { w: 110, s: 1 }, { w: 38, s: 2 }, { w: 76, s: 0 }, { w: 71, s: 1 }, { w: 15, s: 2 }, { w: 21, s: 0 }, { w: 107, s: 1 }, { w: 34, s: 0 }, { w: 1, q: 1 }] },
+    { id: "f19", labelKey: "tbsL19", start: 15, targets: [2, 3, 6, 8, 13], band: [75, 97], core: [0.46, 0.9], quench: [44, 56], speed: 93, drift: 13, driftEvery: 1, slack: 2, stars: [92, 26, 0], line: [{ w: 55, s: 0 }, { w: 15, s: 1 }, { w: 107, s: 2 }, { w: 37, s: 3 }, { w: 75, s: 4 }, { w: 70, s: 0 }, { w: 42, s: 1 }, { w: 102, s: 2 }, { w: 30, s: 3 }, { w: 82, s: 0 }, { w: 64, s: 1 }, { w: 48, s: 2 }, { w: 97, s: 3 }, { w: 18, s: 0 }, { w: 109, s: 1 }, { w: 37, s: 2 }, { w: 15, s: 3 }, { w: 52, s: 0 }, { w: 87, s: 1 }, { w: 15, s: 2 }, { w: 21, s: 0 }, { w: 82, s: 1 }, { w: 57, s: 0 }, { w: 2, q: 1 }] },
+    { id: "f20", labelKey: "tbsL20", start: 15, targets: [1, 2, 5, 8, 14], band: [76, 98], core: [0.46, 0.9], quench: [42, 52], speed: 94, drift: 13, driftEvery: 1, slack: 2, stars: [92, 20, 0], line: [{ w: 55, s: 0 }, { w: 20, s: 1 }, { w: 92, s: 2 }, { w: 53, s: 3 }, { w: 15, s: 4 }, { w: 34, s: 0 }, { w: 101, s: 1 }, { w: 30, s: 2 }, { w: 81, s: 3 }, { w: 63, s: 0 }, { w: 48, s: 1 }, { w: 96, s: 2 }, { w: 17, s: 3 }, { w: 108, s: 0 }, { w: 37, s: 1 }, { w: 74, s: 2 }, { w: 76, s: 3 }, { w: 35, s: 0 }, { w: 101, s: 1 }, { w: 29, s: 2 }, { w: 82, s: 0 }, { w: 63, s: 1 }, { w: 48, s: 0 }, { w: 90, s: 1 }, { w: 51, q: 1 }] },
   ];
 
   /* Keys 1..5 point the hammer, exactly like the five cards on the anvil. */
@@ -977,6 +986,14 @@
       "tbsL10": "Halberd",
       "tbsL11": "Claymore",
       "tbsL12": "Meteor Greatsword",
+      "tbsL13": "Estoc",
+      "tbsL14": "Flamberge",
+      "tbsL15": "Zweihander",
+      "tbsL16": "Executioner's Sword",
+      "tbsL17": "Dadao",
+      "tbsL18": "Glaive",
+      "tbsL19": "Bardiche",
+      "tbsL20": "Khopesh",
       "tbsHeatLabel": "Heat",
       "tbsBlowsLabel": "Hammer",
       "tbsFlawsLabel": "Flaws",
@@ -1019,7 +1036,7 @@
       "tbsMsgLive": "Back at the anvil: {n} blows left, {b} units still to shape.",
       "tbsNextPattern": "Next pattern unlocked.",
       "tbsCampaignDone": "Every pattern on the bench is forged.",
-      "tbsHint": "Point at a position, then swing while the needle is inside the amber band - the bright core takes two units off, and the hammer needs a beat to come back up between blows. Each card shows its thickness over the mark it must reach, and the last swing has to land in the dashed quench window. All twelve patterns are forged as one hot bar: a section that has to stay put, or come down by a single unit, is struck on the dull shoulder of the band while its neighbour waits for the core, and one greedy blow ruins the shape for good. The line under the rail prints all three windows as numbers, so a band is never only a colour.",
+      "tbsHint": "Point at a position, then swing while the needle is inside the amber band - the bright core takes two units off, and the hammer needs a beat to come back up between blows. Each card shows its thickness over the mark it must reach, and the last swing has to land in the dashed quench window. All twenty patterns are forged as one hot bar: a section that has to stay put, or come down by a single unit, is struck on the dull shoulder of the band while its neighbour waits for the core, and one greedy blow ruins the shape for good. The line under the rail prints all three windows as numbers, so a band is never only a colour.",
       "logTinyBlacksmith": "Forged a {name} at quality {q}",
     },
     zh: {
@@ -1036,6 +1053,14 @@
       "tbsL10": "长戟",
       "tbsL11": "双手大剑",
       "tbsL12": "陨铁巨剑",
+      "tbsL13": "穿甲剑",
+      "tbsL14": "焰形剑",
+      "tbsL15": "德式巨剑",
+      "tbsL16": "斩首剑",
+      "tbsL17": "大刀",
+      "tbsL18": "长柄刀",
+      "tbsL19": "月牙斧",
+      "tbsL20": "镰刃剑",
       "tbsHeatLabel": "炉温",
       "tbsBlowsLabel": "锤数",
       "tbsFlawsLabel": "瑕疵",
@@ -1142,4 +1167,9 @@
   App.forgeServiceable = forgeServiceable;
   App.forgeQuenchOk = forgeQuenchOk;
   App.forgeStars = forgeStars;
+  /* The proof and the gates read the same measured replay the panel trusts. */
+  App.forgeReplay = forgeReplay;
+  App.forgeMeasure = forgeMeasure;
+  App.forgeSolvable = forgeSolvable;
+  App.forgeBands = forgeBands;
 })(window.CapitalConvert = window.CapitalConvert || {});

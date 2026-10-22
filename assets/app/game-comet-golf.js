@@ -119,6 +119,126 @@
       ],
       starShots: [2, 4, 7],
     },
+    /* ------------------------------------------------------------------
+     * The crowded tier (g11-g20). The first ten courses are one to three
+     * wells; these run four and five, so a comet that survives one guardian
+     * still has to be threaded past the next, and the star lines climb with
+     * them. Every hole was flown before it shipped - tools/golf-forge.js
+     * replicates this module's step exactly, finds the one-shot answer in the
+     * aim space, and weighs the basin around it so the shot is a window a
+     * hand can find rather than a pixel. */
+    {
+      id: "g11", labelKey: "cgfL11",
+      tee: { x: 36, y: 95 }, target: { x: 284, y: 175, r: 14 },
+      wells: [
+        { x: 201, y: 75, m: 1.5, r: 12 },
+        { x: 214, y: 60, m: 1.1, r: 13 },
+        { x: 237, y: 288, m: 0.9, r: 14 },
+      ],
+      starShots: [1, 2, 3],
+    },
+    {
+      id: "g12", labelKey: "cgfL12",
+      tee: { x: 36, y: 270 }, target: { x: 284, y: 283, r: 14 },
+      wells: [
+        { x: 179, y: 85, m: 1.1, r: 12 },
+        { x: 216, y: 274, m: 1.3, r: 11 },
+        { x: 78, y: 72, m: 0.9, r: 12 },
+      ],
+      starShots: [1, 2, 3],
+    },
+    {
+      id: "g13", labelKey: "cgfL13",
+      tee: { x: 36, y: 62 }, target: { x: 284, y: 88, r: 14 },
+      wells: [
+        { x: 116, y: 299, m: 1.7, r: 10 },
+        { x: 249, y: 217, m: 1.4, r: 10 },
+        { x: 207, y: 130, m: 1.1, r: 13 },
+        { x: 206, y: 149, m: 0.7, r: 12 },
+      ],
+      starShots: [1, 2, 4],
+    },
+    {
+      id: "g14", labelKey: "cgfL14",
+      tee: { x: 284, y: 68 }, target: { x: 36, y: 233, r: 13 },
+      wells: [
+        { x: 101, y: 296, m: 1.4, r: 14 },
+        { x: 109, y: 260, m: 0.7, r: 11 },
+        { x: 241, y: 287, m: 1.2, r: 9 },
+        { x: 216, y: 150, m: 1.4, r: 11 },
+      ],
+      starShots: [2, 3, 4],
+    },
+    {
+      id: "g15", labelKey: "cgfL15",
+      tee: { x: 36, y: 82 }, target: { x: 284, y: 187, r: 13 },
+      wells: [
+        { x: 249, y: 285, m: 1.5, r: 12 },
+        { x: 151, y: 188, m: 0.8, r: 12 },
+        { x: 212, y: 264, m: 0.9, r: 13 },
+        { x: 159, y: 244, m: 1.4, r: 12 },
+      ],
+      starShots: [2, 3, 5],
+    },
+    {
+      id: "g16", labelKey: "cgfL16",
+      tee: { x: 284, y: 255 }, target: { x: 36, y: 131, r: 13 },
+      wells: [
+        { x: 113, y: 109, m: 0.7, r: 9 },
+        { x: 76, y: 129, m: 1.7, r: 10 },
+        { x: 172, y: 180, m: 1.7, r: 12 },
+        { x: 96, y: 260, m: 0.7, r: 12 },
+      ],
+      starShots: [2, 4, 6],
+    },
+    {
+      id: "g17", labelKey: "cgfL17",
+      tee: { x: 36, y: 258 }, target: { x: 284, y: 146, r: 13 },
+      wells: [
+        { x: 180, y: 260, m: 1.8, r: 11 },
+        { x: 118, y: 206, m: 0.8, r: 10 },
+        { x: 232, y: 228, m: 1.1, r: 9 },
+        { x: 147, y: 150, m: 1.7, r: 14 },
+        { x: 230, y: 57, m: 1.1, r: 12 },
+      ],
+      starShots: [2, 4, 6],
+    },
+    {
+      id: "g18", labelKey: "cgfL18",
+      tee: { x: 284, y: 238 }, target: { x: 36, y: 147, r: 12 },
+      wells: [
+        { x: 193, y: 230, m: 0.8, r: 14 },
+        { x: 256, y: 174, m: 1.7, r: 13 },
+        { x: 245, y: 267, m: 1.7, r: 13 },
+        { x: 251, y: 294, m: 1.3, r: 11 },
+        { x: 86, y: 209, m: 0.7, r: 13 },
+      ],
+      starShots: [2, 4, 7],
+    },
+    {
+      id: "g19", labelKey: "cgfL19",
+      tee: { x: 36, y: 131 }, target: { x: 284, y: 284, r: 12 },
+      wells: [
+        { x: 253, y: 304, m: 1.6, r: 11 },
+        { x: 111, y: 267, m: 1.8, r: 10 },
+        { x: 186, y: 185, m: 1.1, r: 13 },
+        { x: 217, y: 101, m: 1, r: 13 },
+        { x: 154, y: 132, m: 0.9, r: 10 },
+      ],
+      starShots: [2, 4, 7],
+    },
+    {
+      id: "g20", labelKey: "cgfL20",
+      tee: { x: 36, y: 130 }, target: { x: 284, y: 201, r: 12 },
+      wells: [
+        { x: 202, y: 72, m: 1.1, r: 12 },
+        { x: 200, y: 302, m: 0.7, r: 13 },
+        { x: 157, y: 282, m: 1.2, r: 13 },
+        { x: 142, y: 97, m: 1.4, r: 11 },
+        { x: 153, y: 256, m: 1.8, r: 12 },
+      ],
+      starShots: [2, 4, 8],
+    },
   ];
   /* A fixed starfield so the sky does not flicker between frames. */
   var cgfStars = [];
@@ -581,12 +701,32 @@
       "cgfL8": "Sky Ladder",
       "cgfL9": "Guarded Ring",
       "cgfL10": "Two Sentinels",
+      "cgfL11": "Crowded Reef",
+      "cgfL12": "Low Road",
+      "cgfL13": "Deep Gate",
+      "cgfL14": "Round Trip",
+      "cgfL15": "Four Crossings",
+      "cgfL16": "Wall of Wells",
+      "cgfL17": "The Gauntlet",
+      "cgfL18": "Five Crowns",
+      "cgfL19": "Anchor Chain",
+      "cgfL20": "Deep Space Ring",
     },
     zh: {
       "cgfL7": "逆向切",
       "cgfL8": "登高梯",
       "cgfL9": "守环口",
       "cgfL10": "双岗哨",
+      "cgfL11": "密礁",
+      "cgfL12": "低路",
+      "cgfL13": "深门",
+      "cgfL14": "往返",
+      "cgfL15": "四渡",
+      "cgfL16": "井墙",
+      "cgfL17": "铁栅",
+      "cgfL18": "五冠",
+      "cgfL19": "锚链",
+      "cgfL20": "深空环",
     },
   });
 

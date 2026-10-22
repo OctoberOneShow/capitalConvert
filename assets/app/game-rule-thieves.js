@@ -628,9 +628,8 @@
       var next = rltApply(state, move);
       var value = 0;
       if (next) {
-        value = rank.depth > 0
-          ? -rltNega(next, rank.depth - 1, -RLT_WIN * 4, RLT_WIN * 4, ctx)
-          : -rltEval(next, false);
+        // Even a zero-depth rival must score completed wins and draws first.
+        value = -rltNega(next, Math.max(0, rank.depth - 1), -RLT_WIN * 4, RLT_WIN * 4, ctx);
       }
       return { move: move, value: value };
     });

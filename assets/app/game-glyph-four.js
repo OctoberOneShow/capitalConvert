@@ -44,6 +44,15 @@
      * row forming three moves off, sidesteps it, and gives up only one turn in
      * five to build its own shape instead of answering yours. */
     { id: "f10", labelKey: "c4L10", depth: 9, noise: 0.2, starMoves: [6, 8, 10] },
+    /* Ranks 11-15: one more ply per rank, and the tempo concession the
+     * ladder already uses at the top - from rank 14 the rival spends turns
+     * developing a flank instead of dropping the move its search rates
+     * best, which is what keeps a rival this deep beatable. */
+    { id: "f11", labelKey: "c4L11", depth: 10, noise: 0.18, starMoves: [6, 8, 10] },
+    { id: "f12", labelKey: "c4L12", depth: 11, noise: 0.16, starMoves: [6, 8, 10] },
+    { id: "f13", labelKey: "c4L13", depth: 12, noise: 0.14, starMoves: [5, 7, 9] },
+    { id: "f14", labelKey: "c4L14", depth: 12, tempo: 1, noise: 0.12, starMoves: [5, 7, 9] },
+    { id: "f15", labelKey: "c4L15", depth: 13, tempo: 1, noise: 0.1, starMoves: [5, 7, 9] },
   ];
 
   /* Pure rules, exported for the static checks. */
@@ -297,7 +306,15 @@
     en: {
       "c4L9": "Sibyl",
       "c4L10": "Ascendant",
-    },
+      "c4L11": "深水者",
+      "c4L12": "高空索",
+      "c4L13": "远望者",
+      "c4L14": "长局者",
+      "c4L15": "登顶者",      "c4L11": "Deepwater",
+      "c4L12": "Highwire",
+      "c4L13": "Overwatch",
+      "c4L14": "The Long Game",
+      "c4L15": "Apex Ascendant",    },
     zh: {
       "c4L9": "占卜者",
       "c4L10": "飞升者",

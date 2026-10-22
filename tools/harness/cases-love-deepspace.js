@@ -619,6 +619,43 @@ run("Love and Deepspace four-shot strips", () => {
   check("Love and Deepspace four-shot strips", "old saves open with an empty strip album", App.ldsReadDates('{"version":1}').strips.length === 0);
 });
 
+run("Love and Deepspace last-turn memory", () => {
+  const env = boot(), panel = env.byId("gamePanelLoveDeepspace");
+  panel.querySelector('[data-i18n="ldsMissionTab"]').click();
+  panel.querySelector('[data-i18n="ldsStrategyMode"]').click();
+  const recover = panel.querySelectorAll(".lds-move")[3];
+  const originalRandom = env.sandbox.Math.random;
+  try {
+    env.sandbox.Math.random = () => 0;
+    recover.click(); recover.click(); recover.click();
+    for (let turn = 0; turn < 3; turn += 1) panel.querySelector(".lds-move.is-counter").click();
+  } finally { env.sandbox.Math.random = originalRandom; }
+  const saved = JSON.parse(env.store.get("love-deepspace-album-v1"));
+  check("Love and Deepspace last-turn memory", "a legal last-turn win earns at least one star", saved.memories["xavier:lds1"] >= 1);
+  panel.querySelector('[data-i18n="ldsMemoryTab"]').click();
+  check("Love and Deepspace last-turn memory", "the earned memory is visible immediately", panel.querySelectorAll(".lds-memory.is-unlocked").length === 1);
+  const restored = boot({ store: env.store });
+  check("Love and Deepspace last-turn memory", "the earned memory survives reload", JSON.parse(restored.store.get("love-deepspace-album-v1")).memories["xavier:lds1"] >= 1 && restored.window.CapitalConvert.ldsReadAlbum(restored.store.get("love-deepspace-album-v1")).memories["xavier:lds1"] >= 1);
+});
+
+run("Love and Deepspace expanded memory copy", () => {
+  for (const language of ["en-US", "zh-CN"]) {
+    const memories = {};
+    for (let index = 1; index <= 8; index += 1) memories["xavier:lds" + index] = 1;
+    const store = new Map([["love-deepspace-album-v1", JSON.stringify({ version: 1, selected: "xavier", bonds: {}, memories })]]);
+    const env = boot({ language, store }), App = env.window.CapitalConvert;
+    const panel = env.byId("gamePanelLoveDeepspace");
+    panel.querySelector('[data-i18n="ldsMemoryTab"]').click();
+    const cards = panel.querySelectorAll(".lds-memory.is-unlocked");
+    check("Love and Deepspace expanded memory copy", language + " displays all eight collected routes", cards.length === App.ldsRoutes.length);
+    cards.forEach((card, index) => {
+      const description = card.querySelector("p").textContent;
+      check("Love and Deepspace expanded memory copy", language + " route " + (index + 1) + " has a translated memory",
+        description !== "ldsMemory" + (index + 1) && description.includes(App.t("ldsPartnerXavier")));
+    });
+  }
+});
+
 run("Love and Deepspace date translations", () => {
   const helper = fs.readFileSync(path.join(__dirname, "../../assets/app/love-deepspace-dates.js"), "utf8");
   const keys = new Set(Array.from(helper.matchAll(/"(lds[A-Z][a-zA-Z0-9]+)"/g), match => match[1]));

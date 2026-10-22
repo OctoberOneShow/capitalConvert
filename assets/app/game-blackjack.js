@@ -28,7 +28,18 @@
     { id: "b8", labelKey: "bjT8", decks: 14, start: 12800, bets: [640, 1280, 3200], target: 19200, starHands: [11, 23, 46] },
     { id: "b9", labelKey: "bjT9", decks: 16, start: 25600, bets: [1280, 2560, 6400], target: 38400, starHands: [11, 22, 44] },
     { id: "b10", labelKey: "bjT10", decks: 18, start: 51200, bets: [2560, 5120, 12800], target: 76800, starHands: [10, 21, 42] },
-  ];
+
+    /* Tables 11-15: the shoe keeps growing - twenty to twenty-eight decks,
+     * where a count is a whisper - and the stack keeps doubling, while the
+     * band tightens: seven hands to clear for three stars, against the ten
+     * the last shipped table allows. Each was swept 160 times on the seeded
+     * bench at the top stake before it shipped, so these bands are what that
+     * sweep measured rather than a guess. */
+    { id: "b11", labelKey: "bjT11", decks: 20, start: 102400, bets: [5120, 10240, 25600], target: 153600, starHands: [7, 13, 26] },
+    { id: "b12", labelKey: "bjT12", decks: 22, start: 204800, bets: [10240, 20480, 51200], target: 307200, starHands: [7, 13, 26] },
+    { id: "b13", labelKey: "bjT13", decks: 24, start: 409600, bets: [20480, 40960, 102400], target: 614400, starHands: [7, 13, 26] },
+    { id: "b14", labelKey: "bjT14", decks: 26, start: 819200, bets: [40960, 81920, 204800], target: 1228800, starHands: [7, 13, 26] },
+    { id: "b15", labelKey: "bjT15", decks: 28, start: 1638400, bets: [81920, 163840, 409600], target: 2457600, starHands: [7, 13, 26] },  ];
 
   /* Presentation beats, in milliseconds: the hole card turns after the deal has
    * landed, the house answer follows the turn, and a settled hand is applauded

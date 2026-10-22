@@ -143,6 +143,45 @@ run("arcade-crossing-respawn", () => {
   check("arcade-crossing-respawn", "an earlier run's respawn cannot teleport the new frog", env.inspect("frog.x") === x);
 });
 
+run("arcade-crossing-log-edge", () => {
+  for (const dir of [-1, 1]) {
+    const env = arcade("glyph-crossing");
+    env.byId("croStartBtn").click();
+    const startX = dir > 0 ? 100.5 : 179.5;
+    env.inspect("level = {lanes: [{row: 1, dir: " + dir + ", speed: 100, len: 80, gap: 80}]}; props = [{lane: 0, row: 1, dir: " + dir + ", speed: 100, len: 80, cycle: 1000, x: 100}]; frog.row = 1; frog.x = " + startX + "; update(0.016);");
+    check("arcade-crossing-log-edge", "a frog at the trailing log edge survives direction " + dir, env.inspect("lives === 3 && !dead"));
+    check("arcade-crossing-log-edge", "the same log carries the frog direction " + dir, Math.abs(env.inspect("frog.x") - startX - dir * 1.6) < 0.001);
+  }
+});
+
+run("arcade-dice-paired-faces", () => {
+  const env = arcade("ember-dice");
+  env.inspect("table = diceTables[3]; startRun(); rollFace = (function () { var faces = [4, 1]; return function () { return faces.shift(); }; })();");
+  env.byId("diceRollBtn").click();
+  check("arcade-dice-paired-faces", "both dice remain visible when the second die burns", env.byId("diceFace").textContent === "\u2683 \u2680");
+  check("arcade-dice-paired-faces", "a burn on either die ends the turn and clears the stake", env.inspect("turn === 2 && stake === 0 && bank === 0"));
+  env.inspect("rollFace = (function () { var faces = [3, 5]; return function () { return faces.shift(); }; })();");
+  env.byId("diceRollBtn").click();
+  check("arcade-dice-paired-faces", "a safe pair displays both contributing faces", env.byId("diceFace").textContent === "\u2682 \u2684");
+  check("arcade-dice-paired-faces", "safe dice add together without consuming the turn", env.inspect("turn === 2 && stake === 8 && bank === 0"));
+});
+
+run("arcade-dice-table-rules", () => {
+  const env = arcade("ember-dice");
+  const tables = env.inspect("diceTables.length");
+  for (let index = 0; index < tables; index += 1) {
+    env.inspect("table = diceTables[" + index + "]; startRun(); rollFace = function () { return table.burn.indexOf(3) === -1 ? 3 : 4; }; roll();");
+    check("arcade-dice-table-rules", "table " + (index + 1) + " correctly totals its safe dice", env.inspect("stake === (table.pairs ? 6 : 3) && turn === 1"));
+    const net = env.inspect("Math.max(0, stake - table.tax)");
+    env.byId("diceBankBtn").click();
+    check("arcade-dice-table-rules", "table " + (index + 1) + " applies its tax or bounty once", env.inspect("bank") === net && env.inspect("stake === 0 && turn === 2"));
+    env.byId("diceBankBtn").click();
+    check("arcade-dice-table-rules", "table " + (index + 1) + " cannot bank an empty stake", env.inspect("bank") === net && env.inspect("turn === 2"));
+    env.inspect("turn = 10; rollFace = function () { return table.burn[0]; }; roll();");
+    check("arcade-dice-table-rules", "table " + (index + 1) + " ends after its tenth turn", env.inspect("!running && turn === 11 && stake === 0"));
+  }
+});
+
 run("arcade-leap-continuation", () => {
   const env = arcade("glyph-leap");
   env.byId("leapStartBtn").click();

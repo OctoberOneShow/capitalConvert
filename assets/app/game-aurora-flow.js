@@ -14,7 +14,14 @@
   var auroDangerHue = 4;
   /* Each board lists its pairs by cell. Every board was designed around a
    * full disjoint path set, so a ribbon solution always exists. Star times
-   * are [3-star, 2-star, 1-star] seconds. */
+   * are [3-star, 2-star, 1-star] seconds.
+   *
+   * Twenty boards in two tiers. Rungs 1-10 grow the grid (5x5 up to 8x8) and
+   * the ribbon count with it while the boards stay airy enough that every pair
+   * is legible at a glance. Rungs 11-20 grow the density instead: they are
+   * forged solution-first by tools/aurora-forge.js, laid out in the order that
+   * forge measured, so each rung needs more inked cells than the one before
+   * it (48 up to 63) and their star bands follow the same climb. */
   var auroraLevels = [
     {
       id: "f1", labelKey: "auroL1", size: 5,
@@ -66,14 +73,83 @@
       pairs: [[1, 6, 7, 5], [7, 2, 6, 3], [3, 7, 2, 0], [2, 2, 0, 4], [4, 1, 5, 4], [5, 6, 4, 5], [5, 2, 6, 1], [2, 5, 3, 4], [1, 1, 0, 2]],
       starTimes: [50, 76, 108],
     },
-  ];
+    /* ------------------------------------------------------------------
+     * The second tier (f11-f20). Rungs 1-10 grow the grid and the ribbon
+     * count with it while the boards stay airy; this tier grows the
+     * density instead. Every board here was forged solution-first by
+     * tools/aurora-forge.js: one long self-avoiding snake over the grid,
+     * cut into consecutive pieces that cannot collide, then re-solved
+     * from the pairs alone by a search that holds the panel's exact
+     * rules (a ribbon may not step on another ribbon's cells, nor on
+     * another pair's endpoint). The boards are laid out in the order the
+     * solver measured them, so each rung needs more ribbon than the one
+     * before it, and the star bands follow that same climb.
+     * ------------------------------------------------------------------ */
+    {
+      id: "f11", labelKey: "auroL11", size: 8,
+      pairs: [[5, 2, 4, 1], [4, 0, 2, 1], [2, 0, 0, 2], [0, 3, 6, 7], [7, 7, 5, 1], [6, 1, 1, 3], [1, 4, 6, 6], [5, 6, 4, 5], [4, 6, 2, 5], [2, 6, 1, 5]],
+      starTimes: [61, 95, 131],
+    },
+    {
+      id: "f12", labelKey: "auroL12", size: 8,
+      pairs: [[3, 0, 0, 2], [0, 3, 7, 7], [7, 6, 3, 6], [2, 6, 3, 5], [4, 5, 6, 5], [7, 5, 3, 4], [2, 4, 1, 1], [2, 1, 2, 3], [3, 3, 7, 0], [7, 1, 6, 3], [7, 3, 6, 2]],
+      starTimes: [61, 95, 131],
+    },
+    {
+      id: "f13", labelKey: "auroL13", size: 8,
+      pairs: [[2, 3, 1, 7], [2, 7, 7, 1], [7, 0, 6, 6], [5, 6, 5, 3], [5, 2, 3, 0], [2, 0, 0, 2], [1, 2, 3, 2], [3, 1, 3, 3], [3, 4, 4, 5], [4, 6, 2, 6], [1, 6, 2, 4]],
+      starTimes: [61, 95, 131],
+    },
+    {
+      id: "f14", labelKey: "auroL14", size: 9,
+      pairs: [[8, 5, 8, 7], [8, 8, 4, 8], [3, 8, 0, 7], [0, 6, 2, 1], [1, 1, 6, 2], [7, 2, 7, 4], [7, 3, 5, 3], [4, 3, 1, 4], [2, 4, 5, 4], [6, 4, 7, 5], [7, 6, 6, 7], [6, 6, 2, 7], [1, 7, 1, 5], [2, 5, 3, 6], [4, 6, 5, 5]],
+      starTimes: [69, 107, 148],
+    },
+    {
+      id: "f15", labelKey: "auroL15", size: 9,
+      pairs: [[1, 8, 0, 5], [0, 4, 0, 2], [0, 1, 5, 0], [6, 0, 1, 4], [1, 5, 1, 7], [2, 7, 3, 8], [4, 8, 8, 8], [8, 7, 3, 2], [4, 2, 8, 5], [8, 6, 7, 5], [7, 4, 3, 3], [4, 3, 5, 5]],
+      starTimes: [75, 116, 161],
+    },
+    {
+      id: "f16", labelKey: "auroL16", size: 9,
+      pairs: [[0, 0, 2, 0], [3, 0, 8, 0], [8, 1, 3, 1], [2, 1, 0, 7], [0, 8, 3, 2], [4, 2, 8, 4], [8, 5, 2, 7], [3, 7, 7, 7], [7, 6, 2, 6], [2, 5, 6, 5], [7, 5, 3, 3]],
+      starTimes: [77, 119, 166],
+    },
+    {
+      id: "f17", labelKey: "auroL17", size: 9,
+      pairs: [[2, 0, 8, 2], [8, 3, 8, 8], [7, 8, 0, 8], [0, 7, 1, 0], [1, 1, 1, 5], [1, 6, 7, 5], [7, 4, 7, 1], [6, 1, 6, 3], [6, 4, 3, 5], [4, 5, 5, 4], [5, 3, 5, 1], [4, 1, 3, 2], [4, 2, 2, 4]],
+      starTimes: [77, 119, 166],
+    },
+    {
+      id: "f18", labelKey: "auroL18", size: 9,
+      pairs: [[1, 1, 0, 0], [0, 1, 0, 7], [0, 8, 2, 8], [3, 8, 8, 8], [8, 7, 2, 7], [1, 7, 7, 6], [8, 6, 8, 1], [8, 0, 7, 5], [6, 5, 1, 4], [1, 3, 3, 4], [3, 3, 3, 0], [4, 0, 6, 4], [6, 3, 5, 2], [6, 2, 6, 0]],
+      starTimes: [77, 119, 166],
+    },
+    {
+      id: "f19", labelKey: "auroL19", size: 9,
+      pairs: [[8, 0, 3, 0], [2, 0, 0, 7], [0, 8, 1, 1], [2, 1, 7, 1], [8, 1, 8, 3], [8, 4, 7, 6], [7, 5, 5, 2], [4, 2, 2, 4], [2, 5, 3, 8], [4, 8, 6, 7], [6, 6, 6, 3], [5, 3, 3, 6], [4, 6, 3, 3]],
+      starTimes: [77, 119, 166],
+    },
+    {
+      id: "f20", labelKey: "auroL20", size: 9,
+      pairs: [[0, 5, 0, 2], [0, 1, 6, 0], [7, 0, 5, 8], [4, 8, 0, 8], [0, 7, 3, 6], [3, 7, 7, 7], [7, 6, 4, 5], [5, 5, 7, 4], [6, 4, 4, 4], [3, 4, 2, 5], [1, 5, 1, 1], [2, 1, 3, 2], [3, 3, 6, 1], [6, 2, 3, 1]],
+      starTimes: [78, 121, 168],
+    },  ];
+  /* Sixteen entries so a fourteen-ribbon board still gives every ribbon its
+   * own colour; the first eight are the shipped ramp, so no existing board
+   * changes appearance. */
   var auroraColors = [
     "#22d3ee", "#f472b6", "#a3e635", "#fbbf24",
     "#a78bfa", "#fb7185", "#38bdf8", "#4ade80",
+    "#f97316", "#e879f9", "#2dd4bf", "#facc15",
+    "#818cf8", "#f43f5e", "#a3a3a3", "#34d399",
   ];
   /* Numeric twins of auroraColors: the shared fx layer takes hsl() hue
    * numbers, not css colour strings. */
-  var auroraHues = [190, 330, 83, 43, 262, 351, 199, 142];
+  var auroraHues = [
+    190, 330, 83, 43, 262, 351, 199, 142,
+    25, 289, 172, 51, 236, 348, 0, 156,
+  ];
 
   function initAuroraFlowGame() {
     var canvas = getElement("auroCanvas");

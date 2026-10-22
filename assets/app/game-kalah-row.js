@@ -47,6 +47,16 @@
     { id: "m8", labelKey: "malR8", depth: 3, noise: 0, keep: 4, threat: 1, deny: 2, tempo: 2.5, flub: 0.3, margin: [7, 4, 1] },
     { id: "m9", labelKey: "malR9", depth: 3, noise: 0, keep: 6, threat: 1.5, deny: 2, tempo: 2.5, count: 10, flub: 0.3, margin: [6, 4, 1] },
     { id: "m10", labelKey: "malR10", depth: 3, noise: 0, keep: 6, threat: 2, deny: 3, tempo: 3, count: 12, slip: 0.05, flub: 0.3, margin: [5, 3, 1] },
+    /* Ranks 11-15: the ring master looks two plies further per rank and
+     * guards more pots, but it still slips - the flub rate falls only
+     * slowly, and the margin it can be beaten by falls to a single stone.
+     * The count it can see rises with it, which is the tell the player
+     * is meant to read. */
+    { id: "m11", labelKey: "malR11", depth: 4, noise: 0, keep: 6, threat: 2, deny: 3, tempo: 3, count: 12, slip: 0.05, flub: 0.28, margin: [5, 3, 1] },
+    { id: "m12", labelKey: "malR12", depth: 5, noise: 0, keep: 8, threat: 2.5, deny: 3, tempo: 3, count: 14, slip: 0.05, flub: 0.26, margin: [4, 3, 1] },
+    { id: "m13", labelKey: "malR13", depth: 6, noise: 0, keep: 8, threat: 2.5, deny: 4, tempo: 3.5, count: 16, slip: 0.04, flub: 0.24, margin: [4, 2, 1] },
+    { id: "m14", labelKey: "malR14", depth: 7, noise: 0, keep: 10, threat: 3, deny: 4, tempo: 3.5, count: 18, slip: 0.04, flub: 0.22, margin: [3, 2, 1] },
+    { id: "m15", labelKey: "malR15", depth: 8, noise: 0, keep: 10, threat: 3, deny: 5, tempo: 4, count: 20, slip: 0.03, flub: 0.2, margin: [3, 2, 1] },
   ];
 
   function malFresh() {
@@ -576,7 +586,15 @@
       "malR8": "Tempo Reader",
       "malR9": "Stone Counter",
       "malR10": "Ring Sovereign",
-    },
+      "malR11": "环上守卫",
+      "malR12": "深播者",
+      "malR13": "长算者",
+      "malR14": "守罐者",
+      "malR15": "至高王",      "malR11": "Ring Warden",
+      "malR12": "Deep Sower",
+      "malR13": "The Long Count",
+      "malR14": "Pot Keeper",
+      "malR15": "Sovereign Supreme",    },
     zh: {
       "malR5": "石墙凳",
       "malR6": "背谱凳",

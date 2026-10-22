@@ -48,6 +48,22 @@
     { id: "t8", labelKey: "diceTable8", ruleKey: "diceRule8", target: 125, burn: [1], tax: -12, pairs: false },
     { id: "t9", labelKey: "diceTable9", ruleKey: "diceRule9", target: 130, burn: [1, 2], tax: -20, pairs: false },
     { id: "t10", labelKey: "diceTable10", ruleKey: "diceRule10", target: 170, burn: [1], tax: -24, pairs: true },
+
+    /* Tables 11-16, the second tier. Two dice with a SECOND burn face: with
+     * two dice on the table a burn lands on five rolls in nine, so the stake
+     * is far more likely to die before it can be banked. The bounty is what
+     * makes that survivable, and it is set by measurement, not feel - each
+     * table was solved by value iteration over (turns, bank, stake) in
+     * tools/dice-forge.js, and the bounty chosen is the one that puts the
+     * three-star line (clear with three turns spare) in the 20-41% band the
+     * later shipped tables already occupy, while a best-policy run still
+     * clears the table outright. */
+    { id: "t11", labelKey: "diceTable11", ruleKey: "diceRule11", target: 150, burn: [1, 6], tax: -23, pairs: true },
+    { id: "t12", labelKey: "diceTable12", ruleKey: "diceRule12", target: 165, burn: [1, 2], tax: -25, pairs: true },
+    { id: "t13", labelKey: "diceTable13", ruleKey: "diceRule13", target: 180, burn: [1, 6], tax: -29, pairs: true },
+    { id: "t14", labelKey: "diceTable14", ruleKey: "diceRule14", target: 195, burn: [1, 2], tax: -31, pairs: true },
+    { id: "t15", labelKey: "diceTable15", ruleKey: "diceRule15", target: 210, burn: [1, 6], tax: -34, pairs: true },
+    { id: "t16", labelKey: "diceTable16", ruleKey: "diceRule16", target: 225, burn: [1, 2], tax: -36, pairs: true },
   ];
 
   function initEmberDiceGame() {
@@ -173,7 +189,7 @@
           burnedBy = face;
         }
       });
-      faceEl.textContent = diceFaces[faces[0]];
+      faceEl.textContent = faces.map(function (face) { return diceFaces[face]; }).join(" ");
       pad.classList.toggle("is-ember", burnedBy !== undefined);
 
       if (burnedBy !== undefined) {
@@ -220,7 +236,7 @@
       turn = 1;
       stake = 0;
       bank = 0;
-      faceEl.textContent = diceFaces[1];
+      faceEl.textContent = table.pairs ? diceFaces[1] + " " + diceFaces[1] : diceFaces[1];
       pad.classList.remove("is-ember");
       renderHud();
       refreshPicker();
@@ -268,10 +284,20 @@
       "diceTable8": "The Bounty Board",
       "diceTable9": "Cold Deuce",
       "diceTable10": "Ashfall Twins",
-      "diceRule8": "The Bounty Board: a bank pays 12 bounty embers, but only a bank collects. Target {t}.",
+      "diceTable11": "Cinder Gate",
+      "diceTable12": "Cold Gate",
+      "diceTable13": "Twin Ashfall",
+      "diceTable14": "Twin Cold",
+      "diceTable15": "Ember Gate",
+      "diceTable16": "The Long Gate",      "diceRule8": "The Bounty Board: a bank pays 12 bounty embers, but only a bank collects. Target {t}.",
       "diceRule9": "Cold Deuce: 2 burns right alongside 1, and the bounty climbs to 20. Target {t}.",
       "diceRule10": "Ashfall Twins: two dice, any 1 burns them both, and each bank pays a 24 bounty. Target {t}.",
-      "diceBurns": "A {f}! The stake burns to ash.",
+      "diceRule11": "Cinder Gate: two dice, 1 and 6 both burn, and each bank pays a 23 bounty. Target {t}.",
+      "diceRule12": "Cold Gate: two dice, 1 and 2 both burn, and the bounty climbs to 25. Target {t}.",
+      "diceRule13": "Twin Ashfall: two dice, 1 and 6 both burn, and each bank pays a 29 bounty. Target {t}.",
+      "diceRule14": "Twin Cold: two dice, 1 and 2 both burn, and the bounty climbs to 31. Target {t}.",
+      "diceRule15": "Ember Gate: two dice, 1 and 6 both burn, and each bank pays a 34 bounty. Target {t}.",
+      "diceRule16": "The Long Gate: two dice, 1 and 2 both burn, and the bounty reaches 36. Target {t}.",      "diceBurns": "A {f}! The stake burns to ash.",
       "diceAllTables": " All {n} tables are yours!",
     },
     zh: {
@@ -282,10 +308,20 @@
       "diceTable8": "赏金桌",
       "diceTable9": "冷二桌",
       "diceTable10": "灰烬双骰",
-      "diceRule8": "赏金桌：「收下」额外给 12 簇赏金，只有收下才拿得到。目标 {t}。",
+      "diceTable11": "炭门桌",
+      "diceTable12": "冷门桌",
+      "diceTable13": "双灰烬桌",
+      "diceTable14": "双冷桌",
+      "diceTable15": "火门桌",
+      "diceTable16": "长门桌",      "diceRule8": "赏金桌：「收下」额外给 12 簇赏金，只有收下才拿得到。目标 {t}。",
       "diceRule9": "冷二桌：2 点和 1 点一样烧注，赏金涨到 20。目标 {t}。",
       "diceRule10": "灰烬双骰：两颗骰子，任何 1 点全烧，每次收下赏 24。目标 {t}。",
-      "diceBurns": "掷出 {f}！赌注化为灰烬。",
+      "diceRule11": "炭门桌：两颗骰子，1 点与 6 点皆烧注，每次收下赏 23。目标 {t}。",
+      "diceRule12": "冷门桌：两颗骰子，1 点与 2 点皆烧注，赏金涨到 25。目标 {t}。",
+      "diceRule13": "双灰烬桌：两颗骰子，1 点与 6 点皆烧注，每次收下赏 29。目标 {t}。",
+      "diceRule14": "双冷桌：两颗骰子，1 点与 2 点皆烧注，赏金涨到 31。目标 {t}。",
+      "diceRule15": "火门桌：两颗骰子，1 点与 6 点皆烧注，每次收下赏 34。目标 {t}。",
+      "diceRule16": "长门桌：两颗骰子，1 点与 2 点皆烧注，赏金升到 36。目标 {t}。",      "diceBurns": "掷出 {f}！赌注化为灰烬。",
       "diceAllTables": " {n} 张牌桌都是你的了！",
     },
   });

@@ -16,11 +16,17 @@
   var rrPad = 8;
   /* Zones: grid side, battery budget and the scan counts that earn
    * [3-star, 2-star, 1-star]. `drift` hops the transmitter every N scans.
-   * The five upper rungs are cut against a scripted hunt, not guessed: the
-   * readings are distance rings, so a solver that always asks the sharpest
-   * question pins the beacon within 3 scans on any still grid and within 6 on
-   * any hopping one, whatever the side. Grid size, battery and hop interval are
-   * therefore the only real difficulty levers, and each rung spends one. */
+   * The upper rungs are cut against a scripted hunt, not guessed. The readings
+   * are distance rings, so a solver that always asks the sharpest question pins
+   * a still beacon within three scans - proven by a two-probe plan that gives
+   * every cell on the floor its own pair of readings - and a hopping beacon is
+   * pinned before its first shunt whenever the hop comes every third scan.
+   * A every-two-scan shunt is the one case that cannot be pinned before it
+   * moves, so those rungs are measured by the tail of a full hunt instead: over
+   * 400 seeded deals a belief-tracking hunt needs at most twelve, fourteen and
+   * seventeen scans on the 28, 30 and 32 floors, and each of those batteries is
+   * set one ping past its own worst line. Grid size, battery and hop interval
+   * are therefore the only real difficulty levers, and each rung spends one. */
   var rrLevels = [
     { id: "r1", labelKey: "rrZ1", side: 6, scans: 8, starScans: [3, 5, 7], drift: 0 },
     { id: "r2", labelKey: "rrZ2", side: 8, scans: 10, starScans: [4, 6, 9], drift: 0 },
@@ -46,6 +52,44 @@
      * of reading, and the tightest battery of the five upper rungs - it stops
      * one ping past the one-star line. */
     { id: "r10", labelKey: "rrZ10", side: 24, scans: 13, starScans: [4, 8, 12], drift: 2 },
+    /* Northgate: the first still floor past the Outer Belt. A wider grid on a
+     * nine-ping battery, so the two-probe pin is still the 3-star line and a
+     * stray scan costs the two-star. */
+    { id: "r11", labelKey: "rrZ11", side: 26, scans: 9, starScans: [3, 6, 8], drift: 0 },
+    /* Substation: the beacon shunts every third scan, so the two-probe pin is
+     * spent before the air moves and the hunt has to be rebuilt once. */
+    { id: "r12", labelKey: "rrZ12", side: 26, scans: 11, starScans: [6, 8, 10], drift: 3 },
+    /* Quarry: still air again, a 28 floor and only eight pings. Every probe
+     * must cut the ring field in half; the 3-star line stays on the pin. */
+    { id: "r13", labelKey: "rrZ13", side: 28, scans: 8, starScans: [3, 5, 7], drift: 0 },
+    /* Foundry: the fastest hop on the ladder - every second scan - on a 28
+     * floor. Readings go stale after each pair of probes, so only the corner
+     * restart survives, and the one-star line is the tail of that restart. */
+    { id: "r14", labelKey: "rrZ14", side: 28, scans: 13, starScans: [6, 9, 12], drift: 2 },
+    /* Transit Hub: a 30 floor on seven pings, the tightest still battery of
+     * the late tier. The pin still lands inside three, but there is no room to
+     * re-ask a question. */
+    { id: "r15", labelKey: "rrZ15", side: 30, scans: 7, starScans: [3, 4, 6], drift: 0 },
+    /* Relay Yard: hop every third scan on the 30 floor. The first pin survives
+     * the hop only if it is spent early, so the 3-star line is the six-scan
+     * re-triangulation. */
+    { id: "r16", labelKey: "rrZ16", side: 30, scans: 9, starScans: [6, 7, 8], drift: 3 },
+    /* Skyline: the widest still floor, a 32 grid on seven pings. The far edges
+     * smear by half a block per percent, so probes come off the middle. */
+    { id: "r17", labelKey: "rrZ17", side: 32, scans: 7, starScans: [3, 5, 6], drift: 0 },
+    /* Cold Store: the widest hopping floor, a 34 grid that shunts every third
+     * scan, and the one-star line sits a single ping inside the battery. */
+    { id: "r18", labelKey: "rrZ18", side: 34, scans: 10, starScans: [6, 8, 9], drift: 3 },
+    /* Antenna Farm: hop every second scan on a 30 floor with a long fifteen-ping
+     * battery. The beacon never sits still for a second pin, so the hunt is a
+     * sequence of corner restarts; the one-star line is the tail of the last
+     * one and the 3-star line stays on the sharpest restart the floor allows. */
+    { id: "r19", labelKey: "rrZ19", side: 30, scans: 15, starScans: [6, 10, 14], drift: 2 },
+    /* Signal Ridge: the last floor, 32 wide and hopping every second scan. The
+     * tail is real - a bad hop costs a whole re-triangulation - so the 3-star
+     * line sits on the sharpest measured restart and the one-star line on the
+     * ninety-ninth percentile hunt, one ping inside the battery. */
+    { id: "r20", labelKey: "rrZ20", side: 32, scans: 18, starScans: [8, 13, 17], drift: 2 },
   ];
 
   /* Pure core, exported for the harness: distance is measured between cell
@@ -482,6 +526,16 @@
       "rrZ8": "Warehouse",
       "rrZ9": "Shipyard",
       "rrZ10": "Outer Belt",
+      "rrZ11": "Northgate",
+      "rrZ12": "Substation",
+      "rrZ13": "Quarry",
+      "rrZ14": "Foundry",
+      "rrZ15": "Transit Hub",
+      "rrZ16": "Relay Yard",
+      "rrZ17": "Skyline",
+      "rrZ18": "Cold Store",
+      "rrZ19": "Antenna Farm",
+      "rrZ20": "Signal Ridge",
       "rrBatteryLabel": "Battery",
       "rrZoneLabel": "Grid",
       "rrZoneSelectLabel": "Choose a zone",
@@ -515,6 +569,16 @@
       "rrZ8": "仓库区",
       "rrZ9": "造船厂",
       "rrZ10": "外环带",
+      "rrZ11": "北门",
+      "rrZ12": "变电站",
+      "rrZ13": "采石场",
+      "rrZ14": "铸造厂",
+      "rrZ15": "交通枢纽",
+      "rrZ16": "中继站",
+      "rrZ17": "天际线",
+      "rrZ18": "冷库",
+      "rrZ19": "天线场",
+      "rrZ20": "信号岭",
       "rrBatteryLabel": "电量",
       "rrZoneLabel": "网格",
       "rrZoneSelectLabel": "选择区域",

@@ -28,12 +28,24 @@
     { id: "tw3", labelKey: "towL3", discs: 5, starMoves: [32, 36, 45] },
     { id: "tw4", labelKey: "towL4", discs: 6, starMoves: [63, 68, 80] },
     { id: "tw5", labelKey: "towL5", discs: 7, starMoves: [128, 135, 155] },
-    { id: "tw6", labelKey: "lvlNum6", discs: 8, starMoves: [256, 266, 290] },
-    { id: "tw7", labelKey: "lvlNum7", discs: 9, starMoves: [512, 526, 560] },
-    { id: "tw8", labelKey: "lvlNum8", discs: 10, starMoves: [1024, 1052, 1116] },
-    { id: "tw9", labelKey: "lvlNum9", discs: 11, starMoves: [2048, 2080, 2176] },
+    { id: "tw6", labelKey: "towL6", discs: 8, starMoves: [256, 266, 290] },
+    { id: "tw7", labelKey: "towL7", discs: 9, starMoves: [512, 526, 560] },
+    { id: "tw8", labelKey: "towL8", discs: 10, starMoves: [1024, 1052, 1116] },
+    { id: "tw9", labelKey: "towL9", discs: 11, starMoves: [2048, 2080, 2176] },
     { id: "tw10", labelKey: "towL10", discs: 12, starMoves: [4095, 4223, 4607] },
-  ];
+
+    /* The second tier, tw11-tw16: thirteen through eighteen rings. The star
+     * bands follow the shipped convention - three stars for an optimal solve
+     * of 2^n - 1, two for a few percent over, one for about a twelfth over -
+     * and towMinMoves is the optimum every threshold is measured against.
+     * An eighteen-ring tower is 262,143 moves, so the move counter is the
+     * only sane way to read it: the HUD's own readout does the work. */
+    { id: "tw11", labelKey: "towL11", discs: 13, starMoves: [8191, 8447, 9215] },
+    { id: "tw12", labelKey: "towL12", discs: 14, starMoves: [16383, 16895, 18431] },
+    { id: "tw13", labelKey: "towL13", discs: 15, starMoves: [32767, 33791, 36863] },
+    { id: "tw14", labelKey: "towL14", discs: 16, starMoves: [65535, 67583, 73727] },
+    { id: "tw15", labelKey: "towL15", discs: 17, starMoves: [131071, 135167, 147455] },
+    { id: "tw16", labelKey: "towL16", discs: 18, starMoves: [262143, 270335, 294911] },  ];
 
   /* Pure optimum, exported for the static checks. */
   function towMinMoves(discs) {

@@ -17,7 +17,18 @@
     { id: "lds2", labelKey: "ldsRoute2", turns: 7, target: 72, stars: [4, 5, 6] },
     { id: "lds3", labelKey: "ldsRoute3", turns: 8, target: 82, stars: [5, 6, 7] },
     { id: "lds4", labelKey: "ldsRoute4", turns: 9, target: 92, stars: [6, 7, 8] },
-  ];
+
+    /* Routes 5-8. The ladder keeps its own shape - one more turn per route,
+     * ten more resonance, and the bands sitting three, two and one turn under
+     * the budget - and walks the target up to 120, which is the ceiling the
+     * engine clamps resonance at: the last route asks for every point the
+     * gauge can hold. Each was driven 400 times per partner per policy in
+     * tools/lds-forge.js before it shipped, so the bands are reachable and
+     * not just written down. */
+    { id: "lds5", labelKey: "ldsRoute5", turns: 10, target: 102, stars: [7, 8, 9] },
+    { id: "lds6", labelKey: "ldsRoute6", turns: 11, target: 108, stars: [8, 9, 10] },
+    { id: "lds7", labelKey: "ldsRoute7", turns: 12, target: 114, stars: [9, 10, 11] },
+    { id: "lds8", labelKey: "ldsRoute8", turns: 13, target: 120, stars: [10, 11, 12] },  ];
 
   var ldsPartners = [
     {
@@ -694,7 +705,7 @@
       animate(move.id, previewText(state.gain));
       addLog("ldsLogTurn", { n: state.turn, move: move.id === "skill" ? t("ldsSkillName", { evol: t(partner.evolKey) }) : t(move.labelKey), r: signed(state.gain.resonance), e: signed(state.gain.energy), t: signed(state.gain.trust) });
       if (state.outcome === "win") {
-        var starsWon = starsFor(state.turn, route.stars, "low");
+        var starsWon = Math.max(1, starsFor(state.turn, route.stars, "low"));
         var reward = awardRoute(starsWon, state.turn);
         var outcome = reward.outcome;
         result.textContent = t("ldsWin", { name: t(partner.nameKey), n: state.turn, s: starsWon }) + " " +
@@ -834,6 +845,10 @@
       "ldsMemory2": "The clocks fall quiet in Chrono Orbit. {name} stays beside you until the stars begin moving again.",
       "ldsMemory3": "Beyond the Abyss Corridor, a signal finds its way home. You recognize {name}'s footsteps before the door opens.",
       "ldsMemory4": "Heartstar Zenith glows on the horizon. You keep one small promise with {name}: another journey, together.",
+      "ldsMemory5": "At the Deepspace Threshold, {name} checks the signal once more. You cross together when the way ahead lights up.",
+      "ldsMemory6": "The Long Resonance fades into a steady pulse. Beside {name}, you finally have time to catch your breath.",
+      "ldsMemory7": "Along the Heartstar Meridian, two trails of light meet. You and {name} follow them back to the waiting shuttle.",
+      "ldsMemory8": "The resonance gauge reaches its final mark. {name} takes your hand as the stars settle into silence.",
       "ldsMoveRecover": "Catch Your Breath",
       "ldsMoveRecoverDetail": "Restore energy; spends one turn",
       "ldsGainPreview": "Energy {e} · Trust {t} · Resonance {r}",
@@ -896,7 +911,10 @@
       "ldsRoute2": "Chrono Orbit",
       "ldsRoute3": "Abyss Corridor",
       "ldsRoute4": "Heartstar Zenith",
-      "ldsPartnerXavier": "Xavier",
+      "ldsRoute5": "Deepspace Threshold",
+      "ldsRoute6": "The Long Resonance",
+      "ldsRoute7": "Heartstar Meridian",
+      "ldsRoute8": "Full Resonance",      "ldsPartnerXavier": "Xavier",
       "ldsPartnerZayne": "Zayne",
       "ldsPartnerRafayel": "Rafayel",
       "ldsPartnerSylus": "Sylus",
@@ -1015,6 +1033,10 @@
       "ldsMemory2": "时序轨道里的钟声停了。{name} 陪你等到星光重新流动。",
       "ldsMemory3": "深渊走廊外，一道信号终于找到归途。舱门打开前，你已认出 {name} 的脚步声。",
       "ldsMemory4": "心曜天顶在远方亮起。你与 {name} 留下一个小小的约定：下次也一起出发。",
+      "ldsMemory5": "深空阈限前，{name} 再次确认信号。前路亮起时，你们一同迈出脚步。",
+      "ldsMemory6": "长共鸣线渐渐化作平稳的脉动。在 {name} 身旁，你终于能喘口气。",
+      "ldsMemory7": "心曜子午线上，两道光迹交汇。你与 {name} 沿着它们回到等候的穿梭机。",
+      "ldsMemory8": "共鸣刻度终于满格。星光归于寂静时，{name} 握住了你的手。",
       "ldsMoveRecover": "稍作休整",
       "ldsMoveRecoverDetail": "恢复能量，消耗一个回合",
       "ldsGainPreview": "能量 {e} · 默契 {t} · 共鸣 {r}",
@@ -1077,7 +1099,10 @@
       "ldsRoute2": "时序轨道",
       "ldsRoute3": "深渊走廊",
       "ldsRoute4": "心曜天顶",
-      "ldsPartnerXavier": "沈星回",
+      "ldsRoute5": "深空阈限",
+      "ldsRoute6": "长共鸣线",
+      "ldsRoute7": "心曜子午",
+      "ldsRoute8": "满共鸣",      "ldsPartnerXavier": "沈星回",
       "ldsPartnerZayne": "黎深",
       "ldsPartnerRafayel": "祁煜",
       "ldsPartnerSylus": "秦彻",
@@ -1147,7 +1172,7 @@
         "Every encounter prefers one action card. Matching it grants a combo boost; mismatching costs extra trust and energy.",
         "Keep all three meters alive: zero energy retreats, zero trust breaks the link, and low resonance misses the mission.",
         "Three matching counters charge Evol. Its partner-specific skill uses one turn; recovery restores energy but also uses a turn. A quiet moment grants trust once per mission.",
-        "Win with fewer turns to earn more stars and unlock harder routes. Each partner can collect four saved memories; find them in Memories.",
+        "Win with fewer turns to earn more stars and unlock harder routes. Each partner can collect a saved memory for every route; find them in Memories.",
         "Animate character plays an optional muted official video online. Local portraits work offline; motion settings and closing the drawer pause the video.",
       ],
       zh: [
@@ -1166,7 +1191,7 @@
         "每次遭遇都有偏好的行动卡，匹配会连锁加成，不匹配会额外消耗默契与能量。",
         "三条数值都要守住：能量归零会撤退，默契归零会断联，共鸣不足会超时失败。",
         "匹配三次遭遇即可为 Evol 充满能量；专属技能与恢复能量的休整均消耗一回合。片刻陪伴每次任务可增加一次默契。",
-        "用更少回合获胜可拿更多星并解锁新航线。每位搭档可收藏四段回忆，在回忆收藏中查看。",
+        "用更少回合获胜可拿更多星并解锁新航线。每位搭档在每条航线都可收藏一段回忆，在回忆收藏中查看。",
         "角色动画为可选的联网静音官方视频。本地肖像可离线查看；关闭动态效果或游戏面板会暂停视频。",
       ],
     },
