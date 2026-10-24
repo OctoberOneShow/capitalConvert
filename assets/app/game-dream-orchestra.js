@@ -451,9 +451,10 @@
           var btn = document.createElement("button");
           btn.type = "button";
           btn.className = "drm-cell" + (step % 4 === 0 ? " is-strong" : "");
+          btn.setAttribute("data-row", String(row));
+          btn.setAttribute("data-step", String(step));
           (function (r, c) {
-            btn.addEventListener("pointerdown", function (event) {
-              event.preventDefault();
+            btn.addEventListener("click", function () {
               toggle(r, c);
             });
           })(row, step);
@@ -528,7 +529,7 @@
           btn.setAttribute(
             "aria-label",
             t("drmCellAria", {
-              step: s + 1,
+              n: s + 1,
               pitch: drmRowNames[row],
               voice: owner ? t(owner.keyName) : "",
               state: noteRow === row ? t("drmFilled") : target[s] && target[s].r === row ? t("drmWanted") : t("drmEmptyCell"),
@@ -815,10 +816,24 @@
       if (event.target && event.target.closest && event.target.closest(".game-guide")) {
         return;
       }
+      var target = event.target;
+      if (target && /^(SELECT|INPUT|TEXTAREA)$/.test(target.tagName)) {
+        return;
+      }
+      // Buttons retain their native Enter/Space action, including note cells.
+      if (target && target.tagName === "BUTTON" && (key === "Enter" || key === " ")) {
+        return;
+      }
+      var cellFocused = target && target.classList && target.classList.contains("drm-cell");
+      if (cellFocused) {
+        cursor.row = Number(target.getAttribute("data-row"));
+        cursor.step = Number(target.getAttribute("data-step"));
+      }
       if (key === "ArrowLeft" || key === "ArrowRight") {
         event.preventDefault();
         cursor.step = (cursor.step + (key === "ArrowRight" ? 1 : drmSteps - 1)) % drmSteps;
         render();
+        if (cellFocused) { cellButtons[drmRows - 1 - cursor.row].cells[cursor.step].focus(); }
         return;
       }
       if (key === "ArrowUp" || key === "ArrowDown") {
@@ -831,6 +846,7 @@
           cursor.row = drmRows - 1;
         }
         render();
+        if (cellFocused) { cellButtons[drmRows - 1 - cursor.row].cells[cursor.step].focus(); }
         return;
       }
       if (key === "Enter" || key === " ") {

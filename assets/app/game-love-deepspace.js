@@ -547,6 +547,7 @@
       getArt: function (id) { return looks.scenes[id]; },
       getAlbum: function () { return album; },
       onMission: function () { switchView(false); actionModeBtn.focus({ preventScroll: true }); },
+      onGallery: function (index) { chooseArt(index, true); switchView("gallery"); hdGallery.open(index); },
       onArt: function (index) { chooseArt(index, false); },
       onReward: function (kind) {
         album.bonds[partner.id] = Math.min(999, (album.bonds[partner.id] || 0) + 2);

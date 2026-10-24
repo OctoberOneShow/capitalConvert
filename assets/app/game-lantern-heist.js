@@ -1297,6 +1297,7 @@
 
     canvas.addEventListener("pointerdown", function (event) {
       event.preventDefault();
+      canvas.focus({ preventScroll: true });
       var cell = cellFromEvent(event);
       if (cell) {
         clickCell(cell);

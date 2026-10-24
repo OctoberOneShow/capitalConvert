@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const { createEnvironment, check, run } = require("./lib");
-const source = ["i18n", "core", "game-campaign", "game-registry", "love-deepspace-combat", "love-deepspace-home", "love-deepspace-release", "love-deepspace-starpath", "love-deepspace-dates", "game-love-deepspace", "game-guide"]
+const source = ["i18n", "core", "game-campaign", "game-registry", "love-deepspace-combat", "love-deepspace-home", "love-deepspace-release", "love-deepspace-starpath", "love-deepspace-mosaic", "love-deepspace-bouquet", "love-deepspace-expedition", "love-deepspace-dates", "game-love-deepspace", "game-guide"]
   .map(name => fs.readFileSync(path.join(__dirname, "../../assets/app", name + ".js"), "utf8")).join("\n");
 function boot(options, live) {
   const env = createEnvironment(options);

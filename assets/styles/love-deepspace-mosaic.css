@@ -1,0 +1,41 @@
+.ldm-game { display:grid; gap:12px; min-width:0; color:var(--text); }
+.ldm-heading { text-align:center; }
+.ldm-overline { font-size:.57rem; letter-spacing:.16em; color:var(--text-secondary); }
+.ldm-heading h4 { margin:7px 0; font:500 1.55rem/1.4 Georgia,serif; }
+.ldm-heading p { margin:0; font-size:.75rem; line-height:1.7; color:var(--text-secondary); }
+.ldm-stages { display:grid; grid-template-columns:repeat(9,minmax(0,1fr)); gap:5px; min-width:0; }
+.lds-stage .ldm-stage { display:grid; gap:4px; justify-items:center; min-width:0; min-height:46px; padding:6px 2px; border:1px solid var(--border); border-radius:9px; color:var(--text-secondary); background:var(--surface-soft); }
+.ldm-stage span:first-child { font-size:.72rem; font-variant-numeric:tabular-nums; }
+.ldm-stage span:last-child { font-size:.52rem; letter-spacing:-.04em; color:#ac9259; }
+.ldm-stage[aria-pressed="true"] { border-color:var(--lds-accent); background:#bcb1de18; color:var(--text); }
+.ldm-stage:disabled { opacity:.4; }
+.ldm-info,.ldm-hud { display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px 12px; }
+.ldm-info strong { font:500 1rem/1.4 Georgia,serif; }
+.ldm-info>span,.ldm-hud { font-size:.65rem; color:var(--text-secondary); }
+.ldm-hud { padding:10px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; }
+.ldm-board { display:grid; grid-template-columns:repeat(var(--ldm-side),minmax(0,1fr)); gap:4px; aspect-ratio:1; width:min(100%,420px); justify-self:center; padding:7px; border:1px solid var(--border); border-radius:15px; background:#080d1d; box-shadow:0 12px 30px #0002; min-width:0; }
+.lds-stage .ldm-tile { position:relative; display:block; aspect-ratio:1; padding:0; min-width:0; min-height:0; overflow:hidden; border:1px solid #ffffff1f; border-radius:4px; background:#28233b; cursor:pointer; touch-action:manipulation; }
+.ldm-fragment { display:block; position:absolute; inset:0; transition:transform .18s; }
+.ldm-fragment img { position:absolute; display:block; max-width:none; object-fit:cover; user-select:none; pointer-events:none; }
+.ldm-tile[aria-pressed="true"] { outline:2px solid #f4d89b; outline-offset:-2px; z-index:1; box-shadow:0 0 16px #f1cc8a77; }
+.ldm-tile:focus-visible { outline:3px solid var(--lds-accent); outline-offset:1px; z-index:2; }
+.ldm-correct-mark { position:absolute; right:3px; bottom:3px; display:grid; place-items:center; width:15px; height:15px; background:#18382cce; color:#d1fae5; border-radius:50%; font-size:10px; }
+.ldm-game[data-complete="true"] .ldm-board { border-color:#e5c68f; box-shadow:0 0 30px #e5c68f24; gap:0; }
+.ldm-game[data-complete="true"] .ldm-tile { border-color:transparent; border-radius:0; cursor:default; }
+.ldm-controls { display:flex; flex-wrap:wrap; gap:7px; justify-content:center; }
+.ldm-controls button { font-size:.66rem; }
+.ldm-status { margin:0; padding:11px 13px; border-left:2px solid var(--lds-accent); background:var(--surface-soft); font-size:.75rem; line-height:1.7; }
+.ldm-help { margin:0; font-size:.64rem; line-height:1.7; color:var(--text-secondary); }
+.ldm-image-status:empty { display:none; }
+.ldm-reference { margin:0; display:grid; gap:7px; justify-items:center; padding:10px; border:1px solid var(--border); border-radius:12px; }
+.ldm-reference img { width:min(100%,360px); aspect-ratio:1; height:auto; object-fit:cover; border-radius:6px; }
+.ldm-reference figcaption { font-size:.65rem; color:var(--text-secondary); text-align:center; }
+.ldx-passport { border:1px solid var(--border); background:var(--surface-soft); padding:11px 13px; border-radius:12px; color:var(--text-secondary); font-size:.72rem; }
+.ldx-passport summary { cursor:pointer; min-height:22px; line-height:1.6; }
+.ldx-passport-cards { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:10px; }
+.lds-stage .ldx-passport-card { display:grid; gap:9px; text-align:left; min-width:0; padding:12px; border:1px solid var(--border); border-radius:10px; background:linear-gradient(140deg,#a793d312,#a7cac60c); color:var(--text); }
+.ldx-passport-card strong { min-width:0; font-size:.69rem; font-weight:500; }
+.ldx-passport-card>span { font-size:.6rem; line-height:1.6; color:var(--text-secondary); }
+@media(max-width:560px) { .ldm-stages { grid-template-columns:repeat(5,minmax(0,1fr)); } .ldx-passport-cards { grid-template-columns:1fr; } .lds-stage .ldx-passport-card { grid-template-columns:minmax(0,1fr); gap:5px; padding:10px; } .ldm-controls button { font-size:.61rem; } }
+[data-motion="off"] .ldm-fragment { transition:none; }
+@media(prefers-reduced-motion:reduce) { .ldm-fragment { transition:none; } }

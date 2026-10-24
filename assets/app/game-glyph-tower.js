@@ -45,7 +45,8 @@
     { id: "tw13", labelKey: "towL13", discs: 15, starMoves: [32767, 33791, 36863] },
     { id: "tw14", labelKey: "towL14", discs: 16, starMoves: [65535, 67583, 73727] },
     { id: "tw15", labelKey: "towL15", discs: 17, starMoves: [131071, 135167, 147455] },
-    { id: "tw16", labelKey: "towL16", discs: 18, starMoves: [262143, 270335, 294911] },  ];
+    { id: "tw16", labelKey: "towL16", discs: 18, starMoves: [262143, 270335, 294911] },
+  ];
 
   /* Pure optimum, exported for the static checks. */
   function towMinMoves(discs) {

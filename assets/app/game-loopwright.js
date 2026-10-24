@@ -862,6 +862,9 @@
     }
 
     function place(index, code) {
+      if (finished) {
+        return;
+      }
       if (code === "J") {
         if (slots[index] && slots[index].indexOf("J") === 0) {
           var n = parseInt(slots[index].slice(1), 10);
@@ -930,14 +933,8 @@
       if (res.win) {
         finished = true;
         var starsWon = starsFor(attempts, floor.starRuns, "low");
-        var usedOps = lpwProgramFromSlots(slots).length;
-        var realOps = 0;
-        for (var i = 0; i < slots.length; i += 1) {
-          if (slots[i]) {
-            realOps += 1;
-          }
-        }
-        if (starsWon === 3 && realOps > floor.parOps) {
+        var usedOps = res.programLength;
+        if (starsWon === 3 && res.placedOps > floor.parOps) {
           starsWon = 2;
         }
         var outcome = campaign.record(floor.id, {
@@ -985,7 +982,11 @@
         crates: base.crates, pads: base.pads, pistons: base.pistons, goal: base.goal,
         start: base.start, ghosts: ghosts.slice(),
       };
-      lastRes = lpwSim(grid, lpwProgramFromSlots(slots), lpwBudget);
+      var program = lpwProgramFromSlots(slots);
+      lastRes = lpwSim(grid, program, lpwBudget);
+      // Grade the executed program even if the next draft changes during replay.
+      lastRes.programLength = program.length;
+      lastRes.placedOps = slots.filter(function (op) { return !!op; }).length;
       viewFrames = lastRes.frames;
       viewIndex = 0;
       replaying = true;
@@ -1052,6 +1053,9 @@
       }
       if (key === "Backspace") {
         event.preventDefault();
+        if (finished) {
+          return;
+        }
         slots[cursor] = "";
         renderQueue();
         draw();

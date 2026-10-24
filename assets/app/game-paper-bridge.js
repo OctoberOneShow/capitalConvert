@@ -288,7 +288,8 @@
         queue.push(walk.concat([link.at]));
       });
     }
-    return null;
+    /* With no destination, return every reachable node for gap feedback. */
+    return target === null ? Object.keys(seen).map(function (at) { return Number(at); }) : null;
   }
 
   function pbrMidSupport(nodes, beams, beam, a, b) {
@@ -344,7 +345,7 @@
         }
         return { ok: false, fail: "slope", segment: steep, path: [], beams: count };
       }
-      var reached = pbrWalk(nodes, adj, start, start === target ? target : start, false, null) || [start];
+      var reached = pbrWalk(nodes, adj, start, null, true, grip) || [start];
       var last = reached[0];
       reached.forEach(function (at) {
         if (nodes[at].x >= nodes[last].x) {
@@ -869,6 +870,7 @@
 
     canvas.addEventListener("pointerdown", function (event) {
       event.preventDefault();
+      canvas.focus({ preventScroll: true });
       var at = nodeFromEvent(event);
       if (at >= 0) {
         chooseNode(at);

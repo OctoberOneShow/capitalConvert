@@ -20,6 +20,7 @@
 .world-renewed { --panel: #10232e; --panel-strong: #10232e; --panel-soft: #152d35; --accent-text: var(--world-light); --accent: var(--world-light); --danger-text: #ffc0b0; --success-text: #c9edb3; }
 [data-theme="light"] .world-renewed :is(.kch-stage, .kch-station, .kch-ticket, .kch-calm, .tea-cup, .tea-btn, .tea-note-guest, .dt-btn, .cir-table, .cor-draft-btn, .cor-legend, .mcb-strain, .mcb-trait, .mcb-btn, .pdk-cell, .pdk-brief, .spot-line, .elements-tool, .elements-brush, .wlk-clear) { background: #10232e; color: #f5f0e5; }
 .world-renewed .cor-draft-btn { display: inline-flex; align-items: center; gap: 6px; }
+[data-theme="light"] .world-renewed .mkt-row { background: var(--panel-strong); }
 .world-draft-art { width: 25px; height: 25px; }
 .world-tea-portrait { display: block; width: 82px; height: 94px; margin: 6px auto; border-radius: 12px; border: 1px solid #decaa555; background: #122e32; }
 .world-renewed .tea-cup { display: flex; align-items: center; gap: 10px; border-radius: 10px; text-align: left; }

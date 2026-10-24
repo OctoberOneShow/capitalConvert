@@ -177,7 +177,9 @@
         event.preventDefault(); event.stopPropagation(); openArt((selected + (event.key === "ArrowRight" ? 1 : App.ldsArtCount - 1)) % App.ldsArtCount);
       }
     });
-    return { element: root, refresh: refresh, close: closeViewer, inspect: function () { return { selected: selected, opened: opened, favorites: saved }; } };
+    return { element: root, refresh: refresh, close: closeViewer,
+      open: function (index) { if (Number.isInteger(index) && index >= 0 && index < App.ldsArtCount) { openArt(index, grid.querySelector('[data-art="' + index + '"]')); close.focus({ preventScroll: true }); } },
+      inspect: function () { return { selected: selected, opened: opened, favorites: saved }; } };
   }
   var copy = {
     ldsGalleryTab: ["Gallery", "高清画廊"], ldrBrand: ["Love and Deepspace", "恋与深空"],

@@ -77,6 +77,10 @@
     { id: "t10", labelKey: "ftL10", grid: 4, walk: 1500, starMoves: [195, 315, 480] },
     { id: "t11", labelKey: "ftL11", grid: 4, walk: 1800, starMoves: [220, 350, 520] },
     { id: "t12", labelKey: "ftL12", grid: 4, walk: 2200, starMoves: [250, 390, 580] },
+    { id: "t13", labelKey: "ftL13", grid: 4, walk: 2600, starMoves: [280, 430, 640] },
+    { id: "t14", labelKey: "ftL14", grid: 4, walk: 3000, starMoves: [310, 480, 700] },
+    { id: "t15", labelKey: "ftL15", grid: 4, walk: 3500, starMoves: [350, 530, 770] },
+    { id: "t16", labelKey: "ftL16", grid: 4, walk: 4000, starMoves: [390, 590, 850] },
   ];
 
   function easeOut(k) {

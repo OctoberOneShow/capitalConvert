@@ -44,6 +44,10 @@
     { id: "w10", labelKey: "bubL10", target: 940, shots: 20, colors: 6, rows: 8, starGain: [1.4, 1.2, 1] },
     { id: "w11", labelKey: "bubL11", target: 950, shots: 18, colors: 6, rows: 8, starGain: [1.4, 1.2, 1] },
     { id: "w12", labelKey: "bubL12", target: 960, shots: 16, colors: 6, rows: 8, starGain: [1.4, 1.2, 1] },
+    { id: "w13", labelKey: "bubL13", target: 1000, shots: 16, colors: 6, rows: 9, starGain: [1.4, 1.2, 1] },
+    { id: "w14", labelKey: "bubL14", target: 1040, shots: 15, colors: 6, rows: 9, starGain: [1.4, 1.2, 1] },
+    { id: "w15", labelKey: "bubL15", target: 1080, shots: 15, colors: 6, rows: 10, starGain: [1.4, 1.2, 1] },
+    { id: "w16", labelKey: "bubL16", target: 1120, shots: 14, colors: 6, rows: 10, starGain: [1.4, 1.2, 1] },
   ];
 
   /* ------------------------------------------------------------ colour math */

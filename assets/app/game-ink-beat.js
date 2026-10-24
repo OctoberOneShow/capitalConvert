@@ -32,9 +32,14 @@
     { id: "t6", labelKey: "beatL6", bpm: 152, bars: 18, seed: 97, density: [0.105, 0.07, 0.11, 0.045] },
     { id: "t7", labelKey: "beatL7", bpm: 164, bars: 18, seed: 113, density: [0.11, 0.075, 0.12, 0.05] },
     { id: "t8", labelKey: "beatL8", bpm: 176, bars: 20, seed: 131, density: [0.115, 0.08, 0.13, 0.055] },
-    { id: "t9", labelKey: "lvlNum9", bpm: 184, bars: 22, seed: 138, density: [0.115, 0.08, 0.13, 0.055] },
-    { id: "t10", labelKey: "lvlNum10", bpm: 190, bars: 24, seed: 145, density: [0.115, 0.08, 0.13, 0.055] },
-    { id: "t11", labelKey: "lvlNum11", bpm: 190, bars: 26, seed: 152, density: [0.115, 0.08, 0.13, 0.055] },
+    { id: "t9", labelKey: "beatL9", bpm: 184, bars: 22, seed: 138, density: [0.115, 0.08, 0.13, 0.055] },
+    { id: "t10", labelKey: "beatL10", bpm: 190, bars: 24, seed: 145, density: [0.12, 0.085, 0.135, 0.06] },
+    { id: "t11", labelKey: "beatL11", bpm: 196, bars: 24, seed: 152, density: [0.12, 0.085, 0.14, 0.06] },
+    { id: "t12", labelKey: "beatL12", bpm: 202, bars: 26, seed: 167, density: [0.125, 0.09, 0.14, 0.065] },
+    { id: "t13", labelKey: "beatL13", bpm: 208, bars: 26, seed: 179, density: [0.125, 0.09, 0.145, 0.065] },
+    { id: "t14", labelKey: "beatL14", bpm: 214, bars: 28, seed: 193, density: [0.13, 0.095, 0.145, 0.07] },
+    { id: "t15", labelKey: "beatL15", bpm: 220, bars: 28, seed: 211, density: [0.13, 0.095, 0.15, 0.07] },
+    { id: "t16", labelKey: "beatL16", bpm: 226, bars: 30, seed: 227, density: [0.135, 0.10, 0.15, 0.075] },
   ];
 
   function mulberry32(seed) {

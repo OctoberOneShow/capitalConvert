@@ -32,6 +32,10 @@
     { id: "h10", labelKey: "snkL10", goal: 13, starTimes: [48, 66, 90], wrap: true, walls: [[7, 7, 8, 8], [2, 2, 2, 2], [13, 2, 13, 2], [2, 13, 2, 13], [13, 13, 13, 13]] },
     { id: "h11", labelKey: "snkL11", goal: 14, starTimes: [52, 72, 98], wrap: false, walls: [[5, 0, 5, 5], [5, 7, 5, 15], [10, 0, 10, 5], [10, 7, 10, 15]] },
     { id: "h12", labelKey: "snkL12", goal: 15, starTimes: [56, 78, 105], wrap: true, walls: [[7, 3, 7, 5], [7, 10, 7, 12], [3, 7, 5, 7], [10, 7, 12, 7]] },
+    { id: "h13", labelKey: "snkL13", goal: 16, starTimes: [60, 84, 115], wrap: true, walls: [[7, 0, 8, 3], [7, 12, 8, 15], [0, 6, 1, 6], [14, 6, 15, 6]] },
+    { id: "h14", labelKey: "snkL14", goal: 17, starTimes: [64, 90, 125], wrap: false, start: { x: 2, y: 2, dx: 1 }, walls: [[4, 2, 4, 6], [4, 9, 4, 13], [11, 2, 11, 6], [11, 9, 11, 13], [6, 7, 9, 8]] },
+    { id: "h15", labelKey: "snkL15", goal: 18, starTimes: [68, 96, 135], wrap: true, start: { x: 8, y: 1, dx: 1 }, walls: [[2, 3, 3, 4], [12, 3, 13, 4], [2, 11, 3, 12], [12, 11, 13, 12], [7, 7, 8, 8]] },
+    { id: "h16", labelKey: "snkL16", goal: 20, starTimes: [75, 105, 150], wrap: false, start: { x: 8, y: 2, dx: 1 }, walls: [[2, 5, 2, 10], [13, 5, 13, 10], [5, 5, 10, 5], [5, 10, 10, 10]] },
   ];
 
   /* The court takes its tint from the panel hue; the serpent stays jade and the

@@ -864,6 +864,10 @@
         col: index % rung.n,
       };
       paintCells();
+      var focused = cellAt(cursor.cat, cursor.row, cursor.col);
+      if (focused) {
+        focused.focus();
+      }
     }
 
     function deal(def) {
@@ -942,6 +946,15 @@
     });
 
     board.addEventListener("keydown", function (event) {
+      var focusedIndex = cellEls.indexOf(event.target);
+      if (focusedIndex >= 0) {
+        var stride = rung.n * rung.n;
+        cursor = {
+          cat: Math.floor(focusedIndex / stride),
+          row: Math.floor((focusedIndex % stride) / rung.n),
+          col: focusedIndex % rung.n,
+        };
+      }
       var moves = {
         ArrowLeft: [-1, 0],
         ArrowRight: [1, 0],
@@ -970,7 +983,7 @@
     });
 
     board.addEventListener("pointerdown", function () {
-      board.focus();
+      board.focus({ preventScroll: true });
     });
 
     rungSel.addEventListener("change", function () {

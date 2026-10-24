@@ -1,0 +1,103 @@
+/* A paper-and-petals atelier, with generous controls for quiet play. */
+.ldb-game { --ldb-accent: #b8bcdd; display: grid; gap: 15px; min-width: 0; max-width: 740px; margin: 0 auto; color: var(--text); }
+.ldb-game > * { min-width: 0; }
+.ldb-game[data-partner="zayne"] { --ldb-accent: #9bcaca; }
+.ldb-game[data-partner="rafayel"] { --ldb-accent: #d6afca; }
+.ldb-game[data-partner="sylus"] { --ldb-accent: #c9a4b5; }
+.ldb-game[data-partner="caleb"] { --ldb-accent: #c3b4de; }
+.ldb-heading { padding: 10px 6px 0; text-align: center; }
+.ldb-eyebrow { display: block; color: var(--text-secondary); font-size: .57rem; letter-spacing: .15em; line-height: 1.8; }
+.ldb-heading h4 { margin: 8px 0; font-family: Georgia, 'Noto Serif SC', serif; font-weight: 500; font-size: clamp(1.3rem, 3vw, 1.8rem); }
+.ldb-heading p { color: var(--text-secondary); font-size: .8rem; line-height: 1.7; max-width: 510px; margin: 0 auto; }
+.ldb-commissions { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 7px; }
+.ldb-commission { display: grid; justify-content: center; gap: 3px; min-width: 0; min-height: 48px; padding: 7px 4px; color: var(--text-secondary); background: var(--surface-soft); border: 1px solid var(--border); border-radius: 10px; font-size: .8rem; cursor: pointer; }
+.ldb-commission[aria-pressed="true"] { color: var(--text); border-color: var(--ldb-accent); background: color-mix(in srgb, var(--ldb-accent) 13%, var(--surface-soft)); }
+.ldb-commission:disabled { opacity: .45; cursor: default; }
+.ldb-commission-stars { color: #b99759; font-size: .57rem; letter-spacing: -.05em; }
+.ldb-brief { padding-inline: 3px; }
+.ldb-brief strong { font-size: .95rem; font-weight: 600; }
+.ldb-brief p { font-size: .75rem; line-height: 1.6; color: var(--text-secondary); margin: 5px 0 0; }
+.ldb-contracts { display: grid; gap: 7px; }
+.ldb-contract { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; gap: 8px; align-items: center; border: 1px solid var(--border); border-radius: 10px; padding: 9px 11px; background: var(--surface-soft); font-size: .72rem; line-height: 1.55; color: var(--text-secondary); }
+.ldb-contract-mark { color: var(--ldb-accent); text-align: center; }
+.ldb-contract strong { white-space: nowrap; font-variant-numeric: tabular-nums; font-size: .72rem; }
+.ldb-contract[data-met="true"] { border-color: #9ac6af70; }
+.ldb-contract[data-met="true"] .ldb-contract-mark { color: #75bca0; }
+.ldb-atelier { position: relative; padding: 18px clamp(10px, 3vw, 26px) 12px; overflow: hidden; border: 1px solid #dfc6b755; border-radius: 22px; color: #51453f; background: radial-gradient(ellipse at 90% 0, #e7dce9b5, transparent 65%), linear-gradient(145deg, #f5eee2, #eadfce); box-shadow: inset 0 1px 0 #ffffffaa, 0 14px 36px #00000017; }
+.ldb-atelier::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .35; background-image: repeating-linear-gradient(45deg, transparent 0 3px, #ad99860c 3px 4px); }
+.ldb-hud { position: relative; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; align-items: center; }
+.ldb-hud strong { font: 500 1.25rem/1.3 Georgia, serif; }
+.ldb-hud > span { font-size: .72rem; }
+.ldb-bands { position: relative; display: flex; flex-wrap: wrap; gap: 7px; margin: 10px 0 17px; color: #8b7e75; }
+.ldb-bands span { padding: 3px 8px; font-size: .62rem; border: 1px solid #9c887744; border-radius: 20px; }
+.ldb-bands span[data-reached="true"] { background: #e9d7ad; color: #665331; border-color: #ba9f61; }
+.ldb-board { position: relative; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 5px; width: min(100%, 320px); aspect-ratio: 1; margin: 0 auto; padding: 8px; box-sizing: border-box; border: 1px solid #9b88792c; border-radius: 18px; background: #fffdf42b; }
+.ldb-cell { position: relative; display: grid; place-items: center; isolation: isolate; min-width: 0; min-height: 0; border: 1px dashed #b6a18c6b; border-radius: 13px; padding: 0; background: #fffcf21c; color: #655748; cursor: pointer; touch-action: manipulation; }
+.ldb-cell:hover:not([aria-disabled="true"]) { background: #fffaf14d; border-color: #887486; }
+.ldb-cell.is-selected { border: 1.5px solid #89758c; box-shadow: 0 0 0 2px #9a85a918; }
+.ldb-cell.is-filled { background: #ffffff20; border-color: #ac96823b; border-style: solid; cursor: default; }
+.ldb-cell.is-ghost .ldb-flower { opacity: .48; }
+.ldb-cell:focus-visible { outline: 2px solid #76657e; outline-offset: 2px; }
+.ldb-empty-dot { width: 4px; height: 4px; border-radius: 50%; background: #a48c6f55; }
+.ldb-cell-code { position: absolute; bottom: 3px; inset-inline: 2px; font-size: .51rem; line-height: 1.2; color: #76675e; font-variant-numeric: tabular-nums; text-align: center; pointer-events: none; }
+.ldb-flower { --ldb-petal: #e9d8ae; --ldb-petal-shadow: #c8b488; position: relative; display: block; width: 62%; height: 62%; aspect-ratio: 1; flex: none; filter: drop-shadow(0 3px 3px #65504120); pointer-events: none; }
+.ldb-flower[data-color="rose"] { --ldb-petal: #e7aebf; --ldb-petal-shadow: #b9768e; }
+.ldb-flower[data-color="sky"] { --ldb-petal: #adcedb; --ldb-petal-shadow: #6b99b1; }
+.ldb-flower[data-color="violet"] { --ldb-petal: #c1b2da; --ldb-petal-shadow: #8b77ad; }
+.ldb-petal { position: absolute; width: 44%; height: 58%; top: 1%; left: 28%; border-radius: 70% 70% 45% 45%; transform-origin: 50% 84%; transform: rotate(var(--ldb-angle)); background: radial-gradient(ellipse at 38% 22%, #ffffff60, transparent 63%), linear-gradient(180deg, var(--ldb-petal), var(--ldb-petal-shadow)); box-shadow: inset 0 0 0 1px #ffffff2b; }
+.ldb-flower[data-petals="3"] .ldb-petal { width: 52%; left: 24%; height: 61%; border-radius: 72% 72% 30% 30%; }
+.ldb-flower[data-petals="8"] .ldb-petal { width: 34%; left: 33%; height: 57%; border-radius: 80% 80% 42% 42%; }
+.ldb-flower-center { position: absolute; width: 18%; height: 18%; top: 41%; left: 41%; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff0be, #c2a25b); box-shadow: 0 1px 3px #64523240, inset 0 0 0 1px #fff2c488; }
+.ldb-preview { position: relative; min-height: 2.7em; margin: 13px 0 0; text-align: center; font-size: .73rem; line-height: 1.6; color: #665c56; }
+.ldb-draft { display: grid; gap: 9px; }
+.ldb-draft-label { color: var(--text-secondary); text-align: center; font-size: .58rem; letter-spacing: .16em; }
+.ldb-atelier .ldb-draft { margin-bottom:12px; }
+.ldb-atelier .ldb-draft-label { color:#75675b; }
+.ldb-hand { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+.ldb-hand-card { display: grid; justify-items: center; align-content: center; min-width: 0; min-height: 120px; padding: 8px 5px 10px; border: 1px solid var(--border); border-radius: 13px; background: var(--surface-soft); color: var(--text); cursor: pointer; }
+.ldb-hand-card[aria-pressed="true"] { border-color: var(--ldb-accent); box-shadow: inset 0 0 18px color-mix(in srgb, var(--ldb-accent) 13%, transparent); }
+.ldb-hand-card:disabled { opacity: .5; cursor: default; }
+.ldb-hand-card .ldb-flower { width: 55px; height: 55px; margin-bottom: 6px; }
+.ldb-hand-name { font-size: .73rem; line-height: 1.5; }
+.ldb-hand-petals { font-size: .62rem; color: var(--text-secondary); }
+.ldb-atelier .ldb-hand-card { min-height:80px; padding:6px 4px; border-color:#9c887744; color:#51453f; background:#fff7; }
+.ldb-atelier .ldb-hand-card[aria-pressed="true"] { border-color:#887486; background:#fff9; box-shadow:inset 0 0 18px #89758c13; }
+.ldb-atelier .ldb-hand-card .ldb-flower { width:36px; height:36px; margin-bottom:3px; }
+.ldb-atelier .ldb-hand-name { font-size:.66rem; }
+.ldb-atelier .ldb-hand-petals { color:#76675e; font-size:.59rem; }
+.ldb-controls { display: flex; flex-wrap: wrap; gap: 7px; justify-content: center; }
+.ldb-controls .lds-small-button, #gamePanelLoveDeepspace .ldb-controls .lds-small-button { min-height: 44px; }
+.ldb-controls .ldb-plant { border-color: var(--ldb-accent); background: color-mix(in srgb, var(--ldb-accent) 18%, var(--surface-soft)); }
+.ldb-atelier .ldb-controls { margin-top:12px; }
+#gamePanelLoveDeepspace .ldb-atelier .lds-small-button { color:#51453f; background:#fff7; border-color:#9c887766; }
+#gamePanelLoveDeepspace .ldb-atelier .ldb-plant { background:#e4d4bc; border-color:#a88b67; }
+.ldb-status { min-height: 2.7em; margin: 0; text-align: center; font-size: .79rem; line-height: 1.6; }
+.ldb-voice { margin: -4px 8px 0; color: var(--text-secondary); font-size: .8rem; line-height: 1.65; text-align: center; font-style: italic; }
+.ldb-sequence, .ldb-rules { font-size: .72rem; color: var(--text-secondary); line-height: 1.7; }
+.ldb-sequence summary, .ldb-rules summary { cursor: pointer; min-height: 35px; padding-block: 5px; box-sizing: border-box; }
+.ldb-rules p { margin: 6px 0; }
+.ldb-queue { display: flex; flex-wrap: wrap; gap: 7px; padding-top: 8px; }
+.ldb-queue-card { display: grid; place-items: center; width: 39px; height: 39px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-soft); }
+.ldb-queue-card .ldb-flower { width: 30px; height: 30px; }
+.ldb-queue p { margin: 0; font-size: .7rem; }
+.ldb-game[data-clear="true"] .ldb-atelier { border-color: #ac9462; }
+.ldb-game[data-clear="true"] .ldb-score { color: #6d5932; }
+@media (max-width: 520px) {
+  .ldb-game { gap: 12px; }
+  .ldb-atelier { padding: 15px 10px 10px; border-radius: 17px; }
+  .ldb-board { padding: 5px; gap: 4px; border-radius: 14px; }
+  .ldb-cell { border-radius: 10px; }
+  .ldb-hand { gap: 6px; }
+  .ldb-hand-card { min-height: 108px; padding-inline: 3px; }
+  .ldb-hand-card .ldb-flower { width: 46px; height: 46px; }
+  .ldb-hand-name { font-size: .68rem; }
+  .ldb-controls .lds-small-button { padding-inline: 10px; font-size: .72rem; }
+  .ldb-contract { font-size: .68rem; padding: 8px; gap: 5px; }
+  .ldb-preview { font-size: .67rem; }
+}
+@media (max-width: 360px) {
+  .ldb-commissions { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ldb-contract { grid-template-columns: 15px minmax(0, 1fr) auto; }
+}
+@media (prefers-reduced-motion: reduce) { .ldb-game *, .ldb-game *::before, .ldb-game *::after { transition: none !important; animation: none !important; } }
+html[data-motion="off"] .ldb-game *, html[data-motion="off"] .ldb-game *::before, html[data-motion="off"] .ldb-game *::after { transition: none !important; animation: none !important; }

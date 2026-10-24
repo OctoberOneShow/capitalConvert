@@ -231,7 +231,7 @@
     el("strong", "", "ldsDateTitle", intro); el("p", "", "ldsDateIntro", intro);
     var nav = el("div", "lds-date-nav", null, root); nav.setAttribute("role", "group"); nav.setAttribute("aria-label", t("ldsDateTitle"));
     var tabs = {}, pages = {};
-    ["claw", "kitty", "story", "photo", "focus", "chat", "home", "cook", "starpath"].forEach(function (id) {
+    ["claw", "kitty", "story", "photo", "focus", "chat", "home", "cook", "starpath", "mosaic", "bouquet", "expedition"].forEach(function (id) {
       var key = "ldsDate" + id.charAt(0).toUpperCase() + id.slice(1);
       tabs[id] = btn("lds-date-tab", key, nav, function () { select(id); });
       tabs[id].setAttribute("data-date", id);
@@ -246,21 +246,34 @@
       isHidden: function () { return options.isHidden() || root.hidden || pages.starpath.hidden; },
       onReward: options.onReward, onMoment: options.onMoment
     });
+    var adventures = {};
+    [["mosaic", App.mountLdsMosaic], ["bouquet", App.mountLdsBouquet], ["expedition", App.mountLdsExpedition]].forEach(function (definition) {
+      var id = definition[0];
+      adventures[id] = definition[1](pages[id], {
+        isHidden: function () { return options.isHidden() || root.hidden || pages[id].hidden; },
+        onReward: options.onReward, onMoment: options.onMoment,
+        onOriginal: function (index) { if (options.onGallery) { options.onGallery(index); } }
+      });
+    });
+    function visitActivity(id) {
+      if (id === "mission") { if (options.onMission) { options.onMission(); } return; }
+      select(id);
+      var control = Array.prototype.slice.call(pages[id].querySelectorAll('canvas[tabindex="0"],button:not([disabled]),input,select')).filter(function (candidate) { return !candidate.closest("[hidden]"); })[0];
+      if (control) { control.focus({ preventScroll: true }); }
+      if (pages[id].scrollIntoView) { pages[id].scrollIntoView({ block: "nearest", behavior: reduced() ? "auto" : "smooth" }); }
+    }
+    var passport = App.mountLdsPassport(root, {
+      getProgress: function () { return { mosaic: adventures.mosaic.getProgress(), bouquet: adventures.bouquet.getProgress(), expedition: adventures.expedition.getProgress() }; },
+      go: visitActivity
+    });
     var journey = App.mountLdsJourney(root, {
       getPartner: function () { return partner; },
       getState: function () { return { album: options.getAlbum ? options.getAlbum() : {}, dates: progress, home: homeGame.inspect().progress, starpath: starpathGame.getProgress() }; },
-      go: function (id) {
-        if (id === "mission") { if (options.onMission) { options.onMission(); } }
-        else {
-          select(id);
-          var control = pages[id].querySelector('canvas[tabindex="0"],button:not([disabled]),input,select');
-          if (control) { control.focus({ preventScroll: true }); }
-          if (pages[id].scrollIntoView) { pages[id].scrollIntoView({ block: "nearest", behavior: reduced() ? "auto" : "smooth" }); }
-        }
-      }
+      go: visitActivity
     });
     root.insertBefore(journey.element, nav);
-    root.addEventListener("click", function () { if (partner) { journey.refresh(); } });
+    root.insertBefore(passport.element, nav);
+    root.addEventListener("click", function () { if (partner) { journey.refresh(); passport.refresh(); } });
     var toolbar = el("div", "lds-date-toolbar", null, root);
     var pauseBtn = btn("lds-small-button", null, toolbar, function () { if (active) { pause(); } else { start(); } });
     var restartBtn = btn("lds-small-button", "ldsDateRestart", toolbar, function () { resetActivity(); });
@@ -606,7 +619,7 @@
       el("p", "lds-challenge-record", null, shelf).textContent = t("ldsChallengeBest", { n: progress.clawBest[id] });
     }
     function syncToolbar() {
-      toolbar.hidden = ["photo", "chat", "home", "cook", "starpath"].indexOf(mode) >= 0; pauseBtn.hidden = mode === "story";
+      toolbar.hidden = ["photo", "chat", "home", "cook", "starpath", "mosaic", "bouquet", "expedition"].indexOf(mode) >= 0; pauseBtn.hidden = mode === "story";
       pauseBtn.textContent = t(active ? "ldsBattlePause" : paused ? "ldsDateResume" : "ldsDateStart");
       pauseBtn.disabled = mode === "claw" && claw.done || mode === "kitty" && kitty.done || mode === "focus" && focusDone;
       root.setAttribute("data-active", String(active)); root.setAttribute("data-paused", String(paused));
@@ -616,8 +629,8 @@
     }
     function pause() {
       homeGame.pause();
-      // Starpath has no clock. Its own visibility guard blocks hidden input;
-      // retaining a manual pause here would strand the board after reopening.
+      // Untimed boards guard hidden input themselves. A lasting pause here
+      // would strand them after focus returns or the drawer reopens.
       if (!active) { clearInputs(); return; } active = false; paused = true; cancel(); clearInputs();
       tell("ldsDatePaused"); syncToolbar(); options.onRunning(false);
     }
@@ -643,7 +656,7 @@
       if (mode !== "kitty") { syncToolbar(); } if (active) { raf = window.requestAnimationFrame(frame); }
     }
     function start() {
-      if (active || pauseBtn.disabled || ["story", "photo", "chat", "home", "cook", "starpath"].indexOf(mode) >= 0) { return; }
+      if (active || pauseBtn.disabled || ["story", "photo", "chat", "home", "cook", "starpath", "mosaic", "bouquet", "expedition"].indexOf(mode) >= 0) { return; }
       active = true; paused = false; clearInputs(); last = performance.now(); syncToolbar(); options.onRunning(true);
       tell(mode === "claw" ? "ldsClawReady" : mode === "kitty" ? (kitty.turn === "you" ? "ldsKittyYourTurn" : "ldsKittyThinking") : "ldsFocusStarted");
       if (mode === "claw") { machine.focus({ preventScroll: true }); }
@@ -666,14 +679,16 @@
       if (id === "chat") { renderChat(); }
       if (id === "home" || id === "cook") { homeGame.refresh(); }
       if (id === "starpath") { starpathGame.refresh(); }
-      if (partner) { journey.refresh(); }
+      if (adventures[id]) { adventures[id].refresh(); }
+      if (partner) { journey.refresh(); passport.refresh(); }
       syncToolbar();
       if (id === "kitty" && kitty.done) { tell(kitty.winner === "you" ? "ldsKittyWon" : kitty.winner === "tie" ? "ldsKittyTie" : "ldsKittyLost"); }
       else if (id === "claw" && claw.done) { tell(claw.challenge ? "ldsChallengeEnd" : "ldsClawFinished", { n: claw.caught.length, s: claw.score }); }
       else if (id === "focus" && focusDone) { tell("ldsFocusComplete"); }
-      else { tell(id === "starpath" ? "lspReady" : id === "home" ? "ldhHomeIntro" : id === "cook" ? "ldhKitchenIntro" : id === "chat" ? "ldsChatPrompt" : id === "story" ? "ldsStoryHint" : id === "photo" ? "ldsPhotoHint" : paused ? "ldsDatePaused" : "ldsDateReady", { name: t(partner.nameKey) }); }
+      else { tell(adventures[id] ? "ldxReady" : id === "starpath" ? "lspReady" : id === "home" ? "ldhHomeIntro" : id === "cook" ? "ldhKitchenIntro" : id === "chat" ? "ldsChatPrompt" : id === "story" ? "ldsStoryHint" : id === "photo" ? "ldsPhotoHint" : paused ? "ldsDatePaused" : "ldsDateReady", { name: t(partner.nameKey) }); }
     }
     function setPartner(next) {
+      var changed = !partner || partner.id !== next.id;
       partner = next;
       // readDates normalizes all partner dictionaries, including fresh saves.
       if (!progress.plushies[partner.id]) { progress.plushies[partner.id] = []; }
@@ -682,6 +697,7 @@
       root.style.setProperty("--lds-date-accent", partner.color);
       homeGame.setPartner(partner);
       starpathGame.setPartner(partner);
+      if (changed) { Object.keys(adventures).forEach(function (id) { adventures[id].setPartner(partner); }); }
       stripShots = []; stripImages = []; syncStrip();
       photo.art = options.getArt ? options.getArt(partner.id) : 0; photo.pan = sceneArt(partner.id, photo.art).x;
       while (artSelect.firstChild) { artSelect.removeChild(artSelect.firstChild); }
@@ -702,9 +718,9 @@
     root.addEventListener("focusout", function (e) {
       if (!e.relatedTarget || (!root.contains(e.relatedTarget) && !(mode === "focus" && options.isCompanionTarget(e.relatedTarget)))) { pause(); }
     });
-    return { element: root, pause: pause, setPartner: setPartner, select: select, start: start, refresh: function () { if (!partner) { return; } journey.refresh(); if (mode === "starpath") { starpathGame.refresh(); } },
+    return { element: root, pause: pause, setPartner: setPartner, select: select, start: start, refresh: function () { if (!partner) { return; } journey.refresh(); passport.refresh(); if (mode === "starpath") { starpathGame.refresh(); } if (adventures[mode]) { adventures[mode].refresh(); } },
       setArt: function (index) { photo.art = sceneArt(partner.id, index).index; photo.pan = sceneArt(partner.id, index).x; syncPhotoControls(); updatePhotoImage(); },
-      inspect: function () { return { claw: claw, kitty: kitty, progress: progress, active: active, paused: paused, mode: mode, focusElapsed: focusElapsed, home: homeGame.inspect(), starpath: starpathGame.getProgress(), stripShots: stripShots }; } };
+      inspect: function () { return { claw: claw, kitty: kitty, progress: progress, active: active, paused: paused, mode: mode, focusElapsed: focusElapsed, home: homeGame.inspect(), starpath: starpathGame.getProgress(), adventures: {mosaic:adventures.mosaic.inspect(),bouquet:adventures.bouquet.inspect(),expedition:adventures.expedition.inspect()}, stripShots: stripShots }; } };
   }
   App.addStrings({
     en: {

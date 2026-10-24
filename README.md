@@ -166,6 +166,58 @@ Release verification:
   packs, and shared game wiring; `node tools/pet-harness.js` runs the wider
   regression suite.
 
+#### More ways to play together
+
+Open **Together / 陪伴** and choose one of three new activities, or expand
+**Adventure passport / 心动游记** to visit an activity and see its collection.
+All three games are untimed and use the existing five partners.
+
+- **Memory mosaic / 心动拼图:** restore nine photographs per partner. Select
+  two fragments to swap them; later puzzles add clockwise rotation and expand
+  from 3×3 to 4×4. The perfect target is the exact minimum number of swaps and
+  rotations. Reference photographs are free to view. Assistance limits that
+  attempt to one star, while undo retains the action count. Completing a puzzle
+  lets you open its full-resolution original in the gallery. Arrow keys move
+  between fragments, and Enter or Space selects them.
+- **Bouquet atelier / 花语工坊:** complete six flower commissions per partner.
+  Draft from three flowers and arrange twelve blooms on a 4×4 board. Choose a
+  flower and an empty space to preview the score, then confirm with **Plant
+  flower**. Matching colours, petal rhythms, rainbow squares, and the partner's
+  two requests shape the result. Meet both requests and the required score to
+  unlock the next commission. Live score breakdowns, text and shape markers,
+  and undo make it possible to refine an arrangement before beginning again.
+- **Starlight expedition / 星夜远征:** take a short card adventure through three
+  battles, a route choice, two lasting upgrades, and a camp before the boss.
+  Spend three energy on a hand of three cards, build Evol for a partner skill,
+  and read the enemy's displayed intent before ending the turn. Health and
+  upgrades carry between encounters; unspent cards, energy, and guard reset
+  each turn. Three difficulty tiers unlock in order. Winning with at least
+  30 health in fifteen battle turns or fewer earns three stars.
+
+The Passport tracks 18 keepsakes and up to 54 stars per partner
+from these three activities. First clears award affinity once per partner and
+stage, commission, or expedition tier; replays can improve saved records.
+These collections are separate from the existing six Journey goals. Switching
+activities, visiting Missions, and closing the drawer keep the current attempt.
+Changing partners or reloading starts a fresh attempt, while best results remain
+saved. Unavailable browser storage keeps progress for the current session.
+
+Expansion checks:
+
+- `node tools/love-deepspace-activities-check.js` uses a real browser to complete
+  every Mosaic puzzle, Bouquet commission, and Expedition tier through their
+  visible controls. It also checks preview and undo controls, repeat rewards,
+  Passport progress, reloads, partner isolation, hidden actions, unfinished
+  expedition persistence, storage failures, and English/Chinese layouts at
+  320px, 390px, and 1100px in both themes. It saves its report and screenshots in
+  `tools/shots/love-deepspace-activities/` and accepts the same browser options
+  as the release checker.
+- `node tools/harness/cases-love-mosaic.js`,
+  `node tools/harness/cases-love-bouquet.js`, and
+  `node tools/harness/cases-love-expedition.js` verify their rules, attainable
+  scores, legal completions, corrupted saves, keyboard controls, and reward
+  lifecycle independently.
+
 Its original responsive, arena, date-activity, and animation styles are restored after an earlier stylesheet merge omitted them. Both this game and Item Quest isolate their native colours and controls from the shared game skin.
 
 **Together → Heart to heart / 陪伴 → 倾心之谈** adds original mood conversations for all five partners. Choose a good, tiring, or worrying day, then choose quiet company or a small plan. Completed exchanges go into each partner's journal; favourite and replay them in either language. The latest 20 distinct exchanges are saved across partners, duplicate choices update the existing entry, and replaying does not award affinity. Old saves remain compatible.

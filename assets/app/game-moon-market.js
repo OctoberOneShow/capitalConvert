@@ -288,6 +288,7 @@
         next.holds[i] = 0;
       }
       next.credits = credits;
+      next.cash = credits;
       next.day = mktDays - 1;
       next.status = credits >= next.level.target ? "won" : "lost";
       next.cause = credits >= next.level.target ? "settled" : "short";
@@ -677,10 +678,11 @@
       if (state.status !== "open") {
         return;
       }
+      var closedDay = state.day + 1;
       var res = mktCloseDay(state, state.seed);
       state = res.state;
       if (res.report) {
-        lines.push(t("mktLedDay", { d: state.day + 1, fee: res.report.fee, cash: state.cash }));
+        lines.push(t("mktLedDay", { d: closedDay, fee: res.report.fee, cash: state.cash }));
       }
       if (state.status === "won") {
         finish(state.credits);
@@ -745,6 +747,9 @@
         return;
       }
       if (event.key === "Enter") {
+        if (event.target && event.target.tagName === "BUTTON") {
+          return;
+        }
         event.preventDefault();
         trade(picked, event.shiftKey ? -1 : 1);
         return;

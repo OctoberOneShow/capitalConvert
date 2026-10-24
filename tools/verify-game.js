@@ -42,6 +42,9 @@ const RUNTIME = [
   "love-deepspace-home",
   "love-deepspace-release",
   "love-deepspace-starpath",
+  "love-deepspace-mosaic",
+  "love-deepspace-bouquet",
+  "love-deepspace-expedition",
   "love-deepspace-dates",
 ];
 

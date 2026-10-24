@@ -27,10 +27,14 @@
     { id: "n6", labelKey: "netL6", size: 7, starPad: [0, 5, 10] },
     { id: "n7", labelKey: "netL7", size: 8, starPad: [0, 5, 10] },
     { id: "n8", labelKey: "netL8", size: 8, starPad: [0, 6, 11] },
-    { id: "n9", labelKey: "lvlNum9", size: 8, starPad: [0, 5, 9] },
-    { id: "n10", labelKey: "lvlNum10", size: 8, starPad: [0, 4, 8] },
-    { id: "n11", labelKey: "lvlNum11", size: 8, starPad: [0, 3, 7] },
-    { id: "n12", labelKey: "lvlNum12", size: 8, starPad: [0, 2, 6] },
+    { id: "n9", labelKey: "netL9", size: 8, starPad: [0, 5, 9] },
+    { id: "n10", labelKey: "netL10", size: 8, starPad: [0, 4, 8] },
+    { id: "n11", labelKey: "netL11", size: 8, starPad: [0, 3, 7] },
+    { id: "n12", labelKey: "netL12", size: 8, starPad: [0, 2, 6] },
+    { id: "n13", labelKey: "netL13", size: 9, starPad: [0, 5, 9] },
+    { id: "n14", labelKey: "netL14", size: 9, starPad: [0, 4, 8] },
+    { id: "n15", labelKey: "netL15", size: 10, starPad: [0, 4, 8] },
+    { id: "n16", labelKey: "netL16", size: 10, starPad: [0, 3, 7] },
   ];
 
   /* Pure generator + checker, exported for the static checks. Returns

@@ -26,10 +26,14 @@
     { id: "s6", labelKey: "slashL6", target: 1800, timeS: 35, spawnMs: 600, bomb: 0.2 },
     { id: "s7", labelKey: "slashL7", target: 2200, timeS: 32, spawnMs: 540, bomb: 0.22 },
     { id: "s8", labelKey: "slashL8", target: 2600, timeS: 30, spawnMs: 500, bomb: 0.24 },
-    { id: "s9", labelKey: "lvlNum9", target: 3100, timeS: 30, spawnMs: 470, bomb: 0.26 },
-    { id: "s10", labelKey: "lvlNum10", target: 3600, timeS: 30, spawnMs: 440, bomb: 0.28 },
-    { id: "s11", labelKey: "lvlNum11", target: 4100, timeS: 30, spawnMs: 410, bomb: 0.3 },
-    { id: "s12", labelKey: "lvlNum12", target: 4600, timeS: 30, spawnMs: 400, bomb: 0.32 },
+    { id: "s9", labelKey: "slashL9", target: 3100, timeS: 30, spawnMs: 470, bomb: 0.25 },
+    { id: "s10", labelKey: "slashL10", target: 3600, timeS: 30, spawnMs: 440, bomb: 0.26 },
+    { id: "s11", labelKey: "slashL11", target: 4100, timeS: 30, spawnMs: 410, bomb: 0.27 },
+    { id: "s12", labelKey: "slashL12", target: 4600, timeS: 30, spawnMs: 380, bomb: 0.28 },
+    { id: "s13", labelKey: "slashL13", target: 5100, timeS: 30, spawnMs: 350, bomb: 0.29 },
+    { id: "s14", labelKey: "slashL14", target: 5600, timeS: 30, spawnMs: 330, bomb: 0.30 },
+    { id: "s15", labelKey: "slashL15", target: 6100, timeS: 30, spawnMs: 310, bomb: 0.31 },
+    { id: "s16", labelKey: "slashL16", target: 6600, timeS: 30, spawnMs: 290, bomb: 0.32 },
   ];
 
   function initInkSlashGame() {

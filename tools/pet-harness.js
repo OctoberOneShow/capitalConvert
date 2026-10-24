@@ -20,9 +20,14 @@ require("./harness/cases-puzzle-regressions");
 require("./harness/cases-arcade-regressions");
 require("./harness/cases-registry-regressions");
 require("./harness/cases-sculptor-thieves");
+require("./harness/cases-bridge-heist-market");
+require("./harness/cases-loop-detective-orchestra");
 require("./harness/cases-love-deepspace");
 require("./harness/cases-love-starpath");
 require("./harness/cases-love-release");
+require("./harness/cases-love-mosaic");
+require("./harness/cases-love-bouquet");
+require("./harness/cases-love-expedition");
 require("./harness/cases-prism-path");
 
 /* report ---------------------------------------------------------------- */

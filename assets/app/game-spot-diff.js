@@ -14,8 +14,7 @@
   var spotPenaltyMs = 2000;
   /* The ladder: more planted damage per rung, and the mutation pool grows
    * sneakier - case flips join on rung 2, look-alike homoglyphs on rung 3.
-   * The last three rungs keep every trick on the table and simply plant more
-   * of them: eight, nine, then ten breaks in one line. */
+   * Higher rungs test precision reading under pressure with up to 18 mutations. */
   var spotLevels = [
     { diffs: 3, caseFlips: false, homoglyphs: false },
     { diffs: 4, caseFlips: true, homoglyphs: false },
@@ -25,6 +24,14 @@
     { diffs: 8, caseFlips: true, homoglyphs: true },
     { diffs: 9, caseFlips: true, homoglyphs: true },
     { diffs: 10, caseFlips: true, homoglyphs: true },
+    { diffs: 11, caseFlips: true, homoglyphs: true },
+    { diffs: 12, caseFlips: true, homoglyphs: true },
+    { diffs: 13, caseFlips: true, homoglyphs: true },
+    { diffs: 14, caseFlips: true, homoglyphs: true },
+    { diffs: 15, caseFlips: true, homoglyphs: true },
+    { diffs: 16, caseFlips: true, homoglyphs: true },
+    { diffs: 17, caseFlips: true, homoglyphs: true },
+    { diffs: 18, caseFlips: true, homoglyphs: true },
   ];
   /* Every mutation is one the site's own tools know how to undo, so the
    * planted damage is exactly the kind of noise the toolkit hunts. */
@@ -72,6 +79,14 @@
     "Every regex is a small contract - keep it boring, tested, and easy to delete.",
     "The pipeline sorts, sweeps, and seals; nobody touches the text by hand anymore.",
     "A careful pass at midnight beats three careless ones before lunch.",
+    "Deterministic state machines guarantee zero divergence across distributed consensus nodes.",
+    "The optimizing compiler vectorizes intermediate bytecode into parallel register streams.",
+    "Cryptographic signatures seal the block header; merkle roots verify each transaction.",
+    "High-throughput telemetry streams ten thousand metrics per second into the analytics cluster.",
+    "Fault-tolerant clusters withstand regional partitions without dropping a single active session.",
+    "Zero-copy ring buffers stream network packets straight into kernel memory queues.",
+    "Synchronized atomic clocks calibrate microsecond timestamps across planetary data centres.",
+    "The microkernel scheduler dispatches asynchronous tasks with sub-microsecond latency.",
   ];
 
   function spotShuffle(list) {

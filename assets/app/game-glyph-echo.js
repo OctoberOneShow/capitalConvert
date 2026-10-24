@@ -22,10 +22,14 @@
     { id: "c6", labelKey: "echoL6", goal: 9, stepMs: 320 },
     { id: "c7", labelKey: "echoL7", goal: 10, stepMs: 280 },
     { id: "c8", labelKey: "echoL8", goal: 11, stepMs: 250 },
-    { id: "c9", labelKey: "lvlNum9", goal: 13, stepMs: 240 },
-    { id: "c10", labelKey: "lvlNum10", goal: 15, stepMs: 230 },
-    { id: "c11", labelKey: "lvlNum11", goal: 17, stepMs: 220 },
-    { id: "c12", labelKey: "lvlNum12", goal: 19, stepMs: 210 },
+    { id: "c9", labelKey: "echoL9", goal: 13, stepMs: 235 },
+    { id: "c10", labelKey: "echoL10", goal: 15, stepMs: 220 },
+    { id: "c11", labelKey: "echoL11", goal: 17, stepMs: 205 },
+    { id: "c12", labelKey: "echoL12", goal: 19, stepMs: 195 },
+    { id: "c13", labelKey: "echoL13", goal: 21, stepMs: 185 },
+    { id: "c14", labelKey: "echoL14", goal: 23, stepMs: 175 },
+    { id: "c15", labelKey: "echoL15", goal: 25, stepMs: 165 },
+    { id: "c16", labelKey: "echoL16", goal: 27, stepMs: 155 },
   ];
 
   function initGlyphEchoGame() {
