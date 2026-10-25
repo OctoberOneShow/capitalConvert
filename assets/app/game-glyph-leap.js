@@ -34,6 +34,22 @@
     { id: "h12", labelKey: "lvlNum12", goal: 8600, gapMin: 78, gapMax: 92, moving: 0.44, spring: 0.16, starTimes: [94, 131, 172] },
     { id: "h13", labelKey: "lvlNum13", goal: 9500, gapMin: 78, gapMax: 92, moving: 0.44, spring: 0.16, starTimes: [101, 140, 184] },
     { id: "h14", labelKey: "lvlNum14", goal: 10400, gapMin: 78, gapMax: 92, moving: 0.44, spring: 0.16, starTimes: [108, 150, 197] },
+    /* Ascents 15-20. The first fourteen only ever raised the summit; the
+     * spacing and the platform mix had been frozen since h10. These six open
+     * those two levers instead: the window narrows from the bottom (gapMin
+     * 78 -> 84) so a short hop is no longer on offer, drifting ledges take
+     * over half the rolls (moving 0.44 -> 0.56) and springs get rarer
+     * (spring 0.16 -> 0.12), so a long climb has to be carried on ordinary
+     * static ledges. 92 stays the ceiling because it is what a normal bounce
+     * can still clear: 460 px/s against 1100 px/s^2 tops out near 96. The
+     * summit keeps its +900 and the bands their ~7%, so the last ascent is a
+     * taller tower built out of worse parts rather than a longer grind. */
+    { id: "h15", labelKey: "lvlNum15", goal: 11300, gapMin: 78, gapMax: 92, moving: 0.46, spring: 0.15, starTimes: [115, 160, 210] },
+    { id: "h16", labelKey: "lvlNum16", goal: 12200, gapMin: 80, gapMax: 92, moving: 0.48, spring: 0.15, starTimes: [122, 170, 223] },
+    { id: "h17", labelKey: "lvlNum17", goal: 13100, gapMin: 80, gapMax: 92, moving: 0.5, spring: 0.14, starTimes: [129, 180, 236] },
+    { id: "h18", labelKey: "lvlNum18", goal: 14000, gapMin: 82, gapMax: 92, moving: 0.52, spring: 0.14, starTimes: [136, 190, 250] },
+    { id: "h19", labelKey: "lvlNum19", goal: 14900, gapMin: 82, gapMax: 92, moving: 0.54, spring: 0.13, starTimes: [143, 201, 265] },
+    { id: "h20", labelKey: "lvlNum20", goal: 15800, gapMin: 84, gapMax: 92, moving: 0.56, spring: 0.12, starTimes: [151, 212, 281] },
   ];
 
   function initGlyphLeapGame() {

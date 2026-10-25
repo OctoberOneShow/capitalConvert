@@ -29,6 +29,23 @@
     { id: "u9", labelKey: "lvlNum9", size: 9, bw: 3, bh: 3, clues: 22, starTimes: [324, 504, 792] },
     { id: "u10", labelKey: "lvlNum10", size: 9, bw: 3, bh: 3, clues: 21, starTimes: [389, 605, 950] },
     { id: "u11", labelKey: "lvlNum11", size: 9, bw: 3, bh: 3, clues: 21, starTimes: [467, 726, 1140] },
+    /* Grids 12-20. The engine carves a board down to `clues` givens and stops
+     * the moment another removal would leave two answers, so every board here
+     * still has exactly one solution and can be finished by logic alone.
+     * These nine are the first rungs to ask for fewer than 21 givens: the
+     * ladder walks 21 -> 20 -> 19 -> 18 -> 17, and each step down is worth
+     * noticeably more scanning, because a sparser grid has fewer immediate
+     * singles to start from. The clock keeps its own 1.2x ramp so the extra
+     * search never turns into a time trial. */
+    { id: "u12", labelKey: "lvlNum12", size: 9, bw: 3, bh: 3, clues: 20, starTimes: [560, 871, 1368] },
+    { id: "u13", labelKey: "lvlNum13", size: 9, bw: 3, bh: 3, clues: 20, starTimes: [672, 1045, 1642] },
+    { id: "u14", labelKey: "lvlNum14", size: 9, bw: 3, bh: 3, clues: 19, starTimes: [807, 1254, 1970] },
+    { id: "u15", labelKey: "lvlNum15", size: 9, bw: 3, bh: 3, clues: 19, starTimes: [968, 1505, 2364] },
+    { id: "u16", labelKey: "lvlNum16", size: 9, bw: 3, bh: 3, clues: 18, starTimes: [1162, 1806, 2837] },
+    { id: "u17", labelKey: "lvlNum17", size: 9, bw: 3, bh: 3, clues: 18, starTimes: [1394, 2167, 3404] },
+    { id: "u18", labelKey: "lvlNum18", size: 9, bw: 3, bh: 3, clues: 18, starTimes: [1673, 2600, 4085] },
+    { id: "u19", labelKey: "lvlNum19", size: 9, bw: 3, bh: 3, clues: 17, starTimes: [2008, 3120, 4902] },
+    { id: "u20", labelKey: "lvlNum20", size: 9, bw: 3, bh: 3, clues: 17, starTimes: [2409, 3744, 5882] },
   ];
 
   /* Pure generator + checker, exported for the static checks. */

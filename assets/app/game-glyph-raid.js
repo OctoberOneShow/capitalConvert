@@ -35,6 +35,22 @@
     { id: "v11", labelKey: "lvlNum11", rows: 6, cols: 10, stepMs: 272, dropMs: 555, starTimes: [119, 155, 195] },
     { id: "v12", labelKey: "lvlNum12", rows: 6, cols: 10, stepMs: 254, dropMs: 530, starTimes: [126, 164, 207] },
     { id: "v13", labelKey: "lvlNum13", rows: 6, cols: 10, stepMs: 236, dropMs: 505, starTimes: [134, 174, 219] },
+    /* Waves 14-20. The formation has been at its full 6x10 since v7, so from
+     * here the only honest lever is tempo: every wave marches about 6% sooner
+     * and drops about 5% sooner than the one before it, which is what turns a
+     * fixed 60-target screen into a different fight - the bottom rank is
+     * already on top of the ship before the top rank is half gone. The step
+     * is also self-accelerating (stepMs scales with the survivors), so the
+     * last waves tighten twice: once by hand here, once as the screen empties.
+     * The bands keep their ~6% widen, so a clean run still earns three stars
+     * even though there is simply less time to shoot in. */
+    { id: "v14", labelKey: "lvlNum14", rows: 6, cols: 10, stepMs: 220, dropMs: 480, starTimes: [142, 185, 232] },
+    { id: "v15", labelKey: "lvlNum15", rows: 6, cols: 10, stepMs: 206, dropMs: 457, starTimes: [150, 196, 246] },
+    { id: "v16", labelKey: "lvlNum16", rows: 6, cols: 10, stepMs: 194, dropMs: 436, starTimes: [159, 207, 260] },
+    { id: "v17", labelKey: "lvlNum17", rows: 6, cols: 10, stepMs: 183, dropMs: 416, starTimes: [168, 220, 276] },
+    { id: "v18", labelKey: "lvlNum18", rows: 6, cols: 10, stepMs: 173, dropMs: 397, starTimes: [178, 233, 292] },
+    { id: "v19", labelKey: "lvlNum19", rows: 6, cols: 10, stepMs: 164, dropMs: 379, starTimes: [188, 247, 310] },
+    { id: "v20", labelKey: "lvlNum20", rows: 6, cols: 10, stepMs: 156, dropMs: 362, starTimes: [199, 262, 328] },
   ];
 
   function initGlyphRaidGame() {

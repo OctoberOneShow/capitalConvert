@@ -49,6 +49,25 @@
     { id: "m11", labelKey: "mcbZ11", twistKey: "mcbTwist11", gens: 10, seed: 14222, cap: 22, traitMax: 7, start: 16, base: 3, step: 3, plan: [["heat", "acid"], ["heat", "defence"], ["acid", "speed"]], starBand: [5780, 5480, 4800] },
     { id: "m12", labelKey: "mcbZ12", twistKey: "mcbTwist12", gens: 10, seed: 15411, cap: 21, traitMax: 7, start: 15, base: 3, step: 2, plan: [["defence"], ["acid", "speed"], ["speed"], ["heat", "defence"], ["acid"]], starBand: [5780, 5480, 4800] },
     { id: "m13", labelKey: "mcbZ13", twistKey: "mcbTwist13", gens: 10, seed: 16824, cap: 23, traitMax: 8, start: 16, base: 4, step: 2, plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"]], starBand: [5780, 5480, 4800] },
+    /* Dishes 14-20. The first thirteen bought their difficulty out of the
+     * environment; these seven buy it out of the budget instead. `cap` is the
+     * trait ceiling one microbe may ever carry and it walks 22 -> 21 -> 20,
+     * so from m17 the colony can no longer simply grow out of a card - it has
+     * to decide which pair it is willing to lose. `start` drops 15 -> 14, so
+     * there is less in the dish on generation one. The last dish is the lean
+     * one: cap 20, the tightest in the game, paid for with a slower climb
+     * (step 3) so a lean colony still has time to adapt.
+     * Every dish here was walked with microbeBeatable before its band was
+     * written (tools/microbe-forge.js): greedy scores 5987, 5986, 5985, 5886,
+     * 5885, 5785 and 5782, and each band sits one hundred under that, so the
+     * three-star line has to be played for rather than collected. */
+    { id: "m14", labelKey: "mcbZ14", twistKey: "mcbTwist14", gens: 10, seed: 17000, cap: 22, traitMax: 7, start: 15, base: 4, step: 3, plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat"]], starBand: [5880, 5580, 4930] },
+    { id: "m15", labelKey: "mcbZ15", twistKey: "mcbTwist15", gens: 10, seed: 17003, cap: 22, traitMax: 7, start: 15, base: 4, step: 3, plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat", "acid"], ["defence", "speed"]], starBand: [5880, 5580, 4930] },
+    { id: "m16", labelKey: "mcbZ16", twistKey: "mcbTwist16", gens: 10, seed: 17002, cap: 22, traitMax: 7, start: 15, base: 4, step: 2, plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat"]], starBand: [5880, 5580, 4930] },
+    { id: "m17", labelKey: "mcbZ17", twistKey: "mcbTwist17", gens: 10, seed: 17167, cap: 21, traitMax: 7, start: 14, base: 4, step: 2, plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat", "acid"], ["defence", "speed"]], starBand: [5780, 5480, 4830] },
+    { id: "m18", labelKey: "mcbZ18", twistKey: "mcbTwist18", gens: 10, seed: 17002, cap: 21, traitMax: 7, start: 14, base: 4, step: 2, plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat", "acid"], ["defence", "speed"]], starBand: [5780, 5480, 4830] },
+    { id: "m19", labelKey: "mcbZ19", twistKey: "mcbTwist19", gens: 10, seed: 17015, cap: 21, traitMax: 7, start: 14, base: 4, step: 2, plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat", "acid"], ["defence", "speed"]], starBand: [5680, 5380, 4730] },
+    { id: "m20", labelKey: "mcbZ20", twistKey: "mcbTwist20", gens: 10, seed: 17071, cap: 20, traitMax: 7, start: 15, base: 4, step: 3, plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat", "acid"], ["defence", "speed"]], starBand: [5680, 5380, 4730] },
   ];
 
   function mcbInt(value) {
@@ -886,6 +905,13 @@
       "mcbZ11": "Thermal Vent",
       "mcbZ12": "Adaptive Crucible",
       "mcbZ13": "Apex Colony",
+      "mcbZ14": "Twin Vent",
+      "mcbZ15": "Six Card Gauntlet",
+      "mcbZ16": "Rapid Crucible",
+      "mcbZ17": "Lean Colony",
+      "mcbZ18": "Pressure Ring",
+      "mcbZ19": "Narrow Margin",
+      "mcbZ20": "Rationed Apex",
       "mcbTwist1": "heat wave only",
       "mcbTwist2": "acid bloom only",
       "mcbTwist3": "predators, then famine",
@@ -899,6 +925,13 @@
       "mcbTwist11": "acid vinegar then brand",
       "mcbTwist12": "rapid alternating pressure",
       "mcbTwist13": "dual stresses across ten generations",
+      "mcbTwist14": "five cards on a slow climb",
+      "mcbTwist15": "six cards on a slow climb",
+      "mcbTwist16": "five cards on a fast climb",
+      "mcbTwist17": "a leaner budget, climbing fast",
+      "mcbTwist18": "six cards on a leaner budget",
+      "mcbTwist19": "six cards, one generation from the floor",
+      "mcbTwist20": "the leanest budget, ten generations to adapt",
       "mcbGenLabel": "Generation",
       "mcbPointLabel": "Mutations",
       "mcbPopLabel": "Colony",
@@ -983,6 +1016,13 @@
       "mcbZ11": "深海热泉",
       "mcbZ12": "适应熔炉",
       "mcbZ13": "巅峰群落",
+      "mcbZ14": "双生热泉",
+      "mcbZ15": "六卡试炼",
+      "mcbZ16": "疾速熔炉",
+      "mcbZ17": "精简群落",
+      "mcbZ18": "压力环阵",
+      "mcbZ19": "微差边缘",
+      "mcbZ20": "配额巅峰",
       "mcbTwist1": "只有热浪",
       "mcbTwist2": "只有酸华",
       "mcbTwist3": "捕食季，随后饥荒",
@@ -996,6 +1036,13 @@
       "mcbTwist11": "酸醋浪潮，继以烙印",
       "mcbTwist12": "交替交叠的快速冲击",
       "mcbTwist13": "十代双重压迫试炼",
+      "mcbTwist14": "五张卡，缓慢爬升",
+      "mcbTwist15": "六张卡，缓慢爬升",
+      "mcbTwist16": "五张卡，快速爬升",
+      "mcbTwist17": "预算收紧，压迫快速攀升",
+      "mcbTwist18": "六张卡，预算更紧",
+      "mcbTwist19": "六张卡，一度逼近底线",
+      "mcbTwist20": "最紧预算，十代时间适应",
       "mcbGenLabel": "世代",
       "mcbPointLabel": "突变点",
       "mcbPopLabel": "菌群",

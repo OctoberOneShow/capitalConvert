@@ -40,6 +40,21 @@
     { id: "b12", labelKey: "lvlNum12", balls: 6, orange: 24, bucketSpeed: 260, seed: 223 },
     { id: "b13", labelKey: "lvlNum13", balls: 6, orange: 26, bucketSpeed: 290, seed: 233 },
     { id: "b14", labelKey: "lvlNum14", balls: 6, orange: 28, bucketSpeed: 320, seed: 241 },
+    /* Boards 15-20. The field is a fixed 84 pegs (eight staggered rows of
+     * eleven and ten), so the ladder keeps buying difficulty the way it has
+     * since b11: two more orange targets out of the same 84-peg field and a
+     * thirty-faster bucket sweep. By b20 a little under half the field is
+     * orange, which is the real change - a ball can no longer be spent
+     * clearing blue, and the refund bucket has to be caught while it is
+     * travelling at five times the speed it opened the campaign at. Six balls
+     * still has to do the whole board, so the three-star line (three balls
+     * left) is a genuine ask rather than a formality. */
+    { id: "b15", labelKey: "lvlNum15", balls: 6, orange: 30, bucketSpeed: 350, seed: 251 },
+    { id: "b16", labelKey: "lvlNum16", balls: 6, orange: 32, bucketSpeed: 380, seed: 257 },
+    { id: "b17", labelKey: "lvlNum17", balls: 6, orange: 34, bucketSpeed: 410, seed: 263 },
+    { id: "b18", labelKey: "lvlNum18", balls: 6, orange: 36, bucketSpeed: 440, seed: 269 },
+    { id: "b19", labelKey: "lvlNum19", balls: 6, orange: 38, bucketSpeed: 470, seed: 271 },
+    { id: "b20", labelKey: "lvlNum20", balls: 6, orange: 40, bucketSpeed: 500, seed: 277 },
   ];
 
   function mulberry32(seed) {
