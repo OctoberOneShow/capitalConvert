@@ -32,6 +32,22 @@
     { id: "p14", labelKey: "lvlNum14", target: 3400, moves: 17 },
     { id: "p15", labelKey: "lvlNum15", target: 3800, moves: 19 },
     { id: "p16", labelKey: "lvlNum16", target: 4200, moves: 21 },
+    /* Pools 17-20 play with what pours out of the well, not just how many
+     * moves the card gives: a level may thin the ink pool (`colors`), and
+     * fewer colours means every match drags a deeper chain reaction behind
+     * it. One rule prices every card here: a round ends the instant a
+     * cascade carries the score across the target, so the final score lands
+     * between the target and the target plus one cascade. A card whose
+     * three-star line sits further than one big cascade past its target can
+     * never be three-starred, so these targets are set where all three
+     * bands live inside a single generous chain - the tier asks less per
+     * card than the shipped tail but pays it out in exactly the moves
+     * given, and the finale's four-colour well throws the deepest chains in
+     * the game against the tightest read. */
+    { id: "p17", labelKey: "lvlNum17", target: 1800, moves: 16, colors: 5 },
+    { id: "p18", labelKey: "lvlNum18", target: 1000, moves: 30 },
+    { id: "p19", labelKey: "lvlNum19", target: 1400, moves: 14, colors: 5 },
+    { id: "p20", labelKey: "lvlNum20", target: 3600, moves: 18, colors: 4 },
   ];
 
   function indexAt(x, y) {
@@ -159,8 +175,11 @@
       return false;
     }
 
+    /* A level may pour a thinner pool (`colors`), which makes matches more
+     * common and chains deeper; the classic six colours stay the default. */
     function randomColor() {
-      return Math.floor(Math.random() * inkColors);
+      var pool = level.colors || inkColors;
+      return Math.floor(Math.random() * pool);
     }
 
     function fillBoard() {

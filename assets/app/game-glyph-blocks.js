@@ -55,6 +55,18 @@
     { id: "f14", labelKey: "blkL14", goal: 26, garbage: 11, startMs: 270, starTimes: [140, 210, 295] },
     { id: "f15", labelKey: "blkL15", goal: 28, garbage: 11, startMs: 250, starTimes: [150, 225, 315] },
     { id: "f16", labelKey: "blkL16", goal: 30, garbage: 12, startMs: 230, starTimes: [160, 240, 335] },
+    /* Ranks 17-20: two twists the ladder has never shipped, both riding data
+     * the well already reads. `pieces: "noI"` stops shipping I-beams, so no
+     * four-row delete exists and every clear has to be assembled from the
+     * L/T/S/Z families. `rise` pours one more rubble row from the floor
+     * every time that many lines are cleared, so the heap the level starts
+     * with is a floor that grows while you dig it - f18 and f20 open with a
+     * thinner heap to pay for the rows the rise adds mid-run. f19 is the
+     * raw-speed peak with the familiar bag; f20 combines both twists. */
+    { id: "f17", labelKey: "blkL17", goal: 32, garbage: 12, startMs: 225, pieces: "noI", starTimes: [175, 260, 365] },
+    { id: "f18", labelKey: "blkL18", goal: 34, garbage: 6, startMs: 215, rise: 7, starTimes: [205, 310, 430] },
+    { id: "f19", labelKey: "blkL19", goal: 36, garbage: 12, startMs: 200, starTimes: [195, 295, 410] },
+    { id: "f20", labelKey: "blkL20", goal: 38, garbage: 7, startMs: 205, pieces: "noI", rise: 8, starTimes: [205, 310, 430] },
   ];
 
   function rotateMatrix(matrix) {
@@ -68,6 +80,231 @@
       out.push(row);
     }
     return out;
+  }
+
+  /* The bag a level draws from: `pieces: "noI"` stops shipping I-beams, so
+   * no four-row delete exists and every clear has to be assembled out of the
+   * L/T/S/Z families. */
+  function blkBagLetters(level) {
+    return level && level.pieces === "noI"
+      ? ["O", "T", "S", "Z", "J", "L"]
+      : ["I", "O", "T", "S", "Z", "J", "L"];
+  }
+
+  /* A rubble row with one hole to dig for. */
+  function blkGarbageRow(hole) {
+    var line = [];
+    for (var x = 0; x < blkCols; x += 1) {
+      line.push(x === hole ? "" : "X");
+    }
+    return line;
+  }
+
+  /* Pure board rules, shared by the game loop below and the headless prover
+   * in tools/verify-levels.js, so a rung proven winnable is winnable on the
+   * same physics the player faces. */
+  function blkCollides(grid, matrix, px, py) {
+    for (var y = 0; y < matrix.length; y += 1) {
+      for (var x = 0; x < matrix[y].length; x += 1) {
+        if (!matrix[y][x]) {
+          continue;
+        }
+        var gx = px + x;
+        var gy = py + y;
+        if (gx < 0 || gx >= blkCols || gy >= blkRows) {
+          return true;
+        }
+        if (gy >= 0 && grid[gy][gx]) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function blkFullRows(grid) {
+    var rows = [];
+    for (var y = 0; y < blkRows; y += 1) {
+      var full = true;
+      for (var x = 0; x < blkCols; x += 1) {
+        if (!grid[y][x]) {
+          full = false;
+          break;
+        }
+      }
+      if (full) {
+        rows.push(y);
+      }
+    }
+    return rows;
+  }
+
+  /* One landing, resolved the way lockPiece resolves it: merge, clear, pour
+   * any rise the cleared count has earned, retime. Returns the rows cleared.
+   * Used by the headless prover; the live loop below keeps its own fx-rich
+   * copy of the same rules. */
+  function blkLand(grid, level, matrix, px, landed, tally, rng) {
+    for (var y = 0; y < matrix.length; y += 1) {
+      for (var x = 0; x < matrix[y].length; x += 1) {
+        if (matrix[y][x] && landed + y >= 0) {
+          grid[landed + y][px + x] = "#";
+        }
+      }
+    }
+    var rows = blkFullRows(grid);
+    rows.forEach(function (row) {
+      grid.splice(row, 1);
+      var fresh = [];
+      for (var x = 0; x < blkCols; x += 1) {
+        fresh.push("");
+      }
+      grid.unshift(fresh);
+    });
+    tally.cleared += rows.length;
+    if (level.rise) {
+      var due = Math.floor(tally.cleared / level.rise) - tally.risen;
+      while (due > 0) {
+        due -= 1;
+        tally.risen += 1;
+        grid.shift();
+        grid.push(blkGarbageRow(Math.floor(rng() * blkCols)));
+      }
+    }
+    return rows.length;
+  }
+
+  /* The piece after `turns` quarter-turns from its spawn matrix, applied the
+   * way rotate() applies them: one step at a time with the same kick table,
+   * at the spawn row. A turn that cannot land is skipped, exactly as a
+   * failed rotate is ignored in play. */
+  function blkOrient(shape, turns, grid) {
+    var matrix = [];
+    for (var y = 0; y < shape.length; y += 1) {
+      matrix.push(shape[y].slice());
+    }
+    var px = Math.floor((blkCols - matrix.length) / 2);
+    var kicks = [0, -1, 1, -2, 2];
+    for (var turn = 0; turn < turns; turn += 1) {
+      var turned = rotateMatrix(matrix);
+      for (var k = 0; k < kicks.length; k += 1) {
+        if (!blkCollides(grid, turned, px + kicks[k], 0)) {
+          matrix = turned;
+          px += kicks[k];
+          break;
+        }
+      }
+    }
+    return { matrix: matrix, px: px };
+  }
+
+  /* Every spot the piece can come to rest, given the engine's real movement:
+   * between ticks the player may slide the piece along its row, turn it with
+   * the same kick table rotate() uses, or let it fall one row - so the state
+   * space is (orientation, column, row) and breadth-first from the spawn
+   * collects every state that cannot descend. Used by the headless prover;
+   * the live loop plays the same affordances one input at a time. */
+  function blkReachable(grid, shape) {
+    var start = blkOrient(shape, 0, grid);
+    if (blkCollides(grid, start.matrix, start.px, 0)) {
+      return [];
+    }
+    var seen = {};
+    var landings = [];
+    function visit(matrix, x, y) {
+      var key = matrix.map(function (row) {
+        return row.join("");
+      }).join("/") + "@" + x + "," + y;
+      if (seen[key]) {
+        return;
+      }
+      seen[key] = true;
+      if (blkCollides(grid, matrix, x, y + 1)) {
+        landings.push({
+          x: x,
+          y: y,
+          matrix: matrix,
+          key: key,
+        });
+      }
+      var steps = [[1, 0], [-1, 0], [0, 1]];
+      for (var m = 0; m < steps.length; m += 1) {
+        var nx = x + steps[m][0];
+        var ny = y + steps[m][1];
+        if (nx < 0 || nx + matrix[0].length > blkCols || ny >= blkRows) {
+          continue;
+        }
+        if (blkCollides(grid, matrix, nx, ny)) {
+          continue;
+        }
+        visit(matrix, nx, ny);
+      }
+      var turned = rotateMatrix(matrix);
+      var kicks = [0, -1, 1, -2, 2];
+      for (var k = 0; k < kicks.length; k += 1) {
+        if (!blkCollides(grid, turned, x + kicks[k], y)) {
+          visit(turned, x + kicks[k], y);
+          break;
+        }
+      }
+    }
+    visit(start.matrix, start.px, 0);
+    return landings;
+  }
+
+  /* The headless run: seed the rubble, draw from the level's bag, commit a
+   * policy move per piece, and keep the engine's own clock - every piece
+   * spends one interval per row it falls through, retimed after each clear
+   * exactly as speedForLines retimes it. `ms` is therefore the engine math
+   * for a player who plays at gravity pace and never wastes a beat. */
+  function blkSimulate(level, policy, rng) {
+    var grid = [];
+    for (var y = 0; y < blkRows; y += 1) {
+      var row = [];
+      for (var x = 0; x < blkCols; x += 1) {
+        row.push("");
+      }
+      grid.push(row);
+    }
+    for (var g = 0; g < level.garbage; g += 1) {
+      grid[blkRows - 1 - g] = blkGarbageRow(Math.floor(rng() * blkCols));
+    }
+    var letters = blkBagLetters(level).slice();
+    var bag = [];
+    var tally = { cleared: 0, risen: 0, pieces: 0, ms: 0, topout: false };
+    function drawLetter() {
+      if (bag.length < 2) {
+        for (var i = letters.length - 1; i > 0; i -= 1) {
+          var j = Math.floor(rng() * (i + 1));
+          var swap = letters[i];
+          letters[i] = letters[j];
+          letters[j] = swap;
+        }
+        bag = bag.concat(letters);
+      }
+      return bag.shift();
+    }
+    var tickMs = level.startMs;
+    var nextLetter = drawLetter();
+    var guard = 0;
+    while (!tally.topout && tally.cleared < level.goal && guard < 5000) {
+      guard += 1;
+      var letter = nextLetter;
+      nextLetter = drawLetter();
+      tally.pieces += 1;
+      var spots = blkReachable(grid, blkShapes[letter]);
+      if (!spots.length) {
+        tally.topout = true;
+        break;
+      }
+      var pick = policy(letter, nextLetter, grid, level, spots);
+      var spot = spots[pick] || spots[0];
+      tally.ms += spot.y * tickMs;
+      blkLand(grid, level, spot.matrix, spot.x, spot.y, tally, rng);
+      tickMs = Math.max(blkMinMs, level.startMs - tally.cleared * 18);
+    }
+    tally.won = !tally.topout && tally.cleared >= level.goal;
+    tally.seconds = Math.round((tally.ms / 1000) * 10) / 10;
+    return tally;
   }
 
   function initGlyphBlocksGame() {
@@ -112,6 +349,7 @@
     var nextLetter = null;
     var score = 0;
     var clearedLines = 0;
+    var risen = 0;
     var running = false;
     var intervalId = null;
     var tickMs = 800;
@@ -154,16 +392,23 @@
 
     function pourGarbage(count) {
       for (var row = 0; row < count; row += 1) {
-        var line = grid[blkRows - 1 - row];
-        var hole = Math.floor(Math.random() * blkCols);
-        for (var x = 0; x < blkCols; x += 1) {
-          line[x] = x === hole ? "" : "X";
-        }
+        grid[blkRows - 1 - row] = blkGarbageRow(Math.floor(Math.random() * blkCols));
+      }
+    }
+
+    /* The rubble floor grows while you dig: one fresh row climbs in from
+     * the bottom for every `rise` lines cleared. The whole stack shifts up,
+     * so the rise never crushes anything outright - the spawn row just gets
+     * that much closer. */
+    function riseGarbage(count) {
+      for (var row = 0; row < count; row += 1) {
+        grid.shift();
+        grid.push(blkGarbageRow(Math.floor(Math.random() * blkCols)));
       }
     }
 
     function refillBag() {
-      var letters = ["I", "O", "T", "S", "Z", "J", "L"];
+      var letters = blkBagLetters(level);
       for (var i = letters.length - 1; i > 0; i -= 1) {
         var j = Math.floor(Math.random() * (i + 1));
         var swap = letters[i];
@@ -181,22 +426,7 @@
     }
 
     function collides(matrix, px, py) {
-      for (var y = 0; y < matrix.length; y += 1) {
-        for (var x = 0; x < matrix[y].length; x += 1) {
-          if (!matrix[y][x]) {
-            continue;
-          }
-          var gx = px + x;
-          var gy = py + y;
-          if (gx < 0 || gx >= blkCols || gy >= blkRows) {
-            return true;
-          }
-          if (gy >= 0 && grid[gy][gx]) {
-            return true;
-          }
-        }
-      }
-      return false;
+      return blkCollides(grid, matrix, px, py);
     }
 
     function spawnPiece(letter) {
@@ -252,20 +482,7 @@
     }
 
     function fullRows() {
-      var rows = [];
-      for (var y = 0; y < blkRows; y += 1) {
-        var full = true;
-        for (var x = 0; x < blkCols; x += 1) {
-          if (!grid[y][x]) {
-            full = false;
-            break;
-          }
-        }
-        if (full) {
-          rows.push(y);
-        }
-      }
-      return rows;
+      return blkFullRows(grid);
     }
 
     function burstRow(row) {
@@ -324,6 +541,13 @@
         tickMs = speedForLines(clearedLines);
         if (running) {
           startLoop();
+        }
+        if (level.rise) {
+          var due = Math.floor(clearedLines / level.rise) - risen;
+          if (due > 0) {
+            risen += due;
+            riseGarbage(due);
+          }
         }
       }
       piece = spawnPiece(nextLetter || drawLetter());
@@ -508,6 +732,7 @@
       piece = null;
       score = 0;
       clearedLines = 0;
+      risen = 0;
       tickMs = level.startMs;
       timeEl.textContent = "0.0s";
       renderHud();
@@ -630,6 +855,14 @@
   }
 
 
-  /* Exported for the other modules. */
+  /* Exported for the other modules and the headless checks. */
   App.initGlyphBlocksGame = initGlyphBlocksGame;
+  App.blkLevels = blkLevels;
+  App.blkSimulate = blkSimulate;
+  App.blkShapes = blkShapes;
+  App.blkCollides = blkCollides;
+  App.blkReachable = blkReachable;
+  App.blkRotate = rotateMatrix;
+  App.blkRows = blkRows;
+  App.blkCols = blkCols;
 })(window.CapitalConvert = window.CapitalConvert || {});

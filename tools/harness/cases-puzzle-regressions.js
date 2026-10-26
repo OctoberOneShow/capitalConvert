@@ -362,7 +362,8 @@ run("spot diff advances without beating a legacy best", () => {
   const saved = JSON.parse(store.get("spot-diff-best"));
   check(name, "a slower clear preserves the old best and unlocks the next rung", saved.level === 2 && saved.bests["1"] === 1);
   click(env, "spotStartBtn");
-  check(name, "the next round starts at the unlocked level", env.byId("spotLevel").textContent === "2/8");
+  check(name, "the next round starts at the unlocked level",
+    env.byId("spotLevel").textContent === "2/" + env.window.CapitalConvert.spotLevels.length);
 });
 
 run("spot diff wrong flashes clear after repeated mistakes", () => {

@@ -28,6 +28,41 @@
     { id: "s14", labelKey: "lvlNum14", rows: [1, 4, 7, 8], misere: false, starTurns: [5, 10, 19] },
     { id: "s15", labelKey: "lvlNum15", rows: [1, 2, 5, 8], misere: true, starTurns: [5, 8, 15] },
     { id: "s16", labelKey: "lvlNum16", rows: [4, 6, 9], misere: false, starTurns: [5, 9, 18] },
+
+    /* Tables 17-20: the board widens past four rows for the first time. The
+     * pyramid brings misere to five rows and reads as a shape, not a list;
+     * the powers-of-two row is the ladder's longest game, where the count
+     * has to survive fifteen of your own turns; the even staircase re-runs
+     * the arithmetic rows of s13 in fresh-but-fair shoes after it; and the
+     * capstone lays out the widest felt of the room - six rows, a staircase,
+     * under misere rules - where the three-star line belongs to the player
+     * who sows the fastest win. Every band below was proved against the
+     * game's own perfect play: the fastest winning line lands inside the
+     * three-star turn, a dawdling win still lands inside the one-star turn,
+     * and no winning line is faster than the three-star line asks. */
+    { id: "s17", labelKey: "lvlNum17", rows: [1, 2, 3, 2, 1], misere: true, starTurns: [3, 5, 10] },
+    { id: "s18", labelKey: "lvlNum18", rows: [1, 2, 4, 8, 16], misere: false, starTurns: [5, 9, 18] },
+    { id: "s19", labelKey: "lvlNum19", rows: [2, 4, 6, 8], misere: false, starTurns: [4, 8, 16] },
+    { id: "s20", labelKey: "lvlNum20", rows: [1, 2, 3, 4, 5, 6], misere: true, starTurns: [5, 6, 12] },
+
+    /* Tables 21-24, the study. The felt stops growing and the shapes start
+     * talking to each other: s21 runs the even spread two-through-seven,
+     * where the xor reads deep but the fastest win is a five-turn bargain;
+     * s22 is the triple-and-stray - three sevens and a three - a position
+     * whose winning reply is one exact take, and everything else loses;
+     * s23 deals the Fibonacci row under misere rules, the shortest sharp
+     * game of the ladder, where every win lands inside five of your own
+     * turns; and the capstone s24 lays out the new widest felt of the
+     * room, seven rows from two to eight, where the three-star line
+     * demands the six-turn kill and a dawdling win still finishes inside
+     * seventeen. Every band below was proved against the game's own
+     * perfect play: the fastest winning line lands inside the three-star
+     * turn, a dawdling win still lands inside the one-star turn, and no
+     * winning line is faster than the three-star line asks. */
+    { id: "s21", labelKey: "lvlNum21", rows: [2, 3, 4, 5, 6, 7], misere: false, starTurns: [5, 8, 13] },
+    { id: "s22", labelKey: "lvlNum22", rows: [7, 7, 7, 3], misere: false, starTurns: [4, 6, 11] },
+    { id: "s23", labelKey: "lvlNum23", rows: [1, 2, 3, 5, 8], misere: true, starTurns: [4, 5, 5] },
+    { id: "s24", labelKey: "lvlNum24", rows: [2, 3, 4, 5, 6, 7, 8], misere: false, starTurns: [6, 11, 17] },
   ];
 
   function nimTotal(rows) {

@@ -11,7 +11,9 @@
   var fillCampaignPicker = App.fillCampaignPicker;
   var starsFor = App.starsFor;
   var pushSize = 320;
-  /* Map legend: "#" wall, " " floor, "$" box, "o" goal, "@" player.
+  /* Map legend: "#" wall, " " floor, "$" box, "o" goal, "@" player, "*"
+   * a box already standing on a goal, "+" the player on a goal. A parked
+   * box is not a finished room - it may still have to make way.
    * starMoves thresholds are push counts [3-star, 2-star, 1-star]. */
   var pushLevels = [
     {
@@ -199,6 +201,136 @@
         "#########"
       ],
     },
+
+    /* k17-k20, the third tier. k17 teaches the parked crate: a box can start
+     * on a diamond and still have to step aside so a loose one can pass.
+     * k18 mirrors one layout around the centre pillar, so every crate's
+     * ferry has a twin. k19 is the bays - a one-wide overhang corridor where
+     * the deepest diamond must be parked first, and the lower room is the
+     * only highway around the line. k20 is the depot: three mouth diamonds
+     * start occupied, and each parked crate must take the deep slot behind
+     * its own mouth so a loose one can slot in - make-way, mirrored ferries
+     * and slot discipline in one room. Bands are the exact push optimum,
+     * then the shipped +4 / +5 cushions. */
+    {
+      id: "k17", labelKey: "lvlNum17", starMoves: [4, 8, 13],
+      map: [
+        "########",
+        "#      #",
+        "# *    #",
+        "#  @   #",
+        "# o*$  #",
+        "#      #",
+        "########"
+      ],
+    },
+    {
+      id: "k18", labelKey: "lvlNum18", starMoves: [8, 12, 17],
+      map: [
+        "#########",
+        "#   #   #",
+        "# $ # $ #",
+        "#  o@o  #",
+        "# $ # $ #",
+        "#o     o#",
+        "#   #   #",
+        "#########"
+      ],
+    },
+    {
+      id: "k19", labelKey: "lvlNum19", starMoves: [18, 23, 28],
+      map: [
+        "############",
+        "#          #",
+        "#   $$$    #",
+        "#          #",
+        "####   #####",
+        "#ooo       #",
+        "#####  # ###",
+        "#    @     #",
+        "############"
+      ],
+    },
+    {
+      id: "k20", labelKey: "lvlNum20", starMoves: [11, 15, 20],
+      map: [
+        "##########",
+        "##o##o####",
+        "##*##*####",
+        "#        #",
+        "#    $$$ #",
+        "#  @   o##",
+        "##########"
+      ],
+    },
+
+    /* k21-k24, the fourth tier. k21 is the counterweights: a divider wall
+     * splits the room and every diamond sits on the far rail, so each
+     * crate has to be ferried around the divide and the low crate below
+     * the player gates the order. k22 is the sandwich - goal rails along
+     * the top and bottom, four crates in two bands split by a one-wide
+     * slit, where a crate pushed through the slit can never come back, so
+     * the bands must be finished in the right sequence. k23 is the
+     * switchback: pillars stagger the left floor into a zigzag, so the
+     * corner crate waits until last and every ferry rides a different
+     * lane. k24, the terraces, is the capstone: three diamonds on
+     * successive ledges, each reached only over the one below, so the
+     * deepest slot must be parked first and the top crates walked down
+     * level by level. Bands are the exact push optimum - measured by the
+     * same canonical solver the checks run - then the shipped cushions. */
+    {
+      id: "k21", labelKey: "lvlNum21", starMoves: [13, 17, 22],
+      map: [
+        "########",
+        "#      #",
+        "# $$ # #",
+        "#    o #",
+        "# @# o #",
+        "# $  o #",
+        "#      #",
+        "########"
+      ],
+    },
+    {
+      id: "k22", labelKey: "lvlNum22", starMoves: [16, 20, 25],
+      map: [
+        "##########",
+        "#o      o#",
+        "#  $  $  #",
+        "####  ####",
+        "#   @    #",
+        "#  $  $  #",
+        "#o      o#",
+        "##########"
+      ],
+    },
+    {
+      id: "k23", labelKey: "lvlNum23", starMoves: [19, 23, 28],
+      map: [
+        "###########",
+        "#    #    #",
+        "# $$ # o  #",
+        "#       # #",
+        "## ###  # #",
+        "#    $  o #",
+        "#  @#   o #",
+        "#         #",
+        "###########"
+      ],
+    },
+    {
+      id: "k24", labelKey: "lvlNum24", starMoves: [23, 28, 33],
+      map: [
+        "##########",
+        "#        #",
+        "# $$$    #",
+        "##     ###",
+        "#  ### o #",
+        "#    @ o #",
+        "#  ##  o #",
+        "##########"
+      ],
+    },
   ];
 
   function initGlyphPusherGame() {
@@ -292,13 +424,13 @@
         for (var x = 0; x < row.length; x += 1) {
           var ch = row.charAt(x);
           walls[y][x] = ch === "#";
-          if (ch === "o") {
+          if (ch === "o" || ch === "*") {
             goals[idx(x, y)] = true;
           }
-          if (ch === "$") {
+          if (ch === "$" || ch === "*") {
             boxes.push([x, y]);
           }
-          if (ch === "@") {
+          if (ch === "@" || ch === "+") {
             player = [x, y];
           }
         }

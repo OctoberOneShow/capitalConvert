@@ -19,9 +19,11 @@
   var fillCampaignPicker = App.fillCampaignPicker;
   var starsFor = App.starsFor;
   var towSize = 320;
-  /* Levels: disc count per tower - the one axis the row schema carries, since
-   * the board reads only id / labelKey / discs / starMoves. Star thresholds are
-   * move counts [3-star, 2-star, 1-star] at or above the 2^n - 1 optimum. */
+  /* Levels: disc count per tower, plus an optional part-built deal. A row
+   * without deal stacks every disc on the first rod; a row with deal lists
+   * each rod bottom-up. Star thresholds are move counts [3-star, 2-star,
+   * 1-star] at or above the rung's optimum - 2^n - 1 for a full tower, or
+   * the row's own opt for a bench that starts part-built. */
   var towLevels = [
     { id: "tw1", labelKey: "towL1", discs: 3, starMoves: [8, 10, 14] },
     { id: "tw2", labelKey: "towL2", discs: 4, starMoves: [16, 19, 25] },
@@ -46,6 +48,45 @@
     { id: "tw14", labelKey: "towL14", discs: 16, starMoves: [65535, 67583, 73727] },
     { id: "tw15", labelKey: "towL15", discs: 17, starMoves: [131071, 135167, 147455] },
     { id: "tw16", labelKey: "towL16", discs: 18, starMoves: [262143, 270335, 294911] },
+
+    /* The third tier re-benches the shop: tw17 and tw19 start from a bench
+     * that is already part-built (deal lists each rod bottom-up), so the
+     * perfect run is shorter than 2^n - 1 and the row pins that proven
+     * optimum in opt; tw18 revisits the plain transfer one ring past the
+     * shipped peak; tw20 reassembles thirteen rings under two parked caps. */
+    { id: "tw17", labelKey: "towL17", discs: 12, opt: 2047,
+      deal: [[], [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1], [12]],
+      starMoves: [2047, 2111, 2303] },
+    { id: "tw18", labelKey: "towL18", discs: 19, starMoves: [524287, 540671, 589823] },
+    { id: "tw19", labelKey: "towL19", discs: 13, opt: 3958,
+      deal: [[7, 6, 5], [12, 11, 10, 9, 4, 1], [13, 8, 3, 2]],
+      starMoves: [3958, 4082, 4453] },
+    { id: "tw20", labelKey: "towL20", discs: 15, opt: 8191,
+      deal: [[13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1], [], [15, 14]],
+      starMoves: [8191, 8447, 9215] },
+
+    /* The fourth tier, the night shift. Every bench below starts from a
+     * pose on the classic optimal path - the deal is the perfect solve
+     * frozen mid-flight, so the pinned opt is the true remaining distance
+     * and the perfect run is provably reachable. tw21 re-opens a
+     * fourteen-ring job three-quarters done; tw22 walks a sixteen-ring
+     * bench with the middle rods already traded; tw23 and tw24 push the
+     * ring count past the shipped peak - twenty and twenty-two rings -
+     * while the frozen start keeps the finish inside a night's work. The
+     * bands keep the shop's convention: three stars for the proven
+     * optimum, two for three percent over, one for an eighth over. */
+    { id: "tw21", labelKey: "towL21", discs: 14, opt: 2600,
+      deal: [[12, 9, 8, 7, 4], [11, 6, 3, 2, 1], [14, 13, 10, 5]],
+      starMoves: [2600, 2681, 2925] },
+    { id: "tw22", labelKey: "towL22", discs: 16, opt: 3400,
+      deal: [[12, 11, 8, 3, 2, 1], [9, 6, 5], [16, 15, 14, 13, 10, 7, 4]],
+      starMoves: [3400, 3505, 3825] },
+    { id: "tw23", labelKey: "towL23", discs: 20, opt: 3600,
+      deal: [[12, 11, 10, 5], [9, 8, 7, 6], [20, 19, 18, 17, 16, 15, 14, 13, 4, 3, 2, 1]],
+      starMoves: [3600, 3712, 4050] },
+    { id: "tw24", labelKey: "towL24", discs: 22, opt: 4200,
+      deal: [[12, 11, 10, 9, 8, 5], [13, 4], [22, 21, 20, 19, 18, 17, 16, 15, 14, 7, 6, 3, 2, 1]],
+      starMoves: [4200, 4330, 4725] },
   ];
 
   /* Pure optimum, exported for the static checks. */
@@ -179,6 +220,13 @@
     var campaign = createCampaign({ key: "glyph-tower-campaign", levels: towLevels });
 
     var level = towLevels[0];
+
+    /* The par the HUD and the bands are read against: a row with a part-built
+     * deal pins its own proven optimum, the plain rows use the formula. */
+    function levelOpt() {
+      return typeof level.opt === "number" ? level.opt : towMinMoves(level.discs);
+    }
+
     var pegs = [[], [], []];
     var lifted = null;
     var liftedFrom = 0;
@@ -474,7 +522,7 @@
     }
 
     function renderHud(roll) {
-      var opt = towMinMoves(level.discs);
+      var opt = levelOpt();
       if (roll && moves !== shownMoves && hasFx("countUp")) {
         fx("countUp", [movesEl, shownMoves, moves, { ms: 190 }]);
       } else {
@@ -528,8 +576,15 @@
     function loadLevel(levelDef) {
       level = levelDef;
       pegs = [[], [], []];
-      for (var size = level.discs; size >= 1; size -= 1) {
-        pegs[0].push(size);
+      if (level.deal) {
+        /* A part-built bench: each rod lists its discs bottom-up. */
+        for (var rod = 0; rod < 3; rod += 1) {
+          pegs[rod] = (level.deal[rod] || []).slice();
+        }
+      } else {
+        for (var size = level.discs; size >= 1; size -= 1) {
+          pegs[0].push(size);
+        }
       }
       lifted = null;
       liftedFrom = 0;
@@ -558,7 +613,7 @@
       syncTheme(true);
       pump();
       draw(Date.now());
-      resultEl.textContent = t("towReady", { n: level.discs, m: towMinMoves(level.discs) });
+      resultEl.textContent = t("towReady", { n: level.discs, m: levelOpt() });
     }
 
     /* ------------------------------------------------------------ move machine */
@@ -900,7 +955,7 @@
         best: moves,
         better: "low",
       });
-      var opt = towMinMoves(level.discs);
+      var opt = levelOpt();
       var message = t("towCleared", { n: moves, m: opt, stars: starsWon });
       if (outcome.isBest) {
         message += " " + t("newBest");

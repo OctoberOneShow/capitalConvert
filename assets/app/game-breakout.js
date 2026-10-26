@@ -73,6 +73,12 @@
     { id: "x5", world: 2, labelKey: "brkL15", speed: 2.85, rows: ["t.gx.xgt", "g.x..x.g", "gx.nn.xg", "g.x..x.g", "tgx.x.gt"] },
     { id: "x6", world: 2, labelKey: "brkL16", speed: 2.9, rows: ["x..n..x.", ".n.g.g.n", "x..t..x.", ".g.n.g.n", "x..n..x."] },
     { id: "x7", world: 2, labelKey: "brkL17", speed: 2.95, rows: ["nnxnnxnn", "........", "gxnnnxng", "........", "nxn..nxn"] },
+    /* The mirrored keeps: every row reads the same from both rails, so the
+     * wall teaches its own double - a keystone blast on one side has an exact
+     * twin on the other, and each reaches the phased ghosts it sits above. */
+    { id: "x8", world: 2, labelKey: "brkL18", speed: 3.0, rows: ["t.x..x.t", "nng..gnn", ".ttnntt.", "nng..gnn", "t.x..x.t"] },
+    { id: "x9", world: 2, labelKey: "brkL19", speed: 3.05, rows: ["sx....xs", "tttttttt", "..x..x..", "..nnnn..", "sx....xs"] },
+    { id: "x10", world: 2, labelKey: "brkL20", speed: 3.1, rows: ["xg....gx", "ts....st", "gxtnntxg", "ts....st", "xg....gx"] },
   ];
 
   function initBreakoutGame() {
@@ -1676,6 +1682,22 @@
         });
       }
     }
+
+    /* A read-only echo of the table for the headless harness: the release gate
+     * aims a scripted paddle through the engine's own tick without reaching
+     * into its state, so the proof plays the same rules a player does. */
+    App.brkProbe = function () {
+      return {
+        levelId: level ? level.id : null,
+        state: state,
+        running: running,
+        lives: lives,
+        bricks: bricks.length,
+        speed: level ? level.speed : 0,
+        paddleX: paddleX,
+        ball: { x: ball.x, y: ball.y, vx: ball.vx, vy: ball.vy },
+      };
+    };
 
     mountInkField();
     buildLevel(brkLevels[campaign.indexOf(campaign.nextLevelId())]);

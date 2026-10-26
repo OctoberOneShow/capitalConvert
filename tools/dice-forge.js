@@ -1,19 +1,23 @@
 #!/usr/bin/env node
 /* Ember Dice table forge + verifier.
  *
- * The table's own rules: ten turns; a turn is any number of rolls followed by a
- * bank; a burn face zeroes the stake and ends the turn; banking pays the stake
- * less the tax (a negative tax is a bounty, and it only lands on a bank, so it
- * is unbankable points); three stars means clearing with three turns spare.
+ * The table's own rules: ten turns; a turn is any number of rolls followed by
+ * a bank; a burn face zeroes the stake and ends the turn; banking pays the
+ * stake less the tax (a negative tax is a bounty, and it only lands on a
+ * bank, so it is unbankable points); three stars means clearing with three
+ * turns spare. A bank needs a stake to collect from - bankStake() returns
+ * while the stake is empty - so the solver never credits a bounty on air.
  *
  * Rather than guess whether a target is reachable, this solves the table.
- * Value iteration over (turns left, bank, stake) gives the exact probability of
- * clearing under the best policy, so a table is measured - how often it clears
- * inside ten turns, and how often inside seven, which is the three-star line.
+ * Value iteration over (turns left, bank, stake) gives the exact probability
+ * of clearing under the best policy, so a table is measured - how often it
+ * clears inside ten turns, and how often inside seven, which is the three-star
+ * line.
  *
  * Usage:
  *   node tools/dice-forge.js list          # measure the shipped tables
  *   node tools/dice-forge.js probe '<json>'
+ *   node tools/dice-forge.js forge         # the summit brief, measured
  */
 "use strict";
 
@@ -86,9 +90,14 @@ function solveTable(table, turns, cap) {
           curr[at(bank, stake)] = 1;
           continue;
         }
-        const net = Math.max(0, stake - table.tax);
-        const banked = Math.min(table.target, bank + net);
-        const bankValue = prev[at(banked, 0)];
+        /* banking an empty stake collects nothing: the table disables the
+         * button and bankStake() returns while stake <= 0 */
+        let bankValue = 0;
+        if (stake > 0) {
+          const net = Math.max(0, stake - table.tax);
+          const banked = Math.min(table.target, bank + net);
+          bankValue = prev[at(banked, 0)];
+        }
         let rollValue = burnP * prev[at(bank, 0)];
         safe.forEach(function (roll) {
           const grew = Math.min(limit, stake + roll.gain);
@@ -161,17 +170,19 @@ function main() {
   }
 
   if (mode === "forge") {
-    /* The new tier: pairs tables with a second burn face - two dice make a
-     * burn far likelier (1 - (4/6)^2 = 56%) - paid for by a bigger bounty,
-     * which is the only lever this engine has that lifts a target while
-     * keeping the three-star line reachable. */
+    /* The summit: tables 17-20. Seventeen takes the twin-ember pairs one
+     * step higher, eighteen walks the twin embers back down to the small
+     * felt, nineteen lights a third burn face on that felt - half the faces
+     * burn, so only the bounty keeps it playable - and the last gate pairs
+     * the cold family's burn with the deepest stakes of the room. Each
+     * bounty sits one step under the cliff where the next bank would come
+     * free, which is where the three-star line lands around a quarter of
+     * best-policy runs. */
     const brief = [
-      { id: "t11", target: 150, burn: [1, 6], tax: -30, pairs: true },
-      { id: "t12", target: 165, burn: [1, 2], tax: -34, pairs: true },
-      { id: "t13", target: 180, burn: [1, 6], tax: -40, pairs: true },
-      { id: "t14", target: 195, burn: [1, 2], tax: -44, pairs: true },
-      { id: "t15", target: 210, burn: [1, 6], tax: -52, pairs: true },
-      { id: "t16", target: 225, burn: [1, 2], tax: -58, pairs: true },
+      { id: "t17", target: 240, burn: [1, 6], tax: -54, pairs: true },
+      { id: "t18", target: 90, burn: [1, 6], tax: -14, pairs: false },
+      { id: "t19", target: 105, burn: [1, 2, 6], tax: -22, pairs: false },
+      { id: "t20", target: 255, burn: [1, 2], tax: -59, pairs: true },
     ];
     brief.forEach(function (spec) {
       const m = measure(spec);

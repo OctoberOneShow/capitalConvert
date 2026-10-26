@@ -34,6 +34,18 @@
     { id: "s14", labelKey: "slashL14", target: 5600, timeS: 30, spawnMs: 330, bomb: 0.30 },
     { id: "s15", labelKey: "slashL15", target: 6100, timeS: 30, spawnMs: 310, bomb: 0.31 },
     { id: "s16", labelKey: "slashL16", target: 6600, timeS: 30, spawnMs: 290, bomb: 0.32 },
+    /* Rounds 17-20 change the shape of the feed rather than only its speed:
+     * s17 pours a flood of mostly safe fruit, s18 starves the screen and
+     * makes every spawn a threat, s19 is the plain peak of both dials, and
+     * s20 closes with `rush` - its feed doubles for the final ten seconds,
+     * so the round ends in a sprint instead of a fade. The targets stay in
+     * the committed-stroke economy the shipped tail is priced in: one
+     * unbroken stroke three-stars, a break at two-thirds still clears at a
+     * lower band, and short swipes do not clear. */
+    { id: "s17", labelKey: "slashL17", target: 6900, timeS: 30, spawnMs: 300, bomb: 0.20 },
+    { id: "s18", labelKey: "slashL18", target: 6100, timeS: 34, spawnMs: 262, bomb: 0.40 },
+    { id: "s19", labelKey: "slashL19", target: 7200, timeS: 30, spawnMs: 245, bomb: 0.34 },
+    { id: "s20", labelKey: "slashL20", target: 8400, timeS: 30, spawnMs: 355, bomb: 0.28, rush: 10 },
   ];
 
   function initInkSlashGame() {
@@ -178,9 +190,13 @@
     }
 
     function update(dt) {
+      /* A `rush` round doubles the feed over its final stretch, so the clock
+       * ends on a sprint; rounds without the flag feed at a constant pace. */
+      var spawnEvery =
+        level.rush && timeLeft <= level.rush ? level.spawnMs / 2 : level.spawnMs;
       spawnAcc += dt * 1000;
-      while (spawnAcc >= level.spawnMs) {
-        spawnAcc -= level.spawnMs;
+      while (spawnAcc >= spawnEvery) {
+        spawnAcc -= spawnEvery;
         spawnFruit();
       }
       timeLeft -= dt;
@@ -476,6 +492,21 @@
         running = false;
         resultEl.textContent = t("slashPaused");
       }
+    };
+
+    /* The release gate replays these rounds headlessly: a read-only echo of
+     * the flying fruit (positions and kinds, nothing writable) is what its
+     * stroke planner reads, the way the canvas itself is what a player reads. */
+    App.inkSlashProbe = function () {
+      return {
+        score: score,
+        lives: lives,
+        timeLeft: timeLeft,
+        running: running,
+        fruits: fruits.map(function (fruit) {
+          return { x: fruit.x, y: fruit.y, color: fruit.color };
+        }),
+      };
     };
 
     loadLevel(slashLevels[campaign.indexOf(campaign.nextLevelId())]);

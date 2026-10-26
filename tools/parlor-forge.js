@@ -12,6 +12,7 @@
  * Usage:
  *   node tools/parlor-forge.js list
  *   node tools/parlor-forge.js probe '<json table>'
+ *   node tools/parlor-forge.js forge
  */
 "use strict";
 
@@ -116,6 +117,32 @@ function main() {
     const stats = sweep(api, api.bjTables.concat([candidate]));
     const last = stats[stats.length - 1];
     console.log(last.line + (last.ok ? "   PASS" : "   FAIL"));
+    return;
+  }
+
+  if (mode === "forge") {
+    /* Tables 16-20: the shoe turns back around. The stack keeps doubling,
+     * sixteen and seventeen ride the deep-deck road with the bands held,
+     * eighteen swaps in a six-deck shoe and nineteen a single deck - the
+     * countable edge returns, so the three-star line moves in to meet it -
+     * and the final felt deals two decks with the tightest lines of the
+     * room. Swept here appended to the shipped ladder, in table order,
+     * because the shared stream makes every number depend on position. */
+    const brief = [
+      { id: "b16", labelKey: "bjT16", decks: 30, start: 3276800, bets: [163840, 327680, 819200], target: 4915200, starHands: [7, 13, 26] },
+      { id: "b17", labelKey: "bjT17", decks: 32, start: 6553600, bets: [327680, 655360, 1638400], target: 9830400, starHands: [7, 13, 26] },
+      { id: "b18", labelKey: "bjT18", decks: 6, start: 13107200, bets: [819200, 1638400, 3276800], target: 19660800, starHands: [5, 11, 26] },
+      { id: "b19", labelKey: "bjT19", decks: 1, start: 26214400, bets: [1638400, 3276800, 6553600], target: 39321600, starHands: [7, 13, 26] },
+      { id: "b20", labelKey: "bjT20", decks: 2, start: 52428800, bets: [3276800, 6553600, 13107200], target: 78643200, starHands: [5, 10, 24] },
+    ];
+    /* Sweep the fifteen shipped tables plus the brief, in table order - the
+     * shared stream makes every number depend on position, so the brief is
+     * never measured on its own. */
+    sweep(api, api.bjTables.slice(0, api.bjTables.length - brief.length).concat(brief))
+      .slice(brief.length * -1)
+      .forEach(function (entry) {
+        console.log((entry.ok ? "ok  " : "FAIL") + "  " + entry.line);
+      });
     return;
   }
 

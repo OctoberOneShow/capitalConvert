@@ -19,8 +19,12 @@
    * habits were built and measured and are not here: an opening chosen by the
    * endgame count (it always agrees with the shortest chain once the sticks are
    * counted) and leaving two boxes to buy the opening beat (it gives the rival
-   * five to twelve boxes a game). Every field below is read by dotsAiMove or
-   * newRound; nothing ships as decoration. */
+   * five to twelve boxes a game). Ranks 16-20 add two habits of their own,
+   * both read where the ones above are: `hold` is the double cross played by
+   * the rival - it eats every chain but keeps the last `hold` boxes and hands
+   * them back, so the opening lands on the player - and `foeFirst` gives the
+   * rival the opening stick, which flips the safe-stick parity. Both are
+   * tuned by the headless bench in tools/verify-levels.js. */
   var dotRanks = [
     { id: "d1", labelKey: "dotsL1", boxes: 3, blunder: 0.4, margin: [3, 2, 1] },
     { id: "d2", labelKey: "dotsL2", boxes: 3, blunder: 0.15, margin: [4, 2, 1] },
@@ -55,6 +59,19 @@
     { id: "d13", labelKey: "dotsL13", boxes: 6, blunder: 0, setup: true, count: true, margin: [3, 2, 1] },
     { id: "d14", labelKey: "dotsL14", boxes: 6, blunder: 0, setup: true, count: true, edge: 1, margin: [3, 1, 1] },
     { id: "d15", labelKey: "dotsL15", boxes: 7, blunder: 0, setup: true, count: true, edge: 1, margin: [2, 1, 1] },
+    /* Ranks 16-20: no bigger plates and no new numbers - three habits the
+     * ladder has never shipped. `hold` is the double cross: the rival eats
+     * every chain but the last boxes of it and hands those back, so a player
+     * who grabs everything inherits every opening (d16 keeps one box, the
+     * d20 capstone keeps two). `foeFirst` gives the rival the opening stick,
+     * which flips the safe-stick parity the whole ladder above was built on.
+     * d17 revisits the blunder on the full-plate reader, and its bands are
+     * tuned to the seeded bench in tools/verify-levels.js, not to one line. */
+    { id: "d16", labelKey: "dotsL16", boxes: 6, blunder: 0, hold: 1, setup: true, count: true, margin: [10, 6, 2] },
+    { id: "d17", labelKey: "dotsL17", boxes: 7, blunder: 0.015, setup: true, count: true, margin: [15, 5, 1] },
+    { id: "d18", labelKey: "dotsL18", boxes: 7, blunder: 0, foeFirst: true, setup: true, count: true, margin: [5, 3, 1] },
+    { id: "d19", labelKey: "dotsL19", boxes: 7, blunder: 0, hold: 1, foeFirst: true, setup: true, count: true, margin: [7, 4, 1] },
+    { id: "d20", labelKey: "dotsL20", boxes: 7, blunder: 0, hold: 2, foeFirst: true, setup: true, count: true, margin: [9, 4, 1] },
   ];
 
   function dotsIndex(y, x, width) {
@@ -238,6 +255,35 @@
     return taken;
   }
 
+  /* Boxes the mover pockets by eating every gift on the plate, one stick at
+   * a time - the run the double dealer measures before it holds two back. */
+  function dotsGiftRun(state) {
+    var board = dotsClone(state);
+    var taken = 0;
+    var guard = 0;
+    while (guard < 200) {
+      var gifts = dotsGifts(board);
+      if (!gifts.length) {
+        break;
+      }
+      taken += dotsApply(board, gifts[0], dotsAi).length;
+      guard += 1;
+    }
+    return taken;
+  }
+
+  /* Boxes nobody owns yet: the double dealer only holds its two back while
+   * there is a chain still waiting beyond the run it is declining. */
+  function dotsUnclaimed(state) {
+    var open = 0;
+    state.owner.forEach(function (owner) {
+      if (!owner) {
+        open += 1;
+      }
+    });
+    return open;
+  }
+
   /* The rival this game has always been: take every gift, else lay a safe
    * stick, else hand over the shortest chain - and never a thought for the
    * parity. Played out to the last stick so a counting rank can score an
@@ -346,9 +392,21 @@
         safe.push(legal[i]);
       }
     }
-    /* 1. take any box on the table. */
+    /* 1. take any box on the table. The double dealer measures the run
+     * first: when the whole gift-run is exactly the two boxes it keeps
+     * back and there is a chain still waiting beyond them, it declines
+     * and hands the opening over instead - the classic double cross. */
     if (closing.length) {
-      return closing[0];
+      if (
+        rank.hold &&
+        dotsGiftRun(state) === rank.hold &&
+        dotsUnclaimed(state) > rank.hold &&
+        safe.length
+      ) {
+        /* decline the run: the safe-stick branch below lays it */
+      } else {
+        return closing[0];
+      }
     }
     /* 2. otherwise play without handing a box over. */
     if (safe.length) {
@@ -922,6 +980,14 @@
         name: t(rank.labelKey),
         n: boxes * boxes,
       });
+      /* A rival that takes the first stick flips the parity the whole ladder
+       * above was read on: the safe-stick count runs out on the player's
+       * turn, so the openings arrive the other way round. */
+      if (rank.foeFirst) {
+        yourTurn = false;
+        renderHud();
+        aiTurn();
+      }
     }
 
     newBtn.addEventListener("click", function () {
@@ -941,25 +1007,37 @@
 
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already own, so the eight shipped rung names stay in the shared
-   * dictionary and only the two new ones ride here. The names say what the two
-   * rivals do: one builds the chains it wants to be holding, the other reads
-   * the whole plate before it lays a stick. */
+   * dictionary and only the new ones ride here. The names say what each
+   * rival does: one builds the chains it wants to hold, one reads the whole
+   * plate, one keeps two boxes back, one takes the first stick. */
   App.addStrings({
     en: {
       "dotsL9": "Chainwright",
       "dotsL10": "Plate Reader",
+      "dotsL11": "The Counter",
+      "dotsL12": "Wide Plate",
+      "dotsL13": "The Opener",
+      "dotsL14": "Edge Reader",
+      "dotsL15": "The Whole Plate",
+      "dotsL16": "Two Keeper",
+      "dotsL17": "Shaky Reader",
+      "dotsL18": "First Stick",
+      "dotsL19": "Cold Opening",
+      "dotsL20": "Every Habit",
+    },
+    zh: {
+      "dotsL9": "织链匠",
+      "dotsL10": "读盘师",
       "dotsL11": "计数师",
       "dotsL12": "宽盘者",
       "dotsL13": "开局者",
       "dotsL14": "读边者",
-      "dotsL15": "全盘者",      "dotsL11": "The Counter",
-      "dotsL12": "Wide Plate",
-      "dotsL13": "The Opener",
-      "dotsL14": "Edge Reader",
-      "dotsL15": "The Whole Plate",    },
-    zh: {
-      "dotsL9": "织链匠",
-      "dotsL10": "读盘师",
+      "dotsL15": "全盘者",
+      "dotsL16": "留二者",
+      "dotsL17": "颤读者",
+      "dotsL18": "先手客",
+      "dotsL19": "冷开局",
+      "dotsL20": "全技者",
     },
   });
 

@@ -36,6 +36,10 @@
     { id: "h14", labelKey: "snkL14", goal: 17, starTimes: [64, 90, 125], wrap: false, start: { x: 2, y: 2, dx: 1 }, walls: [[4, 2, 4, 6], [4, 9, 4, 13], [11, 2, 11, 6], [11, 9, 11, 13], [6, 7, 9, 8]] },
     { id: "h15", labelKey: "snkL15", goal: 18, starTimes: [68, 96, 135], wrap: true, start: { x: 8, y: 1, dx: 1 }, walls: [[2, 3, 3, 4], [12, 3, 13, 4], [2, 11, 3, 12], [12, 11, 13, 12], [7, 7, 8, 8]] },
     { id: "h16", labelKey: "snkL16", goal: 20, starTimes: [75, 105, 150], wrap: false, start: { x: 8, y: 2, dx: 1 }, walls: [[2, 5, 2, 10], [13, 5, 13, 10], [5, 5, 10, 5], [5, 10, 10, 10]] },
+    { id: "h17", labelKey: "snkL17", goal: 21, starTimes: [79, 111, 160], wrap: false, start: { x: 8, y: 8, dx: 1 }, walls: [[5, 5, 11, 5], [5, 11, 6, 11], [10, 11, 11, 11], [5, 6, 5, 10], [11, 6, 11, 10], [2, 2, 3, 3], [12, 2, 13, 3], [2, 12, 3, 13], [12, 12, 13, 13]] },
+    { id: "h18", labelKey: "snkL18", goal: 22, starTimes: [83, 117, 170], wrap: true, walls: [[0, 3, 11, 3], [4, 7, 15, 7], [0, 11, 11, 11]] },
+    { id: "h19", labelKey: "snkL19", goal: 22, starTimes: [81, 113, 164], wrap: false, walls: [[3, 3, 6, 3], [10, 3, 12, 3], [3, 12, 6, 12], [10, 12, 12, 12], [3, 4, 3, 6], [3, 9, 3, 11], [12, 4, 12, 6], [12, 9, 12, 11], [7, 7, 8, 8]] },
+    { id: "h20", labelKey: "snkL20", goal: 24, starTimes: [91, 127, 184], wrap: true, start: { x: 2, y: 8, dx: 1 }, walls: [[3, 3, 6, 3], [9, 3, 12, 3], [3, 12, 6, 12], [9, 12, 12, 12], [3, 4, 3, 6], [3, 9, 3, 11], [12, 4, 12, 6], [12, 9, 12, 11], [6, 6, 9, 6], [6, 9, 9, 9], [6, 7, 6, 8], [1, 1, 2, 1], [13, 1, 14, 1], [1, 14, 2, 14], [13, 14, 14, 14]] },
   ];
 
   /* The court takes its tint from the panel hue; the serpent stays jade and the
@@ -1479,6 +1483,25 @@
       if (running) {
         loadLevel(level);
       }
+    };
+
+    /* A read-only echo of the round for the headless harness: the release gate
+     * steers a scripted policy through the engine's own tick without reaching
+     * into its state, so the proof plays the same rules a player does. */
+    App.snkProbe = function () {
+      return {
+        levelId: level.id,
+        goal: level.goal,
+        wrap: !!level.wrap,
+        running: running,
+        dead: !!death,
+        seconds: startedAt ? Math.round(((Date.now() - startedAt) / 100) * 10) / 100 : 0,
+        dir: { x: dir.x, y: dir.y },
+        food: { x: food.x, y: food.y },
+        snake: snake.map(function (part) {
+          return { x: part.x, y: part.y };
+        }),
+      };
     };
 
     readPalette();

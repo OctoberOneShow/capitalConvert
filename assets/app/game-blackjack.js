@@ -14,9 +14,12 @@
   /* Every table keeps the same shape - a top bet a quarter of the bankroll and
    * a target half again above it - so one sits at the table for about the same
    * number of hands whatever the stakes: the race is always two top bets of net
-   * luck. Deeper shoes take the counting edge away, so the last five tables let
-   * the bankroll double while the star bands hold and then tighten; on the
-   * deepest felt a three-star is a lucky session, not the ordinary one. */
+   * luck. Deeper shoes take the counting edge away, so tables 11-15 let the
+   * bankroll double while the star bands hold and then tighten. Tables 16-20
+   * turn the wheel back around: two more steps down the deep-deck road, then
+   * the pit swaps in a six-deck shoe and a single deck at double stakes, where
+   * the countable edge returns and the three-star line moves in to meet it;
+   * the final felt deals two decks and carries the tightest lines of the room. */
   var bjTables = [
     { id: "b1", labelKey: "bjT1", decks: 1, start: 100, bets: [5, 10, 25], target: 150, starHands: [8, 16, 32] },
     { id: "b2", labelKey: "bjT2", decks: 2, start: 200, bets: [10, 20, 50], target: 300, starHands: [9, 18, 36] },
@@ -39,7 +42,23 @@
     { id: "b12", labelKey: "bjT12", decks: 22, start: 204800, bets: [10240, 20480, 51200], target: 307200, starHands: [7, 13, 26] },
     { id: "b13", labelKey: "bjT13", decks: 24, start: 409600, bets: [20480, 40960, 102400], target: 614400, starHands: [7, 13, 26] },
     { id: "b14", labelKey: "bjT14", decks: 26, start: 819200, bets: [40960, 81920, 204800], target: 1228800, starHands: [7, 13, 26] },
-    { id: "b15", labelKey: "bjT15", decks: 28, start: 1638400, bets: [81920, 163840, 409600], target: 2457600, starHands: [7, 13, 26] },  ];
+    { id: "b15", labelKey: "bjT15", decks: 28, start: 1638400, bets: [81920, 163840, 409600], target: 2457600, starHands: [7, 13, 26] },
+
+    /* Tables 16-20: the shoe turns back around. Sixteen and seventeen ride the
+     * deep-deck road one last time with the bands held; eighteen swaps in a
+     * six-deck shoe - the count is back, and the three-star line moves in to
+     * five hands to meet it; nineteen deals a single deck again, the first
+     * table's game at a whale's stakes, with the bands of the tier above; and
+     * the final felt deals two decks with the tightest lines of the room. The
+     * stack keeps doubling throughout, so the sweep that judged the tier above
+     * judged these the same way - 160 seeded runs at the top stake, in table
+     * order, before any of them shipped. */
+    { id: "b16", labelKey: "bjT16", decks: 30, start: 3276800, bets: [163840, 327680, 819200], target: 4915200, starHands: [7, 13, 26] },
+    { id: "b17", labelKey: "bjT17", decks: 32, start: 6553600, bets: [327680, 655360, 1638400], target: 9830400, starHands: [7, 13, 26] },
+    { id: "b18", labelKey: "bjT18", decks: 6, start: 13107200, bets: [819200, 1638400, 3276800], target: 19660800, starHands: [5, 11, 26] },
+    { id: "b19", labelKey: "bjT19", decks: 1, start: 26214400, bets: [1638400, 3276800, 6553600], target: 39321600, starHands: [7, 13, 26] },
+    { id: "b20", labelKey: "bjT20", decks: 2, start: 52428800, bets: [3276800, 6553600, 13107200], target: 78643200, starHands: [5, 10, 24] },
+  ];
 
   /* Presentation beats, in milliseconds: the hole card turns after the deal has
    * landed, the house answer follows the turn, and a settled hand is applauded

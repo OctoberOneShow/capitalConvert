@@ -121,6 +121,45 @@
       ground: [[0, 2, 5], [11, 11, 2]],
       solution: [[0, 5, 4, 1], [4, 1, 6, 3], [6, 3, 9, 0], [9, 0, 11, 2], [2, 3, 2, 5], [2, 3, 0, 5], [2, 3, 4, 1], [4, 5, 2, 5], [4, 5, 2, 3], [4, 5, 4, 1], [4, 5, 6, 3]],
     },
+
+
+    /* Ranks 16-20: the canyons a learner crossed come back with the strut
+     * budget cut to the bone - the limit now sits exactly on the proven
+     * plan, so the tour strains a single wasted beam and every earlier
+     * habit of over-building fails the purse. Same banks, same physics,
+     * tighter hands; each plan is walked by the same bridgeCheck the build
+     * button answers to. */
+    {
+      id: "b16", labelKey: "pbrZ16", grip: 1, limit: 5,
+      startAt: [2, 2], targetAt: [8, 4],
+      ground: [[0,2,2],[8,11,4],[4,6,5]],
+      solution: [[2,2,4,4],[4,4,4,5],[4,4,5,5],[6,5,7,4],[7,4,8,4]],
+    },
+    {
+      id: "b17", labelKey: "pbrZ17", grip: 0, limit: 5,
+      startAt: [2, 3], targetAt: [8, 3],
+      ground: [[0,2,3],[8,11,3]],
+      solution: [[2,3,5,0],[8,3,5,0],[2,3,5,3],[5,3,8,3],[5,0,5,3]],
+    },
+    {
+      id: "b18", labelKey: "pbrZ18", grip: 1, limit: 4,
+      startAt: [2, 3], targetAt: [9, 3],
+      ground: [[0,2,3],[5,6,4],[9,11,3]],
+      solution: [[2,3,3,4],[3,4,5,4],[6,4,7,3],[7,3,9,3]],
+    },
+    {
+      id: "b19", labelKey: "pbrZ19", grip: 1, limit: 3,
+      startAt: [3, 3], targetAt: [7, 3],
+      ground: [[0,3,3],[7,11,3],[5,6,5]],
+      solution: [[3,3,5,3],[5,3,7,3],[5,3,5,5]],
+    },
+    {
+      id: "b20", labelKey: "pbrZ20", grip: 1, limit: 1,
+      startAt: [4, 3], targetAt: [6, 3],
+      ground: [[0,4,3],[6,11,3]],
+      solution: [[4,3,6,3]],
+    },
+
   ];
 
   function pbrAt(x, y) {
@@ -981,6 +1020,11 @@
       "pbrZ13": "Island Convoy",
       "pbrZ14": "The Stiff Span Sinks",
       "pbrZ15": "Climb to the Skyline",
+      "pbrZ16": "The High Perch",
+      "pbrZ17": "Pillar to Pillar",
+      "pbrZ18": "The Slip Tour",
+      "pbrZ19": "The Weak Plank",
+      "pbrZ20": "The First Crossing, Perfected",
       "pbrBeamLabel": "Beams",
       "pbrParLabel": "Par",
       "pbrGapLabel": "Span",
@@ -1040,6 +1084,11 @@
       "pbrZ13": "孤岛连渡",
       "pbrZ14": "硬跨必沉",
       "pbrZ15": "攀升天际",
+      "pbrZ16": "高栖之岸",
+      "pbrZ17": "柱间飞跨",
+      "pbrZ18": "滑移巡礼",
+      "pbrZ19": "朽木之桥",
+      "pbrZ20": "初渡·完技",
       "pbrBeamLabel": "梁数",
       "pbrParLabel": "标准",
       "pbrGapLabel": "跨距",

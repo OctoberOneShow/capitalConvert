@@ -15,7 +15,7 @@
   var starsFor = App.starsFor;
   var isMotionOff = App.isMotionOff;
 
-  /* The table holds only the characters the ten missions deal, so the legend
+  /* The table holds only the characters the twenty missions deal, so the legend
    * fits without scrolling and nobody needs prior Morse knowledge. */
   var mrsTable = {
     "E": ".", "T": "-", "I": "..", "A": ".-", "N": "-.", "M": "--",
@@ -88,7 +88,28 @@
     { id: "m14", labelKey: "mrsL14", vocab: ["S", "O", "E", "T", "4", "5", "6", "7", "N", "M", "I", "A"], groups: 7, noise: 5, deducible: 0,
       battery: 5, attempts: 6, window: 51, drain: 10, unit: 1.3, seed: 1414, starCost: [7, 13, 19] },
     { id: "m15", labelKey: "mrsL15", vocab: ["A", "N", "M", "S", "U", "R", "W", "K", "D", "O"], groups: 7, noise: 5, deducible: 0,
-      battery: 5, attempts: 6, window: 50, drain: 10, unit: 0.8, seed: 1515, starCost: [10, 14, 20] }
+      battery: 5, attempts: 6, window: 50, drain: 10, unit: 0.8, seed: 1515, starCost: [10, 14, 20] },
+    /* m16: the legend is the digits plus the five quiet letters, so the read
+     * is all rhythm and no shape. */
+    { id: "m16", labelKey: "mrsL16", vocab: ["1", "2", "5", "6", "9", "0", "E", "T", "I", "A"], groups: 7, noise: 5, deducible: 0,
+      battery: 5, attempts: 6, window: 49, drain: 10, unit: 0.8, seed: 1616, starCost: [10, 14, 20] },
+    /* m17: two batteries but a slow drain - the tape is long and the replays
+     * are cheap, so discipline beats speed. Noise stays at 4 because a bank of
+     * two cannot pay for the three-plus ambiguous groups a noisier tape leaves. */
+    { id: "m17", labelKey: "mrsL17", vocab: ["S", "U", "R", "W", "K", "D", "O", "M", "A", "N"], groups: 7, noise: 4, deducible: 0,
+      battery: 2, attempts: 8, window: 60, drain: 5, unit: 0.8, seed: 1717, starCost: [6, 12, 20] },
+    /* m18: the fast tape again, but every legend neighbour is one element
+     * apart - the eaten mark is the only doubt, exactly as m11 taught. */
+    { id: "m18", labelKey: "mrsL18", vocab: ["E", "T", "I", "A", "N", "M", "S", "U", "R", "W"], groups: 7, noise: 5, deducible: 1,
+      battery: 5, attempts: 6, window: 50, drain: 10, unit: 1.3, seed: 1818, starCost: [9, 15, 20] },
+    /* m19: quiet air - noise 3 - but only four attempts, so every guess is
+     * a decision. */
+    { id: "m19", labelKey: "mrsL19", vocab: ["A", "N", "M", "S", "U", "R", "W", "K", "D", "O"], groups: 7, noise: 3, deducible: 0,
+      battery: 5, attempts: 4, window: 50, drain: 10, unit: 0.8, seed: 1919, starCost: [8, 13, 20] },
+    /* m20: the capstone - the long tape, the fast unit, a six-letter legend
+     * of same-length marks, and a window that pays for one replay. */
+    { id: "m20", labelKey: "mrsL20", vocab: ["5", "6", "7", "8", "9", "0"], groups: 8, noise: 5, deducible: 1,
+      battery: 5, attempts: 6, window: 46, drain: 12, unit: 1.3, seed: 2020, starCost: [10, 15, 20] }
   ];
 
   /* --- pure core, exported for the harness ---------------------------------
@@ -1093,6 +1114,11 @@
       "mrsL13": "Two Replays Only",
       "mrsL14": "Send Before The End",
       "mrsL15": "Marks Out Of Order",
+      "mrsL16": "Rhythm Sheet",
+      "mrsL17": "The Long Tape",
+      "mrsL18": "Fast Neighbours",
+      "mrsL19": "Four Tries",
+      "mrsL20": "The Last Broadcast",
       "mrsWindowLabel": "Window",
       "mrsBatteryLabel": "Battery",
       "mrsTryLabel": "Sends",
@@ -1169,6 +1195,11 @@
       "mrsL13": "只许两次重播",
       "mrsL14": "结束前发送",
       "mrsL15": "符号乱序",
+      "mrsL16": "节拍抄纸",
+      "mrsL17": "长带慢耗",
+      "mrsL18": "快带近邻",
+      "mrsL19": "四次机会",
+      "mrsL20": "最后一次广播",
       "mrsWindowLabel": "窗口",
       "mrsBatteryLabel": "电量",
       "mrsTryLabel": "发送",

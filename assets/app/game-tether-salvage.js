@@ -286,6 +286,117 @@
         { go: "lead", thr: 0.75, reel: 4, stop: "docked", max: 1600 },
       ],
     },
+    /* Ranks 16-20 sail the shipped wrecks on a diesel ration: the same
+     * layouts the pilot knows, with the tank cut a step at a time, and the
+     * four-wreck triage closes the ladder on the smallest tank of all.
+     * Every scene below is proved by ttsSceneSolvable, the same judge the
+     * cast-off button answers to. */
+    {
+      id: "s16", labelKey: "ttsS16", briefKey: "ttsB16",
+      fuel: 78, cable: 52, snap: 340, need: 2,
+      tug: { x: 34, y: 160, angle: 0 },
+      dock: { x: 236, y: 62, r: 26 },
+      cargos: [
+        { shape: "shell", x: 96, y: 118 },
+        { shape: "slab", x: 108, y: 216 },
+        { shape: "spar", x: 258, y: 196 },
+        { shape: "shell", x: 292, y: 282 },
+      ],
+      hazards: [{ x: 186, y: 232, r: 14 }, { x: 300, y: 176, r: 12 }],
+      program: [
+        { go: "cargo", thr: 1, stop: "reach", max: 700 },
+        { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
+        { go: "lead", thr: 0.75, reel: 4, stop: "docked", max: 1300 },
+        { go: "cargo", thr: 1, stop: "reach", max: 700 },
+        { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
+        { go: "lead", thr: 0.75, reel: 4, stop: "docked", max: 1600 },
+      ],
+    },
+    {
+      id: "s17", labelKey: "ttsS17", briefKey: "ttsB17",
+      fuel: 82, cable: 52, snap: 340, need: 2,
+      tug: { x: 34, y: 160, angle: 0 },
+      dock: { x: 236, y: 62, r: 26 },
+      cargos: [
+        { shape: "shell", x: 96, y: 118 },
+        { shape: "slab", x: 108, y: 216 },
+        { shape: "spar", x: 258, y: 196 },
+        { shape: "shell", x: 292, y: 282 },
+      ],
+      hazards: [{ x: 186, y: 232, r: 14 }, { x: 300, y: 176, r: 12 }],
+      program: [
+        { go: "cargo", thr: 1, stop: "reach", max: 700 },
+        { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
+        { go: "lead", thr: 0.75, reel: 4, stop: "docked", max: 1300 },
+        { go: "cargo", thr: 1, stop: "reach", max: 700 },
+        { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
+        { go: "lead", thr: 0.75, reel: 4, stop: "docked", max: 1600 },
+      ],
+    },
+    {
+      id: "s18", labelKey: "ttsS18", briefKey: "ttsB18",
+      fuel: 80, cable: 54, snap: 340, need: 2,
+      tug: { x: 34, y: 160, angle: 0 },
+      dock: { x: 236, y: 62, r: 26 },
+      cargos: [
+        { shape: "shell", x: 96, y: 118 },
+        { shape: "slab", x: 108, y: 216 },
+        { shape: "spar", x: 258, y: 196 },
+        { shape: "shell", x: 292, y: 282 },
+      ],
+      hazards: [{ x: 186, y: 232, r: 14 }, { x: 300, y: 176, r: 12 }],
+      program: [
+        { go: "cargo", thr: 1, stop: "reach", max: 700 },
+        { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
+        { go: "lead", thr: 0.75, reel: 4, stop: "docked", max: 1300 },
+        { go: "cargo", thr: 1, stop: "reach", max: 700 },
+        { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
+        { go: "lead", thr: 0.75, reel: 4, stop: "docked", max: 1600 },
+      ],
+    },
+    {
+      id: "s19", labelKey: "ttsS19", briefKey: "ttsB19",
+      fuel: 76, cable: 52, snap: 340, need: 2,
+      tug: { x: 34, y: 160, angle: 0 },
+      dock: { x: 236, y: 62, r: 26 },
+      cargos: [
+        { shape: "shell", x: 96, y: 118 },
+        { shape: "slab", x: 108, y: 216 },
+        { shape: "spar", x: 258, y: 196 },
+        { shape: "shell", x: 292, y: 282 },
+      ],
+      hazards: [{ x: 186, y: 232, r: 14 }, { x: 300, y: 176, r: 12 }],
+      program: [
+        { go: "cargo", thr: 1, stop: "reach", max: 700 },
+        { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
+        { go: "lead", thr: 0.75, reel: 4, stop: "docked", max: 1300 },
+        { go: "cargo", thr: 1, stop: "reach", max: 700 },
+        { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
+        { go: "lead", thr: 0.75, reel: 4, stop: "docked", max: 1600 },
+      ],
+    },
+    {
+      id: "s20", labelKey: "ttsS20", briefKey: "ttsB20",
+      fuel: 74, cable: 52, snap: 340, need: 2,
+      tug: { x: 34, y: 160, angle: 0 },
+      dock: { x: 236, y: 62, r: 26 },
+      cargos: [
+        { shape: "shell", x: 96, y: 118 },
+        { shape: "slab", x: 108, y: 216 },
+        { shape: "spar", x: 258, y: 196 },
+        { shape: "shell", x: 292, y: 282 },
+      ],
+      hazards: [{ x: 186, y: 232, r: 14 }, { x: 300, y: 176, r: 12 }],
+      program: [
+        { go: "cargo", thr: 1, stop: "reach", max: 700 },
+        { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
+        { go: "lead", thr: 0.75, reel: 4, stop: "docked", max: 1300 },
+        { go: "cargo", thr: 1, stop: "reach", max: 700 },
+        { go: "stay", hook: 1, thr: 0.3, stop: "hooked", max: 240 },
+        { go: "lead", thr: 0.75, reel: 4, stop: "docked", max: 1600 },
+      ],
+    },
+
   ];
 
   /* --- NaN-proof helpers ------------------------------------------------ */
@@ -1011,6 +1122,7 @@
   App.tetherReplay = ttsReplay;
   App.tetherMeasure = ttsMeasure;
   App.tetherPilot = ttsPilot;
+  App.tetherLevels = ttsScenes;
   App.tetherWaypoint = ttsWaypoint;
   App.tetherStopHit = ttsStopHit;
   App.tetherMakeState = ttsMakeState;
@@ -1597,6 +1709,11 @@
       "ttsS13": "Redline Spool",
       "ttsS14": "Dead Field",
       "ttsS15": "Cargo Triage",
+      "ttsS16": "The Dry Tank",
+      "ttsS17": "Slack Line",
+      "ttsS18": "The Long Lead",
+      "ttsS19": "Half A Tank",
+      "ttsS20": "The Last Diesel",
       "ttsB1": "An open tow: learn what the line costs you.",
       "ttsB2": "Thread the belt; a wide swing puts the load on a rock.",
       "ttsB3": "Three tonnes of slab sail past the dock if you do not slow them.",
@@ -1612,6 +1729,11 @@
       "ttsB13": "A long line on a weak cable: the tension number, not the tank, decides how hard you may pull.",
       "ttsB14": "The dead field shoves everything away from it. Route around it; thrust into it only spends fuel.",
       "ttsB15": "Four wrecks, two berths, one tank. Choose which salvage you are willing to leave drifting.",
+      "ttsB16": "The same three wrecks on a drier tank: the tour has no diesel to spare.",
+      "ttsB17": "A slacker line and a longer lead - the winch does the work now.",
+      "ttsB18": "One more fathom of cable gone: lead with the tide, not against it.",
+      "ttsB19": "Half a tank for the whole triage. Every sweep of the screw is a decision.",
+      "ttsB20": "The last diesel. Salvage what you can; let the rest drift.",
       "ttsFuelLabel": "Fuel",
       "ttsTensionLabel": "Tension",
       "ttsMassLabel": "Cargo",
@@ -1664,6 +1786,11 @@
       "ttsS13": "红线缆索",
       "ttsS14": "斥力死场",
       "ttsS15": "弃货取舍",
+      "ttsS16": "见底油箱",
+      "ttsS17": "松缆长引",
+      "ttsS18": "放长缆距",
+      "ttsS19": "半箱油",
+      "ttsS20": "最后一箱柴油",
       "ttsB1": "一次开阔的拖带：先弄明白绳索让你付出了什么。",
       "ttsB2": "穿过碎石带；转弯幅度一大，货物就会撞上石块。",
       "ttsB3": "三吨重的板块若不减速，会直接冲过船坞。",
@@ -1679,6 +1806,11 @@
       "ttsB13": "长绳配低限值：真正限制你出力的不是燃料，而是绳索上的张力数字。",
       "ttsB14": "这片死场把周围的一切都推开。绕着它走，硬顶进去只会烧掉燃料。",
       "ttsB15": "四艘残骸、两个泊位、一箱燃料。决定哪些货物你愿意让它继续漂着。",
+      "ttsB16": "同样的三艘残骸，油箱更干：这一程没有富余的柴油。",
+      "ttsB17": "缆更松、引更远——现在靠绞盘做工。",
+      "ttsB18": "又少一寻缆：顺潮引带，不要逆流。",
+      "ttsB19": "半箱油跑完全部取舍。螺旋桨每一转都是决定。",
+      "ttsB20": "最后一箱柴油。能救多少是多少，其余随它漂。",
       "ttsFuelLabel": "燃料",
       "ttsTensionLabel": "张力",
       "ttsMassLabel": "货物",

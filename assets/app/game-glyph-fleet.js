@@ -43,6 +43,19 @@
     { id: "bf13", labelKey: "fltL13", skill: 10, starShots: [26, 34, 43] },
     { id: "bf14", labelKey: "fltL14", skill: 11, starShots: [25, 33, 42] },
     { id: "bf15", labelKey: "fltL15", skill: 12, starShots: [24, 32, 40] },
+    /* Ranks 16-20: the admiral's deep machinery is variety now, not a
+     * stronger arm - the seeded bench says the exact endgames close the
+     * same mean hunt as the long net - so the tier's climb rides the shot
+     * budget, and each rung's brain is a different kind of careful. r16
+     * opens at the familiar budget with the widest net; r17 asks the same
+     * purse of the joint-sweep brain; r18 is the breather - the sharp
+     * brain, a friendlier purse; r19 tightens the two-star and one-star
+     * lines; r20 closes the ladder at twenty-three shots. */
+    { id: "bf16", labelKey: "fltL16", skill: 13, starShots: [24, 32, 40] },
+    { id: "bf17", labelKey: "fltL17", skill: 14, starShots: [24, 31, 40] },
+    { id: "bf18", labelKey: "fltL18", skill: 13, starShots: [25, 33, 42] },
+    { id: "bf19", labelKey: "fltL19", skill: 14, starShots: [24, 30, 39] },
+    { id: "bf20", labelKey: "fltL20", skill: 14, starShots: [23, 30, 39] },
   ];
   var FLT_EMPTY = 0;
   var FLT_MISS = 1;
@@ -103,9 +116,14 @@
   /* The admiral's brain: unknown cells are 0, misses 1, hits 2, a sunk hull's
    * cells 3. skill 0 = random; 1 = hunt/target; 2 = parity hunt; 3+ = tighter
    * targeting queues; 6 = the fleet-inventory solver; 7 = that solver read
-   * through the target queue as well, plus the closed net. The brain takes the
-   * whole rank row, exactly as the game passes it, or a bare skill number -
-   * which is how the shipped static checks drive it. */
+   * through the target queue as well, plus the closed net. The deep ranks buy
+   * real steps from there, each one benched: 8 fires the densest water in the
+   * open sea as well as the net, 9 orders the target queue by the same
+   * density map, 10 solves a lone last hull exactly, and 11-13 close the net
+   * one, two, then three hull-cells early; 14 settles two-hull endgames with
+   * a joint sweep of every pair of lays. The brain
+   * takes the whole rank row, exactly as the game passes it, or a bare skill
+   * number - which is how the shipped static checks drive it. */
   function fltSkillOf(brain) {
     return brain && typeof brain === "object" ? brain.skill : brain;
   }
@@ -216,10 +234,126 @@
     return out;
   }
 
+  /* Every way a hull of `size` can still lie on open water, as cell lists. */
+  function fltPlacements(board, size) {
+    var out = [];
+    for (var y = 0; y < FLT_N; y += 1) {
+      for (var x = 0; x + size <= FLT_N; x += 1) {
+        var cells = [];
+        var ok = true;
+        for (var k = 0; k < size && ok; k += 1) {
+          var idx = y * FLT_N + x + k;
+          if (board[idx] !== FLT_EMPTY) {
+            ok = false;
+          } else {
+            cells.push(idx);
+          }
+        }
+        if (ok) {
+          out.push(cells);
+        }
+      }
+    }
+    for (var x2 = 0; x2 < FLT_N; x2 += 1) {
+      for (var y2 = 0; y2 + size <= FLT_N; y2 += 1) {
+        var cells2 = [];
+        var ok2 = true;
+        for (var k2 = 0; k2 < size && ok2; k2 += 1) {
+          var idx2 = (y2 + k2) * FLT_N + x2;
+          if (board[idx2] !== FLT_EMPTY) {
+            ok2 = false;
+          } else {
+            cells2.push(idx2);
+          }
+        }
+        if (ok2) {
+          out.push(cells2);
+        }
+      }
+    }
+    return out;
+  }
+
+  /* One hull left and no wounded cells: its placements are exact, so the
+   * densest cell is a counted fact, not a run approximation. */
+  function fltLastHullPick(board, size) {
+    var counts = [];
+    for (var i = 0; i < board.length; i += 1) {
+      counts.push(0);
+    }
+    var placements = fltPlacements(board, size);
+    placements.forEach(function (cells) {
+      cells.forEach(function (idx) {
+        counts[idx] += 1;
+      });
+    });
+    var best = -1;
+    var bestCount = 0;
+    for (var c = 0; c < counts.length; c += 1) {
+      if (counts[c] > bestCount) {
+        bestCount = counts[c];
+        best = c;
+      }
+    }
+    return best;
+  }
+
+  /* Two hulls left, no wounded cells: enumerate the joint lays (every
+   * placement of one hull against every still-valid placement of the other)
+   * and fire where the pairs agree most. Bounded: 8x8 holds at most a few
+   * hundred placements per hull, so the sweep stays inside one think. */
+  function fltTwoHullPick(board, sizes) {
+    var counts = [];
+    for (var i = 0; i < board.length; i += 1) {
+      counts.push(0);
+    }
+    var first = fltPlacements(board, sizes[0]);
+    var second = fltPlacements(board, sizes[1]);
+    for (var a = 0; a < first.length; a += 1) {
+      var taken = {};
+      first[a].forEach(function (idx) {
+        taken[idx] = true;
+      });
+      for (var b = 0; b < second.length; b += 1) {
+        var clash = false;
+        for (var c = 0; c < second[b].length && !clash; c += 1) {
+          if (taken[second[b][c]]) {
+            clash = true;
+          }
+        }
+        if (clash) {
+          continue;
+        }
+        first[a].forEach(function (idx) {
+          counts[idx] += 1;
+        });
+        second[b].forEach(function (idx) {
+          counts[idx] += 1;
+        });
+      }
+    }
+    var best = -1;
+    var bestCount = 0;
+    for (var d = 0; d < counts.length; d += 1) {
+      if (counts[d] > bestCount) {
+        bestCount = counts[d];
+        best = d;
+      }
+    }
+    return best;
+  }
+
   function fltSolverPick(board, state, skill) {
     var survivors = fltSurvivors(board);
     var density = fltDensity(board, survivors);
     var queue = state.queue;
+    if (skill >= 9) {
+      /* The queue is read through the density map: the neighbour most likely
+       * to hold the wounded hull is spent first, not the first neighbour. */
+      queue.sort(function (a, b) {
+        return density[b] - density[a];
+      });
+    }
     while (queue.length) {
       var next = queue.shift();
       if (board[next] !== FLT_EMPTY) {
@@ -251,12 +385,58 @@
     if (!open.length) {
       return -1;
     }
+    /* A lone last hull with no wounded cells is a counted question, and from
+     * skill 10 the admiral counts it; two hulls fall to the joint sweep from
+     * skill 14. */
+    if (skill >= 10) {
+      var wounded = 0;
+      for (var w = 0; w < board.length; w += 1) {
+        if (board[w] === FLT_HIT) {
+          wounded += 1;
+        }
+      }
+      if (!wounded && survivors.sets.length === 1 && survivors.sets[0].length === 2 && skill >= 14) {
+        var joint = fltTwoHullPick(board, survivors.sets[0]);
+        if (joint >= 0) {
+          return joint;
+        }
+      }
+      if (!wounded && survivors.sets.length === 1 && survivors.sets[0].length === 1) {
+        var last = fltLastHullPick(board, survivors.sets[0][0]);
+        if (last >= 0) {
+          return last;
+        }
+      }
+    }
     var pool = open;
-    if (skill >= 7 && live.length && live.length === survivors.tonnage) {
+    /* The long net: from skill 11 the admiral closes on the ambiguous cells
+     * a hull-cell early, and tighter still at 12 and 13 - the loose water is
+     * a gamble the densest live cell usually wins back. */
+    var closure = survivors.tonnage +
+      (skill >= 13 ? 3 : skill >= 12 ? 2 : skill >= 11 ? 1 : 0);
+    if (skill >= 7 && live.length && live.length <= closure) {
       /* The net has closed: as many cells can still hold a hull as there are
-       * hull cells left afloat, so every other cell is provably water and the
-       * last ambiguous ones are the only ones worth firing into. */
+       * hull cells left afloat (skill 11 allows one loose cell), so the rest
+       * is provably water and the ambiguous ones are the only worth firing
+       * into. From skill 8 the pick inside the net is the densest cell, not
+       * a coin toss. */
       pool = live;
+      if (skill >= 8) {
+        /* Inside the net the pick is the densest live cell; ties fall to the
+         * same coin as before (a centre bias measured out as a loss). */
+        var netBest = [];
+        var netDensity = -1;
+        live.forEach(function (idx) {
+          if (density[idx] > netDensity) {
+            netDensity = density[idx];
+            netBest = [idx];
+          } else if (density[idx] === netDensity) {
+            netBest.push(idx);
+          }
+        });
+        return netBest[Math.floor(Math.random() * netBest.length)];
+      }
+      return pool[Math.floor(Math.random() * pool.length)];
     } else if (best > 0) {
       for (var l = 0; l < live.length; l += 1) {
         if (density[live[l]] === best) {
@@ -264,6 +444,21 @@
         }
       }
       pool = top;
+    }
+    if (skill >= 8 && pool.length) {
+      /* Certainty in the open sea too: the densest water wins; ties fall to
+       * the coin, the same as the closed net. */
+      var openBest = [];
+      var openDensity = -1;
+      pool.forEach(function (idx) {
+        if (density[idx] > openDensity) {
+          openDensity = density[idx];
+          openBest = [idx];
+        } else if (density[idx] === openDensity) {
+          openBest.push(idx);
+        }
+      });
+      return openBest[Math.floor(Math.random() * openBest.length)];
     }
     return pool[Math.floor(Math.random() * pool.length)];
   }
@@ -736,24 +931,36 @@
 
 
   /* Bilingual copy travels with the game (see core.js addStrings). i18n.js
-   * carries ranks one to eight; the two new ones live here so the picker can
+   * carries ranks one to eight; the deep ranks live here so the picker can
    * name them in both languages. */
   App.addStrings({
     en: {
       "fltL9": "Grand Admiral",
       "fltL10": "Lord High Admiral",
+      "fltL11": "Fleet Marshal",
+      "fltL12": "The Long Net",
+      "fltL13": "The Iron Sea",
+      "fltL14": "Lord of the Line",
+      "fltL15": "High Seas Sovereign",
+      "fltL16": "The Wide Net",
+      "fltL17": "The Joint Sweep",
+      "fltL18": "The Calm Sea",
+      "fltL19": "The Last Frigate",
+      "fltL20": "Ocean's Zenith",
+    },
+    zh: {
+      "fltL9": "海军大将",
+      "fltL10": "海上大元帅",
       "fltL11": "舰队元帅",
       "fltL12": "大舰长",
       "fltL13": "铁海",
       "fltL14": "阵线之主",
-      "fltL15": "沧海至尊",      "fltL11": "Fleet Marshal",
-      "fltL12": "Grand Admiral",
-      "fltL13": "The Iron Sea",
-      "fltL14": "Lord of the Line",
-      "fltL15": "High Seas Sovereign",    },
-    zh: {
-      "fltL9": "海军大将",
-      "fltL10": "海上大元帅",
+      "fltL15": "沧海至尊",
+      "fltL16": "广网之主",
+      "fltL17": "合围扫海",
+      "fltL18": "静海",
+      "fltL19": "末代护卫",
+      "fltL20": "沧海之巅",
     },
   });
 

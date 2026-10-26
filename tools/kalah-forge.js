@@ -12,6 +12,15 @@
  * Usage:
  *   node tools/kalah-forge.js list
  *   node tools/kalah-forge.js probe '<json row>'
+ *
+ * Ranks 16-20 were tuned here through fairness(): the habits deepen rather
+ * than the search (keep, deny and tempo climb, the endgame count rises, and
+ * ranks 18 and 20 spend a real node budget on the short board), the flub and
+ * slip rates fall, and rank 19 re-widens the tell in exchange for the
+ * friendliest margin since rank 9. A prepared opening (book) was benched for
+ * the deep tier and rejected - the reference player punishes a fixed opening
+ * so hard that the rank measured softer than rank 1 - so the book stays a
+ * teaching habit. `list` judges whatever the module ships, in ladder order.
  */
 "use strict";
 

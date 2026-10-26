@@ -20,16 +20,16 @@
     [1, 0], [-1, 0], [0, 1], [0, -1],
     [1, 1], [1, -1], [-1, 1], [-1, -1],
   ];
-  /* Ranks. Two fields change what the rival can do, because orderValue() below
-   * never calls itself: depth <= 0 is the static positional read (it values the
-   * corners from REV_WEIGHTS only), depth >= 1 switches on the one reply/denial
-   * search the engine has - it rewards owning the last square of a line, rewards
-   * +40 for leaving you no legal reply and +60 for answering your reply - so
-   * depth 2 through 5 are the SAME rival as depth 1, not a deeper one. noise is
-   * the other lever: the chance of trading its best pick for a 2nd-to-4th one.
-   * So the ladder reaches its ceiling at r5 and r9/r10 cannot raise it; they hold
-   * that plateau rival and demand a wider final disc lead instead. starMargin is
-   * [3-star, 2-star, 1-star] on the margin, measured by seeded self-play. */
+  /* Ranks. Three fields change what the rival can do. depth 0 is the static
+   * positional read (it values the corners from REV_WEIGHTS only); depth 1
+   * switches on the one reply/denial search the engine has always had - it
+   * rewards owning the last square of a line, +40 for leaving you no legal
+   * reply and +60 for answering your reply; depth >= 2 is a real alpha-beta
+   * search (revDeepPick below), iterative-deepened under a node budget, so
+   * the deep rungs genuinely see more plies than the plateau rival. noise is
+   * the other lever: the chance of trading its best pick for a 2nd-to-4th
+   * one. starMargin is [3-star, 2-star, 1-star] on the margin, measured by
+   * seeded self-play. */
   var revLevels = [
     { id: "r1", labelKey: "revL1", noise: 0.5, depth: 0, starMargin: [18, 10, 4] },
     { id: "r2", labelKey: "revL2", noise: 0.3, depth: 0, starMargin: [16, 9, 3] },
@@ -38,18 +38,33 @@
     { id: "r5", labelKey: "revL5", noise: 0, depth: 2, starMargin: [10, 5, 2] },
     { id: "r6", labelKey: "revL6", noise: 0, depth: 3, starMargin: [8, 4, 2] },
     { id: "r7", labelKey: "revL7", noise: 0, depth: 4, starMargin: [8, 4, 2] },
-    { id: "r8", labelKey: "revL8", noise: 0, depth: 5, starMargin: [8, 4, 2] },
+    { id: "r8", labelKey: "revL8", noise: 0, depth: 4, starMargin: [8, 4, 2] },
     { id: "r9", labelKey: "revL9", noise: 0, depth: 1, starMargin: [11, 6, 2] },
     { id: "r10", labelKey: "revL10", noise: 0, depth: 1, starMargin: [12, 7, 3] },
-    /* Ranks 11-15: the ladder's search climbs one ply at a time past the
-     * shipped top, and the margin the player is allowed to lose by narrows
-     * with it. The last rank keeps a flicker of noise, so a rival that
+    /* Ranks 11-15: the ladder's search becomes real past the plateau - two to
+     * four plies of alpha-beta (revDeepPick below), which the one-reply read
+     * above cannot answer - and the margin the player is allowed to lose by
+     * narrows with it. The last rank keeps a flicker of noise, so a rival that
      * deep still hands the board back now and then. */
-    { id: "r11", labelKey: "revL11", noise: 0, depth: 6, starMargin: [7, 4, 2] },
-    { id: "r12", labelKey: "revL12", noise: 0, depth: 7, starMargin: [7, 4, 2] },
-    { id: "r13", labelKey: "revL13", noise: 0, depth: 8, starMargin: [6, 3, 2] },
-    { id: "r14", labelKey: "revL14", noise: 0, depth: 9, starMargin: [6, 3, 1] },
-    { id: "r15", labelKey: "revL15", noise: 0.05, depth: 10, starMargin: [5, 3, 1] },
+    { id: "r11", labelKey: "revL11", noise: 0, depth: 2, starMargin: [7, 4, 2] },
+    { id: "r12", labelKey: "revL12", noise: 0, depth: 3, starMargin: [7, 4, 2] },
+    { id: "r13", labelKey: "revL13", noise: 0, depth: 3, starMargin: [6, 3, 2] },
+    { id: "r14", labelKey: "revL14", noise: 0, depth: 4, starMargin: [6, 3, 1] },
+    { id: "r15", labelKey: "revL15", noise: 0.05, depth: 4, starMargin: [5, 3, 1] },
+    /* Ranks 16-20: the deep brain is the ceiling a person can answer to, so
+     * the tier buys its climb in arrangements, not plies. r16 opens the tier
+     * a shade looser than the rank below it; r17 asks the same brain for a
+     * tighter final lead; r18 hands it a shaking hand - noise at depth - the
+     * fresh-but-fair breather; r19 gives the rival the opening move, but the
+     * hand that opens shakes - the tempo comes wrapped in noise, and the
+     * seeded bench says the player breaks even across six duels; r20 is the
+     * capstone: the deep brain with a flicker of noise and the tightest
+     * lead of the tier. */
+    { id: "r16", labelKey: "revL16", noise: 0, depth: 4, starMargin: [7, 4, 2] },
+    { id: "r17", labelKey: "revL17", noise: 0, depth: 4, starMargin: [6, 3, 1] },
+    { id: "r18", labelKey: "revL18", noise: 0.12, depth: 4, starMargin: [10, 5, 2] },
+    { id: "r19", labelKey: "revL19", noise: 0.15, depth: 4, aiFirst: true, starMargin: [7, 4, 1] },
+    { id: "r20", labelKey: "revL20", noise: 0.05, depth: 4, starMargin: [6, 3, 1] },
   ];
   var REV_WEIGHTS = [
     120, -20, 10, 5, 5, 10, -20, 120,
@@ -185,11 +200,135 @@
     ranked.sort(function (a, b) {
       return b.value - a.value;
     });
+    /* From rank 11 the depth field is real: revDeepPick returns the alpha-beta
+     * choice, which owns the top slot, while the ordered read above keeps
+     * feeding the noise roll its 2nd-to-4th picks. */
+    if (depth >= 2) {
+      var deep = revDeepPick(board, rank);
+      if (deep.index >= 0) {
+        ranked = ranked.filter(function (entry) {
+          return entry.index !== deep.index;
+        });
+        ranked.unshift({ index: deep.index, value: deep.value });
+      }
+    }
     if (rank.noise && ranked.length > 1 && Math.random() < rank.noise) {
       var pickFrom = 1 + Math.floor(Math.random() * Math.min(3, ranked.length - 1));
       return ranked[pickFrom].index;
     }
     return ranked[0].index;
+  }
+
+  /* The deep ranks' search. Alpha-beta negamax from the rival's seat, with
+   * leaves read off the positional weights and iterative deepening under a
+   * node budget, so a depth-10 think costs about as long as a depth-6 one on
+   * a wild tree and every rank's move still lands inside the move timer. */
+  var REV_SEARCH_NODES = 120000;
+
+  function revRead(board, player) {
+    var total = 0;
+    for (var i = 0; i < board.length; i += 1) {
+      if (board[i] === player) {
+        total += REV_WEIGHTS[i];
+      } else if (board[i] !== REV_EMPTY) {
+        total -= REV_WEIGHTS[i];
+      }
+    }
+    return total;
+  }
+
+  function revNegamax(board, player, depth, alpha, beta, budget) {
+    budget.used += 1;
+    var moves = revMoves(board, player);
+    if (!moves.length) {
+      var foe = player === REV_PLAYER ? REV_AI : REV_PLAYER;
+      if (!revMoves(board, foe).length) {
+        /* Terminal: the final disc lead, read from this player's side and
+         * scaled above any positional read so a won tree always wins. */
+        var score = revScore(board);
+        var mine = player === REV_PLAYER ? score.player : score.ai;
+        var theirs = player === REV_PLAYER ? score.ai : score.player;
+        return mine > theirs ? 10000 + mine - theirs
+          : mine === theirs ? 0 : -10000 + mine - theirs;
+      }
+      /* A pass stays at the same ply; the budget still ticks. */
+      return revNegamax(board, foe, depth, alpha, beta, budget);
+    }
+    if (depth <= 0 || budget.used > REV_SEARCH_NODES) {
+      return revRead(board, player);
+    }
+    moves.sort(function (a, b) {
+      return REV_WEIGHTS[b] - REV_WEIGHTS[a];
+    });
+    var best = -Infinity;
+    for (var m = 0; m < moves.length; m += 1) {
+      var applied = revApply(board, player, moves[m]);
+      var value = -revNegamax(
+        applied.board,
+        player === REV_PLAYER ? REV_AI : REV_PLAYER,
+        depth - 1,
+        -beta,
+        -alpha,
+        budget,
+      );
+      if (value > best) {
+        best = value;
+      }
+      if (best > alpha) {
+        alpha = best;
+      }
+      if (alpha >= beta) {
+        break;
+      }
+    }
+    return best;
+  }
+
+  function revDeepPick(board, rank) {
+    var moves = revMoves(board, REV_AI);
+    if (!moves.length) {
+      return { index: -1, value: 0 };
+    }
+    var budget = { used: 0 };
+    var ordered = moves.slice().sort(function (a, b) {
+      return REV_WEIGHTS[b] - REV_WEIGHTS[a];
+    });
+    var best = ordered[0];
+    for (var depth = 2; depth <= rank.depth; depth += 1) {
+      var alpha = -Infinity;
+      var depthBest = -1;
+      var depthValue = -Infinity;
+      for (var m = 0; m < ordered.length; m += 1) {
+        var applied = revApply(board, REV_AI, ordered[m]);
+        var value = -revNegamax(
+          applied.board,
+          REV_PLAYER,
+          depth - 1,
+          -Infinity,
+          -alpha,
+          budget,
+        );
+        if (value > depthValue) {
+          depthValue = value;
+          depthBest = ordered[m];
+        }
+        if (depthValue > alpha) {
+          alpha = depthValue;
+        }
+        if (budget.used > REV_SEARCH_NODES) {
+          break;
+        }
+      }
+      /* Only a depth that finished inside the budget is allowed to move the
+       * pick; a cut-off pass keeps the previous depth's answer. */
+      if (depthBest >= 0 && budget.used <= REV_SEARCH_NODES) {
+        best = depthBest;
+      }
+      if (budget.used > REV_SEARCH_NODES) {
+        break;
+      }
+    }
+    return { index: best, value: 0 };
   }
   App.glyphReversiMoves = revMoves;
   App.glyphReversiFlips = revFlipsFor;
@@ -199,23 +338,35 @@
 
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js does
    * not already own, so the eight shipped rung names stay in the shared
-   * dictionary and only the two new ones ride here. */
+   * dictionary and only the deep ranks ride here. */
   App.addStrings({
     en: {
       "revL9": "Immortal",
       "revL10": "Ascendant",
+      "revL11": "Deepwell",
+      "revL12": "The Long Count",
+      "revL13": "Iron Disc",
+      "revL14": "Mirror Master",
+      "revL15": "The Full Board",
+      "revL16": "The Long Sight",
+      "revL17": "Deeper Still",
+      "revL18": "The Shaking Hand",
+      "revL19": "First Strike",
+      "revL20": "The Deep End",
+    },
+    zh: {
+      "revL9": "不朽者",
+      "revL10": "登峰者",
       "revL11": "深井者",
       "revL12": "长算者",
       "revL13": "铁盘",
       "revL14": "镜中主",
-      "revL15": "满盘者",      "revL11": "Deepwell",
-      "revL12": "The Long Count",
-      "revL13": "Iron Disc",
-      "revL14": "Mirror Master",
-      "revL15": "The Full Board",    },
-    zh: {
-      "revL9": "不朽者",
-      "revL10": "登峰者",
+      "revL15": "满盘者",
+      "revL16": "远望者",
+      "revL17": "更深一层",
+      "revL18": "颤之手",
+      "revL19": "先手",
+      "revL20": "深渊之底",
     },
   });
 
@@ -306,6 +457,22 @@
       startLoop();
       draw();
       resultEl.textContent = t("revReady");
+      /* The deep ranks' twist: a rival that owns the opening move. The pads
+       * stay locked (busy) until its answer lands, so the player reads the
+       * same board they must now answer to. */
+      if (levelDef.aiFirst) {
+        busy = true;
+        aiTimer = window.setTimeout(function () {
+          aiTimer = null;
+          busy = false;
+          if (cleared) {
+            return;
+          }
+          aiTurn();
+          playTurn();
+          draw();
+        }, 420);
+      }
     }
 
     function finish() {

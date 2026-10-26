@@ -52,14 +52,14 @@
     pot: { id: "pot", nameKey: "kchRPot", price: 18, steps: [{ kind: "sear", held: 0.6, idle: 0.05 }, { kind: "chop", count: 3 }, { kind: "simmer", held: 0.4, idle: 0.09 }] },
   };
 
-  /* Fifteen services: window, seeded queue, walking cost, rack size and the jam
+  /* Twenty services: window, seeded queue, walking cost, rack size and the jam
    * script. The starCovers band is filled in by kchBands from the scripted line,
    * and the chain runs in the order that line measures - 8, 10, 11, 11, 13, 14,
    * 15, 16, 17, 18 covers for the first ten, so svc3 sits ahead of svc2 because
-   * it covers less, not because of the number in its id. Every service keeps the
-   * same 120 second window, and the pressure is count against every: how many
+   * it covers less, not because of the number in its id. The first ten keep the
+   * 120 second window, and the pressure is count against every: how many
    * tickets open and how fast they open. The first ten move the arrival gap, the
-   * deadline lead and the jam script only. The last five each move a dial the
+   * deadline lead and the jam script only. The next five each move a dial the
    * first ten never touch, and the rack is no longer fixed at two places:
    *   svc11 one place rack - the rescue valve holds a single dish;
    *   svc12 the two-heat pot - a dish that needs the pan, then the board with
@@ -89,6 +89,15 @@
     { id: "svc13", labelKey: "kchS13", window: 120, seed: 1313, count: 24, every: 5, jitter: 1, lead: 30, recipes: ["garden", "fillet", "duck", "sauce"], rack: 3, moveTime: 0.3, holdWin: 12, jams: [{ at: 44, station: "pass", need: 2.2 }] },
     { id: "svc14", labelKey: "kchS14", window: 120, seed: 1414, count: 26, every: 4.6, jitter: 1, lead: 26, recipes: ["fillet", "garden", "duck", "garden"], rack: 2, moveTime: 0.3, holdWin: 6, jams: [{ at: 52, station: "pan", need: 1.6 }] },
     { id: "svc15", labelKey: "kchS15", window: 120, seed: 1515, count: 25, every: 4.8, jitter: 1, lead: 28, recipes: ["garden", "garden", "fillet", "sauce"], rack: 2, moveTime: 0.45, holdWin: 16, jams: [] },
+
+    /* Ranks 16-20 tighten the pass: the window closes from 115 to 105
+     * seconds, the tickets bunch, the rack thins to a single shelf, and the
+     * jams come back. s20 closes the ladder with every dial at once. */
+    { id: "svc16", labelKey: "kchS16", window: 115, seed: 1616, count: 26, every: 4.6, jitter: 1, lead: 28, recipes: ["garden", "fillet", "duck", "sauce"], rack: 2, moveTime: 0.45, holdWin: 14, jams: [{ at: 48, station: "pan", need: 1.4 }] },
+    { id: "svc17", labelKey: "kchS17", window: 110, seed: 1717, count: 27, every: 4.4, jitter: 1, lead: 27, recipes: ["fillet", "duck", "garden", "sauce"], rack: 2, moveTime: 0.4, holdWin: 12, jams: [{ at: 40, station: "pan", need: 1.5 }] },
+    { id: "svc18", labelKey: "kchS18", window: 115, seed: 1818, count: 24, every: 5, jitter: 1, lead: 30, recipes: ["garden", "garden", "sauce", "fillet"], rack: 2, moveTime: 0.45, holdWin: 16, jams: [] },
+    { id: "svc19", labelKey: "kchS19", window: 108, seed: 1919, count: 28, every: 4.2, jitter: 1, lead: 26, recipes: ["duck", "fillet", "garden", "sauce"], rack: 1, moveTime: 0.4, holdWin: 10, jams: [{ at: 36, station: "pan", need: 1.6 }, { at: 74, station: "pan", need: 1.4 }] },
+    { id: "svc20", labelKey: "kchS20", window: 105, seed: 2020, count: 28, every: 4, jitter: 1, lead: 25, recipes: ["duck", "sauce", "fillet", "garden"], rack: 1, moveTime: 0.35, holdWin: 8, jams: [{ at: 30, station: "pan", need: 1.6 }, { at: 70, station: "pan", need: 1.6 }] },
   ];
 
   var kchQuiet = null;
@@ -1223,6 +1232,8 @@
       "kchS13": "Pass Closed",
       "kchS14": "Cold Fast",
       "kchS15": "Long Walk",
+      "kchS16": "The Tight Pass", "kchS17": "Bunched Tickets", "kchS18": "The Breather Service",
+      "kchS19": "One Rack", "kchS20": "The Full House",
       "kchRGarden": "garden salad",
       "kchRFillet": "seared fillet",
       "kchRDuck": "duck with orange",
@@ -1321,6 +1332,8 @@
       "kchS13": "封死出菜口",
       "kchS14": "凉得飞快",
       "kchS15": "传菜长途",
+      "kchS16": "紧凑传菜", "kchS17": "单据扎堆", "kchS18": "喘息夜市",
+      "kchS19": "单层晾架", "kchS20": "满座之夜",
       "kchRGarden": "田园沙拉",
       "kchRFillet": "香煎鱼排",
       "kchRDuck": "橙香鸭胸",

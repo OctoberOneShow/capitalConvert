@@ -472,4 +472,5 @@
 
   /* Exported for the other modules. */
   App.initSpotDiffGame = initSpotDiff;
+  App.spotLevels = spotLevels;
 })(window.CapitalConvert = window.CapitalConvert || {});

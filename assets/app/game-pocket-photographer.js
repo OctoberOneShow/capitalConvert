@@ -107,7 +107,7 @@
     },
   };
 
-  /* Fifteen outings. `need` is the album target (distinct species with a behaviour
+  /* Twenty outings. `need` is the album target (distinct species with a behaviour
    * shot), `budget` the frames on the roll, `momentScale` how generous the
    * behaviour window is and `drift` how fast focus wanders on its own.
    * The rungs are ordered by the album a scripted best play actually measures
@@ -198,7 +198,7 @@
       frameW: 124, frameH: 90, start: { x: 200, y: 180, focus: 0.42 },
       roster: [{ sp: "coot", n: 1 }, { sp: "warbler", n: 2 }, { sp: "heron", n: 1 }, { sp: "otter", n: 2 }],
     },
-    /* --- the third tier: fifteen stops on the tour ------------------------
+    /* --- the third tier: stops eleven through fifteen on the tour ----------
      * These five change the shape of the pond rather than the size of the
      * number, because the number is spent. The album is a sum of at most four
      * per-species bests, each capped by that species' behaviour quality, and the
@@ -278,6 +278,33 @@
       frameW: 196, frameH: 150, start: { x: 210, y: 170, focus: 0.42 },
       roster: [{ sp: "coot", n: 1 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 1 }, { sp: "otter", n: 2 }],
     },
+
+    /* Ranks 16-20 hand the lens back to the shipped ponds with the glass
+     * narrowed: the same species, smaller frames, tighter score floors -
+     * the craft the ladder taught, asked for again on fresh mornings.
+     * The pond only stocks four species, so `need` stays at four; the extra
+     * pressure comes from the frame, the roll and the floor. Every row's seed
+     * is the first one its own scripted policy clears (App.photoBeatable). */
+    { id: "pph16", labelKey: "pphZ16", seed: 8399, budget: 8, need: 4,
+      momentScale: 0.84, drift: 0.09, wind: true, scoreMin: 86, behaviourMin: 27,
+      frameW: 188, frameH: 142, start: { x: 214, y: 166, focus: 0.4 },
+      roster: [{ sp: "heron", n: 1 }, { sp: "coot", n: 3 }, { sp: "otter", n: 2 }, { sp: "warbler", n: 2 }] },
+    { id: "pph17", labelKey: "pphZ17", seed: 9262, budget: 7, need: 4,
+      momentScale: 0.86, drift: 0.1, wind: true, scoreMin: 84, behaviourMin: 26,
+      frameW: 184, frameH: 138, start: { x: 206, y: 174, focus: 0.44 },
+      roster: [{ sp: "warbler", n: 4 }, { sp: "otter", n: 2 }, { sp: "coot", n: 2 }, { sp: "heron", n: 1 }] },
+    { id: "pph18", labelKey: "pphZ18", seed: 10374, budget: 8, need: 4,
+      momentScale: 0.84, drift: 0.1, wind: true, scoreMin: 82, behaviourMin: 26,
+      frameW: 192, frameH: 146, start: { x: 212, y: 168, focus: 0.42 },
+      roster: [{ sp: "otter", n: 3 }, { sp: "coot", n: 3 }, { sp: "warbler", n: 2 }, { sp: "heron", n: 1 }] },
+    { id: "pph19", labelKey: "pphZ19", seed: 11487, budget: 7, need: 4,
+      momentScale: 0.86, drift: 0.11, wind: true, scoreMin: 80, behaviourMin: 25,
+      frameW: 186, frameH: 140, start: { x: 208, y: 172, focus: 0.45 },
+      roster: [{ sp: "coot", n: 4 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 1 }, { sp: "otter", n: 1 }] },
+    { id: "pph20", labelKey: "pphZ20", seed: 12613, budget: 8, need: 4,
+      momentScale: 0.87, drift: 0.11, wind: true, scoreMin: 84, behaviourMin: 27,
+      frameW: 182, frameH: 136, start: { x: 204, y: 176, focus: 0.46 },
+      roster: [{ sp: "heron", n: 1 }, { sp: "otter", n: 3 }, { sp: "coot", n: 3 }, { sp: "warbler", n: 3 }] },
   ];
 
   /* Every control is one tap of the same pure stepper, so a key press and a
@@ -1827,6 +1854,11 @@
       "pphZ13": "The Porthole",
       "pphZ14": "No Spare Frame",
       "pphZ15": "Wide Glass",
+      "pphZ16": "The Narrow Morning",
+      "pphZ17": "Long Lens",
+      "pphZ18": "The Fifth Portrait",
+      "pphZ19": "Small Frame",
+      "pphZ20": "The Quiet Portfolio",
       "pphSpCoot": "Coot",
       "pphSpWarbler": "Warbler",
       "pphSpHeron": "Heron",
@@ -1944,6 +1976,11 @@
       "pphZ13": "方寸舷窗",
       "pphZ14": "张张入册",
       "pphZ15": "一览全塘",
+      "pphZ16": "狭晨",
+      "pphZ17": "长镜",
+      "pphZ18": "第五幅肖像",
+      "pphZ19": "小取景框",
+      "pphZ20": "静默作品集",
       "pphSpCoot": "骨顶鸡",
       "pphSpWarbler": "苇莺",
       "pphSpHeron": "苍鹭",

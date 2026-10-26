@@ -32,6 +32,8 @@
    *   deny   will not leave the rival a star pit of its own
    *   tempo  what a spare turn is worth on top of the stone it banks
    *   count  once the row is short, searches the rest of the round out exactly
+   *   nodes  how many positions that short-board search may open before it has
+   *            to guess - the budget the deep ranks spend on their endgame
    *   slip   a single repeatable tell instead of broad jitter, so a prepared
    *            player still has a route to a rout
    * Habits ride on the same (cells, who, depth, noise) entry point, so callers
@@ -57,6 +59,27 @@
     { id: "m13", labelKey: "malR13", depth: 6, noise: 0, keep: 8, threat: 2.5, deny: 4, tempo: 3.5, count: 16, slip: 0.04, flub: 0.24, margin: [4, 2, 1] },
     { id: "m14", labelKey: "malR14", depth: 7, noise: 0, keep: 10, threat: 3, deny: 4, tempo: 3.5, count: 18, slip: 0.04, flub: 0.22, margin: [3, 2, 1] },
     { id: "m15", labelKey: "malR15", depth: 8, noise: 0, keep: 10, threat: 3, deny: 5, tempo: 4, count: 20, slip: 0.03, flub: 0.2, margin: [3, 2, 1] },
+
+    /* Ranks 16-20: the habits deepen rather than the search. Sixteen guards
+     * twelve stones against the freeze; seventeen prices a spare turn higher
+     * than any rank before it and refuses star pits outright; eighteen is
+     * the first rank to spend a real node budget, so once the row is short
+     * it reads the rest of the round out exactly rather than guessing; the
+     * nineteenth widens the old tell again and pays for it with the
+     * friendliest margin since the twelfth stool; and the sovereign of the
+     * row combines the lot - the deep count, the big budget and the
+     * tightest habits of the room. A prepared opening was benched for
+     * eighteen and rejected: the reference player punishes a fixed opening
+     * so hard that the rank measured softer than the first stool, so the
+     * book stays a teaching habit. Every rank below was run against the
+     * same seeded bench that judged the fifteen above - beaten outright in
+     * at least one game in twenty and by its own three-star margin in at
+     * least three games in twenty - before it shipped. */
+    { id: "m16", labelKey: "malR16", depth: 8, noise: 0, keep: 12, threat: 3, deny: 5, tempo: 4, count: 22, slip: 0.03, flub: 0.18, margin: [3, 2, 1] },
+    { id: "m17", labelKey: "malR17", depth: 8, noise: 0, keep: 12, threat: 3.5, deny: 6, tempo: 4.5, count: 24, slip: 0.03, flub: 0.15, margin: [3, 2, 1] },
+    { id: "m18", labelKey: "malR18", depth: 8, noise: 0, keep: 14, threat: 3.5, deny: 6, tempo: 4, count: 26, nodes: 2400, slip: 0.02, flub: 0.15, margin: [3, 2, 1] },
+    { id: "m19", labelKey: "malR19", depth: 8, noise: 0, keep: 12, threat: 3, deny: 5, tempo: 4, count: 24, slip: 0.06, flub: 0.18, margin: [4, 3, 1] },
+    { id: "m20", labelKey: "malR20", depth: 8, noise: 0, keep: 14, threat: 4, deny: 6, tempo: 4.5, count: 28, nodes: 3000, slip: 0.01, flub: 0.08, margin: [3, 2, 1] },
   ];
 
   function malFresh() {
@@ -577,7 +600,7 @@
 
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js does
    * not already own, so the four shipped rung names stay in the shared
-   * dictionary and only the six new ones ride here. */
+   * dictionary and the rungs from the fifth on ride here, both languages. */
   App.addStrings({
     en: {
       "malR5": "Stone Wall",
@@ -586,15 +609,17 @@
       "malR8": "Tempo Reader",
       "malR9": "Stone Counter",
       "malR10": "Ring Sovereign",
-      "malR11": "环上守卫",
-      "malR12": "深播者",
-      "malR13": "长算者",
-      "malR14": "守罐者",
-      "malR15": "至高王",      "malR11": "Ring Warden",
+      "malR11": "Ring Warden",
       "malR12": "Deep Sower",
       "malR13": "The Long Count",
       "malR14": "Pot Keeper",
-      "malR15": "Sovereign Supreme",    },
+      "malR15": "Sovereign Supreme",
+      "malR16": "Grand Warden",
+      "malR17": "Tempo Master",
+      "malR18": "The Endgame Solver",
+      "malR19": "The Open Tell",
+      "malR20": "The Perfect Ring",
+    },
     zh: {
       "malR5": "石墙凳",
       "malR6": "背谱凳",
@@ -602,6 +627,16 @@
       "malR8": "节奏读手",
       "malR9": "数石客",
       "malR10": "环上王",
+      "malR11": "环上守卫",
+      "malR12": "深播者",
+      "malR13": "长算者",
+      "malR14": "守罐者",
+      "malR15": "至高王",
+      "malR16": "大守卫",
+      "malR17": "节奏宗师",
+      "malR18": "终局算手",
+      "malR19": "明破绽",
+      "malR20": "完美之环",
     },
   });
 

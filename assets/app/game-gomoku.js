@@ -50,6 +50,17 @@
     { id: "r13", labelKey: "gomokuRank13", noise: 0.05, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 1, depth: 7, starMoves: [62, 92, 126] },
     { id: "r14", labelKey: "gomokuRank14", noise: 0.08, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 2, depth: 8, starMoves: [66, 98, 134] },
     { id: "r15", labelKey: "gomokuRank15", noise: 0.12, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 2, depth: 9, starMoves: [70, 104, 142] },
+
+    /* Ranks 16-20: the concession deepens instead of the sight - one more
+     * ply at a time is now paid for with a heavier tempo tax, a wider
+     * random walk, and at the capstone a rival that must hold two fronts
+     * at once (hold 2). r18 is the breather: the deepest sight so far,
+     * but it spends a full turn in three building its own shape. */
+    { id: "r16", labelKey: "gomokuRank16", noise: 0.14, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 2, depth: 10, starMoves: [74, 110, 150] },
+    { id: "r17", labelKey: "gomokuRank17", noise: 0.16, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, depth: 10, starMoves: [78, 116, 158] },
+    { id: "r18", labelKey: "gomokuRank18", noise: 0.25, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, depth: 11, starMoves: [82, 122, 166] },
+    { id: "r19", labelKey: "gomokuRank19", noise: 0.18, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, depth: 12, starMoves: [86, 128, 174] },
+    { id: "r20", labelKey: "gomokuRank20", noise: 0.2, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, hold: 2, depth: 12, starMoves: [90, 134, 182] },
   ];
   var gmDirs = [[1, 0], [0, 1], [1, 1], [1, -1]];
 
@@ -1267,23 +1278,37 @@
       "gomokuRank8": "The Twin Fork",
       "gomokuRank9": "The Early Block",
       "gomokuRank10": "The Patient Hand",
-      "gomokuRank11": "深算手",
-      "gomokuRank12": "长梯手",
-      "gomokuRank13": "耐心织网",
-      "gomokuRank14": "静中筑势",
-      "gomokuRank15": "无尽棋盘",      "gomokuRank11": "The Deep Reader",
-      "gomokuRank12": "The Long Ladder",
-      "gomokuRank13": "The Patient Web",
-      "gomokuRank14": "The Quiet Build",
-      "gomokuRank15": "The Endless Board",    },
+      "gomokuRank11": "The Deep Reader",
+      "gomokuRank12": "The Wide Sight",
+      "gomokuRank13": "The Reading Stone",
+      "gomokuRank14": "The Two-Front War",
+      "gomokuRank15": "The Endless Board",
+      "gomokuRank16": "The Heavy Tempo",
+      "gomokuRank17": "The Three-Five Split",
+      "gomokuRank18": "The Shaking Deep",
+      "gomokuRank19": "Twelve Plies",
+      "gomokuRank20": "Two Fronts At Once",
+    },
     zh: {
       "gomokuRank7": "读断点",
       "gomokuRank8": "双活三",
       "gomokuRank9": "提前堵",
       "gomokuRank10": "弃四留三",
+      "gomokuRank11": "深读者",
+      "gomokuRank12": "宽望者",
+      "gomokuRank13": "读石",
+      "gomokuRank14": "两面作战",
+      "gomokuRank15": "无尽棋盘",
+      "gomokuRank16": "重节奏",
+      "gomokuRank17": "三五分化",
+      "gomokuRank18": "颤抖深处",
+      "gomokuRank19": "十二层",
+      "gomokuRank20": "双线齐开",
     },
   });
 
   /* Exported for the other modules. */
   App.initGomokuGame = initGomokuGame;
+  App.gomokuRanks = gmRanks;
+  App.gomokuPick = gmAiPick;
 })(window.CapitalConvert = window.CapitalConvert || {});

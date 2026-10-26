@@ -53,6 +53,19 @@
     { id: "f13", labelKey: "c4L13", depth: 12, noise: 0.14, starMoves: [5, 7, 9] },
     { id: "f14", labelKey: "c4L14", depth: 12, tempo: 1, noise: 0.12, starMoves: [5, 7, 9] },
     { id: "f15", labelKey: "c4L15", depth: 13, tempo: 1, noise: 0.1, starMoves: [5, 7, 9] },
+    /* Ranks 16-20: the search stretches to fifteen plies, and the tempo
+     * concession - one turn in five spent building a flank - is what keeps a
+     * rival that deep answerable; the noise above it thins as the tier
+     * climbs. r16 opens the tier; r17 holds the same sight for a wider
+     * demand; r18 steps back to the shipped sight with a much looser hand - the
+     * breather; r19
+     * and r20 climb to fifteen again, the capstone keeping only a flicker
+     * of noise and the tightest clock of the tier. */
+    { id: "f16", labelKey: "c4L16", depth: 14, tempo: 1, noise: 0.1, starMoves: [5, 7, 9] },
+    { id: "f17", labelKey: "c4L17", depth: 14, tempo: 1, noise: 0.08, starMoves: [5, 7, 9] },
+    { id: "f18", labelKey: "c4L18", depth: 12, tempo: 1, noise: 0.2, starMoves: [6, 8, 10] },
+    { id: "f19", labelKey: "c4L19", depth: 15, tempo: 1, noise: 0.06, starMoves: [5, 7, 9] },
+    { id: "f20", labelKey: "c4L20", depth: 15, tempo: 1, noise: 0.05, starMoves: [5, 7, 9] },
   ];
 
   /* Pure rules, exported for the static checks. */
@@ -223,7 +236,7 @@
       }
       return columns[0];
     }
-    function search(state, depth, alpha, beta, maximising) {
+    function search(state, depth, alpha, beta, maximising, budget) {
       if (c4WinLine(state, C4_AI)) {
         return 100000 - (rank.depth - depth) * 100;
       }
@@ -233,6 +246,7 @@
       if (c4Full(state) || depth === 0) {
         return c4Evaluate(state);
       }
+      budget.used += 1;
       var cols = order.filter(function (col) {
         return c4DropRow(state, col) !== -1;
       });
@@ -241,7 +255,7 @@
         for (var i = 0; i < cols.length; i += 1) {
           var row3 = c4DropRow(state, cols[i]);
           state[row3 * C4_W + cols[i]] = C4_AI;
-          var v = search(state, depth - 1, alpha, beta, false);
+          var v = search(state, depth - 1, alpha, beta, false, budget);
           state[row3 * C4_W + cols[i]] = C4_EMPTY;
           if (v > best) {
             best = v;
@@ -259,7 +273,7 @@
       for (var j = 0; j < cols.length; j += 1) {
         var row4 = c4DropRow(state, cols[j]);
         state[row4 * C4_W + cols[j]] = C4_PLAYER;
-        var v2 = search(state, depth - 1, alpha, beta, true);
+        var v2 = search(state, depth - 1, alpha, beta, true, budget);
         state[row4 * C4_W + cols[j]] = C4_EMPTY;
         if (v2 < worst) {
           worst = v2;
@@ -273,20 +287,51 @@
       }
       return worst;
     }
+    /* Iterative deepening under a node budget: the deep ranks ask for plies
+     * the raw search would answer seconds late, so the pick is the best line
+     * of the deepest depth that finished inside the purse - shallow ranks
+     * finish outright and never notice the budget. */
+    var C4_SEARCH_NODES = 60000;
+    var budget = { used: 0 };
     var bestCol = columns[0];
     var bestValue = -Infinity;
     var ranked = [];
-    for (var k = 0; k < columns.length; k += 1) {
-      var col3 = columns[k];
-      var row5 = c4DropRow(board, col3);
-      board[row5 * C4_W + col3] = C4_AI;
-      var value = search(board, rank.depth - 1, -Infinity, Infinity, false);
-      board[row5 * C4_W + col3] = C4_EMPTY;
-      ranked.push({ col: col3, value: value });
-      if (value > bestValue) {
-        bestValue = value;
-        bestCol = col3;
+    for (var ply = 2; ply <= rank.depth; ply += 1) {
+      var plyRanked = [];
+      var plyBest = columns[0];
+      var plyValue = -Infinity;
+      var finished = true;
+      for (var k = 0; k < columns.length; k += 1) {
+        var col3 = columns[k];
+        var row5 = c4DropRow(board, col3);
+        board[row5 * C4_W + col3] = C4_AI;
+        var value = search(board, ply - 1, -Infinity, Infinity, false, budget);
+        board[row5 * C4_W + col3] = C4_EMPTY;
+        plyRanked.push({ col: col3, value: value });
+        if (value > plyValue) {
+          plyValue = value;
+          plyBest = col3;
+        }
+        if (budget.used > C4_SEARCH_NODES) {
+          finished = false;
+          break;
+        }
       }
+      if (finished) {
+        bestCol = plyBest;
+        bestValue = plyValue;
+        ranked = plyRanked;
+      }
+      if (!finished || budget.used > C4_SEARCH_NODES) {
+        break;
+      }
+    }
+    /* The tempo concession the deep ranks ship with: one turn in five it
+     * builds its own shape instead of dropping the move its search rates
+     * best - the second-ranked column, whoever holds the rail. That is the
+     * whole reason a rival this deep stays beatable. */
+    if (rank.tempo && ranked.length > 1 && Math.random() < 0.2) {
+      return ranked[1].col;
     }
     if (rank.noise && ranked.length > 1 && Math.random() < rank.noise) {
       var pickFrom = 1 + Math.floor(Math.random() * Math.min(2, ranked.length - 1));
@@ -298,6 +343,7 @@
   App.glyphFourWinLine = c4WinLine;
   App.glyphFourPick = c4Pick;
   App.glyphFourFull = c4Full;
+  App.glyphFourLevels = c4Levels;
 
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already own, so the names it holds for rungs one to eight stay in
@@ -306,18 +352,30 @@
     en: {
       "c4L9": "Sibyl",
       "c4L10": "Ascendant",
+      "c4L11": "Deepwater",
+      "c4L12": "Highwire",
+      "c4L13": "Overwatch",
+      "c4L14": "The Long Game",
+      "c4L15": "Apex Ascendant",
+      "c4L16": "The Wide Sight",
+      "c4L17": "Fifteen Deep",
+      "c4L18": "The Loose Hand",
+      "c4L19": "The Far Clock",
+      "c4L20": "Grandmaster Four",
+    },
+    zh: {
+      "c4L9": "占卜者",
+      "c4L10": "飞升者",
       "c4L11": "深水者",
       "c4L12": "高空索",
       "c4L13": "远望者",
       "c4L14": "长局者",
-      "c4L15": "登顶者",      "c4L11": "Deepwater",
-      "c4L12": "Highwire",
-      "c4L13": "Overwatch",
-      "c4L14": "The Long Game",
-      "c4L15": "Apex Ascendant",    },
-    zh: {
-      "c4L9": "占卜者",
-      "c4L10": "飞升者",
+      "c4L15": "登顶者",
+      "c4L16": "广望者",
+      "c4L17": "十五层深",
+      "c4L18": "松手者",
+      "c4L19": "远钟",
+      "c4L20": "四子宗师",
     },
   });
 

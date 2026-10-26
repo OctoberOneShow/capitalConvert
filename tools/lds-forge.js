@@ -165,10 +165,18 @@ function main() {
      * - the same offset every shipped route uses. 120 is the resonance ceiling,
      * so the last route asks for nearly all of it. */
     const brief = [
-      { id: "lds5", labelKey: "ldsRoute5", turns: 10, target: 102, stars: [7, 8, 9] },
-      { id: "lds6", labelKey: "ldsRoute6", turns: 11, target: 108, stars: [8, 9, 10] },
-      { id: "lds7", labelKey: "ldsRoute7", turns: 12, target: 114, stars: [9, 10, 11] },
-      { id: "lds8", labelKey: "ldsRoute8", turns: 13, target: 120, stars: [10, 11, 12] },
+      { id: "lds9", labelKey: "ldsRoute9", turns: 12, target: 120, stars: [9, 10, 11] },
+      { id: "lds10", labelKey: "ldsRoute10", turns: 12, target: 116, stars: [9, 10, 11] },
+      { id: "lds11", labelKey: "ldsRoute11", turns: 11, target: 120, stars: [8, 9, 10] },
+      { id: "lds12", labelKey: "ldsRoute12", turns: 11, target: 114, stars: [8, 9, 10] },
+      { id: "lds13", labelKey: "ldsRoute13", turns: 10, target: 120, stars: [7, 8, 9] },
+      { id: "lds14", labelKey: "ldsRoute14", turns: 10, target: 112, stars: [7, 8, 9] },
+      { id: "lds15", labelKey: "ldsRoute15", turns: 9, target: 118, stars: [6, 7, 8] },
+      { id: "lds16", labelKey: "ldsRoute16", turns: 9, target: 110, stars: [6, 7, 8] },
+      { id: "lds17", labelKey: "ldsRoute17", turns: 8, target: 116, stars: [5, 6, 7] },
+      { id: "lds18", labelKey: "ldsRoute18", turns: 8, target: 108, stars: [5, 6, 7] },
+      { id: "lds19", labelKey: "ldsRoute19", turns: 7, target: 112, stars: [4, 5, 6] },
+      { id: "lds20", labelKey: "ldsRoute20", turns: 7, target: 104, stars: [4, 5, 6] },
     ];
     brief.forEach(function (route) {
       const best = measure(api, route, 400);

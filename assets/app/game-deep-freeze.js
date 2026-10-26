@@ -95,10 +95,10 @@
    * for a different question: which hazard mix the pack must answer, which
    * carry limit or narrow way decides what may be carried at all, how far
    * ahead the reach gate lets the party read, and which node is the goal.
-   * Fifteen expeditions, the first ten ordered by the par the planner measures
-   * on each shipped seed; f2 was re-seeded off 812, which measured a day
-   * harder than f3, so the original ladder rises 3, 4, 4, 4, 5, 5, 6, 7, 8, 8
-   * and every original id stands. The last five each change the question:
+   * Twenty-four expeditions, the first ten ordered by the par the planner
+   * measures on each shipped seed; f2 was re-seeded off 812, which measured a
+   * day harder than f3, so the original ladder rises 3, 4, 4, 4, 5, 5, 6, 7, 8,
+   * 8 and every original id stands. Ranks 11-15 each change the question:
    * f11 a carry limit under coat plus crampons, f12 one readable card unless
    * the lamp is paid for, f13 an objective every way into which is ice, f14 a
    * trek run backwards from the hut where the rations and not the day cap are
@@ -133,7 +133,43 @@
     { id: "f14", labelKey: "dfzE14", seed: 88, start: 11, goal: 0, days: 9, spread: 1,
       cap: 6, food: 7, reach: 2, chill: 2, hazardWeights: [2, 3, 1, 0] },
     { id: "f15", labelKey: "dfzE15", seed: 1201, start: 0, goal: 11, days: 10, spread: 2,
-      cap: 5, food: 7, reach: 2, chill: 3, hazardWeights: [0, 2, 2, 3] }
+      cap: 5, food: 7, reach: 2, chill: 3, hazardWeights: [0, 2, 2, 3] },
+    /* Ranks 16-20: the questions change again. f16 pairs a deep pantry
+     * with a short clock - six days to the far hut; f17 walks the
+     * whole range one hop at a time; f18 runs the homeward leg through
+     * blizzard country; f19 hands the ledger to the cold itself; f20 asks
+     * for the far hut under every kind of sky at once. Every map here, like
+     * every map above, ships only because the planner can walk it. */
+    { id: "f16", labelKey: "dfzE16", seed: 606, start: 0, goal: 11, days: 6, spread: 1,
+      cap: 5, food: 8, reach: 2, chill: 2, hazardWeights: [1, 2, 2, 2] },
+    { id: "f17", labelKey: "dfzE17", seed: 77, start: 0, goal: 11, days: 6, spread: 1,
+      cap: 6, food: 7, reach: 1, chill: 2, hazardWeights: [2, 2, 2, 1] },
+    { id: "f18", labelKey: "dfzE18", seed: 909, start: 11, goal: 0, days: 8, spread: 1,
+      cap: 6, food: 9, reach: 2, chill: 2, hazardWeights: [1, 2, 3, 2] },
+    { id: "f19", labelKey: "dfzE19", seed: 1010, start: 0, goal: 11, days: 6, spread: 1,
+      cap: 6, food: 6, reach: 2, chill: 4, hazardWeights: [5, 1, 1, 1] },
+    { id: "f20", labelKey: "dfzE20", seed: 2020, start: 0, goal: 11, days: 7, spread: 2,
+      cap: 5, food: 8, reach: 2, chill: 3, hazardWeights: [2, 2, 2, 2] },
+
+    /* Ranks 21-24, the long winters. f21 carries the deepest pantry of
+     * the ladder - nine rations - under a six-day clock, so the extra
+     * weight itself becomes the route's constraint. f22 runs the
+     * homeward leg through the coldest sky yet: chill four with the
+     * blizzard hazard favoured, where the planner spends warmth instead
+     * of distance. f23 hands the sledge the smallest pack of the ladder -
+     * a cap of four - over eight days, so every pickup is scheduled, not
+     * stockpiled. f24 closes on the tightest mapping: reach one, spread
+     * two, and every hazard on the board at once, a week in which the
+     * detour is usually the road. Every map here, like every map above,
+     * ships only because the planner can walk it inside its deadline. */
+    { id: "f21", labelKey: "dfzE21", seed: 2121, start: 0, goal: 11, days: 6, spread: 1,
+      cap: 6, food: 9, reach: 2, chill: 2, hazardWeights: [2, 2, 2, 2] },
+    { id: "f22", labelKey: "dfzE22", seed: 2222, start: 11, goal: 0, days: 8, spread: 1,
+      cap: 6, food: 8, reach: 2, chill: 4, hazardWeights: [4, 1, 1, 2] },
+    { id: "f23", labelKey: "dfzE23", seed: 2323, start: 0, goal: 11, days: 8, spread: 1,
+      cap: 4, food: 8, reach: 2, chill: 3, hazardWeights: [2, 3, 1, 2] },
+    { id: "f24", labelKey: "dfzE24", seed: 2424, start: 0, goal: 11, days: 8, spread: 2,
+      cap: 5, food: 9, reach: 1, chill: 3, hazardWeights: [2, 2, 3, 3] }
   ];
 
   function mulberry32(seed) {
@@ -1202,6 +1238,15 @@
       "dfzE13": "The Serac Gate",
       "dfzE14": "The Long Way Back",
       "dfzE15": "Blizzard Ledger",
+      "dfzE16": "The Three-Slot Trek",
+      "dfzE17": "Short Steps",
+      "dfzE18": "The Homeward Leg",
+      "dfzE19": "The Cold Ledger",
+      "dfzE20": "The Whole Range",
+      "dfzE21": "The Heavy Sledge",
+      "dfzE22": "The Deep Chill",
+      "dfzE23": "The Small Pack",
+      "dfzE24": "Every Sky At Once",
       "dfzN0": "Base Camp",
       "dfzN1": "Moraine Shelf",
       "dfzN2": "Frozen Creek",
@@ -1300,7 +1345,7 @@
       "dfzLostFatigue": "Fatigue stayed maxed three days running, so the party had to halt on day {d}, {place}.",
       "dfzLostDays": "The {n}-day cap ran out on day {d}, {place}. The destination stayed out of reach.",
       "dfzNextExp": "Next expedition unlocked.",
-      "dfzAllExps": "All fifteen expeditions crossed.",
+      "dfzAllExps": "All twenty-four expeditions crossed.",
       "dfzPrompt": "{name}: reach {place} within {d} days. Carry limit {cap} kg, {f} rations, warmth 10.",
       "logDeepFreeze": "Reached {place} in {n} days on the ice",
     },
@@ -1321,6 +1366,15 @@
       "dfzE13": "冰塔之门",
       "dfzE14": "风雪归途",
       "dfzE15": "风雪账本",
+      "dfzE16": "三格远征",
+      "dfzE17": "短步横穿",
+      "dfzE18": "归途长路",
+      "dfzE19": "严寒账本",
+      "dfzE20": "全境纵走",
+      "dfzE21": "重载雪橇",
+      "dfzE22": "极寒天",
+      "dfzE23": "小背囊",
+      "dfzE24": "诸天并至",
       "dfzN0": "大本营",
       "dfzN1": "冰碛台地",
       "dfzN2": "冻溪口",
@@ -1419,7 +1473,7 @@
       "dfzLostFatigue": "疲劳连续三天顶在极限，第 {d} 天，{place}，被迫停下。",
       "dfzLostDays": "{n} 天期限已到，第 {d} 天，{place}，目标点始终没露面。",
       "dfzNextExp": "解锁下一段远征。",
-      "dfzAllExps": "十五段远征全部走完。",
+      "dfzAllExps": "二十四段远征全部走完。",
       "dfzPrompt": "「{name}」：{d} 天内抵达{place}。限重 {cap} 公斤，起始口粮 {f} 份，体温 10。",
       "logDeepFreeze": "在冰原上走了 {n} 天抵达{place}",
     }
@@ -1495,6 +1549,7 @@
   App.freezeBeatable = freezeBeatable;
   App.freezeBand = freezeBand;
   App.freezeForecast = freezeForecast;
+  App.dfzLevels = dfzLevels;
   App.freezeDeal = dfzDeal;
   App.freezeOptions = dfzOptions;
   App.freezeWeight = dfzWeight;

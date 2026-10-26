@@ -17,7 +17,11 @@
   var NET_DY = [-1, 0, 1, 0];
   /* Grids: `size` per side. The source sits at the top-left tile; every
    * other leaf of the spanning tree is a glowing bulb. Star pads are added
-   * to the scramble's optimum rotation count: [3-star, 2-star, 1-star]. */
+   * to the scramble's optimum rotation count: [3-star, 2-star, 1-star].
+   * Ranks 17-20 add `tangle`: the share of tiles the deal scrambles. The
+   * shipped deal always tangles three fifths of the grid, so a big plate
+   * always leaves two fifths of it reading true; a tangled deal scrambles
+   * more of the grid instead of growing much bigger. */
   var netLevels = [
     { id: "n1", labelKey: "netL1", size: 4, starPad: [0, 2, 5] },
     { id: "n2", labelKey: "netL2", size: 4, starPad: [0, 2, 5] },
@@ -35,6 +39,24 @@
     { id: "n14", labelKey: "netL14", size: 9, starPad: [0, 4, 8] },
     { id: "n15", labelKey: "netL15", size: 10, starPad: [0, 4, 8] },
     { id: "n16", labelKey: "netL16", size: 10, starPad: [0, 3, 7] },
+    { id: "n17", labelKey: "netL17", size: 10, tangle: 0.75, starPad: [0, 5, 10] },
+    { id: "n18", labelKey: "netL18", size: 11, starPad: [0, 4, 8] },
+    { id: "n19", labelKey: "netL19", size: 11, tangle: 0.8, starPad: [0, 3, 7] },
+    { id: "n20", labelKey: "netL20", size: 12, tangle: 0.75, starPad: [0, 3, 7] },
+
+    /* Ranks 21-24, the deep plates. The board steps past its old edge:
+     * n21 storms a twelve-wide plate at the ladder's wildest tangle, n22
+     * opens the thirteen-wide grid at the calm three-fifths deal, n23
+     * tangles the thirteen wide four fifths over, and n24 closes on the
+     * fourteen-wide plate - the largest the loom deals. Every rank below
+     * was proven on the checker's own seeds: each deal tangles a real
+     * tree with bulbs to spare, the honest optimum line - every tile back
+     * to its solved pose - solves the plate at exactly the dealt optimum,
+     * and a blind one-more-turn sweep never powers the grid. */
+    { id: "n21", labelKey: "netL21", size: 12, tangle: 0.85, starPad: [0, 4, 9] },
+    { id: "n22", labelKey: "netL22", size: 13, starPad: [0, 3, 8] },
+    { id: "n23", labelKey: "netL23", size: 13, tangle: 0.8, starPad: [0, 4, 8] },
+    { id: "n24", labelKey: "netL24", size: 14, tangle: 0.75, starPad: [0, 4, 9] },
   ];
 
   /* Pure generator + checker, exported for the static checks. Returns
@@ -111,7 +133,10 @@
     return true;
   }
 
-  function netGenerate(size) {
+  function netGenerate(size, tangle) {
+    /* The share of tiles the deal scrambles; the shipped ladder tangles
+     * three fifths unless the rank asks for a stormier deal. */
+    var share = typeof tangle === "number" ? tangle : 0.6;
     function degree(conns, i) {
       var count = 0;
       for (var d = 0; d < 4; d += 1) {
@@ -129,7 +154,11 @@
         inTree.push(i === 0);
       }
       var guard = 0;
-      while (inTree.indexOf(false) !== -1 && guard < 600) {
+      /* The tree grows by random frontier picks, and on a big plate most
+       * picks land on tiles the tree has already enclosed - the guard has
+       * to scale with the plate or every attempt dies mid-growth. */
+      var guardMax = 40 * size * size;
+      while (inTree.indexOf(false) !== -1 && guard < guardMax) {
         guard += 1;
         var frontier = [];
         for (var n = 0; n < size * size; n += 1) {
@@ -188,28 +217,55 @@
       for (var r = 0; r < size * size; r += 1) {
         rot.push(0);
       }
-      var scrambleCount = Math.max(3, Math.floor(tiles.length * 0.6));
+      var scrambleCount = Math.max(3, Math.floor(tiles.length * share));
       for (var sc = 0; sc < scrambleCount; sc += 1) {
         rot[tiles[sc]] = 1 + Math.floor(Math.random() * 3);
       }
+      /* The optimum the star pads hang from. Clicks only step clockwise, so
+       * a tile's honest cost is its forward distance to a solved pose: the
+       * pose the deal was scrambled from, or, for a straight pipe, half a
+       * turn (the same two arms). A cross reads the same at any angle and
+       * costs nothing; every other tile is pinned by the tree it hangs
+       * from, so no cheaper line exists. */
       var opt = 0;
       for (var o = 1; o < rot.length; o += 1) {
-        opt += Math.min(rot[o], 4 - rot[o]);
+        var arms = 0;
+        var straight = false;
+        for (var d = 0; d < 4; d += 1) {
+          if (!conns[o][d]) {
+            continue;
+          }
+          arms += 1;
+          if (conns[o][(d + 2) % 4]) {
+            straight = true;
+          }
+        }
+        if (arms === 4) {
+          continue;
+        }
+        if (arms === 2 && straight) {
+          opt += Math.min((4 - rot[o]) % 4, (6 - rot[o]) % 4);
+        } else {
+          opt += (4 - rot[o]) % 4;
+        }
       }
       if (opt < 3 || netWin(size, conns, rot)) {
         continue;
       }
       return { size: size, conns: conns, rot: rot, terminals: terminals, opt: opt };
     }
-    /* Fallback: the solved board itself, trivially one rotation from done. */
+    /* Fallback: the solved board itself, trivially one rotation from done.
+     * The source tile arms only into the plate - an arm off the board could
+     * never be matched, and the deal would be unwinnable. */
     var fallbackConns = [];
     for (var f = 0; f < size * size; f += 1) {
-      fallbackConns.push([f === 0, (f % size) < size - 1, false, (f % size) > 0]);
+      fallbackConns.push([false, (f % size) < size - 1, false, (f % size) > 0]);
     }
     return { size: size, conns: fallbackConns, rot: [0, 1].concat([0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0].slice(0, size*size-2)), terminals: [size-1, size*(size-1)], opt: 1 };
   }
   App.glyphNetGenerate = netGenerate;
   App.glyphNetWin = netWin;
+  App.netLevels = netLevels;
 
   function initGlyphNetGame() {
     var canvas = getElement("netCanvas");
@@ -315,7 +371,7 @@
 
     function loadLevel(levelDef) {
       level = levelDef;
-      var deal = netGenerate(level.size);
+      var deal = netGenerate(level.size, level.tangle);
       size = deal.size;
       conns = deal.conns;
       rot = deal.rot.slice();

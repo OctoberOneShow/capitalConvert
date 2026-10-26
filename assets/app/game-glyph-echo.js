@@ -12,7 +12,11 @@
   /* One tone per pad; the pads also flash, so the chain is seen and heard. */
   var echoTones = [261.63, 329.63, 392.0, 523.25];
   var echoFlashMs = 300;
-  /* Every chime sets a chain length goal and how fast the pads sing. */
+  /* Every chime sets a chain length goal and how fast the pads sing. Ranks
+   * 17-20 add two dials the ladder has never shipped: `reverse` makes the
+   * player echo the chain backwards, and `flashMs` shortens the light each
+   * pad holds (the tone rides the same length), so a chime can sing faster
+   * than it glows. */
   var echoLevels = [
     { id: "c1", labelKey: "echoL1", goal: 4, stepMs: 620 },
     { id: "c2", labelKey: "echoL2", goal: 5, stepMs: 560 },
@@ -30,6 +34,14 @@
     { id: "c14", labelKey: "echoL14", goal: 23, stepMs: 175 },
     { id: "c15", labelKey: "echoL15", goal: 25, stepMs: 165 },
     { id: "c16", labelKey: "echoL16", goal: 27, stepMs: 155 },
+    /* c17 debuts the backwards echo at a generous pace; c18 revisits the
+     * speed ladder with a shorter glow instead of a longer chain; c19 is
+     * the plain-memory peak; c20 combines the backwards echo with the
+     * short-glow pressure at a length any chain-runner can read. */
+    { id: "c17", labelKey: "echoL17", goal: 13, stepMs: 300, reverse: true },
+    { id: "c18", labelKey: "echoL18", goal: 29, stepMs: 150, flashMs: 230 },
+    { id: "c19", labelKey: "echoL19", goal: 31, stepMs: 140 },
+    { id: "c20", labelKey: "echoL20", goal: 16, stepMs: 180, reverse: true, flashMs: 210 },
   ];
 
   function initGlyphEchoGame() {
@@ -118,12 +130,18 @@
       osc.stop(audio.currentTime + duration);
     }
 
+    /* How long a pad holds its light this rung: the tone rides the same
+     * length, so a short-glow chime sings shorter notes too. */
+    function flashLen() {
+      return level.flashMs || echoFlashMs;
+    }
+
     function flash(padIndex, wrong) {
       var pad = pads[padIndex];
       pad.classList.add(wrong ? "is-wrong" : "is-lit");
       schedule(function () {
         pad.classList.remove(wrong ? "is-wrong" : "is-lit");
-      }, echoFlashMs);
+      }, flashLen());
     }
 
     function renderHud() {
@@ -145,7 +163,7 @@
       chain.forEach(function (padIndex, step) {
         schedule(function () {
           flash(padIndex, false);
-          playTone(padIndex, echoFlashMs / 1000);
+          playTone(padIndex, flashLen() / 1000);
         }, step * level.stepMs);
       });
       schedule(function () {
@@ -197,13 +215,18 @@
         return;
       }
       flash(padIndex, false);
-      playTone(padIndex, echoFlashMs / 1000);
-      if (padIndex !== chain[progress]) {
+      playTone(padIndex, flashLen() / 1000);
+      /* The backwards chime wants the chain mirrored: the pad it waits for
+       * is counted from the far end. The forward chime is untouched. */
+      var want = level.reverse
+        ? chain[chain.length - 1 - progress]
+        : chain[progress];
+      if (padIndex !== want) {
         mistakes += 1;
         lives -= 1;
         state = "between";
         lockPads(true);
-        flash(chain[progress], true);
+        flash(want, true);
         if (lives <= 0) {
           lives = 0;
           renderHud();

@@ -1540,9 +1540,9 @@ check(
   })(),
 );
 const campaignGames = [
-  { file: "game-breakout", table: "brkLevels", minCount: 10, select: "brkLevelSel" },
-  { file: "game-snake", table: "snkLevels", minCount: 10, select: "snkLevelSel" },
-  { file: "game-ember-dice", table: "diceTables", minCount: 10, select: "diceTableSel" },
+  { file: "game-breakout", table: "brkLevels", minCount: 20, select: "brkLevelSel" },
+  { file: "game-snake", table: "snkLevels", minCount: 20, select: "snkLevelSel" },
+  { file: "game-ember-dice", table: "diceTables", minCount: 20, select: "diceTableSel" },
 ];
 campaignGames.forEach((game) => {
   const source = fs
@@ -1599,18 +1599,47 @@ campaignGames.forEach((game) => {
     String(countOccurrences(appJs, `"${key}":`)),
   );
 });
+/* The two twenty-rung ladders of the drawer name every rung in both
+ * languages, the way the dice ladder's table and rule keys do: a missing
+ * half would hand one language the other's words. brkL 1-17 shipped with the
+ * ladder, 18-20 ride the mirrored-walls tier; snkL 13-16 shipped, 17-20 ride
+ * the walled-house tier. */
 ["brkL", "snkL", "diceTable", "diceRule"].forEach((prefix) => {
-  for (let index = 1; index <= 15; index += 1) {
+  for (let index = 1; index <= 20; index += 1) {
     const key = prefix + index;
     const hits = countOccurrences(appJs, `"${key}":`);
-    if (prefix === "brkL" || hits > 0) {
-      check(
-        `the "${key}" key exists in both languages`,
-        hits === 2,
-        String(hits),
-      );
-    }
+    check(
+      `the "${key}" key exists in both languages`,
+      hits === 2,
+      String(hits),
+    );
   }
+});
+/* The dice ladder runs to twenty, so its table and rule keys are required,
+ * not optional - both dictionaries carry each one, whether the shared file
+ * owns it (1-7) or the module's own pack does (8-20, plus the b-suffixed
+ * retunes). A key missing from one language renders the shared fallback and
+ * lies about the table it names. */
+[
+  "diceTable",
+  "diceRule",
+].forEach((prefix) => {
+  for (let index = 1; index <= 20; index += 1) {
+    const key = prefix + index;
+    const hits = countOccurrences(appJs, `"${key}":`);
+    check(
+      `the "${key}" key exists in both languages`,
+      hits === 2,
+      String(hits),
+    );
+  }
+});
+["diceRule2b", "diceRule5b", "diceRule6b", "diceRule7b"].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
 });
 
 console.log("\n== 5i. Gomoku, Traffic Jam and Letter Vault ==");
@@ -2945,8 +2974,9 @@ check(
     if (!block) return false;
     const maps = Array.from(block[1].matchAll(/map:\s*\[([\s\S]*?)\]/g));
     const roomIds = Array.from(block[1].matchAll(/id:\s*"([a-z0-9]+)"/g)).map((m) => m[1]);
-    /* Room count comes from the table so the ladder can keep growing. */
-    if (roomIds.length < 8 || maps.length !== roomIds.length) return false;
+    /* The ladder is pinned at twenty-four rooms and the ids must stay distinct. */
+    if (roomIds.length !== 24 || maps.length !== roomIds.length) return false;
+    if (new Set(roomIds).size !== roomIds.length) return false;
     const thresholds = Array.from(block[1].matchAll(/starMoves:\s*\[(\d+),\s*(\d+),\s*(\d+)\]/g)).map(
       (m) => [Number(m[1]), Number(m[2]), Number(m[3])],
     );
@@ -2956,58 +2986,140 @@ check(
       const H = rows.length;
       const W = Math.max(...rows.map((r) => r.length));
       const grid = rows.map((r) => r.padEnd(W, "#").split(""));
-      let player = null;
-      let boxes = [];
-      const goals = new Set();
-      const wall = (x, y) => grid[y][x] === "#";
+      const N = H * W;
+      const blocked = new Uint8Array(N);
+      const goalOf = new Uint8Array(N);
+      let player = -1;
+      const startBoxes = [];
       for (let y = 0; y < H; y += 1) {
         for (let x = 0; x < W; x += 1) {
           const c = grid[y][x];
-          if (c === "@") player = [x, y];
-          if (c === "$") boxes.push(x + "," + y);
-          if (c === "o") goals.add(x + "," + y);
+          const i = y * W + x;
+          /* "*" is a parked box on a goal - box and goal at once, and the
+           * parked box may still have to move. "+" is the player on a goal. */
+          if (c === "#") blocked[i] = 1;
+          if (c === "o" || c === "*") goalOf[i] = 1;
+          if (c === "$" || c === "*") startBoxes.push(i);
+          if (c === "@" || c === "+") player = i;
         }
       }
-      if (!player || boxes.length === 0 || boxes.length !== goals.size) return false;
-      const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-      const seen = new Set([player.join(",") + "|" + boxes.slice().sort().join(";")]);
-      let queue = [{ p: player, b: boxes, d: 0 }];
-      while (queue.length) {
-        const st = queue.shift();
-        if (st.b.every((b) => goals.has(b))) {
-          return st.d <= thresholds[index][0];
-        }
-        const boxSet = new Set(st.b);
-        const reach = {};
-        const walk = [st.p];
-        reach[st.p.join(",")] = true;
-        while (walk.length) {
-          const [x, y] = walk.shift();
-          for (const [dx, dy] of dirs) {
-            const nx = x + dx;
-            const ny = y + dy;
-            const k = nx + "," + ny;
-            if (wall(nx, ny) || boxSet.has(k) || reach[k]) continue;
-            reach[k] = true;
-            walk.push([nx, ny]);
+      if (player < 0 || startBoxes.length === 0) return false;
+      let goalCount = 0;
+      for (let i = 0; i < N; i += 1) if (goalOf[i]) goalCount += 1;
+      if (new Set(startBoxes).size !== goalCount) return false;
+      const deltas = [1, -1, W, -W];
+      const edge = (i, d) =>
+        d === 1 ? i % W !== W - 1 : d === -1 ? i % W !== 0 : true;
+      const isWall = (i) => i < 0 || i >= N || blocked[i] === 1;
+      function regionOf(pos, on) {
+        const reach = new Uint8Array(N);
+        const walk = [pos];
+        reach[pos] = 1;
+        let min = pos;
+        for (let head = 0; head < walk.length; head += 1) {
+          const cur = walk[head];
+          for (const d of deltas) {
+            if (!edge(cur, d)) continue;
+            const nxt = cur + d;
+            if (isWall(nxt) || on[nxt] || reach[nxt]) continue;
+            reach[nxt] = 1;
+            if (nxt < min) min = nxt;
+            walk.push(nxt);
           }
         }
-        for (const b of st.b) {
-          const [bx, by] = b.split(",").map(Number);
-          for (const [dx, dy] of dirs) {
-            if (!reach[bx - dx + "," + (by - dy)]) continue;
-            const nbx = bx + dx;
-            const nby = by + dy;
-            if (wall(nbx, nby) || boxSet.has(nbx + "," + nby)) continue;
-            const nb2 = st.b.map((x2) => (x2 === b ? nbx + "," + nby : x2));
-            const k3 = bx + "," + by + "|" + nb2.slice().sort().join(";");
-            if (seen.has(k3)) continue;
-            seen.add(k3);
-            queue.push({ p: [bx, by], b: nb2, d: st.d + 1 });
-          }
-        }
+        return { reach, min };
       }
-      return false;
+      /* Freeze rule: a box blocked on both axes - counting boxes already
+       * proven frozen as blockers - can never move again. A frozen box off a
+       * goal is a dead set, so the search never enters one and the depth it
+       * reports is the true push optimum. */
+      function frozenBox(on, i, path, memo) {
+        if (memo.has(i)) return true;
+        if (path.has(i)) return true;
+        path.add(i);
+        const blockedX =
+          isWall(i - 1) ||
+          isWall(i + 1) ||
+          (on[i - 1] && frozenBox(on, i - 1, path, memo)) ||
+          (on[i + 1] && frozenBox(on, i + 1, path, memo));
+        const blockedY =
+          isWall(i - W) ||
+          isWall(i + W) ||
+          (on[i - W] && frozenBox(on, i - W, path, memo)) ||
+          (on[i + W] && frozenBox(on, i + W, path, memo));
+        path.delete(i);
+        if (blockedX && blockedY) {
+          memo.add(i);
+          return true;
+        }
+        return false;
+      }
+      function deadSet(on) {
+        const memo = new Set();
+        for (let i = 0; i < N; i += 1) {
+          if (!on[i] || goalOf[i]) continue;
+          if (frozenBox(on, i, new Set(), memo)) return true;
+        }
+        return false;
+      }
+      const boxesOn = new Uint8Array(N);
+      for (const b of startBoxes) boxesOn[b] = 1;
+      const solvedNow = (on) => {
+        for (let i = 0; i < N; i += 1) if (goalOf[i] && !on[i]) return false;
+        return true;
+      };
+      if (solvedNow(boxesOn)) return thresholds[index][0] >= 0;
+      const startRegion = regionOf(player, boxesOn);
+      const keyOf = (min, on) => {
+        let s = String(min);
+        for (let i = 0; i < N; i += 1) if (on[i]) s += "," + i;
+        return s;
+      };
+      const startState = {
+        boxes: startBoxes.slice().sort((a, b) => a - b),
+        pos: player,
+        d: 0,
+      };
+      const seen = new Map([[keyOf(startRegion.min, boxesOn), startState]]);
+      let frontier = [startState];
+      let goalDepth = null;
+      while (frontier.length && goalDepth === null) {
+        const next = [];
+        for (const st of frontier) {
+          const on = new Uint8Array(N);
+          for (const b of st.boxes) on[b] = 1;
+          const reg = regionOf(st.pos, on);
+          for (const b of st.boxes) {
+            for (const d of deltas) {
+              if (!edge(b, d) || !edge(b, -d)) continue;
+              const land = b + d;
+              if (!reg.reach[b - d] || isWall(land) || on[land]) continue;
+              on[b] = 0;
+              on[land] = 1;
+              const dead = deadSet(on);
+              const nreg = dead ? null : regionOf(b, on);
+              const key = dead ? null : keyOf(nreg.min, on);
+              on[land] = 0;
+              on[b] = 1;
+              if (dead || seen.has(key)) continue;
+              const boxes2 = st.boxes.filter((x) => x !== b).concat(land).sort((a, c) => a - c);
+              seen.set(key, { boxes: boxes2, pos: b, d: st.d + 1 });
+              const doneOn = new Uint8Array(N);
+              for (const x of boxes2) doneOn[x] = 1;
+              if (solvedNow(doneOn)) {
+                goalDepth = st.d + 1;
+                break;
+              }
+              next.push({ boxes: boxes2, pos: b, d: st.d + 1 });
+            }
+            if (goalDepth !== null) break;
+          }
+          if (goalDepth !== null) break;
+        }
+        frontier = next;
+      }
+      if (goalDepth === null) return false;
+      return goalDepth <= thresholds[index][0];
     });
   })(),
 );
@@ -3097,6 +3209,8 @@ check(
   "sokFieldLabel", "sokPrompt", "sokReady", "sokPaused", "sokCleared",
   "sokNextRoom", "sokCampaignDone", "sokUndo", "sokHint",
   "logGlyphPusher",
+  "lvlNum17", "lvlNum18", "lvlNum19", "lvlNum20",
+  "lvlNum21", "lvlNum22", "lvlNum23", "lvlNum24",
   "tabGlyphNet", "netLevelSelectLabel", "netL1", "netL6",
   "netFieldLabel", "netPrompt", "netReady", "netPaused", "netCleared",
   "netNextGrid", "netCampaignDone", "netHint", "logGlyphNet",
@@ -3292,6 +3406,8 @@ check(
     )();
     const configs = [
       [3, 60], [3, 130], [3, 220], [4, 300], [4, 440], [4, 600],
+      /* The quintet boards walk the same generator at the new size. */
+      [5, 420], [5, 1400],
     ];
     return configs.every(([n, walk]) => {
       for (let trial = 0; trial < 12; trial += 1) {
@@ -3374,6 +3490,7 @@ check(
   "tabGlyphFifteen", "ftLevelSelectLabel", "ftL1", "ftL6",
   "ftFieldLabel", "ftPrompt", "ftReady", "ftPaused", "ftCleared",
   "ftNextBoard", "ftCampaignDone", "ftHint", "logGlyphFifteen",
+  "ftL17", "ftL18", "ftL19", "ftL20",
   "leapL7", "leapL8", "inkL9", "inkL10", "bubL9", "bubL10",
   "pegL7", "pegL8", "raidL7", "raidL8",
 ].forEach((key) => {
@@ -3864,7 +3981,7 @@ check(
     countOccurrences(appJs, "quietResetGlyphFleet()") === 2,
 );
 check(
-  "Glyph Tower star thresholds all sit above the 2^n - 1 optimum",
+  "Glyph Tower star thresholds all sit above their rung's proven optimum",
   (() => {
     const src = fs.readFileSync(
       path.join(root, "assets", "app", "game-glyph-tower.js"),
@@ -3873,27 +3990,46 @@ check(
     const minMoves = (n) => Math.pow(2, n) - 1;
     const block = /var towLevels = \[([\s\S]*?)\n  \];/.exec(src);
     if (!block) return false;
-    const discs = Array.from(block[1].matchAll(/discs:\s*(\d+)/g)).map((m) =>
-      Number(m[1]),
-    );
-    const thresholds = Array.from(block[1].matchAll(/starMoves:\s*\[(\d+),\s*(\d+),\s*(\d+)\]/g)).map(
-      (m) => [Number(m[1]), Number(m[2]), Number(m[3])],
-    );
-    const ids = Array.from(block[1].matchAll(/id:\s*"([a-z0-9]+)"/g)).map((m) => m[1]);
-    /* Length comes from the table; the invariant is the optimum, not the size. */
-    if (ids.length < 5 || discs.length !== ids.length || thresholds.length !== ids.length) {
-      return false;
-    }
-    return discs.every((n, i) => {
-      const opt = minMoves(n);
+    /* One object per row: deal lists use only square brackets, so a lazy
+     * brace match isolates each row cleanly. */
+    const rows = Array.from(block[1].matchAll(/\{[^{}]*\}/g)).map((m) => m[0]);
+    if (rows.length !== 24) return false;
+    const ids = rows.map((row) => (/id:\s*"([a-z0-9]+)"/.exec(row) || [])[1]);
+    if (ids.some((id) => !id) || new Set(ids).size !== 24) return false;
+    const discs = rows.map((row) => Number((/discs:\s*(\d+)/.exec(row) || [])[1]));
+    const opts = rows.map((row) => (/opt:\s*(\d+)/.exec(row) || [])[1]);
+    const thresholds = rows.map((row) => {
+      const m = /starMoves:\s*\[(\d+),\s*(\d+),\s*(\d+)\]/.exec(row);
+      return m ? [Number(m[1]), Number(m[2]), Number(m[3])] : null;
+    });
+    /* A plain row's par is the 2^n - 1 formula. A part-built row (deal, with
+     * discs already placed) pins its own proven optimum in opt, which must
+     * sit strictly below the formula because part of the transfer is done. */
+    return rows.every((row, i) => {
+      if (!thresholds[i] || !(discs[i] >= 3)) return false;
+      const par =
+        opts[i] !== undefined
+          ? Number(opts[i])
+          : minMoves(discs[i]);
+      if (opts[i] !== undefined && (par < 1 || par >= minMoves(discs[i]))) return false;
       return (
-        thresholds[i][0] >= opt &&
+        thresholds[i][0] >= par &&
         thresholds[i][1] > thresholds[i][0] &&
         thresholds[i][2] > thresholds[i][1]
       );
     });
   })(),
 );
+[
+  "towL17", "towL18", "towL19", "towL20",
+  "towL21", "towL22", "towL23", "towL24",
+].forEach((key) => {
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+});
 check(
   "every Glyph Fleet placement is legal and every admiral duel terminates legally",
   (() => {
@@ -4143,6 +4279,16 @@ check(
     }
   })(),
 );
+/* The sticks ladder runs to twenty: rungs 13-20 read the generic stage keys,
+ * which the shared dictionary owns, so both languages must carry each one. */
+for (let index = 13; index <= 20; index += 1) {
+  const key = "lvlNum" + index;
+  check(
+    `the "${key}" key exists in both languages`,
+    countOccurrences(appJs, `"${key}":`) === 2,
+    String(countOccurrences(appJs, `"${key}":`)),
+  );
+}
 check(
   "Glyph Dots: AI self-play fills the plate and owns every box",
   (() => {
@@ -4873,6 +5019,21 @@ check(
   })(),
   parlorStats.join(" | ") || "seeded 160-run sweep per table at the top bet",
 );
+/* Both twenty-rung ladders of this section name every rung in both
+ * languages: the parlor's felt names live in the shared dictionary, and
+ * Kalah Row's bench names ride its own pack from the fifth stool on. A
+ * missing half would hand one language the other's words. */
+["bjT", "malR"].forEach((prefix) => {
+  for (let index = 1; index <= 20; index += 1) {
+    const key = prefix + index;
+    const hits = countOccurrences(appJs, `"${key}":`);
+    check(
+      `the "${key}" key exists in both languages`,
+      hits === 2,
+      String(hits),
+    );
+  }
+});
 check(
   "Roof Garden: every bed can be sown and its three-star line beats the greedy run",
   (() => {

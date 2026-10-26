@@ -40,6 +40,15 @@
     { id: "t14", labelKey: "beatL14", bpm: 214, bars: 28, seed: 193, density: [0.13, 0.095, 0.145, 0.07] },
     { id: "t15", labelKey: "beatL15", bpm: 220, bars: 28, seed: 211, density: [0.13, 0.095, 0.15, 0.07] },
     { id: "t16", labelKey: "beatL16", bpm: 226, bars: 30, seed: 227, density: [0.135, 0.10, 0.15, 0.075] },
+    /* Tracks 17-20 change what the chart says, not just how fast it comes:
+     * t17 mirrors the lane roles (the quiet kick lane hands the melody to the
+     * hats), t18 introduces swing (every odd 16th lands late by swing of a
+     * step), t19 is the plain speed peak, and t20 closes by playing the
+     * mirrored chart in swing, which reads familiar and still sits apart. */
+    { id: "t17", labelKey: "beatL17", bpm: 218, bars: 28, seed: 241, density: [0.075, 0.15, 0.10, 0.135] },
+    { id: "t18", labelKey: "beatL18", bpm: 196, bars: 26, seed: 251, density: [0.13, 0.095, 0.15, 0.07], swing: 0.34 },
+    { id: "t19", labelKey: "beatL19", bpm: 232, bars: 30, seed: 263, density: [0.14, 0.105, 0.155, 0.08] },
+    { id: "t20", labelKey: "beatL20", bpm: 224, bars: 30, seed: 269, density: [0.08, 0.155, 0.105, 0.14], swing: 0.34 },
   ];
 
   function mulberry32(seed) {
@@ -49,6 +58,69 @@
       var mixed = Math.imul(value ^ (value >>> 15), 1 | value);
       mixed = (mixed + Math.imul(mixed ^ (mixed >>> 7), 61 | mixed)) ^ mixed;
       return ((mixed ^ (mixed >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  /* Wall clock on purpose: every drum sound fires on the hit itself, so
+   * nothing needs the audio clock, and a suspended AudioContext (a
+   * backgrounded page can be muted by the host) must never freeze the
+   * falling notes. */
+  function nowSec() {
+    return performance.now() / 1000;
+  }
+
+  /* One track's chart, built from the seed alone: a 16th-step grid where each
+   * lane fires with its own probability. No lane may fire on two adjacent
+   * steps (it keeps the chart human - fastest repeat is every other 16th -
+   * and kills random machine-gun clusters; the rng is still consumed every
+   * step, so the seeds keep producing the same charts). A level may set
+   * `swing` (0..1): every odd 16th then lands that share of a step late, so
+   * the groove leans back without touching the tempo. */
+  function buildBeatNotes(level) {
+    var rng = mulberry32(level.seed);
+    var stepSec = 60 / level.bpm / 4;
+    var swing = level.swing || 0;
+    var laneNotes = [[], [], [], []];
+    var lastFired = [-2, -2, -2, -2];
+    var globalStep = 0;
+    for (var bar = 0; bar < level.bars; bar += 1) {
+      for (var step = 0; step < 16; step += 1) {
+        for (var lane = 0; lane < beatLanes; lane += 1) {
+          var forced = step === 0 && lane === 0;
+          var fires =
+            forced ||
+            (rng() < level.density[lane] && globalStep - lastFired[lane] > 1);
+          if (fires) {
+            laneNotes[lane].push({
+              time: globalStep * stepSec + (globalStep % 2 ? swing * stepSec : 0),
+              judged: false,
+              hit: false,
+            });
+            lastFired[lane] = globalStep;
+          }
+        }
+        globalStep += 1;
+      }
+    }
+    for (var sort = 0; sort < beatLanes; sort += 1) {
+      laneNotes[sort].sort(function (a, b) {
+        return a.time - b.time;
+      });
+    }
+    var last = 0;
+    for (var scan = 0; scan < beatLanes; scan += 1) {
+      if (laneNotes[scan].length) {
+        last = Math.max(last, laneNotes[scan][laneNotes[scan].length - 1].time);
+      }
+    }
+    return {
+      lanes: laneNotes,
+      total:
+        laneNotes[0].length +
+        laneNotes[1].length +
+        laneNotes[2].length +
+        laneNotes[3].length,
+      end: last + 0.8,
     };
   }
 
@@ -113,59 +185,18 @@
       return 150 + level.bpm * 0.35;
     }
 
-    /* Wall clock on purpose: every drum sound fires on the hit itself, so
-     * nothing needs the audio clock, and a suspended AudioContext (a
-     * backgrounded page can be muted by the host) must never freeze the
-     * falling notes. */
-    function nowSec() {
-      return performance.now() / 1000;
+    /* Gentle scroll: notes stay on screen for about a second before the
+     * hit line, so reading the chart is never the hard part. */
+    function pxPerSec() {
+      return 150 + level.bpm * 0.35;
     }
 
     function buildNotes() {
-      var rng = mulberry32(level.seed);
-      var stepSec = 60 / level.bpm / 4;
-      var laneNotes = [[], [], [], []];
-      /* No lane may fire on two adjacent steps: it keeps the chart human
-       * (fastest repeat is every other 16th) and kills random machine-gun
-       * clusters. The rng is still consumed every step, so the seeds keep
-       * producing the same charts. */
-      var lastFired = [-2, -2, -2, -2];
-      var globalStep = 0;
-      for (var bar = 0; bar < level.bars; bar += 1) {
-        for (var step = 0; step < 16; step += 1) {
-          for (var lane = 0; lane < beatLanes; lane += 1) {
-            var forced = step === 0 && lane === 0;
-            var fires =
-              forced ||
-              (rng() < level.density[lane] && globalStep - lastFired[lane] > 1);
-            if (fires) {
-              laneNotes[lane].push({
-                time: globalStep * stepSec,
-                judged: false,
-                hit: false,
-              });
-              lastFired[lane] = globalStep;
-            }
-          }
-          globalStep += 1;
-        }
-      }
-      for (var sort = 0; sort < beatLanes; sort += 1) {
-        laneNotes[sort].sort(function (a, b) {
-          return a.time - b.time;
-        });
-      }
-      notes = laneNotes;
+      var chart = buildBeatNotes(level);
+      notes = chart.lanes;
       lanePointers = [0, 0, 0, 0];
-      totalNotes =
-        notes[0].length + notes[1].length + notes[2].length + notes[3].length;
-      var last = 0;
-      for (var scan = 0; scan < beatLanes; scan += 1) {
-        if (notes[scan].length) {
-          last = Math.max(last, notes[scan][notes[scan].length - 1].time);
-        }
-      }
-      endAt = last + 0.8;
+      totalNotes = chart.total;
+      endAt = chart.end;
     }
 
     function ensureAudio() {
@@ -555,4 +586,7 @@
 
   /* Exported for the other modules. */
   App.initInkBeatGame = initInkBeatGame;
+  /* The chart builder is pure (seed in, notes out), so the release gate can
+   * replay a track's own stream headlessly without a second copy of it. */
+  App.beatChart = buildBeatNotes;
 })(window.CapitalConvert = window.CapitalConvert || {});

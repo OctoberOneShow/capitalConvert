@@ -81,6 +81,18 @@
     { id: "t14", labelKey: "ftL14", grid: 4, walk: 3000, starMoves: [310, 480, 700] },
     { id: "t15", labelKey: "ftL15", grid: 4, walk: 3500, starMoves: [350, 530, 770] },
     { id: "t16", labelKey: "ftL16", grid: 4, walk: 4000, starMoves: [390, 590, 850] },
+
+    /* t17-t20, the third tier. t17 opens the quintet: the tray grows to a
+     * 5x5 board, so the rung is fresh at a moderate shuffle and the three-
+     * star line is the board's own reference solve. t18 and t19 ride the
+     * shipped walk ladder past its old peak - the bands follow the same
+     * curve the t13-t16 rungs were tuned on. t20 closes on the quintet at
+     * depth: the big tray with a long-walk deal, the same reference line
+     * anchoring the band, after the tier's hardest rung. */
+    { id: "t17", labelKey: "ftL17", grid: 5, walk: 420, starMoves: [145, 218, 319] },
+    { id: "t18", labelKey: "ftL18", grid: 4, walk: 4600, starMoves: [415, 625, 900] },
+    { id: "t19", labelKey: "ftL19", grid: 4, walk: 5600, starMoves: [450, 675, 970] },
+    { id: "t20", labelKey: "ftL20", grid: 5, walk: 1400, starMoves: [172, 258, 378] },
   ];
 
   function easeOut(k) {

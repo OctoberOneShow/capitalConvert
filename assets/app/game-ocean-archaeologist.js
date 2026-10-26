@@ -116,6 +116,21 @@
      * the site's 10 fragments come up on every one of the 360 replayed digs. */
     { id: "d15", labelKey: "ocnZ15", w: 20, h: 14, finds: 10, base: 38, slope: 1, debris: 34, spread: 5, air: 100,
       pingRadius: 3, pingCost: 6, docCost: 28, liftCost: 5, silt: 0, bays: 1, ambig: 8, quickReach: 5, starQuality: [6, 4, 1] },
+
+    /* d16 is the survey: a wide grid and cheap pings, but every record costs
+     * most of a bag run. d17 squeezes the air; d18 pours the silt; d19 opens
+     * a second bay and lets the diver reach far; d20 makes everything dear
+     * at once and asks for twelve finds anyway. */
+    { id: "d16", labelKey: "ocnZ16", w: 24, h: 16, finds: 12, base: 30, slope: 1, debris: 60, spread: 5, air: 110,
+      pingRadius: 3, pingCost: 5, docCost: 22, liftCost: 4, silt: 0, bays: 2, ambig: 8, quickReach: 6, starQuality: [7, 4, 1] },
+    { id: "d17", labelKey: "ocnZ17", w: 18, h: 12, finds: 9, base: 40, slope: 2, debris: 44, spread: 5, air: 76,
+      pingRadius: 2, pingCost: 8, docCost: 14, liftCost: 4, silt: 1, bays: 1, ambig: 9, quickReach: 4, starQuality: [6, 3, 1] },
+    { id: "d18", labelKey: "ocnZ18", w: 20, h: 14, finds: 10, base: 36, slope: 1, debris: 38, spread: 4, air: 96,
+      pingRadius: 2, pingCost: 7, docCost: 12, liftCost: 5, silt: 2, bays: 1, ambig: 10, quickReach: 5, starQuality: [5, 3, 1] },
+    { id: "d19", labelKey: "ocnZ19", w: 22, h: 15, finds: 11, base: 34, slope: 1, debris: 50, spread: 5, air: 108,
+      pingRadius: 2, pingCost: 7, docCost: 13, liftCost: 5, silt: 1, bays: 2, ambig: 9, quickReach: 7, starQuality: [6, 4, 1] },
+    { id: "d20", labelKey: "ocnZ20", w: 22, h: 15, finds: 12, base: 40, slope: 2, debris: 46, spread: 5, air: 100,
+      pingRadius: 2, pingCost: 9, docCost: 20, liftCost: 6, silt: 1, bays: 2, ambig: 10, quickReach: 5, starQuality: [6, 3, 1] },
   ];
 
   /* --- pure core ---------------------------------------------------------
@@ -1504,6 +1519,11 @@
       "ocnZ13": "The Debris Maze",
       "ocnZ14": "The Blackout",
       "ocnZ15": "A Record's Price",
+      "ocnZ16": "The Survey Grounds",
+      "ocnZ17": "Short Air",
+      "ocnZ18": "The Silt Field",
+      "ocnZ19": "Twin Bays",
+      "ocnZ20": "The Dear Dive",
       "ocnAirLabel": "Air",
       "ocnDepthLabel": "Depth",
       "ocnAscentLabel": "Ascent",
@@ -1617,6 +1637,11 @@
       "ocnZ13": "碎壳迷宫",
       "ocnZ14": "黑水盲潜",
       "ocnZ15": "记录天价",
+      "ocnZ16": "测绘海床",
+      "ocnZ17": "气短之潜",
+      "ocnZ18": "淤泥场",
+      "ocnZ19": "双湾",
+      "ocnZ20": "昂贵一潜",
       "ocnAirLabel": "气瓶",
       "ocnDepthLabel": "深度",
       "ocnAscentLabel": "返程",

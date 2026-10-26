@@ -48,6 +48,20 @@
     { id: "w14", labelKey: "bubL14", target: 1040, shots: 15, colors: 6, rows: 9, starGain: [1.4, 1.2, 1] },
     { id: "w15", labelKey: "bubL15", target: 1080, shots: 15, colors: 6, rows: 10, starGain: [1.4, 1.2, 1] },
     { id: "w16", labelKey: "bubL16", target: 1120, shots: 14, colors: 6, rows: 10, starGain: [1.4, 1.2, 1] },
+    /* Springs 17-20 change what the well pours, not just how many shots the
+     * card gives. `sparse` pours the wall as panels on a plate - the top two
+     * rows solid, the body carved with wide shafts - so a shot that cuts a panel's
+     * neck drops the whole panel, worth 15 a bubble to the pop's 10. Fewer
+     * inks (a level may set `colors`) make clusters easier to find and the
+     * score climb faster, which is what lets a smaller number stay honest.
+     * w17 introduces the shaft read, w18 thins the ink to four colours and
+     * pays in pops, w19 steps back to five as the fresh-but-fair rung, and
+     * w20 closes by pouring the four-colour well sparse - both readings at
+     * once. */
+    { id: "w17", labelKey: "bubL17", target: 540, shots: 20, colors: 6, rows: 10, starGain: [1.4, 1.2, 1], sparse: 0.22 },
+    { id: "w18", labelKey: "bubL18", target: 620, shots: 14, colors: 4, rows: 10, starGain: [1.4, 1.2, 1] },
+    { id: "w19", labelKey: "bubL19", target: 520, shots: 16, colors: 5, rows: 10, starGain: [1.4, 1.2, 1] },
+    { id: "w20", labelKey: "bubL20", target: 770, shots: 14, colors: 4, rows: 10, starGain: [1.4, 1.2, 1], sparse: 0.18 },
   ];
 
   /* ------------------------------------------------------------ colour math */
@@ -1363,7 +1377,15 @@
       grid = emptyGrid();
       for (var r = 0; r < level.rows; r += 1) {
         for (var c = 0; c < grid[r].length; c += 1) {
-          grid[r][c] = Math.floor(Math.random() * level.colors);
+          /* A `sparse` wall is poured as panels on a plate: the top two rows
+           * stay solid and the body is carved with shafts, so every panel
+           * hangs from the plate by its own neck of row-two bubbles. Cut a
+           * neck and the whole panel drops - 15 a bubble to the pop's 10 -
+           * which is the read this tier is teaching. */
+          grid[r][c] =
+            level.sparse && r >= 2 && c % 4 === 2
+              ? -1
+              : Math.floor(Math.random() * level.colors);
         }
       }
       /* The well is poured, not printed: bubbles drop in row by row, so the
@@ -1477,6 +1499,23 @@
         resultEl.textContent = t("bubPaused");
         draw();
       }
+    };
+
+    /* The release gate plays these springs headlessly: a read-only echo of
+     * the wall (grid, loaded inks, budget) is what its aim planner reads, the
+     * way the well itself is what a player reads. Nothing here is writable. */
+    App.bubProbe = function () {
+      return {
+        grid: grid.map(function (row) {
+          return row.slice();
+        }),
+        current: current,
+        next: next,
+        shots: shots,
+        score: score,
+        popped: popped,
+        alive: alive,
+      };
     };
 
     /* The field is authored at 320x270 but stretched by the panel, so the

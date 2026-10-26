@@ -641,13 +641,14 @@ run("Love and Deepspace last-turn memory", () => {
 run("Love and Deepspace expanded memory copy", () => {
   for (const language of ["en-US", "zh-CN"]) {
     const memories = {};
-    for (let index = 1; index <= 8; index += 1) memories["xavier:lds" + index] = 1;
+    const routeCount = boot().window.CapitalConvert.ldsRoutes.length;
+    for (let index = 1; index <= routeCount; index += 1) memories["xavier:lds" + index] = 1;
     const store = new Map([["love-deepspace-album-v1", JSON.stringify({ version: 1, selected: "xavier", bonds: {}, memories })]]);
     const env = boot({ language, store }), App = env.window.CapitalConvert;
     const panel = env.byId("gamePanelLoveDeepspace");
     panel.querySelector('[data-i18n="ldsMemoryTab"]').click();
     const cards = panel.querySelectorAll(".lds-memory.is-unlocked");
-    check("Love and Deepspace expanded memory copy", language + " displays all eight collected routes", cards.length === App.ldsRoutes.length);
+    check("Love and Deepspace expanded memory copy", language + " displays all collected routes", cards.length === App.ldsRoutes.length);
     cards.forEach((card, index) => {
       const description = card.querySelector("p").textContent;
       check("Love and Deepspace expanded memory copy", language + " route " + (index + 1) + " has a translated memory",

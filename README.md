@@ -360,6 +360,37 @@ Every board was forged, not guessed:
 - `node tools/harness/cases-prism-path.js` drives all twenty boards through the
   real panel in the stub DOM.
 
+### The expert tier (rungs 21-24)
+
+Five campaign games grew a fourth tier past their twenty-rung ladders, and
+every new rung ships with its proof:
+
+- **Ember Sticks** deals the study (s21-s24): the even spread two-through-seven,
+  the triple-and-stray, the Fibonacci row under misere rules, and a seven-row
+  capstone. Each table is proved against the game's own perfect play - the
+  fastest winning line lands inside the three-star turn, a dawdling win inside
+  the one-star line, and the table's own move never throws a win away.
+- **Glyph Tower** works the night shift (tw21-tw24): fourteen to twenty-two
+  rings, each bench starting from a pose on the classic optimal path - the
+  deal is the perfect solve frozen mid-flight, so the pinned optimum is the
+  true remaining distance. The gate replays the suffix through the real panel
+  and reads three stars back from the save.
+- **Glyph Pusher** opens four new rooms (k21-k24): the counterweights, the
+  sandwich, the switchback and the terraces, each solved by the canonical
+  push-optimal BFS with its bands pinned to the measured optimum.
+- **Glyph Net** stretches the deep plates (n21-n24) to thirteen and fourteen
+  wide, at tangles up to eighty-five percent. Every deal was proven on the
+  checker's own seeds: a real tangle with bulbs to spare, the honest optimum
+  line solving at exactly the dealt optimum, and a blind sweep never powering
+  the grid.
+- **Deep Freeze** rides the long winters (f21-f24): the heaviest sledge, the
+  coldest homeward sky, the smallest pack, and every hazard at once - each
+  expedition walked by the shipped planner inside its deadline.
+
+`node tools/verify-levels.js` replays every rung of every expanded ladder
+through the games' own engines; `node tools/static-checks.js` re-proves the
+sokoban rooms solvable and the tower bands against the 2^n - 1 formula.
+
 ## Game checks and future ideas
 
 Run `node tools/pet-harness.js` for the shared gameplay and regression checks,

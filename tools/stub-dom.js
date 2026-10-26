@@ -507,8 +507,24 @@ function createEnvironment(options) {
       return !event.defaultPrevented;
     },
     getElementById(id) {
-      const found = document.documentElement.querySelector("#" + id);
-      return found || null;
+      /* A direct walk beats routing through the selector engine: the gates
+       * call this per simulated frame, and "#id" matching paid for a regex
+       * pass over every node each time. Same semantics - the property and
+       * the attribute share one store. */
+      let found = null;
+      const visit = (node) => {
+        for (const child of node.childNodes) {
+          if (child.nodeType !== 1) continue;
+          if (child.id === id) {
+            found = child;
+            return;
+          }
+          visit(child);
+          if (found) return;
+        }
+      };
+      visit(document.documentElement);
+      return found;
     },
     querySelector(selector) {
       return document.documentElement.querySelector(selector);
