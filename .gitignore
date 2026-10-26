@@ -7,6 +7,8 @@ Thumbs.db
 
 # Dev/test runtime artifacts (not source)
 tmp/
+dist/
+*.qoder.site
 tools/_*
 tools/_*.json
 tools/.chrome-profile/

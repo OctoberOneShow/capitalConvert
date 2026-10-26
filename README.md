@@ -1,403 +1,220 @@
 # capitalConvert
 
-A small web-based text toolkit (pure HTML/CSS/JS, no build step) for cleaning and transforming text:
+A zero-build, browser-only text toolkit with a 98-game arcade and a virtual companion.
+Four static HTML pages share one vanilla JavaScript/CSS runtime. There is no bundler,
+package manager, backend, or telemetry.
 
-- `index.html` – main entry point / overview
-- `chinese_punctuation.html` – normalize Chinese punctuation
-- `english_filter.html` – filter / process English text
-- `words_replacing.html` – batch find-and-replace words
-- `assets/` – shared scripts and styles
+## Pages
 
-Each page also includes a shared mini-game drawer with ninety-eight games:
-Typing Sprint, Glyph Match, 2048, Reflex Tap, Caret Dash, Elements
-(falling-sand sandbox), Spot the Diff (mutation-hunting ladder), Punctuation
-Plumber (width sorting with combos), Stack! (drop-and-trim tower), Color Code
-(Mastermind), Inkball (glyph-brick breakout), Ember Dice (push-your-luck),
-Serpent (snake), Lights Out (flip-the-cross logic), Glyph Mines (minesweeper),
-Gomoku (five in a row against a ranking AI), Traffic Jam (BFS-proven slide
-puzzles), Letter Vault (daily five-letter word lock), Glyph Blocks
-(line-clearing stacker with a floor-by-floor campaign), Ink Cascade
-(match-three chain reactions), Ink Beat (WebAudio rhythm tapping on
-synthesized drums), Bubble Ink (bubble shooter with wall bounces and cluster
-drops), Glyph Echo (listen-and-repeat chain memory on singing pads), Ink
-Slash (swipe-to-cut arcade with combo trails and bombs), Peg Splash
-(Peggle-style peg clearing with a ball-refunding bucket), Glyph Raid
-(Invaders-style formation shooter), Glyph Leap (vertical hopper with
-springs and drifting ledges), Aurora Flow (glowing numberlink ribbons on
-a starfield board), Comet Golf (gravity-well slingshot golf with a
-particle-trailing comet), Prism Path (twenty laser-and-mirror boards with a
-live-traced beam, splitters and welded elements), Starfall Lander (thrust-and-touchdown flight over
-glowing pads), Ink Sort (pouring puzzles dealt by a built-in solver), Glyph
-Crossing (frogger-style lanes with log rides), Glyph Pusher (BFS-verified
-sokoban rooms with undo), Glyph Net (spanning-tree pipe rotations that
-power every bulb), Glyph Sketch (nonograms proven solvable by pure
-row/column logic), Glyph Fifteen (sliding tiles dealt by legal walks, so
-every board is solvable), Glyph Sudoku (mini grids carved while the answer
-stays unique), Glyph Reversi (a disc-flipping duel against six AI ranks),
-Glyph Glide (ice-slide mazes whose generator quotes a BFS-proven par),
-Glyph Four (column-drop duels against a minimax ladder), Glyph Tower
-(tower-transfer puzzles rated against the 2^n - 1 optimum), and Glyph
-Fleet (battleship duels against ranked hunt/target admirals), Ember Sticks
-(Nim tables solved by a provably perfect xor player), and Glyph Dots
-(dots-and-boxes against an AI that surrenders its shortest chain), and Republic
-Rewind (a bilingual history-and-culture card quiz with per-card notes), Kalah
-Row (a mancala sow against a bench that reads the ring two hands deep),
-Twenty-One Parlor (blackjack tables that race a bankroll to its target) and
-Roof Garden (an idle planting bed that ripens on the wall clock), plus twenty-one
-games the drawer injects from a registry (game-registry.js) instead of page
-markup: Rooftop Radio (triangulate a hidden transmitter from signal readings),
-Lantern Heist (turn-based stealth past guard vision cones), Pocket Detective
-(logic-grid cases carved down to one unique solution), Circuit Scribe (gate nets
-graded against a truth table), Shadow Fold (stamp one unit cell, fold it into the
-target), Clockwork Dispatch (junction switching against BFS-proved timetables),
-Weather Loom (steer wind and heat to feed the villages), Coral Architect (draft
-reef tiles scored by adjacency rules), Paper Bridge (beam lattices a cart can
-actually roll), Ember Delve (telegraphed intents across a 4x4 floor plan),
-Whisper Deck (a three-lane deckbuilder with echo and exhaust clauses), Glyph
-Bastion (tower traits against armour, splitters and cloaks), Microbe Lab (spend
-mutation points to outlast the environment cards), Echo Cartographer (map a cave
-from fading sonar pings), Neon Drift (momentum time trials against your own
-ghost), Lantern Fishing (depth, bite windows and line tension), Archive Escape
-(a branching bilingual text adventure), Moon Market (seven seeded days of prices
-and events), Dream Orchestra (voice-limited step-sequencer puzzles), Loopwright
-(loop a program so your earlier runs hold the plates), Hue Hunter (hunt the one
-tile whose colour is a shade off, across a fifty-level ladder), Snapshot
-Sleuth (find the one tampered photo on a wall of hand-painted scenes, across
-a fifty-level ladder), Double Take (the classic two-photo
-find-the-difference hunt over a fifteen-scene hand-painted deck, across a
-fifty-level ladder), Item Quest (hunt the items listed in the tray through
-six dense hand-painted rooms), and Love and Deepspace
-(an action arena and route-and-bond strategy game themed around 恋与深空). Campaign
-games share an unlock-chain core
-(game-campaign.js). Every game panel carries a collapsible "How to play"
-guide (game-guide.js) with a mechanic diagram and step-by-step instructions
-in both languages. The picker is a two-column grid that shows six games and
-states the hidden count ("More games +64") instead of hiding the rest behind
-a scroll gesture.
+| Page | Tool | What it does |
+| --- | --- | --- |
+| `index.html` | **Text Formatter** | Sentence-case cleanup, common contraction fixes, `[...]` removal, and symbol filtering that preserves Chinese characters. |
+| `english_filter.html` | **English Letter Filter** | Removes CJK characters from mixed-language text while keeping Latin letters, digits, punctuation, and apostrophes. |
+| `chinese_punctuation.html` | **Chinese Punctuation Remover** | Converts Chinese commas, colons, semicolons, and sentence marks to spaces; drops quotes, brackets, ellipses, dashes, and tildes; collapses the leftover spacing. |
+| `words_replacing.html` | **Words Replacer** | Applies searchable preset replacement rules. The default preset has 70 rules with phrase exemptions; the speaker-tag preset has 7. Match previews and per-rule counts update as you type. |
 
-## Usage
+Open any page directly in a browser. Paste text, run the tool, then copy, download,
+swap the result back into the input, or inspect the before/after diff. `Ctrl+Enter`
+runs the active tool.
 
-Open any `.html` file directly in a browser. No server required.
+### Shared shell
 
-### Game presentation
+All four pages load the same 126 script modules and 9 stylesheets and provide:
 
-The 96 games other than **Item Quest / 寻物启事** and **Love and Deepspace / 恋与深空** now have illustrated title scenes, bilingual objectives, and genre identities. The expanded picker supports searching English or Chinese names and filtering by category. Keyboard navigation follows the filtered results.
+- English/Chinese UI switching, dark/light themes, and full/calm/off motion settings.
+- Game sound on/off, a history drawer, undo, draggable cards, and reset-layout.
+- Character/line counters, a change summary, and a highlighted diff preview.
+- A game drawer and the companion widget, available on every page.
+- Responsive layouts and `prefers-reduced-motion` support.
 
-All 98 games have library icons and category metadata, including a magnifying glass for Item Quest and a heart for Love and Deepspace. Switching games preserves the shared drawer layout: three columns on desktop and two on phones. The two native game screens keep their own artwork and layout.
+The core app works offline. Web fonts (Inter, JetBrains Mono) and the optional
+Love and Deepspace character videos are the only network-dependent pieces.
 
-The remaining game screens use coordinated controls and readable dark surfaces in either site theme. Thirty-four canvas games include original environment artwork; trains, ships, stealth characters, coral, crates, board discs, and falling blocks have additional piece detail. Whisper Deck has illustrated card faces with visible costs and echo rules. Tea House has guest portraits and illustrated drinks. Weather Loom shows terrain and weather gauges, with exact values available through **Show readings** and the selected-cell readout.
+## Games
 
-Presentation animations respect the motion setting and the system's reduced-motion preference. Score changes animate only when the value changes; hidden games do not run presentation animation loops. Campaign completions display a dismissible star banner. Game rules and saved-progress formats are preserved.
+The drawer ships **98 games**: 49 hand-wired panels in the HTML pages plus 49
+registry modules loaded through `assets/app/game-registry.js`. The picker supports
+name search, six genre filters, a collapsible "more games" list, and keyboard
+navigation.
 
-Verification:
+Every game has a collapsible **How to play** guide with a mechanic diagram and
+bilingual steps. Campaign games share the unlock-chain core in
+`assets/app/game-campaign.js`. 96 titles use the illustrated presentation layer
+with their own world, motif, and objective; Item Quest and Love and Deepspace keep
+their native screens.
 
-- `node tools/game-presentation-check.js` checks all 98 panels at 860px, 390px, and 320px; validates search, localization, and motion controls; exercises Item Quest and all Love and Deepspace activities in both languages and themes; and saves previews and a report in `tools/shots/completed/`. It requires local Chrome.
-- `node tools/verify-game.js game-weather-loom game-coral-architect game-clockwork-dispatch game-whisper-deck game-tea-house game-ember-delve game-glyph-bastion game-lantern-heist` exercises the changed game controls and timer cleanup.
-- `node tools/pet-harness.js` runs the full gameplay and companion regression suite.
-- `node tools/static-checks.js` checks page wiring, localization, and the shared game infrastructure.
+**Arcade (24):** Typing Sprint, Reflex Tap, Caret Dash, Punctuation Plumber, Stack!,
+Inkball, Serpent, Glyph Blocks, Bubble Ink, Ink Slash, Peg Splash, Glyph Raid, Glyph
+Leap, Comet Golf, Starfall Lander, Glyph Crossing, Neon Drift, Tether Salvage,
+Pinball Courier, Tiny Wrestlers, Kitchen Relay, Crosswind Kites, Gravity Badminton,
+Tiny Blacksmith.
+
+**Puzzle (35):** Glyph Match, 2048, Spot the Diff, Color Code, Lights Out, Glyph
+Mines, Traffic Jam, Letter Vault, Ink Cascade, Aurora Flow, Prism Path, Ink Sort,
+Glyph Pusher, Glyph Net, Glyph Sketch, Glyph Fifteen, Glyph Sudoku, Glyph Glide,
+Glyph Tower, Republic Rewind, Pocket Detective, Circuit Scribe, Shadow Fold, Paper
+Bridge, Loopwright, Hue Hunter, Snapshot Sleuth, Double Take, Rule Thieves, Paradox
+Post, Blind Sculptor, Lost Language, Switchboard Duo, Counterfeit Museum, Shadow
+Puppeteer.
+
+**Strategy (19):** Ember Dice, Gomoku, Glyph Reversi, Glyph Four, Glyph Fleet, Ember
+Sticks, Glyph Dots, Kalah Row, Twenty-One Parlor, Clockwork Dispatch, Weather Loom,
+Whisper Deck, Glyph Bastion, Microbe Lab, Moon Market, Courtroom of Animals, Whale
+Parliament, One-Minute Mayor, Auction Dungeon.
+
+**Explore (8):** Rooftop Radio, Lantern Heist, Ember Delve, Echo Cartographer,
+Archive Escape, Borrowed Bodies, Deep Freeze, Ocean Archaeologist.
+
+**Cozy (6):** Elements, Roof Garden, Coral Architect, Lantern Fishing, Pocket
+Photographer, Tea House at Midnight.
+
+**Rhythm (4):** Ink Beat, Glyph Echo, Dream Orchestra, Morse Rescue.
+
+Item Quest and Love and Deepspace sit outside the genre filters and open their own
+native layouts.
+
+### Proven boards, not guessed ones
+
+Many games generate their deals and prove the deal before shipping it:
+
+- Glyph Pusher rooms are BFS-verified; Glyph Glide quotes a BFS-proven par.
+- Glyph Tower bands are checked against the `2^n - 1` optimum.
+- Glyph Sketch nonograms are solvable by row/column logic alone; Glyph Sudoku
+  keeps a unique answer.
+- Prism Path replays every reachable mirror orientation through the real beam.
+- Kalah, Blackjack, Ink Sort, and several campaign ladders ship with their own
+  solvers/forges.
+
+The `tools/*-forge.js` scripts search for new levels, and
+`node tools/verify-levels.js` replays every shipped rung through the games' own
+engines. `node tools/audit-levels.js` reports the current ladder sizes.
 
 ### 恋与深空 / Love and Deepspace
 
-#### 1.0 fan release
+A 1.0 fan-made mini-adventure built around the five partners (Xavier, Zayne,
+Rafayel, Sylus, Caleb). It is not an official Infold release.
 
-Open [the game directly](index.html?game=love-deepspace), or use the game drawer
-on any of the four pages. This is an independent fan-made mini-adventure; its
-1.0 version does not refer to an official Infold game release.
+Open it from any page's game drawer, or directly with
+`index.html?game=love-deepspace`.
 
-For a local preview with reliable photo exports, run `node tools/serve-game.js`
-and open [the preview](http://127.0.0.1:8765/index.html?game=love-deepspace).
-The preview listens only on this computer; `PORT` changes its default port.
+- **Gallery:** nine locally bundled artworks per partner (45 originals plus 45
+  compact thumbnails), with zoom, favorites, keyboard navigation, and original-file
+  download.
+- **Together:** scene strips, a six-goal Journey per partner, twelve Starpath
+  constellation puzzles, and 18 keepsakes / 54 stars across Mosaic, Bouquet, and
+  Expedition.
+- **Date activities:** claw machine, Kitty Cards, date stories, photo studio and
+  four-shot strips, quality time, heart-to-heart conversations, cooking, and room
+  decoration.
+- **Missions:** an action arena (Starbond Hunt) and a turn-based strategy mode
+  (Starbond Relay), with per-partner skills and saved best stars.
 
-**HD Gallery / 高清画廊** includes nine local artworks for each of the five
-partners, for 45 images. The 20 added images include eight native 4K artworks
-and twelve native Full HD artworks. Open any card to see the complete image, inspect its
-dimensions, zoom in, save a favourite, or download the original file. Arrow keys
-move between images, Escape closes the viewer, and keyboard focus returns to
-the opened card. The favourite filter and saved favourites help players return
-to their collection. Artwork also appears in the character scene strip and
-photo studio. Media provenance is recorded in
-[CREDITS.md](assets/media/love-deepspace/CREDITS.md).
+Media provenance is recorded in
+[assets/media/love-deepspace/CREDITS.md](assets/media/love-deepspace/CREDITS.md).
+Dialog, mini-games, and gameplay are original fan adaptations; portraits and
+gallery art belong to their respective rights holders.
 
-**Our journey / 我们的旅程** gives each partner six visible goals connected to
-the existing activities: a photograph, a story ending, Starpath, Kitty Cards,
-a successful meal, and a mission memory. Its next-step button takes the player
-to an unfinished activity. Goals follow the actual collection and completion
-records, so replaying a goal cannot award a second collection reward.
+## Companion
 
-**Starpath resonance / 星轨共鸣** adds a constellation puzzle to Together. Rotate the star
-tiles to connect the route, use a star hint when needed, and complete
-each of twelve constellations to unlock the next sky. Visit every diamond beacon
-and find a route around fixed anchors and decoys. Matching the minimum rotation
-count without hints earns three stars; a few extra turns earn two, and other
-clears earn one. Hints earn one star for that attempt. Undo restores a tile but
-still counts the rotation; beginning again resets the attempt. Best stars are
-saved per partner. First completions award affinity once per constellation.
-Together opens on Starpath, so players
-can start with a calm puzzle and follow their partner's Journey from there.
+Every page also hosts an original virtual companion, injected by the `pet-*.js`
+modules:
 
-The scene strips and gallery cards use compact local previews. The 45 previews
-total less than 1 MB; opening an artwork loads its full-resolution original.
+- Adopt one of three species — **Bracko**, **Quillop**, or **Tagling** — and name it.
+- Happiness, hunger, and energy decay with real elapsed time (capped at 12 hours).
+- Feed, pet, play, rest, brush, teach tricks, and unlock accessories, hues, and
+  evolutions across 10 levels and three stages.
+- Eleven achievements, daily streaks, away rewards, and two mini-games:
+  **Treat Toss** and **Trick Trainer**.
+- The widget can be collapsed, dragged to another corner, hidden, renamed, reset,
+  or switched to another species. It respects the sound and motion settings.
 
-The complete gallery and gameplay use bundled files and work without a network
-connection. Character videos remain optional online media. Closing the drawer,
-switching activities, and hiding the browser tab pause active gameplay and
-stop the character video. Saves remain compatible with existing collections;
-live rounds restart after a reload. If browser storage is unavailable, progress
-lasts for the current session.
+State is stored under `capitalconvert-pet` and shared across all four pages.
 
-Release verification:
+## Project layout
 
-- `node tools/love-deepspace-release-check.js` runs the real game in Chrome or
-  Edge over a temporary local HTTP server. It checks all four direct entry
-  links, image decoding, the gallery viewer and favourites, photo and story
-  collections, mission rewards, Journey goals, storage failure, reduced motion, and narrow
-  layouts in English/Chinese and both themes. Reports and screenshots are saved
-  under `tools/shots/love-deepspace-release/`. Use `CHROME_PATH` or
-  `--chrome=/path/to/chrome` when the browser is installed elsewhere.
-- `node tools/harness/cases-love-deepspace.js` verifies the original activities,
-  saves, combat rules, collection rewards, and pause/resume lifecycle.
-- `node tools/harness/cases-love-starpath.js` verifies all twelve puzzles,
-  optimal scoring, hints, undo, keyboard navigation, per-partner unlocks, and
-  rewards once per first clear.
-- `node tools/harness/cases-love-release.js` checks expanded-image save
-  compatibility, corrupted favourites, viewer focus, photo handoff, media
-  lifecycle, Journey progress, and bilingual labels.
-- `node tools/static-checks.js` verifies all four page manifests, translation
-  packs, and shared game wiring; `node tools/pet-harness.js` runs the wider
-  regression suite.
+```text
+index.html                  Text Formatter + shared drawer
+english_filter.html         English Letter Filter
+chinese_punctuation.html    Chinese Punctuation Remover
+words_replacing.html        Words Replacer
 
-#### More ways to play together
+assets/app/                 126 JavaScript modules
+  core.js                   storage, i18n, theme, history, layout, effects
+  i18n.js                   English/Chinese dictionary
+  tools.js                  text transforms and replacement presets
+  main.js                   page bootstrap
+  game-*.js                 game engines and registry modules
+  pet-*.js                  companion
+assets/styles/              9 stylesheets (base, games, presentation, pet, Love)
+assets/media/love-deepspace/
+                            45 artworks, 45 thumbnails, credits and source hashes
+tools/                      headless checks, browser drivers, level forges
+```
 
-Open **Together / 陪伴** and choose one of three new activities, or expand
-**Adventure passport / 心动游记** to visit an activity and see its collection.
-All three games are untimed and use the existing five partners.
+### Two ways a game is wired
 
-- **Memory mosaic / 心动拼图:** restore nine photographs per partner. Select
-  two fragments to swap them; later puzzles add clockwise rotation and expand
-  from 3×3 to 4×4. The perfect target is the exact minimum number of swaps and
-  rotations. Reference photographs are free to view. Assistance limits that
-  attempt to one star, while undo retains the action count. Completing a puzzle
-  lets you open its full-resolution original in the gallery. Arrow keys move
-  between fragments, and Enter or Space selects them.
-- **Bouquet atelier / 花语工坊:** complete six flower commissions per partner.
-  Draft from three flowers and arrange twelve blooms on a 4×4 board. Choose a
-  flower and an empty space to preview the score, then confirm with **Plant
-  flower**. Matching colours, petal rhythms, rainbow squares, and the partner's
-  two requests shape the result. Meet both requests and the required score to
-  unlock the next commission. Live score breakdowns, text and shape markers,
-  and undo make it possible to refine an arrangement before beginning again.
-- **Starlight expedition / 星夜远征:** take a short card adventure through three
-  battles, a route choice, two lasting upgrades, and a camp before the boss.
-  Spend three energy on a hand of three cards, build Evol for a partner skill,
-  and read the enemy's displayed intent before ending the turn. Health and
-  upgrades carry between encounters; unspent cards, energy, and guard reset
-  each turn. Three difficulty tiers unlock in order. Winning with at least
-  30 health in fifteen battle turns or fewer earns three stars.
+1. **Hand-wired:** the tab and panel live in the four HTML pages; its module calls
+   an exported `init...Game()` from `main.js`.
+2. **Registry:** a module calls `App.registerGame({ name, tabKey, init, guide })`
+   and the shell injects the tab, panel, guide, and pause hook. The linker
+   `node tools/link-registry-games.js` adds registry scripts to all four pages and
+   is the sanctioned wiring path; do not hand-edit asset tags.
 
-The Passport tracks 18 keepsakes and up to 54 stars per partner
-from these three activities. First clears award affinity once per partner and
-stage, commission, or expedition tier; replays can improve saved records.
-These collections are separate from the existing six Journey goals. Switching
-activities, visiting Missions, and closing the drawer keep the current attempt.
-Changing partners or reloading starts a fresh attempt, while best results remain
-saved. Unavailable browser storage keeps progress for the current session.
+## Run locally
 
-Expansion checks:
+Directly opening the `.html` files is enough for the text tools, games, and
+companion.
 
-- `node tools/love-deepspace-activities-check.js` uses a real browser to complete
-  every Mosaic puzzle, Bouquet commission, and Expedition tier through their
-  visible controls. It also checks preview and undo controls, repeat rewards,
-  Passport progress, reloads, partner isolation, hidden actions, unfinished
-  expedition persistence, storage failures, and English/Chinese layouts at
-  320px, 390px, and 1100px in both themes. It saves its report and screenshots in
-  `tools/shots/love-deepspace-activities/` and accepts the same browser options
-  as the release checker.
-- `node tools/harness/cases-love-mosaic.js`,
-  `node tools/harness/cases-love-bouquet.js`, and
-  `node tools/harness/cases-love-expedition.js` verify their rules, attainable
-  scores, legal completions, corrupted saves, keyboard controls, and reward
-  lifecycle independently.
+For reliable Love and Deepspace PNG exports, use the local server:
 
-Its original responsive, arena, date-activity, and animation styles are restored after an earlier stylesheet merge omitted them. Both this game and Item Quest isolate their native colours and controls from the shared game skin.
+```bash
+node tools/serve-game.js
+# http://127.0.0.1:8765/index.html?game=love-deepspace
+```
 
-**Together → Heart to heart / 陪伴 → 倾心之谈** adds original mood conversations for all five partners. Choose a good, tiring, or worrying day, then choose quiet company or a small plan. Completed exchanges go into each partner's journal; favourite and replay them in either language. The latest 20 distinct exchanges are saved across partners, duplicate choices update the existing entry, and replaying does not award affinity. Old saves remain compatible.
+`PORT` changes the port. The server listens on localhost only. Photo export needs
+an HTTP origin because `file://` can taint the canvas.
 
-The companion activities draw on Tête-à-Tête, Home, and everyday companionship described in [Infold's official App Store listing](https://apps.apple.com/us/app/love-and-deepspace/id6443467666). Dialogue, room illustrations, recipes, and gameplay are original fan adaptations. Cooking, room decoration, and four-shot photo strips now connect to the existing date collections and character affinity.
+## Development checks
 
-Open **Games → More games → Love and Deepspace** on any of the four pages.
-The fan-made mini-adventure features Xavier, Zayne, Rafayel, Sylus, and
-Caleb with locally bundled official portraits, optional muted character video
-loops, and original English/Chinese dialogue. Videos require an internet
-connection; portraits and gameplay work offline. Media sources are recorded in
-[CREDITS.md](assets/media/love-deepspace/CREDITS.md).
+Node.js 22+ is recommended for the browser scripts (they use the built-in
+`fetch`/`WebSocket`). No `npm install` is required. Browser checks need a local
+Chrome or Edge installation; the Love checks accept `CHROME_PATH` or
+`--chrome=/path/to/browser`.
 
-**Together / 陪伴** is the landing view, with a large official character portrait,
-gentle viewpoint movement, original character dialogue, and an optional official
-character video. **Say hello** starts the muted video when motion is enabled;
-**Animate character** also lets you start or stop it explicitly. On wider screens,
-the character stays beside the date activity. **All games** restores the shared
-picker, and **Missions** opens the existing combat and strategy modes.
+| Command | What it proves |
+| --- | --- |
+| `node tools/static-checks.js` | Page wiring, 98-game/49-panel manifest, i18n keys, pet lifecycle, campaign levels, CSS/HTML integrity. |
+| `node tools/pet-harness.js` | Full headless suite: companion, registry games, campaigns, shell regressions, Love activities, Prism Path. |
+| `node tools/i18n-keys.js` | English/Chinese dictionaries are 1:1; `--baseline <file>` also catches removed keys. |
+| `node tools/verify-game.js game-<slug>` | Boots one module in the stub DOM and drives its controls before it is linked. Add `--isolated` to ignore unrelated modules. |
+| `node tools/verify-levels.js` | Replays every campaign rung through the shipped engines. |
+| `node tools/audit-levels.js` | Prints campaign level counts per game. |
+| `node tools/prism-forge.js verify` | Replays every possible orientation of every Prism Path board. |
+| `node tools/prism-forge.js forge [seed]` | Searches for new boards against the same proof bar. |
+| `node tools/game-presentation-check.js` | Real-browser pass over all panels, filtering, localization, motion, and screenshots. |
+| `node tools/love-deepspace-release-check.js` | Real-browser gallery, photo, story, Journey, Starpath, save, and responsive checks. |
+| `node tools/love-deepspace-activities-check.js` | Real-browser Mosaic, Bouquet, and Expedition completion checks. |
+| `node tools/shot.js --game <slug>` | Headless screenshot of a game panel. |
+| `node tools/serve-game.js` | Local HTTP preview for photo exports and manual play. |
 
-Each partner has **nine distinct images**: the original portrait plus eight
-official gallery artworks. The scene strip switches images, remembers a separate
-selection for each partner, and can change scenes in response to play. Turn off
-**Scenes react to play** to keep your chosen image. All 45 images are bundled
-locally, and every scene is also available in the photo studio.
+Browser checks write generated screenshots and reports under `tools/shots/` on
+demand; that directory is ignored by Git.
 
-The date activities are simplified fan adaptations inspired by the official
-[feature list](https://apps.apple.com/us/app/love-and-deepspace/id6443467666):
+## Persistence
 
-- **Claw machine / 抓娃娃:** hold A/D or arrows, use touch movement buttons,
-  or drag to aim. Predict the moving plushies and press Space to drop. Each
-  session has five attempts and one Evol assist that steadies prizes for two
-  seconds. The claw descends, lifts, and delivers the prize before awarding it.
-  **Challenge** adds a 60-second limit, faster movement, and a second Space press
-  to grip in the mint timing zone. Centre hits earn Perfect bonuses, consecutive
-  catches grow a combo, and each partner's best challenge score is saved.
-- **Kitty Cards / 喵喵牌:** play number cards into coloured cups, doubling
-  points for a matching colour. The partner replies with its strongest available
-  move. Advanced mode adds a one-use shield and an opponent nudge. All twelve
-  cups must be filled before scoring the match.
-  Advanced play gives each side two tactic charges: redraw a selected hand card,
-  boost an owned cup by two (cap eight), or rotate an occupied cup's colour.
-  Use them before number-card placement. Shields stop enemy colour changes;
-  the partner chooses tactics that improve its score advantage.
-- **Date story / 约会故事:** three choices lead to two original endings, with
-  different partner dialogue. Replay from **New session** to collect both endings.
-- **Photo studio / 拍照馆:** choose any of the partner's nine artworks, then adjust
-  lighting, frame, sticker, close-up, and
-  portrait crop by dragging or using the arrow keys. Save up to twelve snapshots;
-  thumbnails recreate their settings and **Download PNG** exports a local portrait
-  composition with attribution. Export requires a loaded portrait and browser
-  permission to read its pixels; a local server supports this reliably.
-  **Four little moments / 四个小小瞬间** captures four separately styled shots into
-  a downloadable photo strip. Change the artwork, lighting, frame, sticker, crop,
-  or zoom between captures. The latest four strips are saved across partners;
-  reopen them without collecting another reward. They use local image assets
-  and compact settings rather than storing image data in browser storage.
-- **Quality time / 专属陪伴:** a 1-, 5-, or 15-minute visible-page timer for
-  studying, working, or taking a break together. It can run beside the optional
-  character video and pauses when the page or date view is hidden.
-- **Heart to heart / 倾心之谈:** choose a mood and a response, then favourite or
-  replay the original partner conversation from the saved journal.
-- **Cook together / 一起下厨:** prepare three ingredients in order for garden soup,
-  apple toast, or honey pudding. Start heating, ask for one companion assist to
-  slow the heat, and serve inside the green band. Perfect preparation and timing
-  earn three stars; mistakes and missed timing lower the score. Pause or resume
-  explicitly. Switching activities, closing the drawer, or hiding the page
-  stops the stove; changing partners or recipes starts fresh preparation. Each
-  partner has distinct kitchen dialogue and a saved best result for each recipe.
-- **Our room / 我们的小屋:** arrange four shelf positions and choose morning,
-  sunset, or night lighting. Plants, books, and a lamp are available immediately.
-  A caught rabbit, Kitty victory, saved photograph or strip, and completed story
-  unlock their corresponding keepsakes. Completing all three recipes with the
-  current partner unlocks the shared-meal trophy. The photo frame displays that
-  partner's saved artwork. Each partner's room layout and lighting are saved
-  independently in `love-deepspace-home-v1`.
+Preferences (`theme`, `lang`, `motion-level`, `sound-level`), layout/history,
+the companion, and game saves use `localStorage`. Love and Deepspace keeps its
+records under `love-deepspace-*-v1` keys and falls back to session state when
+storage is blocked. Saves are scoped to the origin, so `file://` and
+`http://127.0.0.1` do not share progress.
 
-Date keepsakes are saved per partner: five plushies, one Kitty badge, two story
-endings, and completed focus sessions. A newly collected keepsake, the first
-snapshot, the first focus session, or the first successful preparation of each
-recipe awards two affinity points. Repeating the
-same collection does not award affinity again. These records use
-`love-deepspace-dates-v1` and share the existing character affinity. Live sessions
-restart on reload; collections remain saved, or stay in memory if storage is blocked.
+## Credits
 
-Under **Missions**, **Action · Starbond Hunt** is the default mode. Move with WASD or the arrow keys,
-hold J to fire at the nearest enemy, press Space to dodge, and press E when the
-Evol gauge fills. You can also hold the mouse inside the arena to aim and fire.
-On touch screens, drag the movement joystick while holding Fire. Fight two
-enemy waves and a Wanderer boss within 65 seconds. Attack warnings, charging
-enemies, boss projectile fans, perfect-dodge slow motion, damage numbers, and
-partner skill cut-ins provide live feedback. Each partner has a different skill:
-lightblade, healing ice, lingering flame, energy siphon, or gravity control.
-Optional synthesized sound starts only when enabled.
-
-Press P or Escape to pause. Leaving the arena, closing the drawer, switching
-modes, and changing characters stop its animation loop. A hidden page pauses
-without advancing the mission clock; resume explicitly when you return.
-Winning earns route stars and the selected partner's memory. The best stars
-remain saved across both modes, and the original strategy turn records remain
-separate from the arena score.
-
-In **Strategy · Starbond Relay**, match the highlighted encounter counter to
-build a resonance streak and charge
-your partner's Evol skill. Three matches charge the skill; using it spends a
-turn. Recovery restores energy and also spends a turn. A quiet moment adds
-trust once per mission. Reach the route's resonance target with energy above
-zero and trust at least 24; switching partners restarts the current mission.
-
-Each of the five partners can earn four route memories, for 20 total. The
-memory album, affinity, selected partner, campaign unlocks, and best stars are
-saved in the browser. Missions themselves restart on page reload. Blocked
-browser storage falls back to session progress. The layout supports narrow
-screens and both themes, and respects the motion setting and reduced-motion
-preference. Closing or switching away from the game stops its video and combat.
-
-Run `node tools/harness/cases-love-deepspace.js` for the focused dates, combat, turn,
-save, memory, and media lifecycle checks. These cover full arena clears for all
-five partners on all four routes, claw timing, seeded card matches, saved photos
-and strips, both story branches, mood journals, all three recipes for each
-partner, room unlocks, pause/resume, held inputs, and collection rewards.
-Run `node tools/verify-game.js --isolated game-love-deepspace` for its registry
-and translation checks.
-
-### Prism Path / 棱镜光路
-
-Twenty boards. The first ten are the tutorial ladder; the optics bench (11-20)
-adds a violet **beam splitter** (reflects the ray *and* lets it carry straight
-on, so one ray becomes two) and **welded** amber elements that never rotate.
-
-Every board was forged, not guessed:
-
-- `node tools/prism-forge.js verify` replays the beam over every reachable
-  orientation of every shipped board and proves the deal is not already solved,
-  that some orientation lights all targets, that 2-5 flips separate the two,
-  that at most four orientations solve it, and that the solution beam touches
-  each element.
-- `node tools/prism-forge.js forge [seed]` searches for new boards against the
-  same bar and prints them as source-ready literals.
-- `node tools/harness/cases-prism-path.js` drives all twenty boards through the
-  real panel in the stub DOM.
-
-### The expert tier (rungs 21-24)
-
-Five campaign games grew a fourth tier past their twenty-rung ladders, and
-every new rung ships with its proof:
-
-- **Ember Sticks** deals the study (s21-s24): the even spread two-through-seven,
-  the triple-and-stray, the Fibonacci row under misere rules, and a seven-row
-  capstone. Each table is proved against the game's own perfect play - the
-  fastest winning line lands inside the three-star turn, a dawdling win inside
-  the one-star line, and the table's own move never throws a win away.
-- **Glyph Tower** works the night shift (tw21-tw24): fourteen to twenty-two
-  rings, each bench starting from a pose on the classic optimal path - the
-  deal is the perfect solve frozen mid-flight, so the pinned optimum is the
-  true remaining distance. The gate replays the suffix through the real panel
-  and reads three stars back from the save.
-- **Glyph Pusher** opens four new rooms (k21-k24): the counterweights, the
-  sandwich, the switchback and the terraces, each solved by the canonical
-  push-optimal BFS with its bands pinned to the measured optimum.
-- **Glyph Net** stretches the deep plates (n21-n24) to thirteen and fourteen
-  wide, at tangles up to eighty-five percent. Every deal was proven on the
-  checker's own seeds: a real tangle with bulbs to spare, the honest optimum
-  line solving at exactly the dealt optimum, and a blind sweep never powering
-  the grid.
-- **Deep Freeze** rides the long winters (f21-f24): the heaviest sledge, the
-  coldest homeward sky, the smallest pack, and every hazard at once - each
-  expedition walked by the shipped planner inside its deadline.
-
-`node tools/verify-levels.js` replays every rung of every expanded ladder
-through the games' own engines; `node tools/static-checks.js` re-proves the
-sokoban rooms solvable and the tower bands against the 2^n - 1 formula.
-
-## Game checks and future ideas
-
-Run `node tools/pet-harness.js` for the shared gameplay and regression checks,
-and `node tools/static-checks.js` for page wiring, translation and level checks.
-
-[GAME_BUG_AUDIT.md](GAME_BUG_AUDIT.md) records the verified bugs, fixes and checks.
-
-[GAME_IDEAS.md](GAME_IDEAS.md) contains 24 new concepts across sport, combat, diplomacy,
-survival, communication, narrative and cooperative play, with a small first
-version for each.
+Love and Deepspace is a fan project. Character portraits, gallery artwork, and
+optional character videos come from official Infold media and remain the property
+of their rights holders; see the
+[media credits](assets/media/love-deepspace/CREDITS.md) and
+[gallery source hashes](assets/media/love-deepspace/gallery-sources.json).
+Dialogue, mini-games, companion art, and all other game visuals are original and
+drawn in code.
