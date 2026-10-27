@@ -169,6 +169,42 @@
       points: [{ x: 40, y: 356 }, { x: 189, y: 195 }, { x: 315, y: 327 }, { x: 225, y: 189 }, { x: 81, y: 36 }, { x: 36, y: 198 }, { x: 180, y: 42 }, { x: 327, y: 156 }, { x: 183, y: 243 }, { x: 30, y: 114 }],
       pads: [{ x: 36, y: 198 }, { x: 315, y: 327 }],
     },
+    /* Three sawtooth ranks on shared rails. Every gate is the same 79-degree
+     * flick at the same 56px pitch, so the lap is one cadence held for
+     * twenty-two gates: the brake mark never moves, and one rushed crest puts
+     * the car out of rhythm for the next three. */
+    {
+      id: "n21", labelKey: "nirZ21", width: 23, limit: 95, basePar: 50,
+      points: [{ x: 44, y: 384 }, { x: 100, y: 338 }, { x: 156, y: 384 }, { x: 212, y: 338 }, { x: 268, y: 384 }, { x: 324, y: 338 }, { x: 380, y: 384 }, { x: 404, y: 319 }, { x: 380, y: 254 }, { x: 324, y: 208 }, { x: 268, y: 254 }, { x: 212, y: 208 }, { x: 156, y: 254 }, { x: 100, y: 208 }, { x: 44, y: 254 }, { x: 20, y: 189 }, { x: 44, y: 124 }, { x: 100, y: 78 }, { x: 156, y: 124 }, { x: 212, y: 78 }, { x: 268, y: 124 }, { x: 324, y: 78 }, { x: 380, y: 124 }],
+      pads: [{ x: 100, y: 338 }, { x: 212, y: 208 }],
+    },
+    /* One corner that never stops tightening: a coil of nearly three full laps
+     * falling from a 170px radius to a 46px eye, with no straight to reset on.
+     * Entry speed decides the whole lap - arrive greedy and the second
+     * revolution hands the car to the wall. */
+    {
+      id: "n22", labelKey: "nirZ22", width: 22, limit: 43, basePar: 22,
+      points: [{ x: 40, y: 356 }, { x: 110, y: 344 }, { x: 292, y: 338 }, { x: 349, y: 280 }, { x: 371, y: 203 }, { x: 354, y: 127 }, { x: 304, y: 69 }, { x: 233, y: 44 }, { x: 161, y: 55 }, { x: 104, y: 99 }, { x: 76, y: 163 }, { x: 82, y: 231 }, { x: 118, y: 286 }, { x: 176, y: 316 }, { x: 240, y: 314 }, { x: 295, y: 281 }, { x: 326, y: 224 }, { x: 322, y: 160 }, { x: 285, y: 108 }, { x: 225, y: 86 }, { x: 163, y: 102 }, { x: 123, y: 151 }, { x: 121, y: 215 }, { x: 161, y: 264 }, { x: 222, y: 275 }, { x: 274, y: 240 }, { x: 283, y: 179 }, { x: 242, y: 133 }, { x: 182, y: 140 }, { x: 160, y: 195 }, { x: 201, y: 237 }],
+      pads: [{ x: 110, y: 344 }, { x: 295, y: 281 }],
+    },
+    /* Four full-length drag strips joined by three hairpins. Every tooth ends
+     * at a wall, so the lap is three cycles of full brake from the top speed
+     * down to a crawl and one clean exit back to full throttle - won at the
+     * brake marks, not on the gas. */
+    {
+      id: "n23", labelKey: "nirZ23", width: 22, limit: 33, basePar: 17,
+      points: [{ x: 44, y: 52 }, { x: 209, y: 52 }, { x: 374, y: 52 }, { x: 404, y: 104 }, { x: 374, y: 156 }, { x: 209, y: 156 }, { x: 44, y: 156 }, { x: 14, y: 208 }, { x: 44, y: 260 }, { x: 209, y: 260 }, { x: 374, y: 260 }, { x: 404, y: 312 }, { x: 374, y: 364 }, { x: 209, y: 364 }, { x: 44, y: 364 }],
+      pads: [{ x: 209, y: 52 }, { x: 404, y: 104 }],
+    },
+    /* The exam: the rank weave's sawtooth run-up feeds a three-tooth comb, on
+     * the narrowest tape the engine ships and with no boost pads anywhere.
+     * Nothing on it is new - that is the point. Cadence, brake marks and wall
+     * discipline, all of it one width step past the shipped floor. */
+    {
+      id: "n24", labelKey: "nirZ24", width: 21, limit: 55, basePar: 29,
+      points: [{ x: 28, y: 384 }, { x: 84, y: 340 }, { x: 140, y: 384 }, { x: 196, y: 340 }, { x: 252, y: 384 }, { x: 308, y: 340 }, { x: 364, y: 296 }, { x: 204, y: 296 }, { x: 44, y: 296 }, { x: 14, y: 244 }, { x: 44, y: 192 }, { x: 206, y: 192 }, { x: 368, y: 192 }, { x: 398, y: 140 }, { x: 368, y: 88 }, { x: 204, y: 88 }, { x: 40, y: 88 }],
+      pads: [],
+    },
   ];
 
   /* --- pure core ---------------------------------------------------------- */
@@ -569,7 +605,11 @@
    * All ten clear, by 1.5s (n2) at the tightest and 9.0s (n3) at the loosest, so
    * nothing was lifted this pass. The reference line is the slower one here: it
    * grinds 0-6 walls a lap at +1.5s each and caps itself hard off the bend
-   * measure, which is why par reads generous on the twisty courses. Rule for later
+   * measure, which is why par reads generous on the twisty courses. The 21-24
+   * tier was held to the same bar through the forge replay (tools/drift-forge.js,
+   * same stepper, worst of three phase offsets for the best line variant):
+   *   n21 15.5 vs 49.9   n22 13.2 vs 22.2   n23 11.3 vs 17.3   n24 17.0 vs 28.6
+   * All four clear with room, and no band was lifted to get there. Rule for later
    * passes: only ever lift a band a keyboard lap cannot reach - and re-run this
    * replay after any change to points, width, pads or the stepper. */
   function nirBands(course) {
@@ -1133,7 +1173,12 @@
       "nirZ17": "Long Haul Bend",
       "nirZ18": "Tight Squeeze",
       "nirZ19": "Downhill Folds",
-      "nirZ20": "Final Drift",      "nirClockLabel": "Clock",
+      "nirZ20": "Final Drift",
+      "nirZ21": "The Metronome",
+      "nirZ22": "The Coil",
+      "nirZ23": "The Comb",
+      "nirZ24": "The Last Apex",
+      "nirClockLabel": "Clock",
       "nirGateLabel": "Gates",
       "nirScrapLabel": "Scrapes",
       "nirParLabel": "Par / Limit",
@@ -1178,7 +1223,12 @@
       "nirZ17": "长途弯道",
       "nirZ18": "窄缝挤压",
       "nirZ19": "下行折返",
-      "nirZ20": "终末漂移",      "nirClockLabel": "计时",
+      "nirZ20": "终末漂移",
+      "nirZ21": "节拍波浪道",
+      "nirZ22": "收紧螺旋",
+      "nirZ23": "梳齿长廊",
+      "nirZ24": "终极弯心",
+      "nirClockLabel": "计时",
       "nirGateLabel": "门",
       "nirScrapLabel": "撞墙",
       "nirParLabel": "标准 / 限时",

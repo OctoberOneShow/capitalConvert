@@ -255,6 +255,103 @@
       intended: [{ axis: "h", line: 3 }, { axis: "h", line: 15 }, { axis: "v", line: 13 }, { axis: "h", line: 1 }, { axis: "v", line: 5 }, { axis: "h", line: 13 }],
       authored: [{ x: 0, y: 0 }, { x: 0, y: 5 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 6, y: 0 }, { x: 1, y: 5 }],
     },
+    /* ------------------------------------------------------------------
+     * The summit tier (f21-f24). The wider tier stopped at six creases and
+     * six stamps on nine-cell paper; these hold that paper and ask for more
+     * of everything else - up to seven creases, up to seven stamps - around
+     * one long walk the wider tier never pulled: a single orbit that
+     * swallows seven of the nine columns, gains a heavy underside, steps
+     * aside once for a sheet with no walk at all, and turns sideways for
+     * the summit. Every sheet below was checked by tools/fold-forge.js the
+     * way the panel deals it: twelve seeded deals all solvable, no deal
+     * ever falling through to the authored reserve, and every intended
+     * crease provably needed. */
+    {
+      id: "f21", labelKey: "shfS21",
+      side: 9,
+      wants: 6,
+      par: 6,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 11 },
+        { axis: "v", line: 15 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 13 },
+      ],
+      /* One walk runs almost the whole sheet: four creases stitch seven of
+       * the nine columns into a single orbit and pair off the two they leave
+       * out, while the horizontal pair splits the rows into five small
+       * territories. Every stamp on the walk prints fourteen cells wherever
+       * it lands, the lone middle row prints seven, and the deal lives on
+       * the walk doing the carrying. */
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 5 }, { x: 0, y: 6 }, { x: 0, y: 4 }, { x: 5, y: 0 }],
+    },
+    {
+      id: "f22", labelKey: "shfS22",
+      side: 9,
+      wants: 6,
+      par: 7,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 11 },
+        { axis: "v", line: 15 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 13 },
+        { axis: "h", line: 15 },
+      ],
+      /* Seven creases, the most the panel has ever pulled: the walk keeps its
+       * seven columns and gains a third crease underneath, and that crease
+       * folds the bottom four rows into one run - the walk's stamps on the
+       * under-run now print twenty-eight cells, double what the flat rows
+       * pay, and the seventh crease is the one that buys the difference.
+       * The lone middle row survives, so the tray still has a thin option
+       * to spend. */
+      authored: [{ x: 0, y: 5 }, { x: 0, y: 0 }, { x: 0, y: 1 }, { x: 5, y: 5 }, { x: 0, y: 4 }, { x: 5, y: 0 }],
+    },
+    {
+      id: "f23", labelKey: "shfS23",
+      side: 9,
+      wants: 7,
+      par: 6,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 11 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 11 },
+      ],
+      /* No walk at all: one triple of creases sits on each axis, and the far
+       * crease of the triple reaches across the two pairs to drag the last
+       * column into the near run, so five columns fold as one on both axes
+       * and the sheet breaks into nine little territories. Seven stamps are
+       * asked - the most the tray has ever laid - and the doubled corner
+       * floods five by five. */
+      authored: [{ x: 0, y: 0 }, { x: 4, y: 0 }, { x: 5, y: 0 }, { x: 0, y: 4 }, { x: 0, y: 5 }, { x: 4, y: 4 }, { x: 5, y: 4 }],
+    },
+    {
+      id: "f24", labelKey: "shfS24",
+      side: 9,
+      wants: 7,
+      par: 7,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 11 },
+        { axis: "v", line: 15 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 11 },
+        { axis: "h", line: 15 },
+      ],
+      /* The summit: seven creases and seven stamps at once. The walk turns
+       * sideways and runs across the rows while the columns split into two
+       * pairs, a stranded lone column and a four-run, and the stamp where
+       * the four-run crosses the walk floods twenty-eight cells - the
+       * heaviest single print the game has ever dealt. */
+      authored: [{ x: 3, y: 0 }, { x: 0, y: 0 }, { x: 5, y: 0 }, { x: 3, y: 5 }, { x: 2, y: 0 }, { x: 0, y: 5 }, { x: 5, y: 5 }],
+    },
   ];
 
   function shfKey(x, y) {
@@ -942,6 +1039,10 @@
       "shfS18": "Narrow Window",
       "shfS19": "Four Horizontals",
       "shfS20": "The Six-Fold",
+      "shfS21": "The Long Reach",
+      "shfS22": "The Seven-Fold",
+      "shfS23": "Seven Stamps",
+      "shfS24": "The Deep Fold",
       "shfInkLabel": "Ink",
       "shfFoldLabel": "Creases",
       "shfSheetSelectLabel": "Pick a sheet",
@@ -969,7 +1070,7 @@
       "shfAlready": "{name} is already pressed - take a new sheet.",
       "shfBestFolds": "best {n} creases",
       "shfNextSheet": "Next sheet unlocked.",
-      "shfCampaignDone": "All twenty sheets pressed clean.",
+      "shfCampaignDone": "All twenty-four sheets pressed clean.",
       "shfLocked": "{name} is still folded away behind the sheet before it.",
       "shfHint": "Extra ink is a failure, so a crease you do not need is a trap - and the crossing cell of two creases often has to stay bare.",
       "logShadowFold": "Pressed a sheet on {n} creases",
@@ -996,6 +1097,10 @@
       "shfS18": "窄窗",
       "shfS19": "四道横线",
       "shfS20": "六折",
+      "shfS21": "长臂折",
+      "shfS22": "七折",
+      "shfS23": "七枚印章",
+      "shfS24": "深折",
       "shfInkLabel": "墨点",
       "shfFoldLabel": "折痕",
       "shfSheetSelectLabel": "选择纸张",
@@ -1023,7 +1128,7 @@
       "shfAlready": "「{name}」已经拓好了——换一张纸再来。",
       "shfBestFolds": "最佳 {n} 道折痕",
       "shfNextSheet": "解锁下一张纸。",
-      "shfCampaignDone": "二十张纸都拓干净了。",
+      "shfCampaignDone": "二十四张纸都拓干净了。",
       "shfLocked": "「{name}」还压在上一张纸后面。",
       "shfHint": "多出图案之外的墨就算失败，所以用不上的折痕是个陷阱；两条折线的交叉格常常必须留空。",
       "logShadowFold": "用 {n} 道折痕拓好了一张纸",

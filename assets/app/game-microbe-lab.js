@@ -22,7 +22,9 @@
   var mcbAlts = { heat: "speed", acid: "defence", speed: "defence", defence: "speed" };
   var mcbMarks = { heat: "\u2600", acid: "\u25cd", speed: "\u224b", defence: "\u25a4" };
   var POINTS = 3;
-  /* Combined cards get their own dictionary id so no key carries a plus sign. */
+  /* Combined cards get their own dictionary id so no key carries a plus sign.
+   * flare and venom join at dish 21 - the two dual pressures the first twenty
+   * dishes never printed (see the dish 21-24 comment). */
   var mcbIds = {
     heat: "heat",
     acid: "acid",
@@ -32,6 +34,8 @@
     "acid+speed": "empty",
     "defence+speed": "grey",
     "heat+acid": "vinegar",
+    "heat+speed": "flare",
+    "acid+defence": "venom",
   };
 
   /* base + step per generation, and `plan` names the pressures of each card. */
@@ -68,6 +72,29 @@
     { id: "m18", labelKey: "mcbZ18", twistKey: "mcbTwist18", gens: 10, seed: 17002, cap: 21, traitMax: 7, start: 14, base: 4, step: 2, plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat", "acid"], ["defence", "speed"]], starBand: [5780, 5480, 4830] },
     { id: "m19", labelKey: "mcbZ19", twistKey: "mcbTwist19", gens: 10, seed: 17015, cap: 21, traitMax: 7, start: 14, base: 4, step: 2, plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat", "acid"], ["defence", "speed"]], starBand: [5680, 5380, 4730] },
     { id: "m20", labelKey: "mcbZ20", twistKey: "mcbTwist20", gens: 10, seed: 17071, cap: 20, traitMax: 7, start: 15, base: 4, step: 3, plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat", "acid"], ["defence", "speed"]], starBand: [5680, 5380, 4730] },
+    /* Dishes 21-24. The fourteen before them bought their difficulty out of
+     * the environment and then out of the budget; these four buy it out of the
+     * deck, the pool, the founding colony and finally both ceilings at once.
+     * The deck turns first: two pressures the lab has never printed - a heat
+     * wave riding a famine (flare: speed is the partner in both pairs) and a
+     * bloom growing teeth (venom: defence is the partner in both pairs) - so
+     * the One Throat dish narrows every card onto a single trait while the
+     * climb runs at step 1, the fastest pace the engine allows. The pool
+     * shallows next: traitMax walks 7 -> 6, and traitMax is two levers in this
+     * engine - it caps what a strain may stack AND clamps what a card may
+     * demand - so from m22 no strain can grow out of a card any more. Then the
+     * founding colony starves: start 13 is the weakest seeding the ladder has
+     * ever shipped, and the greedy line spends the whole trial riding the
+     * floor of four. The last dish carries everything at once: cap 19, the
+     * tightest budget in the game, over the shallow pool, on the step 1 climb.
+     * Every dish here was walked with microbeBeatable before its band was
+     * written (tools/microbe-forge.js): greedy scores 5782, 5780, 5688 and
+     * 5682, and each band sits one hundred under that, so the three-star line
+     * has to be played for rather than collected. */
+    { id: "m21", labelKey: "mcbZ21", twistKey: "mcbTwist21", gens: 10, seed: 24338, cap: 20, traitMax: 7, start: 14, base: 4, step: 1, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["heat", "defence"], ["heat", "speed"], ["defence", "speed"]], starBand: [5680, 5380, 4730] },
+    { id: "m22", labelKey: "mcbZ22", twistKey: "mcbTwist22", gens: 10, seed: 24222, cap: 20, traitMax: 6, start: 15, base: 4, step: 1, plan: [["heat", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"], ["defence", "speed"], ["heat"]], starBand: [5680, 5380, 4730] },
+    { id: "m23", labelKey: "mcbZ23", twistKey: "mcbTwist23", gens: 10, seed: 24072, cap: 21, traitMax: 7, start: 13, base: 3, step: 2, plan: [["heat", "acid"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "defence"], ["acid", "speed"]], starBand: [5580, 5280, 4630] },
+    { id: "m24", labelKey: "mcbZ24", twistKey: "mcbTwist24", gens: 10, seed: 24001, cap: 19, traitMax: 6, start: 14, base: 4, step: 1, plan: [["heat", "acid"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "defence"], ["acid", "speed"]], starBand: [5580, 5280, 4630] },
   ];
 
   function mcbInt(value) {
@@ -912,6 +939,10 @@
       "mcbZ18": "Pressure Ring",
       "mcbZ19": "Narrow Margin",
       "mcbZ20": "Rationed Apex",
+      "mcbZ21": "One Throat",
+      "mcbZ22": "Shallow Pool",
+      "mcbZ23": "Starving Flask",
+      "mcbZ24": "The Last Niche",
       "mcbTwist1": "heat wave only",
       "mcbTwist2": "acid bloom only",
       "mcbTwist3": "predators, then famine",
@@ -932,6 +963,10 @@
       "mcbTwist18": "six cards on a leaner budget",
       "mcbTwist19": "six cards, one generation from the floor",
       "mcbTwist20": "the leanest budget, ten generations to adapt",
+      "mcbTwist21": "every card asks through speed",
+      "mcbTwist22": "no strain stacks past six",
+      "mcbTwist23": "the founding colony starts starving",
+      "mcbTwist24": "the tightest budget over the shallow pool",
       "mcbGenLabel": "Generation",
       "mcbPointLabel": "Mutations",
       "mcbPopLabel": "Colony",
@@ -985,6 +1020,10 @@
       "mcbEgreyText": "Teeth in a lean year: defence and speed are asked to carry both clauses.",
       "mcbEvinegar": "Sauna of vinegar",
       "mcbEvinegarText": "Hot and sour together: heat and acid must both find a partner.",
+      "mcbEflare": "Flare and famine",
+      "mcbEflareText": "The bench cooks while food vanishes: speed is the partner in both pairs.",
+      "mcbEvenom": "Fangs in the bloom",
+      "mcbEvenomText": "The bloom bites back: defence is the partner in both pairs.",
       "mcbNoPoints": "No mutation points left - advance the generation to bank what you built.",
       "mcbCapped": "That strain is at its ceiling ({n} per trait, {c} total) - spend the point elsewhere.",
       "mcbZero": "That trait is already at zero.",
@@ -1023,6 +1062,10 @@
       "mcbZ18": "压力环阵",
       "mcbZ19": "微差边缘",
       "mcbZ20": "配额巅峰",
+      "mcbZ21": "一线天",
+      "mcbZ22": "浅池基因",
+      "mcbZ23": "荒年接种",
+      "mcbZ24": "最后生态位",
       "mcbTwist1": "只有热浪",
       "mcbTwist2": "只有酸华",
       "mcbTwist3": "捕食季，随后饥荒",
@@ -1043,6 +1086,10 @@
       "mcbTwist18": "六张卡，预算更紧",
       "mcbTwist19": "六张卡，一度逼近底线",
       "mcbTwist20": "最紧预算，十代时间适应",
+      "mcbTwist21": "每张卡都从速度过",
+      "mcbTwist22": "单项性状不过六",
+      "mcbTwist23": "起始菌群先天不足",
+      "mcbTwist24": "最紧预算压着最浅池",
       "mcbGenLabel": "世代",
       "mcbPointLabel": "突变点",
       "mcbPopLabel": "菌群",
@@ -1096,6 +1143,10 @@
       "mcbEgreyText": "荒年里的牙齿：防护和速度要同时支撑两个条件。",
       "mcbEvinegar": "醋里蒸桑拿",
       "mcbEvinegarText": "又热又酸：耐热和耐酸都得找到自己的搭档。",
+      "mcbEflare": "灼热伴饥荒",
+      "mcbEflareText": "温箱在烤，食物又在消失：两个条件都指望速度。",
+      "mcbEvenom": "酸华里的獠牙",
+      "mcbEvenomText": "酸华反咬一口：两个条件都指望防护。",
       "mcbNoPoints": "突变点用完了——推进世代，把改好的菌群定下来。",
       "mcbCapped": "这个菌株已经到顶（单项上限 {n}，总预算 {c}）——这点会白白浪费。",
       "mcbZero": "这个性状已经是 0 了。",

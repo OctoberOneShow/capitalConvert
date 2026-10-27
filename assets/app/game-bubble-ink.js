@@ -58,10 +58,10 @@
      * pays in pops, w19 steps back to five as the fresh-but-fair rung, and
      * w20 closes by pouring the four-colour well sparse - both readings at
      * once. */
-    { id: "w17", labelKey: "bubL17", target: 540, shots: 20, colors: 6, rows: 10, starGain: [1.4, 1.2, 1], sparse: 0.22 },
-    { id: "w18", labelKey: "bubL18", target: 620, shots: 14, colors: 4, rows: 10, starGain: [1.4, 1.2, 1] },
-    { id: "w19", labelKey: "bubL19", target: 520, shots: 16, colors: 5, rows: 10, starGain: [1.4, 1.2, 1] },
-    { id: "w20", labelKey: "bubL20", target: 770, shots: 14, colors: 4, rows: 10, starGain: [1.4, 1.2, 1], sparse: 0.18 },
+    { id: "w17", labelKey: "bubL17", target: 540, shots: 20, colors: 6, rows: 10, starGain: [1.35, 1.08, 1], sparse: 0.22 },
+    { id: "w18", labelKey: "bubL18", target: 560, shots: 14, colors: 4, rows: 10, starGain: [1.19, 1.06, 1] },
+    { id: "w19", labelKey: "bubL19", target: 460, shots: 16, colors: 5, rows: 10, starGain: [1.55, 1.1, 1] },
+    { id: "w20", labelKey: "bubL20", target: 760, shots: 14, colors: 4, rows: 10, starGain: [1.18, 1.1, 1], sparse: 0.18 },
   ];
 
   /* ------------------------------------------------------------ colour math */

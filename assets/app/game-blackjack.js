@@ -19,7 +19,10 @@
    * turn the wheel back around: two more steps down the deep-deck road, then
    * the pit swaps in a six-deck shoe and a single deck at double stakes, where
    * the countable edge returns and the three-star line moves in to meet it;
-   * the final felt deals two decks and carries the tightest lines of the room. */
+   * the final felt deals two decks and carries the tightest lines of the room.
+   * Above it the salon halves the shoe table by table - eight decks, four,
+   * two, and the single deck the game began on - walking the lines down to
+   * the shortest the parlor has ever printed. */
   var bjTables = [
     { id: "b1", labelKey: "bjT1", decks: 1, start: 100, bets: [5, 10, 25], target: 150, starHands: [8, 16, 32] },
     { id: "b2", labelKey: "bjT2", decks: 2, start: 200, bets: [10, 20, 50], target: 300, starHands: [9, 18, 36] },
@@ -58,6 +61,22 @@
     { id: "b18", labelKey: "bjT18", decks: 6, start: 13107200, bets: [819200, 1638400, 3276800], target: 19660800, starHands: [5, 11, 26] },
     { id: "b19", labelKey: "bjT19", decks: 1, start: 26214400, bets: [1638400, 3276800, 6553600], target: 39321600, starHands: [7, 13, 26] },
     { id: "b20", labelKey: "bjT20", decks: 2, start: 52428800, bets: [3276800, 6553600, 13107200], target: 78643200, starHands: [5, 10, 24] },
+
+    /* Tables 21-24: the salon above the pit. The stack doubles four more
+     * times - the last felt stakes every bankroll the shipped ladder owns on
+     * one hand - and the shoe halves table by table: eight decks, the house's
+     * own standard felt, where the count is dead twice over and the three-
+     * star luck pays for the size; four, where the count stirs and the line
+     * steps in a hand; two, the last count's game at double the stakes; and
+     * the single deck the game began on, asking a clear in three hands - the
+     * shortest line the parlor has ever printed. The bands never loosen from
+     * the last shipped felt, and each table was swept 160 times on the seeded
+     * bench at the top stake, appended to the shipped ladder in table order,
+     * before any of it shipped. */
+    { id: "b21", labelKey: "bjT21", decks: 8, start: 104857600, bets: [6553600, 13107200, 26214400], target: 157286400, starHands: [5, 10, 24] },
+    { id: "b22", labelKey: "bjT22", decks: 4, start: 209715200, bets: [13107200, 26214400, 52428800], target: 314572800, starHands: [4, 9, 24] },
+    { id: "b23", labelKey: "bjT23", decks: 2, start: 419430400, bets: [26214400, 52428800, 104857600], target: 629145600, starHands: [4, 9, 23] },
+    { id: "b24", labelKey: "bjT24", decks: 1, start: 838860800, bets: [52428800, 104857600, 209715200], target: 1258291200, starHands: [3, 9, 23] },
   ];
 
   /* Presentation beats, in milliseconds: the hole card turns after the deal has
@@ -878,4 +897,22 @@
   App.blackjackCount = bjCount;
   App.blackjackNatural = bjNatural;
   App.initBlackjackGame = initBlackjackGame;
+
+  /* The salon's names travel with the game: addStrings only fills keys the
+   * shared dictionary does not already hold (see core.js), so the picker
+   * never prints a raw key for the felts above the pit. */
+  App.addStrings({
+    en: {
+      "bjT21": "The House Shoe",
+      "bjT22": "The Half Shoe",
+      "bjT23": "Two Decks",
+      "bjT24": "The Last Shoe",
+    },
+    zh: {
+      "bjT21": "庄家靴桌",
+      "bjT22": "半靴桌",
+      "bjT23": "双副桌",
+      "bjT24": "终靴桌",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

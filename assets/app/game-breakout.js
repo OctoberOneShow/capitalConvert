@@ -79,6 +79,36 @@
     { id: "x8", world: 2, labelKey: "brkL18", speed: 3.0, rows: ["t.x..x.t", "nng..gnn", ".ttnntt.", "nng..gnn", "t.x..x.t"] },
     { id: "x9", world: 2, labelKey: "brkL19", speed: 3.05, rows: ["sx....xs", "tttttttt", "..x..x..", "..nnnn..", "sx....xs"] },
     { id: "x10", world: 2, labelKey: "brkL20", speed: 3.1, rows: ["xg....gx", "ts....st", "gxtnntxg", "ts....st", "xg....gx"] },
+    /* The tier of four climbs past the shipped ceiling and carries the mirrored
+     * law with it: every row still reads the same from both rails, and each
+     * wall teaches a motion the keeps never showed - tides that shear against
+     * each other, a wall that regrows as you prune it, powder banked behind
+     * armor, and the seal that closes the tile alphabet. */
+    /* The counter tide: the drift shallows above the lattice sweep one way and
+     * the braces below sweep the other, so the two chimneys through the
+     * ghost-and-post courses never feed the same lane twice - the way down is
+     * timed twice, once by each tide, and the posts are two hits of grinding
+     * if the chimneys close. */
+    { id: "x21", world: 2, labelKey: "brkL21", speed: 3.15, rows: [".d.dd.d.", "gg.gg.gg", "tt.tt.tt", ".d.dd.d.", "........"] },
+    /* The greenhouse keeps its own wall alive: every pod pruned on the shelf
+     * replants a normal pair in the open course above it, so the clear is not
+     * done until the regrowth is done too. The powder keel under the two-hit
+     * floor is the economical route in - each charge clears its slab of the
+     * floor outright - and the trellis of ghosts overhead phases the last
+     * shots of the rally. */
+    { id: "x22", world: 2, labelKey: "brkL22", speed: 3.2, rows: ["g.g..g.g", "........", ".s.ss.s.", "tttttttt", ".x.xx.x."] },
+    /* The powder vault banks its charges behind two full courses of tough
+     * tiles: the crown charges up top and the buried pair in the middle only
+     * pay once the armor is chewed open, and each buried blast then demolishes
+     * six slabs at once. A vault that is ground tile by tile costs twice the
+     * rally of one that is blown open - the reading of the wall is the skill. */
+    { id: "x23", world: 2, labelKey: "brkL23", speed: 3.25, rows: ["x.x..x.x", "tttttttt", "t.x..x.t", "tttttttt", "..g..g.."] },
+    /* The summit seal closes the alphabet: all six kinds the engine knows on
+     * one mirrored plate, the first wall to carry every kind. The drift
+     * braces breathe across the heart, the pods re-seal a breached course
+     * with fresh normals, the exploders flank the seal itself, and the
+     * tough-glyph foot phases the final descent. */
+    { id: "x24", world: 2, labelKey: "brkL24", speed: 3.3, rows: ["t.g..g.t", ".dd..dd.", "xgtnntgx", ".s.ss.s.", "t.g..g.t"] },
   ];
 
   function initBreakoutGame() {
@@ -1705,6 +1735,24 @@
     resultEl.textContent = t("brkPrompt");
     domFx("sweep", startBtn);
   }
+
+
+  /* The tier of four carries its own names: addStrings only fills keys i18n.js
+   * does not already hold, so the picker never prints a raw key. */
+  App.addStrings({
+    en: {
+      "brkL21": "The Counter Tide",
+      "brkL22": "The Greenhouse",
+      "brkL23": "The Powder Vault",
+      "brkL24": "The Sixfold Seal",
+    },
+    zh: {
+      "brkL21": "逆潮闸",
+      "brkL22": "花房",
+      "brkL23": "火药库",
+      "brkL24": "六合封印",
+    },
+  });
 
 
   /* Exported for the other modules. */

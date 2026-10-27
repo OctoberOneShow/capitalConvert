@@ -247,6 +247,10 @@ function main() {
   if (mode === "forge") {
     const ids = process.argv.slice(3);
     const brief = {
+      /* g9/g10 shipped under the old basin>=3 bar; they re-forge here so the
+       * whole sky meets the same keyboard bar the deep tier is held to. */
+      g9: { bump: 3, wells: 3, r: 14 },
+      g10: { bump: 0, wells: 3, r: 13 },
       g11: { bump: 1, wells: 3, r: 14 },
       g12: { bump: 2, wells: 3, r: 14 },
       g13: { bump: 3, wells: 4, r: 14 },
@@ -257,11 +261,19 @@ function main() {
       g18: { bump: 8, wells: 5, r: 12 },
       g19: { bump: 9, wells: 5, r: 12 },
       g20: { bump: 10, wells: 5, r: 12 },
+      /* The deep tier: more wells in the same sky and a ring that keeps
+       * shrinking - the forge still has to prove a repeatable one-shot. */
+      g21: { bump: 11, wells: 6, r: 12 },
+      g22: { bump: 12, wells: 6, r: 11 },
+      g23: { bump: 13, wells: 7, r: 11 },
+      g24: { bump: 14, wells: 7, r: 10 },
     };
     const stars = {
+      g9: [2, 4, 6], g10: [2, 4, 7],
       g11: [1, 2, 3], g12: [1, 2, 3], g13: [1, 2, 4], g14: [2, 3, 4],
       g15: [2, 3, 5], g16: [2, 4, 6], g17: [2, 4, 6], g18: [2, 4, 7],
       g19: [2, 4, 7], g20: [2, 4, 8],
+      g21: [2, 4, 8], g22: [2, 5, 8], g23: [2, 5, 9], g24: [2, 5, 10],
     };
     (ids.length ? ids : Object.keys(brief)).forEach(function (id) {
       const spec = brief[id];

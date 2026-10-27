@@ -93,29 +93,30 @@
       starShots: [2, 3, 4],
     },
     {
-      /* One well caps the mouth of the ring on the tee side, so the lazy
-       * straight shot burns on the guardian: the only way in is the slow arc
-       * that bends around its far shoulder. Remove it and the direct line
-       * opens right up, which is the whole point of the hole. */
+      /* Re-forged under the keyboard bar the deep tier ships against: the
+       * guardians mass on the low left with the heaviest at the pack's
+       * heart, so the honest flight is the slow lob that clears the whole
+       * pack and glides in high to the ring (basin 15/25). */
       id: "g9", labelKey: "cgfL9",
-      tee: { x: 36, y: 240 }, target: { x: 284, y: 120, r: 14 },
+      tee: { x: 36, y: 193 }, target: { x: 284, y: 116, r: 14 },
       wells: [
-        { x: 240, y: 150, m: 1.1, r: 13 },
-        { x: 130, y: 150, m: 1.2, r: 12 },
-        { x: 60, y: 90, m: 0.8, r: 10 },
+        { x: 67, y: 281, m: 1, r: 11 },
+        { x: 65, y: 209, m: 1.5, r: 12 },
+        { x: 88, y: 228, m: 1.8, r: 13 },
       ],
       starShots: [2, 4, 6],
     },
     {
-      /* The same warding, doubled and on the opposite diagonal: two guardians
-       * close two of the ring's approach sides, so a single door is left and
-       * the flight has to be curved in through it. */
+      /* Same bar from the far tee: the mid stack caps the ring's approach so
+       * the straight lane burns at every power, and the one-shot rides the
+       * thin lane between the high guardian and the stack before dropping
+       * into the ring (basin 12/25). */
       id: "g10", labelKey: "cgfL10",
-      tee: { x: 36, y: 120 }, target: { x: 284, y: 240, r: 13 },
+      tee: { x: 284, y: 115 }, target: { x: 36, y: 160, r: 13 },
       wells: [
-        { x: 244, y: 216, m: 1.1, r: 13 },
-        { x: 276, y: 200, m: 0.9, r: 11 },
-        { x: 150, y: 110, m: 1.2, r: 12 },
+        { x: 108, y: 163, m: 1.2, r: 13 },
+        { x: 92, y: 191, m: 1.1, r: 12 },
+        { x: 74, y: 75, m: 1.5, r: 9 },
       ],
       starShots: [2, 4, 7],
     },
@@ -238,6 +239,65 @@
         { x: 153, y: 256, m: 1.8, r: 12 },
       ],
       starShots: [2, 4, 8],
+    },
+
+    /* Courses 21-24: the deep sky. The forge laid every one of these - more
+     * wells packed into the same sky and a ring that keeps shrinking - and
+     * each ships only because a one-shot survives the aim space with a basin
+     * a keyboard player can re-find (golf-forge: basin >= 6 of 25). */
+    {
+      id: "g21", labelKey: "cgfL21",
+      tee: { x: 284, y: 227 }, target: { x: 36, y: 93, r: 12 },
+      wells: [
+        { x: 253, y: 180, m: 0.9, r: 12 },
+        { x: 214, y: 251, m: 1.3, r: 10 },
+        { x: 228, y: 74, m: 0.9, r: 10 },
+        { x: 205, y: 52, m: 0.8, r: 9 },
+        { x: 102, y: 75, m: 1.2, r: 12 },
+        { x: 113, y: 247, m: 1.3, r: 11 },
+      ],
+      starShots: [2, 4, 8],
+    },
+    {
+      id: "g22", labelKey: "cgfL22",
+      tee: { x: 284, y: 160 }, target: { x: 36, y: 189, r: 11 },
+      wells: [
+        { x: 200, y: 118, m: 1.3, r: 13 },
+        { x: 196, y: 159, m: 1.5, r: 13 },
+        { x: 175, y: 285, m: 1.5, r: 12 },
+        { x: 254, y: 52, m: 0.9, r: 13 },
+        { x: 61, y: 289, m: 1.5, r: 11 },
+        { x: 217, y: 84, m: 0.8, r: 13 },
+      ],
+      starShots: [2, 5, 8],
+    },
+    {
+      id: "g23", labelKey: "cgfL23",
+      tee: { x: 36, y: 269 }, target: { x: 284, y: 147, r: 11 },
+      wells: [
+        { x: 134, y: 268, m: 0.9, r: 13 },
+        { x: 190, y: 212, m: 1.2, r: 11 },
+        { x: 182, y: 211, m: 1.1, r: 12 },
+        { x: 104, y: 70, m: 1.1, r: 11 },
+        { x: 103, y: 306, m: 1, r: 12 },
+        { x: 159, y: 228, m: 1.2, r: 10 },
+        { x: 155, y: 172, m: 1.2, r: 14 },
+      ],
+      starShots: [2, 5, 9],
+    },
+    {
+      id: "g24", labelKey: "cgfL24",
+      tee: { x: 284, y: 225 }, target: { x: 36, y: 134, r: 10 },
+      wells: [
+        { x: 85, y: 63, m: 0.8, r: 10 },
+        { x: 67, y: 179, m: 1.7, r: 10 },
+        { x: 125, y: 108, m: 1.6, r: 13 },
+        { x: 94, y: 223, m: 1.3, r: 11 },
+        { x: 124, y: 73, m: 0.7, r: 9 },
+        { x: 207, y: 65, m: 1.1, r: 10 },
+        { x: 167, y: 214, m: 0.8, r: 10 },
+      ],
+      starShots: [2, 5, 10],
     },
   ];
   /* A fixed starfield so the sky does not flicker between frames. */
@@ -711,6 +771,10 @@
       "cgfL18": "Five Crowns",
       "cgfL19": "Anchor Chain",
       "cgfL20": "Deep Space Ring",
+      "cgfL21": "Sixth Well",
+      "cgfL22": "Tight Orbit",
+      "cgfL23": "Seven Stones",
+      "cgfL24": "Needle's Eye",
     },
     zh: {
       "cgfL7": "逆向切",
@@ -727,6 +791,10 @@
       "cgfL18": "五冠",
       "cgfL19": "锚链",
       "cgfL20": "深空环",
+      "cgfL21": "第六井",
+      "cgfL22": "窄轨",
+      "cgfL23": "七石阵",
+      "cgfL24": "针眼",
     },
   });
 

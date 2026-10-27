@@ -20,7 +20,17 @@
  * friendliest margin since rank 9. A prepared opening (book) was benched for
  * the deep tier and rejected - the reference player punishes a fixed opening
  * so hard that the rank measured softer than rank 1 - so the book stays a
- * teaching habit. `list` judges whatever the module ships, in ladder order.
+ * teaching habit.
+ *
+ * Ranks 21-24 were tuned here the same way: the tier past the sovereign
+ * keeps the search where the sovereign left it and climbs on the prices
+ * instead - keep to sixteen, threat to four and a half, tempo to five -
+ * paying in a wider slip where it can, while the summit stops erring
+ * outright (flub 0.04 and no tell at all). Two benches were rejected: a
+ * seventh deny, which distorts the sow enough to measure softer than the
+ * sovereign, and any node budget past three thousand, which measured game
+ * for game with the sovereign's - past that the ring has no more bottom to
+ * read. `list` judges whatever the module ships, in ladder order.
  */
 "use strict";
 

@@ -160,6 +160,37 @@
       solution: [[4,3,6,3]],
     },
 
+    /* Ranks 21-24: the yard's final term. Three canyons are new ground - one
+     * pier carrying two decks off V braces, a level-grip keel that only
+     * stands on stiffened slenderness, a long ramp braced off two islands -
+     * and the last one is the widest crossing of the tour re-measured: the
+     * yard now hands out exactly what its own checker proved the span needs
+     * (the shipped b10 plan, eleven beams, holds and cannot spare one). */
+    {
+      id: "b21", labelKey: "pbrZ21", grip: 1, limit: 5,
+      startAt: [2, 3], targetAt: [10, 3],
+      ground: [[0,2,3],[9,11,3],[5,6,5]],
+      solution: [[2,3,4,3],[4,3,7,3],[7,3,10,3],[4,3,6,5],[7,3,5,5]],
+    },
+    {
+      id: "b22", labelKey: "pbrZ22", grip: 0, limit: 5,
+      startAt: [2, 3], targetAt: [10, 3],
+      ground: [[0,2,3],[10,11,3],[4,4,5],[8,8,5]],
+      solution: [[2,3,6,3],[6,3,10,3],[4,3,4,5],[8,3,8,5],[6,3,8,5]],
+    },
+    {
+      id: "b23", labelKey: "pbrZ23", grip: 1, limit: 5,
+      startAt: [2, 5], targetAt: [10, 1],
+      ground: [[0,2,5],[10,11,1],[6,6,3],[8,8,3]],
+      solution: [[2,5,5,2],[5,2,6,1],[6,1,10,1],[5,2,6,3],[8,1,8,3]],
+    },
+    {
+      id: "b24", labelKey: "pbrZ24", grip: 0, limit: 11,
+      startAt: [2, 4], targetAt: [11, 4],
+      ground: [[0,2,4],[11,11,4]],
+      solution: [[2,4,3,4],[3,4,7,4],[7,4,11,4],[0,0,4,4],[4,0,8,4],[7,0,7,4],[7,0,11,4],[7,0,3,4],[2,3,3,4],[2,3,1,4],[2,3,2,4]],
+    },
+
   ];
 
   function pbrAt(x, y) {
@@ -1025,6 +1056,10 @@
       "pbrZ18": "The Slip Tour",
       "pbrZ19": "The Weak Plank",
       "pbrZ20": "The First Crossing, Perfected",
+      "pbrZ21": "One Pier, Two Decks",
+      "pbrZ22": "The Keel Span",
+      "pbrZ23": "The Long Ramp",
+      "pbrZ24": "The Full Crossing, Re-Measured",
       "pbrBeamLabel": "Beams",
       "pbrParLabel": "Par",
       "pbrGapLabel": "Span",
@@ -1089,6 +1124,10 @@
       "pbrZ18": "滑移巡礼",
       "pbrZ19": "朽木之桥",
       "pbrZ20": "初渡·完技",
+      "pbrZ21": "一墩双跨",
+      "pbrZ22": "龙骨跨",
+      "pbrZ23": "长栈道",
+      "pbrZ24": "全渡·复尺",
       "pbrBeamLabel": "梁数",
       "pbrParLabel": "标准",
       "pbrGapLabel": "跨距",

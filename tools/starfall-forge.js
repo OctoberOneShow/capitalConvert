@@ -368,6 +368,21 @@ function main() {
         need: 8,
       };
     }
+    /* The summit tier's shipped shapes (s21-s24) are hand-laid - decoy
+     * basin, slot canyon, mesa, wedge - and proven through checkLevel in
+     * list mode; the brief only carries the tier's tank and gravity walk,
+     * and the generator still offers its generic ridge-and-shelf take. */
+    for (let i = 21; i <= 24; i += 1) {
+      brief["s" + i] = {
+        id: "s" + i,
+        labelKey: "lantL" + i,
+        gravity: 154 + (i - 20) * 4,
+        fuel: 68 - (i - 20),
+        points: i < 22 ? 9 : i < 24 ? 8 : 11,
+        bump: (i - 10) * 37,
+        need: 8,
+      };
+    }
     (ids.length ? ids : Object.keys(brief)).forEach(function (id) {
       const spec = brief[id];
       let level = null;

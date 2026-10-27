@@ -567,20 +567,37 @@ function forge(seed) {
     { w: 9, h: 9, walls: 5, elements: 7, splitters: 2, locked: 2, targets: 6, turns: 6, cells: 24, spread: 6, minFlips: 2, maxFlips: 5, maxSolutions: 3, maxLitDeal: 2, samples: 140 },
     { w: 9, h: 9, walls: 6, elements: 8, splitters: 2, locked: 2, targets: 6, turns: 6, cells: 26, spread: 6, minFlips: 2, maxFlips: 5, maxSolutions: 3, maxLitDeal: 2, samples: 140 },
     { w: 9, h: 9, walls: 6, elements: 8, splitters: 3, locked: 2, targets: 6, turns: 7, cells: 28, spread: 7, minFlips: 3, maxFlips: 5, maxSolutions: 3, maxLitDeal: 2, samples: 140 },
+    /* The deep tier holds the bar Aurora Engine set - deals 4-5 flips out -
+     * and widens the game: seven targets, then the first ten-across bench,
+     * then the most welded board, then the summit with four splitters, ten
+     * elements and a single solving orientation on the wide bench. */
+    { w: 9, h: 9, walls: 6, elements: 8, splitters: 3, locked: 2, targets: 7, turns: 7, cells: 30, spread: 7, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 140 },
+    { w: 10, h: 10, walls: 7, elements: 8, splitters: 3, locked: 2, targets: 6, turns: 8, cells: 32, spread: 8, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 140, attempts: 60000 },
+    { w: 10, h: 10, walls: 7, elements: 9, splitters: 3, locked: 3, targets: 6, turns: 8, cells: 34, spread: 8, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 140, attempts: 60000 },
+    { w: 10, h: 10, walls: 8, elements: 10, splitters: 4, locked: 3, targets: 7, turns: 9, cells: 36, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 160, attempts: 60000 },
   ];
   var names = [
     ["p11", "prismL11"], ["p12", "prismL12"], ["p13", "prismL13"],
     ["p14", "prismL14"], ["p15", "prismL15"], ["p16", "prismL16"],
     ["p17", "prismL17"], ["p18", "prismL18"], ["p19", "prismL19"],
-    ["p20", "prismL20"],
+    ["p20", "prismL20"], ["p21", "prismL21"], ["p22", "prismL22"],
+    ["p23", "prismL23"], ["p24", "prismL24"],
   ];
   var times = [
     [42, 64, 90], [46, 70, 98], [50, 76, 106], [54, 82, 114], [58, 88, 122],
     [62, 94, 130], [66, 100, 138], [70, 106, 146], [78, 118, 162], [88, 132, 180],
+    [92, 138, 188], [98, 146, 198], [104, 156, 210], [112, 166, 224],
   ];
+  /* `from` lets a search re-run only the deep rungs (board number, default 11)
+   * so an already-shipped rung is never re-forged over. */
+  var from = Number((typeof process !== "undefined" &&
+    process.argv && process.argv[4]) || 11);
   specs.forEach(function (spec, index) {
+    if (Number(String(names[index][0]).replace(/\D/g, "")) < from) {
+      return;
+    }
     var found = null;
-    for (var attempt = 0; attempt < 14000 && !found; attempt += 1) {
+    for (var attempt = 0; attempt < (spec.attempts || 14000) && !found; attempt += 1) {
       var rand = mulberry32(seed + index * 7919 + attempt * 104729);
       var result = forgeOne(rand, spec);
       if (result && result.score >= 60) {

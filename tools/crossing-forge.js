@@ -347,28 +347,50 @@ function main() {
         cross: step >= 6 ? [6, 2] : step >= 2 ? [6] : [],
       };
     }
+    /* The deep tier breaks the forged half's linear ramp - nine lanes, a
+     * third doubled row (row 7, then row 5), speeds past the shipped
+     * ceiling and gaps under its floor - so its briefs are written out
+     * rather than ramped. Each carries the seed its shipped lanes were
+     * forged from, so `forge c21` regenerates exactly the rung the panel
+     * ships; the first-passing-seed search only covers a brief with no
+     * pinned seed. */
+    const deepBriefs = {
+      c21: { id: "c21", labelKey: "croL21", band: [124, 160, 94, 128], cross: [6, 2, 7], seed: 81 },
+      c22: { id: "c22", labelKey: "croL22", band: [130, 168, 92, 122], cross: [6, 2, 7], seed: 89 },
+      c23: { id: "c23", labelKey: "croL23", band: [136, 176, 90, 118], cross: [6, 2, 5], seed: 275 },
+      c24: { id: "c24", labelKey: "croL24", band: [148, 190, 84, 110], cross: [6, 2, 5], seed: 174 },
+    };
+    Object.keys(deepBriefs).forEach(function (id) {
+      brief[id] = deepBriefs[id];
+    });
     (ids.length ? ids : Object.keys(brief)).forEach(function (id) {
       const spec = brief[id];
       let level = null;
       let report = null;
-      for (let seed = 1; seed <= 500 && !level; seed += 1) {
+      const lay = function (seed) {
         const candidate = forgeFord(spec, seed * 7919 + spec.band[0] * 31 + spec.cross.length);
         const attempt = checkFord(candidate);
-        if (!attempt.ok) continue;
+        if (!attempt.ok) return;
         level = candidate;
         report = attempt;
-      }
+      };
+      if (spec.seed) lay(spec.seed);
+      for (let seed = 1; seed <= 500 && !level; seed += 1) lay(seed);
       if (!level) {
         console.log(id + ": NO PROVED FORD");
         return;
       }
-      const cleared = report.proof.ticks * TICK;
-      /* Star bands continue the shipped ladder's curve and rise with the
-       * rung. The proof above is what makes them honest: a clean run is
-       * already possible in a fraction of the three-star time. */
-      const three = 78 + (Number(id.slice(1)) - 11) * 5.5;
+      /* Star bands: the forged half keeps the shipped ladder's curve and
+       * rises with the rung; the deep tier instead quotes its own measured
+       * route at the forged half's mean margin (48x the prover's route) -
+       * the calibration the shipped c21-c24 bands were cut with. The proof
+       * above is what makes both honest: a clean run is already possible
+       * in a fraction of the three-star time. */
+      const n = Number(id.slice(1));
+      const three = n >= 21
+        ? report.proof.ticks * TICK * 48
+        : 78 + (n - 11) * 5.5;
       const stars = [Math.round(three), Math.round(three * 1.5), Math.round(three * 2.05)];
-      void cleared;
       console.log(fmtFord(level, stars));
     });
   }

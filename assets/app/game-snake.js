@@ -40,6 +40,18 @@
     { id: "h18", labelKey: "snkL18", goal: 22, starTimes: [83, 117, 170], wrap: true, walls: [[0, 3, 11, 3], [4, 7, 15, 7], [0, 11, 11, 11]] },
     { id: "h19", labelKey: "snkL19", goal: 22, starTimes: [81, 113, 164], wrap: false, walls: [[3, 3, 6, 3], [10, 3, 12, 3], [3, 12, 6, 12], [10, 12, 12, 12], [3, 4, 3, 6], [3, 9, 3, 11], [12, 4, 12, 6], [12, 9, 12, 11], [7, 7, 8, 8]] },
     { id: "h20", labelKey: "snkL20", goal: 24, starTimes: [91, 127, 184], wrap: true, start: { x: 2, y: 8, dx: 1 }, walls: [[3, 3, 6, 3], [9, 3, 12, 3], [3, 12, 6, 12], [9, 12, 12, 12], [3, 4, 3, 6], [3, 9, 3, 11], [12, 4, 12, 6], [12, 9, 12, 11], [6, 6, 9, 6], [6, 9, 9, 9], [6, 7, 6, 8], [1, 1, 2, 1], [13, 1, 14, 1], [1, 14, 2, 14], [13, 14, 14, 14]] },
+
+    /* Houses 21-24, the inner keep. The coil hides its plaza behind two
+     * stone squares whose gates sit a quarter-turn apart, so every visit
+     * is a lap; the twin keeps face each other across the wrap lanes and
+     * only open toward the middle; the four courts split the plate into
+     * quarters joined by two-brick doors on a broken cross; and the crown
+     * rings its heart with four pillar courts behind four gates. Each row
+     * asks for a longer serpent than the citadel below it. */
+    { id: "h21", labelKey: "snkL21", goal: 25, starTimes: [96, 134, 193], wrap: false, start: { x: 13, y: 8, dx: -1 }, walls: [[2, 2, 13, 2], [2, 3, 2, 12], [2, 13, 13, 13], [13, 3, 13, 5], [13, 9, 13, 12], [5, 5, 10, 5], [5, 6, 5, 6], [5, 9, 5, 9], [10, 6, 10, 9], [5, 10, 6, 10], [9, 10, 10, 10]] },
+    { id: "h22", labelKey: "snkL22", goal: 26, starTimes: [100, 140, 201], wrap: true, start: { x: 2, y: 13, dx: -1 }, walls: [[2, 4, 5, 4], [2, 5, 2, 10], [2, 11, 5, 11], [10, 4, 13, 4], [13, 5, 13, 10], [10, 11, 13, 11], [3, 7, 4, 8], [11, 7, 12, 8], [7, 7, 8, 8], [7, 1, 8, 2], [7, 13, 8, 14], [0, 6, 1, 7], [14, 8, 15, 9]] },
+    { id: "h23", labelKey: "snkL23", goal: 26, starTimes: [104, 146, 210], wrap: true, start: { x: 2, y: 5, dx: 1 }, walls: [[7, 0, 8, 3], [7, 5, 8, 10], [7, 12, 8, 15], [0, 7, 4, 8], [11, 7, 15, 8]] },
+    { id: "h24", labelKey: "snkL24", goal: 27, starTimes: [110, 154, 222], wrap: true, start: { x: 5, y: 1, dx: 1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 6, 6], [9, 5, 10, 6], [5, 9, 6, 10], [9, 9, 10, 10], [7, 7, 8, 8], [0, 0, 0, 0], [15, 0, 15, 0], [0, 15, 0, 15], [15, 15, 15, 15]] },
   ];
 
   /* The court takes its tint from the panel hue; the serpent stays jade and the
@@ -1512,4 +1524,23 @@
 
   /* Exported for the other modules. */
   App.initSnakeGame = initSnakeGame;
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so the shared dictionary stays authoritative. The
+   * inner keep continues the fortress ascent the shared dictionary carries
+   * through the citadel. */
+  App.addStrings({
+    en: {
+      "snkL21": "The Coil",
+      "snkL22": "The Twin Keeps",
+      "snkL23": "The Four Courts",
+      "snkL24": "The Crown",
+    },
+    zh: {
+      "snkL21": "盘环阵",
+      "snkL22": "双子堡",
+      "snkL23": "四合院",
+      "snkL24": "御冠殿",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

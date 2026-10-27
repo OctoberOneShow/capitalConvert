@@ -28,7 +28,14 @@
    * `node tools/prism-forge.js verify` replays the beam over every reachable
    * orientation and proves the deal is unsolved, that some orientation lights
    * every target, that 2-5 flips separate the two, that at most four
-   * orientations solve it, and that the solution beam touches each element. */
+   * orientations solve it, and that the solution beam touches each element.
+   *
+   * Rungs 21-24 are the deep tier: the same bar, held at the top - deals sit
+   * 4-5 flips out, at most two orientations solve any of them, and the
+   * summit keeps only one. The bench itself widens along the way: seven
+   * targets on the nine-by-nine, the first ten-across board, the most
+   * welded rig in the campaign, and finally ten elements with four
+   * splitters feeding seven marks. */
   var prismLevels = [
     {
       id: "p1", labelKey: "prismL1", w: 5, h: 5,
@@ -321,6 +328,98 @@
         { x: 5, y: 2, slope: 1, split: true },
       ],
       starTimes: [88, 132, 180],
+    },
+    /* Spectrum: seven targets - the widest fan the bench has carried. Three
+     * splitters ride one rail down row five and every ray they peel climbs
+     * north; the top rung splits again and fires west into the left-edge
+     * pair while the main climb escapes over the welded top-left corner,
+     * crosses the ceiling and drops down the right edge. */
+    {
+      id: "p21", labelKey: "prismL21", w: 9, h: 9,
+      emitter: { x: 8, y: 5, dir: 2 },
+      targets: [[0, 2], [1, 2], [2, 3], [4, 4], [7, 4], [4, 3], [3, 3]],
+      walls: [[3, 7], [0, 1], [4, 2], [7, 8], [6, 1], [0, 8]],
+      mirrors: [
+        { x: 3, y: 0, slope: 0, locked: true },
+        { x: 3, y: 5, slope: 1, split: true },
+        { x: 2, y: 5, slope: 1 },
+        { x: 2, y: 1, slope: 0, locked: true },
+        { x: 4, y: 5, slope: 1, split: true },
+        { x: 3, y: 1, slope: 0 },
+        { x: 2, y: 2, slope: 0, split: true },
+        { x: 7, y: 0, slope: 0 },
+      ],
+      starTimes: [92, 138, 188],
+    },
+    /* Vortex: the bench widens to ten across. The solution beam is the
+     * longest the campaign has carried - forty-six cells - and it keeps
+     * folding back on itself: up the eighth column into the welded
+     * right-edge chute, back down it, away west along row two, and home
+     * along the bottom row into the emitter housing, which absorbs the
+     * beam twice before the last target lights. */
+    {
+      id: "p22", labelKey: "prismL22", w: 10, h: 10,
+      emitter: { x: 8, y: 9, dir: 3 },
+      targets: [[8, 8], [7, 7], [5, 3], [2, 9], [9, 4], [1, 3]],
+      walls: [[5, 1], [4, 5], [4, 0], [4, 6], [3, 3], [0, 1], [0, 0]],
+      mirrors: [
+        { x: 8, y: 2, slope: 0 },
+        { x: 1, y: 2, slope: 0, split: true },
+        { x: 1, y: 9, slope: 0 },
+        { x: 8, y: 5, slope: 0, split: true },
+        { x: 5, y: 5, slope: 1 },
+        { x: 9, y: 5, slope: 1, locked: true },
+        { x: 1, y: 7, slope: 0, split: true },
+        { x: 9, y: 2, slope: 1, locked: true },
+      ],
+      starTimes: [98, 146, 198],
+    },
+    /* Anvil: nine elements and three welds - more bolted hardware than any
+     * board before it. The welded bottom-left corner is a return loop: the
+     * beam runs row eight into it, is thrown back the way it came, and
+     * climbs the first column between the fixed mirrors. Half of the
+     * route's twelve bends happen against welded steel. */
+    {
+      id: "p23", labelKey: "prismL23", w: 10, h: 10,
+      emitter: { x: 9, y: 3, dir: 2 },
+      targets: [[3, 8], [2, 8], [8, 9], [0, 6], [8, 5], [4, 8]],
+      walls: [[7, 0], [6, 6], [6, 4], [4, 2], [0, 3], [6, 5], [0, 7]],
+      mirrors: [
+        { x: 2, y: 6, slope: 0 },
+        { x: 8, y: 8, slope: 0 },
+        { x: 2, y: 3, slope: 0, split: true },
+        { x: 0, y: 8, slope: 0, locked: true },
+        { x: 1, y: 5, slope: 0, locked: true },
+        { x: 0, y: 9, slope: 1 },
+        { x: 1, y: 8, slope: 0, split: true },
+        { x: 1, y: 9, slope: 0, locked: true },
+        { x: 8, y: 3, slope: 0, split: true },
+      ],
+      starTimes: [104, 156, 210],
+    },
+    /* Singularity: the summit. Ten elements, four splitters, three welds
+     * and seven targets, and exactly one orientation out of a hundred and
+     * twenty-eight lights them all. Three forks ride the emitter's own
+     * drop and unzip the beam as it falls; the welded pair in column three
+     * catches the first ray it sheds and throws it back across. */
+    {
+      id: "p24", labelKey: "prismL24", w: 10, h: 10,
+      emitter: { x: 5, y: 0, dir: 1 },
+      targets: [[4, 1], [1, 7], [3, 2], [8, 4], [8, 7], [0, 5], [9, 4]],
+      walls: [[0, 8], [0, 4], [4, 8], [1, 4], [7, 1], [0, 1], [9, 0], [2, 3]],
+      mirrors: [
+        { x: 5, y: 7, slope: 1 },
+        { x: 3, y: 1, slope: 0, locked: true },
+        { x: 4, y: 2, slope: 1 },
+        { x: 3, y: 3, slope: 0, locked: true },
+        { x: 5, y: 4, slope: 0, split: true },
+        { x: 0, y: 7, slope: 1, locked: true },
+        { x: 4, y: 5, slope: 1, split: true },
+        { x: 4, y: 7, slope: 1 },
+        { x: 5, y: 3, slope: 1, split: true },
+        { x: 5, y: 2, slope: 1, split: true },
+      ],
+      starTimes: [112, 166, 224],
     },
   ];
   /* "/" is slope 1, "\" is slope 0. */
@@ -846,6 +945,10 @@
       "prismL18": "Resonator",
       "prismL19": "Star Chamber",
       "prismL20": "Aurora Engine",
+      "prismL21": "Spectrum",
+      "prismL22": "Vortex",
+      "prismL23": "Anvil",
+      "prismL24": "Singularity",
       "prismSplitHint": "Violet forks split the beam: one ray turns, one carries straight on.",
       "prismLockedHint": "Amber elements are welded down and never rotate.",
       "prismWelded": "That element is welded to the bench - build the route around it.",
@@ -863,6 +966,10 @@
       "prismL18": "共振腔",
       "prismL19": "星室",
       "prismL20": "极光引擎",
+      "prismL21": "光谱",
+      "prismL22": "漩涡",
+      "prismL23": "铁砧",
+      "prismL24": "奇点",
       "prismSplitHint": "紫色分光叉会把光束劈成两路：一路转向，一路直穿。",
       "prismLockedHint": "琥珀色元件已被焊死，永远不会转动。",
       "prismWelded": "这个元件焊死在台面上——请绕开它设计光路。",

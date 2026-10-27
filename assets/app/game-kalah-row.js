@@ -80,6 +80,30 @@
     { id: "m18", labelKey: "malR18", depth: 8, noise: 0, keep: 14, threat: 3.5, deny: 6, tempo: 4, count: 26, nodes: 2400, slip: 0.02, flub: 0.15, margin: [3, 2, 1] },
     { id: "m19", labelKey: "malR19", depth: 8, noise: 0, keep: 12, threat: 3, deny: 5, tempo: 4, count: 24, slip: 0.06, flub: 0.18, margin: [4, 3, 1] },
     { id: "m20", labelKey: "malR20", depth: 8, noise: 0, keep: 14, threat: 4, deny: 6, tempo: 4.5, count: 28, nodes: 3000, slip: 0.01, flub: 0.08, margin: [3, 2, 1] },
+
+    /* Ranks 21-24: the tier past the sovereign keeps the search exactly where
+     * the sovereign left it and spends the climb on the prices instead.
+     * Twenty-one guards one stone more against the freeze - fifteen now -
+     * and pays for the extra guard with the tell a touch wider; twenty-two
+     * prices a star pit higher than any rank before it, planting singles
+     * opposite your loaded pits and farming them; twenty-three takes both
+     * endurance levers at once, sixteen stones against the freeze and a
+     * spare turn priced at five, and wins by outlasting rather than
+     * outcounting; and the last ring of the row combines the lot - the star
+     * price, the deep guard, the five-stone tempo - then stops erring: the
+     * blind sow all but gone and no tell at all. A seventh deny was benched
+     * for the tier and rejected: priced above six the refusal distorts the
+     * sow and the rank measures softer than the sovereign, so the
+     * sovereign's six stands; a node budget past three thousand was benched
+     * beside it and measured game for game with the sovereign's - past that
+     * the ring has no more bottom to read. Every rank below was run against
+     * the same seeded bench that judged the twenty above - beaten outright
+     * in at least one game in twenty and by its own three-star margin in at
+     * least three games in twenty - before it shipped. */
+    { id: "m21", labelKey: "malR21", depth: 8, noise: 0, keep: 15, threat: 4, deny: 6, tempo: 4.5, count: 28, nodes: 3000, slip: 0.02, flub: 0.08, margin: [3, 2, 1] },
+    { id: "m22", labelKey: "malR22", depth: 8, noise: 0, keep: 14, threat: 4.5, deny: 6, tempo: 4.5, count: 28, nodes: 3000, slip: 0.02, flub: 0.08, margin: [3, 2, 1] },
+    { id: "m23", labelKey: "malR23", depth: 8, noise: 0, keep: 16, threat: 4, deny: 6, tempo: 5, count: 28, nodes: 3000, slip: 0.01, flub: 0.08, margin: [3, 2, 1] },
+    { id: "m24", labelKey: "malR24", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 6, tempo: 5, count: 28, nodes: 3000, slip: 0, flub: 0.04, margin: [3, 2, 1] },
   ];
 
   function malFresh() {
@@ -619,6 +643,10 @@
       "malR18": "The Endgame Solver",
       "malR19": "The Open Tell",
       "malR20": "The Perfect Ring",
+      "malR21": "The Hoard Warden",
+      "malR22": "The Star Farmer",
+      "malR23": "The Long Siege",
+      "malR24": "The Seamless Ring",
     },
     zh: {
       "malR5": "石墙凳",
@@ -637,6 +665,10 @@
       "malR18": "终局算手",
       "malR19": "明破绽",
       "malR20": "完美之环",
+      "malR21": "守仓翁",
+      "malR22": "养星手",
+      "malR23": "长围手",
+      "malR24": "无缝之环",
     },
   });
 

@@ -13,10 +13,11 @@
   var fillCampaignPicker = App.fillCampaignPicker;
   var starsFor = App.starsFor;
   var sudSize = 320;
-  /* Sizes: 4x4 (2x2 boxes), 6x6 (2x3 boxes), 9x9 (3x3 boxes).
-   * `clues` is the target number of givens; carving stops as soon as the
-   * answer would no longer be unique. Star times are
-   * [3-star, 2-star, 1-star] seconds. */
+  /* Sizes: 4x4 (2x2 boxes), 6x6 (2x3 boxes), 9x9 (3x3 boxes), 10x10
+   * (2x5 or 5x2 boxes), 12x12 (3x4 boxes). A rung may also carry a seed,
+   * which pins the deal to one carved grid. `clues` is the target number of
+   * givens; carving stops as soon as the answer would no longer be unique.
+   * Star times are [3-star, 2-star, 1-star] seconds. */
   var sudLevels = [
     { id: "u1", labelKey: "sudL1", size: 4, bw: 2, bh: 2, clues: 8, starTimes: [20, 40, 70] },
     { id: "u2", labelKey: "sudL2", size: 4, bw: 2, bh: 2, clues: 6, starTimes: [25, 45, 80] },
@@ -46,6 +47,23 @@
     { id: "u18", labelKey: "lvlNum18", size: 9, bw: 3, bh: 3, clues: 18, starTimes: [1673, 2600, 4085] },
     { id: "u19", labelKey: "lvlNum19", size: 9, bw: 3, bh: 3, clues: 17, starTimes: [2008, 3120, 4902] },
     { id: "u20", labelKey: "lvlNum20", size: 9, bw: 3, bh: 3, clues: 17, starTimes: [2409, 3744, 5882] },
+    /* Grids 21-24. The summit seals its boards: each rung carries a seed and
+     * the generator drives its shuffles from that seed alone, so a rung deals
+     * one proven grid on every visit, and the clues line can hold the carve to
+     * an exact count instead of a hope - the classic sweep bottoms out
+     * wherever it stalls (23-27 givens in practice, whatever the ask). So u21
+     * holds the classic to 23, the floor of every random deal's spread, its
+     * seed swept until the board needed about twice the branch work a random
+     * deal measures. The vault then opens the first double-digit grid, 10x10
+     * with boxes five tall at 31 givens; the cross lays the same room the
+     * other way, boxes five wide, sealed deeper than the vault; and the hall
+     * opens the 12x12, 144 cells and twelve glyphs at 52, the density paying
+     * for the scale. The clock prices the size steps 1.5x and 1.7x, the
+     * shipped ramp's own way of charging for a bigger room. */
+    { id: "u21", labelKey: "lvlNum21", size: 9, bw: 3, bh: 3, clues: 23, seed: 216, starTimes: [2891, 4493, 7058] },
+    { id: "u22", labelKey: "lvlNum22", size: 10, bw: 2, bh: 5, clues: 31, seed: 128, starTimes: [4337, 6740, 10593] },
+    { id: "u23", labelKey: "lvlNum23", size: 10, bw: 5, bh: 2, clues: 31, seed: 5, starTimes: [5204, 8088, 12712] },
+    { id: "u24", labelKey: "lvlNum24", size: 12, bw: 3, bh: 4, clues: 52, seed: 20, starTimes: [8847, 13747, 21609] },
   ];
 
   /* Pure generator + checker, exported for the static checks. */
@@ -172,7 +190,20 @@
     return count;
   }
 
-  function sudGenerate(size, bw, bh, clues) {
+  /* Sealed rungs pass { seed: n }: the stream below is then driven by the
+   * seed alone (the LCG the static checks seed Math.random with), so the
+   * deal never reaches for Math.random and every visit carves the same
+   * board. Without a seed the stream is Math.random itself and the deal
+   * stays fresh, exactly as the shipped rungs behave. */
+  function sudGenerate(size, bw, bh, clues, opts) {
+    var rand = Math.random;
+    if (opts && typeof opts.seed === "number") {
+      var seedState = opts.seed >>> 0;
+      rand = function () {
+        seedState = (Math.imul(seedState, 1103515245) + 12345) >>> 0;
+        return seedState / 4294967296;
+      };
+    }
     var total = size * size;
     for (var attempt = 0; attempt < 40; attempt += 1) {
       /* Build a full valid grid with randomized backtracking. */
@@ -190,7 +221,7 @@
         }
         var order = values.slice();
         for (var s = order.length - 1; s > 0; s -= 1) {
-          var j = Math.floor(Math.random() * (s + 1));
+          var j = Math.floor(rand() * (s + 1));
           var tmp = order[s];
           order[s] = order[j];
           order[j] = tmp;
@@ -242,7 +273,7 @@
         positions.push(p);
       }
       for (var sh = positions.length - 1; sh > 0; sh -= 1) {
-        var sj = Math.floor(Math.random() * (sh + 1));
+        var sj = Math.floor(rand() * (sh + 1));
         var sp = positions[sh];
         positions[sh] = positions[sj];
         positions[sj] = sp;
@@ -466,7 +497,7 @@
       size = level.size;
       bw = level.bw;
       bh = level.bh;
-      var deal = sudGenerate(size, bw, bh, level.clues);
+      var deal = sudGenerate(size, bw, bh, level.clues, { seed: level.seed });
       solution = deal.solution;
       board = deal.puzzle.slice();
       given = deal.puzzle.map(function (v) {

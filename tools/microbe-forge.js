@@ -34,20 +34,30 @@ const App = env.sandbox.CapitalConvert || env.window.CapitalConvert;
 
 /* The candidate dishes. Every one is walked before its band is written. */
 const CANDIDATES = [
-  { id: "m14", gens: 10, seed: 17231, cap: 22, traitMax: 7, start: 15, base: 4, step: 2,
-    plan: [["heat", "acid"], ["defence", "speed"], ["heat"], ["acid", "speed"], ["defence"]] },
-  { id: "m15", gens: 10, seed: 18119, cap: 22, traitMax: 7, start: 15, base: 4, step: 2,
-    plan: [["heat", "defence"], ["acid", "speed"], ["heat", "acid"], ["defence", "speed"], ["heat"], ["acid"]] },
-  { id: "m16", gens: 10, seed: 19087, cap: 21, traitMax: 7, start: 14, base: 4, step: 2,
-    plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["speed"]] },
-  { id: "m17", gens: 10, seed: 20143, cap: 21, traitMax: 7, start: 14, base: 4, step: 2,
-    plan: [["heat", "defence"], ["acid", "speed"], ["heat", "acid"], ["defence", "speed"], ["defence"], ["speed"]] },
-  { id: "m18", gens: 10, seed: 21191, cap: 20, traitMax: 7, start: 14, base: 4, step: 2,
-    plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat", "acid"], ["defence"]] },
-  { id: "m19", gens: 10, seed: 22229, cap: 20, traitMax: 7, start: 13, base: 4, step: 2,
-    plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat", "acid"], ["defence", "speed"]] },
-  { id: "m20", gens: 10, seed: 23327, cap: 19, traitMax: 7, start: 13, base: 4, step: 2,
-    plan: [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat", "acid"], ["defence", "speed"]] },
+  /* m21 - One Throat: the deck narrows onto one trait. flare (heat+speed)
+   * prints for the first time and joins brand and grey, so every card is
+   * answered through speed; the fastest climb the engine allows (step 1)
+   * reaches the shipped demand ceiling by generation four. */
+  { id: "m21", gens: 10, seed: 24338, cap: 20, traitMax: 7, start: 14, base: 4, step: 1,
+    plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["heat", "defence"], ["heat", "speed"], ["defence", "speed"]],
+    starBand: [5680, 5380, 4730] },
+  /* m22 - Shallow Pool: traitMax 6 for the first time since m8, and it is two
+   * levers at once - no strain stacks past six and no card demands past nine.
+   * venom (acid+defence) prints for the first time. */
+  { id: "m22", gens: 10, seed: 24222, cap: 20, traitMax: 6, start: 15, base: 4, step: 1,
+    plan: [["heat", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"], ["defence", "speed"], ["heat"]],
+    starBand: [5680, 5380, 4730] },
+  /* m23 - Starving Flask: start 13, the weakest founding colony the ladder has
+   * ever shipped, against the full six-card storm; the greedy line spends the
+   * trial one life above the floor. */
+  { id: "m23", gens: 10, seed: 24072, cap: 21, traitMax: 7, start: 13, base: 3, step: 2,
+    plan: [["heat", "acid"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "defence"], ["acid", "speed"]],
+    starBand: [5580, 5280, 4630] },
+  /* m24 - The Last Niche: both ceilings bite at once - cap 19, the tightest
+   * budget in the game, over the shallow pool, on the step 1 climb. */
+  { id: "m24", gens: 10, seed: 24001, cap: 19, traitMax: 6, start: 14, base: 4, step: 1,
+    plan: [["heat", "acid"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "defence"], ["acid", "speed"]],
+    starBand: [5580, 5280, 4630] },
 ];
 
 function line(label, level, band) {
@@ -61,41 +71,47 @@ function line(label, level, band) {
 }
 
 if (process.argv.includes("--search")) {
-  /* Picks a seed for each new rung instead of guessing one: the levers tighten
-   * slot by slot (cap 22 -> 19, start 15 -> 13, five cards -> six) and the seed
+  /* Picks a seed for each new rung instead of guessing one: the 21-24 tier
+   * buys its difficulty out of the deck, the pool, the founding colony and
+   * both ceilings - new dual cards (heat+speed, acid+defence), traitMax
+   * 7 -> 6, start down to 13, cap down to 19, the step 1 climb - and the seed
    * is whatever lands the greedy walk inside that slot's score window, so the
-   * seven new dishes read as one descending ramp rather than seven dice rolls. */
-  const P5 = [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat"]];
-  const P6 = [["heat", "acid"], ["defence", "speed"], ["heat", "defence"], ["acid", "speed"], ["heat", "acid"], ["defence", "speed"]];
+   * four new dishes read as one descending ramp rather than four dice rolls.
+   * The windows are what each lever set can actually produce: the score pays
+   * out in survivor hundreds minus waste ones, so a 57-survivor line (568x)
+   * only exists on a knife edge - most seed ranges collapse outright. */
+  const PTHROAT = [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["heat", "defence"], ["heat", "speed"], ["defence", "speed"]];
+  const PSHALLOW = [["heat", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"], ["defence", "speed"], ["heat"]];
+  const PALL = [["heat", "acid"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "defence"], ["acid", "speed"]];
   const SLOTS = [
-    { id: "m19", cap: 21, start: 14, base: 4, step: 2, plan: P6 },
-    { id: "pA", cap: 20, start: 15, base: 4, step: 3, plan: P6 },
-    { id: "pB", cap: 20, start: 14, base: 4, step: 3, plan: P6 },
-    { id: "pC", cap: 21, start: 13, base: 4, step: 2, plan: P6 },
-    { id: "pD", cap: 22, start: 15, base: 4, step: 2, plan: P5 },
+    { id: "m21", cap: 20, traitMax: 7, start: 14, base: 4, step: 1, plan: PTHROAT, low: 5782 },
+    { id: "m22", cap: 20, traitMax: 6, start: 15, base: 4, step: 1, plan: PSHALLOW, low: 5780 },
+    { id: "m23", cap: 21, traitMax: 7, start: 13, base: 3, step: 2, plan: PALL, low: 5688 },
+    { id: "m24", cap: 19, traitMax: 6, start: 14, base: 4, step: 1, plan: PALL, low: 5682 },
   ];
   SLOTS.forEach((slot) => {
     /* Keep one seed per distinct greedy score, then report the whole spread:
-     * the score a dish pays out is lumpy, so the ramp is chosen from what the
-     * lever set can actually produce instead of from a window it may not hit. */
+     * the ramp is chosen from what the lever set can actually produce instead
+     * of from a window it may not hit. */
     const seen = new Map();
-    for (let seed = 17000; seed < 17400; seed += 1) {
+    for (let seed = 24000; seed < 24800; seed += 1) {
       const level = {
-        id: slot.id, gens: 10, seed: seed, cap: slot.cap, traitMax: 7,
+        id: slot.id, gens: 10, seed: seed, cap: slot.cap, traitMax: slot.traitMax,
         start: slot.start, base: slot.base, step: slot.step, plan: slot.plan,
       };
       const proof = App.microbeBeatable(level);
       if (proof.collapsed || proof.minSurvivors < 4) continue;
-      if (proof.metric < 5400) continue;
+      if (proof.metric < slot.low) continue;
       if (!seen.has(proof.metric)) {
-        seen.set(proof.metric, { seed: seed, floor: proof.minSurvivors });
+        seen.set(proof.metric, { seed: seed, floor: proof.minSurvivors, n: 0 });
       }
+      seen.get(proof.metric).n += 1;
     }
-    const list = Array.from(seen.entries()).sort((a, b) => b[0] - a[0]).slice(-12).reverse();
+    const list = Array.from(seen.entries()).sort((a, b) => a[0] - b[0]).slice(0, 8);
     console.log(
-      `${slot.id} cap ${slot.cap} start ${slot.start} base ${slot.base} step ${slot.step} -> ` +
+      `${slot.id} cap ${slot.cap} traitMax ${slot.traitMax} start ${slot.start} base ${slot.base} step ${slot.step} -> ` +
         (list.length
-          ? list.map(([metric, info]) => `${metric}@${info.seed}(f${info.floor})`).join(" ")
+          ? list.map(([metric, info]) => `${metric}x${info.n}@${info.seed}(f${info.floor})`).join(" ")
           : "nothing playable"),
     );
   });
@@ -145,10 +161,17 @@ if (process.argv.includes("--sweep")) {
   process.exit(0);
 }
 
-if (process.argv.includes("--mine")) {
-  console.log("id     greedy walk");
-  CANDIDATES.forEach((level) => line(level.id, level, null));
-} else {
-  console.log("id     greedy walk                                  shipped band");
-  App.microbeLevels.forEach((level) => line(level.id, level, level.starBand));
+/* The audit runs only on the command line: the verify-levels gate requires
+ * this module for CANDIDATES (the documented measurement of the 21-24 tier,
+ * kept row-for-row equal to the shipped table) and must not print here. */
+if (require.main === module) {
+  if (process.argv.includes("--mine")) {
+    console.log("id     greedy walk");
+    CANDIDATES.forEach((level) => line(level.id, level, null));
+  } else {
+    console.log("id     greedy walk                                  shipped band");
+    App.microbeLevels.forEach((level) => line(level.id, level, level.starBand));
+  }
 }
+
+module.exports = { CANDIDATES, line };

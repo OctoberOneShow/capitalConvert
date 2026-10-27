@@ -16,12 +16,12 @@
    * full disjoint path set, so a ribbon solution always exists. Star times
    * are [3-star, 2-star, 1-star] seconds.
    *
-   * Twenty boards in two tiers. Rungs 1-10 grow the grid (5x5 up to 8x8) and
-   * the ribbon count with it while the boards stay airy enough that every pair
-   * is legible at a glance. Rungs 11-20 grow the density instead: they are
-   * forged solution-first by tools/aurora-forge.js, laid out in the order that
-   * forge measured, so each rung needs more inked cells than the one before
-   * it (48 up to 63) and their star bands follow the same climb. */
+   * Twenty-four boards in three tiers. Rungs 1-10 grow the grid (5x5 up to
+   * 8x8) and the ribbon count with it while the boards stay airy enough that
+   * every pair is legible at a glance. Rungs 11-20 grow the density instead:
+   * they are forged solution-first by tools/aurora-forge.js, laid out in the
+   * order that forge measured, so each rung needs more inked cells than the
+   * one before it (60 up to 76) and their star bands follow the same climb. */
   var auroraLevels = [
     {
       id: "f1", labelKey: "auroL1", size: 5,
@@ -134,6 +134,41 @@
       id: "f20", labelKey: "auroL20", size: 9,
       pairs: [[0, 5, 0, 2], [0, 1, 6, 0], [7, 0, 5, 8], [4, 8, 0, 8], [0, 7, 3, 6], [3, 7, 7, 7], [7, 6, 4, 5], [5, 5, 7, 4], [6, 4, 4, 4], [3, 4, 2, 5], [1, 5, 1, 1], [2, 1, 3, 2], [3, 3, 6, 1], [6, 2, 3, 1]],
       starTimes: [78, 121, 168],
+    },
+
+    /* ------------------------------------------------------------------
+     * The deep tier (f21-f24). The second tier had taken the 9x9 panel as
+     * far as density would go - the forge measured that squeezing more
+     * pairs into nine cells a side only shortens the average ribbon - so
+     * this tier opens the grid to 10x10, a size no earlier rung used, and
+     * packs it harder than any shipped board: fifteen and sixteen ribbons
+     * (the colour table covers exactly sixteen, so every ribbon keeps its
+     * own hue) and a solver-measured weave of 86 up to 94 inked cells, up
+     * to 94% of the panel, against the second tier's ceiling of 76. Every
+     * board was forged solution-first by tools/aurora-forge.js and
+     * re-solved from the pairs alone at the full step cap; the rungs sit
+     * in the order that re-solve measured, and the star bands follow the
+     * same one-second-per-inked-cell pace the second tier ships at.
+     * ------------------------------------------------------------------ */
+    {
+      id: "f21", labelKey: "auroL21", size: 10,
+      pairs: [[2, 5, 0, 6], [1, 6, 1, 8], [2, 8, 4, 9], [5, 9, 9, 0], [8, 0, 0, 0], [0, 1, 5, 2], [4, 2, 1, 2], [0, 2, 0, 4], [1, 4, 6, 3], [7, 3, 3, 8], [3, 7, 4, 4], [5, 4, 5, 6], [4, 6, 6, 7], [7, 7, 6, 5], [6, 4, 7, 5]],
+      starTimes: [88, 136, 189],
+    },
+    {
+      id: "f22", labelKey: "auroL22", size: 10,
+      pairs: [[3, 9, 0, 8], [0, 7, 1, 1], [1, 2, 1, 5], [1, 6, 2, 8], [3, 8, 6, 8], [6, 9, 9, 8], [9, 7, 9, 5], [9, 4, 8, 0], [8, 1, 8, 5], [8, 6, 3, 7], [2, 7, 5, 6], [6, 6, 4, 0], [3, 0, 2, 1], [2, 2, 2, 4], [2, 5, 6, 5], [5, 5, 5, 2]],
+      starTimes: [96, 149, 206],
+    },
+    {
+      id: "f23", labelKey: "auroL23", size: 10,
+      pairs: [[0, 7, 2, 9], [3, 9, 7, 9], [8, 9, 9, 4], [9, 3, 8, 0], [8, 1, 8, 3], [8, 4, 8, 8], [7, 8, 7, 5], [7, 4, 7, 1], [7, 0, 2, 8], [1, 8, 2, 7], [3, 7, 5, 7], [5, 6, 0, 0], [1, 0, 2, 5], [2, 4, 2, 1], [2, 0, 5, 5], [5, 4, 5, 1]],
+      starTimes: [96, 149, 206],
+    },
+    {
+      id: "f24", labelKey: "auroL24", size: 10,
+      pairs: [[8, 4, 9, 0], [8, 0, 6, 0], [5, 0, 1, 1], [2, 1, 8, 3], [7, 3, 2, 2], [1, 2, 0, 3], [0, 4, 0, 6], [0, 7, 5, 9], [6, 9, 9, 8], [9, 7, 2, 8], [1, 8, 2, 3], [2, 4, 2, 6], [2, 7, 7, 6], [7, 7, 5, 5], [5, 4, 4, 6], [4, 7, 5, 6]],
+      starTimes: [96, 149, 206],
     },  ];
   /* Sixteen entries so a fourteen-ribbon board still gives every ribbon its
    * own colour; the first eight are the shipped ramp, so no existing board
@@ -1133,6 +1168,23 @@
     loadLevel(auroraLevels[campaign.indexOf(campaign.nextLevelId())]);
     startLoop();
   }
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already hold, so the picker never prints a raw key. */
+  App.addStrings({
+    en: {
+      "auroL21": "Tapestry",
+      "auroL22": "Empyrean",
+      "auroL23": "Apogee",
+      "auroL24": "Firmament",
+    },
+    zh: {
+      "auroL21": "星锦",
+      "auroL22": "星霄",
+      "auroL23": "星极",
+      "auroL24": "星幕",
+    },
+  });
 
 
   /* Exported for the other modules. */

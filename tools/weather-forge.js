@@ -40,8 +40,10 @@ const LIMIT = 92;
 
 const spot = (x, y) => ({ x: x, y: y });
 const village = (x, y, min, max) => ({ x: x, y: y, min: min, max: max });
+const wind = (x, y, dir) => ({ x: x, y: y, kind: "w", dir: dir === undefined ? 0 : dir });
+const pump = (x, y) => ({ x: x, y: y, kind: "h", dir: 0 });
 
-/* The seven new seasons. Each one names its own weather, its own terrain and
+/* The new seasons. Each one names its own weather, its own terrain and
  * its own settlements; the forge only has to find the weave. `width` is how
  * much slack a village's window leaves - it narrows as the ladder climbs. */
 const NEW_SEASONS = [
@@ -90,6 +92,52 @@ const NEW_SEASONS = [
     ridge: [spot(4, 3), spot(4, 4)],
     lake: [spot(7, 1), spot(7, 6)],
     villages: [village(2, 1), village(2, 6), village(3, 3), village(6, 2), village(6, 5), village(9, 3)],
+  },
+  /* w21: the far shore - the longest canal the ladder has ever run dies long
+   * before the eastern sea line, and only a heater sump pumping the creep
+   * back into it lets the far parish drink at all. The authored weave below
+   * was walked through App.loomRun; the forge re-proves it instead of
+   * re-searching it. */
+  {
+    id: "w21", points: 27, ticks: 20, width: 22,
+    cfg: { source: 8 },
+    ridge: [spot(6, 1), spot(6, 6)],
+    villages: [village(2, 0), village(5, 1), village(9, 3), village(2, 5), village(5, 6), village(2, 7)],
+    plan: [
+      wind(0, 0), wind(1, 0),
+      wind(0, 1), wind(1, 1), wind(2, 1), wind(3, 1), wind(4, 1),
+      wind(0, 3), wind(1, 3), wind(2, 3), wind(3, 3), wind(4, 3), wind(5, 3), wind(6, 3), wind(7, 3), wind(8, 3),
+      pump(6, 4),
+      wind(0, 5), wind(1, 5),
+      wind(0, 6), wind(1, 6), wind(2, 6), wind(3, 6), wind(4, 6),
+      wind(0, 7), wind(1, 7),
+    ],
+  },
+  /* w22: the needle gate - a full ridge wall with one gap; the east country
+   * drinks from the single canal that threads the gap and its short branches. */
+  {
+    id: "w22", points: 27, ticks: 20, width: 22,
+    cfg: { source: 8, drain: 0.8 },
+    ridge: [spot(4, 0), spot(4, 1), spot(4, 2), spot(4, 4), spot(4, 5), spot(4, 6), spot(4, 7)],
+    villages: [village(2, 2), village(2, 6), village(6, 3), village(8, 3), village(9, 2)],
+  },
+  /* w23: storm ledger - rain comes early and heavy and a flooded cell costs
+   * double, so the season is won by not overpouring six crowded parishes. */
+  {
+    id: "w23", points: 28, ticks: 20, width: 22,
+    cfg: { source: 9, lakeSource: 4, rainAt: 52, dump: 0.6, floodLimit: 80, floodWeight: 2 },
+    ridge: [spot(2, 3), spot(2, 4), spot(8, 3)],
+    lake: [spot(5, 4)],
+    villages: [village(6, 1), village(6, 2), village(5, 3), village(6, 5), village(4, 6), village(2, 7)],
+  },
+  /* w24: seven parishes - the most settlements the loom has ever held, behind
+   * ridge stubs and twin lakes, with the tightest windows on the ladder. */
+  {
+    id: "w24", points: 30, ticks: 20, width: 20,
+    cfg: { source: 8, lakeSource: 4, ambient: 54, lift: 0.42, wind: 0.55 },
+    ridge: [spot(3, 3), spot(3, 4), spot(6, 2), spot(6, 5)],
+    lake: [spot(8, 1), spot(4, 7)],
+    villages: [village(1, 1), village(1, 6), village(2, 2), village(5, 1), village(5, 6), village(8, 4), village(9, 6)],
   },
 ];
 
@@ -335,8 +383,9 @@ if (process.argv.includes("--forge")) {
   NEW_SEASONS.forEach((season) => {
     /* Weave and re-window until the two agree: the windows say what counts as
      * a harvest, the weave is aimed at them, and each pass re-aims both at the
-     * season the other one just produced. */
-    let plan = sow(season);
+     * season the other one just produced. A season that ships an authored
+     * weave starts from it - the forge then only re-proves it. */
+    let plan = season.plan ? season.plan.slice() : sow(season);
     if (!Array.isArray(plan)) throw new Error(season.id + " sow returned " + typeof plan);
     let level = window(Object.assign({}, season, { plan: plan }), season.width / 2);
     plan = weave(level, plan).plan;

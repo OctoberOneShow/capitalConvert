@@ -1,5 +1,5 @@
 /* Glyph Bastion - the small-footprint tower defence in the shared game drawer.
- * A 9x6 field whose twenty authored maps vary the shape of the problem: one
+ * A 9x6 field whose twenty-four authored maps vary the shape of the problem: one
  * road, a fork, two roads that share a tail, three that merge twice, plus a
  * per-map budget, tower cap and leak allowance. A build phase sits between
  * waves, and the tick simulation is a pure function of (level, towers, ticks)
@@ -314,13 +314,13 @@
       solution: [
         { x: 5, y: 1, kind: "piercer" }, { x: 3, y: 1, kind: "piercer" },
         { x: 6, y: 4, kind: "piercer" }, { x: 4, y: 1, kind: "smoulder" },
-        { x: 2, y: 4, kind: "snare" }, { x: 1, y: 1, kind: "snare" },
+        { x: 3, y: 4, kind: "snare" }, { x: 1, y: 1, kind: "snare" },
       ],
     },
     {
-      id: "g17", labelKey: "gstZ17", twistKey: "gstTwist17", budget: 26, maxTowers: 7, leaks: 2, starGlyphs: [15, 17, 19],
+      id: "g17", labelKey: "gstZ17", twistKey: "gstTwist17", budget: 26, maxTowers: 7, leaks: 2, starGlyphs: [10, 12, 14],
       paths: [
-        [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0], [8, 1], [7, 1], [6, 1], [5, 1], [4, 1], [3, 1], [2, 1], [1, 1], [0, 1], [0, 2], [1, 2], [2, 2], [3, 2], [4, 2], [5, 2], [6, 2], [7, 2], [8, 2], [8, 3], [7, 3], [6, 3], [5, 3], [4, 3], [3, 3], [2, 3], [1, 3], [0, 3], [0, 4], [1, 4], [2, 4], [3, 4], [4, 4], [5, 4], [6, 4], [7, 4], [8, 4], [8, 5], [7, 5], [6, 5], [5, 5], [4, 5], [3, 5], [2, 5], [1, 5], [0, 5]],
+        [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0], [8, 1], [8, 2], [7, 2], [6, 2], [5, 2], [4, 2], [3, 2], [2, 2], [1, 2], [0, 2], [0, 3], [0, 4], [1, 4], [2, 4], [3, 4], [4, 4], [5, 4], [6, 4], [7, 4], [8, 4]],
       ],
       waves: [
         { start: 0, gap: 5, count: 8, kind: "runner" },
@@ -328,9 +328,8 @@
         { start: 160, gap: 5, count: 8, kind: "runner" },
       ],
       solution: [
-        { x: 3, y: 1, kind: "piercer" }, { x: 5, y: 2, kind: "piercer" },
-        { x: 7, y: 4, kind: "piercer" }, { x: 4, y: 4, kind: "smoulder" },
-        { x: 2, y: 2, kind: "snare" },
+        { x: 3, y: 3, kind: "piercer" }, { x: 4, y: 5, kind: "snare" },
+        { x: 1, y: 3, kind: "snare" }, { x: 3, y: 1, kind: "piercer" },
       ],
     },
     {
@@ -367,7 +366,7 @@
       ],
     },
     {
-      id: "g20", labelKey: "gstZ20", twistKey: "gstTwist20", budget: 28, maxTowers: 8, leaks: 1, starGlyphs: [24, 26, 28],
+      id: "g20", labelKey: "gstZ20", twistKey: "gstTwist20", budget: 28, maxTowers: 8, leaks: 1, starGlyphs: [14, 16, 18],
       paths: [
         [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [7, 5], [6, 5], [5, 5], [4, 5], [3, 5], [2, 5], [1, 5], [0, 5], [2, 4], [2, 3], [2, 2], [3, 2], [4, 2], [5, 2], [6, 2], [7, 2], [7, 3], [6, 3], [5, 3], [4, 3]],
         [[0, 4], [1, 4], [2, 4], [3, 4], [4, 4], [5, 4], [6, 4], [7, 4], [8, 4]],
@@ -379,10 +378,82 @@
         { start: 220, gap: 5, count: 6, kind: "runner" },
       ],
       solution: [
-        { x: 4, y: 1, kind: "piercer" }, { x: 6, y: 1, kind: "piercer" },
-        { x: 5, y: 4, kind: "piercer" }, { x: 3, y: 4, kind: "piercer" },
-        { x: 5, y: 2, kind: "smoulder" }, { x: 7, y: 2, kind: "smoulder" },
-        { x: 2, y: 1, kind: "snare" }, { x: 1, y: 3, kind: "snare" },
+        { x: 1, y: 2, kind: "piercer" }, { x: 5, y: 1, kind: "smoulder" },
+        { x: 3, y: 3, kind: "snare" }, { x: 1, y: 3, kind: "piercer" },
+        { x: 7, y: 1, kind: "snare" },
+      ],
+    },
+    /* Ranks 21-24: the summit's four shapes. The ring makes one lap of the
+     * whole field and then cuts back through the middle, so the second row
+     * watches three lanes; the chicane gives three stands for four waves and
+     * asks for one of each kind; the weave crosses two roads at a single
+     * junction; the last court runs three roads at once under a choir. Every
+     * plan below is proven by bastionSolvable, the same resolver the buttons
+     * drive. */
+    {
+      id: "g21", labelKey: "gstZ21", twistKey: "gstTwist21", budget: 17, maxTowers: 5, leaks: 2, starGlyphs: [13, 15, 17],
+      paths: [[[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [6, 0], [7, 0], [8, 0], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [7, 5], [6, 5], [5, 5], [4, 5], [3, 5], [2, 5], [1, 5], [0, 5], [0, 4], [0, 3], [0, 2], [1, 2], [2, 2], [3, 2], [4, 2], [5, 2], [6, 2], [7, 2], [8, 2]]],
+      waves: [
+        { start: 0, gap: 6, count: 6, kind: "plate" },
+        { start: 75, gap: 5, count: 7, kind: "wisp" },
+        { start: 150, gap: 6, count: 6, kind: "husk" },
+        { start: 230, gap: 4, count: 8, kind: "runner" },
+      ],
+      solution: [
+        { x: 5, y: 4, kind: "piercer" }, { x: 3, y: 4, kind: "snare" },
+        { x: 4, y: 3, kind: "piercer" }, { x: 1, y: 1, kind: "snare" },
+        { x: 7, y: 3, kind: "piercer" },
+      ],
+    },
+    {
+      id: "g22", labelKey: "gstZ22", twistKey: "gstTwist22", budget: 13, maxTowers: 3, leaks: 2, starGlyphs: [9, 11, 13],
+      paths: [[[0, 3], [1, 3], [1, 2], [2, 2], [3, 2], [3, 3], [4, 3], [4, 4], [5, 4], [5, 3], [6, 3], [6, 2], [7, 2], [7, 3], [8, 3]]],
+      waves: [
+        { start: 0, gap: 5, count: 5, kind: "wisp" },
+        { start: 70, gap: 6, count: 5, kind: "husk" },
+        { start: 140, gap: 0, count: 1, kind: "choir" },
+        { start: 190, gap: 5, count: 6, kind: "cutter" },
+      ],
+      solution: [
+        { x: 4, y: 2, kind: "piercer" }, { x: 1, y: 4, kind: "smoulder" },
+        { x: 4, y: 5, kind: "snare" },
+      ],
+    },
+    {
+      id: "g23", labelKey: "gstZ23", twistKey: "gstTwist23", budget: 16, maxTowers: 4, leaks: 2, starGlyphs: [12, 14, 16],
+      paths: [
+        [[0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [5, 2], [5, 3], [6, 3], [7, 3], [8, 3]],
+        [[0, 4], [1, 4], [2, 4], [3, 4], [4, 4], [5, 4], [5, 3], [5, 2], [6, 2], [7, 2], [8, 2]],
+      ],
+      waves: [
+        { start: 0, gap: 5, count: 6, kind: "wisp" },
+        { start: 70, gap: 6, count: 6, kind: "plate" },
+        { start: 150, gap: 0, count: 1, kind: "choir" },
+        { start: 210, gap: 5, count: 6, kind: "cutter" },
+      ],
+      solution: [
+        { x: 5, y: 5, kind: "snare" }, { x: 3, y: 2, kind: "smoulder" },
+        { x: 4, y: 2, kind: "piercer" }, { x: 3, y: 3, kind: "piercer" },
+      ],
+    },
+    {
+      id: "g24", labelKey: "gstZ24", twistKey: "gstTwist24", budget: 18, maxTowers: 5, leaks: 1, starGlyphs: [14, 16, 18],
+      paths: [
+        [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [4, 1], [4, 2], [3, 2], [2, 2], [1, 2], [0, 2], [0, 3], [0, 4], [1, 4], [2, 4], [3, 4], [4, 4], [4, 5], [5, 5], [6, 5], [7, 5], [8, 5]],
+        [[0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [7, 1], [8, 1]],
+        [[0, 4], [1, 4], [2, 4], [3, 4], [4, 4], [5, 4], [6, 4], [7, 4], [8, 4]],
+      ],
+      waves: [
+        { start: 0, gap: 6, count: 6, kind: "plate" },
+        { start: 70, gap: 5, count: 7, kind: "wisp" },
+        { start: 145, gap: 5, count: 8, kind: "cutter" },
+        { start: 230, gap: 6, count: 5, kind: "runner" },
+        { start: 280, gap: 0, count: 1, kind: "choir" },
+      ],
+      solution: [
+        { x: 1, y: 3, kind: "smoulder" }, { x: 5, y: 3, kind: "snare" },
+        { x: 5, y: 2, kind: "piercer" }, { x: 6, y: 2, kind: "piercer" },
+        { x: 3, y: 3, kind: "snare" },
       ],
     },
   ];
@@ -1326,11 +1397,19 @@
       "gstZ18": "The Quiet Bloom",
       "gstZ19": "The Split Court",
       "gstZ20": "The Iron Relay",
+      "gstZ21": "The Ring Road",
+      "gstZ22": "The Narrow Gate",
+      "gstZ23": "The Weave",
+      "gstZ24": "The Last Court",
       "gstTwist16": "one long spiral - the middle rows guard two roads",
-      "gstTwist17": "the walk passes every tower twice",
+      "gstTwist17": "the walk folds back twice - a stand between lanes covers both",
       "gstTwist18": "blooms knit their wounds back - keep the line hot",
       "gstTwist19": "splinters and iron down two lanes at once",
       "gstTwist20": "the choir comes shielded behind a forked road",
+      "gstTwist21": "one lap of the ring - the middle rows watch every lane",
+      "gstTwist22": "three towers for four waves - one of each kind",
+      "gstTwist23": "two roads cross once - the junction is the whole map",
+      "gstTwist24": "three roads at once, and a choir to close",
       "gstGlyphLabel": "Glyphs",
       "gstLeakLabel": "Leaks",
       "gstWaveLabel": "Wave",
@@ -1421,11 +1500,19 @@
       "gstZ18": "静默之花",
       "gstZ19": "分流庭院",
       "gstZ20": "铁壁接力",
+      "gstZ21": "环城路",
+      "gstZ22": "窄门",
+      "gstZ23": "交织道",
+      "gstZ24": "终局庭院",
       "gstTwist16": "一条长回环——中段两排同时御敌",
-      "gstTwist17": "路线两次经过每座塔",
+      "gstTwist17": "两次折返——夹在两路之间的塔双线御敌",
       "gstTwist18": "花苞会自愈——火力不能断",
       "gstTwist19": "碎片与铁甲同下两路",
       "gstTwist20": "歌者在叉路之后压阵",
+      "gstTwist21": "绕城一整圈——中排同时看守三条车道",
+      "gstTwist22": "三座塔守四波——三种塔各一",
+      "gstTwist23": "两条路交错一次——胜负全在交汇点",
+      "gstTwist24": "三路齐下，歌者压阵",
       "gstGlyphLabel": "符文",
       "gstLeakLabel": "漏怪",
       "gstWaveLabel": "波次",

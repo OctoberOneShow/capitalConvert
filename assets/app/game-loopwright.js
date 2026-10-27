@@ -356,6 +356,100 @@
       doorPlates: [], pistonOffsets: [],
       programs: [["F", "F", "F", "F", "R", "F", "F", "F"]],
     },
+    /* Floors 21-24. The first twenty taught the verbs and put them to work in
+     * relays; the back tier asks for things no authored run has done yet: f21
+     * reverses - the B op's first shift - driving a crate down a two-cell dock
+     * and backing out the way it came; f22 races a piston pair on the phase
+     * clock and leaves a ghost holding the plate behind the rams; f23 carries
+     * a pad through a live door and drops it on the far plate mid-run; and
+     * f24 chains the crate trick, a parked ghost, and a wait-for-your-crew
+     * finish into the summit. Every floor was walked by its own shipped runs
+     * in tools/loopwright-forge.js and came back solved, and the forge's
+     * searches came back empty: no shorter run list plays any of them. */
+    /* The dock is two cells deep, so the crate needs two shoves to reach the
+     * far plate - and once it is home the worker is nose-to-wall in a dead
+     * end. Turning around costs two ops; backing out (B) costs one, and the
+     * eight-slot cap only fits the reverse. */
+    {
+      id: "f21", labelKey: "lpwF21",
+      map: ["########",
+            "#......#",
+            "#..P...#",
+            "#......#",
+            "#..C.DG#",
+            "#......#",
+            "#..W...#",
+            "########"],
+      doorPlates: [0], pistonOffsets: [],
+      programs: [["F", "P", "P", "B", "R", "F", "F", "F"]],
+    },
+    /* The press pair cycles on a four-tick phase, and both rams are down on
+     * the very tick the straight walk from the start would reach them: the
+     * mouth ram kills tick one, the far ram kills tick five, so no run can
+     * thread both without burning a beat on the phase clock. The ghost parked
+     * on the plate between the rams keeps the win alive while the worker
+     * climbs past both to the goal. */
+    {
+      id: "f22", labelKey: "lpwF22",
+      map: ["########",
+            "###.G###",
+            "###T####",
+            "###P####",
+            "###T####",
+            "###.####",
+            "#..W...#",
+            "########"],
+      doorPlates: [], pistonOffsets: [3, 3],
+      programs: [
+        ["F", "W", "F", "F"],
+        ["F", "W", "F", "F", "F", "F", "R", "F"],
+      ],
+    },
+    /* The pad can be shoved, but every shove lane dies before it helps: north
+     * slides stall against the chamber's back wall short of the plate, and the
+     * west slide into the plate's cell leaves the far plate starving - so the
+     * only line that feeds both plates is a carry. The last run grabs the pad
+     * at the start, walks it through the live airlock, and drops it on the
+     * side chamber's plate on the way to the goal. First authored run that
+     * delivers its own key. */
+    {
+      id: "f23", labelKey: "lpwF23",
+      map: ["########",
+            "########",
+            "########",
+            "#GP.####",
+            "###D####",
+            "#..S...#",
+            "#.PW...#",
+            "########"],
+      doorPlates: [1], pistonOffsets: [],
+      programs: [
+        ["L", "F"],
+        ["G", "F", "F", "F", "L", "F", "D", "F"],
+      ],
+    },
+    /* Outer gate, inner post, final sprint. Run one shoulders the crate onto
+     * the outer plate; run two waits out the ghost's settle time - its crate
+     * only lands on the plate on its third tick - and takes the inner post
+     * through the outer gate; the last run, waits included, is exactly the
+     * eight slots the panel allows, and no two-run split fits the cap. */
+    {
+      id: "f24", labelKey: "lpwF24",
+      map: ["########",
+            "###DG###",
+            "###P####",
+            "###D####",
+            "#......#",
+            "#PC....#",
+            "#..W...#",
+            "########"],
+      doorPlates: [0, 1], pistonOffsets: [],
+      programs: [
+        ["F", "L", "P"],
+        ["W", "F", "F", "F", "F"],
+        ["W", "F", "F", "F", "F", "F", "R", "F"],
+      ],
+    },
   ];
 
   function mulberry32(seed) {
@@ -1223,6 +1317,10 @@
       "lpwF18": "Gatekeeper",
       "lpwF19": "Half Turn",
       "lpwF20": "Foot on the Switch",
+      "lpwF21": "Reverse Out",
+      "lpwF22": "The Stamping Press",
+      "lpwF23": "Carry It Through",
+      "lpwF24": "The Night Shift",
       "lpwOpF": "Forward",
       "lpwOpB": "Back",
       "lpwOpL": "Turn left",
@@ -1253,7 +1351,7 @@
       "lpwFailBudget": "The loop never ended. Everything rewound; the ghost keeps its walk.",
       "lpwFailShort": "The queue ran out short of the goal. Rewound - and that ghost is now your crew.",
       "lpwNextFloor": "Next floor unlocked.",
-      "lpwAllFloors": "All ten floors are running.",
+      "lpwAllFloors": "Every floor is running.",
       "lpwHint": "Keys 1-9 insert (9 is the loop marker; re-click it to change its target), arrows move the queue cursor, Enter inserts the armed chip, Backspace clears a slot, R runs, X rewinds. Empty slots act as waits. 3 stars: par runs AND no more than par instructions.",
       "logLoopwright": "Cleared {name} in {n} runs",
     },
@@ -1279,6 +1377,10 @@
       "lpwF18": "守门人",
       "lpwF19": "半程转弯",
       "lpwF20": "脚下压闸",
+      "lpwF21": "倒车出库",
+      "lpwF22": "冲压车间",
+      "lpwF23": "携垫过闸",
+      "lpwF24": "夜班交接",
       "lpwOpF": "前进",
       "lpwOpB": "后退",
       "lpwOpL": "左转",
@@ -1309,7 +1411,7 @@
       "lpwFailBudget": "循环永远跑不完。全部倒回起点；分身保留了这段路程。",
       "lpwFailShort": "指令跑完时还没达成目标。已倒带——这个分身现在是你的一名工友。",
       "lpwNextFloor": "解锁下一层。",
-      "lpwAllFloors": "十层全部运转起来了。",
+      "lpwAllFloors": "全部楼层都运转起来了。",
       "lpwHint": "数字键 1-9 直接插入（9 是回环标记，再点一次可切换跳回的目标），方向键移动队列光标，回车插入选中的指令，退格清空槽位，R 运行，X 倒带。空槽按等待处理。三星条件：恰好标准运行数且指令数不超过标准。",
       "logLoopwright": "用 {n} 次运行通关{name}",
     },

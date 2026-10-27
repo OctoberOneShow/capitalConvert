@@ -388,6 +388,125 @@
         wlkWind(7, 2, 2), wlkShade(9, 3),
       ],
     },
+    /* Seasons 21-24. The second twenty proved the loom can fill a whole map;
+     * these four turn the country against the canals. The budget climbs
+     * 26 -> 30 and the windows sit at the w20 ceiling of 22 wide or tighter,
+     * so the constraint is still the land: a canal the drift starves, a wall
+     * with one gap, a sky that rains before the fields are ready, and the
+     * most parishes the loom has ever held. Each season below was proven by
+     * its own shipped plan through App.loomRun - w21's weave was walked by
+     * hand and re-proved by tools/weather-forge.js, w22-w24 were found by
+     * that forge - and came back three stars with no flooded field and no
+     * dry hold, so what is printed is what is winnable. */
+    /* The far shore: the longest canal the loom has ever run - nine arrows
+     * east - dies two cells short of the last parish. A heater sump beside
+     * the canal pumps the drift back into it, and that one pump is the only
+     * reason the far shore drinks. The stubs on rows one and six close the
+     * mid canals so they pool at their own villages instead of leaking east. */
+    {
+      id: "w21", labelKey: "wlkZ21", points: 27, ticks: 20,
+      cfg: { source: 8 },
+      ridge: [wlkSpot(6, 1), wlkSpot(6, 6)],
+      villages: [
+        wlkVillage(2, 0, 56, 78),
+        wlkVillage(5, 1, 56, 78),
+        wlkVillage(9, 3, 54, 76),
+        wlkVillage(2, 5, 56, 78),
+        wlkVillage(5, 6, 56, 78),
+        wlkVillage(2, 7, 56, 78),
+      ],
+      plan: [
+        wlkWind(0, 0), wlkWind(1, 0), wlkWind(0, 1), wlkWind(1, 1),
+        wlkWind(2, 1), wlkWind(3, 1), wlkWind(4, 1), wlkWind(0, 3),
+        wlkWind(1, 3), wlkWind(2, 3), wlkWind(3, 3), wlkWind(4, 3),
+        wlkWind(5, 3), wlkWind(6, 3), wlkWind(7, 3), wlkWind(8, 3),
+        wlkHeat(6, 4), wlkWind(0, 5), wlkWind(1, 5), wlkWind(0, 6),
+        wlkWind(1, 6), wlkWind(2, 6), wlkWind(3, 6), wlkWind(4, 6),
+        wlkWind(0, 7), wlkWind(1, 7),
+      ],
+    },
+    /* The needle's eye: a ridge wall runs the whole height of the map with a
+     * single gap, so every drop the three eastern parishes drink has passed
+     * through that one gate cell. The western rows drink their fill first,
+     * and the gate canal still has to reach the far corner without drowning
+     * the parish that stands beside it. */
+    {
+      id: "w22", labelKey: "wlkZ22", points: 27, ticks: 20,
+      cfg: { source: 8, drain: 0.8 },
+      ridge: [wlkSpot(4, 0), wlkSpot(4, 1), wlkSpot(4, 2), wlkSpot(4, 4), wlkSpot(4, 5), wlkSpot(4, 6), wlkSpot(4, 7)],
+      villages: [
+        wlkVillage(2, 2, 55, 77),
+        wlkVillage(2, 6, 55, 77),
+        wlkVillage(6, 3, 60, 82),
+        wlkVillage(8, 3, 57, 79),
+        wlkVillage(9, 2, 57, 79),
+      ],
+      plan: [
+        wlkWind(0, 2), wlkWind(1, 2), wlkWind(0, 6), wlkWind(1, 6),
+        wlkWind(0, 3), wlkWind(1, 3), wlkWind(2, 3), wlkWind(3, 3),
+        wlkWind(4, 3), wlkWind(5, 3), wlkWind(7, 3), wlkWind(3, 2, 1),
+        wlkWind(5, 2), wlkWind(6, 2), wlkWind(7, 2), wlkWind(8, 2),
+        wlkShade(9, 2), wlkHeat(2, 4), wlkHeat(2, 5), wlkShade(8, 3),
+        wlkWind(9, 3, 2), wlkHeat(8, 4), wlkWind(1, 5, 3), wlkShade(1, 4),
+      ],
+    },
+    /* The storm ledger: rain comes at 52 and dumps in great sheets, and a
+     * flooded cell costs double, so the six crowded parishes are as much a
+     * ceiling as a floor - one canal too short drowns its own village. The
+     * lake at the heart of the map tops up the parish the ridge stubs hide. */
+    {
+      id: "w23", labelKey: "wlkZ23", points: 28, ticks: 20,
+      cfg: { source: 9, lakeSource: 4, rainAt: 52, dump: 0.6, floodLimit: 80, floodWeight: 2 },
+      ridge: [wlkSpot(2, 3), wlkSpot(2, 4), wlkSpot(8, 3)],
+      lake: [wlkSpot(5, 4)],
+      villages: [
+        wlkVillage(6, 1, 54, 76),
+        wlkVillage(6, 2, 56, 78),
+        wlkVillage(5, 3, 55, 77),
+        wlkVillage(6, 5, 54, 76),
+        wlkVillage(4, 6, 54, 76),
+        wlkVillage(2, 7, 21, 43),
+      ],
+      plan: [
+        wlkWind(0, 1), wlkWind(1, 1), wlkWind(2, 1), wlkWind(3, 1),
+        wlkWind(4, 1), wlkWind(5, 1), wlkWind(0, 2), wlkWind(1, 2),
+        wlkWind(2, 2), wlkWind(3, 2), wlkWind(4, 2), wlkWind(5, 2),
+        wlkWind(1, 3, 3), wlkWind(3, 3), wlkWind(4, 3), wlkWind(0, 5),
+        wlkWind(1, 5), wlkWind(2, 5), wlkWind(3, 5), wlkWind(4, 5),
+        wlkWind(5, 5), wlkWind(0, 6), wlkWind(1, 6), wlkWind(2, 6),
+        wlkWind(3, 6), wlkShade(5, 3), wlkShade(2, 7), wlkWind(4, 4, 3),
+      ],
+    },
+    /* Seven parishes: the most settlements the loom has ever held, one behind
+     * every ridge stub and two down the far edge, with the tightest windows
+     * on the ladder. Every trick the first twenty-three seasons taught -
+     * canals, lakes, lift, shade - is spent somewhere in this weave, and
+     * none of it is spare. */
+    {
+      id: "w24", labelKey: "wlkZ24", points: 30, ticks: 20,
+      cfg: { source: 8, lakeSource: 4, ambient: 54, lift: 0.42, wind: 0.55 },
+      ridge: [wlkSpot(3, 3), wlkSpot(3, 4), wlkSpot(6, 2), wlkSpot(6, 5)],
+      lake: [wlkSpot(8, 1), wlkSpot(4, 7)],
+      villages: [
+        wlkVillage(1, 1, 56, 76),
+        wlkVillage(1, 6, 56, 76),
+        wlkVillage(2, 2, 56, 76),
+        wlkVillage(5, 1, 63, 83),
+        wlkVillage(5, 6, 69, 89),
+        wlkVillage(8, 4, 64, 84),
+        wlkVillage(9, 6, 59, 79),
+      ],
+      plan: [
+        wlkWind(0, 1), wlkWind(0, 6), wlkWind(0, 2), wlkWind(1, 2),
+        wlkWind(2, 1), wlkWind(3, 1), wlkWind(4, 1), wlkWind(2, 6),
+        wlkWind(3, 6), wlkWind(4, 6), wlkWind(1, 4), wlkWind(2, 4),
+        wlkWind(4, 4), wlkWind(5, 4), wlkWind(6, 4), wlkWind(7, 4),
+        wlkWind(6, 6), wlkWind(7, 6), wlkWind(8, 6), wlkShade(8, 4),
+        wlkWind(6, 7, 3), wlkWind(3, 0, 1), wlkShade(5, 1), wlkWind(6, 3, 1),
+        wlkHeat(5, 5), wlkWind(6, 1, 2), wlkWind(5, 7, 3), wlkWind(4, 7, 3),
+        wlkShade(9, 6),
+      ],
+    },
   ];
 
   function wlkCfg(level) {
@@ -1243,6 +1362,10 @@
       "wlkZ18": "Inner Delta",
       "wlkZ19": "Slow Monsoon",
       "wlkZ20": "Crown of the Map",
+      "wlkZ21": "The Long Canal",
+      "wlkZ22": "Needle's Eye",
+      "wlkZ23": "Storm Ledger",
+      "wlkZ24": "Seven Parishes",
       "wlkSeasonLabel": "Season",
       "wlkPointsLabel": "Loom",
       "wlkFedLabel": "Fed",
@@ -1305,6 +1428,10 @@
       "wlkZ18": "内三角洲",
       "wlkZ19": "缓季季风",
       "wlkZ20": "地图之冠",
+      "wlkZ21": "长渠远村",
+      "wlkZ22": "针眼隘口",
+      "wlkZ23": "骤洪清账",
+      "wlkZ24": "七村并灌",
       "wlkSeasonLabel": "季度",
       "wlkPointsLabel": "织点",
       "wlkFedLabel": "灌足",

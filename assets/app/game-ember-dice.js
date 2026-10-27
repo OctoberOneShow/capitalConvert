@@ -68,19 +68,40 @@
     { id: "t15", labelKey: "diceTable15", ruleKey: "diceRule15", target: 210, burn: [1, 6], tax: -48, pairs: true },
     { id: "t16", labelKey: "diceTable16", ruleKey: "diceRule16", target: 225, burn: [1, 2], tax: -51, pairs: true },
 
-    /* Tables 17-20, the summit. Seventeen takes the twin-ember pairs one
-     * step higher; eighteen brings the twin embers back down to the small
-     * felt at their highest stakes, a breath after the pairs grind; nineteen
-     * lights a THIRD burn face on that small felt - half the faces burn now,
-     * and only the bounty keeps the table playable - and the last gate
-     * combines the cold family's rule with the deepest stakes of the room.
-     * Every bounty below sits one step under the cliff where the next bank
-     * would come free, which is where the solver puts the three-star line
-     * around a quarter of best-policy runs. */
+    /* Tables 17-20, the summit as the ladder first shipped it. Seventeen
+     * takes the twin-ember pairs one step higher; eighteen brings the twin
+     * embers back down to the small felt at their highest stakes, a breath
+     * after the pairs grind; nineteen lights a THIRD burn face on that small
+     * felt - half the faces burn now, and only the bounty keeps the table
+     * playable - and the last gate combines the cold family's rule with the
+     * deepest stakes the room had then asked. Every bounty below sits one
+     * step under the cliff where the next bank would come free, which is
+     * where the solver puts the three-star line around a quarter of
+     * best-policy runs. */
     { id: "t17", labelKey: "diceTable17", ruleKey: "diceRule17", target: 240, burn: [1, 6], tax: -54, pairs: true },
     { id: "t18", labelKey: "diceTable18", ruleKey: "diceRule18", target: 90, burn: [1, 6], tax: -14, pairs: false },
     { id: "t19", labelKey: "diceTable19", ruleKey: "diceRule19", target: 105, burn: [1, 2, 6], tax: -22, pairs: false },
     { id: "t20", labelKey: "diceTable20", ruleKey: "diceRule20", target: 255, burn: [1, 2], tax: -59, pairs: true },
+
+    /* Tables 21-24, the summit tier - the four tables the first summit's own
+     * language was pointing at. Twenty-one walks the twin-ember pairs past
+     * Ashen Stair to 280, a target no pairs table had carried; twenty-two
+     * hands the cold family the deepest ask in the room, 300; twenty-three
+     * takes the three-ember small felt past Trinity Ember to 150, the
+     * highest that felt has carried; and the last gate asks Ashen Stair's
+     * own 240 of a pairs felt with all THREE embers lit, where three of
+     * every four rolls burn - no shipped table pairs three burn faces, and
+     * that felt is why the last bounty reaches 111. Each bounty below is
+     * the smallest one the forge still measures inside the shipped bands -
+     * clear for 45% of best-policy runs, the three-star line between 15%
+     * and 50% - so the tier is as hard as those bands allow, and the gate
+     * can prove the edge by re-measuring one bounty stingier: 21's
+     * three-star line falls to 13.8%, 22's to 14.3%, 23's to 13.2%, and 24
+     * drops under 45% clear outright. */
+    { id: "t21", labelKey: "diceTable21", ruleKey: "diceRule21", target: 280, burn: [1, 6], tax: -63, pairs: true },
+    { id: "t22", labelKey: "diceTable22", ruleKey: "diceRule22", target: 300, burn: [1, 2], tax: -66, pairs: true },
+    { id: "t23", labelKey: "diceTable23", ruleKey: "diceRule23", target: 150, burn: [1, 2, 6], tax: -32, pairs: false },
+    { id: "t24", labelKey: "diceTable24", ruleKey: "diceRule24", target: 240, burn: [1, 2, 6], tax: -111, pairs: true },
   ];
 
   function initEmberDiceGame() {
@@ -311,6 +332,10 @@
       "diceTable18": "Twinlings",
       "diceTable19": "Trinity Ember",
       "diceTable20": "The Last Gate",
+      "diceTable21": "Pyre Stair",
+      "diceTable22": "The Cold Deep",
+      "diceTable23": "Ember Crown",
+      "diceTable24": "The Last Ember",
       "diceRule8": "The Bounty Board: a bank pays 12 bounty embers, but only a bank collects. Target {t}.",
       "diceRule9": "Cold Deuce: 2 burns right alongside 1, and the bounty climbs to 20. Target {t}.",
       "diceRule10": "Ashfall Twins: two dice, any 1 burns them both, and each bank pays a 24 bounty. Target {t}.",
@@ -324,6 +349,10 @@
       "diceRule18": "Twinlings: one die, a 1 or a 6 burns the stake, and every bank pays you an extra 14. Target {t}.",
       "diceRule19": "Trinity Ember: one die, a 1, a 2 or a 6 burns the stake, and every bank pays you an extra 22. Target {t}.",
       "diceRule20": "The Last Gate: two dice add together, a 1 or a 2 on either die burns the stake, and every bank pays you an extra 59. Target {t}.",
+      "diceRule21": "Pyre Stair: two dice add together, a 1 or a 6 on either die burns the stake, and every bank pays you an extra 63. Target {t}.",
+      "diceRule22": "The Cold Deep: two dice add together, a 1 or a 2 on either die burns the stake, and every bank pays you an extra 66. Target {t}.",
+      "diceRule23": "Ember Crown: one die, a 1, a 2 or a 6 burns the stake, and every bank pays you an extra 32. Target {t}.",
+      "diceRule24": "The Last Ember: two dice add together, a 1, a 2 or a 6 on either die burns the stake, and every bank pays you an extra 111. Target {t}.",
       "diceBurns": "A {f}! The stake burns to ash.",
       "diceAllTables": " All {n} tables are yours!",
     },
@@ -345,6 +374,10 @@
       "diceTable18": "孪火桌",
       "diceTable19": "三烬桌",
       "diceTable20": "末门桌",
+      "diceTable21": "焚阶桌",
+      "diceTable22": "深寒桌",
+      "diceTable23": "烬冠桌",
+      "diceTable24": "末烬桌",
       "diceRule8": "赏金桌：「收下」额外给 12 簇赏金，只有收下才拿得到。目标 {t}。",
       "diceRule9": "冷二桌：2 点和 1 点一样烧注，赏金涨到 20。目标 {t}。",
       "diceRule10": "灰烬双骰：两颗骰子，任何 1 点全烧，每次收下赏 24。目标 {t}。",
@@ -358,6 +391,10 @@
       "diceRule18": "孪火桌：一颗骰子，掷出 1 或 6 就烧光赌注，每次「收下」额外给 14。目标 {t}。",
       "diceRule19": "三烬桌：一颗骰子，1、2、6 任何一点都会烧光赌注，每次「收下」额外给 22。目标 {t}。",
       "diceRule20": "末门桌：两颗骰子相加，任何一颗掷出 1 或 2 就烧光赌注，每次「收下」额外给 59。目标 {t}。",
+      "diceRule21": "焚阶桌：两颗骰子相加，任何一颗掷出 1 或 6 就烧光赌注，每次「收下」额外给 63。目标 {t}。",
+      "diceRule22": "深寒桌：两颗骰子相加，任何一颗掷出 1 或 2 就烧光赌注，每次「收下」额外给 66。目标 {t}。",
+      "diceRule23": "烬冠桌：一颗骰子，1、2、6 任何一点都会烧光赌注，每次「收下」额外给 32。目标 {t}。",
+      "diceRule24": "末烬桌：两颗骰子相加，1、2、6 任何一点都会烧光赌注，每次「收下」额外给 111。目标 {t}。",
       "diceBurns": "掷出 {f}！赌注化为灰烬。",
       "diceAllTables": " {n} 张牌桌都是你的了！",
     },

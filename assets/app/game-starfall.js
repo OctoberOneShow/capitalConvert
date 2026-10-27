@@ -156,6 +156,55 @@
       pad: { x0: 0.247, x1: 0.42, y: 301 },
       starFuel: [17, 12, 6],
     },
+
+    /* ------------------------------------------------------------------
+     * The summit tier (s21-s24). The heavy-gravity tier ended on nested
+     * ridge fields at 154; these four keep those engines but change what
+     * the ground asks of the descent, one idea per sector, while gravity
+     * walks on to 170 - still 65 inside the engine's 235 of thrust - and
+     * the tank drains from 68 to 64, so every hover is borrowed fuel.
+     *
+     * s21 hangs a deep basin just past the pad's right lip: the shelf is
+     * the only safe ground on the field, and its own lowest point is the
+     * trap. s22 drops the pad to the floor of a slot canyon whose flanks
+     * rise on both sides, so the approach is a corridor rather than a
+     * slope. s23 inverts the shipped approach - the pad is a mesa, the
+     * highest ground in sight, with a basin waiting below on either side
+     * for a descent that sinks early. s24 closes the ladder with a wedge:
+     * twin spires pinch a 32-pixel window whose flat floor runs on past
+     * the pad's glow as same-height rock, and one more basin waits beyond
+     * the far spire.
+     *
+     * Every sector here was flown before it shipped, exactly the way the
+     * tiers above were: tools/starfall-forge.js re-implements this module's
+     * flight and lands its swarm of scripted pilots on each candidate; the
+     * rung ships only when one of them touches down inside the pad window
+     * with fuel still on the gauge, and the star bands are that measured
+     * landing's own line - 62/42/22 percent of the best fuel it leaves. */
+    {
+      id: "s21", labelKey: "lantL21", gravity: 158, fuel: 67,
+      terrain: [[0, 300], [0.14, 318], [0.3, 296], [0.42, 284], [0.56, 284], [0.66, 306], [0.76, 330], [0.88, 318], [1, 322]],
+      pad: { x0: 0.435, x1: 0.545, y: 284 },
+      starFuel: [12, 8, 4],
+    },
+    {
+      id: "s22", labelKey: "lantL22", gravity: 162, fuel: 66,
+      terrain: [[0, 266], [0.16, 240], [0.32, 290], [0.4, 316], [0.62, 316], [0.74, 286], [0.88, 242], [1, 274]],
+      pad: { x0: 0.445, x1: 0.555, y: 316 },
+      starFuel: [9, 6, 3],
+    },
+    {
+      id: "s23", labelKey: "lantL23", gravity: 166, fuel: 65,
+      terrain: [[0, 300], [0.12, 326], [0.26, 306], [0.39, 262], [0.53, 262], [0.66, 296], [0.8, 330], [1, 316]],
+      pad: { x0: 0.405, x1: 0.515, y: 262 },
+      starFuel: [11, 8, 4],
+    },
+    {
+      id: "s24", labelKey: "lantL24", gravity: 170, fuel: 64,
+      terrain: [[0, 258], [0.1, 240], [0.16, 300], [0.24, 320], [0.36, 320], [0.48, 320], [0.58, 296], [0.66, 238], [0.8, 250], [0.9, 314], [1, 322]],
+      pad: { x0: 0.26, x1: 0.36, y: 320 },
+      starFuel: [11, 7, 4],
+    },
   ];
 
   function initStarfallGame() {
@@ -648,6 +697,23 @@
     loadLevel(lantLevels[campaign.indexOf(campaign.nextLevelId())]);
   }
 
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already hold, so the picker never prints a raw key. */
+  App.addStrings({
+    en: {
+      "lantL21": "The Lure",
+      "lantL22": "The Narrows",
+      "lantL23": "High Shelf",
+      "lantL24": "The Wedge",
+    },
+    zh: {
+      "lantL21": "幻谷",
+      "lantL22": "窄峡",
+      "lantL23": "浮台",
+      "lantL24": "夹缝",
+    },
+  });
 
   /* Exported for the other modules. */
   App.initStarfallGame = initStarfallGame;

@@ -42,12 +42,14 @@
      * never be three-starred, so these targets are set where all three
      * bands live inside a single generous chain - the tier asks less per
      * card than the shipped tail but pays it out in exactly the moves
-     * given, and the finale's four-colour well throws the deepest chains in
-     * the game against the tightest read. */
+     * given. The finale is the longest accumulation in the tier: the most
+     * moves against the biggest target, where the release gate's random
+     * hand never reaches the line and only a read that keeps the pools
+     * managed crosses it with a cascade to spare. */
     { id: "p17", labelKey: "lvlNum17", target: 1800, moves: 16, colors: 5 },
     { id: "p18", labelKey: "lvlNum18", target: 1000, moves: 30 },
     { id: "p19", labelKey: "lvlNum19", target: 1400, moves: 14, colors: 5 },
-    { id: "p20", labelKey: "lvlNum20", target: 3600, moves: 18, colors: 4 },
+    { id: "p20", labelKey: "lvlNum20", target: 2600, moves: 18, colors: 5 },
   ];
 
   function indexAt(x, y) {

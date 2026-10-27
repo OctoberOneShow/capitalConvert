@@ -280,6 +280,110 @@
       ],
       starTimes: [128, 191, 261],
     },
+
+    /* ------------------------------------------------------------------
+     * The deep tier (c21-c24). The second tier had taken the eight-lane
+     * template as far as it would go - rows 6 and 2 running opposing
+     * trains, a fastest lane of 172, a tightest gap of 96 - so this tier
+     * breaks both floors at once: every rung carries nine lanes, a third
+     * doubled row (row 7, then row 5) joining the shipped pair, and every
+     * rung's fastest lane outruns the shipped ceiling while its tightest
+     * gap dips under the shipped floor. As ever a ford ships only because
+     * tools/crossing-forge.js proves it: each rung was laid against its
+     * own brief (speed band, gap band, doubled rows) and ships because the
+     * prover's breadth-first search over (pads, row, position, time) found
+     * a route that stands on all four pads. The rungs sit in the order
+     * that proof measured - the cleanest route lengthens from 2.85s to
+     * 3.3s as the tier climbs - and the star bands are quoted from each
+     * ford's own measured route at the forged half's own mean margin (48x
+     * the prover's route; shipped rungs c11-c20 clear their three-star
+     * line at 25x-65x), widened by the same 1.5x / 2.05x steps the shipped
+     * rungs use.
+     * ------------------------------------------------------------------ */
+    /* Spring Tide: the third doubled row. The second tier split rows 6 and
+     * 2 into opposing trains and topped out at eight lanes, so this rung
+     * hangs the third train on row 7 - nine lanes, a first, and the first
+     * road lane the frog meets now reads both ways from the opening hop.
+     * The counter-trains come back at 138, 172 and 182, the fastest lane
+     * yet, and row 6's 92 window dips under c20's 96 floor. */
+    {
+      id: "c21", labelKey: "croL21",
+      lanes: [
+        { row: 1, dir: 1, speed: 156, len: 74, gap: 114 },
+        { row: 2, dir: -1, speed: 138, len: 96, gap: 96 },
+        { row: 3, dir: -1, speed: 140, len: 82, gap: 114 },
+        { row: 5, dir: -1, speed: 134, len: 90, gap: 112 },
+        { row: 6, dir: -1, speed: 140, len: 72, gap: 100 },
+        { row: 7, dir: -1, speed: 148, len: 80, gap: 112 },
+        { row: 6, dir: 1, speed: 138, len: 76, gap: 92 },
+        { row: 2, dir: 1, speed: 182, len: 70, gap: 128 },
+        { row: 7, dir: 1, speed: 172, len: 66, gap: 98 },
+      ],
+      starTimes: [137, 205, 280],
+    },
+    /* The Maelstrom: no relief lane. c21 still let one counter-train lope
+     * along at 138; every cross train here is express - 174, 178, 184 - and
+     * every base lane holds 134 or better, the pace c20's quickest base
+     * lane ran at, so there is nowhere on the board to watch a cycle go
+     * by. The 184 on row 7 is the fastest lane yet, and row 2's 94 gap
+     * keeps the rung under the shipped floor. */
+    {
+      id: "c22", labelKey: "croL22",
+      lanes: [
+        { row: 1, dir: -1, speed: 134, len: 78, gap: 118 },
+        { row: 2, dir: -1, speed: 160, len: 98, gap: 120 },
+        { row: 3, dir: 1, speed: 134, len: 78, gap: 120 },
+        { row: 5, dir: 1, speed: 154, len: 86, gap: 104 },
+        { row: 6, dir: -1, speed: 160, len: 98, gap: 104 },
+        { row: 7, dir: -1, speed: 156, len: 94, gap: 112 },
+        { row: 6, dir: 1, speed: 178, len: 74, gap: 126 },
+        { row: 2, dir: 1, speed: 174, len: 74, gap: 94 },
+        { row: 7, dir: 1, speed: 184, len: 70, gap: 100 },
+      ],
+      starTimes: [139, 209, 285],
+    },
+    /* The Overflow: the doubled row moves to the median. The third train
+     * leaves row 7 for row 5, the last road lane before the water, so the
+     * both-ways street now sits exactly where the frog lines up its river
+     * entry - and its 88 gap is the tightest window the ladder has asked
+     * for. The fastest lane yet (196) rides row 2's counter-train, so the
+     * rung's top speed is a river lane, not a road train. */
+    {
+      id: "c23", labelKey: "croL23",
+      lanes: [
+        { row: 1, dir: 1, speed: 152, len: 100, gap: 92 },
+        { row: 2, dir: -1, speed: 144, len: 92, gap: 112 },
+        { row: 3, dir: -1, speed: 138, len: 78, gap: 96 },
+        { row: 5, dir: -1, speed: 156, len: 88, gap: 94 },
+        { row: 6, dir: -1, speed: 170, len: 100, gap: 92 },
+        { row: 7, dir: -1, speed: 170, len: 84, gap: 98 },
+        { row: 6, dir: 1, speed: 156, len: 66, gap: 124 },
+        { row: 2, dir: 1, speed: 196, len: 72, gap: 114 },
+        { row: 5, dir: 1, speed: 154, len: 66, gap: 88 },
+      ],
+      starTimes: [144, 216, 295],
+    },
+    /* The Washout: the board shears. All three river base lanes run right
+     * at 160-176 while all three road base lanes run left - a tide-race
+     * split the full width of the ford, the first in the campaign - and
+     * the counter-trains thread it at 166, 180 and 198, 198 the fastest
+     * lane the ladder ships. Row 5's 86 window and the tier's longest
+     * clean route close the ladder. */
+    {
+      id: "c24", labelKey: "croL24",
+      lanes: [
+        { row: 1, dir: 1, speed: 166, len: 82, gap: 110 },
+        { row: 2, dir: 1, speed: 160, len: 70, gap: 100 },
+        { row: 3, dir: 1, speed: 176, len: 74, gap: 100 },
+        { row: 5, dir: -1, speed: 158, len: 86, gap: 86 },
+        { row: 6, dir: -1, speed: 150, len: 78, gap: 88 },
+        { row: 7, dir: -1, speed: 162, len: 94, gap: 88 },
+        { row: 6, dir: 1, speed: 198, len: 62, gap: 100 },
+        { row: 2, dir: -1, speed: 180, len: 72, gap: 104 },
+        { row: 5, dir: 1, speed: 166, len: 62, gap: 116 },
+      ],
+      starTimes: [158, 238, 325],
+    },
   ];
   var STREAK_COLORS = ["#f472b6", "#fb7185", "#fbbf24", "#a78bfa"];
 
@@ -769,13 +873,23 @@
 
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already hold, so the shared dictionary stays the authority for
-   * the drawer chrome and the nine shipped rung names. */
+   * the drawer chrome and the first twenty rung names. The deep tier's four
+   * names are new here - the shared dictionary stops at croL20 - so they
+   * travel with the module. */
   App.addStrings({
     en: {
       "croL10": "Two-Way Street",
+      "croL21": "Spring Tide",
+      "croL22": "The Maelstrom",
+      "croL23": "The Overflow",
+      "croL24": "The Washout",
     },
     zh: {
       "croL10": "双向街",
+      "croL21": "大潮",
+      "croL22": "大漩涡",
+      "croL23": "漫堤",
+      "croL24": "决堤",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});
