@@ -105,6 +105,22 @@
       mix: [{ v: "genuine", n: 10 }, { v: "restored", n: 5 }, { v: "forgery", n: 5 }], twin: true, decoyLog: true, clue: 5 },
     { id: "cfm20", labelKey: "cfmHall20", count: 20, verdicts: ["genuine", "restored", "forgery"],
       mix: [{ v: "genuine", n: 9 }, { v: "restored", n: 6 }, { v: "forgery", n: 5 }], twin: true, decoyLog: true, clue: 0 },
+    /* Hall 21 expands the survey to 21 pieces with twin pairings and decoy logs,
+     * maintaining high analytical density under a 5-forgery lot note. */
+    { id: "cfm21", labelKey: "cfmHall21", count: 21, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 10 }, { v: "restored", n: 6 }, { v: "forgery", n: 5 }], twin: true, decoyLog: true, clue: 5 },
+    /* Hall 22 is an intensive 22-piece audit with 9 forgeries testing deep cross-checking
+     * between material inception years and artist working lifetimes. */
+    { id: "cfm22", labelKey: "cfmHall22", count: 22, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 8 }, { v: "restored", n: 5 }, { v: "forgery", n: 9 }], twin: true, decoyLog: true, clue: 9 },
+    /* Hall 23 features 23 pieces where restored works outnumber originals, demanding
+     * rigorous verification of repair dates against surface scratch frequencies. */
+    { id: "cfm23", labelKey: "cfmHall23", count: 23, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 9 }, { v: "restored", n: 10 }, { v: "forgery", n: 4 }], twin: true, decoyLog: true, clue: 4 },
+    /* Hall 24: The Curator's Master Trial. Full 24-piece gallery with decoy logs,
+     * twin comparisons, and zero lot clues, requiring pure first-principles inference. */
+    { id: "cfm24", labelKey: "cfmHall24", count: 24, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 11 }, { v: "restored", n: 7 }, { v: "forgery", n: 6 }], twin: true, decoyLog: true, clue: 0 },
   ];
 
   /* Ledger artists: the working window is what rule 3 checks. */
@@ -1183,6 +1199,7 @@
       "cfmHall14": "Portrait Corridor", "cfmHall15": "Registrar's Strongroom",
       "cfmHall16": "The Restoration Wing", "cfmHall17": "The Twins Gallery",
       "cfmHall18": "The Quiet Wing", "cfmHall19": "The Double Frame", "cfmHall20": "The Registrar's Vault",
+      "cfmHall21": "The Grand Rotunda", "cfmHall22": "The Shadow Wing", "cfmHall23": "The Conservator's Vault", "cfmHall24": "The Curator's Master Trial",
       "cfmHallLabel": "Hall", "cfmSurveyLabel": "Survey", "cfmOpenLabel": "Opened", "cfmMarkLabel": "Marked",
       "cfmHallSelectLabel": "Choose a hall", "cfmOpenCount": "{n}/{max} lines", "cfmMarkCount": "{n}/{max}",
       "cfmRule1": "Rule 1 wear: scratches only collect on genuine surfaces - under 25 marks per century the top layer is new, over 95 the marks were forced.",
@@ -1231,6 +1248,7 @@
       "cfmHall14": "肖像回廊", "cfmHall15": "登记处密室",
       "cfmHall16": "修复偏厅", "cfmHall17": "孪生画廊",
       "cfmHall18": "静默偏厅", "cfmHall19": "双框之厅", "cfmHall20": "登记员金库",
+      "cfmHall21": "宏伟大厅", "cfmHall22": "暗影侧厅", "cfmHall23": "修复师秘藏", "cfmHall24": "馆长终极评鉴",
       "cfmHallLabel": "展厅", "cfmSurveyLabel": "普查", "cfmOpenLabel": "展阅", "cfmMarkLabel": "判定",
       "cfmHallSelectLabel": "选择展厅", "cfmOpenCount": "已开 {n}/{max} 行", "cfmMarkCount": "{n}/{max}",
       "cfmRule1": "规则一 磨损：划痕只在真品表面累积——每百年少于 25 道说明表层是新做的，多于 95 道就是人为刻出来的。",

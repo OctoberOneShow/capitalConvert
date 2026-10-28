@@ -345,6 +345,90 @@
       stations: [{ edge: "r", pos: 1, colour: 1 }, { edge: "r", pos: 3, colour: 0 }, { edge: "b", pos: 5, colour: 2 }],
       trains: [{ c: 1, row: 1, tick: 0 }, { c: 0, row: 3, tick: 3 }, { c: 2, row: 1, tick: 6 }, { c: 0, row: 1, tick: 9 }, { c: 2, row: 3, tick: 12 }, { c: 0, row: 1, tick: 15 }, { c: 1, row: 1, tick: 18 }, { c: 0, row: 3, tick: 21 }, { c: 2, row: 1, tick: 24 }, { c: 0, row: 1, tick: 27 }, { c: 2, row: 3, tick: 30 }, { c: 0, row: 1, tick: 33 }, { c: 1, row: 1, tick: 36 }, { c: 0, row: 3, tick: 39 }, { c: 2, row: 1, tick: 42 }, { c: 0, row: 1, tick: 45 }, { c: 2, row: 3, tick: 48 }, { c: 0, row: 1, tick: 51 }, { c: 1, row: 1, tick: 54 }, { c: 0, row: 3, tick: 57 }, { c: 2, row: 1, tick: 60 }, { c: 0, row: 1, tick: 63 }, { c: 2, row: 3, tick: 66 }, { c: 0, row: 1, tick: 69 }, { c: 1, row: 1, tick: 72 }, { c: 0, row: 3, tick: 75 }, { c: 2, row: 1, tick: 78 }, { c: 0, row: 1, tick: 81 }],
     },
+    {
+      /* The long return: the platforms are on the west edge and the only way
+       * to reach them is the buffer column, so each train has to be handed
+       * down the right level and run back west before the next one drops. */
+      id: "d25",
+      labelKey: "cwkZ25",
+      limit: 152,
+      hold: 2,
+      tickMs: 300,
+      rows: ["#########", "........#", "#######.#", "........#", "#######.#", "........#", "#########"],
+      cells: [{ x: 7, y: 1, kind: "p", a: 3, b: 2, init: 0 }, { x: 7, y: 3, kind: "p", a: 2, b: 3, init: 0 }, { x: 7, y: 5, kind: "p", a: 1, b: 2, init: 0 }],
+      stations: [{ edge: "l", pos: 3, colour: 0 }, { edge: "l", pos: 5, colour: 2 }],
+      trains: [{ c: 0, row: 1, tick: 0 }, { c: 2, row: 1, tick: 4 }, { c: 0, row: 1, tick: 8 }, { c: 2, row: 1, tick: 12 }, { c: 0, row: 1, tick: 16 }, { c: 2, row: 1, tick: 20 }, { c: 0, row: 1, tick: 24 }, { c: 2, row: 1, tick: 28 }, { c: 0, row: 1, tick: 32 }, { c: 2, row: 1, tick: 36 }, { c: 0, row: 1, tick: 40 }, { c: 2, row: 1, tick: 44 }, { c: 0, row: 1, tick: 48 }, { c: 2, row: 1, tick: 52 }, { c: 0, row: 1, tick: 56 }, { c: 2, row: 1, tick: 60 }, { c: 0, row: 1, tick: 64 }, { c: 2, row: 1, tick: 68 }, { c: 0, row: 1, tick: 72 }, { c: 2, row: 1, tick: 76 }, { c: 0, row: 1, tick: 80 }, { c: 2, row: 1, tick: 84 }, { c: 0, row: 1, tick: 88 }, { c: 2, row: 1, tick: 92 }, { c: 0, row: 1, tick: 96 }, { c: 2, row: 1, tick: 100 }, { c: 0, row: 1, tick: 104 }, { c: 2, row: 1, tick: 108 }, { c: 0, row: 1, tick: 112 }],
+    },
+    {
+      /* The held column: the bay train due at the top of the timetable has to
+       * be thrown into the berth three ticks before the merge, or it and the
+       * express reach the same junction on the same tick. The berth is the
+       * whole timetable, and the trains behind it still have to be spaced. */
+      id: "d26",
+      labelKey: "cwkZ26",
+      limit: 168,
+      hold: 3,
+      tickMs: 300,
+      rows: ["#########", ".........", "#####.###", ".........", "#####.###", ".........", "#####.###"],
+      cells: [{ x: 5, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 2, y: 1, kind: "s", init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 1 }, { edge: "r", pos: 3, colour: 0 }, { edge: "b", pos: 5, colour: 2 }],
+      trains: [{ c: 2, row: 1, tick: 0 }, { c: 0, row: 3, tick: 2 }, { c: 1, row: 1, tick: 5 }, { c: 1, row: 1, tick: 8 }, { c: 2, row: 1, tick: 11 }, { c: 0, row: 3, tick: 14 }, { c: 1, row: 1, tick: 17 }, { c: 2, row: 1, tick: 20 }, { c: 0, row: 3, tick: 23 }, { c: 1, row: 1, tick: 26 }, { c: 2, row: 1, tick: 29 }, { c: 0, row: 3, tick: 32 }, { c: 1, row: 1, tick: 35 }, { c: 2, row: 1, tick: 38 }, { c: 0, row: 3, tick: 41 }, { c: 1, row: 1, tick: 44 }, { c: 2, row: 1, tick: 47 }, { c: 0, row: 3, tick: 50 }, { c: 1, row: 1, tick: 53 }, { c: 2, row: 1, tick: 56 }, { c: 0, row: 3, tick: 59 }, { c: 1, row: 1, tick: 62 }, { c: 2, row: 1, tick: 65 }, { c: 0, row: 3, tick: 68 }, { c: 1, row: 1, tick: 71 }, { c: 2, row: 1, tick: 74 }, { c: 0, row: 3, tick: 77 }, { c: 1, row: 1, tick: 80 }, { c: 2, row: 1, tick: 83 }, { c: 0, row: 3, tick: 86 }, { c: 1, row: 1, tick: 89 }, { c: 2, row: 1, tick: 92 }, { c: 0, row: 3, tick: 95 }, { c: 1, row: 1, tick: 98 }, { c: 2, row: 1, tick: 101 }, { c: 0, row: 3, tick: 104 }, { c: 1, row: 1, tick: 107 }, { c: 2, row: 1, tick: 110 }, { c: 0, row: 3, tick: 113 }, { c: 1, row: 1, tick: 116 }, { c: 2, row: 1, tick: 119 }, { c: 0, row: 3, tick: 122 }, { c: 1, row: 1, tick: 125 }, { c: 2, row: 1, tick: 128 }, { c: 0, row: 3, tick: 131 }],
+    },
+    {
+      /* The one-way climb: a single column carries traffic up to the high
+       * platform, and the top point is shared with the eastbound road - so
+       * every ascent has to be threaded between the trains running past it. */
+      id: "d27",
+      labelKey: "cwkZ27",
+      limit: 139,
+      hold: 2,
+      tickMs: 300,
+      rows: ["#####.###", ".........", "#####.###", ".........", "#####.###", ".........", "#########"],
+      cells: [{ x: 5, y: 1, kind: "p", a: 0, b: 1, init: 0 }, { x: 5, y: 3, kind: "p", a: 0, b: 1, init: 0 }, { x: 5, y: 5, kind: "p", a: 0, b: 1, init: 0 }],
+      stations: [{ edge: "t", pos: 5, colour: 1 }, { edge: "r", pos: 1, colour: 0 }, { edge: "r", pos: 3, colour: 2 }, { edge: "r", pos: 5, colour: 0 }],
+      trains: [{ c: 0, row: 1, tick: 0 }, { c: 2, row: 3, tick: 3 }, { c: 1, row: 1, tick: 6 }, { c: 0, row: 1, tick: 9 }, { c: 1, row: 3, tick: 12 }, { c: 0, row: 5, tick: 15 }, { c: 1, row: 5, tick: 18 }, { c: 2, row: 3, tick: 21 }, { c: 0, row: 1, tick: 24 }, { c: 1, row: 1, tick: 27 }, { c: 2, row: 3, tick: 30 }, { c: 0, row: 1, tick: 33 }, { c: 1, row: 3, tick: 36 }, { c: 0, row: 5, tick: 39 }, { c: 1, row: 5, tick: 42 }, { c: 2, row: 3, tick: 45 }, { c: 0, row: 1, tick: 48 }, { c: 1, row: 1, tick: 51 }, { c: 2, row: 3, tick: 54 }, { c: 0, row: 1, tick: 57 }, { c: 1, row: 3, tick: 60 }, { c: 0, row: 5, tick: 63 }, { c: 1, row: 5, tick: 66 }, { c: 2, row: 3, tick: 69 }, { c: 0, row: 1, tick: 72 }, { c: 1, row: 1, tick: 75 }, { c: 2, row: 3, tick: 78 }, { c: 0, row: 1, tick: 81 }, { c: 1, row: 3, tick: 84 }, { c: 0, row: 5, tick: 87 }, { c: 1, row: 5, tick: 90 }, { c: 2, row: 3, tick: 93 }, { c: 0, row: 1, tick: 96 }, { c: 1, row: 1, tick: 99 }],
+    },
+    {
+      /* The second berth: a bay train has to be stood aside for four ticks
+       * while two expresses cross the junction it needs, and one berth only
+       * buys two - so both berths in the ladder have to be thrown. */
+      id: "d28",
+      labelKey: "cwkZ28",
+      limit: 126,
+      hold: 2,
+      tickMs: 300,
+      rows: ["#########", ".........", "#####.###", ".........", "#####.###", ".........", "#####.###"],
+      cells: [{ x: 5, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 3, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 5, kind: "p", a: 2, b: 3, init: 0 }, { x: 2, y: 1, kind: "s", init: 0 }, { x: 3, y: 1, kind: "s", init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 1 }, { edge: "r", pos: 3, colour: 0 }, { edge: "b", pos: 5, colour: 2 }],
+      trains: [{ c: 2, row: 1, tick: 0 }, { c: 0, row: 3, tick: 2 }, { c: 0, row: 3, tick: 4 }, { c: 1, row: 1, tick: 8 }, { c: 0, row: 1, tick: 11 }, { c: 2, row: 1, tick: 14 }, { c: 0, row: 3, tick: 17 }, { c: 1, row: 1, tick: 20 }, { c: 2, row: 3, tick: 23 }, { c: 0, row: 1, tick: 26 }, { c: 0, row: 3, tick: 29 }, { c: 1, row: 1, tick: 32 }, { c: 2, row: 1, tick: 35 }, { c: 0, row: 3, tick: 38 }, { c: 0, row: 1, tick: 41 }, { c: 1, row: 1, tick: 44 }, { c: 2, row: 3, tick: 47 }, { c: 0, row: 3, tick: 50 }, { c: 0, row: 1, tick: 53 }, { c: 2, row: 1, tick: 56 }, { c: 1, row: 1, tick: 59 }, { c: 0, row: 3, tick: 62 }, { c: 0, row: 1, tick: 65 }, { c: 2, row: 3, tick: 68 }, { c: 0, row: 3, tick: 71 }, { c: 0, row: 1, tick: 74 }, { c: 1, row: 1, tick: 77 }, { c: 2, row: 1, tick: 80 }, { c: 0, row: 3, tick: 83 }, { c: 0, row: 1, tick: 86 }],
+    },
+    {
+      /* The turnback yard: the reversal point is the only way onto the low
+       * road, and it is wanted back east again straight after each arrival. */
+      id: "d29",
+      labelKey: "cwkZ29",
+      limit: 115,
+      hold: 2,
+      tickMs: 300,
+      rows: ["#########", ".........", "##.######", "##.######", ".........", "#########", "#########"],
+      cells: [{ x: 2, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 1, kind: "p", a: 2, b: 0, init: 0 }, { x: 2, y: 4, kind: "p", a: 0, b: 2, init: 1 }],
+      stations: [{ edge: "l", pos: 4, colour: 0 }, { edge: "r", pos: 4, colour: 1 }, { edge: "r", pos: 1, colour: 2 }],
+      trains: [{ c: 0, row: 1, tick: 0 }, { c: 1, row: 1, tick: 3 }, { c: 2, row: 1, tick: 6 }, { c: 0, row: 1, tick: 9 }, { c: 1, row: 1, tick: 12 }, { c: 2, row: 1, tick: 15 }, { c: 0, row: 1, tick: 18 }, { c: 1, row: 1, tick: 21 }, { c: 2, row: 1, tick: 24 }, { c: 0, row: 1, tick: 27 }, { c: 1, row: 1, tick: 30 }, { c: 2, row: 1, tick: 33 }, { c: 0, row: 1, tick: 36 }, { c: 1, row: 1, tick: 39 }, { c: 2, row: 1, tick: 42 }, { c: 0, row: 1, tick: 45 }, { c: 1, row: 1, tick: 48 }, { c: 2, row: 1, tick: 51 }, { c: 0, row: 1, tick: 54 }, { c: 1, row: 1, tick: 57 }, { c: 2, row: 1, tick: 60 }, { c: 0, row: 1, tick: 63 }, { c: 1, row: 1, tick: 66 }, { c: 2, row: 1, tick: 69 }, { c: 0, row: 1, tick: 72 }, { c: 1, row: 1, tick: 75 }],
+    },
+    {
+      /* The summit: three points over four platforms, with the lowest point
+       * handing traffic either to the bay below or back west along the return
+       * road, while the high and middle roads still have to be kept on time. */
+      id: "d30",
+      labelKey: "cwkZ30",
+      limit: 151,
+      hold: 2,
+      tickMs: 300,
+      rows: ["#########", ".........", "#####.###", ".........", "#####.###", ".........", "#####.###"],
+      cells: [{ x: 5, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 3, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 5, kind: "p", a: 2, b: 3, init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 1 }, { edge: "r", pos: 3, colour: 0 }, { edge: "l", pos: 5, colour: 0 }, { edge: "b", pos: 5, colour: 2 }],
+      trains: [{ c: 1, row: 1, tick: 0 }, { c: 0, row: 3, tick: 3 }, { c: 2, row: 1, tick: 6 }, { c: 0, row: 1, tick: 9 }, { c: 2, row: 3, tick: 12 }, { c: 0, row: 1, tick: 15 }, { c: 1, row: 1, tick: 18 }, { c: 0, row: 3, tick: 21 }, { c: 2, row: 1, tick: 24 }, { c: 0, row: 1, tick: 27 }, { c: 0, row: 3, tick: 30 }, { c: 0, row: 1, tick: 33 }, { c: 1, row: 1, tick: 36 }, { c: 0, row: 3, tick: 39 }, { c: 2, row: 1, tick: 42 }, { c: 0, row: 1, tick: 45 }, { c: 2, row: 3, tick: 48 }, { c: 0, row: 1, tick: 51 }, { c: 1, row: 1, tick: 54 }, { c: 0, row: 3, tick: 57 }, { c: 0, row: 1, tick: 60 }, { c: 2, row: 1, tick: 63 }, { c: 0, row: 3, tick: 66 }, { c: 0, row: 1, tick: 69 }, { c: 1, row: 1, tick: 72 }, { c: 0, row: 3, tick: 75 }, { c: 2, row: 1, tick: 78 }, { c: 0, row: 1, tick: 81 }, { c: 0, row: 3, tick: 84 }, { c: 0, row: 1, tick: 87 }, { c: 1, row: 1, tick: 90 }, { c: 0, row: 3, tick: 93 }, { c: 2, row: 1, tick: 96 }, { c: 0, row: 1, tick: 99 }, { c: 0, row: 3, tick: 102 }, { c: 0, row: 1, tick: 105 }, { c: 2, row: 1, tick: 108 }, { c: 0, row: 3, tick: 111 }],
+    },
   ];
 
   function cwkBoard(level) {
@@ -1376,6 +1460,12 @@
       "cwkZ22": "The Westbound Terminus",
       "cwkZ23": "The Berth Queue",
       "cwkZ24": "The Grand Cascade",
+      "cwkZ25": "The Long Return",
+      "cwkZ26": "The Held Column",
+      "cwkZ27": "The One-Way Climb",
+      "cwkZ28": "The Second Berth",
+      "cwkZ29": "The Turnback Yard",
+      "cwkZ30": "The Summit Timetable",
       "cwkClockLabel": "Clock",
       "cwkCrashLabel": "Wrecks",
       "cwkHaulLabel": "Haul",
@@ -1435,6 +1525,12 @@
       "cwkZ22": "西行总站",
       "cwkZ23": "侧线排队",
       "cwkZ24": "三色联落",
+      "cwkZ25": "长途回程",
+      "cwkZ26": "扣车待发",
+      "cwkZ27": "单向上坡",
+      "cwkZ28": "二重候车",
+      "cwkZ29": "折返站场",
+      "cwkZ30": "巅峰时刻表",
       "cwkClockLabel": "时钟",
       "cwkCrashLabel": "事故",
       "cwkHaulLabel": "运量",
@@ -1495,6 +1591,7 @@
         "Clock: Space starts and holds the boards, Escape holds them, X stops and reruns the timetable. Flips apply from the next tick.",
         "Scoring: the solver proves how few flips are enough, and that number is par; a wreck costs dearer than an extra flip.",
         "New tier: a loop berth can hold a train so a later one goes first, a westbound platform is only reached by running out to the buffer and back, and a queue of berths spaces a burst of arrivals into the gaps on the main road.",
+        "Summit: a ladder of two berths buys four ticks of hold, a one-way climb shares its top point with the eastbound road, and the last boards hand traffic to a bay below or back west along the return road.",
       ],
       zh: [
         "目标：让时刻表上的每一趟列车都进自己的车站，全程不出第三次事故。",
@@ -1504,6 +1601,7 @@
         "时钟：空格开闸与暂停，Esc 暂停，X 停轮重排。扳动从下一拍开始生效。",
         "计分：求解器算出最少需要扳几次，那就是标准次数；一次事故的代价比多扳几下更高。",
         "新层级：环线上的候车侧线可扣住一趟车，让后车先行；西行站台要跑到尽头折返才进得去；一串侧线能把密集到车排进正线的空档。",
+        "巅峰段：两道串联侧线能扣住四拍，单向上坡共用顶端的道岔，最后的线路把车分别送进下方的港湾站和西行回程线。",
       ],
     },
   });

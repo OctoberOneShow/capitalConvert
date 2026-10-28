@@ -441,6 +441,42 @@
       stars: [171, 150, 124],
       offers: ["NPP", "PNN", "NNP", "NPN", "PNN", "NNP", "NPP", "NNP", "PNN", "NNP", "PXP", "SFP", "SPX", "PXP", "FSP", "SFP", "XXX", "SFP"],
     },
+    /* Trench rung: dense pillar stacking in deep water coupled with sponge buffers
+     * and unavoidable urchins. Eighteen turns testing tight vertical packing. */
+    {
+      id: "c21",
+      labelKey: "corZ21",
+      turns: 18,
+      stars: [133, 114, 96],
+      offers: ["PPP", "PPX", "PPP", "XPP", "PPS", "SPP", "PPP", "PPX", "FPS", "SPF", "PPP", "XPP", "PPS", "SPP", "PPP", "XPP", "SFP", "PPP"],
+    },
+    /* Atoll rung: an expansive 19-turn nursery chain that weaves across depths
+     * 7-19, linking sponge clusters without breaking the chain requirement. */
+    {
+      id: "c22",
+      labelKey: "corZ22",
+      turns: 19,
+      stars: [281, 242, 202],
+      offers: ["NNP", "PNN", "NNP", "NNS", "SNN", "NNP", "PNN", "NNS", "SNN", "NNP", "PNN", "NNF", "FNN", "NNS", "SNN", "NNP", "PNN", "NNS", "SNN"],
+    },
+    /* Currents rung: alternating surface fan canopies and deep column foundations,
+     * forcing careful management of urchin discards into dead shelf pockets. */
+    {
+      id: "c23",
+      labelKey: "corZ23",
+      turns: 19,
+      stars: [129, 111, 93],
+      offers: ["FPS", "NPS", "PPX", "FPN", "SPX", "PPP", "NPS", "SXF", "FPN", "XSN", "PPP", "FNS", "PPX", "NFP", "SFP", "PNX", "PPP", "FPN", "SPF"],
+    },
+    /* Masterwork: 20-turn grand barrier reef requiring full-spectrum ecosystem
+     * synergy. High nursery chains, deep pillars, isolated sponges, and neutralised urchins. */
+    {
+      id: "c24",
+      labelKey: "corZ24",
+      turns: 20,
+      stars: [174, 150, 125],
+      offers: ["NNP", "PPP", "PNN", "NPN", "PPP", "NNP", "NPP", "NNP", "PNN", "NNP", "PXP", "SFP", "SPX", "PXP", "FSP", "SFP", "XXX", "SFP", "NNP", "PPP"],
+    },
   ];
 
   function initCoralArchitectGame(panelEl) {
@@ -977,6 +1013,10 @@
       "corZ18": "Fan Meadow",
       "corZ19": "Nursery Buttress",
       "corZ20": "The Mature Reef",
+      "corZ21": "The Abyssal Trench",
+      "corZ22": "Luminescent Atoll",
+      "corZ23": "Dual Currents",
+      "corZ24": "The Grand Barrier",
       "corTurnLabel": "Turn",
       "corScoreLabel": "Reef",
       "corHandLabel": "In hand",
@@ -1042,6 +1082,10 @@
       "corZ18": "柳珊瑚草甸",
       "corZ19": "育苗拱壁",
       "corZ20": "满潮礁盘",
+      "corZ21": "海沟断崖",
+      "corZ22": "荧光环礁",
+      "corZ23": "双向洋流",
+      "corZ24": "永恒大堡礁",
       "corTurnLabel": "回合",
       "corScoreLabel": "珊瑚",
       "corHandLabel": "手上",

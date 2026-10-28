@@ -50,6 +50,14 @@
     { presses: 46 },
     { presses: 52 },
     { presses: 58 },
+    { presses: 65 },
+    { presses: 73 },
+    { presses: 82 },
+    { presses: 92 },
+    { presses: 103 },
+    { presses: 115 },
+    { presses: 128 },
+    { presses: 142 },
   ];
 
   /* Presentation rides on the shared feel layer, but this module also boots

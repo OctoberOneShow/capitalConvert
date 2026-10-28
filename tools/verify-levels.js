@@ -1370,12 +1370,12 @@ if (App.glyphFourPick && App.glyphFourLevels) {
       return { moves: playerMoves, ms: think / Math.max(1, thinks) };
     });
 
-  check("game-glyph-four", "the ladder holds twenty boards",
-    c4.c4Levels.length === 20, String(c4.c4Levels.length));
+  check("game-glyph-four", "the ladder holds twenty-four boards",
+    c4.c4Levels.length === 24, String(c4.c4Levels.length));
   const c4Tier = c4.c4Levels.filter((l) =>
-    ["f16", "f17", "f18", "f19", "f20"].includes(l.id));
-  check("game-glyph-four", "the tier 17-20 rows all exist and carry the concession",
-    c4Tier.length === 5 && c4Tier.every((l) => l.tempo === 1 && l.depth >= 12),
+    ["f16", "f17", "f18", "f19", "f20", "f21", "f22", "f23", "f24"].includes(l.id));
+  check("game-glyph-four", "the tier 16-24 rows all exist and carry the concession",
+    c4Tier.length === 9 && c4Tier.every((l) => l.tempo === 1 && l.depth >= 12),
     c4Tier.map((l) => l.id + ":d" + l.depth).join(","));
   check("game-glyph-four", "the tier move bands run falling (3,2,1 stars)",
     c4Tier.every((l) => l.starMoves[0] < l.starMoves[1] && l.starMoves[1] < l.starMoves[2]),
@@ -1420,7 +1420,7 @@ if (App.glyphFourPick && App.glyphFourLevels) {
       ms < 2000, `${Math.round(ms)}ms vs f13 ${Math.round(c4BaselineMs)}ms`);
   });
   check("game-glyph-four", "the deep board names are bilingual",
-    ["c4L16", "c4L17", "c4L18", "c4L19", "c4L20"].every((key) => {
+    ["c4L16", "c4L17", "c4L18", "c4L19", "c4L20", "c4L21", "c4L22", "c4L23", "c4L24"].every((key) => {
       const text = App.t(key);
       return text && text !== key;
     }), "a tier label fell back to its key");
@@ -1561,8 +1561,8 @@ if (App.glyphReversiPick && App.glyphReversiMoves) {
   };
 
   const revRanks = rev.revLevels;
-  check("game-glyph-reversi", "the ladder holds twenty ranks",
-    revRanks.length === 20, String(revRanks.length));
+  check("game-glyph-reversi", "the ladder holds twenty-four ranks",
+    revRanks.length === 24, String(revRanks.length));
   const revTier = ["r16", "r17", "r18", "r19", "r20"].map((id) =>
     revRanks.find((r) => r.id === id));
   check("game-glyph-reversi", "the tier 17-20 rows all exist",
@@ -1792,8 +1792,8 @@ if (App.glyphFleetPlace && App.glyphFleetAiPick) {
     }
     return { three: three / deals, two: two / deals, one: one / deals };
   };
-  check("game-glyph-fleet", "the ladder holds twenty ranks",
-    flt.fltLevels.length === 20, String(flt.fltLevels.length));
+  check("game-glyph-fleet", "the ladder holds twenty-four ranks",
+    flt.fltLevels.length === 24, String(flt.fltLevels.length));
   const fltTier = flt.fltLevels.filter((r) =>
     ["bf16", "bf17", "bf18", "bf19", "bf20"].includes(r.id));
   check("game-glyph-fleet", "the tier 17-20 rows all exist", fltTier.length === 5,
@@ -1814,7 +1814,7 @@ if (App.glyphFleetPlace && App.glyphFleetAiPick) {
   });
   check("game-glyph-fleet", "the deep rank names are bilingual",
     (() => {
-      const names = ["fltL16", "fltL17", "fltL18", "fltL19", "fltL20"];
+      const names = ["fltL16", "fltL17", "fltL18", "fltL19", "fltL20", "fltL21", "fltL22", "fltL23", "fltL24"];
       return names.every((key) => {
         const text = App.t(key);
         return text && text !== key;
@@ -4158,8 +4158,9 @@ if (App.freezePlan && App.freezeBand && App.dfzLevels) {
 
 /* tether-salvage: the pilot must prove every new scene solvable. */
 if (App.tetherSceneSolvable && App.tetherLevels) {
-  const ttsTier = App.tetherLevels.filter((l) => ["s16", "s17", "s18", "s19", "s20"].includes(l.id));
-  check("tether-salvage", "the tier 17-20 scenes all exist", ttsTier.length === 5, String(ttsTier.length));
+  const ttsTier = App.tetherLevels.filter((l) =>
+    ["s16", "s17", "s18", "s19", "s20", "s21", "s22", "s23", "s24"].includes(l.id));
+  check("tether-salvage", "the tier 16-24 scenes all exist", ttsTier.length === 9, String(ttsTier.length));
   ttsTier.forEach((scene) => {
     const out = App.tetherSceneSolvable(scene);
     check("tether-salvage", scene.id + ": the pilot solves the scene",
@@ -4212,10 +4213,10 @@ if (App.bridgeCheck && App.bridgeNodes && App.bridgeSpan && App.bridgeLevels) {
 /* gomoku: the deep ranks keep the ladder shape and a concession to climb. */
 if (App.gomokuPick && App.gomokuRanks) {
   const gmRanks = App.gomokuRanks;
-  check("gomoku", "the ladder holds twenty ranks", gmRanks.length === 20, String(gmRanks.length));
-  const gmTier = gmRanks.filter((r) => ["r16", "r17", "r18", "r19", "r20"].includes(r.id));
-  check("gomoku", "the tier 17-20 rows all exist and carry the concession",
-    gmTier.length === 5 && gmTier.every((r) => r.tempo >= 2 && r.depth >= 10),
+  check("gomoku", "the ladder holds twenty-four ranks", gmRanks.length === 24, String(gmRanks.length));
+  const gmTier = gmRanks.filter((r) => ["r16", "r17", "r18", "r19", "r20", "r21", "r22", "r23", "r24"].includes(r.id));
+  check("gomoku", "the tier 16-24 rows all exist and carry the concession",
+    gmTier.length === 9 && gmTier.every((r) => r.tempo >= 2 && r.depth >= 10),
     gmTier.map((r) => r.id + ":d" + r.depth).join(","));
   check("gomoku", "the tier star bands run rising (fewer moves is better)",
     gmTier.every((r) => r.starMoves[0] < r.starMoves[1] && r.starMoves[1] < r.starMoves[2]),
@@ -4225,8 +4226,8 @@ if (App.gomokuPick && App.gomokuRanks) {
 /* republic-quiz: every deck keeps the shipped shape in both languages. */
 if (App.republicDecks) {
   const rqTier = App.republicDecks.filter((d) =>
-    ["q11", "q12", "q13", "q14", "q15", "q16", "q17", "q18", "q19", "q20"].includes(d.id));
-  check("republic-quiz", "the tier 11-20 decks all exist", rqTier.length === 10, String(rqTier.length));
+    ["q11", "q12", "q13", "q14", "q15", "q16", "q17", "q18", "q19", "q20", "q21", "q22", "q23", "q24"].includes(d.id));
+  check("republic-quiz", "the tier 11-24 decks all exist", rqTier.length === 14, String(rqTier.length));
   rqTier.forEach((deck) => {
     const shaped = deck.cards.length === 7 && deck.stars[0] === 5 && deck.stars[1] === 4 && deck.stars[2] === 2 &&
       deck.cards.every((card) => card.q && card.q.en && card.q.zh && card.o.length === 4 &&
@@ -4237,11 +4238,11 @@ if (App.republicDecks) {
 
 /* love-deepspace: the deep routes keep the ceiling shape the forge measured. */
 if (App.ldsRoutes) {
-  const LDS_TIER = ["lds9", "lds10", "lds11", "lds12", "lds13", "lds14", "lds15", "lds16", "lds17", "lds18", "lds19", "lds20"];
+  const LDS_TIER = ["lds9", "lds10", "lds11", "lds12", "lds13", "lds14", "lds15", "lds16", "lds17", "lds18", "lds19", "lds20", "lds21", "lds22", "lds23", "lds24"];
   const ldsTier = App.ldsRoutes.filter((r) => LDS_TIER.includes(r.id));
-  check("love-deepspace", "the ladder holds twenty routes", App.ldsRoutes.length === 20, String(App.ldsRoutes.length));
-  check("love-deepspace", "the tier 9-20 rows keep the target ceiling and honest bands",
-    ldsTier.length === 12 && ldsTier.every((r) => r.target <= 120 && r.stars[0] < r.stars[1] && r.stars[1] < r.stars[2]),
+  check("love-deepspace", "the ladder holds twenty-four routes", App.ldsRoutes.length === 24, String(App.ldsRoutes.length));
+  check("love-deepspace", "the tier 9-24 rows keep the target ceiling and honest bands",
+    ldsTier.length === 16 && ldsTier.every((r) => r.target <= 120 && r.stars[0] < r.stars[1] && r.stars[1] < r.stars[2]),
     ldsTier.map((r) => r.id + ":t" + r.turns).join(","));
 }
 
@@ -4298,8 +4299,8 @@ if (App.ldsRoutes) {
  * last of the noise drains away, and no band drops below the rung before. */
 if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
   const twrRanks = App.wrestlerRanks;
-  check("game-tiny-wrestlers", "the ladder holds twenty ranks",
-    twrRanks.length === 20, String(twrRanks.length));
+  check("game-tiny-wrestlers", "the ladder holds twenty-four ranks",
+    twrRanks.length === 24, String(twrRanks.length));
   check("game-tiny-wrestlers", "every rank id is distinct",
     new Set(twrRanks.map((r) => r.id)).size === twrRanks.length);
   check("game-tiny-wrestlers", "the window only tightens and lands on the engine's floor",
@@ -5578,7 +5579,7 @@ if (App.foldSheets && App.foldDeal && App.foldTargetSolvable) {
  * cuts the new tier's advertised mechanic out of a copy of its own row, so
  * a rung whose lesson is decorative fails the build. */
 ["glyph-echo", "clockwork-dispatch", "courtroom-of-animals", "pinball-courier",
-  "borrowed-bodies", "pocket-detective", "shadow-puppeteer",
+  "borrowed-bodies", "pocket-detective", "shadow-puppeteer", "switchboard-duo",
   "circuit-scribe", "lost-language", "glyph-fifteen", "glyph-blocks",
   "glyph-dots", "bubble-ink", "ink-cascade", "ink-slash",
   "ink-beat", "dream-orchestra",

@@ -3,7 +3,7 @@
  * picture: seat A reads the dials and holds the valve page of the rulebook, seat B
  * reads the switchboard and holds the pump page. Every work order is split the
  * same way, so closing a fault needs somebody saying a number out loud.
- * Thirteen authored faults, twenty shifts, one shared keyboard plus a real button
+ * Thirteen authored faults, thirty shifts, one shared keyboard plus a real button
  * behind every lever, and a seat swap so one person can always work the whole
  * shift. No timers anywhere: a beat is one decision, and the entire machine
  * resolves through the exported boardStep. Registered through the game registry,
@@ -177,14 +177,15 @@
     },
   };
 
-  /* Twenty shifts, ordered by the par each one measures: the scripted line is
+  /* Thirty shifts, ordered by the par each one measures: the scripted line is
    * replayed for every shift and its beats are the ladder's rungs, so no rung
    * costs fewer beats than the one below it. "fails" is the order the log is
    * worked in, "chain" names the fault a cleared one wakes, "dim" moves the heat
-   * dial to the other seat (so an order with a heat condition is never printed on
-   * a dim shift, where that half would name a dial its own seat cannot read),
-   * "budget" is how many stress events the shift survives, and "pages" says
-   * whether both rulebook pages are printed at both desks (the teaching shift). */
+   * dial to the other seat (so on a dim shift a heat condition printed on the
+   * gauge desk's half has to be read off the switch desk's dial and called
+   * across), "budget" is how many stress events the shift survives, and "pages"
+   * says whether both rulebook pages are printed at both desks (the teaching
+   * shift). */
   var swbShifts = [
     { id: "b1", labelKey: "swbS1", briefKey: "swbY1", budget: 3, dim: false, pages: "both", fails: ["overheat", "stuckHeader"], chain: {} },
     { id: "b2", labelKey: "swbS2", briefKey: "swbY2", budget: 3, dim: false, pages: "split", fails: ["stuckHeader", "arcing", "starved"], chain: {} },
@@ -206,6 +207,43 @@
     { id: "b18", labelKey: "swbS18", briefKey: "swbY18", budget: 1, dim: false, pages: "split", fails: ["overheat", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "flashedOver", "stifledHeader", "pumpPack", "hotBus", "blackout", "blackout", "flashedOver", "cavitation"], chain: { overheat: "stuckHeader", stuckHeader: "chokedStrainer" } },
     { id: "b19", labelKey: "swbS19", briefKey: "swbY19", budget: 1, dim: true, pages: "split", fails: ["arcing", "overheat", "stuckHeader", "cavitation", "backpressure", "lostPrime", "flashedOver", "stifledHeader", "pumpPack", "blackout", "blackout", "flashedOver", "cavitation", "arcing"], chain: { arcing: "starved", starved: "chokedStrainer", chokedStrainer: "hotBus" } },
     { id: "b20", labelKey: "swbS20", briefKey: "swbY20", budget: 1, dim: false, pages: "split", fails: ["flashedOver", "overheat", "stuckHeader", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "hotBus", "blackout", "blackout", "flashedOver", "cavitation", "hotBus", "arcing"], chain: { flashedOver: "stifledHeader", stifledHeader: "chokedStrainer", chokedStrainer: "pumpPack" } },
+    /* Shift 21: Emergency Overload. 16 orders on dim glass, budget 1, 95 beats. */
+    { id: "b21", labelKey: "swbS21", briefKey: "swbY21", budget: 1, dim: true, pages: "split", fails: ["flashedOver", "overheat", "stuckHeader", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "hotBus", "blackout", "blackout", "flashedOver", "cavitation", "hotBus", "arcing", "lostPrime"], chain: { flashedOver: "stifledHeader", stifledHeader: "chokedStrainer", chokedStrainer: "pumpPack" } },
+    /* Shift 22: Deadweight Surge. 17 orders on bright glass, budget 1, 101 beats. */
+    { id: "b22", labelKey: "swbS22", briefKey: "swbY22", budget: 1, dim: false, pages: "split", fails: ["flashedOver", "overheat", "stuckHeader", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "hotBus", "blackout", "blackout", "flashedOver", "cavitation", "hotBus", "arcing", "cavitation", "lostPrime"], chain: { flashedOver: "stifledHeader", stifledHeader: "chokedStrainer", chokedStrainer: "pumpPack" } },
+    /* Shift 23: Deep Grid Lockdown. 18 orders on dim glass, budget 1, 107 beats. */
+    { id: "b23", labelKey: "swbS23", briefKey: "swbY23", budget: 1, dim: true, pages: "split", fails: ["flashedOver", "overheat", "stuckHeader", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "hotBus", "blackout", "blackout", "flashedOver", "cavitation", "hotBus", "arcing", "cavitation", "backpressure", "lostPrime"], chain: { flashedOver: "stifledHeader", stifledHeader: "chokedStrainer", chokedStrainer: "pumpPack" } },
+    /* Shift 24: The Infinite Grid. 19 orders on bright glass, budget 1, 114 beats. */
+    { id: "b24", labelKey: "swbS24", briefKey: "swbY24", budget: 1, dim: false, pages: "split", fails: ["flashedOver", "overheat", "stuckHeader", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "hotBus", "blackout", "blackout", "flashedOver", "cavitation", "hotBus", "arcing", "cavitation", "backpressure", "flashedOver", "lostPrime"], chain: { flashedOver: "stifledHeader", stifledHeader: "chokedStrainer", chokedStrainer: "pumpPack" } },
+    /* Shift 25: The Deep Fall. 20 orders on dim glass, budget 1, 124 beats.
+     * A cleared overheat wakes a four-link cascade - choke, pack, hot bus,
+     * blackout - so the log holds twenty-four orders even though only twenty
+     * are authored. */
+    { id: "b25", labelKey: "swbS25", briefKey: "swbY25", budget: 1, dim: true, pages: "split", fails: ["flashedOver", "overheat", "stuckHeader", "arcing", "starved", "cavitation", "backpressure", "lostPrime", "flashedOver", "cavitation", "backpressure", "stifledHeader", "flashedOver", "cavitation", "lostPrime", "flashedOver", "cavitation", "backpressure", "stifledHeader", "arcing"], chain: { overheat: "chokedStrainer", chokedStrainer: "pumpPack", pumpPack: "hotBus", hotBus: "blackout" } },
+    /* Shift 26: Everything Comes Back. 26 orders on bright glass, budget 1,
+     * 134 beats, no cascade at all: the arc and the starved pump return once,
+     * the lost prime returns twice, the hot bus and blackout once more too, and
+     * the flashovers, cavitations and back pressures each come back twice. */
+    { id: "b26", labelKey: "swbS26", briefKey: "swbY26", budget: 1, dim: false, pages: "split", fails: ["arcing", "starved", "lostPrime", "overheat", "stuckHeader", "cavitation", "backpressure", "flashedOver", "arcing", "starved", "lostPrime", "cavitation", "backpressure", "flashedOver", "stifledHeader", "hotBus", "blackout", "flashedOver", "cavitation", "backpressure", "lostPrime", "hotBus", "blackout", "flashedOver", "cavitation", "stuckHeader"], chain: {} },
+    /* Shift 27: The Dim Return. 25 orders on dim glass, budget 1, 142 beats.
+     * A starved pump wakes a three-link cascade - pack, choke, blackout - while
+     * the flashovers and the lost prime keep coming back on their own. */
+    { id: "b27", labelKey: "swbS27", briefKey: "swbY27", budget: 1, dim: true, pages: "split", fails: ["flashedOver", "starved", "overheat", "stuckHeader", "arcing", "cavitation", "backpressure", "lostPrime", "hotBus", "flashedOver", "cavitation", "backpressure", "starved", "stifledHeader", "hotBus", "flashedOver", "cavitation", "backpressure", "lostPrime", "stifledHeader", "overheat", "cavitation", "backpressure", "flashedOver", "lostPrime"], chain: { starved: "pumpPack", pumpPack: "chokedStrainer", chokedStrainer: "blackout" } },
+    /* Shift 28: Heat Across the Desks. 26 orders on dim glass, budget 1, 151
+     * beats: the heat dial lives at the switch desk, so every heat order
+     * prints its number on the gauge desk but can only be read across the
+     * aisle, and overheat and stifled header each return twice. A stifled
+     * header also wakes a two-link cascade - choke, pack. */
+    { id: "b28", labelKey: "swbS28", briefKey: "swbY28", budget: 1, dim: true, pages: "split", fails: ["overheat", "stifledHeader", "cavitation", "backpressure", "flashedOver", "lostPrime", "overheat", "stifledHeader", "cavitation", "backpressure", "flashedOver", "cavitation", "backpressure", "lostPrime", "hotBus", "blackout", "overheat", "stifledHeader", "flashedOver", "cavitation", "backpressure", "lostPrime", "hotBus", "blackout", "flashedOver", "lostPrime"], chain: { stifledHeader: "chokedStrainer", chokedStrainer: "pumpPack" } },
+    /* Shift 29: Blackout Returns. 25 orders on bright glass, budget 1, 159
+     * beats: the blackout is authored four times, and an arc wakes a
+     * three-link cascade - pack, choke, stifled header. */
+    { id: "b29", labelKey: "swbS29", briefKey: "swbY29", budget: 1, dim: false, pages: "split", fails: ["blackout", "arcing", "starved", "flashedOver", "cavitation", "backpressure", "blackout", "lostPrime", "hotBus", "flashedOver", "cavitation", "backpressure", "blackout", "lostPrime", "hotBus", "flashedOver", "cavitation", "backpressure", "overheat", "lostPrime", "cavitation", "hotBus", "blackout", "flashedOver", "cavitation"], chain: { arcing: "pumpPack", pumpPack: "chokedStrainer", chokedStrainer: "stifledHeader" } },
+    /* Shift 30: The Whole Board. 28 orders on bright glass, budget 1, 183
+     * beats, and the longest cascade on the board - five links, six faults:
+     * overheat, choke, double pack, hot bus, blackout, stifled header - on top
+     * of the returned flashovers and cavitations. */
+    { id: "b30", labelKey: "swbS30", briefKey: "swbY30", budget: 1, dim: false, pages: "split", fails: ["flashedOver", "overheat", "cavitation", "backpressure", "lostPrime", "flashedOver", "cavitation", "backpressure", "stuckHeader", "arcing", "flashedOver", "cavitation", "backpressure", "lostPrime", "flashedOver", "cavitation", "backpressure", "lostPrime", "overheat", "cavitation", "backpressure", "cavitation", "backpressure", "cavitation", "backpressure", "flashedOver", "cavitation", "backpressure"], chain: { overheat: "chokedStrainer", chokedStrainer: "pumpPack", pumpPack: "hotBus", hotBus: "blackout", blackout: "stifledHeader" } },
   ];
 
   /* --- pure helpers ---------------------------------------------------- */
@@ -1202,6 +1240,26 @@
       "swbY19": "Fourteen orders on dim glass, one stress event, and an arc starves a pump, the starved pump chokes the strainer, and the choke calls the hot bus.",
       "swbS20": "Full cascade",
       "swbY20": "Fifteen orders, one stress event, and a flashover stifles the header, the stifled header chokes the strainer, and the choke packs both pumps.",
+      "swbS21": "Emergency Overload",
+      "swbY21": "Sixteen orders on dim glass, one stress event, and a flashover triggers a three-deep cascade across the pumps.",
+      "swbS22": "Deadweight Surge",
+      "swbY22": "Seventeen orders, one stress event, and a compound failure ripples from the header through to the main bus.",
+      "swbS23": "Deep Grid Lockdown",
+      "swbY23": "Eighteen orders on dim glass, a budget of one stress event, and double cavitation threatens total blackout.",
+      "swbS24": "The Infinite Grid",
+      "swbY24": "Nineteen orders, one stress event, and the complete cascade chain tests both operators to the limit.",
+      "swbS25": "The Deep Fall",
+      "swbY25": "Twenty orders on dim glass, one stress event, and a cleared overheat wakes a four-link cascade that ends in a blackout.",
+      "swbS26": "Everything Comes Back",
+      "swbY26": "Twenty-six orders, one stress event, and no cascade at all: the arc, the starved pump and the lost prime simply come back.",
+      "swbS27": "The Dim Return",
+      "swbY27": "Twenty-five orders on dim glass, one stress event, a starved pump wakes a three-link cascade, and the flashovers return.",
+      "swbS28": "Heat Across the Desks",
+      "swbY28": "Twenty-six orders on dim glass, one stress event, and the heat orders return while their dial sits at the switch desk.",
+      "swbS29": "Blackout Returns",
+      "swbY29": "Twenty-five orders, one stress event, the blackout is authored four times, and an arc wakes a three-link cascade.",
+      "swbS30": "The Whole Board",
+      "swbY30": "Twenty-eight orders, one stress event, a five-link cascade from the overheat to the stifled header, and the longest orders return for the finale.",
       "swbY1": "Every order prints both of its halves on your desk.",
       "swbY2": "Your page is your page: read it out, do not hand it over.",
       "swbY3": "Relieve the header and the arc wakes; a burning arc starves pump 2.",
@@ -1378,6 +1436,26 @@
       "swbY19": "昏暗玻璃上十四张工单、一次应力事件；电弧让泵断流，断流唤醒堵网，堵网又叫来发烫的母线。",
       "swbS20": "全链坠落",
       "swbY20": "十五张工单、一次应力事件；闪络闷死母管，闷死的母管堵住滤网，堵网之后双泵并挤。",
+      "swbS21": "应急超载",
+      "swbY21": "昏暗玻璃上十六张工单，只容一次应力事件；闪络引发深层泵组级联故障。",
+      "swbS22": "死重涌浪",
+      "swbY22": "十七张工单、一次应力事件；从母管到主母线的一系列复合连锁故障接连爆发。",
+      "swbS23": "深层锁网",
+      "swbY23": "昏暗玻璃上十八张工单、一次应力事件；双重气蚀险情逼近全厂全黑断电。",
+      "swbS24": "无限电网",
+      "swbY24": "十九张工单、一次应力事件；完整的全链连锁故障将两席值班员逼至反应极限。",
+      "swbS25": "深链坠落",
+      "swbY25": "昏暗玻璃上二十张工单、一次应力事件；销掉过热会唤醒四环连坠，最后一环是整桌断电。",
+      "swbS26": "全部回头",
+      "swbY26": "二十六张工单、一次应力事件，完全没有连环：电弧、断流的泵和失引水各自回头再来。",
+      "swbS27": "昏暗回头链",
+      "swbY27": "昏暗玻璃上二十五张工单、一次应力事件；断流的泵唤醒三环连坠，而闪络一再回头。",
+      "swbS28": "隔桌读温",
+      "swbY28": "昏暗玻璃上二十六张工单、一次应力事件；温度表盘坐在开关席，而热工单不断回头。",
+      "swbS29": "断电回头",
+      "swbY29": "二十五张工单、一次应力事件；断电工单排了四次，而电弧唤醒三环连坠。",
+      "swbS30": "整张班台",
+      "swbY30": "二十八张工单、一次应力事件；从过热一路攀到闷死母管的五环连坠，最长的工单在终局一再回头。",
       "swbY1": "每张工单在你这台控制台上都印出完整两半。",
       "swbY2": "你那一页只是你那一页：念出来，别递过去。",
       "swbY3": "泄压会唤醒电弧；烧着的电弧会让 2 号泵断流。",

@@ -24,6 +24,20 @@
     { pairs: 13, cols: 6 },
     { pairs: 14, cols: 6 },
     { pairs: 15, cols: 6 },
+    { pairs: 16, cols: 6 },
+    { pairs: 17, cols: 6 },
+    { pairs: 18, cols: 6 },
+    { pairs: 19, cols: 6 },
+    { pairs: 20, cols: 6 },
+    { pairs: 21, cols: 6 },
+    { pairs: 22, cols: 6 },
+    { pairs: 23, cols: 6 },
+    { pairs: 24, cols: 6 },
+    { pairs: 25, cols: 6 },
+    { pairs: 26, cols: 6 },
+    { pairs: 27, cols: 6 },
+    { pairs: 28, cols: 6 },
+    { pairs: 30, cols: 6 },
   ];
   /* Glyph pool: the first six are the original board's glyphs, the rest widen
    * the pool so the largest rung has enough distinct faces. */
@@ -43,6 +57,21 @@
     "\u7084",
     "\u6cc9",
     "\u68ee",
+    "\u98ce",
+    "\u96e8",
+    "\u96ea",
+    "\u5251",
+    "\u76fe",
+    "\u9f0e",
+    "\u955c",
+    "\u7434",
+    "\u73ba",
+    "\u949f",
+    "\u9f99",
+    "\u51e4",
+    "\u9e64",
+    "\u82b1",
+    "\u7af9",
   ];
   /* One identity per glyph: a motif from the art bank plus the hue its plate is
    * bevelled in. The character stays the fact a pair is matched on - the motif
@@ -64,6 +93,21 @@
     "\u7084": { icon: "flame", hue: 14 }, // flame
     "\u6cc9": { icon: "wave", hue: 190 }, // spring
     "\u68ee": { icon: "tree", hue: 105 }, // forest
+    "\u98ce": { icon: "wave", hue: 175 }, // wind
+    "\u96e8": { icon: "rain", hue: 205 }, // rain
+    "\u96ea": { icon: "snow", hue: 195 }, // snow
+    "\u5251": { icon: "sword", hue: 215 }, // sword
+    "\u76fe": { icon: "shield", hue: 225 }, // shield
+    "\u9f0e": { icon: "crown", hue: 48 }, // vessel
+    "\u955c": { icon: "disc", hue: 165 }, // mirror
+    "\u7434": { icon: "sparkle", hue: 275 }, // zither
+    "\u73ba": { icon: "gem", hue: 140 }, // imperial seal
+    "\u949f": { icon: "meeple", hue: 35 }, // bell
+    "\u9f99": { icon: "flame", hue: 18 }, // dragon
+    "\u51e4": { icon: "feather", hue: 350 }, // phoenix
+    "\u9e64": { icon: "bird", hue: 160 }, // crane
+    "\u82b1": { icon: "bloom", hue: 320 }, // flower
+    "\u7af9": { icon: "sprout", hue: 95 }, // bamboo
   };
   var memoryFaceFallback = { icon: "gem", hue: 196 };
   /* The deck's own back colour. It matches the --gp-hue the shared art-direction

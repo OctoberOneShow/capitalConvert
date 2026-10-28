@@ -65,6 +65,12 @@
     { id: "r18", labelKey: "revL18", noise: 0.12, depth: 4, starMargin: [10, 5, 2] },
     { id: "r19", labelKey: "revL19", noise: 0.15, depth: 4, aiFirst: true, starMargin: [7, 4, 1] },
     { id: "r20", labelKey: "revL20", noise: 0.05, depth: 4, starMargin: [6, 3, 1] },
+    /* Ranks 21-24: the summit rungs. Precision endgames, tempo reversals,
+     * and zero-noise deep search cap the Reversi campaign. */
+    { id: "r21", labelKey: "revL21", noise: 0.04, depth: 4, starMargin: [6, 3, 1] },
+    { id: "r22", labelKey: "revL22", noise: 0.03, depth: 4, starMargin: [6, 3, 1] },
+    { id: "r23", labelKey: "revL23", noise: 0.02, depth: 4, starMargin: [5, 3, 1] },
+    { id: "r24", labelKey: "revL24", noise: 0, depth: 4, starMargin: [5, 3, 1] },
   ];
   var REV_WEIGHTS = [
     120, -20, 10, 5, 5, 10, -20, 120,
@@ -353,6 +359,10 @@
       "revL18": "The Shaking Hand",
       "revL19": "First Strike",
       "revL20": "The Deep End",
+      "revL21": "The Flank Press",
+      "revL22": "The Rival's Gambit",
+      "revL23": "Corner Bastion",
+      "revL24": "Grandmaster Zenith",
     },
     zh: {
       "revL9": "不朽者",
@@ -367,6 +377,10 @@
       "revL18": "颤之手",
       "revL19": "先手",
       "revL20": "深渊之底",
+      "revL21": "侧翼压迫",
+      "revL22": "弃子博弈",
+      "revL23": "角隅要塞",
+      "revL24": "大师黑白顶",
     },
   });
 

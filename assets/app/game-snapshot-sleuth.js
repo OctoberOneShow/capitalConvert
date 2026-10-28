@@ -28,6 +28,9 @@
     "ssAdjDusky",
     "ssAdjCrooked",
     "ssAdjFaded",
+    "ssAdjMaster",
+    "ssAdjPhantom",
+    "ssAdjMirage",
   ];
   var ssZoneNouns = [
     "ssNounPostcards",
@@ -43,11 +46,11 @@
   ];
 
   function ssBuildZones() {
-    var modes = ["hue", "flip", "hue", "tilt", "faint"];
-    var bases = [150, 0, 48, 15, 18];
-    var jitters = [0.2, 0, 0.25, 0.3, 0.3];
+    var modes = ["hue", "flip", "hue", "tilt", "faint", "faint", "faint", "tilt"];
+    var bases = [150, 0, 48, 15, 18, 12, 10, 9];
+    var jitters = [0.2, 0, 0.25, 0.3, 0.3, 0.35, 0.38, 0.40];
     var zones = [];
-    for (var index = 1; index <= 50; index += 1) {
+    for (var index = 1; index <= 80; index += 1) {
       var tier = Math.floor((index - 1) / 10);
       zones.push({
         id: "ss" + index,
@@ -652,6 +655,9 @@
       "ssAdjDusky": "Dusky",
       "ssAdjCrooked": "Crooked",
       "ssAdjFaded": "Faded",
+      "ssAdjMaster": "Master",
+      "ssAdjPhantom": "Phantom",
+      "ssAdjMirage": "Mirage",
       "ssNounPostcards": "Postcards",
       "ssNounStudio": "Studio",
       "ssNounGallery": "Gallery",
@@ -673,7 +679,7 @@
       "ssRunOut": "Out of hearts at {n} points after {r} rounds. The forged photo is lit.",
       "ssCleared": "{name} cleared - {s} stars, {n} points.",
       "ssNextZone": "Next level unlocked.",
-      "ssAllZones": "All fifty levels are solved.",
+      "ssAllZones": "All eighty levels are solved.",
       "ssBest": "Best {n}",
       "ssBoardLabel": "Photo wall - exactly one photo has been tampered with",
       "ssTileLabel": "Photo {n}",
@@ -692,6 +698,9 @@
       "ssAdjDusky": "暮色",
       "ssAdjCrooked": "歪斜",
       "ssAdjFaded": "褪色",
+      "ssAdjMaster": "宗师",
+      "ssAdjPhantom": "幻影",
+      "ssAdjMirage": "蜃景",
       "ssNounPostcards": "明信片",
       "ssNounStudio": "摄影棚",
       "ssNounGallery": "画廊",
@@ -713,7 +722,7 @@
       "ssRunOut": "红心用尽：{r} 轮后共 {n} 分。伪造的照片已点亮。",
       "ssCleared": "「{name}」通关 - {s} 星，{n} 分。",
       "ssNextZone": "下一级已解锁。",
-      "ssAllZones": "五十级全部告破。",
+      "ssAllZones": "八十级全部告破。",
       "ssBest": "最佳 {n}",
       "ssBoardLabel": "照片墙 - 恰好有一张照片被动了手脚",
       "ssTileLabel": "第 {n} 张照片",

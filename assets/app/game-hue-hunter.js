@@ -26,6 +26,9 @@
     "hhAdjKeen",
     "hhAdjSharp",
     "hhAdjEagle",
+    "hhAdjMaster",
+    "hhAdjLegend",
+    "hhAdjMythic",
   ];
   var hhZoneNouns = [
     "hhNounKiln",
@@ -45,12 +48,12 @@
   ];
 
   function hhBuildZones() {
-    var deltas = [14, 10, 7.5, 5.5, 4];
-    var nudges = [0, 5, 8, 10, 12];
-    var sats = [62, 65, 55, 45, 60];
-    var lights = [54, 50, 56, 70, 52];
+    var deltas = [14, 10, 7.5, 5.5, 4, 3, 2.5, 2.0];
+    var nudges = [0, 5, 8, 10, 12, 14, 16, 18];
+    var sats = [62, 65, 55, 45, 60, 50, 52, 58];
+    var lights = [54, 50, 56, 70, 52, 55, 50, 48];
     var zones = [];
-    for (var index = 1; index <= 50; index += 1) {
+    for (var index = 1; index <= 80; index += 1) {
       var tier = Math.floor((index - 1) / 10);
       zones.push({
         id: "hh" + index,
@@ -470,6 +473,9 @@
       "hhAdjKeen": "Keen",
       "hhAdjSharp": "Sharp",
       "hhAdjEagle": "Eagle",
+      "hhAdjMaster": "Master",
+      "hhAdjLegend": "Legendary",
+      "hhAdjMythic": "Mythic",
       "hhNounKiln": "Ember Kiln",
       "hhNounStudio": "Dye Studio",
       "hhNounMoss": "Moss Garden",
@@ -491,7 +497,7 @@
       "hhRunOut": "Out of hearts at {n} points after {r} rounds. The impostor is lit.",
       "hhCleared": "{name} cleared - {s} stars, {n} points.",
       "hhNextZone": "Next level unlocked.",
-      "hhAllZones": "All fifty levels are hunted down.",
+      "hhAllZones": "All eighty levels are hunted down.",
       "hhBest": "Best {n}",
       "hhBoardLabel": "Colour board - exactly one tile is a slightly different colour",
       "hhTileLabel": "Tile {n}",
@@ -510,6 +516,9 @@
       "hhAdjKeen": "敏锐",
       "hhAdjSharp": "锐利",
       "hhAdjEagle": "鹰眼",
+      "hhAdjMaster": "宗师",
+      "hhAdjLegend": "传奇",
+      "hhAdjMythic": "神话",
       "hhNounKiln": "炭窑",
       "hhNounStudio": "染坊",
       "hhNounMoss": "苔园",
@@ -531,7 +540,7 @@
       "hhRunOut": "红心用尽：{r} 轮后共 {n} 分。异色块已点亮。",
       "hhCleared": "「{name}」通关 - {s} 星，{n} 分。",
       "hhNextZone": "下一级已解锁。",
-      "hhAllZones": "五十级全部猎获。",
+      "hhAllZones": "八十级全部猎获。",
       "hhBest": "最佳 {n}",
       "hhBoardLabel": "色板 - 恰好有一块颜色略有不同",
       "hhTileLabel": "第 {n} 块",

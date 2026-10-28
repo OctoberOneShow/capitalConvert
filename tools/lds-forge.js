@@ -177,6 +177,10 @@ function main() {
       { id: "lds18", labelKey: "ldsRoute18", turns: 8, target: 108, stars: [5, 6, 7] },
       { id: "lds19", labelKey: "ldsRoute19", turns: 7, target: 112, stars: [4, 5, 6] },
       { id: "lds20", labelKey: "ldsRoute20", turns: 7, target: 104, stars: [4, 5, 6] },
+      { id: "lds21", labelKey: "ldsRoute21", turns: 7, target: 108, stars: [4, 5, 6] },
+      { id: "lds22", labelKey: "ldsRoute22", turns: 6, target: 94, stars: [3, 4, 5] },
+      { id: "lds23", labelKey: "ldsRoute23", turns: 6, target: 88, stars: [3, 4, 5] },
+      { id: "lds24", labelKey: "ldsRoute24", turns: 6, target: 82, stars: [3, 4, 5] },
     ];
     brief.forEach(function (route) {
       const best = measure(api, route, 400);

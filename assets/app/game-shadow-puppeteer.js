@@ -272,7 +272,7 @@
     /* p24 - the closing play: both beats work all four levers (lamp x/y,
      * upper arm, forearm, rod). Beat one throws a tall low silhouette, beat
      * two gathers it high and close; neither beat can be reached by holding
-     * any lever still, so the finale chains the whole control row. */
+     * any lever still, so the closing play chains the whole control row. */
     {
       id: "p24", labelKey: "shpP24", briefKey: "shpB24",
       baseY: 160, l1: 48, l2: 40, baseMovable: true,
@@ -286,6 +286,112 @@
         { baseY: 124, aY: 75, bY: 128, tol: 22 },
       ],
       starNudges: [142, 146, 151],
+    },
+    /* The long tier: six more lessons, each one a different way to spend the
+     * same five levers. Every span below is the measured chained road. */
+    /* p25 - the somersault: beat two is a double half-turn - both hinges flip
+     * 180 degrees while the lamp and the rod never move - so the silhouette
+     * rolls end over end instead of being re-lit. */
+    {
+      id: "p25", labelKey: "shpP25", briefKey: "shpB25",
+      baseY: 155, l1: 36, l2: 30, baseMovable: true,
+      start: { lampX: 15, lampY: 285, ang1: 0, ang2: 60, baseX: 170 },
+      solutions: [
+        { lampX: 65, lampY: 120, ang1: 90, ang2: 90, baseX: 200 },
+        { lampX: 65, lampY: 120, ang1: -90, ang2: -90, baseX: 200 },
+      ],
+      targets: [
+        { baseY: 181, aY: 244, bY: 296, tol: 22 },
+        { baseY: 181, aY: 118, bY: 66, tol: 22 },
+      ],
+      starNudges: [145, 149, 154],
+    },
+    /* p26 - the lamp alone: beat two moves only the lamp, from a low near-corner
+     * to a high close one. The puppet never changes, yet the base shadow jumps
+     * almost two hundred pixels, so the light is proven to be a lever of its
+     * own. */
+    {
+      id: "p26", labelKey: "shpP26", briefKey: "shpB26",
+      baseY: 135, l1: 40, l2: 32,
+      start: { lampX: 15, lampY: 15, ang1: -150, ang2: 150, baseX: 210 },
+      solutions: [
+        { lampX: 15, lampY: 220, ang1: 30, ang2: 20, baseX: 210 },
+        { lampX: 150, lampY: 40, ang1: 30, ang2: 20, baseX: 210 },
+      ],
+      targets: [
+        { baseY: 96, aY: 139, bY: 161, tol: 22 },
+        { baseY: 278, aY: 222, bY: 191, tol: 22 },
+      ],
+      starNudges: [166, 170, 175],
+    },
+    /* p27 - the mirror and the lamp: the ghosts are exact reflections about the
+     * rod's height, but unlike p23 the lamp must mirror too (its y crosses the
+     * base) while both arms change sign. Tolerance ten forgives almost
+     * nothing. */
+    {
+      id: "p27", labelKey: "shpP27", briefKey: "shpB27",
+      baseY: 150, l1: 34, l2: 28,
+      start: { lampX: 30, lampY: 120, ang1: 85, ang2: -120, baseX: 175 },
+      solutions: [
+        { lampX: 65, lampY: 60, ang1: -60, ang2: 60, baseX: 175 },
+        { lampX: 65, lampY: 240, ang1: 60, ang2: -60, baseX: 175 },
+      ],
+      targets: [
+        { baseY: 252, aY: 172, bY: 201, tol: 10 },
+        { baseY: 48, aY: 128, bY: 99, tol: 10 },
+      ],
+      starNudges: [168, 172, 177],
+    },
+    /* p28 - the rod answers the arms: beat two freezes the lamp and swings both
+     * hinges a full half-turn, and still the rod must travel 55px or the base
+     * shadow misses by more than the whole bar. */
+    {
+      id: "p28", labelKey: "shpP28", briefKey: "shpB28",
+      baseY: 150, l1: 44, l2: 36, baseMovable: true,
+      start: { lampX: 15, lampY: 125, ang1: -140, ang2: -150, baseX: 220 },
+      solutions: [
+        { lampX: 30, lampY: 60, ang1: 40, ang2: 30, baseX: 140 },
+        { lampX: 30, lampY: 60, ang1: -140, ang2: -150, baseX: 195 },
+      ],
+      targets: [
+        { baseY: 281, aY: 282, bY: 270, tol: 22 },
+        { baseY: 207, aY: 187, bY: 178, tol: 22 },
+      ],
+      starNudges: [187, 191, 196],
+    },
+    /* p29 - the tight quartet: both beats move lamp x/y, both hinges and the
+     * rod, but the bar is fourteen pixels, so the forearm alone is the trim:
+     * holding it costs the beat. */
+    {
+      id: "p29", labelKey: "shpP29", briefKey: "shpB29",
+      baseY: 135, l1: 46, l2: 38, baseMovable: true,
+      start: { lampX: 185, lampY: 165, ang1: -110, ang2: -150, baseX: 120 },
+      solutions: [
+        { lampX: 60, lampY: 90, ang1: 70, ang2: 30, baseX: 155 },
+        { lampX: 110, lampY: 210, ang1: -60, ang2: -20, baseX: 210 },
+      ],
+      targets: [
+        { baseY: 204, aY: 281, bY: 269, tol: 14 },
+        { baseY: 68, aY: 33, bY: 57, tol: 14 },
+      ],
+      starNudges: [200, 204, 209],
+    },
+    /* p30 - the last fire: the summit. Both legs work every lever, beat two
+     * carries a 180-degree upper-arm flip, and the chained road is the longest
+     * in the play. */
+    {
+      id: "p30", labelKey: "shpP30", briefKey: "shpB30",
+      baseY: 115, l1: 48, l2: 40, baseMovable: true,
+      start: { lampX: 15, lampY: 15, ang1: -105, ang2: -155, baseX: 140 },
+      solutions: [
+        { lampX: 95, lampY: 95, ang1: 75, ang2: 25, baseX: 155 },
+        { lampX: 40, lampY: 40, ang1: -105, ang2: -155, baseX: 210 },
+      ],
+      targets: [
+        { baseY: 163, aY: 283, bY: 252, tol: 16 },
+        { baseY: 155, aY: 87, bY: 65, tol: 16 },
+      ],
+      starNudges: [212, 216, 221],
     },
   ];
   /* The free performance stage: no target, same geometry, same controls. */
@@ -1155,6 +1261,12 @@
       "shpP22": "The plinth walks",
       "shpP23": "The mirror pose",
       "shpP24": "The closing play",
+      "shpP25": "The somersault",
+      "shpP26": "The lamp takes the stage",
+      "shpP27": "The mirror and the lamp",
+      "shpP28": "The rod answers the arms",
+      "shpP29": "The tight quartet",
+      "shpP30": "The last fire",
       "shpPFree": "Free performance",
       "shpB1": "one long, even shadow",
       "shpB2": "the head folds back up",
@@ -1180,6 +1292,12 @@
       "shpB22": "two beats - the rod travels while the lamp holds",
       "shpB23": "two beats - mirror both hinges, never overshoot",
       "shpB24": "two beats - lamp, both hinges and the rod close the play",
+      "shpB25": "two beats - both hinges flip a half-turn",
+      "shpB26": "two beats - only the lamp moves, the puppet holds",
+      "shpB27": "two beats - mirror the light and both arms",
+      "shpB28": "two beats - both hinges and the rod, lamp frozen",
+      "shpB29": "two beats - four levers with no slack",
+      "shpB30": "two beats - every lever, a half-turn, the longest road",
       "shpBFree": "no ghost, just rays",
       "shpLeverLabel": "Lever",
       "shpNudgesLabel": "Nudges",
@@ -1235,6 +1353,12 @@
       "shpP22": "台座移步",
       "shpP23": "镜中造型",
       "shpP24": "终场全戏",
+      "shpP25": "翻筋斗",
+      "shpP26": "灯独挑大梁",
+      "shpP27": "灯与镜像",
+      "shpP28": "支杆应臂",
+      "shpP29": "四方紧合",
+      "shpP30": "终场焰火",
       "shpPFree": "自由演出",
       "shpB1": "一道匀长的影子",
       "shpB2": "头颅折回上方",
@@ -1260,6 +1384,12 @@
       "shpB22": "两个节拍 - 灯不动，支杆移步",
       "shpB23": "两个节拍 - 两臂镜像，切莫过冲",
       "shpB24": "两个节拍 - 灯、双臂与支杆共同收场",
+      "shpB25": "两个节拍 - 双臂各翻半圈",
+      "shpB26": "两个节拍 - 只有灯动，木偶不动",
+      "shpB27": "两个节拍 - 灯与双臂一同镜像",
+      "shpB28": "两个节拍 - 灯不动，双臂与支杆同行",
+      "shpB29": "两个节拍 - 四杆联动，不容偏差",
+      "shpB30": "两个节拍 - 全杆齐动，半圈翻转，最长之路",
       "shpBFree": "没有目标，只有光线",
       "shpLeverLabel": "操作杆",
       "shpNudgesLabel": "挪动",

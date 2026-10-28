@@ -1,5 +1,5 @@
 /* Tea House at Midnight - the social simulation in the shared game drawer.
- * Four recurring guests, one to six nights a sitting, six drinks, a notebook.
+ * Four recurring guests, one to nine nights a sitting, six drinks, a notebook.
  * No cup is good on its own: a pour only settles a guest when it carries what
  * they need tonight and a taste they take, and the very same cup offends the
  * next chair. Every fact about a guest has to be bought with a beat of
@@ -110,7 +110,7 @@
       ]
     }
   ];
-  /* --- the twenty-four sittings --------------------------------------------
+  /* --- the thirty sittings ------------------------------------------------
    * beats = the night budget. need = the target in guests soothed. gossip = what
    * a converse turn hands over, in order. slate = a sitting that opens with
    * history already on the shelf. moods = a narrowed pool for a small tray, so
@@ -132,7 +132,14 @@
  * roster rotation the tutorial spent at s4/s5 comes back out of storage, the
  * table drops from four chairs to three and finally to two, and the same prover
  * reads the thinner house unchanged - need runs 18 17 18 19 against measured
- * ceilings of 19 18 20 20. */
+ * ceilings of 19 18 20 20.
+ * The long tier s25-s30 fills the room again but strikes answers off the tray:
+ * each sitting opens with a refusal the shipped tier never used (yun:scalding,
+ * mu:soft, kuo:green, he:dark, then two at once), so two guests can be left
+ * with one pot between them. Chairs run 22 23 24 25 26 27 across eight and nine
+ * nights, and need runs 20 21 22 23 24 25: the printed target is exactly the
+ * measured ceiling of the sitting's own deal, and the benches show the ceiling
+ * moving with the roll rather than with the number. */
   var teaAllCups = ["dc1", "dc2", "dc3", "dc4", "dc5", "dc6"];
   var teaLevels = [
     {
@@ -604,7 +611,7 @@
      * Roster rotation has been idle since the s4/s5 taper: every sitting since
      * s6 has seated all four guests, every night. The deep tier spends it - the
      * table drops to three chairs and finally two, so a sitting that once had
-     * twenty-four chances to soothe ends with nineteen. Nothing new for the
+     * twenty chances to soothe ends with nineteen. Nothing new for the
      * engine: narrowed trays, far-table walks and one pot answering two chairs
      * are all on the shelf already, and the prover, the best line and the bands
      * read the emptier room unchanged. */
@@ -773,6 +780,332 @@
           seats: ["kuo", "yun"], pool: ["dc1", "dc3", "dc4", "dc6"], beats: 7,
           moods: { kuo: ["soured", "feverish", "homesick"], yun: ["wayfaring", "chilled", "homesick"] },
           gossip: [{ id: "s24r7", from: "yun", about: "kuo", rumour: true, claim: "sweet", en: "Yun says Kuo's last guest left and the honey went back under the counter.", zh: "云姑说郭婆婆最后一位客人一走，蜜就收回柜台底下去了。" }]
+        }
+      ]
+    },
+    /* --- the long tier: the sitting outlasts the notebook -------------------
+     * The room stops shrinking and starts filling: eight and nine nights,
+     * twenty-two to twenty-seven chairs, and a target that climbs from twenty
+     * to twenty-five. The shelf gains two refusals the shipped ladder never
+     * used - yun:scalding and kuo:green - and pairs them with the shipped ones
+     * (mu:soft, he:dark), so a guest who had two answers keeps one and the same
+     * pot is suddenly the only answer for two chairs. Kuo and Yun are the pair
+     * that collides: the smoked pot answers her road and her homesickness both,
+     * and the green pot leaves the old woman only that same smoked pot. Where
+     * the roll sends both of them to it, one chair goes unsoothed no matter how
+     * well you play, and the target is measured against that ceiling. */
+    {
+      id: "s25", labelKey: "teaSit25", seed: 2300229652, need: 20,
+      slate: { rap: { he: 2 }, grudge: { "yun:scalding": 1 }, known: { kuo1: 1, kuo2: 1, mu1: 1, mu2: 1, he1: 1, he2: 1, yun1: 1, yun2: 1 } },
+      nights: [
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 14,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "tired"], he: ["grieving", "restless"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s25r1", from: "kuo", about: "yun", rumour: true, claim: "smoke", en: "Kuo says the smoke house has Yun's shawl hanging in it every evening now.", zh: "郭婆婆说熏房里每晚都挂着云姑的头巾。" }]
+        },
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 14,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "tired"], he: ["grieving", "restless"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s25g1", from: "he", about: "yun", fact: "yun1" }]
+        },
+        {
+          seats: ["he", "kuo", "yun"], pool: ["dc1", "dc2", "dc4", "dc6"], beats: 11,
+          moods: { kuo: ["homesick", "feverish"], he: ["grieving", "restless"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s25r2", from: "he", about: "kuo", rumour: true, claim: "shared", en: "He says Kuo pours one pot for the whole sewing room and calls it hospitality.", zh: "老贺说郭婆婆给整间针线房倒一壶，还说是待客。" }]
+        },
+        {
+          seats: ["mu", "kuo", "yun"], pool: ["dc1", "dc3", "dc4", "dc5"], beats: 11,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "tired"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s25g2", from: "mu", about: "kuo", fact: "kuo2" }]
+        },
+        {
+          seats: ["kuo", "yun"], pool: ["dc1", "dc3", "dc4", "dc6"], beats: 7,
+          moods: { kuo: ["homesick", "feverish"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s25r3", from: "yun", about: "mu", rumour: true, claim: "soft", en: "Yun says the clerk asks for the mild pot and then salts it.", zh: "云姑说书办要淡的那壶，回头又往里搁盐。" }]
+        },
+        {
+          seats: ["he", "yun"], pool: ["dc1", "dc2", "dc4", "dc6"], beats: 7,
+          moods: { he: ["grieving", "restless"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s25g3", from: "kuo", about: "he", fact: "he1" }]
+        },
+        {
+          seats: ["mu", "kuo"], pool: ["dc1", "dc3", "dc4", "dc5"], beats: 7,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "tired"] },
+          gossip: [{ id: "s25r4", from: "mu", about: "he", rumour: true, claim: "dark", en: "Mu says He has taken to the charcoal pot since the depot changed hands.", zh: "书办说车行换了东家以后，老贺就改喝炭焙的。" }]
+        },
+        {
+          seats: ["kuo", "yun"], pool: ["dc1", "dc3", "dc4", "dc6"], beats: 7,
+          moods: { kuo: ["homesick", "feverish"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s25r5", from: "kuo", about: "yun", rumour: true, claim: "sweet", en: "Kuo swears Yun keeps a honey jar under the cart seat for herself.", zh: "郭婆婆赌咒说云姑车座底下给自己藏着一罐蜜。" }]
+        }
+      ]
+    },
+    /* The clerk comes in already talking: a like-family slate means his mood is
+     * on the table before you seat him, and the mild pot is struck off his list,
+     * so every answer of his lands on the sweet roasted cup. Eight nights, a
+     * tighter tray on the small ones, and the same two women fighting over the
+     * smoked pot. */
+    {
+      id: "s26", labelKey: "teaSit26", seed: 2400285085, need: 21,
+      slate: { rap: { mu: 5 }, grudge: { "mu:soft": 1 }, known: { kuo1: 1, kuo2: 1, mu1: 1, mu2: 1, he1: 1, he2: 1, yun1: 1, yun2: 1 } },
+      nights: [
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 14,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "chilled"], he: ["grieving", "restless"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s26r1", from: "mu", about: "kuo", rumour: true, claim: "warm", en: "Mu says Kuo sends the pot back unless it is warm enough to fog the lid.", zh: "书办说郭婆婆的壶不热到盖子上起雾就要退回去。" }]
+        },
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 14,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "chilled"], he: ["grieving", "restless"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s26g1", from: "kuo", about: "he", fact: "he2" }]
+        },
+        {
+          seats: ["mu", "he", "yun"], pool: teaAllCups, beats: 12,
+          moods: { mu: ["heavy", "chilled"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s26r2", from: "yun", about: "mu", rumour: true, claim: "sweet", en: "Yun says the clerk has his own honey pot marked with a court seal.", zh: "云姑说书办自带的蜜罐上还盖着衙门的印。" }]
+        },
+        {
+          seats: ["mu", "kuo", "yun"], pool: ["dc1", "dc3", "dc4", "dc6"], beats: 11,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "chilled"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s26g2", from: "he", about: "mu", fact: "mu1" }]
+        },
+        {
+          seats: ["he", "kuo", "yun"], pool: ["dc1", "dc2", "dc4", "dc6"], beats: 11,
+          moods: { kuo: ["homesick", "feverish"], he: ["grieving", "restless"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s26r3", from: "he", about: "yun", rumour: true, claim: "sweet", en: "He says Yun's cart smells of honey before it smells of smoke.", zh: "老贺说云姑车上先闻见蜜，后闻见烟。" }]
+        },
+        {
+          seats: ["kuo", "mu"], pool: ["dc1", "dc3", "dc4", "dc5"], beats: 7,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "heavy"] },
+          gossip: [{ id: "s26g3", from: "yun", about: "kuo", fact: "kuo1" }]
+        },
+        {
+          seats: ["yun", "he"], pool: ["dc1", "dc2", "dc4", "dc6"], beats: 7,
+          moods: { yun: ["wayfaring", "chilled"], he: ["grieving", "restless"] },
+          gossip: [{ id: "s26r4", from: "mu", about: "he", rumour: true, claim: "sweet", en: "Mu says He carries a lump of honey in his coat against the cold stairs.", zh: "书办说老贺在衣兜里揣一块蜜，防着后楼的冷风。" }]
+        },
+        {
+          seats: ["kuo", "yun"], pool: ["dc1", "dc3", "dc4", "dc6"], beats: 7,
+          moods: { kuo: ["homesick", "feverish"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s26g4", from: "kuo", about: "mu", fact: "mu2" }]
+        }
+      ]
+    },
+    /* The green leaf is struck off the old woman's list and the notebook opens
+     * without an answer for it: every night Kuo is homesick, the smoked pot is
+     * her only cup, and on the nights Yun is on the road it is Yun's only cup
+     * too. Eight nights and twenty-four chairs, twenty-two of them wanted. */
+    {
+      id: "s27", labelKey: "teaSit27", seed: 2500047515, need: 22,
+      slate: { rap: { yun: 3 }, grudge: { "kuo:green": 1 }, known: { kuo1: 1, kuo2: 1, mu1: 1, mu2: 1, he1: 1, he2: 1, yun1: 1, yun2: 1 } },
+      nights: [
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 13,
+          moods: { kuo: ["soured", "homesick"], mu: ["empty", "tired"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s27r1", from: "kuo", about: "mu", rumour: true, claim: "heavy", en: "Kuo says the clerk asks for the charred pot when the audit runs late.", zh: "郭婆婆说查账查到深夜，书办就要炭焙的那壶。" }]
+        },
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 13,
+          moods: { kuo: ["soured", "homesick"], mu: ["empty", "tired"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s27g1", from: "mu", about: "yun", fact: "yun1" }]
+        },
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 13,
+          moods: { kuo: ["soured", "homesick"], mu: ["empty", "tired"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s27r2", from: "he", about: "kuo", rumour: true, claim: "smoke", en: "He has seen Kuo buy the smoked brick at the north gate three mornings running.", zh: "老贺连着三个早晨看见郭婆婆在北门买熏砖。" }]
+        },
+        {
+          seats: ["he", "kuo", "yun"], pool: ["dc1", "dc2", "dc4", "dc6"], beats: 10,
+          moods: { kuo: ["soured", "homesick"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s27g2", from: "kuo", about: "he", fact: "he2" }]
+        },
+        {
+          seats: ["mu", "he", "yun"], pool: teaAllCups, beats: 10,
+          moods: { mu: ["empty", "tired"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s27r3", from: "yun", about: "kuo", rumour: true, claim: "sweet", en: "Yun says Kuo stirs honey into the pot after the last guest has gone.", zh: "云姑说最后一位客人走了，郭婆婆才往壶里下蜜。" }]
+        },
+        {
+          seats: ["kuo", "yun"], pool: ["dc1", "dc3", "dc4", "dc6"], beats: 7,
+          moods: { kuo: ["soured", "homesick"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s27r4", from: "mu", about: "yun", rumour: true, claim: "cool", en: "Mu says Yun drinks yesterday's cold pot before she will price a single leaf.", zh: "书办说云姑不先喝口昨夜的凉茶，就不肯给叶子上价。" }]
+        },
+        {
+          seats: ["mu", "kuo"], pool: ["dc1", "dc3", "dc4", "dc5"], beats: 7,
+          moods: { kuo: ["soured", "homesick"], mu: ["empty", "tired"] },
+          gossip: [{ id: "s27g3", from: "he", about: "mu", fact: "mu2" }]
+        },
+        {
+          seats: ["he", "yun"], pool: ["dc1", "dc2", "dc4", "dc6"], beats: 7,
+          moods: { he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s27g4", from: "yun", about: "kuo", fact: "kuo2" }]
+        }
+      ]
+    },
+    /* Nine nights now, and the porter's charcoal pot is struck off his list,
+     * leaving the green bitter one. The tray still carries both, but only one
+     * of them is his, so on the full nights the smoked pot goes to Yun and the
+     * green one to He while Kuo waits for a homesick roll that sends her to the
+     * same smoked pot. */
+    {
+      id: "s28", labelKey: "teaSit28", seed: 2600372194, need: 23,
+      slate: { rap: { kuo: 4 }, grudge: { "he:dark": 1 }, known: { kuo1: 1, kuo2: 1, mu1: 1, mu2: 1, he1: 1, he2: 1, yun1: 1, yun2: 1 } },
+      nights: [
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 14,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "tired"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s28r1", from: "he", about: "mu", rumour: true, claim: "soft", en: "He says the clerk will not take a pot that stings, not even in winter.", zh: "老贺说书办连冬天都不肯喝刺喉的那壶。" }]
+        },
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 14,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "tired"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s28g1", from: "kuo", about: "he", fact: "he1" }]
+        },
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 14,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "tired"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s28r2", from: "mu", about: "he", rumour: true, claim: "cool", en: "Mu says He lets the pot go cold on purpose before the second cup.", zh: "书办说老贺第二杯故意放凉了才喝。" }]
+        },
+        {
+          seats: ["he", "kuo", "yun"], pool: ["dc1", "dc2", "dc4", "dc6"], beats: 11,
+          moods: { kuo: ["homesick", "feverish"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s28g2", from: "yun", about: "mu", fact: "mu1" }]
+        },
+        {
+          seats: ["mu", "he"], pool: ["dc2", "dc3", "dc5", "dc6"], beats: 7,
+          moods: { mu: ["empty", "tired"], he: ["grieving", "restless"] },
+          gossip: [{ id: "s28r3", from: "kuo", about: "he", rumour: true, claim: "sweet", en: "Kuo swears He keeps a honey cake in the depot ledger for the boy who sweeps.", zh: "郭婆婆赌咒说老贺在车行账本里夹着一块蜜糕，留给扫地的孩子。" }]
+        },
+        {
+          seats: ["kuo", "yun"], pool: ["dc1", "dc3", "dc4", "dc6"], beats: 7,
+          moods: { kuo: ["homesick", "feverish"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s28g3", from: "he", about: "kuo", fact: "kuo1" }]
+        },
+        {
+          seats: ["kuo", "mu"], pool: ["dc1", "dc3", "dc4", "dc5"], beats: 7,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "tired"] },
+          gossip: [{ id: "s28r4", from: "mu", about: "yun", rumour: true, claim: "warm", en: "Mu says Yun warms her hands on the pot before she will say good evening.", zh: "书办说云姑要先把手捂在壶上，才肯问一声好。" }]
+        },
+        {
+          seats: ["he", "yun"], pool: ["dc1", "dc2", "dc4", "dc6"], beats: 7,
+          moods: { he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s28g4", from: "kuo", about: "yun", fact: "yun2" }]
+        },
+        {
+          seats: ["kuo", "yun"], pool: ["dc1", "dc3", "dc4", "dc6"], beats: 7,
+          moods: { kuo: ["homesick", "feverish"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s28r5", from: "yun", about: "kuo", rumour: true, claim: "green", en: "Yun says there is still green leaf in Kuo's cupboard, wrapped against the damp.", zh: "云姑说郭婆婆柜里还收着青叶，裹着防潮。" }]
+        }
+      ]
+    },
+    /* Two refusals walk in together: Yun's scalding and the clerk's mild are
+     * both struck off, so the smoked pot and the sweet roasted pot carry the
+     * whole house between them. Nine nights, twenty-six chairs, twenty-four
+     * wanted - and the same collision at the smoked pot every night the road
+     * and the homesickness meet. */
+    {
+      id: "s29", labelKey: "teaSit29", seed: 1029242052, need: 24,
+      slate: { rap: { mu: 5 }, grudge: { "yun:scalding": 1, "mu:soft": 1 }, known: { kuo1: 1, kuo2: 1, mu1: 1, mu2: 1, he1: 1, he2: 1, yun1: 1, yun2: 1 } },
+      nights: [
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 15,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "chilled"], he: ["grieving", "restless"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s29r1", from: "yun", about: "kuo", rumour: true, claim: "dry", en: "Yun says Kuo asks for the pot with no sweetness in it, and means it.", zh: "云姑说郭婆婆要的是不带甜的那壶，而且是认真的。" }]
+        },
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 15,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "chilled"], he: ["grieving", "restless"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s29g1", from: "he", about: "mu", fact: "mu2" }]
+        },
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 15,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "chilled"], he: ["grieving", "restless"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s29r2", from: "mu", about: "yun", rumour: true, claim: "shared", en: "Mu says Yun has one pot for the whole market row and no cup of her own.", zh: "书办说云姑整个菜市共一壶茶，自己没有杯。" }]
+        },
+        {
+          seats: ["mu", "kuo", "yun"], pool: teaAllCups, beats: 12,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "heavy"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s29g2", from: "kuo", about: "yun", fact: "yun1" }]
+        },
+        {
+          seats: ["he", "kuo", "yun"], pool: ["dc1", "dc2", "dc4", "dc6"], beats: 12,
+          moods: { kuo: ["homesick", "feverish"], he: ["grieving", "restless"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s29r3", from: "he", about: "kuo", rumour: true, claim: "bitter", en: "He says Kuo has started taking the bitter steep since the grandson left.", zh: "老贺说孙子走了以后，郭婆婆改喝苦的那道了。" }]
+        },
+        {
+          seats: ["kuo", "mu"], pool: ["dc1", "dc3", "dc4", "dc5"], beats: 8,
+          moods: { kuo: ["homesick", "feverish"], mu: ["empty", "heavy"] },
+          gossip: [{ id: "s29g3", from: "he", about: "kuo", fact: "kuo2" }]
+        },
+        {
+          seats: ["yun", "he"], pool: ["dc1", "dc2", "dc4", "dc6"], beats: 8,
+          moods: { yun: ["wayfaring", "homesick"], he: ["grieving", "restless"] },
+          gossip: [{ id: "s29r4", from: "mu", about: "he", rumour: true, claim: "green", en: "Mu says He has been seen buying unroasted leaf off the river boats.", zh: "书办说有人看见老贺在河船上买生青的叶子。" }]
+        },
+        {
+          seats: ["kuo", "yun"], pool: ["dc1", "dc3", "dc4", "dc6"], beats: 8,
+          moods: { kuo: ["homesick", "feverish"], yun: ["wayfaring", "homesick"] },
+          gossip: [{ id: "s29g4", from: "kuo", about: "mu", fact: "mu1" }]
+        },
+        {
+          seats: ["mu", "he"], pool: ["dc2", "dc3", "dc5", "dc6"], beats: 8,
+          moods: { mu: ["empty", "chilled"], he: ["grieving", "restless"] },
+          gossip: [{ id: "s29r5", from: "yun", about: "mu", rumour: true, claim: "heavy", en: "Yun says the clerk has taken to the charred pot since the new seal came.", zh: "云姑说新印上任以后，书办改喝炭焙的了。" }]
+        }
+      ]
+    },
+    /* The summit: both the green leaf and the porter's charcoal are struck off,
+     * so Kuo lives on the smoked pot and He on the green bitter one, and there
+     * is no spare answer anywhere. Nine nights, twenty-seven chairs, twenty-five
+     * wanted, and every night Kuo and Yun share the table they both reach for
+     * the smoked pot and one of them has to go without. */
+    {
+      id: "s30", labelKey: "teaSit30", seed: 2800435546, need: 25,
+      slate: { rap: { kuo: 5 }, grudge: { "kuo:green": 1, "he:dark": 1 }, known: { kuo1: 1, kuo2: 1, mu1: 1, mu2: 1, he1: 1, he2: 1, yun1: 1, yun2: 1 } },
+      nights: [
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 14,
+          moods: { kuo: ["soured", "homesick"], mu: ["empty", "tired"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s30r1", from: "kuo", about: "he", rumour: true, claim: "sweet", en: "Kuo says the depot pot has honey at the bottom again and He never stirs it.", zh: "郭婆婆说车行那壶底下又沉了蜜，老贺从来不搅。" }]
+        },
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 14,
+          moods: { kuo: ["soured", "homesick"], mu: ["empty", "tired"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s30g1", from: "mu", about: "kuo", fact: "kuo1" }]
+        },
+        {
+          seats: ["mu", "he", "kuo", "yun"], pool: teaAllCups, beats: 14,
+          moods: { kuo: ["soured", "homesick"], mu: ["empty", "tired"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s30r2", from: "he", about: "yun", rumour: true, claim: "smoke", en: "He says Yun sleeps with her shawl over her face so the smoke stays in it.", zh: "老贺说云姑睡觉拿头巾盖着脸，好把烟味留住。" }]
+        },
+        {
+          seats: ["he", "kuo", "yun"], pool: ["dc1", "dc2", "dc4", "dc6"], beats: 11,
+          moods: { kuo: ["soured", "homesick"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s30g2", from: "yun", about: "he", fact: "he1" }]
+        },
+        {
+          seats: ["mu", "kuo", "yun"], pool: ["dc1", "dc3", "dc4", "dc5"], beats: 10,
+          moods: { kuo: ["soured", "homesick"], mu: ["empty", "tired"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s30r3", from: "mu", about: "kuo", rumour: true, claim: "soft", en: "Mu says Kuo keeps the mild pot for the boy and the smoked one for herself.", zh: "书办说郭婆婆把淡的那壶留给孙子，自己喝熏的。" }]
+        },
+        {
+          seats: ["he", "kuo", "yun"], pool: ["dc1", "dc2", "dc4", "dc6"], beats: 11,
+          moods: { kuo: ["soured", "homesick"], he: ["grieving", "restless"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s30g3", from: "he", about: "mu", fact: "mu1" }]
+        },
+        {
+          seats: ["kuo", "mu"], pool: ["dc1", "dc3", "dc4", "dc5"], beats: 7,
+          moods: { kuo: ["soured", "homesick"], mu: ["empty", "tired"] },
+          gossip: [{ id: "s30r4", from: "mu", about: "yun", rumour: true, claim: "bitter", en: "Mu says Yun has started asking for the bitter steep when the road is long.", zh: "书办说路长的时候，云姑开始要苦的那道了。" }]
+        },
+        {
+          seats: ["yun", "he"], pool: ["dc1", "dc2", "dc4", "dc6"], beats: 7,
+          moods: { yun: ["wayfaring", "chilled"], he: ["grieving", "restless"] },
+          gossip: [{ id: "s30g4", from: "kuo", about: "yun", fact: "yun2" }]
+        },
+        {
+          seats: ["kuo", "yun"], pool: ["dc1", "dc3", "dc4", "dc6"], beats: 7,
+          moods: { kuo: ["soured", "homesick"], yun: ["wayfaring", "chilled"] },
+          gossip: [{ id: "s30r5", from: "yun", about: "kuo", rumour: true, claim: "scalding", en: "Yun says Kuo will not lift a cup unless it is still moving in the pot.", zh: "云姑说壶里不还在滚的，郭婆婆就不端。" }]
         }
       ]
     }
@@ -2026,6 +2359,12 @@
       "teaSit22": "Half the House",
       "teaSit23": "Seven Thin Nights",
       "teaSit24": "The Whole Notebook",
+      "teaSit25": "A Longer Table",
+      "teaSit26": "The Clerk Speaks First",
+      "teaSit27": "No Green Leaf",
+      "teaSit28": "The Porter's Dark",
+      "teaSit29": "Two Doors Shut",
+      "teaSit30": "The Last Lamp",
       "teaStatNightLabel": "Night",
       "teaStatBeatsLabel": "Beats left",
       "teaStatTonightLabel": "Tonight",
@@ -2125,6 +2464,12 @@
       "teaSit22": "半间堂",
       "teaSit23": "连开七夜",
       "teaSit24": "账上都在",
+      "teaSit25": "桌子长了",
+      "teaSit26": "书办先开口",
+      "teaSit27": "青叶不上桌",
+      "teaSit28": "老贺的炭焙",
+      "teaSit29": "两扇门关了",
+      "teaSit30": "最后一盏灯",
       "teaStatNightLabel": "夜晚",
       "teaStatBeatsLabel": "剩节拍",
       "teaStatTonightLabel": "今夜",

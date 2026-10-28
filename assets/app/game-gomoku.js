@@ -61,6 +61,12 @@
     { id: "r18", labelKey: "gomokuRank18", noise: 0.25, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, depth: 11, starMoves: [82, 122, 166] },
     { id: "r19", labelKey: "gomokuRank19", noise: 0.18, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, depth: 12, starMoves: [86, 128, 174] },
     { id: "r20", labelKey: "gomokuRank20", noise: 0.2, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, hold: 2, depth: 12, starMoves: [90, 134, 182] },
+    /* Ranks 21-24: the summit rungs. Precision attack combinations,
+     * high defense hold and deep multi-front search cap the Gomoku ladder. */
+    { id: "r21", labelKey: "gomokuRank21", noise: 0.16, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, hold: 2, depth: 12, starMoves: [94, 140, 190] },
+    { id: "r22", labelKey: "gomokuRank22", noise: 0.14, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, hold: 2, depth: 13, starMoves: [98, 146, 198] },
+    { id: "r23", labelKey: "gomokuRank23", noise: 0.12, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, hold: 2, depth: 13, starMoves: [102, 152, 206] },
+    { id: "r24", labelKey: "gomokuRank24", noise: 0.10, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, hold: 2, depth: 14, starMoves: [106, 158, 214] },
   ];
   var gmDirs = [[1, 0], [0, 1], [1, 1], [1, -1]];
 
@@ -1288,6 +1294,10 @@
       "gomokuRank18": "The Shaking Deep",
       "gomokuRank19": "Twelve Plies",
       "gomokuRank20": "Two Fronts At Once",
+      "gomokuRank21": "The Iron Formation",
+      "gomokuRank22": "The Silent Weave",
+      "gomokuRank23": "Double Threat Sovereign",
+      "gomokuRank24": "Celestial Grandmaster",
     },
     zh: {
       "gomokuRank7": "读断点",
@@ -1304,6 +1314,10 @@
       "gomokuRank18": "颤抖深处",
       "gomokuRank19": "十二层",
       "gomokuRank20": "双线齐开",
+      "gomokuRank21": "玄铁阵法",
+      "gomokuRank22": "无声经纬",
+      "gomokuRank23": "双杀之威",
+      "gomokuRank24": "天元棋圣",
     },
   });
 

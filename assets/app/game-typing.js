@@ -19,6 +19,22 @@
     "A tidy sentence is a gift to whoever reads it next in the pipeline.",
     "Every stray fullwidth comma becomes a space before you can blink.",
     "Keep the best words, drop the clutter, and ship the clean version.",
+    "Zero bugs slip past the sieve when the batch looks twice.",
+    "Punctuation is a dial, not a switch: nudge the comma, and the sentence changes key.",
+    "Batch jobs love idempotence: run the sweeper twice, and the output stays golden.",
+    "Every regex is a small contract: keep it boring, tested, and easy to delete.",
+    "The pipeline sorts, sweeps, and seals; nobody touches the text by hand anymore.",
+    "A careful pass at midnight beats three careless ones before lunch.",
+    "Deterministic state machines guarantee zero divergence across distributed consensus nodes.",
+    "The optimizing compiler vectorizes intermediate bytecode into parallel register streams.",
+    "Cryptographic signatures seal the block header; merkle roots verify each transaction.",
+    "High-throughput telemetry streams ten thousand metrics per second into the analytics cluster.",
+    "Fault-tolerant clusters withstand regional partitions without dropping a single active session.",
+    "Zero-copy ring buffers stream network packets straight into kernel memory queues.",
+    "Synchronized atomic clocks calibrate microsecond timestamps across planetary data centres.",
+    "The microkernel scheduler dispatches asynchronous tasks with sub-microsecond latency.",
+    "Hardware-accelerated rendering pipelines rasterize geometric primitives inside framebuffers.",
+    "Distributed file systems replicate partitioned chunks across heterogeneous storage clusters.",
   ];
 
   function initTypingGame() {

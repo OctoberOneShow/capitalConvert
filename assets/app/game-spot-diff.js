@@ -32,6 +32,14 @@
     { diffs: 16, caseFlips: true, homoglyphs: true },
     { diffs: 17, caseFlips: true, homoglyphs: true },
     { diffs: 18, caseFlips: true, homoglyphs: true },
+    { diffs: 19, caseFlips: true, homoglyphs: true },
+    { diffs: 20, caseFlips: true, homoglyphs: true },
+    { diffs: 21, caseFlips: true, homoglyphs: true },
+    { diffs: 22, caseFlips: true, homoglyphs: true },
+    { diffs: 23, caseFlips: true, homoglyphs: true },
+    { diffs: 24, caseFlips: true, homoglyphs: true },
+    { diffs: 25, caseFlips: true, homoglyphs: true },
+    { diffs: 26, caseFlips: true, homoglyphs: true },
   ];
   /* Every mutation is one the site's own tools know how to undo, so the
    * planted damage is exactly the kind of noise the toolkit hunts. */
@@ -87,6 +95,11 @@
     "Zero-copy ring buffers stream network packets straight into kernel memory queues.",
     "Synchronized atomic clocks calibrate microsecond timestamps across planetary data centres.",
     "The microkernel scheduler dispatches asynchronous tasks with sub-microsecond latency.",
+    "Asynchronous event loops multiplex concurrent socket connections across worker thread pools.",
+    "Decentralized ledger protocols validate state transitions through zero-knowledge proofs.",
+    "Hardware-accelerated rendering pipelines rasterize geometric primitives directly inside framebuffers.",
+    "Distributed file systems replicate partitioned chunks across heterogeneous storage clusters.",
+    "High-dimensional vector embeddings index semantic knowledge graphs for low-latency similarity retrieval.",
   ];
 
   function spotShuffle(list) {

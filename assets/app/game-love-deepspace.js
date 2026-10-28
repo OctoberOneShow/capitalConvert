@@ -46,6 +46,13 @@
     { id: "lds18", labelKey: "ldsRoute18", turns: 8, target: 108, stars: [5, 6, 7] },
     { id: "lds19", labelKey: "ldsRoute19", turns: 7, target: 112, stars: [4, 5, 6] },
     { id: "lds20", labelKey: "ldsRoute20", turns: 7, target: 104, stars: [4, 5, 6] },
+    /* Routes 21-24: The pinnacle expedition pushing into extreme turn ceilings.
+     * Route 21 finishes the 7-turn arc, while routes 22-24 introduce high-pressure
+     * 6-turn runs requiring near-flawless Evol charging and matching. */
+    { id: "lds21", labelKey: "ldsRoute21", turns: 7, target: 108, stars: [4, 5, 6] },
+    { id: "lds22", labelKey: "ldsRoute22", turns: 6, target: 94, stars: [3, 4, 5] },
+    { id: "lds23", labelKey: "ldsRoute23", turns: 6, target: 88, stars: [3, 4, 5] },
+    { id: "lds24", labelKey: "ldsRoute24", turns: 6, target: 82, stars: [3, 4, 5] },
   ];
 
   var ldsPartners = [
@@ -958,6 +965,10 @@
       "ldsRoute18": "The Soft Target",
       "ldsRoute19": "Seven Turns Burning",
       "ldsRoute20": "Heartstar Finale",
+      "ldsRoute21": "The Seven-Turn Ceiling",
+      "ldsRoute22": "Six Turns to Dawn",
+      "ldsRoute23": "Deep Space Resonance",
+      "ldsRoute24": "Infinite Starlight",
       "ldsPartnerXavier": "Xavier",
       "ldsPartnerZayne": "Zayne",
       "ldsPartnerRafayel": "Rafayel",
@@ -1171,6 +1182,10 @@
       "ldsRoute18": "软目标",
       "ldsRoute19": "七回合燃烧",
       "ldsRoute20": "心星终章",
+      "ldsRoute21": "七轮极境",
+      "ldsRoute22": "破晓六转",
+      "ldsRoute23": "深空共振",
+      "ldsRoute24": "永恒星芒",
       "ldsPartnerXavier": "沈星回",
       "ldsPartnerZayne": "黎深",
       "ldsPartnerRafayel": "祁煜",

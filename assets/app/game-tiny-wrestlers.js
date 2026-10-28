@@ -99,6 +99,12 @@
     { id: "w18", labelKey: "twrR18", windowMs: 1000, predict: 1, rush: 1, greed: 1, noise: 0.003, starBeats: [23, 31, 40] },
     { id: "w19", labelKey: "twrR19", windowMs: 950, predict: 1, rush: 1, greed: 1, noise: 0.002, starBeats: [24, 32, 40] },
     { id: "w20", labelKey: "twrR20", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.001, starBeats: [25, 34, 40] },
+    /* Ranks 21-24: the grand champion summit. Sub-millisecond reactions,
+     * ultra-pure prediction, and relentless timing crown the arena ladder. */
+    { id: "w21", labelKey: "twrR21", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.0008, starBeats: [25, 34, 40] },
+    { id: "w22", labelKey: "twrR22", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.0006, starBeats: [26, 35, 40] },
+    { id: "w23", labelKey: "twrR23", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.0004, starBeats: [26, 35, 40] },
+    { id: "w24", labelKey: "twrR24", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.0002, starBeats: [27, 36, 40] },
   ];
 
   /* --- pure core, exported for the checks -------------------------- */
@@ -1005,7 +1011,7 @@
       "tabTinyWrestlers": "Tiny Wrestlers",
       "twrR1": "Rookie", "twrR2": "Slick", "twrR3": "Iron Arm", "twrR4": "Bulldog", "twrR5": "Champion",
       "twrR6": "Ring Lord", "twrR7": "Shadow Grip", "twrR8": "Iron Wall", "twrR9": "Grand Master", "twrR10": "Legend", "twrR11": "Veteran", "twrR12": "Iron Grip", "twrR13": "The Wall", "twrR14": "Immovable", "twrR15": "Grand Champion",
-      "twrR16": "Main Event", "twrR17": "Iron Crown", "twrR18": "Unmoved", "twrR19": "Undefeated", "twrR20": "The Peak",
+      "twrR16": "Main Event", "twrR17": "Iron Crown", "twrR18": "Unmoved", "twrR19": "Undefeated", "twrR20": "The Peak", "twrR21": "Iron Grip", "twrR22": "The Unbroken Stance", "twrR23": "Thunder Throw", "twrR24": "Grand Champion Apex",
       "twrBlueLabel": "Cyan", "twrRedLabel": "Red",
       "twrBeatLabel": "Exchange", "twrSpaceLabel": "Space", "twrLockLabel": "Locks", "twrWindowLabel": "Window",
       "twrModeSelectLabel": "Bout mode", "twrModeSolo": "Solo bout - you against the machine",
@@ -1078,7 +1084,7 @@
     zh: {
       "tabTinyWrestlers": "小小摔跤手",       "twrR1": "新手", "twrR2": "滑头", "twrR3": "铁臂", "twrR4": "蛮牛", "twrR5": "冠军",
       "twrR6": "擂台王", "twrR7": "暗手", "twrR8": "铁壁", "twrR9": "宗师", "twrR10": "传奇", "twrR11": "老将", "twrR12": "铁腕", "twrR13": "人墙", "twrR14": "不动如山", "twrR15": "至尊冠军",
-      "twrR16": "主赛", "twrR17": "铁冠", "twrR18": "岿然", "twrR19": "不败", "twrR20": "巅峰",
+      "twrR16": "主赛", "twrR17": "铁冠", "twrR18": "岿然", "twrR19": "不败", "twrR20": "巅峰", "twrR21": "铁手锁力", "twrR22": "磐石定式", "twrR23": "迅雷摔投", "twrR24": "角力霸主之巅",
       "twrBlueLabel": "青角", "twrRedLabel": "红角",
       "twrBeatLabel": "回合", "twrSpaceLabel": "距离", "twrLockLabel": "锁定", "twrWindowLabel": "窗口",
       "twrModeSelectLabel": "赛制", "twrModeSolo": "单人——对阵机器", "twrModeDuo": "双人——共用一块键盘",

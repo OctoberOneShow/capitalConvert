@@ -97,6 +97,18 @@
      * sowing and asks for 43000: about thirty-six harvests on a 54-second
      * clock, deeper than any bed before it. */
     { id: "g20", labelKey: "gdnB20", cost: 396, crop: 1584, start: 1584, growMs: 54000, goal: 43000, starTimes: [615, 805, 1090] },
+    /* High-tempo pavilion: 4 plots open with an 18-second rapid clock and a 2.5x
+     * return, testing fast-handed continuous turnover toward 52,000. */
+    { id: "g21", labelKey: "gdnB21", cost: 450, crop: 1125, start: 1800, growMs: 18000, goal: 52000, starTimes: [412, 540, 729] },
+    /* Single bonsai start: starts on a single seedling with a massive 7x return
+     * on an 80-second clock; deliberate early reinvestment opens the full terrace. */
+    { id: "g22", labelKey: "gdnB22", cost: 520, crop: 3640, start: 520, growMs: 80000, goal: 62000, starTimes: [548, 718, 970] },
+    /* Razor-margin lattice: 2 plots open and only 1.8x return on a brisk 16-second
+     * clock, demanding persistent sowing rhythm to reach 74,000. */
+    { id: "g23", labelKey: "gdnB23", cost: 600, crop: 1080, start: 1200, growMs: 16000, goal: 74000, starTimes: [731, 958, 1294] },
+    /* Master grand conservatory: 3 plots open, premium 4.5x botanical harvest on
+     * a 42-second clock, demanding balanced management to hit the 90,000 summit. */
+    { id: "g24", labelKey: "gdnB24", cost: 700, crop: 3150, start: 2100, growMs: 42000, goal: 90000, starTimes: [480, 629, 850] },
   ];
 
   function gdnRipe(plots, index, now, bed) {
@@ -344,6 +356,10 @@
       "gdnB18": "Chili Rack",
       "gdnB19": "Fig Canopy",
       "gdnB20": "Moonlit Orchard",
+      "gdnB21": "Cloud Pavilion",
+      "gdnB22": "Bonsai Terrace",
+      "gdnB23": "Jasmine Lattice",
+      "gdnB24": "Grand Conservatory",
     },
     zh: {
       "gdnB6": "\u6e29\u5ba4\u5784",
@@ -361,10 +377,15 @@
       "gdnB18": "辣椒架",
       "gdnB19": "无花果棚",
       "gdnB20": "月下果园",
+      "gdnB21": "云顶凉亭",
+      "gdnB22": "古树盆景台",
+      "gdnB23": "夜茉莉花格",
+      "gdnB24": "空中植物殿",
     },
   });
 
   /* Exported for the other modules. */
+  App.gardenBeds = gdnBeds;
   App.gardenSecondsToGoal = gdnSecondsToGoal;
   App.gardenRipe = gdnRipe;
   App.initRoofGardenGame = initRoofGardenGame;

@@ -56,6 +56,12 @@
     { id: "bf18", labelKey: "fltL18", skill: 13, starShots: [25, 33, 42] },
     { id: "bf19", labelKey: "fltL19", skill: 14, starShots: [24, 30, 39] },
     { id: "bf20", labelKey: "fltL20", skill: 14, starShots: [23, 30, 39] },
+    /* Ranks 21-24: the summit pinnacle. Deep joint sweep and density hunt
+     * face the tightest target budgets the naval range allows. */
+    { id: "bf21", labelKey: "fltL21", skill: 14, starShots: [23, 29, 38] },
+    { id: "bf22", labelKey: "fltL22", skill: 14, starShots: [22, 29, 38] },
+    { id: "bf23", labelKey: "fltL23", skill: 14, starShots: [22, 28, 37] },
+    { id: "bf24", labelKey: "fltL24", skill: 14, starShots: [21, 28, 36] },
   ];
   var FLT_EMPTY = 0;
   var FLT_MISS = 1;
@@ -947,6 +953,10 @@
       "fltL18": "The Calm Sea",
       "fltL19": "The Last Frigate",
       "fltL20": "Ocean's Zenith",
+      "fltL21": "Tide of Shadows",
+      "fltL22": "The Silent Armada",
+      "fltL23": "Storm Bastion",
+      "fltL24": "Ocean's Sovereign Apex",
     },
     zh: {
       "fltL9": "海军大将",
@@ -961,6 +971,10 @@
       "fltL18": "静海",
       "fltL19": "末代护卫",
       "fltL20": "沧海之巅",
+      "fltL21": "暗潮之伏",
+      "fltL22": "无声舰队",
+      "fltL23": "风暴堡垒",
+      "fltL24": "大洋主权巅峰",
     },
   });
 

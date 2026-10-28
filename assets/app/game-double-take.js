@@ -30,6 +30,9 @@
     "dtAdjMisty",
     "dtAdjVelvet",
     "dtAdjMidnight",
+    "dtAdjMaster",
+    "dtAdjLegend",
+    "dtAdjMythic",
   ];
   var dtZoneNouns = [
     "dtNounPostcards",
@@ -46,7 +49,7 @@
 
   function dtBuildZones() {
     var zones = [];
-    for (var index = 1; index <= 50; index += 1) {
+    for (var index = 1; index <= 80; index += 1) {
       zones.push({
         id: "dt" + index,
         adjKey: dtZoneAdjectives[Math.floor((index - 1) / 10)],
@@ -1942,6 +1945,9 @@
       "dtAdjMisty": "Misty",
       "dtAdjVelvet": "Velvet",
       "dtAdjMidnight": "Midnight",
+      "dtAdjMaster": "Master",
+      "dtAdjLegend": "Legendary",
+      "dtAdjMythic": "Mythic",
       "dtNounPostcards": "Postcards",
       "dtNounStudio": "Studio",
       "dtNounGallery": "Gallery",
@@ -1965,7 +1971,7 @@
       "dtRunOut": "Out of hearts at {n} points after {f} finds in round {r}. The rest are lit.",
       "dtCleared": "{name} cleared - {s} stars, {n} points.",
       "dtNextZone": "Next level unlocked.",
-      "dtAllZones": "All fifty levels are solved.",
+      "dtAllZones": "All eighty levels are solved.",
       "dtBest": "Best {n}",
       "dtBoardLabel": "Two photos side by side - find what differs",
       "dtCopyLabel": "Photo {n} - tap a difference",
@@ -1984,6 +1990,9 @@
       "dtAdjMisty": "薄雾",
       "dtAdjVelvet": "绒面",
       "dtAdjMidnight": "午夜",
+      "dtAdjMaster": "宗师",
+      "dtAdjLegend": "传奇",
+      "dtAdjMythic": "神话",
       "dtNounPostcards": "明信片",
       "dtNounStudio": "摄影棚",
       "dtNounGallery": "画廊",
@@ -2007,7 +2016,7 @@
       "dtRunOut": "红心用尽：第 {r} 轮找到 {f} 处，共 {n} 分。其余不同已点亮。",
       "dtCleared": "「{name}」通关 - {s} 星，{n} 分。",
       "dtNextZone": "下一级已解锁。",
-      "dtAllZones": "五十级全部告破。",
+      "dtAllZones": "八十级全部告破。",
       "dtBest": "最佳 {n}",
       "dtBoardLabel": "两张照片并排 - 找出不同之处",
       "dtCopyLabel": "照片 {n} - 点击不同之处",

@@ -66,6 +66,12 @@
     { id: "f18", labelKey: "c4L18", depth: 12, tempo: 1, noise: 0.2, starMoves: [6, 8, 10] },
     { id: "f19", labelKey: "c4L19", depth: 15, tempo: 1, noise: 0.06, starMoves: [5, 7, 9] },
     { id: "f20", labelKey: "c4L20", depth: 15, tempo: 1, noise: 0.05, starMoves: [5, 7, 9] },
+    /* Ranks 21-24: the summit rungs. The search extends to sixteen plies
+     * where flank tempos and zero-noise precision crown the ladder. */
+    { id: "f21", labelKey: "c4L21", depth: 15, tempo: 1, noise: 0.04, starMoves: [5, 7, 9] },
+    { id: "f22", labelKey: "c4L22", depth: 16, tempo: 1, noise: 0.03, starMoves: [5, 7, 9] },
+    { id: "f23", labelKey: "c4L23", depth: 16, tempo: 1, noise: 0.02, starMoves: [5, 7, 9] },
+    { id: "f24", labelKey: "c4L24", depth: 16, tempo: 1, noise: 0, starMoves: [5, 7, 9] },
   ];
 
   /* Pure rules, exported for the static checks. */
@@ -362,6 +368,10 @@
       "c4L18": "The Loose Hand",
       "c4L19": "The Far Clock",
       "c4L20": "Grandmaster Four",
+      "c4L21": "Pinnacle Tactics",
+      "c4L22": "Grandmaster Trap",
+      "c4L23": "Iron Line",
+      "c4L24": "The Four-Stone Sovereign",
     },
     zh: {
       "c4L9": "占卜者",
@@ -376,6 +386,10 @@
       "c4L18": "松手者",
       "c4L19": "远钟",
       "c4L20": "四子宗师",
+      "c4L21": "巅峰战术",
+      "c4L22": "大师围猎",
+      "c4L23": "钢铁连线",
+      "c4L24": "四子至尊",
     },
   });
 

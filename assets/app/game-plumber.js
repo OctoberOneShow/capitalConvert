@@ -34,6 +34,12 @@
     { glyph: "\uFF09", full: true },
     { glyph: "\u300C", full: true },
     { glyph: "\u300D", full: true },
+    { glyph: "\u3010", full: true },
+    { glyph: "\u3011", full: true },
+    { glyph: "\u2014", full: true },
+    { glyph: "\u2026", full: true },
+    { glyph: "\u300E", full: true },
+    { glyph: "\u300F", full: true },
     { glyph: ",", full: false },
     { glyph: ".", full: false },
     { glyph: ";", full: false },
@@ -44,6 +50,12 @@
     { glyph: ")", full: false },
     { glyph: "/", full: false },
     { glyph: "\\", full: false },
+    { glyph: "[", full: false },
+    { glyph: "]", full: false },
+    { glyph: "-", full: false },
+    { glyph: "~", full: false },
+    { glyph: "<", full: false },
+    { glyph: ">", full: false },
   ];
 
   function initPlumberGame() {

@@ -17,7 +17,7 @@
   var ctaTrustMax = 5;
   var ctaHasOwn = Object.prototype.hasOwnProperty;
 
-  /* --- the docket: twenty-four authored cases ---------------------------- */
+  /* --- the docket: thirty authored cases --------------------------------- */
   var ctaCases = [
     {
       id: "k1", labelKey: "ctaCase1", time: 8, culprit: "rat",
@@ -1411,6 +1411,418 @@
         { id: "k24c3", accused: "seal", statements: ["k24s2", "k24s6"], exhibits: ["k24e8"], en: "Harbour reached over the outer grate, hooked the sluice open and scooped the oysters from the tank", zh: "哈伯越过外闸栅，用爪子钩开闸门，把池里的牡蛎捞走了" },
       ],
     },
+    /* k25 teaches the price of a question. The owl is believed outright and the
+     * court may ask it one question costing three, but three is more than the
+     * bench's three-point trust can survive even with a mending; the winning
+     * line routes around the question. At one action the same question is
+     * affordable and joins the line, so the measured best play moves. */
+    {
+      id: "k25", labelKey: "ctaCase25", time: 17, culprit: "marten",
+      bar: { strength: 25, trust: 3 },
+      charge: {
+        en: "The shrine lamp went out before the last bell and its oil jar was found turned open, the wick still warm. The owl watched the whole night and the bench believes the owl outright. The court may ask the owl anything, but it will pay for the answer twice over.",
+        zh: "神龛的灯在末钟之前就灭了，油罐被发现拧开了口，灯芯还温着。猫头鹰守了一整夜，法庭对它是全然相信的。尽可以问它，只是每问一句，都要付两回账。",
+      },
+      suspects: [
+        { id: "marten", en: "Sable the Marten", zh: "貂塞布尔" },
+        { id: "badger", en: "Brock the Badger", zh: "獾布罗克" },
+        { id: "magpie", en: "Chatter the Magpie", zh: "喜鹊查特" },
+      ],
+      exhibits: [
+        { id: "k25e1", weight: 3, en: "The oil jar's stopper stands a quarter-turn out of its thread, the brass clean and unbruised: it was turned, not forced.", zh: "油罐的塞子拧出螺纹四分之一圈，铜面干净，一点没磕碰：是拧开的，不是撬开的。" },
+        { id: "k25e2", weight: 3, en: "A track crosses the shrine wall: light going up, deep going down, with five points and a drag between them.", zh: "一道痕迹横过神龛的墙：上去时轻，下来时深，中间五个点，拖着一条。" },
+        { id: "k25e3", weight: 3, en: "A magpie's feather on the sill, vane oiled and still soft, though the bird's roost is three branches above.", zh: "窗台上一根喜鹊羽毛，羽片沾着油，还软着，可那鸟的栖枝在三根树枝以上。" },
+        { id: "k25e4", weight: 3, en: "A line of lamp oil runs from the jar's foot to the wall and stops under a marten's ledge; above the line the stone is dry.", zh: "一道灯油从罐脚通到墙边，停在一处貂的岩台底下；油线以上的石头是干的。" },
+      ],
+      witnesses: [
+        {
+          id: "k25w1", trust: 5, en: "Moth the Owl", zh: "猫头鹰莫斯",
+          statements: [
+            { id: "k25s1", claim: "k25c1", en: "I sat the shrine roof from dusk. The lamp burned steady, then it drank itself small and went out between the second bell and the third.", zh: "天黑起我就蹲在龛顶上。灯先烧得稳，后来把油喝少了，在二更和三更之间灭的。" },
+            { id: "k25s2", claim: "k25c1", en: "A marten smells of pine sap and warm fur. That smell came up the wall at midnight and went down heavier than it came.", zh: "貂身上是松脂和暖毛的气味。半夜那股味从墙上下来，下来时比上去时沉。" },
+            { id: "k25s3", claim: "k25c1", en: "The jar's stopper was turned, not gnawed. A turned stopper is a hand's work, and a marten has hands enough.", zh: "罐塞子是拧开的，不是啃开的。拧开的塞子是手的活计，而貂的手够用。" },
+          ],
+        },
+        {
+          id: "k25w2", trust: 4, en: "Clover the Hare", zh: "野兔克洛弗",
+          statements: [
+            { id: "k25s4", claim: "k25c1", en: "I crossed the yard at the second bell. The jar stood full then, and the lamp was still bright enough to throw my shadow.", zh: "二更我穿过院子。那会儿罐子还是满的，灯还亮得能照出我的影子。" },
+            { id: "k25s5", claim: "k25c1", en: "A marten goes up a wall light and comes down heavy. I have watched that track all my life and it never runs the other way.", zh: "貂上墙轻，下墙沉。这道痕迹我看了一辈子，从没有反过来的时候。" },
+            { id: "k25s6", claim: "k25c1", en: "The badger's sett was stopped with earth all night. I passed it twice and the earth was not broken either time.", zh: "獾的洞整夜用土堵着。我打那儿过了两回，两回土都没破。" },
+          ],
+        },
+        {
+          id: "k25w3", trust: 4, en: "Reed the Fox", zh: "狐狸里德",
+          statements: [
+            { id: "k25s7", claim: "k25c1", en: "I keep the hedge and I hear the roost. The magpie never left its branch, and a bird that never leaves its branch does not oil a feather on the sill.", zh: "我守树篱，听得见栖枝。喜鹊一夜没离那根枝；不离枝的鸟，不会在窗台上给羽毛上油。" },
+            { id: "k25s8", claim: "k25c1", en: "The oil was poured, not spilled. The lip is dry on the outside and wet on the inside, and a spill wets both.", zh: "油是倒出去的，不是洒的。罐口外头干、里头湿；洒出来的两边都湿。" },
+            { id: "k25s9", claim: "k25c1", en: "A marten can turn a stopper with its forepaws. A badger's paws are shovels, and a shovel does not turn a thread.", zh: "貂能用前爪拧塞子。獾的爪是铲子，铲子拧不了螺纹。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k25p1", witness: "k25w2", with: "k25e1", claim: "k25c1", cost: 1, en: "You crossed the yard at the second bell and say the jar was full. The stopper has been turned a quarter since, and the thread is clean. A full jar does not turn its own stopper. Say what you saw at the wall, and say why you did not stop.", zh: "你二更穿过院子，说罐子是满的。那以后塞子被拧了四分之一圈，螺纹干干净净。满罐子不会自己拧塞子。说你在墙边看见了什么，再说你为什么没拦住。" },
+        { id: "k25p2", witness: "k25w3", with: "k25e2", claim: "k25c1", cost: 1, en: "You keep the hedge and say the magpie never stirred. Here is the track up the wall and down again, and it comes down heavier. Put your nose to it and tell the court whose feet wrote it.", zh: "你守树篱，说喜鹊没动。这儿有一道上下墙的痕迹，下来时更沉。把鼻子凑上去，告诉法庭这是谁的脚写的。" },
+        { id: "k25p3", witness: "k25w1", with: "k25e4", claim: "k25c1", cost: 3, en: "You watched the roof from dusk to dawn and you did not cry out once. The oil line runs from the jar to the marten's ledge, and a silent owl is a paid owl. The court will ask you three times: who paid you, and with what, and why were you silent?", zh: "你从天黑守到天亮，一声也没叫。油线从罐子一直通到貂的岩台；不叫的猫头鹰，是收了钱的猫头鹰。法庭要问你三遍：谁付了你，用什么付的，你为什么不出声？" },
+        { id: "k25p4", witness: "k25w2", with: "k25e3", claim: "k25c2", cost: 1, en: "You say the magpie never came down. Its feather is on the sill with oil on the vane. A roosting feather does not oil itself; tell the court what carried it down.", zh: "你说喜鹊没下来。它的羽毛就落在窗台上，羽片上沾着油。栖着的羽毛不会自己上油；告诉法庭，是什么把它带下来的。" },
+      ],
+      vouches: [
+        { id: "k25v1", witness: "k25w2", exhibit: "k25e1", claim: "k25c1", en: "The hare crossed the yard while the jar was still full. The stopper was turned after the second bell, and the hare has no reason to move the hour. Believe the hare about the hour, and the jar about the hand.", zh: "兔子过院子时罐子还满着。塞子是二更以后才被拧开的，兔子没有理由挪动时辰。信兔子讲的时辰，也信罐子讲的那只手。" },
+        { id: "k25v2", witness: "k25w3", exhibit: "k25e2", claim: "k25c1", en: "The fox read the wall-track: up light and down heavy. A fox does not invent a track it has followed all its life; believe the fox about the wall.", zh: "狐狸读懂了墙上的痕迹：上去轻，下来沉。狐狸不会编造一道它跟了一辈子的印子；信狐狸讲的墙。" },
+        { id: "k25v3", witness: "k25w2", exhibit: "k25e3", claim: "k25c2", en: "The hare crossed the yard and saw the roost; the magpie's feather came down after the second bell. Believe the hare about the hour, and the feather will answer for the bird.", zh: "兔子穿过院子，看见过栖枝；喜鹊的羽毛是二更以后才落下来的。信兔子讲的时辰，羽毛自会替那只鸟答话。" },
+      ],
+      claims: [
+        { id: "k25c1", accused: "marten", statements: ["k25s1", "k25s2", "k25s3", "k25s4", "k25s5", "k25s6", "k25s7", "k25s8", "k25s9"], exhibits: ["k25e1", "k25e2", "k25e3", "k25e4"], en: "Sable came up the wall at midnight, turned the jar's stopper with her forepaws and poured the shrine's oil away", zh: "塞布尔半夜上了墙，用前爪拧开罐塞，把神龛的油倒走了" },
+        { id: "k25c2", accused: "magpie", statements: ["k25s7"], exhibits: ["k25e3"], en: "Chatter came down from the roost, fouled the sill and drank the oil from the jar", zh: "查特从栖枝上下来，弄脏了窗台，把罐里的油喝了" },
+        { id: "k25c3", accused: "badger", statements: ["k25s6"], exhibits: ["k25e1"], en: "Brock broke out of his stopped sett, climbed the wall and turned the stopper with his claws", zh: "布罗克从堵着的洞里出来，爬上墙，用爪子拧开了塞子" },
+      ],
+    },
+    /* k26 teaches the cross-witness recant. The true charge is answered by the
+     * heron's third word about the pike, and the frog's question exposes that
+     * word. Because the exposed word sits only in the rival charge, the rival
+     * recants and the true charge stands; aimed at the true charge instead the
+     * same press would destroy the case. */
+    {
+      id: "k26", labelKey: "ctaCase26", time: 18, culprit: "heron",
+      bar: { strength: 27, trust: 5 },
+      charge: {
+        en: "The keep-net at the fish-weir was cut open in the night and the catch was gone. The heron names the pike, and it is the heron's own third word that the court must take apart. The frog can put that word where it belongs, and the charge that rests on it will not survive.",
+        zh: "鱼梁的养鱼网夜里被割开，一夜的鱼获没了。苍鹭咬定是狗鱼干的，而法庭要拆的，正是苍鹭自己的第三句话。青蛙能把那句话放回它该在的地方，压在那句话上的指控便活不下来。",
+      },
+      suspects: [
+        { id: "heron", en: "Stilt the Heron", zh: "苍鹭斯蒂尔特" },
+        { id: "pike", en: "Tarn the Pike", zh: "狗鱼塔恩" },
+        { id: "mink", en: "Rill the Mink", zh: "水貂里尔" },
+      ],
+      exhibits: [
+        { id: "k26e1", weight: 3, en: "The keep-net is parted in one clean stroke at the head-rope; the strands are not frayed, so it was cut, not bitten.", zh: "养鱼网在头绳处一下齐口断开；网线没有起毛，是割的，不是咬的。" },
+        { id: "k26e2", weight: 3, en: "A print in the soft mud by the net: three long toes and no heel, pressed deep where the bird put its weight down.", zh: "网边软泥里一个印子：三个长趾，没有后跟，鸟把重心压下去的地方很深。" },
+        { id: "k26e3", weight: 3, en: "A heron's feather caught on the net post, though the heron's own post stands ten paces upstream and is bare.", zh: "网桩上挂着一根苍鹭羽毛，可苍鹭自己的桩在上游十步远，那根桩上光着。" },
+        { id: "k26e4", weight: 2, en: "A pike's scale on the net head-rope above the waterline, and the deep water below it is undisturbed.", zh: "网头绳上、水线以上有一片狗鱼鳞，下面深水却一点没被搅动。" },
+      ],
+      witnesses: [
+        {
+          id: "k26w1", trust: 5, en: "Pip the Frog", zh: "青蛙皮普",
+          statements: [
+            { id: "k26s1", claim: "k26c1", en: "I sat the weir post from dark. The net was tied at dusk with a double knot, and I heard the knot give at the third bell.", zh: "我从天黑起就蹲在鱼梁桩上。网是黄昏时用双结系好的，三更我听见结松了。" },
+            { id: "k26s2", claim: "k26c1", en: "Something stepped into the shallows on two legs, not four, and it stepped carefully, the way a bird steps when it does not want the water to talk.", zh: "有什么东西两条腿踩进浅水，不是四条；踩得很小心，像鸟不想让水说话那样。" },
+            { id: "k26s3", claim: "k26c1", en: "A heron's foot leaves three long toes and no heel. The print by the net has the three toes, and the mud is dry in the heel place.", zh: "苍鹭的脚留三个长趾，没有后跟。网边的印子有三个趾，后跟那儿泥是干的。" },
+          ],
+        },
+        {
+          id: "k26w2", trust: 5, en: "Brim the Duck", zh: "野鸭布里姆",
+          statements: [
+            { id: "k26s4", claim: "k26c1", en: "I kept the reeds. The pike was in the deep water all night; I saw his back turn once and no more, and a pike does not climb a weir post.", zh: "我守芦苇。狗鱼整夜都在深水里；我只见他翻过一次背，再没有第二回；狗鱼不会爬上鱼梁桩。" },
+            { id: "k26s5", claim: "k26c1", en: "The net was cut, not bitten. The strands are parted at one stroke and a pike's teeth would have frayed them.", zh: "网是割开的，不是咬开的。网线一下子断开，狗鱼的牙会把线磨毛。" },
+            { id: "k26s6", claim: "k26c1", en: "The heron's post was empty at the third bell. I looked for him because the net was singing, and his post was bare.", zh: "三更苍鹭的桩是空的。网响的时候我找他，他的桩上光着。" },
+          ],
+        },
+        {
+          id: "k26w3", trust: 5, en: "Stilt the Heron", zh: "苍鹭斯蒂尔特",
+          statements: [
+            { id: "k26s7", claim: "k26c1", en: "I stood my post until the moon crossed the alder. A heron does not leave a post while the eels run.", zh: "我在桩上站到月亮过了赤杨。鳗鱼上水的时辰，苍鹭不离桩。" },
+            { id: "k26s8", claim: "k26c1", en: "The pike rose once and took a fish. That is what a pike does, and the court may not hang a whole net on one rise.", zh: "狗鱼上来过一次，叼走一条鱼。狗鱼就是干这个的，法庭不能把整张网挂在那一次上浮上。" },
+            { id: "k26s9", claim: "k26c2", en: "I saw the pike at the net with my own eyes and heard the knot part in his teeth. The court has my word, and my word is enough.", zh: "我亲眼看见狗鱼在网边，亲耳听见结在他牙间断开。法庭有我的话，我的话就够了。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k26p1", witness: "k26w1", with: "k26e1", exposes: "k26s9", claim: "k26c1", cost: 1, en: "You say you saw a pike at the net and heard the knot part in his teeth. A pike has no teeth for cutting rope, and the net is cut clean. You were not at the net; you were told. Tell the court who told you, and when.", zh: "你说你亲眼看见狗鱼在网边，亲耳听见结在他牙间断开。狗鱼没有割绳的牙，而网是齐口割开的。你不在网边，你是听来的。告诉法庭，是谁说的，什么时候说的。" },
+        { id: "k26p2", witness: "k26w2", with: "k26e2", claim: "k26c1", cost: 1, en: "You kept the reeds and saw the pike turn once. Here is the print by the net: three long toes and no heel, pressed where the mud was soft. Tell the court what stood there, and why you did not name it before.", zh: "你守芦苇，看见狗鱼翻过一次身。这儿是网边的印子：三个长趾，没有后跟，踩在软泥上。告诉法庭那儿站的是什么，再说你先前为什么不说。" },
+        { id: "k26p3", witness: "k26w3", with: "k26e3", claim: "k26c1", cost: 1, en: "You say you never left your post. A heron's feather is on the net post, and the net post is not your post. A bird that stands still does not shed on another bird's perch. Account for the feather, and for the hour.", zh: "你说你从没离桩。网桩上有一根苍鹭的羽毛，那根桩不是你的桩。站着不动的鸟，不会在别的鸟的架上掉毛。给羽毛一个说法，也给那个时辰一个说法。" },
+        { id: "k26p4", witness: "k26w1", with: "k26e4", claim: "k26c2", cost: 1, en: "You say the pike took one fish. A scale is on the net, above the waterline, and a pike does not jump a weir to leave a scale. Tell the court how it climbed.", zh: "你说狗鱼只叼了一条鱼。网口上、水线以上有一片狗鱼鳞，狗鱼不会跳鱼梁来留一片鳞。告诉法庭它是怎么爬上去的。" },
+      ],
+      vouches: [
+        { id: "k26v1", witness: "k26w1", exhibit: "k26e1", claim: "k26c1", en: "The frog heard the knot give at the third bell and found the cut edge clean. The frog was at the post and the water was quiet; believe the frog about the hour, and the net about the cut.", zh: "青蛙三更听见结松了，看见断口是齐的。青蛙就在桩上，水是静的；信青蛙讲的时辰，也信网讲的这一刀。" },
+        { id: "k26v2", witness: "k26w2", exhibit: "k26e2", claim: "k26c1", en: "The duck kept the reeds and saw the pike turn once, no more. The print by the net has three toes and no heel; the duck can read a print it has seen all its life.", zh: "鸭子守着芦苇，看见狗鱼只翻了一次身。网边的印子三趾无跟；鸭子认了一辈子的印子，读得懂。" },
+        { id: "k26v3", witness: "k26w3", exhibit: "k26e3", claim: "k26c1", en: "The heron's post was empty at the third bell and his feather is on the net post. Believe the duck about the empty post, and the post will answer for the bird.", zh: "三更苍鹭的桩是空的，他的羽毛却在网桩上。信鸭子讲的空桩，桩自会替那只鸟答话。" },
+      ],
+      claims: [
+        { id: "k26c1", accused: "heron", statements: ["k26s1", "k26s2", "k26s3", "k26s4", "k26s5", "k26s6", "k26s7", "k26s8"], exhibits: ["k26e1", "k26e2", "k26e3", "k26e4"], en: "Stilt left his post at the third bell, cut the keep-net with his beak and carried the catch off the weir", zh: "斯蒂尔特三更离了桩，用喙割开养鱼网，把鱼获带下鱼梁" },
+        { id: "k26c2", accused: "pike", statements: ["k26s8", "k26s9"], exhibits: ["k26e4"], en: "Tarn rose at the third bell, tore the net with his teeth and took the catch into the deep water", zh: "塔恩三更上浮，用牙撕开网，把鱼获拖进深水" },
+        { id: "k26c3", accused: "mink", statements: ["k26s7"], exhibits: ["k26e1"], en: "Rill came along the bank, bit through the net and swam the catch down the ditch", zh: "里尔沿河岸过来，咬穿网，把鱼获顺沟游走了" },
+      ],
+    },
+    /* k27 teaches corroboration ordering. Both owners stand at the ceiling, so
+     * the bench refuses a corroboration until the witness has been pressed down
+     * from five; the only legal order is question, then mending, and both pairs
+     * are needed for the bar. The gate reads the askability off the panel's own
+     * rule instead of trusting the statement. */
+    {
+      id: "k27", labelKey: "ctaCase27", time: 19, culprit: "weasel",
+      bar: { strength: 28, trust: 5 },
+      charge: {
+        en: "The tower bell was cut down in the night and the alarm rope lay in two pieces on the floor. The bat is the bench's favourite and stands at the very top of its trust. While a witness stands at the top the court will not hear a word of corroboration, so the question must come first and the mending after.",
+        zh: "钟楼的钟夜里被放了下来，警绳断成两截躺在地上。蝙蝠是法庭最信的一位，正站在信任的顶格。证人还站在顶格的时候，法庭一句旁证也不听，所以问要先来，补要后到。",
+      },
+      suspects: [
+        { id: "weasel", en: "Sly the Weasel", zh: "黄鼠狼斯莱" },
+        { id: "jackdaw", en: "Caw the Jackdaw", zh: "寒鸦考" },
+        { id: "cat", en: "Velvet the Cat", zh: "猫维尔维特" },
+      ],
+      exhibits: [
+        { id: "k27e1", weight: 3, en: "The alarm rope's two ends: the cut is high above the knot and clean, at the height of a small body standing on the ladder.", zh: "警绳的两个断头：断口在结以上很高，齐整，正好是个小身子站在梯子上够得着的高度。" },
+        { id: "k27e2", weight: 3, en: "A five-toed print in the flour by the grain door, the toes spread in a soft fan and no claw marks anywhere in it.", zh: "粮门边面粉里一个五趾印，趾头软软地铺开，整只印里没有一处爪痕。" },
+        { id: "k27e3", weight: 3, en: "The grain-door bar lies on the inside flagstone: it was lifted out of its keep and laid down, not forced.", zh: "粮门的门闩躺在里头的石板上：是被抬出槽、放下的，不是撞开的。" },
+        { id: "k27e4", weight: 3, en: "A jackdaw's feather under the louvre, dry and dusty, with the dust of the louvre still on it and none of the stair.", zh: "百叶窗下一根寒鸦羽毛，又干又灰，上头的灰还是窗上的灰，楼梯上的灰一点没沾。" },
+        { id: "k27e5", weight: 3, en: "The bell's cradle is greased where the rope runs, and the grease is marked by a long, low body that had to stretch.", zh: "钟架的绳槽抹了油，油上压着一道又长又低的身印，得使劲伸才够得着。" },
+        { id: "k27e6", weight: 2, en: "A cat's paw-mark on the outer sill, old and weathered, from a night when the bell was still hung.", zh: "外窗台上一道猫爪印，又旧又经了风雨，是钟还挂着的那一夜留下的。" },
+      ],
+      witnesses: [
+        {
+          id: "k27w1", trust: 5, en: "Flit the Bat", zh: "蝙蝠弗利特",
+          statements: [
+            { id: "k27s1", claim: "k27c1", en: "I hung in the belfry and I do not sleep at night. The rope was whole when the moon rose and in two pieces when it set.", zh: "我挂在钟楼里，夜里是不睡的。月亮上来时绳子还完整，落下去时已成两截。" },
+            { id: "k27s2", claim: "k27c1", en: "The cut is high, above the knot, where a small body on the ladder would reach. A cat cuts low; a weasel climbs.", zh: "断口在高处，结的上面，只有小身子站在梯子上才够得着。猫在低处下口；貂才往上爬。" },
+            { id: "k27s3", claim: "k27c1", en: "The bell did not fall by itself. It was lowered on the rope, slow, and it rang once against the frame when it landed.", zh: "钟不是自己掉下来的。它是被绳子慢慢放下来的，落地时在钟架上撞响了一声。" },
+          ],
+        },
+        {
+          id: "k27w2", trust: 5, en: "Moss the Vole", zh: "田鼠莫斯",
+          statements: [
+            { id: "k27s4", claim: "k27c1", en: "I keep the stair-foot. Something came down the stair at the third bell, light and quick, and went out by the grain door.", zh: "我守楼梯脚。三更有什么东西从楼上下来，又轻又快，从粮门出去了。" },
+            { id: "k27s5", claim: "k27c1", en: "A weasel's foot is five toes in a soft fan. There is a print in the flour by the grain door with five toes and no claw marks.", zh: "貂的脚印是五个趾，软软地铺开。粮门边的面粉里有一个印子，五个趾，没有爪痕。" },
+            { id: "k27s6", claim: "k27c1", en: "The jackdaw roosted in the louvre all night and never came down. I would have heard a bird on the stair; birds are loud on stone.", zh: "寒鸦整夜歇在百叶窗里，没下来过。楼梯上有鸟我会听见；鸟踩石头是响的。" },
+          ],
+        },
+        {
+          id: "k27w3", trust: 4, en: "Grey the Moth", zh: "飞蛾格雷",
+          statements: [
+            { id: "k27s7", claim: "k27c2", en: "I was on the bell-frame all night. The rope went slack twice: once when it was cut, and once when the bell was lowered.", zh: "我整夜在钟架上。绳子松过两回：一回是被割断，一回是钟被放下去。" },
+            { id: "k27s8", claim: "k27c2", en: "A moth does not make a sound, but a moth sees. The thing on the ladder had a long back and a tail, and a cat has neither.", zh: "蛾子不出声，可蛾子看得见。梯子上那东西背长，还有尾巴；猫这两样都没有。" },
+            { id: "k27s9", claim: "k27c2", en: "The grain door was unbarred from the inside. Whatever left by it knew the tower, and the weasel has slept in the grain room all winter.", zh: "粮门是从里头抽开闩的。从那儿出去的东西认得这座塔，而貂在粮房里睡了一冬。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k27p1", witness: "k27w1", with: "k27e1", claim: "k27c1", cost: 1, en: "You hung in the belfry and heard the rope go slack twice. Here are the two ends: the cut is high and clean. You are the bench's own witness and the court will ask you plainly: who was on the ladder?", zh: "你挂在钟楼里，听见绳子松了两回。这儿是两个断头：断口又高又齐。你是法庭自己的证人，法庭只问你一句：梯子上是谁？" },
+        { id: "k27p2", witness: "k27w2", with: "k27e2", claim: "k27c1", cost: 1, en: "You keep the stair-foot and say something came down at the third bell. Here is the print in the flour: five toes, no claws. Put your own foot beside it and tell the court which of you climbs.", zh: "你守楼梯脚，说三更有什么下来了。这儿是面粉里的印子：五个趾，没有爪。把你的脚搁在旁边，告诉法庭你们俩谁往上爬。" },
+        { id: "k27p3", witness: "k27w3", with: "k27e3", claim: "k27c2", cost: 1, en: "You were on the bell-frame and saw a long back with a tail. The grain door was unbarred from inside. Tell the court what you saw take the stair, and why the door was open for it.", zh: "你在钟架上，看见一个长背带尾的东西。粮门是从里头抽开的。告诉法庭你看见什么下了楼，那门又为什么替它开着。" },
+        { id: "k27p4", witness: "k27w3", with: "k27e4", claim: "k27c2", cost: 1, en: "You say the jackdaw never came down. Its feather is under the louvre with the louvre's own dust on it and none of the stair. A bird that never left the louvre did not cut a rope below it.", zh: "你说寒鸦没下来。它的羽毛在百叶窗下，上头的灰是窗上的灰，楼梯上的灰一点没沾。没离窗的鸟，割不了下面的绳。" },
+        { id: "k27p5", witness: "k27w2", with: "k27e5", claim: "k27c2", cost: 1, en: "You say the thing on the stair was light. The rope-cradle grease carries a long, low body that had to stretch. Tell the court what stretched, and how it got down without the stair.", zh: "你说楼梯上的东西很轻。绳槽的油上压着一道又长又低的身印，得使劲伸才够得着。告诉法庭是什么伸了身子，又怎么不踩楼梯下来的。" },
+      ],
+      vouches: [
+        { id: "k27v1", witness: "k27w1", exhibit: "k27e1", claim: "k27c1", en: "The bat heard the rope go slack twice and the cut is high. A bat does not sleep through a bell; believe the bat about the ladder.", zh: "蝙蝠听见绳子松了两回，断口在高处。钟响的时候蝙蝠不会睡；信蝙蝠讲的梯子。" },
+        { id: "k27v2", witness: "k27w2", exhibit: "k27e2", claim: "k27c1", en: "The vole read the print in its own flour: five toes and no claws. The vole has no reason to climb and every reason to look; believe the vole about the stair.", zh: "田鼠在自己磨的面粉里读出印子：五个趾，没有爪。田鼠没有理由上楼，却有十足的理由看；信田鼠讲的楼梯。" },
+        { id: "k27v3", witness: "k27w3", exhibit: "k27e3", claim: "k27c2", en: "The moth saw the long back and the bar was lifted from inside. A moth does not invent a shape; believe the moth about the stair, and the bar about the hand.", zh: "飞蛾看见了长背，门闩是从里头抬开的。飞蛾不会凭空编一个形状；信飞蛾讲的楼梯，也信门闩讲的那只手。" },
+      ],
+      claims: [
+        { id: "k27c1", accused: "weasel", statements: ["k27s1", "k27s2", "k27s3", "k27s4", "k27s5", "k27s6"], exhibits: ["k27e1", "k27e2", "k27e3", "k27e4", "k27e5", "k27e6"], en: "Sly climbed the ladder, cut the alarm rope high and lowered the bell, then left by the grain door he knew", zh: "斯莱爬上梯子，在高处割断警绳，把钟放了下来，再从他熟悉的粮门走了" },
+        { id: "k27c2", accused: "jackdaw", statements: ["k27s7", "k27s8", "k27s9"], exhibits: ["k27e3", "k27e4"], en: "Caw came down from the louvre, pecked the rope apart and let the bell fall to wake the tower", zh: "考从百叶窗下来，把绳子啄断，让钟掉下来惊醒全塔" },
+        { id: "k27c3", accused: "cat", statements: ["k27s4"], exhibits: ["k27e6"], en: "Velvet slipped up the stair, cut the rope at paw-height and rolled the bell off its cradle", zh: "维尔维特溜上楼梯，在爪子够得着的高度割断绳，把钟滚下钟架" },
+      ],
+    },
+    /* k28 teaches the exact clock. The true charge hears twelve words, asks
+     * three questions and mends all three witnesses, which is exactly the
+     * eighteen actions the tide allows; the whole docket proof also spends
+     * eighteen. One action less and no sound line fits, so the clock is a wall,
+     * not a margin. */
+    {
+      id: "k28", labelKey: "ctaCase28", time: 18, culprit: "grebe",
+      bar: { strength: 29, trust: 5 },
+      charge: {
+        en: "The salt-pan's sluice boards were lifted in the night and the brine ran out into the marsh, leaving the pan dry at dawn. The tide gives the court eighteen actions and not one more: every word, every question and every mending has to be measured against the water.",
+        zh: "盐田的闸板夜里被抬开，卤水淌进沼泽，天亮时盐田干了。潮水只给法庭十八次动作，一次也不多：每一句话、每一问、每一回补，都得拿水来量。",
+      },
+      suspects: [
+        { id: "grebe", en: "Dab the Grebe", zh: "鸊鷉达布" },
+        { id: "eel", en: "Sleeve the Eel", zh: "鳗鱼斯利夫" },
+        { id: "rat", en: "Gnaw the Rat", zh: "老鼠诺" },
+      ],
+      exhibits: [
+        { id: "k28e1", weight: 3, en: "The sluice boards stand lifted and wedged with a wet feather and a smear of grebe oil, and the wedge was set from the water side.", zh: "闸板被抬起，用一根湿羽毛和一道鸊鷉油楔住；楔子是从水那一面打进去的。" },
+        { id: "k28e2", weight: 3, en: "Grebe tracks cross the pan rim from the channel and go back the same way, webbed and close together, and no track goes near the rat's wall.", zh: "鸊鷉的蹼印从水道越过盐田边，又原路回去，脚印挨得密；老鼠的墙根一道印也没有。" },
+        { id: "k28e3", weight: 3, en: "The pan's brine-gate cord is cut and knotted again at the top, at the height of a swimming bird's neck, not a rat's teeth.", zh: "盐田卤水闸的绳被割断，又在高处重新打了个结，正好是游禽脖子够得着的高度，不是老鼠牙咬的。" },
+      ],
+      witnesses: [
+        {
+          id: "k28w1", trust: 5, en: "Skitter the Sandpiper", zh: "鹬斯基特",
+          statements: [
+            { id: "k28s1", claim: "k28c1", en: "I keep the pan rim. The boards were down at dusk and the brine stood at the second mark when the moon came up.", zh: "我守盐田边。黄昏时闸板是落下的，月亮上来时卤水还在第二道刻度上。" },
+            { id: "k28s2", claim: "k28c1", en: "At the third bell the boards were up and the brine was running. I heard the wedge go in: one knock, from the water side.", zh: "三更闸板抬起来了，卤水在流。我听见楔子打进去：一声，从水那一面。" },
+            { id: "k28s3", claim: "k28c1", en: "A grebe swims low and works with its neck. The cord was knotted high, and a rat would have had to climb the gate to knot it there.", zh: "鸊鷉游得低，用脖子干活。绳子结在高处，老鼠要结在那儿，得爬上闸门。" },
+            { id: "k28s4", claim: "k28c1", en: "The eel was in the channel all night; I saw its back in the shallows and it never came over the rim.", zh: "鳗鱼整夜都在水道里；我看见它在浅水露背，从没越过田边。" },
+          ],
+        },
+        {
+          id: "k28w2", trust: 5, en: "Click the Shrimp", zh: "虾克利克",
+          statements: [
+            { id: "k28s5", claim: "k28c1", en: "I was under the boards. The wedge went in above me and the water came down on my back, and the thing that set it had a breast, not a belly.", zh: "我在闸板底下。楔子在我头上打进去，水压到我背上；打楔子的那东西有胸脯，不是肚皮贴地。" },
+            { id: "k28s6", claim: "k28c1", en: "A rat works with its teeth and leaves a chewed edge. The cord is cut clean and knotted again, and no tooth has touched it.", zh: "老鼠用牙干活，留下啃过的毛边。这绳是齐口割断又重打的结，没有一颗牙碰过。" },
+            { id: "k28s7", claim: "k28c1", en: "The rat's wall was quiet all night. I would have felt a rat cross the pan; the pan rings under a rat.", zh: "老鼠的墙整夜没动静。老鼠过盐田我会觉得出；老鼠一踩，盐田就响。" },
+            { id: "k28s8", claim: "k28c1", en: "The boards were lifted straight up, both together. A rat pulls one board down; a swimming bird pushes both up with its back.", zh: "两块闸板是一起直着抬起来的。老鼠把一块板往下拽；游禽用背把两块一起顶上去。" },
+          ],
+        },
+        {
+          id: "k28w3", trust: 5, en: "Barnacle the Limpet", zh: "帽贝巴纳克尔",
+          statements: [
+            { id: "k28s9", claim: "k28c1", en: "I do not move, so I see what moves. The grebe came up the channel twice: once light, once low in the water.", zh: "我不动，所以看得见什么在动。鸊鷉从水道上来过两回：一回轻，一回压在水里。" },
+            { id: "k28s10", claim: "k28c1", en: "The second time it came it carried the smell of salt and its breast was wet above the waterline.", zh: "第二回上来时它带着盐味，胸脯在水线以上是湿的。" },
+            { id: "k28s11", claim: "k28c1", en: "A rat leaves a dry track and a grebe leaves a wet one. The rim is wet where the webbed print is, and dry where the rat's wall meets it.", zh: "老鼠留干印，鸊鷉留湿印。蹼印那儿的田边是湿的，老鼠墙根接上来的地方是干的。" },
+            { id: "k28s12", claim: "k28c1", en: "The eel cannot lift a board with its back and cannot knot a cord with its tail. Whatever did this had a neck and two feet.", zh: "鳗鱼不能用背顶起闸板，也不能用尾巴打结。干这事的东西有脖子，有两只脚。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k28p1", witness: "k28w1", with: "k28e1", claim: "k28c1", cost: 1, en: "You keep the rim and heard one knock from the water side. Here is the wedge: a wet feather and grebe oil. Tell the court what had a breast to push with, and why you did not cry out at the third bell.", zh: "你守田边，听见水那一面一声响。这儿是楔子：一根湿羽毛，一道鸊鷉油。告诉法庭是什么用胸脯顶的，三更你又为什么没叫。" },
+        { id: "k28p2", witness: "k28w2", with: "k28e2", claim: "k28c1", cost: 1, en: "You were under the boards and felt the wedge go in above you. The webbed print on the rim goes back the same way it came. Put the court's eye on the print and tell it what swam.", zh: "你在闸板底下，觉得楔子从头上打进去。田边的蹼印原路来、原路去。把法庭的眼睛按到印子上，告诉它游过去的是什么。" },
+        { id: "k28p3", witness: "k28w3", with: "k28e3", claim: "k28c1", cost: 1, en: "You do not move, so you see what moves. The grebe came twice, the second time low and wet to the breast. Account for the second coming, and for the cord knotted at a swimmer's height.", zh: "你不动，所以看得见什么在动。鸊鷉来了两回，第二回压得低，胸脯湿到水线上。给第二回一个说法，也给那根结在游禽高度上的绳一个说法。" },
+      ],
+      vouches: [
+        { id: "k28v1", witness: "k28w1", exhibit: "k28e1", claim: "k28c1", en: "The sandpiper heard one knock and the wedge carries a grebe's feather. Believe the sandpiper about the knock, and the wedge about the breast that pushed it.", zh: "鹬听见一声响，楔子上带着鸊鷉的羽毛。信鹬讲的那一声，也信楔子讲的胸脯。" },
+        { id: "k28v2", witness: "k28w2", exhibit: "k28e2", claim: "k28c1", en: "The shrimp felt the water come down and the print on the rim is webbed. A shrimp does not invent a print; believe the shrimp about the boards.", zh: "虾觉得水压下来，田边的印子是蹼印。虾不会凭空编一个印子；信虾讲的闸板。" },
+        { id: "k28v3", witness: "k28w3", exhibit: "k28e3", claim: "k28c1", en: "The limpet saw the grebe come twice and the cord is knotted at a swimmer's height. The limpet has nowhere to go and no reason to lie; believe the limpet about the second coming.", zh: "帽贝看见鸊鷉来了两回，绳子结在游禽的高度上。帽贝没处可去，也没理由撒谎；信帽贝讲的第二回。" },
+      ],
+      claims: [
+        { id: "k28c1", accused: "grebe", statements: ["k28s1", "k28s2", "k28s3", "k28s4", "k28s5", "k28s6", "k28s7", "k28s8", "k28s9", "k28s10", "k28s11", "k28s12"], exhibits: ["k28e1", "k28e2", "k28e3"], en: "Dab came up the channel twice, lifted both boards with its back and let the brine run into the marsh", zh: "达布从水道上来两回，用背顶起两块闸板，让卤水淌进沼泽" },
+        { id: "k28c2", accused: "eel", statements: ["k28s4", "k28s12"], exhibits: ["k28e3"], en: "Sleeve came over the rim, unknotted the cord with its tail and pulled the boards down", zh: "斯利夫越过田边，用尾巴解开绳，把闸板拽了下来" },
+        { id: "k28c3", accused: "rat", statements: ["k28s7", "k28s8"], exhibits: ["k28e2"], en: "Gnaw climbed the gate, chewed the cord and dragged one board open with his teeth", zh: "诺爬上闸门，啃断绳，用牙把一块闸板拽开" },
+      ],
+    },
+    /* k29 teaches the mending that rescues a broken press. Every press costs
+     * two and takes a witness believed at five down to three, under the bar of
+     * four; only its corroboration puts it back. If the press were cheap the
+     * corroboration could be dropped and the case would still close, so the cut
+     * makes the press cheap and removes the vouch at once. */
+    {
+      id: "k29", labelKey: "ctaCase29", time: 20, culprit: "stoat",
+      bar: { strength: 30, trust: 4 },
+      charge: {
+        en: "The salmon ladder's counting gate was wedged open in the night and the run went up unwatched. Every question in this case costs the witness two points of trust and leaves it below the bar; the court must mend each witness it breaks, or close on nobody.",
+        zh: "鲑鱼梯的计数闸夜里被楔开，鱼群从没人看着的地方上去了。这件案子里，每一问都要从证人身上拿走两分信任，把它压到杠下；法庭折了谁，就得把谁补回来，不然一个证人也留不住。",
+      },
+      suspects: [
+        { id: "stoat", en: "Whisk the Stoat", zh: "白鼬威斯克" },
+        { id: "osprey", en: "Talons the Osprey", zh: "鱼鹰塔隆斯" },
+        { id: "newt", en: "Slick the Newt", zh: "蝾螈斯利克" },
+      ],
+      exhibits: [
+        { id: "k29e1", weight: 3, en: "The counting gate is wedged with a fish-tail and a smear of stoat musk; the wedge went in from the ladder top.", zh: "计数闸被一段鱼尾和一道白鼬麝香楔住；楔子是从梯顶打进去的。" },
+        { id: "k29e2", weight: 3, en: "A stoat's track crosses the ladder grating and comes back with a fish-scale caught in the print.", zh: "白鼬的印子横过梯上的格栅，回来时印子里卡着一片鱼鳞。" },
+        { id: "k29e3", weight: 3, en: "The gate cord is gnawed at the knot, not cut; the teeth are small and sharp and set in pairs.", zh: "闸绳在结上被啃过，不是割的；齿印又小又尖，成对。" },
+        { id: "k29e4", weight: 2, en: "The osprey's perch above the ladder is empty of fish bones, though the perch is white with them every other morning.", zh: "鱼鹰在梯上的栖木上一根鱼骨也没有，可别的早晨那栖木白花花全是骨头。" },
+        { id: "k29e5", weight: 2, en: "A newt's slime trail stops at the ladder's foot; the grating above it is dry.", zh: "蝾螈的黏液痕停在梯脚；上面的格栅是干的。" },
+      ],
+      witnesses: [
+        {
+          id: "k29w1", trust: 5, en: "Redd the Salmon", zh: "鲑鱼雷德",
+          statements: [
+            { id: "k29s1", claim: "k29c1", en: "I came up the ladder at the second bell. The gate was down and the counting cord was taut and whole.", zh: "二更我上梯。闸是落下的，计数绳绷着，完好。" },
+            { id: "k29s2", claim: "k29c1", en: "At the third bell the gate was wedged and the cord was slack. I felt the wedge go in with my own back.", zh: "三更闸被楔住了，绳子松了。那楔子打进去，是我自己背上觉出来的。" },
+            { id: "k29s3", claim: "k29c1", en: "A stoat crosses the grating with its belly low. The track I passed had a fish-scale in it, and a stoat does not eat scales.", zh: "白鼬过格栅时肚皮贴得低。我路过的那道印子里卡着一片鱼鳞；白鼬不吃鳞。" },
+          ],
+        },
+        {
+          id: "k29w2", trust: 5, en: "Sieve the Lamprey", zh: "七鳃鳗西夫",
+          statements: [
+            { id: "k29s4", claim: "k29c1", en: "I hold the ladder foot. The gate cord was whole at dusk; at the third bell it was gnawed at the knot.", zh: "我守梯脚。黄昏时闸绳还是好的；三更结上就有了啃痕。" },
+            { id: "k29s5", claim: "k29c1", en: "The teeth marks are small and paired. An osprey's beak cannot make pairs, and a newt has no teeth worth the name.", zh: "齿印又小又成对。鱼鹰的喙做不出成对的印，蝾螈的牙也不成气候。" },
+            { id: "k29s6", claim: "k29c1", en: "The newt's trail stops at the foot and the grating above is dry. Whatever went up the ladder did not come up wet from the newt's way.", zh: "蝾螈的痕停在梯脚，上面格栅是干的。上梯的东西，不是从蝾螈那条湿路来的。" },
+          ],
+        },
+        {
+          id: "k29w3", trust: 5, en: "Dip the Dipper", zh: "河乌迪普",
+          statements: [
+            { id: "k29s7", claim: "k29c1", en: "I keep the ladder head. The gate went open at the third bell and the run went up under it, fast and silent.", zh: "我守梯顶。三更闸开了，鱼群从底下上去，又快又静。" },
+            { id: "k29s8", claim: "k29c1", en: "The osprey was on the far bank at the third bell. I saw her shadow on the water and her perch was empty behind her.", zh: "三更鱼鹰在远岸。我看见她投在水上的影子，她身后的栖木空着。" },
+            { id: "k29s9", claim: "k29c1", en: "A stoat's musk is sharp and it was on the wedge. I smelled it from the ladder head and it did not come from the water.", zh: "白鼬的麝香很冲，就在楔子上。我在梯顶就闻到了，那味不是水里来的。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k29p1", witness: "k29w1", with: "k29e1", claim: "k29c1", cost: 2, en: "You came up at the second bell and felt the wedge go in at the third. Here is the wedge with stoat musk on it. A salmon does not smell musk in the water and forget it; tell the court what crossed the grating, and how it carried a scale away.", zh: "你二更上梯，三更觉出楔子打进去。这儿是带白鼬麝香的楔子。鲑鱼在水里闻到麝香，不会转头就忘；告诉法庭是什么过了格栅，又怎么带走一片鳞。" },
+        { id: "k29p2", witness: "k29w2", with: "k29e3", claim: "k29c1", cost: 2, en: "You hold the foot and say the cord was gnawed at the knot. The marks are small and paired, and no beak makes pairs. Put your mouth to the cord and tell the court whose teeth these are.", zh: "你守梯脚，说绳结上有啃痕。齿印又小又成对，没有哪只喙能做出成对的印。把你的嘴凑到绳上，告诉法庭这是谁的牙。" },
+        { id: "k29p3", witness: "k29w3", with: "k29e2", claim: "k29c1", cost: 2, en: "You keep the head and smelled musk on the wedge. The track on the grating comes back with a scale in it. Tell the court what walked up dry and came back with a fish's coat on its foot.", zh: "你守梯顶，在楔子上闻到麝香。格栅上的印子回来时卡着一片鳞。告诉法庭，是什么干着脚上去，回来时脚上带着鱼的衣服。" },
+        { id: "k29p4", witness: "k29w1", with: "k29e4", claim: "k29c2", cost: 2, en: "You say the osprey was on the far bank. Her perch is empty of bones, and it is never empty. Tell the court where she ate, if not here.", zh: "你说鱼鹰在远岸。她的栖木上一根骨头也没有，而它从来不空。告诉法庭，她要是不在这儿吃，是在哪儿吃的。" },
+        { id: "k29p5", witness: "k29w2", with: "k29e5", claim: "k29c3", cost: 2, en: "You say the newt came up wet. Its trail stops at the foot and the grating is dry. Tell the court how a newt climbs a dry ladder.", zh: "你说蝾螈湿着上来。它的痕停在梯脚，格栅是干的。告诉法庭，蝾螈怎么爬一架干梯子。" },
+      ],
+      vouches: [
+        { id: "k29v1", witness: "k29w1", exhibit: "k29e1", claim: "k29c1", en: "The salmon felt the wedge go in and the wedge smells of stoat. A salmon does not invent a smell it has spent its life avoiding; believe the salmon about the grating.", zh: "鲑鱼觉出楔子打进去，楔子上有白鼬的味。鲑鱼躲了一辈子的气味，不会凭空编出来；信鲑鱼讲的格栅。" },
+        { id: "k29v2", witness: "k29w2", exhibit: "k29e3", claim: "k29c1", en: "The lamprey read the gnawed knot: small, paired teeth. The lamprey has a mouth of its own and no reason to praise another's; believe the lamprey about the cord.", zh: "七鳃鳗读出了啃过的结：小齿，成对。它自己有嘴，没理由夸别人的牙；信七鳃鳗讲的绳。" },
+        { id: "k29v3", witness: "k29w3", exhibit: "k29e2", claim: "k29c1", en: "The dipper smelled musk at the head and the track carries a fish-scale. The dipper works this ladder every day; believe it about the grating.", zh: "河乌在梯顶闻到麝香，印子里带着鱼鳞。河乌天天在这架梯上做工；信它讲的格栅。" },
+        { id: "k29v4", witness: "k29w3", exhibit: "k29e5", claim: "k29c2", en: "The dipper saw the osprey's shadow on the far water and her perch bare. Believe the dipper about the far bank, and the perch about the bird.", zh: "河乌看见鱼鹰的影子投在远水上，栖木空着。信河乌讲的远岸，也信栖木讲的那只鸟。" },
+      ],
+      claims: [
+        { id: "k29c1", accused: "stoat", statements: ["k29s1", "k29s2", "k29s3", "k29s4", "k29s5", "k29s6", "k29s7", "k29s8", "k29s9"], exhibits: ["k29e1", "k29e2", "k29e3", "k29e4", "k29e5"], en: "Whisk wedged the counting gate from the ladder top, gnawed the cord and walked the run with a fish-scale on its foot", zh: "威斯克从梯顶楔开计数闸，啃断绳，脚上带着鱼鳞走了一趟" },
+        { id: "k29c2", accused: "osprey", statements: ["k29s8", "k29s7"], exhibits: ["k29e4"], en: "Talons came off the far bank, forced the gate with her beak and took the run from above", zh: "塔隆斯从远岸过来，用喙顶开闸，从上面截走了鱼群" },
+        { id: "k29c3", accused: "newt", statements: ["k29s6"], exhibits: ["k29e5"], en: "Slick climbed the wet ladder foot, squeezed the gate cord loose and let the run pass", zh: "斯利克从湿的梯脚爬上来，把闸绳蹭松，让鱼群过去了" },
+      ],
+    },
+    /* k30 is the summit and the last mechanic: the exhibit that waits on a
+     * witness. The bronze mirror is named by the true charge, but the only
+     * question that puts it to the court is held by the crow and anchored on the
+     * mole's third word. Until that word is heard the question is illegal, and
+     * the exhibit proves nothing. Swap the anchor for the mirror itself and the
+     * measured line loses the mole's three words; remove the mirror and the bar
+     * is out of reach. */
+    {
+      id: "k30", labelKey: "ctaCase30", time: 23, culprit: "raven",
+      bar: { strength: 32, trust: 4 },
+      charge: {
+        en: "The bronze mirror left on the hill cairn at midsummer was gone by morning, and the raven's ledge glittered. The mirror is the whole case, but it is only put to the court through the crow's question, and that question waits on the mole's third word. Until the mole speaks, the exhibit is only a shine on a ledge.",
+        zh: "仲夏留在山间石堆上的铜镜，天亮时没了，乌鸦的岩台却闪着光。整件案子就靠这面镜子，可它只能借乌鸦那一问呈到堂上，而那一问又等着鼹鼠的第三句话。鼹鼠不开口，那物证也不过是岩台上的一道亮。",
+      },
+      suspects: [
+        { id: "raven", en: "Ash the Raven", zh: "乌鸦阿什" },
+        { id: "tortoise", en: "Grit the Tortoise", zh: "陆龟格里特" },
+        { id: "shrew", en: "Quill the Shrew", zh: "鼩鼱奎尔" },
+      ],
+      exhibits: [
+        { id: "k30e1", weight: 3, en: "The cairn mirror, found on the raven's ledge: the bronze is scratched by a beak's grip, and the cairn's moss is still in its rim.", zh: "在乌鸦岩台上找到的石堆铜镜：铜面被喙抓出划痕，镜框里还嵌着石堆上的苔。" },
+        { id: "k30e2", weight: 3, en: "A raven's feather on the cairn, split at the quill, with bronze dust caught in the split.", zh: "石堆上一根乌鸦羽毛，羽根裂开，裂缝里嵌着铜屑。" },
+        { id: "k30e3", weight: 3, en: "Three-toed claw-prints on the cairn's top stone, deep at the front, where a bird landed heavy with something.", zh: "石堆顶石上有三趾爪印，前头深——是鸟带着重东西落下来的样子。" },
+        { id: "k30e4", weight: 3, en: "A scrape of drystone runs from the cairn's face to the raven's ledge, the lichen broken in one long line.", zh: "一道干石刮痕从石堆正面通到乌鸦岩台，地衣被拉成一条长线。" },
+        { id: "k30e5", weight: 1, en: "The mirror's notch in the top stone: the moss about it is torn in a ring, not a stripe.", zh: "顶石上放镜子的槽：四周的苔被扯成一圈，不是一道。" },
+      ],
+      witnesses: [
+        {
+          id: "k30w1", trust: 5, en: "Sker the Lizard", zh: "蜥蜴斯克尔",
+          statements: [
+            { id: "k30s1", claim: "k30c1", en: "I warm on the cairn's top stone. At dusk the mirror stood in its notch and the moss around it was unbroken.", zh: "我在石堆顶石上晒太阳。黄昏时镜子还在它的槽里，周围的苔没被碰过。" },
+            { id: "k30s2", claim: "k30c1", en: "At the third bell something came down on the top stone heavy and went off again lighter. I felt the stone jump under me.", zh: "三更有什么重东西落到顶石上，又轻着走了。我觉出身下的石头跳了一下。" },
+            { id: "k30s3", claim: "k30c1", en: "A raven lands with its claws forward and takes off with its feet behind. The claw-prints are deep at the front and shallow behind.", zh: "乌鸦落下来爪子在前，起飞时脚在后。那爪印前深后浅。" },
+            { id: "k30s4", claim: "k30c1", en: "The tortoise was under the wall all night; I saw his shell in the same place at dusk and at dawn.", zh: "陆龟整夜在墙根下；黄昏和天亮我都看见他的壳在同一个地方。" },
+            { id: "k30s14", claim: "k30c1", en: "The mirror's notch was empty at dawn and the moss about it was torn in a ring. A thing lifted straight up leaves a ring; a thing dragged leaves a stripe.", zh: "天亮时镜槽空了，四周的苔被扯成一圈。直着抬起来的东西留下圈；拖着走的东西留下道。" },
+          ],
+        },
+        {
+          id: "k30w2", trust: 5, en: "Croak the Crow", zh: "乌鸦克罗克",
+          statements: [
+            { id: "k30s5", claim: "k30c1", en: "I keep the far ash and I watch the cairn. A raven crossed to the ledge at the third bell with something bright in its beak.", zh: "我守远处那棵白蜡树，看着石堆。三更一只乌鸦飞到岩台去，喙里衔着亮东西。" },
+            { id: "k30s6", claim: "k30c1", en: "The scrape on the drystone is one long line, not two. A bird carried the mirror along the wall and did not come back by the same road.", zh: "干石上的刮痕是一条长线，不是两条。鸟带着镜子沿墙走，没从原路回来。" },
+            { id: "k30s7", claim: "k30c1", en: "Bronze dust is in the feather's split quill. Bronze dust does not blow upward to a cairn; it falls from what was carried.", zh: "铜屑嵌在羽毛裂开的羽根里。铜屑不会往石堆上吹；它是从被带走的东西上掉下来的。" },
+            { id: "k30s8", claim: "k30c1", en: "The shrew keeps the cairn's foot and never lies about a smell. She will tell the court what crossed her stone before the third bell.", zh: "鼩鼱守石堆脚，从不对气味撒谎。她会告诉法庭，三更以前是什么踩过她的石头。" },
+          ],
+        },
+        {
+          id: "k30w3", trust: 5, en: "Snout the Mole", zh: "鼹鼠斯瑙特",
+          statements: [
+            { id: "k30s9", claim: "k30c1", en: "I keep the cairn's foot under the moss. At the second bell a bird walked past me, heavy at the front, and it smelled of bronze and raven.", zh: "我守石堆脚下苔里。二更一只鸟从我旁边走过，前头沉，身上是铜和乌鸦的味。" },
+            { id: "k30s10", claim: "k30c2", en: "The tortoise's shell was cold in the same place all night. I know cold stone when I put my nose to it.", zh: "陆龟的壳整夜在同一个地方，凉着。我把鼻子贴上去，就认得冷石头。" },
+            { id: "k30s11", claim: "k30c2", en: "A tortoise cannot climb a cairn and cannot grip a mirror with a beak. The court may put his shell against the scrape and see which of them is worn.", zh: "陆龟爬不上石堆，也不能用喙抓住镜子。法庭尽管把他的壳摆到刮痕旁边，看是谁磨的。" },
+            { id: "k30s12", claim: "k30c1", en: "The thing that walked past me stopped at the cairn's face and pushed. I heard the bronze ring once against the stone, and then it went up.", zh: "从我旁边走过去的东西，在石堆正面停下，推了一下。我听见铜在石头上响了一声，然后就上去了。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k30p1", witness: "k30w2", with: "k30s12", claim: "k30c1", cost: 2, en: "You keep the far ash and saw a raven cross with something bright. The mole heard the bronze ring and go up, and the scrape runs one way only. Put the mirror's story to the court: what crossed, what rang, and what never came back.", zh: "你守白蜡树，看见一只乌鸦衔着亮东西过去。鼹鼠听见铜响了一声就上去了，刮痕只朝一个方向。把镜子的故事摆到法庭上：什么过去了，什么响了，什么再没回来。" },
+        { id: "k30p2", witness: "k30w1", with: "k30e2", claim: "k30c1", cost: 1, en: "You warm on the top stone and felt it jump at the third bell. A raven's feather is split with bronze dust in it. Tell the court what landed heavy and left light.", zh: "你在顶石上晒太阳，觉出三更石头跳了一下。一根乌鸦羽毛裂着，缝里嵌着铜屑。告诉法庭，什么落下来时沉，走时轻。" },
+        { id: "k30p3", witness: "k30w3", with: "k30e3", claim: "k30c1", cost: 1, en: "You keep the foot and smelled bronze and raven at the second bell. The claw-prints on the top stone are deep at the front. Tell the court what walked past you, and what it pushed before it went up.", zh: "你守石堆脚，二更闻到铜和乌鸦的味。顶石上的爪印前头深。告诉法庭什么从你旁边走过，上去之前又推了什么。" },
+        { id: "k30p4", witness: "k30w1", with: "k30e4", claim: "k30c2", cost: 1, en: "You say the tortoise was under the wall all night. A tortoise pushes with the front of its shell, and the scrape on the drystone runs high, above a shell's reach. Tell the court what made it, if not a bird.", zh: "你说陆龟整夜在墙根下。陆龟用壳的前头推，可干石上的刮痕在高处，壳够不到。告诉法庭，要不是鸟，是什么弄出来的。" },
+        { id: "k30p5", witness: "k30w3", with: "k30s10", claim: "k30c2", cost: 1, en: "You say the tortoise's shell was cold in one place all night. A tortoise cannot climb a cairn. Tell the court why his shell is answer enough, and why the mirror is not his.", zh: "你说陆龟的壳整夜凉在一个地方。陆龟爬不上石堆。告诉法庭，为什么他的壳就够答话了，镜子又为什么不是他的。" },
+      ],
+      vouches: [
+        { id: "k30v1", witness: "k30w2", exhibit: "k30e1", claim: "k30c1", en: "The crow saw the raven cross with something bright and the mirror was found on the raven's ledge with the cairn's moss in its rim. Believe the crow about the crossing, and the mirror about the ledge.", zh: "乌鸦看见那只乌鸦衔着亮东西过去，镜子在乌鸦岩台上找到，框里还嵌着石堆的苔。信乌鸦讲的那一趟，也信镜子讲的岩台。" },
+        { id: "k30v2", witness: "k30w1", exhibit: "k30e2", claim: "k30c1", en: "The lizard felt the stone jump and the feather holds bronze dust. A lizard does not invent a jump it felt under its belly; believe the lizard about the landing.", zh: "蜥蜴觉出石头跳了，羽毛里嵌着铜屑。蜥蜴不会编造肚子底下的一跳；信蜥蜴讲的落地。" },
+        { id: "k30v3", witness: "k30w3", exhibit: "k30e3", claim: "k30c1", en: "The mole smelled bronze and raven before the third bell and the claw-prints are deep in front. The mole lives under the stone and has no quarrel with the bird; believe the mole.", zh: "鼹鼠三更前闻到铜和乌鸦的味，爪印前头深。鼹鼠住在石头底下，和那只鸟没仇；信鼹鼠。" },
+        { id: "k30v4", witness: "k30w3", exhibit: "k30e4", claim: "k30c2", en: "The mole knows cold shell from cold stone. The tortoise's shell never moved, and the scrape is a bird's one-way road. Believe the mole about the shell.", zh: "鼹鼠分得清冷壳和冷石。陆龟的壳一夜没动，刮痕是鸟的单程路。信鼹鼠讲的壳。" },
+      ],
+      claims: [
+        { id: "k30c1", accused: "raven", statements: ["k30s1", "k30s2", "k30s3", "k30s4", "k30s14", "k30s5", "k30s6", "k30s7", "k30s8", "k30s9"], exhibits: ["k30e1", "k30e2", "k30e3", "k30e4", "k30e5"], en: "Ash landed on the cairn, gripped the bronze mirror, carried it along the drystone to the ledge and left the moss in its rim", zh: "阿什落在石堆上，抓住铜镜，沿干石把它带到岩台，镜框里还留着石堆的苔" },
+        { id: "k30c2", accused: "tortoise", statements: ["k30s10", "k30s11"], exhibits: ["k30e3"], en: "Grit climbed the cairn in the dark, pushed the mirror off its notch and carried it down in his shell", zh: "格里特摸黑爬上石堆，把镜子从槽里推下来，用壳驮走了" },
+        { id: "k30c3", accused: "shrew", statements: ["k30s9"], exhibits: ["k30e4"], en: "Quill came over the cairn's foot, dragged the mirror down the drystone and hid it in the wall", zh: "奎尔从石堆脚过来，把镜子沿干石拖下去，藏在墙里" },
+      ],
+    },
   ];
 
   /* --- pure core --------------------------------------------------------- */
@@ -2149,6 +2561,7 @@
   App.courtLinks = courtLinks;
   App.courtVerdict = courtVerdict;
   App.courtSolvable = courtSolvable;
+  App.courtCanAsk = ctaCanAsk;
   App.courtTrust = courtTrust;
   App.courtPoints = courtPoints;
   App.courtBestLine = ctaBestLine;
@@ -2961,6 +3374,12 @@
       "ctaCase22": "The Unnamed Word",
       "ctaCase23": "Believed at Five",
       "ctaCase24": "The Whole Bench",
+      "ctaCase25": "The Unpayable Question",
+      "ctaCase26": "The Rival's Own Word",
+      "ctaCase27": "Never at the Ceiling",
+      "ctaCase28": "Eighteen Actions",
+      "ctaCase29": "The Mended Witness",
+      "ctaCase30": "The Exhibit That Waited",
       "ctaCaseSelectLabel": "Take a case from the docket",
       "ctaTimeLabel": "Court time",
       "ctaWordsLabel": "Testimony",
@@ -3080,6 +3499,12 @@
       "ctaCase22": "未引的那句话",
       "ctaCase23": "信到五分",
       "ctaCase24": "整个证人席",
+      "ctaCase25": "问不起的一句话",
+      "ctaCase26": "对家的原话",
+      "ctaCase27": "顶格不收旁证",
+      "ctaCase28": "十八次动作",
+      "ctaCase29": "补回来的证人",
+      "ctaCase30": "等着证人的物证",
       "ctaCaseSelectLabel": "从案卷里挑一件案子",
       "ctaTimeLabel": "庭上时间",
       "ctaWordsLabel": "证词",
@@ -3192,7 +3617,7 @@
         '<rect x="72" y="46" width="34" height="16" rx="3" fill="none" stroke="#ff6b35" stroke-width="2"/>' +
         '<text x="89" y="57" font-size="8" fill="#ff6b35" text-anchor="middle">trust</text></svg>',
       en: [
-        "Goal: close one of twenty-four cases with a verdict the numbers behind it actually support.",
+        "Goal: close one of thirty cases with a verdict the numbers behind it actually support.",
         "Action: click a witness to take their testimony in order, click an exhibit to mark it, then press 1 to 4 to spend an action, Enter to confirm, Escape back to the bench, L to read out everything you have established.",
         "Two numbers: claim strength comes from testimony, exhibit weight and contradictions; witness trust is separate, starts at the case's own value, and is what the bench will believe.",
         "The trade-off: pressing a witness adds 2 to the charge it serves and costs that witness 1 trust; corroborating a witness with a marked exhibit adds 1 to both.",
@@ -3200,7 +3625,7 @@
         "Scoring: the verdict quality is the gate, the case strength of your closing sets the stars, and the bands are measured from each case's own best-play line.",
       ],
       zh: [
-        "目标：在二十四件案子里结一件，判决要能被它背后的数字真正撑住。",
+        "目标：在三十件案子里结一件，判决要能被它背后的数字真正撑住。",
         "操作：点证人按顺序取他的证词，点物证把它呈堂，再按 1 到 4 花掉一次庭上动作，回车确认，Esc 回证人席，L 键念出你已确立的一切。",
         "两个数字：指控强度来自证词、物证分量与矛盾；证人信任是另一回事，由案子自己给定，那才是法庭愿意信多少。",
         "取舍：逼一个证人，替他服务的那条指控加 2，可这位证人的信任减 1；用已呈堂的物证为他旁证，两边各加 1。",

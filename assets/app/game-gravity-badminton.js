@@ -242,6 +242,32 @@
         { u: 108, target: 132, track: true }, { u: 24, target: 152, track: true },
         { u: 100, target: 226, track: true }, { u: 30, target: 144, track: true }],
     },
+    /* b21-b24: Grand Court Apex. Maximum velocity smashes, tight gravity
+     * wells and multi-target rallies culminate in the badminton summit. */
+    {
+      id: "b21", labelKey: "gbmL21", style: "sweeper", seed: 91401, cap: 36,
+      speed: 154, reach: 18, height: 64, power: 1.18, err: 0.22, offLock: 1.25, freeze: 0.1,
+      react: 0.05, spread: 2.1, lock: [0, 2], targets: [46, 96, 24, 8], baseBands: [1, 3, 5],
+      line: [{ u: 92, target: 230, track: true }, { u: 20, target: 132, track: true }, { u: 108, target: 132, track: true }, { u: 24, target: 152, track: true }, { u: 100, target: 226, track: true }, { u: 30, target: 144, track: true }, { u: 96, target: 220, track: true }],
+    },
+    {
+      id: "b22", labelKey: "gbmL22", style: "chaser", seed: 91502, cap: 36,
+      speed: 156, reach: 18, height: 64, power: 1.20, err: 0.20, offLock: 1.25, freeze: 0.1,
+      react: 0.05, spread: 2.2, lock: [0, 2], targets: [46, 96, 24, 8], baseBands: [1, 3, 5],
+      line: [{ u: 92, target: 230, track: true }, { u: 20, target: 132, track: true }, { u: 108, target: 132, track: true }, { u: 24, target: 152, track: true }, { u: 100, target: 226, track: true }, { u: 30, target: 144, track: true }, { u: 96, target: 220, track: true }],
+    },
+    {
+      id: "b23", labelKey: "gbmL23", style: "reader", seed: 91603, cap: 38,
+      speed: 158, reach: 18, height: 66, power: 1.22, err: 0.18, offLock: 1.30, freeze: 0.1,
+      react: 0.04, spread: 2.2, lock: [0, 2], targets: [46, 96, 24, 8], baseBands: [1, 3, 5],
+      line: [{ u: 92, target: 230, track: true }, { u: 20, target: 132, track: true }, { u: 108, target: 132, track: true }, { u: 24, target: 152, track: true }, { u: 100, target: 226, track: true }, { u: 30, target: 144, track: true }, { u: 96, target: 220, track: true }],
+    },
+    {
+      id: "b24", labelKey: "gbmL24", style: "wall", seed: 91704, cap: 38,
+      speed: 160, reach: 18, height: 68, power: 1.25, err: 0.16, offLock: 1.30, freeze: 0.1,
+      react: 0.04, spread: 2.3, lock: [0, 2], targets: [46, 96, 24, 8], baseBands: [1, 3, 5],
+      line: [{ u: 92, target: 230, track: true }, { u: 20, target: 132, track: true }, { u: 108, target: 132, track: true }, { u: 24, target: 152, track: true }, { u: 100, target: 226, track: true }, { u: 30, target: 144, track: true }, { u: 96, target: 220, track: true }],
+    },
   ];
 
   /* --- tiny pure helpers ------------------------------------------------ */
@@ -1401,6 +1427,10 @@
       "gbmL18": "Blind-Side Bulwark",
       "gbmL19": "Relentless Runner",
       "gbmL20": "Mirror Bulwark",
+      "gbmL21": "Cosmic Rally",
+      "gbmL22": "Gravity Well Duel",
+      "gbmL23": "Hyper-Drive Court",
+      "gbmL24": "Grand Court Pinnacle",
       "gbmScoreLabel": "Score",
       "gbmPullLabel": "Pull",
       "gbmPowerLabel": "Power",
@@ -1468,6 +1498,10 @@
       "gbmL18": "盲区壁垒",
       "gbmL19": "不歇奔跑者",
       "gbmL20": "镜面壁垒",
+      "gbmL21": "星海对攻",
+      "gbmL22": "引力深渊对决",
+      "gbmL23": "超光速球场",
+      "gbmL24": "星际羽皇巅峰",
       "gbmScoreLabel": "比分",
       "gbmPullLabel": "引力",
       "gbmPowerLabel": "力量",

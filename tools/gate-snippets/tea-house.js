@@ -1,38 +1,64 @@
 "use strict";
 
-/* game-tea-house: the deep tier empties the room, and the house's own prover
- * sits witness on every deal.
+/* game-tea-house: the long tier fills the room back up and strikes an answer
+ * off the tray at every rung.
  *
- * The tray, the grudges and the urgent moods were all spent by s20, so the
- * tier's lever is the roster: rungs 21-24 bring the chair rotation out of the
- * s4/s5 tutorial drawer and drop the table from four seats to three and
- * finally two. Nothing in the engine is new, which is exactly what the gate
- * holds the tier to: App.teaSolve proves every mood of every chair on every
- * night has a proven path inside the night's budget, App.teaBestLine replays
- * the real resolver to a win on the sitting's own deal, and a bench of seeded
- * deals measures the bands off that same resolver - three stars reachable but
- * not free, and the whole tier won less often than the shipped peak on the
- * same stream. */
+ * The shipped deep tier (s21-s24) emptied the room; the long tier (s25-s30)
+ * does the opposite. Two refusals the shipped ladder never used - Yun's
+ * scalding and Kuo's green - enter beside the shipped ones (the clerk's mild,
+ * He's charcoal) and are paired into new slates, so a guest who once had two
+ * answers has one, and the homesick old woman and the road-worn peddler can end
+ * up reaching for the same smoked pot.
+ * Chairs climb 22 23 24 25 26 27 across eight and nine nights and the target
+ * climbs 20 21 22 23 24 25: the printed need is the measured ceiling of the
+ * sitting's own deal, and the bench shows the ceiling moving with the roll.
+ * Nothing in the engine is new: App.teaSolve proves every mood of every chair
+ * on every night has a tray answer and a proven listening path inside the
+ * night's budget, App.teaBestLine replays the real resolver to a win, and a
+ * bench of seeded deals measures the bands off that same resolver. */
 
 module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const levels = App.teaLevels || [];
-  const deepIds = ["s21", "s22", "s23", "s24"];
+  const deepIds = ["s25", "s26", "s27", "s28", "s29", "s30"];
 
-  check("game-tea-house", "the ladder holds twenty-four sittings",
-    levels.length === 24, String(levels.length));
+  check("game-tea-house", "the ladder holds at least thirty sittings",
+    levels.length >= 30, String(levels.length));
   check("game-tea-house", "every sitting id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
   const missing = deepIds.filter((id) => !levels.some((level) => level.id === id));
-  check("game-tea-house", "the deep tier s21-s24 is present",
+  check("game-tea-house", "the long tier s25-s30 is present",
     missing.length === 0, missing.join(","));
 
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
   const deep = deepIds.map((id) => byId[id]);
   const s20 = byId.s20;
+  const s24 = byId.s24;
+  const s30 = byId.s30;
   const chairsOf = (level) => level.nights.reduce((a, n) => a + n.seats.length, 0);
+
+  /* The shipped ladder is untouched, so every one of the thirty rungs still
+   * has to pass the house's own prover on its own deal. */
+  const ladderProblems = levels.filter((level) => App.teaSolve(level).ok !== true)
+    .map((level) => level.id);
+  check("game-tea-house", "every rung of the ladder clears its own prover",
+    ladderProblems.length === 0, ladderProblems.join(","));
+
+  /* The new tier is a real climb: need and chairs both rise rung by rung, and
+   * every rung sits above the shipped deep tier's target. */
+  const climbProblems = [];
+  deep.forEach((level, index) => {
+    if (level.need <= s24.need) { climbProblems.push(`${level.id} need ${level.need} not above s24's ${s24.need}`); }
+    if (index > 0) {
+      const prev = deep[index - 1];
+      if (level.need <= prev.need) { climbProblems.push(`${level.id} need ${level.need} <= ${prev.id} ${prev.need}`); }
+      if (chairsOf(level) <= chairsOf(prev)) { climbProblems.push(`${level.id} ${chairsOf(level)} chairs <= ${prev.id} ${chairsOf(prev)}`); }
+    }
+  });
+  check("game-tea-house", "the long tier climbs in need and in chairs",
+    climbProblems.length === 0, climbProblems.slice(0, 4).join(" | "));
 
   /* The engine's own prover, per sitting: every mood the roll can hand out has
    * a tray answer and a proven listening path inside the night budget, and the
@@ -52,7 +78,7 @@ module.exports = function gate(ctx) {
     if (bands[0] <= bands[2]) { solveProblems.push(`${level.id} top band ${bands[0]} not above target ${bands[2]}`); }
   });
   check("game-tea-house",
-    "the prover clears every deep sitting and the replayed line wins at its own band",
+    "the prover clears every long sitting and the replayed line wins above its own target",
     solveProblems.length === 0, solveProblems.slice(0, 4).join(" | "));
 
   /* One seeded deal per trial through the same resolver the panel drives: the
@@ -99,14 +125,31 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-tea-house",
-    "every deep sitting wins less often than the shipped peak and lands above its own floor",
+    "every long sitting wins less often than the shipped peak and lands above its own floor",
     benchProblems.length === 0, benchProblems.slice(0, 4).join(" | "));
   check("game-tea-house",
     "the shipped peak itself still clears its bench",
     s20Bench.wins > 0 && s20Bench.reach > 0,
     `s20 wins ${s20Bench.wins}/${TRIALS}, top band reached ${s20Bench.reach}`);
 
-  /* The deep nights keep the shipped voice: every claim the house hands over
+  /* The summit is s30: it closes the ladder, carries the largest room and the
+   * highest target, and its replayed line is the longest in the house. */
+  const summitProblems = [];
+  if (levels[levels.length - 1].id !== "s30") { summitProblems.push("s30 is not the last sitting"); }
+  if (s30.need !== Math.max.apply(null, levels.map((level) => level.need))) {
+    summitProblems.push(`s30 need ${s30.need} is not the ladder maximum`);
+  }
+  if (chairsOf(s30) !== Math.max.apply(null, levels.map(chairsOf))) {
+    summitProblems.push(`s30 chairs ${chairsOf(s30)} are not the widest room`);
+  }
+  if (s30.need <= s20.need) { summitProblems.push(`s30 need ${s30.need} not above s20's ${s20.need}`); }
+  const s30Line = App.teaBestLine(s30);
+  const longest = Math.max.apply(null, levels.map((level) => App.teaBestLine(level).soothed));
+  if (s30Line.soothed !== longest) { summitProblems.push(`s30 line ${s30Line.soothed} is not the house's longest`); }
+  check("game-tea-house", "s30 is the summit: the last sitting, the widest room, the highest target",
+    summitProblems.length === 0, summitProblems.slice(0, 4).join(" | "));
+
+  /* The long nights keep the shipped voice: every claim the house hands over
    * speaks in both languages. */
   const voiceProblems = [];
   deep.forEach((level) => {
@@ -118,7 +161,7 @@ module.exports = function gate(ctx) {
       });
     });
   });
-  check("game-tea-house", "every deep rumour carries a line in both languages",
+  check("game-tea-house", "every long-tier rumour carries a line in both languages",
     voiceProblems.length === 0, voiceProblems.slice(0, 4).join(" | "));
 
   /* The tier's names resolve in both languages. */
@@ -126,11 +169,11 @@ module.exports = function gate(ctx) {
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-tea-house", "the four deep sitting names resolve in both languages",
+  check("game-tea-house", "the six long sitting names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 
   /* The unlock chain is derived, never stored: clearing each sitting in order
-   * hands the player exactly the next one, all twenty-four times. */
+   * hands the player exactly the next one, all the way to s30. */
   const chain = App.createCampaign({
     key: "tea-house-gate-chain",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey }))
@@ -143,6 +186,7 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) { chained = false; }
   });
-  check("game-tea-house", "the unlock chain walks all twenty-four sittings in order",
-    walked === 24 && chained && chain.clearedCount() === 24, walked + " first clears");
+  check("game-tea-house", "the unlock chain walks every sitting in order",
+    walked === levels.length && chained && chain.clearedCount() === levels.length,
+    walked + " first clears");
 };

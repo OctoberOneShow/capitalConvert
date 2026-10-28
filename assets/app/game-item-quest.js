@@ -38,7 +38,7 @@
       return index;
     }));
     var zones = [];
-    for (var index = 1; index <= 50; index += 1) {
+    for (var index = 1; index <= 84; index += 1) {
       var slot = (index - 1) % 12;
       var sceneIndex = order[slot];
       var block = Math.floor((index - 1) / 12);
@@ -1710,6 +1710,8 @@
       "iqVisit3": " III",
       "iqVisit4": " IV",
       "iqVisit5": " V",
+      "iqVisit6": " VI",
+      "iqVisit7": " VII",
       "iqRoundStat": "{n}/{total}",
       "iqHeartsLeft": "{n} of 3 hearts left",
       "iqBtnNew": "New run",
@@ -1723,7 +1725,7 @@
       "iqRunOut": "Out of hearts at {n} points after {f} finds in round {r}. The rest are lit.",
       "iqCleared": "{name} cleared - {s} stars, {n} points.",
       "iqNextZone": "Next level unlocked.",
-      "iqAllZones": "All fifty levels are solved.",
+      "iqAllZones": "All eighty-four levels are solved.",
       "iqBest": "Best {n}",
       "iqProgress": "Found {n} of {total}",
       "iqSpeed": "Speed bonus +{n} points!",
@@ -1763,6 +1765,8 @@
       "iqVisit3": "·三",
       "iqVisit4": "·四",
       "iqVisit5": "·五",
+      "iqVisit6": "·六",
+      "iqVisit7": "·七",
       "iqRoundStat": "{n}/{total}",
       "iqHeartsLeft": "还剩 {n} 颗红心",
       "iqBtnNew": "重新开始",
@@ -1776,7 +1780,7 @@
       "iqRunOut": "红心用尽：第 {r} 轮找到 {f} 件，共 {n} 分。其余物品已点亮。",
       "iqCleared": "「{name}」通关 - {s} 星，{n} 分。",
       "iqNextZone": "下一级已解锁。",
-      "iqAllZones": "五十级全部告破。",
+      "iqAllZones": "八十四级全部告破。",
       "iqBest": "最佳 {n}",
       "iqProgress": "已找到 {n}/{total} 件",
       "iqSpeed": "速度奖励 +{n} 分！",
