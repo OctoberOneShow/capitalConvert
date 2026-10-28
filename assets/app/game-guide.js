@@ -924,6 +924,7 @@
         "Rules: you cannot stop mid-ice - walls and corners are your only brakes; the goal ring only activates once all stars are collected.",
         "Watch out: walls are your steering - sliding into the wrong wall can box you in; the HUD shows the par to beat.",
         "Scoring: solve in par or par+1 slides for top stars; every board is BFS-verified solvable.",
+        "New tier: snowdrifts stop a ride mid-ice - the stopping law breaks, so every push-off re-reads where you can actually stop.",
       ],
       zh: [
         "目标：滑上绿色圆环，并收齐沿途所有星星。",
@@ -931,6 +932,7 @@
         "规则：冰面中途无法停下——墙和拐角是唯一的刹车；收齐星星后圆环才会激活。",
         "小心：撞墙就是转向——滑错墙可能把自己困死；HUD 显示需要打败的标准步数。",
         "计分：标准步数或 +1 内完成可拿满星；每张图都经 BFS 验证可解。",
+        "新层级：雪堆会让滑行停在冰面中央——刹停法则被打破，每次蹬冰都要重新读一遍哪里停得下来。",
       ],
     },
     glyphFour: {

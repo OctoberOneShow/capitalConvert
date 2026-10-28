@@ -46,6 +46,27 @@
     { id: "s18", labelKey: "slashL18", target: 6100, timeS: 34, spawnMs: 262, bomb: 0.40 },
     { id: "s19", labelKey: "slashL19", target: 7200, timeS: 30, spawnMs: 245, bomb: 0.34 },
     { id: "s20", labelKey: "slashL20", target: 8400, timeS: 30, spawnMs: 355, bomb: 0.28, rush: 10 },
+    /* Rounds 21-24 keep pricing targets in the committed-stroke economy,
+     * and each card turns one dial of the feed until the round is shaped by
+     * it. s21 is the gauntlet record - nearly half the feed is live bombs -
+     * with the feed quickened to 235ms to pay for it: the target is priced
+     * against the safe fruit the pair leaves (about sixty a round), so cut
+     * the pour back to the shipped summit's 355ms and the feed cannot
+     * deliver the fruit the line needs; soften the bombs back to the shipped
+     * ceiling and every seeded round clears with room to spare. s22 is the
+     * long haul - forty seconds of feed and the biggest target in the
+     * campaign (12400); cut the clock back to a shipped-length 30s and the
+     * same hand falls short on every seeded round. s23 is the double sprint
+     * - the rush flag doubling an already live feed for the final fifteen
+     * seconds, the longest sprint in the campaign; without the rush the
+     * round never gathers the fruit its target needs. s24 closes with the
+     * flood record - the fastest constant pour in the campaign at 225ms -
+     * and its 12500 is paid by the fruit itself: back to 355ms no seeded
+     * round reaches the line. */
+    { id: "s21", labelKey: "slashL21", target: 8800, timeS: 30, spawnMs: 235, bomb: 0.46 },
+    { id: "s22", labelKey: "slashL22", target: 12400, timeS: 40, spawnMs: 330, bomb: 0.34 },
+    { id: "s23", labelKey: "slashL23", target: 12000, timeS: 30, spawnMs: 360, bomb: 0.28, rush: 15 },
+    { id: "s24", labelKey: "slashL24", target: 12500, timeS: 30, spawnMs: 225, bomb: 0.36 },
   ];
 
   function initInkSlashGame() {
@@ -515,4 +536,27 @@
 
   /* Exported for the other modules. */
   App.initInkSlashGame = initInkSlashGame;
+  /* The level table travels with the module, so the release gate can replay
+   * seeded rounds through the real panel and re-deal a round under a cut
+   * dial without re-parsing this file. */
+  App.slashLevels = slashLevels;
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so the shared dictionary stays authoritative. The
+   * new rounds keep the water-and-blade register the shared dictionary
+   * carries through the last deluge. */
+  App.addStrings({
+    en: {
+      "slashL21": "Cloudburst",
+      "slashL22": "The Long Rain",
+      "slashL23": "Iron Hail",
+      "slashL24": "The Twin Deluge",
+    },
+    zh: {
+      "slashL21": "骤雨狂澜",
+      "slashL22": "长霖漫卷",
+      "slashL23": "铁雹风暴",
+      "slashL24": "双生洪澜",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

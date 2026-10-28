@@ -62,6 +62,25 @@
     { id: "w18", labelKey: "bubL18", target: 560, shots: 14, colors: 4, rows: 10, starGain: [1.19, 1.06, 1] },
     { id: "w19", labelKey: "bubL19", target: 460, shots: 16, colors: 5, rows: 10, starGain: [1.55, 1.1, 1] },
     { id: "w20", labelKey: "bubL20", target: 760, shots: 14, colors: 4, rows: 10, starGain: [1.18, 1.1, 1], sparse: 0.18 },
+    /* Springs 21-24 turn the tier's two readings into one ladder measured in
+     * shots. w21 tightens the seam: the same panels as w20 on a thirteen-shot
+     * quiver, where pouring the shafts solid leaves pops alone short of the
+     * prize (the planner's best cut deal scores 840 of 850, under the 884
+     * three-star line as well). w22 pours the thinnest well in the campaign
+     * - three inks - so clusters are everywhere and the card is paid in
+     * exact shots; back to six inks the same planner tops out at 525 of 850.
+     * w23 pours the triad over the panels and one row less wall, the biggest
+     * slab prize in the tier (1000, three-star at 1100); cut its pour and
+     * the best cut deal falls to 875. w24 closes by giving the panels back
+     * and keeping the quiver: ten shots for the triad's prize, the highest
+     * three-star line per shot in the campaign (968 of 880, 96.8 a shot,
+     * against w22's 78 and w20's 64). Seeded planner runs: every new card
+     * clears most of its six deals, lands the three-star line on at least
+     * one, and none of them clears without its pour. */
+    { id: "w21", labelKey: "bubL21", target: 850, shots: 13, colors: 4, rows: 10, starGain: [1.04, 1.02, 1], sparse: 0.18 },
+    { id: "w22", labelKey: "bubL22", target: 850, shots: 12, colors: 3, rows: 10, starGain: [1.1, 1.04, 1] },
+    { id: "w23", labelKey: "bubL23", target: 1000, shots: 14, colors: 3, rows: 9, starGain: [1.1, 1.05, 1], sparse: 0.18 },
+    { id: "w24", labelKey: "bubL24", target: 880, shots: 10, colors: 3, rows: 10, starGain: [1.08, 1.04, 1] },
   ];
 
   /* ------------------------------------------------------------ colour math */
@@ -1540,4 +1559,27 @@
 
   /* Exported for the other modules. */
   App.initBubbleInkGame = initBubbleInkGame;
+  /* The level table travels with the module, so the release gate can replay
+   * seeded deals through the real panel and re-deal a rung under a cut dial
+   * without re-parsing this file. */
+  App.bubLevels = bubLevels;
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so the shared dictionary stays authoritative. The
+   * new springs keep the planetary descent the shared dictionary carries
+   * through the hollow heart, and name the wells they pour. */
+  App.addStrings({
+    en: {
+      "bubL21": "Triad Well",
+      "bubL22": "The Narrow Seam",
+      "bubL23": "The Triad Slab",
+      "bubL24": "The Ten-Shot Triad",
+    },
+    zh: {
+      "bubL21": "三色墨井",
+      "bubL22": "窄缝矿脉",
+      "bubL23": "三色石板",
+      "bubL24": "十发三色井",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

@@ -24,7 +24,19 @@
    * the rival - it eats every chain but keeps the last `hold` boxes and hands
    * them back, so the opening lands on the player - and `foeFirst` gives the
    * rival the opening stick, which flips the safe-stick parity. Both are
-   * tuned by the headless bench in tools/verify-levels.js. */
+   * tuned by the headless bench in tools/verify-levels.js. Ranks 21-24 ship
+   * no new habit at all - they measure the old ones on plates and in
+   * pairings the ladder never tried: the rival's opening stick played on the
+   * six-box plate, where the safe sticks run out one turn early and every
+   * tail size measures differently than it did on seven, and the blunder
+   * played on a flipped plate, where the shake decides whether three stars
+   * exist at all. Two concession habits were built and measured for this
+   * tier and are not here: opening on purpose while safe sticks remain
+   * never once outscores the safe lines under the plate's own playouts, and
+   * a tail of three on the flipped seven wins the plate for the rival
+   * outright, so the deep rungs tune the tails per plate instead. The deep
+   * bands are tuned by the seeded bench in
+   * tools/gate-snippets/glyph-dots.js. */
   var dotRanks = [
     { id: "d1", labelKey: "dotsL1", boxes: 3, blunder: 0.4, margin: [3, 2, 1] },
     { id: "d2", labelKey: "dotsL2", boxes: 3, blunder: 0.15, margin: [4, 2, 1] },
@@ -72,6 +84,24 @@
     { id: "d18", labelKey: "dotsL18", boxes: 7, blunder: 0, foeFirst: true, setup: true, count: true, margin: [5, 3, 1] },
     { id: "d19", labelKey: "dotsL19", boxes: 7, blunder: 0, hold: 1, foeFirst: true, setup: true, count: true, margin: [7, 4, 1] },
     { id: "d20", labelKey: "dotsL20", boxes: 7, blunder: 0, hold: 2, foeFirst: true, setup: true, count: true, margin: [9, 4, 1] },
+    /* Ranks 21-24: the deep tier - the flipped plate, played past the shipped
+     * peak. One lesson the ladder has never shipped: the habits are not
+     * plate-proof. No rank above pairs the six-box plate with the rival's
+     * opening stick (the flipped ranks all play seven), and none pairs a
+     * blunder with the first stick either; the deep tier ships both pairings
+     * and re-tunes the double cross for the small plate, where the tail that
+     * held two on seven must hold one or three to bite at all. d21 holds one
+     * back and wins the plate by the narrowest margin on the ladder, d22
+     * holds three - the widest tail the small plate bears - d23 shakes the
+     * small plate, where three stars land twice in fifteen seeds, and d24
+     * shakes the wide plate, whose unshaken line cannot reach the band at
+     * all. Every band is tuned to the seeded bench in
+     * tools/gate-snippets/glyph-dots.js, which replays the shipped players
+     * against every deep deal and every twin. */
+    { id: "d21", labelKey: "dotsL21", boxes: 6, blunder: 0, hold: 1, foeFirst: true, setup: true, count: true, margin: [2, 1, 1] },
+    { id: "d22", labelKey: "dotsL22", boxes: 6, blunder: 0, hold: 3, foeFirst: true, setup: true, count: true, margin: [4, 2, 1] },
+    { id: "d23", labelKey: "dotsL23", boxes: 6, blunder: 0.015, hold: 2, foeFirst: true, setup: true, count: true, margin: [12, 8, 1] },
+    { id: "d24", labelKey: "dotsL24", boxes: 7, blunder: 0.015, hold: 2, foeFirst: true, setup: true, count: true, margin: [15, 5, 1] },
   ];
 
   function dotsIndex(y, x, width) {
@@ -1009,7 +1039,9 @@
    * does not already own, so the eight shipped rung names stay in the shared
    * dictionary and only the new ones ride here. The names say what each
    * rival does: one builds the chains it wants to hold, one reads the whole
-   * plate, one keeps two boxes back, one takes the first stick. */
+   * plate, one keeps two boxes back, one takes the first stick - and the
+   * deep tier retunes the keeping for the small flipped plate: one box back,
+   * three back, the small plate shaken, the wide plate shaken. */
   App.addStrings({
     en: {
       "dotsL9": "Chainwright",
@@ -1024,6 +1056,10 @@
       "dotsL18": "First Stick",
       "dotsL19": "Cold Opening",
       "dotsL20": "Every Habit",
+      "dotsL21": "One Keeper",
+      "dotsL22": "Three Keeper",
+      "dotsL23": "Small Plate",
+      "dotsL24": "Shaky Keeper",
     },
     zh: {
       "dotsL9": "织链匠",
@@ -1038,14 +1074,26 @@
       "dotsL18": "先手客",
       "dotsL19": "冷开局",
       "dotsL20": "全技者",
+      "dotsL21": "留一者",
+      "dotsL22": "留三者",
+      "dotsL23": "小盘者",
+      "dotsL24": "颤留者",
     },
   });
 
 
-  /* Exported for the other modules. */
+  /* Exported for the other modules (and for the headless gate, which replays
+   * the ranks through this same engine). */
+  App.dotsLevels = dotRanks;
   App.dotsAiMove = dotsAiMove;
   App.dotsLegal = dotsLegal;
   App.dotsApply = dotsApply;
+  App.dotsCount = dotsCount;
+  App.dotsGifts = dotsGifts;
+  App.dotsGiftRun = dotsGiftRun;
+  App.dotsUnclaimed = dotsUnclaimed;
+  App.dotsSafe = dotsSafe;
+  App.dotsChainCost = dotsChainCost;
   App.dotsNewState = function (boxes) {
     return {
       boxes: boxes,

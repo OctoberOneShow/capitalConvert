@@ -49,6 +49,20 @@
     { id: "c18", labelKey: "pdkC18", n: 4, clues: 30, starTimes: [270, 385, 515] },
     { id: "c19", labelKey: "pdkC19", n: 5, clues: 31, starTimes: [310, 440, 590] },
     { id: "c20", labelKey: "pdkC20", n: 5, clues: 32, starTimes: [320, 455, 610] },
+    /* Volume three raises the brief in two steps of two rungs and carries each
+     * step on both boards, four names first and five names second, so the page
+     * count is the only thing two neighbouring cases share. c21 and c22 hold
+     * nine pages of brief - the first briefs in the campaign longer than any
+     * shipped case - and c23 and c24 hold ten. On the narrow board the lines
+     * outnumber the cells (34 and 38 lines for 48 boxes), so the grid closes
+     * by ruling pairs out; on the wide board the same pages have 27 more boxes
+     * to cross-check and the plain statements run out before the grid does.
+     * Every rung keeps the shipped five fields: the dealer reads n and clues,
+     * the campaign reads id and labelKey, and the clock reads starTimes. */
+    { id: "c21", labelKey: "pdkC21", n: 4, clues: 34, starTimes: [305, 435, 580] },
+    { id: "c22", labelKey: "pdkC22", n: 5, clues: 36, starTimes: [360, 510, 685] },
+    { id: "c23", labelKey: "pdkC23", n: 4, clues: 38, starTimes: [340, 485, 645] },
+    { id: "c24", labelKey: "pdkC24", n: 5, clues: 40, starTimes: [400, 570, 760] },
   ];
   /* Removal order for the carve: the plainest clues go first so the mixed
    * negative / same-owner / hour-gap lines stay in the brief. */
@@ -441,7 +455,7 @@
     }
     bank = pdkShuffle(bank);
     var tries = 0;
-    for (i = 0; i < keep.length && tries < 8; i += 1) {
+    for (var i = 0; i < keep.length && tries < 8; i += 1) {
       if (keep[i].kind !== "direct") {
         continue;
       }
@@ -1033,6 +1047,10 @@
       "pdkC18": "The Missing Hour",
       "pdkC19": "Closing Net",
       "pdkC20": "Final Verdict",
+      "pdkC21": "Narrow Ledger",
+      "pdkC22": "Wide Sweep",
+      "pdkC23": "Dense File",
+      "pdkC24": "The Final Docket",
       "pdkTimeLabel": "Elapsed",
       "pdkBriefLabel": "Brief",
       "pdkRungSelectLabel": "Pick a rung",
@@ -1069,7 +1087,7 @@
       "pdkBestTime": "best {n}s",
       "pdkAlready": "{name} is already closed - pick a rung or take a new case.",
       "pdkNextRung": "Next rung open.",
-      "pdkCampaignDone": "Every rung worked. You keep the notebook.",
+      "pdkCampaignDone": "All twenty-four rungs worked. You keep the notebook.",
       "pdkLocked": "{name} is sealed until the rung before it closes.",
       "pdkHint": "Tick a box and its row and column fill with crosses in your head - a tick is only safe once nothing else can reach that row.",
       "logPocketDetective": "Closed a {n}-line case",
@@ -1096,6 +1114,10 @@
       "pdkC18": "消失的一小时",
       "pdkC19": "收网",
       "pdkC20": "最终裁决",
+      "pdkC21": "窄格长卷",
+      "pdkC22": "广域清查",
+      "pdkC23": "密档压卷",
+      "pdkC24": "终审全卷",
       "pdkTimeLabel": "用时",
       "pdkBriefLabel": "卷宗",
       "pdkRungSelectLabel": "选择难度",
@@ -1132,7 +1154,7 @@
       "pdkBestTime": "最佳 {n} 秒",
       "pdkAlready": "「{name}」已经结案——换个难度或重开一件。",
       "pdkNextRung": "解锁下一档。",
-      "pdkCampaignDone": "二十档全部办结，笔记本归你了。",
+      "pdkCampaignDone": "二十四档全部办结，笔记本归你了。",
       "pdkLocked": "「{name}」还封存着——先办结前面那一档。",
       "pdkHint": "打一个勾，同行同列就都该是叉；只有当这一行再无别处可去时，勾才算稳。",
       "logPocketDetective": "办结了 {n} 条线索的案子",

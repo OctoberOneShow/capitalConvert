@@ -49,6 +49,21 @@
     { id: "q18", labelKey: "sorL18", tubes: 18, colors: 14, shuffle: 106, starMoves: [76, 94, 112], maxPath: 76 },
     { id: "q19", labelKey: "sorL19", tubes: 19, colors: 14, shuffle: 110, starMoves: [80, 98, 118], maxPath: 80 },
     { id: "q20", labelKey: "sorL20", tubes: 20, colors: 15, shuffle: 114, starMoves: [84, 104, 124], maxPath: 84 },
+    /* Ranks 21-24. Every rung above this line built the rack up; the deep
+     * tier drains it. The palette has topped out at fifteen tints, so the
+     * lever left is the spare glass: four spares, then three, then two -
+     * and two is the floor, because a single spare starves the dealer's
+     * own solver and every deal collapses to the one-pour fallback. Each
+     * drained vial takes away a staging column, so the same fifteen colours
+     * have to be threaded through fewer and fewer places to put anything
+     * down. q24 keeps the two-spare rack and scrambles it deeper than any
+     * deal before it (shuffle 150) with the loosest walk the dealer accepts
+     * (maxPath 105), so the final palette hands out the least room and the
+     * longest lines of the ladder. */
+    { id: "q21", labelKey: "sorL21", tubes: 19, colors: 15, shuffle: 118, starMoves: [88, 108, 128], maxPath: 88 },
+    { id: "q22", labelKey: "sorL22", tubes: 18, colors: 15, shuffle: 122, starMoves: [92, 112, 132], maxPath: 92 },
+    { id: "q23", labelKey: "sorL23", tubes: 17, colors: 15, shuffle: 126, starMoves: [96, 116, 136], maxPath: 96 },
+    { id: "q24", labelKey: "sorL24", tubes: 17, colors: 15, shuffle: 150, starMoves: [105, 126, 147], maxPath: 105 },
   ];
 
   /* Bilingual copy for the deeper rack. addStrings only fills keys the shared
@@ -60,6 +75,8 @@
       "sorL15": "Cold Bloom", "sorL16": "Glass Orchard",
       "sorL17": "The Long Rack", "sorL18": "Fourteen Tints",
       "sorL19": "One Vial Shy", "sorL20": "The Final Palette",
+      "sorL21": "The Nineteenth Vial", "sorL22": "Three Spares",
+      "sorL23": "Two Spares", "sorL24": "The Squeezed Rack",
     },
     zh: {
       "sorL11": "\u7b2c\u4e94\u53ea\u7a7a\u74f6", "sorL12": "\u7a84\u67b6",
@@ -67,6 +84,8 @@
       "sorL15": "\u51b7\u8272\u7efd\u653e", "sorL16": "\u73bb\u7483\u679c\u56ed",
       "sorL17": "\u957f\u67b6", "sorL18": "\u5341\u56db\u8272",
       "sorL19": "\u53ea\u5dee\u4e00\u74f6", "sorL20": "\u7ec8\u8272\u76d8",
+      "sorL21": "\u7b2c\u5341\u4e5d\u53ea\u74f6", "sorL22": "\u4e09\u53ea\u7a7a\u74f6",
+      "sorL23": "\u4e24\u53ea\u7a7a\u74f6", "sorL24": "\u6324\u7d27\u7684\u74f6\u67b6",
     },
   });
 

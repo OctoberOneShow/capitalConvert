@@ -333,6 +333,32 @@
     z[3].ay = 322; z[3].by = 372; z[4].ay = 322; z[4].by = 372;
   };
   var pbcMarketMouth = function (z) { z[2].bx = 262; };
+  /* Back Lift: the backward ratchet window is lifted out of the 290-350 row
+   * into 214-272, so route 2's return run is caught at head height instead of
+   * at the flippers. Every climb back to Ridge now starts from a corridor the
+   * stock table never put anything in. */
+  var pbcBackLift = function (z) {
+    z[4].ax = 46; z[4].bx = 120; z[4].ay = 214; z[4].by = 272;
+  };
+  /* High Wire: both ratchet corridors move up 46px to the 244-300 band, above
+   * the side posts. The ladder is climbed entirely over the top half of the
+   * field, and a dropped ball falls past two bins before a flip can reach it. */
+  var pbcHighWire = function (z) {
+    z[3].ay = 244; z[3].by = 300; z[4].ay = 244; z[4].by = 300;
+  };
+  /* Cross Wires: the corridors trade rows and flanks - forward is low-left,
+   * backward is high-right. Route changes cross the field diagonally, so each
+   * switch lands the ball on the opposite hand from the one that sent it. */
+  var pbcCrossWires = function (z) {
+    z[3].ax = 46; z[3].bx = 144; z[3].ay = 300; z[3].by = 340;
+    z[4].ax = 176; z[4].bx = 250; z[4].ay = 214; z[4].by = 272;
+  };
+  /* Side Swap: the two corridors trade flanks at the same height - forward
+   * left, backward right. Every climb is mirrored against the stock layout,
+   * so the return lane feeds the opposite hand on every descent. */
+  var pbcSideSwap = function (z) {
+    z[3].ax = 70; z[3].bx = 144; z[4].ax = 176; z[4].bx = 250;
+  };
   /* The Market grate: a second hold 3 panel, so it is solid on every route
    * except Market - a parcel can only be read on the way down. */
   var pbcGrateSeg = [[208, 196, 254, 196, 3]];
@@ -737,6 +763,80 @@
     [11, 2], [84, 0], [22, 2], [1, 4], [4, 1], [131, 0],
   ]);
 
+  /* Back Lift: twelve stops, twelve launches, one spare ball, 3283 ticks. The
+   * backward ratchet window is lifted into the 214-272 row, so every return
+   * from Curb has to be caught above the posts; on the stock table the same
+   * line reads one parcel and spends eight launches in refusals. */
+  var pbcLine21 = pbcScript([
+    [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0], [24, 2], [3, 1], [1, 3],
+    [289, 0], [6, 1], [32, 0], [28, 2], [28, 0], [20, 2], [11, 0], [8, 1],
+    [3, 0], [8, 1], [25, 0], [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0],
+    [24, 2], [3, 1], [1, 3], [289, 0], [6, 1], [32, 0], [28, 2], [28, 0],
+    [20, 2], [11, 0], [8, 1], [3, 0], [8, 1], [25, 0], [1, 3], [137, 0], [3, 1],
+    [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0], [24, 2], [3, 1], [1, 3],
+    [128, 0], [10, 1], [154, 0], [1, 1], [69, 0], [5, 2], [31, 0], [1, 1],
+    [2, 0], [3, 2], [1, 3], [295, 0], [1, 3], [290, 0], [20, 2], [1, 0], [2, 1],
+    [12, 0], [29, 2], [43, 0], [6, 2], [25, 0], [3, 1], [1, 3], [137, 0],
+    [3, 1], [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0], [24, 2], [3, 1],
+    [1, 3], [128, 0], [10, 1], [154, 0], [1, 1], [69, 0], [5, 2], [31, 0],
+    [1, 1], [2, 0], [3, 2],
+  ]);
+
+  /* High Wire: twelve stops, twelve launches, one spare ball, 3636 ticks. Both
+   * ratchet windows sit in the 244-300 band, so the ledger climbs the whole
+   * ladder over the side posts; the stock layout refuses so many of the same
+   * flips that it reads a single parcel in six launches. */
+  var pbcLine22 = pbcScript([
+    [1, 3], [137, 0], [3, 1], [1, 3], [88, 0], [10, 1], [33, 0], [8, 1],
+    [24, 0], [24, 2], [3, 1], [1, 3], [289, 0], [6, 1], [32, 0], [28, 2],
+    [28, 0], [20, 2], [11, 0], [8, 1], [3, 0], [8, 1], [25, 0], [1, 3],
+    [276, 0], [16, 2], [27, 0], [2, 2], [64, 0], [24, 2], [26, 0], [14, 2],
+    [4, 0], [18, 2], [25, 0], [31, 2], [1, 3], [137, 0], [3, 1], [1, 3],
+    [99, 0], [3, 1], [27, 0], [1, 1], [2, 4], [11, 2], [84, 0], [22, 2], [1, 4],
+    [4, 1], [1, 3], [276, 0], [16, 2], [27, 0], [2, 2], [64, 0], [24, 2],
+    [26, 0], [14, 2], [4, 0], [18, 2], [25, 0], [31, 2], [1, 3], [137, 0],
+    [3, 1], [1, 3], [99, 0], [3, 1], [27, 0], [1, 1], [2, 4], [11, 2], [84, 0],
+    [22, 2], [1, 4], [4, 1], [1, 3], [276, 0], [16, 2], [27, 0], [2, 2],
+    [64, 0], [24, 2], [26, 0], [14, 2], [4, 0], [18, 2], [25, 0], [31, 2],
+    [1, 3], [99, 0], [3, 1], [27, 0], [1, 1], [2, 4], [11, 2], [84, 0], [22, 2],
+    [1, 4], [4, 1], [1, 3], [295, 0],
+  ]);
+
+  /* Cross Wires: twelve stops, twelve launches, one spare ball, 3690 ticks.
+   * The forward window is low-left and the backward window high-right, so the
+   * ledger alternates diagonally across the field; on the stock layout the
+   * same line turns into nine launches and a single delivery. */
+  var pbcLine23 = pbcScript([
+    [1, 3], [137, 0], [3, 1], [1, 3], [322, 0], [14, 2], [77, 0], [24, 2],
+    [48, 0], [1, 1], [2, 4], [1, 3], [137, 0], [3, 1], [1, 3], [128, 0],
+    [10, 1], [154, 0], [1, 1], [69, 0], [5, 2], [31, 0], [1, 1], [2, 0], [3, 2],
+    [1, 3], [295, 0], [1, 3], [128, 0], [10, 1], [154, 0], [1, 1], [69, 0],
+    [5, 2], [31, 0], [1, 1], [2, 0], [3, 2], [1, 3], [295, 0], [1, 3], [322, 0],
+    [14, 2], [77, 0], [24, 2], [48, 0], [1, 1], [2, 4], [1, 3], [137, 0],
+    [3, 1], [1, 3], [128, 0], [10, 1], [154, 0], [1, 1], [69, 0], [5, 2],
+    [31, 0], [1, 1], [2, 0], [3, 2], [1, 3], [295, 0], [1, 3], [128, 0],
+    [10, 1], [154, 0], [1, 1], [69, 0], [5, 2], [31, 0], [1, 1], [2, 0], [3, 2],
+  ]);
+
+  /* Side Swap: the summit - thirteen stops, thirteen launches, one spare
+   * ball, 3611 ticks. The corridors trade flanks at the same height, so every
+   * climb is mirrored against the stock table; the same line reads three
+   * parcels on the stock layout and needs eight launches to do it. */
+  var pbcLine24 = pbcScript([
+    [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0], [24, 2], [3, 1], [1, 3],
+    [137, 0], [3, 1], [1, 3], [322, 0], [14, 2], [77, 0], [24, 2], [48, 0],
+    [1, 1], [2, 4], [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0], [24, 2],
+    [3, 1], [1, 3], [137, 0], [3, 1], [1, 3], [128, 0], [10, 1], [154, 0],
+    [1, 1], [69, 0], [5, 2], [31, 0], [1, 1], [2, 0], [3, 2], [1, 3], [295, 0],
+    [1, 3], [162, 0], [10, 2], [114, 0], [21, 2], [11, 0], [27, 2], [32, 0],
+    [20, 1], [4, 0], [1, 3], [88, 0], [10, 1], [33, 0], [8, 1], [24, 0],
+    [24, 2], [3, 1], [1, 3], [137, 0], [3, 1], [1, 3], [128, 0], [10, 1],
+    [154, 0], [1, 1], [69, 0], [5, 2], [31, 0], [1, 1], [2, 0], [3, 2], [1, 3],
+    [290, 0], [20, 2], [1, 0], [2, 1], [12, 0], [29, 2], [43, 0], [6, 2],
+    [25, 0], [3, 1], [1, 3], [128, 0], [10, 1], [154, 0], [1, 1], [69, 0],
+    [5, 2], [31, 0], [1, 1], [2, 0], [3, 2],
+  ]);
+
   var pbcTables = [
     pbcTable("pbcT1", "pbcTbl1", [0, 1, 2], 4, 0, pbcLine1),
     pbcTable("pbcT2", "pbcTbl2", [2, 1, 0], 5, 0, pbcLine2),
@@ -800,6 +900,26 @@
     /* Top of the ladder: twelve parcels, twelve launches, thirteen balls. */
     pbcTable("pbcT20", "pbcTbl20", [0, 0, 0, 0, 1, 0, 0, 0, 0, 2, 0, 2], 13, 0, pbcLine20, null, {
       zones: pbcZonesWith(pbcBackTight),
+    }),
+    /* Back Lift: the backward ratchet is lifted into the 214-272 row, so every
+     * return from Curb is caught above the posts instead of at the flippers. */
+    pbcTable("pbcT21", "pbcTbl21", [0, 1, 0, 1, 0, 0, 1, 2, 2, 0, 0, 1], 12, 0, pbcLine21, null, {
+      zones: pbcZonesWith(pbcBackLift),
+    }),
+    /* High Wire: both ratchet windows move up 46px, so the ledger climbs the
+     * whole ladder over the side posts. */
+    pbcTable("pbcT22", "pbcTbl22", [0, 0, 1, 2, 0, 0, 2, 0, 0, 2, 0, 2], 12, 0, pbcLine22, null, {
+      zones: pbcZonesWith(pbcHighWire),
+    }),
+    /* Cross Wires: forward low-left, backward high-right - route changes are
+     * diagonal and land on the opposite hand. */
+    pbcTable("pbcT23", "pbcTbl23", [0, 1, 0, 1, 2, 1, 2, 1, 0, 1, 2, 1], 12, 0, pbcLine23, null, {
+      zones: pbcZonesWith(pbcCrossWires),
+    }),
+    /* Side Swap, the summit: the corridors trade flanks at the same height,
+     * mirroring every climb. Thirteen parcels on thirteen launches. */
+    pbcTable("pbcT24", "pbcTbl24", [0, 0, 1, 0, 0, 1, 2, 2, 0, 0, 1, 2, 1], 13, 0, pbcLine24, null, {
+      zones: pbcZonesWith(pbcSideSwap),
     }),
   ];
 
@@ -1891,6 +2011,10 @@
       "pbcTbl18": "Right Hand Run",
       "pbcTbl19": "No Safety Net",
       "pbcTbl20": "Last Ledger",
+      "pbcTbl21": "Back Lift",
+      "pbcTbl22": "High Wire",
+      "pbcTbl23": "Cross Wires",
+      "pbcTbl24": "Side Swap",
       "pbcTblSelectLabel": "Choose a table",
       "pbcBin1": "Ridge",
       "pbcBin2": "Curb",
@@ -1964,6 +2088,10 @@
       "pbcTbl18": "右手台面",
       "pbcTbl19": "无回球台面",
       "pbcTbl20": "末班账台面",
+      "pbcTbl21": "后栅抬升台面",
+      "pbcTbl22": "高空拉索台面",
+      "pbcTbl23": "交叉开关台面",
+      "pbcTbl24": "换边台面",
       "pbcTblSelectLabel": "选择台面",
       "pbcBin1": "山脊",
       "pbcBin2": "路边",

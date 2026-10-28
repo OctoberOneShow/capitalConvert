@@ -98,6 +98,19 @@
     { id: "svc18", labelKey: "kchS18", window: 115, seed: 1818, count: 24, every: 5, jitter: 1, lead: 30, recipes: ["garden", "garden", "sauce", "fillet"], rack: 2, moveTime: 0.45, holdWin: 16, jams: [] },
     { id: "svc19", labelKey: "kchS19", window: 108, seed: 1919, count: 28, every: 4.2, jitter: 1, lead: 26, recipes: ["duck", "fillet", "garden", "sauce"], rack: 1, moveTime: 0.4, holdWin: 10, jams: [{ at: 36, station: "pan", need: 1.6 }, { at: 74, station: "pan", need: 1.4 }] },
     { id: "svc20", labelKey: "kchS20", window: 105, seed: 2020, count: 28, every: 4, jitter: 1, lead: 25, recipes: ["duck", "sauce", "fillet", "garden"], rack: 1, moveTime: 0.35, holdWin: 8, jams: [{ at: 30, station: "pan", need: 1.6 }, { at: 70, station: "pan", need: 1.6 }] },
+    /* svc21-24: the pile-up. Every jam the shipped ladder ever threw hit
+     * one station at a time; the deep tier jams the stations together -
+     * two at one bell, then all three, then two separate pile-ups on a
+     * single-rack service, then the capstone: a triple pile-up in the
+     * first half minute and a second pile-up before the window half runs
+     * out, on the longest ticket list the pass has seen. When the pan, the
+     * board and the pass go down together, the plan has to hold dishes it
+     * would rather move, and the hold window is what keeps them alive.
+     * Bands are measured off the plan the way the shipped rungs were. */
+    { id: "svc21", labelKey: "kchS21", window: 108, seed: 2121, count: 28, every: 4.2, jitter: 1, lead: 26, recipes: ["garden", "fillet", "duck", "sauce"], rack: 2, moveTime: 0.35, holdWin: 10, jams: [{ at: 40, station: "pan", need: 2.2 }, { at: 40, station: "board", need: 2.4 }] },
+    { id: "svc22", labelKey: "kchS22", window: 106, seed: 2222, count: 28, every: 4.2, jitter: 1, lead: 26, recipes: ["fillet", "duck", "garden", "sauce"], rack: 2, moveTime: 0.35, holdWin: 10, jams: [{ at: 36, station: "pan", need: 1.7 }, { at: 36, station: "board", need: 1.6 }, { at: 36, station: "pass", need: 1.6 }] },
+    { id: "svc23", labelKey: "kchS23", window: 104, seed: 2323, count: 29, every: 4.1, jitter: 1, lead: 26, recipes: ["duck", "fillet", "garden", "sauce"], rack: 1, moveTime: 0.35, holdWin: 9, jams: [{ at: 32, station: "pan", need: 1.5 }, { at: 32, station: "board", need: 1.4 }, { at: 70, station: "pass", need: 1.6 }, { at: 70, station: "pan", need: 1.4 }] },
+    { id: "svc24", labelKey: "kchS24", window: 100, seed: 2424, count: 30, every: 4, jitter: 1, lead: 25, recipes: ["duck", "sauce", "fillet", "garden"], rack: 1, moveTime: 0.35, holdWin: 8, jams: [{ at: 30, station: "pan", need: 1.6 }, { at: 30, station: "board", need: 1.5 }, { at: 30, station: "pass", need: 1.4 }, { at: 64, station: "pan", need: 1.6 }, { at: 64, station: "pass", need: 1.5 }] },
   ];
 
   var kchQuiet = null;
@@ -1234,6 +1247,8 @@
       "kchS15": "Long Walk",
       "kchS16": "The Tight Pass", "kchS17": "Bunched Tickets", "kchS18": "The Breather Service",
       "kchS19": "One Rack", "kchS20": "The Full House",
+      "kchS21": "The Pile-Up", "kchS22": "Three Lines Down",
+      "kchS23": "The Long Pile-Up", "kchS24": "Blackout Night",
       "kchRGarden": "garden salad",
       "kchRFillet": "seared fillet",
       "kchRDuck": "duck with orange",
@@ -1334,6 +1349,8 @@
       "kchS15": "传菜长途",
       "kchS16": "紧凑传菜", "kchS17": "单据扎堆", "kchS18": "喘息夜市",
       "kchS19": "单层晾架", "kchS20": "满座之夜",
+      "kchS21": "双灶同堵", "kchS22": "三线齐卡",
+      "kchS23": "连环堵灶", "kchS24": "大堵塞之夜",
       "kchRGarden": "田园沙拉",
       "kchRFillet": "香煎鱼排",
       "kchRDuck": "橙香鸭胸",

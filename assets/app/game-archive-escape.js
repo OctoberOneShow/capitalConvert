@@ -80,6 +80,21 @@
     { id: "a18", labelKey: "arcZ18", goal: "yardEveryItem" },
     { id: "a19", labelKey: "arcZ19", goal: "yardLedgerFull" },
     { id: "a20", labelKey: "arcZ20", goal: "yardEveryItemFull" },
+    /* Nights twenty-one to twenty-four: the satchel law. Every case above
+     * this line asked for a laden ending; the deep tier sends the whole
+     * loadout to doors it has never reached, then sends it dry. a21 takes
+     * every item and every clue up to the roof; a22 does the same for the
+     * hidden stacks; a23 carries the case out past the shutters without
+     * the thermos; a24 - the capstone - walks the entire case dry out the
+     * coal yard, the longest haul in the building, minus the one sip the
+     * walk used to be built around. The BFS below proves each case
+     * solvable and bands it off its own minimum turns; the gate proves the
+     * satchel's tools load-bearing by taking them away from the full yard
+     * case and finding nothing left. */
+    { id: "a21", labelKey: "arcZ21", goal: "roofEveryItemFull" },
+    { id: "a22", labelKey: "arcZ22", goal: "secretEveryItemFull" },
+    { id: "a23", labelKey: "arcZ23", goal: "ledgerDryFull" },
+    { id: "a24", labelKey: "arcZ24", goal: "yardDryFull" },
   ];
 
   /* The additive case-file layer. A goal named here is met only at its named
@@ -115,6 +130,30 @@
       ending: "yard",
       items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
       clues: ["c1", "c2", "c3", "c4", "c5"],
+    },
+    /* The deep tier's cases: the full loadout at doors it has never
+     * reached, then the same haul with the thermos banned. */
+    roofEveryItemFull: {
+      ending: "roof",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+    },
+    secretEveryItemFull: {
+      ending: "secret",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+    },
+    ledgerDryFull: {
+      ending: "ledger",
+      items: ["key", "card", "lamp", "rope", "chit", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      ban: { items: ["tea"] },
+    },
+    yardDryFull: {
+      ending: "yard",
+      items: ["key", "card", "lamp", "rope", "chit", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      ban: { items: ["tea"] },
     },
   };
 
@@ -651,6 +690,7 @@
       "any", "ledger", "roof", "clues", "secret", "tea", "roofFull", "ledgerFull", "yard", "yardLedger",
       "roofNoLamp", "yardTea", "ledgerTeaNoLamp", "everyItem", "secretTeaFull",
       "secretLedger", "roofTeaFull", "yardEveryItem", "yardLedgerFull", "yardEveryItemFull",
+      "roofEveryItemFull", "secretEveryItemFull", "ledgerDryFull", "yardDryFull",
     ];
     var turns = {};
     var i;
@@ -1495,6 +1535,10 @@
       "arcZ18": "The Yard Satchel",
       "arcZ19": "The Ledger File",
       "arcZ20": "The Full Case",
+      "arcZ21": "The Roof Take",
+      "arcZ22": "The Stacks Take",
+      "arcZ23": "The Dry Ledger",
+      "arcZ24": "The Dry Yard",
       "arcTurnLabel": "Turns",
       "arcClueLabel": "Clues",
       "arcRoomLabel": "Room",
@@ -1594,6 +1638,10 @@
       "arcZ18": "煤场满袋",
       "arcZ19": "台账全卷",
       "arcZ20": "全案之夜",
+      "arcZ21": "天窗满载",
+      "arcZ22": "书架满载",
+      "arcZ23": "干手账本",
+      "arcZ24": "干手煤场",
       "arcTurnLabel": "步数",
       "arcClueLabel": "线索",
       "arcRoomLabel": "房间",

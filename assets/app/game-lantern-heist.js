@@ -497,6 +497,37 @@
       starTurns: [14, 18, 24],
       solution: "rRuRURUaUadDDD",
     },
+
+    /* h24 - The Lantern Throne. The summit breaks the tier's one comfort: the
+     * right-hand corridor is no longer dark. A fourth watchman walks the very
+     * lane the vault sits over, dipping into the middle hall so the windows
+     * come and go, and the three cross-lanes below still sweep every row the
+     * ledger road crosses. The perfect line needs 24 turns against the tier's
+     * 14 - a search confirms the same floor with the lane watchman removed -
+     * and every wait in the shipped script is load-bearing: drop them and the
+     * runner is seen twice before the gate. */
+    {
+      id: "h24",
+      labelKey: "lheR24",
+      plan: [
+        "......#G",
+        "......#=",
+        ".#.#..#.",
+        ".L......",
+        "..#...#.",
+        ".L......",
+        "..#.....",
+        "S......E",
+      ],
+      guards: [
+        { loop: [[0, 1], [1, 1], [2, 1], [1, 1]] },
+        { loop: [[0, 3], [1, 3], [2, 3], [1, 3]] },
+        { loop: [[1, 5], [2, 5], [3, 5], [2, 5]] },
+        { loop: [[7, 6], [7, 5], [6, 5], [5, 5], [6, 5], [7, 5], [7, 4], [7, 3], [7, 4], [7, 5]] },
+      ],
+      starTurns: [24, 28, 34],
+      solution: "RRruuUrwruaUadDllrlddDrr",
+    },
   ];
 
   function lheKey(x, y) {
@@ -1375,6 +1406,7 @@
       "lheR21": "The Royal Armory",
       "lheR22": "The Grand Conservatory",
       "lheR23": "The Archon's Keep",
+      "lheR24": "The Lantern Throne",
       "lheTurnsLabel": "Turns",
       "lheSeenLabel": "Alarms",
       "lheRoomSelectLabel": "Pick a room",
@@ -1429,6 +1461,7 @@
       "lheR21": "王家武库",
       "lheR22": "温室花厅",
       "lheR23": "执政官要塞",
+      "lheR24": "提灯王座",
       "lheTurnsLabel": "回合",
       "lheSeenLabel": "警报",
       "lheRoomSelectLabel": "选择房间",

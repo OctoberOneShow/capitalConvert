@@ -22,6 +22,12 @@
   var STRAIN = 2;
   var LANE_BONUS = 2;
   var DUELS = 4;
+  /* The run's duel count: the shipped four, or a deep tier that asks the
+   * same deck for a longer night. Absent `duels`, every rung replays
+   * exactly the four-duel run it shipped with. */
+  function wsdRunDuels(level) {
+    return Math.max(1, Math.min(8, wsdInt(level && level.duels) || DUELS));
+  }
   var TYPES = { strike: "strike", guard: "guard", flow: "flow" };
 
   /* lane: -1 accepts any lane. power/guard/draw/mend are the base effects and
@@ -161,6 +167,35 @@
       id: "w20", labelKey: "wsdZ20", twistKey: "wsdTwist20", seed: 13311, breath: 3, starResolve: [22, 14, 6],
       deck: ["gust", "gust", "claw", "claw", "fang", "lance", "riposte", "wall", "sidewall", "sidewall", "shell", "sip", "airy", "hush"],
       foes: ["deacon", "wraith", "thunder", "thunder"],
+    },
+    /* w21-24: the deep tier's lesson is the long night. Every rung above
+     * this line asked the deck for four duels; here `duels` stretches the
+     * run - five, then five on a breath of two, then six, then six against
+     * the heaviest chorus the table holds - and the rest between duels
+     * matters for the first time, because a run is only as long as the
+     * resolve it carries into its last encore. The decks lean into it:
+     * w21 keeps the balanced book, w22 pays for the fifth duel with a
+     * thin breath, w23 feeds two gobbler encores from a wall-and-sip
+     * battery, and w24 closes on six duels where every foe is a headliner. */
+    {
+      id: "w21", labelKey: "wsdZ21", twistKey: "wsdTwist21", seed: 14351, breath: 3, duels: 5, starResolve: [17, 12, 4],
+      deck: ["gust", "gust", "claw", "claw", "fang", "lance", "riposte", "wall", "sidewall", "shell", "sip", "sip", "airy", "hush"],
+      foes: ["murmur", "choir", "deacon", "thunder", "wraith"],
+    },
+    {
+      id: "w22", labelKey: "wsdZ22", twistKey: "wsdTwist22", seed: 14403, breath: 2, duels: 5, starResolve: [18, 12, 6],
+      deck: ["gust", "gust", "claw", "fang", "fang", "lance", "riposte", "wall", "sidewall", "sip", "sip", "airy", "hush", "hush"],
+      foes: ["murmur", "caller", "murmur", "caller", "choir"],
+    },
+    {
+      id: "w23", labelKey: "wsdZ23", twistKey: "wsdTwist23", seed: 14461, breath: 3, duels: 6, starResolve: [22, 14, 5],
+      deck: ["gust", "claw", "claw", "fang", "wall", "wall", "sidewall", "sidewall", "shell", "sip", "sip", "airy", "hush", "hush"],
+      foes: ["murmur", "thunder", "wraith", "hollow", "thunder", "wraith"],
+    },
+    {
+      id: "w24", labelKey: "wsdZ24", twistKey: "wsdTwist24", seed: 14521, breath: 3, duels: 6, starResolve: [14, 9, 3],
+      deck: ["gust", "gust", "claw", "claw", "fang", "lance", "riposte", "riposte", "wall", "sidewall", "shell", "sip", "airy", "hush"],
+      foes: ["choir", "wraith", "thunder", "deacon", "hollow", "thunder"],
     },
   ];
 
@@ -584,17 +619,18 @@
     return live;
   }
 
-  /* The scripted best-play line through all four duels, rest included. */
+  /* The scripted best-play line through all the rung's duels, rest included. */
   function wsdAutoRun(level, attempt) {
+    var total = wsdRunDuels(level);
     var state = wsdDeal(level, (level.seed + wsdInt(attempt) * 31) >>> 0, 0);
     var duels = 0;
-    for (var duel = 0; duel < DUELS; duel += 1) {
+    for (var duel = 0; duel < total; duel += 1) {
       state = wsdAutoDuel(state);
       if (state.over !== "duel") {
         return { won: false, duels: duels, resolve: state.resolve, turns: state.turn };
       }
       duels += 1;
-      if (duel + 1 >= DUELS) {
+      if (duel + 1 >= total) {
         return { won: true, duels: duels, resolve: state.resolve, turns: state.turn };
       }
       var carried = Math.min(YOUR_RESOLVE, state.resolve + REST_MEND);
@@ -796,7 +832,7 @@
       runs += 1;
       state = wsdDeal(levelDef, (levelDef.seed + runs * 31) >>> 0, 0);
       state.events = [t("wsdOpen", { n: t(levelDef.twistKey) })];
-      result.textContent = t("wsdPrompt", { n: DUELS, b: state.breathMax, cap: TURN_CAP });
+      result.textContent = t("wsdPrompt", { n: wsdRunDuels(levelDef), b: state.breathMax, cap: TURN_CAP });
       render();
     }
 
@@ -837,8 +873,9 @@
     }
 
     function winDuel() {
-      state.duelsWon = Math.min(DUELS, state.duel + 1);
-      if (state.duel + 1 >= DUELS) {
+      var total = wsdRunDuels(levelDef);
+      state.duelsWon = Math.min(total, state.duel + 1);
+      if (state.duel + 1 >= total) {
         finishRun();
         return;
       }
@@ -846,14 +883,14 @@
       state = wsdDeal(levelDef, state.seed, state.duel + 1);
       state.resolve = Math.max(1, carried);
       state.events = [t("wsdRest", { n: REST_MEND })];
-      result.textContent = t("wsdDuelWon", { d: state.duel + 1, total: DUELS });
+      result.textContent = t("wsdDuelWon", { d: state.duel + 1, total: total });
     }
 
     function finishRun() {
       state.over = "run";
       var stars = starsFor(state.resolve, levelDef.starResolve, "high");
       var outcome = campaign.record(levelDef.id, { stars: stars, best: state.resolve, better: "high" });
-      var message = t("wsdWon", { d: DUELS, h: state.resolve, s: stars });
+      var message = t("wsdWon", { d: wsdRunDuels(levelDef), h: state.resolve, s: stars });
       if (outcome.isBest) {
         message += " " + t("newBest");
       }
@@ -1018,6 +1055,10 @@
       "wsdZ18": "Echo Choir",
       "wsdZ19": "Cheap Flood",
       "wsdZ20": "Final Chorus",
+      "wsdZ21": "The Long Night",
+      "wsdZ22": "Thin Breath",
+      "wsdZ23": "The Gobbler Watch",
+      "wsdZ24": "Six Bells",
       "wsdTwist1": "the starter deck",
       "wsdTwist2": "one more echo card",
       "wsdTwist3": "two breath a turn",
@@ -1038,6 +1079,10 @@
       "wsdTwist18": "echo choir: claw into claw into fang, chaining strike echoes all duel",
       "wsdTwist19": "cheap flood: a deck of one-cost cards and Sip, filling the left lane every turn",
       "wsdTwist20": "final chorus: deacon, wraith and twin thunder ask for the whole deck",
+      "wsdTwist21": "the long night: five duels, and the rest between them is the real card",
+      "wsdTwist22": "thin breath: five duels on two breath a turn",
+      "wsdTwist23": "the gobbler watch: six duels, and two of the encores eat cards",
+      "wsdTwist24": "six bells: six duels, every foe a headliner",
       "wsdBreathLabel": "Breath",
       "wsdResolveLabel": "Resolve",
       "wsdDuelLabel": "Duel",
@@ -1138,6 +1183,10 @@
       "wsdZ18": "回音合唱",
       "wsdZ19": "廉价洪流",
       "wsdZ20": "终曲合唱",
+      "wsdZ21": "长夜漫漫",
+      "wsdZ22": "气息薄夜",
+      "wsdZ23": "饕餐守夜",
+      "wsdZ24": "六声钟",
       "wsdTwist1": "起始牌组",
       "wsdTwist2": "多一张回音牌",
       "wsdTwist3": "每回合两口气",
@@ -1158,6 +1207,10 @@
       "wsdTwist18": "回音合唱：左爪接左爪再接右牙，整场连锁攻击回音",
       "wsdTwist19": "廉价洪流：一费牌加小口，每回合把左道填满",
       "wsdTwist20": "终曲合唱：执事、幽魂与双雷霆要你交出整副牌",
+      "wsdTwist21": "长夜漫漫：五场对决，中途休息才是真正的那张牌",
+      "wsdTwist22": "气息薄夜：五场对决，每回合只有两口气",
+      "wsdTwist23": "饕餐守夜：六场对决，其中两场会吃牌",
+      "wsdTwist24": "六声钟：六场对决，场场都是硬手",
       "wsdBreathLabel": "气息",
       "wsdResolveLabel": "心气",
       "wsdDuelLabel": "对决",

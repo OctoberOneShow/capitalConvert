@@ -408,6 +408,80 @@
       ],
       mind: "C",
     },
+    /* b21 - The eel opens the stair. The link column runs water above and
+     * perch below, so no body can walk the room alone: the eel has to break the
+     * trail, the crab holds the perch shelf and the moth takes the last steps
+     * to the flag. Measured par 64. Cut the perch out of the same map and it
+     * falls to 20 moves, cut the water out and to 6; the crab cannot open this
+     * room at all, so the opening mind is part of the proof. */
+    {
+      id: "b21",
+      labelKey: "brbR21",
+      map: [
+        "##########",
+        "#__^E~.C_#",
+        "####M##..#",
+        "####.##~^#",
+        "#X~.^_.^.#",
+        "##########",
+      ],
+      mind: "E",
+    },
+    /* b22 - Water in the crossing. The far descent is one cell of water at the
+     * foot of the upper road, so the crab or the eel must carry the mind down
+     * and hand it to the moth only after the wet step is taken. Measured par
+     * 67: perch cut 25, water cut 11, chasm cut 9, and the moth cannot start
+     * it. The same map played as the eel is a 28-move warm-up. */
+    {
+      id: "b22",
+      labelKey: "brbR22",
+      map: [
+        "##########",
+        "#__..~E._#",
+        "####.##.C#",
+        "####M##~.#",
+        "#X~~^___.#",
+        "##########",
+      ],
+      mind: "C",
+    },
+    /* b23 - A crate on the perch lane. The crate sits in the only column that
+     * links the two roads on the flag side, and only the crab can move it, so
+     * the room is a push puzzle before it is a hand-off puzzle: the crab has to
+     * clear the lane, walk back around, and only then let the moth through.
+     * Lift the crate out and the measured par drops from 83 to 11. */
+    {
+      id: "b23",
+      labelKey: "brbR23",
+      map: [
+        "##########",
+        "#__..~E._#",
+        "####.##.C#",
+        "#..BM##~.#",
+        "#X_~^___.#",
+        "##########",
+      ],
+      mind: "C",
+    },
+    /* b24 - The long push through water. The finale keeps the crate and makes
+     * the cell it must be shoved into water, so the crab can clear the lane but
+     * cannot finish the crossing: the push has to be handed to the eel mid-lane
+     * and back to the crab again. Measured par 111 - the longest room in the
+     * campaign by a wide margin (the shipped summit is 59) - and without the
+     * crate the same map is a 25-move walk. */
+    {
+      id: "b24",
+      labelKey: "brbR24",
+      map: [
+        "##########",
+        "#__..~E._#",
+        "####.##.C#",
+        "#.~BM##~.#",
+        "#X_~^___.#",
+        "##########",
+      ],
+      mind: "C",
+    },
   ];
 
   function brbBody(id) {
@@ -1497,6 +1571,10 @@
       "brbR18": "Three Pushes Down the Stair",
       "brbR19": "Water at the Flag's Door",
       "brbR20": "Nine Handovers to the Flag",
+      "brbR21": "The Eel Opens the Stair",
+      "brbR22": "Water in the Crossing",
+      "brbR23": "A Crate on the Perch Lane",
+      "brbR24": "The Long Push Through Water",
       "brbTerrain.": "floor",
       "brbTerrain#": "wall",
       "brbTerrain_": "chasm",
@@ -1572,6 +1650,10 @@
       "brbR18": "三次推箱下井",
       "brbR19": "旗门前的水",
       "brbR20": "九次交棒到旗标",
+      "brbR21": "鳗鱼先下阶梯",
+      "brbR22": "过道里的水",
+      "brbR23": "栖木道上的木箱",
+      "brbR24": "长推到水里",
       "brbTerrain.": "地面",
       "brbTerrain#": "墙",
       "brbTerrain_": "裂口",

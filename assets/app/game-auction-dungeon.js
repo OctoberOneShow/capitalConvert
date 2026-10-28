@@ -149,17 +149,18 @@
     warden: { key: "audFoeWarden", gl: "#", hp: 22, soak: 3, pattern: [{ k: "hit", n: 6 }, { k: "rend", n: 5 }, { k: "guard", n: 5 }] }
   };
 
-  /* Twenty runs: each level owns its lot pool, its rivals' nerve, its purse and
-   * its doors, so the three pressures (greedy rivals, jockeys, rests) stack.
-   * `buff` is the one extra knob the back half of the ladder uses: it bolts hit
-   * points onto every foe behind a door, so a late run demands a harder kit for
-   * the same party. Difficulty here is what the planner measures, not what the
-   * numbers look like: each rung's star band comes from the richest surviving
-   * line (audBand -> audMeasure), and down the ladder that line burns a bigger
-   * share of the purse - 43 per cent at Stall Fares, 92 per cent at The Last
-   * Hammer, 97 per cent at The Last Ledger - while the coins it can still keep
-   * fall 25, 25, 26, 22, 21, 17, 16, 12, 9, 7, then 16, 13, 12, 9, 8, 7, 6, 5,
-   * 4, 3 through the deeper tier. */
+  /* Twenty-four runs: each level owns its lot pool, its rivals' nerve, its
+   * purse and its doors, so the three pressures (greedy rivals, jockeys, rests)
+   * stack. `buff` is the extra knob the back half of the ladder uses: it bolts
+   * hit points onto every foe behind a door, so a late run demands a harder kit
+   * for the same party. Difficulty here is what the planner measures, not what
+   * the numbers look like: each rung's star band comes from the richest
+   * surviving line (audBand -> audMeasure), and down the ladder that line burns
+   * a bigger share of the purse - 43 per cent at Stall Fares, 92 per cent at
+   * The Last Hammer, 97 per cent at The Last Ledger - while the coins it can
+   * still keep fall 25, 25, 26, 22, 21, 17, 16, 12, 9, 7, then 16, 13, 12, 9,
+   * 8, 7, 6, 5, 4, 3 through the deeper tier, and the fuse tier's line burns
+   * 87, 92, 94 and 90 per cent of four thinner purses. */
   var audLevels = [
     { id: "a1", labelKey: "audR1", twistKey: "audTwist1", seed: 20260711, purse: 44, hp: 26, slots: 4, step: 2, reserve: 1,
       pool: ["dirk", "buckler", "canteen"], packs: [["rat"], ["adder"], ["hook"]],
@@ -233,7 +234,34 @@
       restPrice: 10, restHeal: 8, rests: 2, rivalPurse: 76, greed: 1.34, jockey: 1.5, miser: 0.76, miserRaises: 3 },
     { id: "a20", labelKey: "audR20", twistKey: "audTwist20", seed: 20261111, purse: 100, hp: 34, slots: 5, step: 2, reserve: 1.45, buff: 5,
       pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern", "canteen"], packs: [["hook", "hook", "adder"], ["warden", "brute", "adder"], ["warden", "warden", "hook"]],
-      restPrice: 11, restHeal: 9, rests: 2, rivalPurse: 110, greed: 1.45, jockey: 1.65, miser: 0.85, miserRaises: 3 }
+      restPrice: 11, restHeal: 9, rests: 2, rivalPurse: 110, greed: 1.45, jockey: 1.65, miser: 0.85, miserRaises: 3 },
+    /* The fuse tier. Every rung above sat the shipped sixteen-round door cap, so
+     * a party that could not break a door could at least outlast it, and the
+     * lesson the ladder taught was to hoard: coins are the score and the only
+     * healing. These four rungs spend the one lever left - time. `cap` authors
+     * the door's fuse in rounds, twelve down to eight, and structurally nothing
+     * before the tier carries the field. The counter's question changes for the
+     * last time: the coins the ladder taught you to hoard now have to become
+     * damage, because a party that cannot break the door is driven off it, and
+     * every round of waiting is a round closer to the bell. The bands stay what
+     * they always were - a line the planner replayed through auctionRound,
+     * audFightRound and audAdvance, never a guess - and the cap is load-bearing:
+     * on the shipped sixteen-round calendar the very same sale hands the
+     * planner a lazier, richer line on three of the four rungs, and on all
+     * four there are legal lines that clear the shipped calendar and are
+     * driven off the door by the fuse alone. */
+    { id: "a21", labelKey: "audR21", twistKey: "audTwist21", seed: 20261201, purse: 60, hp: 34, slots: 5, step: 2, reserve: 1.2, cap: 12, buff: 3,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern"], packs: [["adder"], ["hook", "adder"], ["brute", "hook"]],
+      restPrice: 9, restHeal: 8, rests: 2, rivalPurse: 74, greed: 1.3, jockey: 1.4, miser: 0.72, miserRaises: 3 },
+    { id: "a22", labelKey: "audR22", twistKey: "audTwist22", seed: 20261208, purse: 64, hp: 34, slots: 4, step: 2, reserve: 1.25, cap: 10, buff: 3,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "lantern", "goad"], packs: [["hook", "hook"], ["brute", "brute"], ["warden", "brute"]],
+      restPrice: 10, restHeal: 8, rests: 2, rivalPurse: 70, greed: 1.32, jockey: 1.45, miser: 0.75, miserRaises: 3 },
+    { id: "a23", labelKey: "audR23", twistKey: "audTwist23", seed: 20261215, purse: 63, hp: 38, slots: 4, step: 2, reserve: 1.25, cap: 9, buff: 3,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern", "canteen"], packs: [["adder", "adder"], ["brute", "adder"], ["warden", "adder"]],
+      restPrice: 10, restHeal: 9, rests: 2, rivalPurse: 78, greed: 1.34, jockey: 1.5, miser: 0.76, miserRaises: 3 },
+    { id: "a24", labelKey: "audR24", twistKey: "audTwist24", seed: 20261218, purse: 84, hp: 44, slots: 5, step: 2, reserve: 1.45, cap: 8, buff: 2,
+      pool: ["dirk", "axe", "buckler", "vial", "goad", "lantern"], packs: [["warden"], ["brute", "brute", "hook"], ["warden", "warden", "brute"]],
+      restPrice: 11, restHeal: 9, rests: 2, rivalPurse: 100, greed: 1.4, jockey: 1.6, miser: 0.8, miserRaises: 3 }
   ];
 
   function audInt(value) {
@@ -555,6 +583,16 @@
 
   /* ---------------- combat ---------------- */
 
+  /* The fuse a door sits on: the shipped sixteen-round cap unless the rung
+   * authors its own count. Rungs 1-20 leave `cap` off and keep the shipped
+   * calendar; the fuse tier's rungs carry twelve down to eight. Reads a level
+   * or a live run, so the panel, the planner and the checks all ask once. */
+  function audCapOf(input) {
+    var def = input && input.level ? input.level : input;
+    var cap = audInt(def && def.cap);
+    return cap > 0 ? cap : AUD_ROUND_CAP;
+  }
+
   function audIntent(foe) {
     var pattern = audFoe(foe.kind).pattern;
     return pattern[audInt(foe.step) % pattern.length] || pattern[0];
@@ -689,7 +727,7 @@
     next.hp = audInt(next.hp);
     next.wiped = !audFront(foes);
     next.fallen = next.hp <= 0;
-    next.stalled = !next.wiped && !next.fallen && next.round >= AUD_ROUND_CAP;
+    next.stalled = !next.wiped && !next.fallen && next.round >= audCapOf(next);
     if (next.fallen || next.stalled) {
       next.phase = "lost";
       next.cause = next.fallen ? "hp" : "stalled";
@@ -853,7 +891,7 @@
     var run = audCopy(state);
     var stats = audKit(run.kit);
     var guard = 0;
-    while (!run.wiped && !run.fallen && !run.stalled && guard < AUD_ROUND_CAP + 2) {
+    while (!run.wiped && !run.fallen && !run.stalled && guard < audCapOf(run) + 2) {
       guard += 1;
       run = audFightRound(run, audTactic(run, stats), stats, []);
     }
@@ -1379,7 +1417,7 @@
       if (run.fallen || run.stalled) {
         result.textContent = run.fallen
           ? t("audLostHp", { n: audInt(run.encIdx) + 1, seed: audInt(run.seed) })
-          : t("audLostStall", { n: audInt(run.encIdx) + 1, cap: AUD_ROUND_CAP, seed: audInt(run.seed) });
+          : t("audLostStall", { n: audInt(run.encIdx) + 1, cap: audCapOf(run), seed: audInt(run.seed) });
         var endLine = result.textContent;
         later(function () {
           fx.ceremony(panelEl, { tone: "lose", title: t("audSilence"), lines: [endLine], stars: 0 });
@@ -1919,6 +1957,10 @@
       "audR18": "One Crate a Door",
       "audR19": "The Warden First",
       "audR20": "The Last Ledger",
+      "audR21": "The Twelve-Round Bell",
+      "audR22": "The Fuse and the Shield",
+      "audR23": "The Fuse and the Fang",
+      "audR24": "The Last Fuse",
       "audTwist1": "three honest lots, one soft door",
       "audTwist2": "Margra sets every price against you",
       "audTwist3": "the healer's vial is in the pool and a rest decides the run",
@@ -1939,6 +1981,10 @@
       "audTwist18": "three crates in the whole sale, one before each door, and your purse cannot cover all three",
       "audTwist19": "the warden and the brute stand at the very first door: the three crates of the opening phase are all the answer you get",
       "audTwist20": "every crate opens in the top of its own band, six foes stand behind the last two doors, and the purse is spent before the last hammer falls",
+      "audTwist21": "every door now stands on a twelve-round fuse: a party that cannot break the door is driven off it, so the coins you save have to become damage, not just healing",
+      "audTwist22": "the fuse burns ten rounds and every door braces behind a shield: guard soaks your strikes, so a blunt kit can no longer outlast anything",
+      "audTwist23": "nine rounds to a door and the adders bite in packs: mending keeps the party standing, but only damage beats the bell",
+      "audTwist24": "the fuse is down to eight rounds, the warden holds the first door, and every reserve sits in the top of its band - the whole purse is the price of one fast kit",
       "audItDirk": "Iron Dirk",
       "audItAxe": "Splitter Axe",
       "audItBuckler": "Tin Buckler",
@@ -2058,7 +2104,7 @@
       "audLostHp": "The party fell at encounter {n}. Run {seed} replays this auction - pass more and spend it on rests.",
       "audLostStall": "Encounter {n} would not break: {cap} rounds and the door still stood. Run {seed} - your kit was too blunt to clear it.",
       "audNextRun": "Next run unlocked.",
-      "audAllRuns": "All twenty runs cleared.",
+      "audAllRuns": "All twenty-four runs cleared.",
       "audBands": "Three stars keeps {three}; one star keeps {one}.",
       "audBest": "Best keep: {n}.",
       "audHint": "Passing is a bid too: every coin left between encounters buys the only healing the run has.",
@@ -2086,6 +2132,10 @@
       "audR18": "一门一箱",
       "audR19": "狱卒当先",
       "audR20": "最后的账簿",
+      "audR21": "十二轮的钟声",
+      "audR22": "引线与盾",
+      "audR23": "引线与毒牙",
+      "audR24": "最后的引线",
       "audTwist1": "三件实在货，一扇软门",
       "audTwist2": "玛格丽特专门针对你抬价",
       "audTwist3": "治疗师小瓶在货架上，一次扎营决定成败",
@@ -2106,6 +2156,10 @@
       "audTwist18": "整场拍卖只有三件货，每件开在一扇门之前，而你的钱袋买不下三件",
       "audTwist19": "狱卒与壮汉就守在第一道门后：开场那三件货，就是你全部的解法",
       "audTwist20": "每件货都开在自家价位带的顶端，最后两道门后站着六个敌人，而落槌之前钱袋就得花空",
+      "audTwist21": "每道门现在都装着十二轮的引线：打不穿门的队伍会被赶下门去——所以省下的钱必须买成输出，而不只是治疗",
+      "audTwist22": "引线只烧十轮，而每道门后都架着盾：架防会吞掉你的劈砍——钝装备再也拖不垮任何东西",
+      "audTwist23": "每扇门只有九轮，蝰蛇还成群撕咬：治疗能让队伍站着，但只有输出才赶得上钟声",
+      "audTwist24": "引线只剩八轮，狱卒守在头一道门后，底价又都贴着价位带顶端——整个钱袋就是一套快刀的价钱",
       "audItDirk": "铁匕首",
       "audItAxe": "劈裂斧",
       "audItBuckler": "锡圆盾",
@@ -2225,7 +2279,7 @@
       "audLostHp": "队伍倒在第 {n} 关。种子 {seed} 可完整重放这趟拍卖——多放弃几次，把钱留给扎营。",
       "audLostStall": "第 {n} 关打不穿：{cap} 轮过去门还立着。种子 {seed}——你的装备太钝，啃不下它。",
       "audNextRun": "解锁下一趟拍卖。",
-      "audAllRuns": "二十趟拍卖全部打通。",
+      "audAllRuns": "二十四趟拍卖全部打通。",
       "audBands": "三星需要剩下 {three}；一星只需剩下 {one}。",
       "audBest": "最佳结余：{n}。",
       "audHint": "放弃也是一种出价：关卡之间剩下的每一枚钱币，都是这趟旅程唯一的医术。",
@@ -2264,7 +2318,8 @@
         "Rivals: Greed the Cox bids until he cannot pay, Margra the Setter only raises while you are still in and quits the moment you do, Ost the Miser lifts a set number of paddles at his own share of the worth and then hoards - and each run sets that number and that share.",
         "Fight: foes telegraph their intent - hits, bites, guards and rends. Strike, Brace and Patch cost the round's actions, and 16 rounds without a break drives you off.",
         "Rest: coins only turn into healing between encounters, at the run's price per rest - take every lot and you will meet the last door bleeding.",
-        "Ladder: twenty runs, from Stall Fares to The Last Ledger, and every rung's stars are the planner's own measured line - a clear that keeps coins burns four in ten of the purse at the front of the ladder and twenty-six in twenty-seven at the back.",
+        "Ladder: twenty-four runs, from Stall Fares to The Last Fuse, and every rung's stars are the planner's own measured line - a clear that keeps coins burns four in ten of the purse at the front of the ladder and twenty-six in twenty-seven by The Last Ledger.",
+        "New tier: the deep halls sit on a fuse - twelve rounds at the Twelve-Round Bell, eight at The Last Fuse - so a party that cannot break a door is driven off it, and the coins the first twenty runs taught you to hoard have to become damage.",
       ],
       zh: [
         "目标：让队伍活着打通这趟拍卖的三个关卡，并且尽量把钱留在袋里——终局钱袋就是分数；星级由导出的规划器实测得出，同一个种子完全重放同一趟拍卖。",
@@ -2273,7 +2328,8 @@
         "对手：贪心的科克斯一直叫到付不起；设局的玛格丽特只在你还在场时抬价，你一撤她立刻收手；吝啬的奥斯特只按本趟设定的次数举牌，只出他自己那一份价值，之后就抱着钱不动——举几次、出几成，每一趟都由这一趟的规则定。",
         "战斗：敌人会预告意图——重打、撕咬、架防、撕裂。劈砍、格挡、包扎消耗本轮行动数，16 轮打不穿就被赶下门。",
         "扎营：钱币只在关卡之间变成治疗，每处营地按本趟价格收费——每件货物都抢，最后一道门你就会流着血进去。",
-        "阶梯：从摊位小市到最后的账簿一共二十趟，每一趟的星级都由规划器实测得出——一次合法的通关，在阶梯前半段要烧掉钱袋的十之三四，走到最后一趟要烧掉二十七份里的二十六。",
+        "阶梯：从摊位小市到最后的引线一共二十四趟，每一趟的星级都由规划器实测得出——一次合法的通关，在阶梯前半段要烧掉钱袋的十之三四，到最后的账簿要烧掉二十七份里的二十六。",
+        "新阶梯：深层关卡都装上了引线——十二轮的钟声处十二轮，最后的引线处只剩八轮——打不穿门的队伍会被赶下门去，前二十关教你攒下的钱，如今必须买成输出。",
       ]
     }
   });
@@ -2290,6 +2346,7 @@
   };
   App.auctionTakeAll = audTakeAll;
   App.auctionBand = audBand;
+  App.auctionCap = audCapOf;
   App.auctionKit = audKit;
   App.auctionIntent = audIntent;
   App.auctionEnter = audEnter;

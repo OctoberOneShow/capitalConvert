@@ -109,7 +109,28 @@
     /* m20: the capstone - the long tape, the fast unit, a six-letter legend
      * of same-length marks, and a window that pays for one replay. */
     { id: "m20", labelKey: "mrsL20", vocab: ["5", "6", "7", "8", "9", "0"], groups: 8, noise: 5, deducible: 1,
-      battery: 5, attempts: 6, window: 46, drain: 12, unit: 1.3, seed: 2020, starCost: [10, 15, 20] }
+      battery: 5, attempts: 6, window: 46, drain: 12, unit: 1.3, seed: 2020, starCost: [10, 15, 20] },
+    /* m21-24: the deep tier's lesson is the bank running dry. m21 is the
+     * longest tape the ladder has ever asked anyone to read - nine groups
+     * at full noise - with battery to spare but a window that only pays
+     * for five replays, so the surplus cells are a mirage. m22 gives the
+     * sends the scarcity instead: two sends, and the coordinate is either
+     * right or the crew goes quiet. m23 dries the bank itself - one battery
+     * cell against real static, where at most one group may be bought, at
+     * least one must be deduced outright, and every other read has to be
+     * reasoned out of the mark bar. m24 is the capstone: the
+     * nine-group tape at the fast unit, two cells, three sends, and a
+     * window that pays for four replays it will never need. Bands are read
+     * off the morseSolve line over each mission's real deal stream, the way
+     * the shipped rungs were measured. */
+    { id: "m21", labelKey: "mrsL21", vocab: ["S", "U", "R", "W", "K", "D", "O", "M", "A", "N"], groups: 9, noise: 5, deducible: 0,
+      battery: 6, attempts: 6, window: 56, drain: 10, unit: 0.8, seed: 2121, starCost: [7, 13, 19] },
+    { id: "m22", labelKey: "mrsL22", vocab: ["A", "N", "M", "S", "U", "R", "W", "K", "D", "O"], groups: 8, noise: 4, deducible: 0,
+      battery: 5, attempts: 2, window: 50, drain: 9, unit: 0.9, seed: 2222, starCost: [7, 11, 15] },
+    { id: "m23", labelKey: "mrsL23", vocab: ["E", "T", "I", "A", "N", "M", "S", "U", "R", "W"], groups: 7, noise: 2, deducible: 1,
+      battery: 1, attempts: 6, window: 55, drain: 8, unit: 0.85, seed: 2323, starCost: [1, 4, 6] },
+    { id: "m24", labelKey: "mrsL24", vocab: ["S", "U", "R", "W", "K", "D", "O", "M", "A", "N"], groups: 9, noise: 5, deducible: 0,
+      battery: 2, attempts: 3, window: 44, drain: 9, unit: 1.3, seed: 2424, starCost: [4, 7, 10] },
   ];
 
   /* --- pure core, exported for the harness ---------------------------------
@@ -1119,6 +1140,10 @@
       "mrsL18": "Fast Neighbours",
       "mrsL19": "Four Tries",
       "mrsL20": "The Last Broadcast",
+      "mrsL21": "The Nine-Group Tape",
+      "mrsL22": "Two Sends",
+      "mrsL23": "The Dry Bank",
+      "mrsL24": "The Last Cell",
       "mrsWindowLabel": "Window",
       "mrsBatteryLabel": "Battery",
       "mrsTryLabel": "Sends",
@@ -1200,6 +1225,10 @@
       "mrsL18": "快带近邻",
       "mrsL19": "四次机会",
       "mrsL20": "最后一次广播",
+      "mrsL21": "九组长信",
+      "mrsL22": "两次发送",
+      "mrsL23": "电库告罄",
+      "mrsL24": "最后一格电",
       "mrsWindowLabel": "窗口",
       "mrsBatteryLabel": "电量",
       "mrsTryLabel": "发送",
@@ -1286,7 +1315,8 @@
         "Rule: static replaces a mark with '?', so the group still shows its shape - the badge tells you how many letters in the legend can fit it.",
         "Watch out: Replay (battery) restores one group cleanly but costs battery and seconds, so spend it on the groups where several letters fit.",
         "Scoring: battery spent then tries used set your stars, and the slot flags spell out exactly why a coordinate was accepted or rejected.",
-        "Tip: the game never needs sound - every flash the lamp sends is printed as dot, dash or static."
+        "Tip: the game never needs sound - every flash the lamp sends is printed as dot, dash or static.",
+        "New tier: the deep missions dry the bank - a nine-group tape whose window pays for five replays, two sends for the whole coordinate, one battery cell against a noisy tape, and a capstone that leaves everything scarce."
       ],
       zh: [
         "目标：在播发窗口关闭之前，把船员发出的点与划抄成救援坐标。",
@@ -1294,7 +1324,8 @@
         "规则：杂音会把某个信号替换成问号，该组的长度仍在——角标会告诉你字符表里有几个字母合得上。",
         "注意：重播会耗电并缩短窗口，只能用来救那些有多个字母都合得上的组。",
         "计分：按剩余电量优先、发送次数其次评星，每一格的对错标记会说明坐标为何被接受或被拒收。",
-        "提示：完全不需要声音——信号灯闪的每一下都会写成点、划或杂音。"
+        "提示：完全不需要声音——信号灯闪的每一下都会写成点、划或杂音。",
+        "新层级：深层任务把家底耗干——九组长带的窗口只付得起五次重播，两次发送定生死，一格电要硬扛杂音带，收官任务样样稀缺。"
       ],
     },
   });

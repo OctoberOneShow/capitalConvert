@@ -47,11 +47,44 @@
     { id: "i18", labelKey: "glL18", w: 18, h: 14, stars: 5, minPar: 18, maxPar: 40, trail: true, density: 0.22 },
     { id: "i19", labelKey: "glL19", w: 18, h: 15, stars: 6, minPar: 18, maxPar: 42, trail: true, density: 0.22 },
     { id: "i20", labelKey: "glL20", w: 19, h: 15, stars: 6, minPar: 20, maxPar: 44, trail: true, density: 0.22 },
+    /* The deep tier - the summit. Its one lesson is one no rung 1-20 teaches:
+     * the stopping law breaks. Every earlier rink stops the skate at walls
+     * alone, so the stop map is just the walls; here `drifts` sows snowdrifts
+     * into open ice and a ride that crosses one ends on it mid-floor - the
+     * long glide lines the white rinks are built around break short, and the
+     * stop map has to be re-read on every push-off. The drifts are sown on
+     * the measured trail itself, and no deal ships unless the BFS prices it
+     * strictly above the same board without drifts, so the drifts are the
+     * proven cost, never decoration. The par floor climbs past the shipped
+     * peak's 20 - 22, 24, 26, 28 - and i24 raises seven stars, one more than
+     * any rink before it asked for. */
+    /* i21 - three drifts on the measured trail: the ride the deal was laid
+     * around already breaks once, and the par floor steps past i20 for the
+     * first time. */
+    { id: "i21", labelKey: "glL21", w: 19, h: 16, stars: 6, minPar: 22, maxPar: 46, trail: true, density: 0.22, drifts: 3 },
+    /* i22 - four drifts on a wider floor: two long rides now end short, and
+     * the honest line has to be re-planned around stops that no wall put
+     * there. */
+    { id: "i22", labelKey: "glL22", w: 20, h: 16, stars: 6, minPar: 24, maxPar: 48, trail: true, density: 0.22, drifts: 4 },
+    /* i23 - five drifts: with this much snow in the ice, whole corridors ride
+     * one drift at a time, and the driftless line is no longer even a sketch
+     * of the answer. */
+    { id: "i23", labelKey: "glL23", w: 20, h: 17, stars: 6, minPar: 26, maxPar: 50, trail: true, density: 0.22, drifts: 5 },
+    /* i24 - six drifts and seven stars: the summit breaks the ride and doubles
+     * the errands, so the proven par floor lands at 28 - the deepest demand
+     * the ladder makes. */
+    { id: "i24", labelKey: "glL24", w: 21, h: 17, stars: 7, minPar: 28, maxPar: 54, trail: true, density: 0.22, drifts: 6 },
   ];
 
   /* Pure generator + solver, exported for the static checks. Board walls
-   * are a flat 0/1 array; the solver returns the minimal slide count. */
-  function glideSolve(wall, w, h, start, goal, stars) {
+   * are a flat 0/1 array; the solver returns the minimal slide count. The
+   * sixth argument is the deep tier's drift mask - a flat 0/1 array the same
+   * shape as the wall, marking snowdrifts that stop a ride mid-floor. A ride
+   * still ends where ice meets a wall, and now also where it crosses a
+   * drift. Omitted (every rung 1-20 and both shipped generators call it
+   * without one), the extra test never fires and the search is exactly the
+   * solver that has always priced the rinks. */
+  function glideSolve(wall, w, h, start, goal, stars, drift) {
     var dirs = GLIDE_DIRS;
     function slide(pos, d) {
       var x = pos % w;
@@ -66,6 +99,9 @@
         x = nx;
         y = ny;
         steps += 1;
+        if (drift && drift[y * w + x]) {
+          break;
+        }
       }
       return { pos: y * w + x, steps: steps };
     }
@@ -254,9 +290,124 @@
     return { pos: y * w + x, steps: steps };
   }
 
+  /* The deep tier's dealer: the trail dealer plus snowdrifts. The board and
+   * the measured trail are laid exactly as glideTrailGenerate lays them, but
+   * the walk also records every cell the ride crosses, and the drifts are
+   * sown on that ridden ice - so every drift sits where long slides actually
+   * travel and is guaranteed to break something. The BFS then prices the
+   * deal twice, once through the drifts and once across the same board with
+   * the snow cleared, and the deal only ships when the priced par lands in
+   * the rung's window AND costs strictly more than the driftless line: the
+   * drifts are load-bearing by construction, not decoration. If the rink
+   * refuses, the untouched trail dealer takes over and the rung stays
+   * playable. */
+  function glideDriftTrailGenerate(w, h, starCount, minPar, maxPar, density, driftCount) {
+    for (var attempt = 0; attempt < 300; attempt += 1) {
+      var wall = [];
+      for (var i = 0; i < w * h; i += 1) {
+        var x = i % w;
+        var y = Math.floor(i / w);
+        wall.push(
+          x === 0 || y === 0 || x === w - 1 || y === h - 1 || Math.random() < density ? 1 : 0,
+        );
+      }
+      var cells = [];
+      for (var c = 0; c < w * h; c += 1) {
+        if (!wall[c]) {
+          cells.push(c);
+        }
+      }
+      if (cells.length < 20) {
+        continue;
+      }
+      var start = cells[Math.floor(Math.random() * cells.length)];
+      var target = maxPar + 4;
+      var pos = start;
+      var lastDir = -1;
+      var stops = [];
+      var ridden = {};
+      var guard = 0;
+      while (stops.length < target && guard < target * 10) {
+        guard += 1;
+        var options = [];
+        for (var d = 0; d < 4; d += 1) {
+          if (d !== lastDir) {
+            options.push(d);
+          }
+        }
+        var dir = options[Math.floor(Math.random() * options.length)];
+        var res = slideOn(wall, w, h, pos, dir);
+        if (!res.steps) {
+          continue;
+        }
+        var step = pos;
+        for (var k = 0; k < res.steps; k += 1) {
+          step += GLIDE_DIRS[dir][0] + GLIDE_DIRS[dir][1] * w;
+          ridden[step] = 1;
+        }
+        pos = res.pos;
+        stops.push(pos);
+        lastDir = dir;
+      }
+      if (stops.length < target) {
+        continue;
+      }
+      var goal = stops[stops.length - 1];
+      var stars = [];
+      for (var s = 0; s < starCount; s += 1) {
+        var at = Math.floor(((s + 1) * stops.length) / (starCount + 1));
+        var stop = stops[at];
+        if (stop !== start && stop !== goal && stars.indexOf(stop) < 0) {
+          stars.push(stop);
+        }
+      }
+      if (stars.length < starCount) {
+        continue;
+      }
+      /* Drift sites: ridden ice, clear of the start, the goal and the stars,
+       * so a drift never doubles as a socket. */
+      var sites = [];
+      for (var r = 0; r < cells.length; r += 1) {
+        if (ridden[cells[r]] && cells[r] !== start && cells[r] !== goal && stars.indexOf(cells[r]) < 0) {
+          sites.push(cells[r]);
+        }
+      }
+      if (sites.length < driftCount) {
+        continue;
+      }
+      var drift = [];
+      for (var z = 0; z < w * h; z += 1) {
+        drift.push(0);
+      }
+      var pool = sites.slice();
+      for (var p = 0; p < driftCount; p += 1) {
+        var pick = Math.floor(Math.random() * pool.length);
+        drift[pool[pick]] = 1;
+        pool.splice(pick, 1);
+      }
+      var par = glideSolve(wall, w, h, start, goal, stars, drift);
+      if (par < minPar || par > maxPar) {
+        continue;
+      }
+      var open = glideSolve(wall, w, h, start, goal, stars);
+      /* The trail walk is itself a driftless play, so the driftless price is
+       * always real; the deal ships only when the snow provably costs. */
+      if (open < 1 || open >= par) {
+        continue;
+      }
+      return { wall: wall, start: start, goal: goal, stars: stars, drifts: drift, par: par };
+    }
+    /* Kept playable even if the rink refuses every sowing. */
+    return glideTrailGenerate(w, h, starCount, minPar, maxPar, density);
+  }
+
   App.glyphGlideGenerate = glideGenerate;
   App.glyphGlideTrailGenerate = glideTrailGenerate;
+  App.glyphGlideDriftGenerate = glideDriftTrailGenerate;
   App.glyphGlideSolve = glideSolve;
+  /* The ladder itself, for the checks: the gate walks the unlock chain the
+   * campaign derives rather than trusting the picker. */
+  App.glyphGlideLevels = glideLevels;
 
   /* Bilingual copy for the white rinks. The shipped ten names stay in the
    * shared dictionary; addStrings only fills the keys it does not own. */
@@ -267,6 +418,8 @@
       "glL16": "The Weeping Wall", "glL17": "Glacier Gate",
       "glL18": "The Long Crevasse", "glL19": "Whiteout Gallery",
       "glL20": "The Frozen Crown",
+      "glL21": "First Drifts", "glL22": "The Snowbound Corridors",
+      "glL23": "The Buried Rink", "glL24": "The White Summit",
     },
     zh: {
       "glL11": "\u971c\u75d5\u6ed1\u9053", "glL12": "\u7409\u7483\u9636",
@@ -274,6 +427,8 @@
       "glL15": "\u516d\u661f\u51b0\u7a96", "glL16": "\u6cea\u5899",
       "glL17": "\u51b0\u5ddd\u4e4b\u95e8", "glL18": "\u957f\u88c2\u9699",
       "glL19": "\u767d\u76f2\u957f\u5eca", "glL20": "\u51b0\u5c01\u738b\u51a0",
+      "glL21": "\u521d\u96ea\u5806", "glL22": "\u96ea\u5c01\u56de\u5eca",
+      "glL23": "\u57cb\u96ea\u51b0\u573a", "glL24": "\u767d\u96ea\u4e4b\u5dc5",
     },
   });
 
@@ -343,6 +498,7 @@
     var player = 0;
     var goal = 0;
     var stars = [];
+    var drifts = [];
     var collected = {};
     var collectedAt = {};
     var par = 3;
@@ -452,7 +608,9 @@
       return !!wall[cy * w + cx];
     }
 
-    /* Mirrors the solver's rule read-only: a run ends where ice meets a wall. */
+    /* Mirrors the solver's rule read-only: a run ends where ice meets a wall,
+     * and on the deep rinks also where it crosses a snowdrift - the pressed
+     * direction resolves exactly the way glideSolve prices it. */
     function slideFrom(cx, cy, d) {
       var steps = 0;
       for (;;) {
@@ -464,6 +622,9 @@
         cx = nx;
         cy = ny;
         steps += 1;
+        if (drifts[cy * w + cx]) {
+          break;
+        }
       }
       return { x: cx, y: cy, steps: steps };
     }
@@ -839,6 +1000,44 @@
         if (!isWall(cx2 - 1, cy2)) {
           drawEdgeDecor(p, "left", bx, by, 0, cs);
         }
+      }
+
+      /* The deep rinks' snowdrifts: a ride ends on one, so a drift is a stop
+       * point, not decoration - heaped snow on open ice, legible in both
+       * themes and dead centre of the cell the solver stops on. */
+      for (i = 0; i < cells; i += 1) {
+        if (!drifts[i]) {
+          continue;
+        }
+        var dcx = x0 + (i % w) * cs + cs / 2;
+        var dcy = y0 + Math.floor(i / w) * cs + cs / 2;
+        var jx = ((i * 37) % 7) - 3;
+        var jy = ((i * 53) % 5) - 2;
+        p.fillStyle = C.cast;
+        p.globalAlpha = 0.5;
+        p.beginPath();
+        p.arc(dcx + jx * 0.4, dcy + cs * 0.14, cs * 0.26, 0, Math.PI * 2);
+        p.fill();
+        p.globalAlpha = 1;
+        p.fillStyle = C.snow;
+        for (var b2 = 0; b2 < 3; b2 += 1) {
+          var bang = (Math.PI * 2 * b2) / 3 + (i % 2 ? 0.5 : 0);
+          p.beginPath();
+          p.arc(
+            dcx + jx * 0.4 + Math.cos(bang) * cs * 0.13,
+            dcy + jy * 0.4 + Math.sin(bang) * cs * 0.09 - cs * 0.02,
+            cs * (0.12 + (b2 % 2) * 0.05),
+            0, Math.PI * 2,
+          );
+          p.fill();
+        }
+        p.strokeStyle = C.rim;
+        p.globalAlpha = 0.35;
+        p.lineWidth = Math.max(0.8, cs * 0.04);
+        p.beginPath();
+        p.arc(dcx + jx * 0.4, dcy + jy * 0.4, cs * 0.24, 0, Math.PI * 2);
+        p.stroke();
+        p.globalAlpha = 1;
       }
 
       /* Goal: a face-off circle etched into the ice, always there. */
@@ -1376,7 +1575,7 @@
 
     function draw() {
       ensurePalette();
-      var key = [w, h, level.id, goal, stars.join("."), PAL.hue, PAL.light ? 1 : 0, scale.toFixed(2), viewH].join("|");
+      var key = [w, h, level.id, goal, stars.join("."), drifts.join("."), PAL.hue, PAL.light ? 1 : 0, scale.toFixed(2), viewH].join("|");
       if (key !== plateKey) {
         plateKey = key;
         buildPlate();
@@ -1562,15 +1761,18 @@
     /* ------------------------------------------------------------------ deal */
     function loadLevel(levelDef) {
       level = levelDef;
-      var deal = level.trail
-        ? glideTrailGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density)
-        : glideGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar);
+      var deal = level.drifts
+        ? glideDriftTrailGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density, level.drifts)
+        : level.trail
+          ? glideTrailGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density)
+          : glideGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar);
       w = level.w;
       h = level.h;
       wall = deal.wall;
       player = deal.start;
       goal = deal.goal;
       stars = deal.stars;
+      drifts = deal.drifts || [];
       collected = {};
       collectedAt = {};
       par = deal.par;

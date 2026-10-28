@@ -84,11 +84,13 @@ run(CASE, () => {
 
   const levels = App.prismLevels;
   const key = "prism-path-campaign";
-  check(CASE, "the ladder carries twenty boards", levels.length === 20, String(levels.length));
+  /* Counts derive from the live ladder: a restated length goes red the moment
+   * the campaign grows, and the checks it guards then never run. */
+  check(CASE, "the ladder carries at least twenty boards", levels.length >= 20, String(levels.length));
   check(
     CASE,
     "the picker lists every board",
-    dom.select.querySelectorAll("option").length === 20,
+    dom.select.querySelectorAll("option").length === levels.length,
     String(dom.select.querySelectorAll("option").length),
   );
 
@@ -140,13 +142,13 @@ run(CASE, () => {
   check(
     CASE,
     "every board ends the run cleared",
-    done && Object.keys(done.cleared).length === 20,
+    done && Object.keys(done.cleared).length === levels.length,
     done ? String(Object.keys(done.cleared).length) : "no record",
   );
   check(
     CASE,
     "the star line counts the whole ladder",
-    dom.best.textContent.indexOf("60") >= 0,
+    dom.best.textContent.indexOf(String(levels.length * 3)) >= 0,
     dom.best.textContent,
   );
 });

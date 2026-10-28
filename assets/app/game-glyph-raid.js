@@ -51,6 +51,35 @@
     { id: "v18", labelKey: "lvlNum18", rows: 6, cols: 10, stepMs: 173, dropMs: 397, starTimes: [178, 233, 292] },
     { id: "v19", labelKey: "lvlNum19", rows: 6, cols: 10, stepMs: 164, dropMs: 379, starTimes: [188, 247, 310] },
     { id: "v20", labelKey: "lvlNum20", rows: 6, cols: 10, stepMs: 156, dropMs: 362, starTimes: [199, 262, 328] },
+    /* Waves 21-24 - the deep tier. The formation has been at its full 6x10
+     * since v7 and v14-20 spent the tempo lever, so the deep tier spends the
+     * one lever the raid has never had: plating. The bottom ranks march in
+     * armor and every plate soaks one bullet whole - a plated raider costs
+     * two shots, a triple-plated one four - so the one-bullet-one-glyph
+     * economy v1-20 ran on is gone exactly where it hurts: the 330ms fire
+     * cadence is fixed, the march accelerates as the screen thins, and every
+     * round spent on a plate is a round the march buys back. That is the
+     * lesson all four rungs share and no shipped rung teaches - hit economy
+     * under a self-accelerating march: the kill order has to earn its
+     * bullets, because punching a plated edge raider out of the formation
+     * now costs two rounds where it used to cost one. v21 teaches the lesson
+     * on the vanguard rank alone at near-v20 tempo, so the price the gate
+     * benches is the plates' price, not the clock's; v22 plates the two
+     * ranks nearest the ship, where the landing threat lives; v23 triples
+     * the vanguard's plates, so a half-killed raider still marches and
+     * still shoots; v24 plates both lower ranks twice at the fastest tempo
+     * the raid has ever asked for - the summit. The plates raise every
+     * rung's shot floor above v20's (70, 80, 90, 100 rounds against v20's
+     * 60) while the tempo keeps tightening, so each deep rung is measurably
+     * the harder fight in both of the engine's own currencies. The names
+     * ride the shared numbered-label shelf (lvlNum21-24). The armor fields
+     * are inert for v1-20: no shipped rung sets one, so every shipped
+     * raider musters no plates and its fight replays the shipped stream
+     * exactly. */
+    { id: "v21", labelKey: "lvlNum21", rows: 6, cols: 10, stepMs: 150, dropMs: 350, armor: 1, starTimes: [211, 278, 348] },
+    { id: "v22", labelKey: "lvlNum22", rows: 6, cols: 10, stepMs: 141, dropMs: 330, armor: 1, armorRanks: 2, starTimes: [224, 295, 369] },
+    { id: "v23", labelKey: "lvlNum23", rows: 6, cols: 10, stepMs: 133, dropMs: 312, armor: 3, starTimes: [238, 313, 392] },
+    { id: "v24", labelKey: "lvlNum24", rows: 6, cols: 10, stepMs: 126, dropMs: 296, armor: 2, armorRanks: 2, starTimes: [252, 332, 416] },
   ];
 
   function initGlyphRaidGame() {
@@ -131,6 +160,7 @@
             row: row,
             col: col,
             alive: true,
+            armor: raidArmorPlates(level, row),
           });
         }
       }
@@ -281,6 +311,17 @@
           var dx = bullet.x - invaderX(inv);
           var dy = bullet.y - invaderY(inv);
           if (dx * dx + dy * dy < 144) {
+            if (inv.armor > 0) {
+              /* Deep tier: a plate soaks the whole shot - the raider keeps
+               * marching, keeps shooting, and costs the cadence another
+               * 330ms. Dead code for v1-20: their raiders muster no plates. */
+              bullets.splice(b, 1);
+              inv.armor -= 1;
+              score += 5;
+              renderHud();
+              burst(invaderX(inv), invaderY(inv), "#e2e8f0", 5);
+              break;
+            }
             inv.alive = false;
             bullets.splice(b, 1);
             score += 10;
@@ -513,6 +554,249 @@
   }
 
 
+  /* ---- deep tier: plates ---- */
+
+  /* The plates a raider in `row` marches under: the bottom `armorRanks` ranks
+   * (one when unset) carry `armor` plates apiece, every other rank none.
+   * Shipped rungs set neither field, so every shipped raider musters 0 plates
+   * and the armor branch in the bullet scan above stays dead for them - their
+   * fights replay the shipped streams exactly. */
+  function raidArmorPlates(level, row) {
+    if (!level.armor) {
+      return 0;
+    }
+    var ranks = level.armorRanks || 1;
+    return row >= level.rows - ranks ? level.armor : 0;
+  }
+
+  /* ---- headless mirror, exported for the level gate ---- */
+
+  /* The panel runs on requestAnimationFrame, which no headless harness can
+   * pump, so the gate plays the raid through this mirror. It runs the loop's
+   * own laws on a fixed 16ms tick - the tick the gate pumps the live panel
+   * with when it proves the mirror faithful, so a seed replays the same deal
+   * on both: the same build with plates, the same march bounds, flip drop and
+   * the 206px landing line, the same step that scales with the survivors, the
+   * same 330ms fire cadence and 175px/s drops, the same 12px and 14px hit
+   * radii and the same 1.2s invulnerability window. The hand answers steer
+   * -1/0/1 each tick the way keyDir does and sees what the screen shows:
+   * raider positions and plates, drop positions, its own hull, its lives,
+   * whether it is blinking. The rng answers every draw Math.random answers in
+   * the live loop - the shooter pick per drop and the cosmetic burst sprays
+   * (two draws a particle: nine particles a kill, five a plate strip, twelve
+   * a hull hit) - so the stream, and therefore the deal, stays identical to
+   * the panel's. A level without plates replays the shipped fight. */
+  function raidSimulate(level, hand, rng) {
+    var invaders = [];
+    for (var row = 0; row < level.rows; row += 1) {
+      for (var col = 0; col < level.cols; col += 1) {
+        invaders.push({
+          row: row,
+          col: col,
+          alive: true,
+          armor: raidArmorPlates(level, row),
+        });
+      }
+    }
+    var total = invaders.length;
+    var shiftX = 0;
+    var shiftY = 0;
+    var dir = 1;
+    var marchAcc = 0;
+    var dropAcc = 0;
+    var fireAcc = 0;
+    var bullets = [];
+    var drops = [];
+    var shipX = 160;
+    var lives = 3;
+    var invulnUntil = 0;
+    var elapsedMs = 0;
+    var fired = 0;
+    var soaked = 0;
+    var kills = 0;
+    var dt = 16 / 1000;
+
+    function invX(inv) {
+      return 26 + inv.col * raidCellW + shiftX;
+    }
+
+    function invY(inv) {
+      return 30 + inv.row * raidCellH + shiftY;
+    }
+
+    function aliveList() {
+      var list = [];
+      for (var index = 0; index < invaders.length; index += 1) {
+        if (invaders[index].alive) {
+          list.push(invaders[index]);
+        }
+      }
+      return list;
+    }
+
+    function spray(count) {
+      /* the burst() particles the panel sprays - two rng draws each */
+      for (var index = 0; index < count * 2; index += 1) {
+        rng();
+      }
+    }
+
+    function march() {
+      var list = aliveList();
+      if (!list.length) {
+        return false;
+      }
+      var minX = Infinity;
+      var maxX = -Infinity;
+      list.forEach(function (inv) {
+        var x = invX(inv);
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+      });
+      if (
+        (dir > 0 && maxX + 8 > raidEdgeR) ||
+        (dir < 0 && minX - 8 < raidEdgeL)
+      ) {
+        dir = -dir;
+        shiftY += 10;
+      } else {
+        shiftX += dir * 8;
+      }
+      for (var index = 0; index < list.length; index += 1) {
+        if (invY(list[index]) >= raidReachY) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function tally(cleared, landed, ticks) {
+      return {
+        cleared: cleared,
+        landed: landed,
+        seconds: Math.max(0.1, Math.round((elapsedMs / 1000) * 10) / 10),
+        bullets: fired,
+        kills: kills,
+        soaked: soaked,
+        lives: lives,
+        ticks: ticks,
+      };
+    }
+
+    for (var tick = 0; tick < 54000; tick += 1) {
+      elapsedMs += dt * 1000;
+      var list = aliveList();
+      if (!list.length) {
+        return tally(true, false, tick);
+      }
+      var seen = [];
+      var index;
+      for (index = 0; index < list.length; index += 1) {
+        seen.push({
+          x: invX(list[index]),
+          y: invY(list[index]),
+          row: list[index].row,
+          col: list[index].col,
+          armor: list[index].armor,
+        });
+      }
+      var dropSeen = [];
+      for (index = 0; index < drops.length; index += 1) {
+        dropSeen.push({ x: drops[index].x, y: drops[index].y });
+      }
+      var steer = hand({
+        level: level,
+        elapsed: elapsedMs / 1000,
+        shipX: shipX,
+        lives: lives,
+        invuln: elapsedMs < invulnUntil,
+        invaders: seen,
+        drops: dropSeen,
+        bullets: bullets,
+      });
+      steer = steer === -1 || steer === 1 ? steer : 0;
+
+      marchAcc += dt * 1000;
+      var stepMs = level.stepMs * (0.4 + 0.6 * (list.length / total));
+      while (marchAcc >= stepMs) {
+        marchAcc -= stepMs;
+        if (march()) {
+          return tally(false, true, tick);
+        }
+      }
+      dropAcc += dt * 1000;
+      if (dropAcc >= level.dropMs) {
+        dropAcc = 0;
+        var shooter = list[Math.floor(rng() * list.length)];
+        drops.push({ x: invX(shooter), y: invY(shooter) + 8 });
+      }
+      var move = steer * 240;
+      shipX = Math.max(16, Math.min(raidWidth - 16, shipX + move * dt));
+      fireAcc += dt * 1000;
+      if (fireAcc >= 330) {
+        fireAcc = 0;
+        bullets.push({ x: shipX, y: raidShipY - 12 });
+        fired += 1;
+      }
+      for (var b = bullets.length - 1; b >= 0; b -= 1) {
+        var bullet = bullets[b];
+        bullet.y -= 340 * dt;
+        if (bullet.y < -8) {
+          bullets.splice(b, 1);
+          continue;
+        }
+        for (var i = 0; i < invaders.length; i += 1) {
+          var inv = invaders[i];
+          if (!inv.alive) {
+            continue;
+          }
+          var dx = bullet.x - invX(inv);
+          var dy = bullet.y - invY(inv);
+          if (dx * dx + dy * dy < 144) {
+            bullets.splice(b, 1);
+            if (inv.armor > 0) {
+              inv.armor -= 1;
+              soaked += 1;
+              spray(5);
+            } else {
+              inv.alive = false;
+              kills += 1;
+              spray(9);
+            }
+            break;
+          }
+        }
+      }
+      if (!aliveList().length) {
+        return tally(true, false, tick);
+      }
+      for (var d = drops.length - 1; d >= 0; d -= 1) {
+        var drop = drops[d];
+        drop.y += 175 * dt;
+        if (drop.y > raidHeight + 8) {
+          drops.splice(d, 1);
+          continue;
+        }
+        var sx = drop.x - shipX;
+        var sy = drop.y - raidShipY;
+        if (elapsedMs > invulnUntil && sx * sx + sy * sy < 196) {
+          drops.splice(d, 1);
+          lives -= 1;
+          invulnUntil = elapsedMs + 1200;
+          spray(12);
+          if (lives <= 0) {
+            return tally(false, false, tick);
+          }
+        }
+      }
+    }
+    return tally(false, false, 54000);
+  }
+
+
   /* Exported for the other modules. */
+  App.raidLevels = raidLevels;
+  App.raidArmorPlates = raidArmorPlates;
+  App.raidSimulate = raidSimulate;
   App.initGlyphRaidGame = initGlyphRaidGame;
 })(window.CapitalConvert = window.CapitalConvert || {});

@@ -50,6 +50,22 @@
     { id: "p18", labelKey: "lvlNum18", target: 1000, moves: 30 },
     { id: "p19", labelKey: "lvlNum19", target: 1400, moves: 14, colors: 5 },
     { id: "p20", labelKey: "lvlNum20", target: 2600, moves: 18, colors: 5 },
+    /* Pools 21-24 push the pour, not the arithmetic. The tier's one lever is
+     * the ink pool, and every card is priced against what its pour delivers:
+     * the two-ply player's six-ink ceiling on these budgets is about 2700
+     * points (measured 2690 on fifteen moves, 2210 on eleven, 2570 and 2290
+     * on the triad), so p21-p24 sit at 3200, 2800, 3600 and 4200 - each
+     * above what the classic well can produce, each inside reach of the
+     * thinner one, where a single generous chain ends the round and the
+     * three bands live inside its overshoot. A no-op hand never scores at
+     * all, and the searched line outscores every random hand. Cut the pour -
+     * re-deal any of these cards at the classic six inks - and the same
+     * player cannot reach the target on a single seeded deal, which is what
+     * makes the pool the tier's load-bearing mechanic. */
+    { id: "p21", labelKey: "inkL21", target: 3200, moves: 15, colors: 4 },
+    { id: "p22", labelKey: "inkL22", target: 2800, moves: 11, colors: 4 },
+    { id: "p23", labelKey: "inkL23", target: 3600, moves: 14, colors: 3 },
+    { id: "p24", labelKey: "inkL24", target: 4200, moves: 12, colors: 3 },
   ];
 
   function indexAt(x, y) {
@@ -489,4 +505,27 @@
 
   /* Exported for the other modules. */
   App.initInkCascadeGame = initInkCascadeGame;
+  /* The level table travels with the module, so the release gate can replay
+   * seeded deals through the real panel and re-deal a pool under a cut pour
+   * without re-parsing this file. */
+  App.cascadeLevels = inkLevels;
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so the shared dictionary stays authoritative. The
+   * new pools keep the water-body ladder the shared dictionary carries from
+   * the droplet to the source, and name the waters they pour. */
+  App.addStrings({
+    en: {
+      "inkL21": "Estuary",
+      "inkL22": "The Straits",
+      "inkL23": "The Triad Deep",
+      "inkL24": "The Confluence",
+    },
+    zh: {
+      "inkL21": "河口",
+      "inkL22": "海峡",
+      "inkL23": "三色海渊",
+      "inkL24": "百川汇流",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

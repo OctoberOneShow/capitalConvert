@@ -2833,6 +2833,8 @@ check(
       [10, 15, 78, 50], [11, 15, 82, 54], [11, 16, 86, 58], [12, 16, 90, 60],
       [12, 17, 94, 64], [13, 17, 98, 68], [13, 18, 102, 72],
       [14, 18, 106, 76], [14, 19, 110, 80], [15, 20, 114, 84],
+      [15, 19, 118, 88], [15, 18, 122, 92], [15, 17, 126, 96],
+      [15, 17, 150, 105],
     ];
     return configs.every(([colors, tubeCount, depth, maxPath]) => {
       for (var trial = 0; trial < 6; trial += 1) {
@@ -5421,8 +5423,8 @@ console.log("\n== 5oa. Lost Language's drowned archive ==");
       "\nreturn { lngLevels, lngGenerate, lngAnalyses, lngPrefixCost, lngGlossOnlyFails };",
   )();
   check(
-    "Lost Language now ships twenty chambers",
-    api.lngLevels.length === 20,
+    "Lost Language now ships twenty-four chambers",
+    api.lngLevels.length === 24,
     String(api.lngLevels.length),
   );
   const deep = api.lngLevels.slice(10);
@@ -5443,7 +5445,8 @@ console.log("\n== 5oa. Lost Language's drowned archive ==");
   );
   ["lngChamber11", "lngChamber12", "lngChamber13", "lngChamber14",
     "lngChamber15", "lngChamber16", "lngChamber17", "lngChamber18",
-    "lngChamber19", "lngChamber20"].forEach((key) => {
+    "lngChamber19", "lngChamber20", "lngChamber21", "lngChamber22",
+    "lngChamber23", "lngChamber24"].forEach((key) => {
     check(
       `the "${key}" key exists in both languages`,
       countOccurrences(appJs, `"${key}":`) === 2,

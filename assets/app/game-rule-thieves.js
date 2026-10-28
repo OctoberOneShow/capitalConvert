@@ -46,16 +46,19 @@
     { depth: 4, noise: 0, threat: true, labelKey: "rltRankChamp" },
   ];
 
-  /* Twenty openings, and every one of them is proved rather than asserted. The
-   * par is the shortest forced win measured in plies by App.ruleSolve from the
-   * shipped position - 5, 7, 9 or 11 - and cross-checked by an independent exact
-   * mate search that reads only the module's own terminal table (no heuristic
-   * leaf scores), so a position whose outcome cannot be falsified never ships.
-   * starMoves is that measured par converted to the mover's own move count,
-   * plus the standing slack of two and five, and the same measurement was taken
-   * again for the five original rungs. The list is ordered by measured
-   * difficulty: rival rank first, then par, then the prover's own node count, so
-   * no rung is easier than the one that unlocks it. */
+  /* Twenty-four openings, and every one of them is proved rather than
+   * asserted. The par is the shortest forced win measured in plies from the
+   * shipped position - 5, 7, 9, 11, 13 or 15 - cross-checked by an independent
+   * exact mate search that reads only the module's own terminal table (no
+   * heuristic leaf scores), so a position whose outcome cannot be falsified
+   * never ships. The deep tier trusts that exact search alone: the horizon
+   * eval answers a leaf with a mate-shaped guess, and a guess that calls a
+   * defensible position lost is not a measurement. starMoves is the measured
+   * par converted to the mover's own move count, plus the standing slack of
+   * two and five, and the same measurement was taken again for the five
+   * original rungs. The list is ordered by measured difficulty: rival rank
+   * first, then par, then the prover's own node count, so no rung is easier
+   * than the one that unlocks it. */
   var rltLevels = [
     {
       id: "o1", labelKey: "rltO1", twistKey: "rltTwist1", rank: 0, cap: 34,
@@ -182,6 +185,34 @@
       one: [0, 5, 3], two: [8, 12, 21],
       tok: [23, 19, 15, 24],
       starMoves: [6, 8, 11],
+    },
+    /* The deep tier: pars of thirteen and fifteen plies, each proved by the
+     * exact terminal-only search, and each one a geometry the shipped twenty
+     * never set - a banner with a single guarded door, a boot already on the
+     * flag, an unguarded north, and a law standing right beneath the stone. */
+    {
+      id: "o21", labelKey: "rltO21", twistKey: "rltTwist21", rank: 2, cap: 34,
+      obj: 12, walls: [7, 11, 13],
+      one: [3, 0, 4], two: [9, 10, 2], tok: [17, 11, 6, 22],
+      starMoves: [7, 9, 12],
+    },
+    {
+      id: "o22", labelKey: "rltO22", twistKey: "rltTwist22", rank: 2, cap: 34,
+      obj: 23, walls: [12, 21, 20, 2],
+      one: [17, 23, 22], two: [4, 18, 24], tok: [12, 13, 5, 1],
+      starMoves: [7, 9, 12],
+    },
+    {
+      id: "o23", labelKey: "rltO23", twistKey: "rltTwist23", rank: 2, cap: 34,
+      obj: 21, walls: [17, 21],
+      one: [3, 5, 9], two: [6, 2, 18], tok: [22, 12, 20, 0],
+      starMoves: [8, 10, 13],
+    },
+    {
+      id: "o24", labelKey: "rltO24", twistKey: "rltTwist24", rank: 2, cap: 34,
+      obj: 18, walls: [16, 18],
+      one: [0, 5, 1], two: [8, 12, 21], tok: [23, 19, 15, 24],
+      starMoves: [8, 10, 13],
     },
   ];
 
@@ -1295,6 +1326,10 @@
       "rltO18": "Wall To The Flag",
       "rltO19": "Laws On The Shoulders",
       "rltO20": "The Gap In The Bar",
+      "rltO21": "The Doorway Law",
+      "rltO22": "Boot On The Banner",
+      "rltO23": "The Open North",
+      "rltO24": "Beneath The Flag",
       "rltTwist11": "two of the four laws start buried under a rival thief, so the second one you lift decides it and the banner never matters",
       "rltTwist12": "three walls ring the banner and the fourth face is a law in its own right, yet the win is a swap spent on the road to two laws",
       "rltTwist13": "the token file is walled at its mouth, so its diagonal law sits behind the jump law, and two of your three first steps lose outright",
@@ -1305,6 +1340,10 @@
       "rltTwist18": "the flag is the last stone of a bar running along the fourth rank and all four laws hug the outer frame, so the win has to walk the rim",
       "rltTwist19": "the walled flag carries a law on each shoulder, swap to its left and diagonal to its right, and the only other stone sits diagonally behind it",
       "rltTwist20": "the same rank bar loses its middle stone, so open ground lies hard in front of the walled banner and every reply through that gap has to be proved",
+      "rltTwist21": "three walls guard the banner's north, west and east, so its only door is the south gap - and the diagonal law lies in that doorway, with the jump law buried under the west wall",
+      "rltTwist22": "the visitor's boot is already on the banner, so the duel is keeping it - three walls fence the cellar and the diagonal law is sealed inside the stone",
+      "rltTwist23": "no wall stands anywhere in the north-west, the rival's pair pinches the middle file, and the hold law opens the game from the top-left corner",
+      "rltTwist24": "the diagonal law stands directly beneath the walled flag and the visitor stacks three deep on the left rail, so every approach has to be answered twice over",
       "rltRankPick": "Pickpocket",
       "rltRankCut": "Cutpurse",
       "rltRankChamp": "Fence",
@@ -1406,6 +1445,10 @@
       "rltO18": "墙尾的旗",
       "rltO19": "旗肩双律",
       "rltO20": "断开的墙栏",
+      "rltO21": "门槛之律",
+      "rltO22": "踏旗之靴",
+      "rltO23": "北面敞地",
+      "rltO24": "旗下之律",
       "rltTwist11": "四枚令牌里有两枚开局就压在对手棋子底下，举起第二枚就赢，旗帜全程用不上",
       "rltTwist12": "旗帜三面被墙围死，第四面正压着一条例法，可赢局是一次换位换来的两条律法",
       "rltTwist13": "整列令牌被墙堵在列口，斜行压在跳过后面；三步开局里有两步会让对手反手必胜",
@@ -1416,6 +1459,10 @@
       "rltTwist18": "旗是第四排那道墙的最后一块，四枚令牌全贴着最外一圈，胜局得沿着边上一路摸上去",
       "rltTwist19": "被封死的旗左右两肩各压着一枚律法，左边是换位右边是斜行，另一块墙只是斜斜立在旗后",
       "rltTwist20": "同一道墙栏被抽掉中间那块，石旗正前方成了敞地，每一手穿过缺口的反击都得被算死",
+      "rltTwist21": "北、西、东三面墙护着旗，唯一的门在南面缺口——斜行律正躺在门槛上，而换位律被压在西墙之下",
+      "rltTwist22": "对手的靴子已经踏在旗上，胜负在于守不守得住——三堵墙围住地下室，斜行律被封在石头里",
+      "rltTwist23": "西北方向一堵墙都没有，对手的一对棋子掐住中路，牵制律从左上角开局",
+      "rltTwist24": "斜行律就立在封死的旗正下方，访客在左沿叠了三层，每一条接近路线都要被算上两遍",
       "rltRankPick": "三只手",
       "rltRankCut": "飞贼",
       "rltRankChamp": "销赃人",

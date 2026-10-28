@@ -2,13 +2,14 @@
  * Each net is a hand-authored DAG with a target truth table, and the shipped
  * gate assignment is the one a brute-force pass proved cheapest over the very
  * sockets the net offers, so every net can be completed and the star line is
- * honest. Twenty nets, one new idea each: two-wire difference, a three-wire
+ * honest. Twenty-four nets, one new idea each: two-wire difference, a three-wire
  * vote, a counted vote, an inhibited difference, a staged relay, then a
  * steered pair, a half-specified strobe table, a difference two branches
  * share, a four-wire consensus, a two-bit comparison, a four-wire quorum,
  * a carry chain, a perfect square, strict alternation, a long month, a
- * top-right bar, a rule of three, a prime nibble, four of five and twin
- * rails. */
+ * top-right bar, a rule of three, a prime nibble, four of five, twin rails,
+ * a shared run of three, a balanced four, two lone sparks on six wires and
+ * the gap law. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
   var t = App.t;
@@ -477,6 +478,114 @@
       ],
       gates: { s1: "and", s2: "and", s3: "and", s4: "and", s5: "or", s6: "or", s7: "or" },
       par: 7,
+    },
+    {
+      /* A run of three lit neighbours: ABC, BCD or CDE. The factored middle
+       * shares - B and C carry the first pair, the A-or-D fork folds two
+       * three-wire products into one socket, and only the CDE tail is paid
+       * for whole. */
+      id: "k21",
+      labelKey: "cirL21",
+      inputs: ["A", "B", "C", "D", "E"],
+      truth: "00000001000000110000000100001111",
+      out: "s6",
+      slots: [
+        { id: "s1", a: "B", b: "C" },
+        { id: "s2", a: "A", b: "D" },
+        { id: "s3", a: "s1", b: "s2" },
+        { id: "s4", a: "C", b: "D" },
+        { id: "s5", a: "s4", b: "E" },
+        { id: "s6", a: "s3", b: "s5" },
+        /* Spare rail. */
+        { id: "s7", a: "s6", b: "B" },
+        { id: "s8", a: "A", b: "s6" },
+      ],
+      gates: { s1: "and", s2: "or", s3: "and", s4: "and", s5: "and", s6: "or" },
+      par: 6,
+    },
+    {
+      /* Exactly two of four - the count that is neither a quorum nor a
+       * minority. Two pair-parities decide it: both pairs split, or neither
+       * does and the surviving ends disagree. */
+      id: "k22",
+      labelKey: "cirL22",
+      inputs: ["A", "B", "C", "D"],
+      truth: "0001011001101000",
+      out: "s8",
+      slots: [
+        { id: "s1", a: "A", b: "B" },
+        { id: "s2", a: "C", b: "D" },
+        { id: "s3", a: "s1", b: "s2" },
+        { id: "s4", a: "s1", b: "s2" },
+        { id: "s5", a: "s4" },
+        { id: "s6", a: "A", b: "C" },
+        { id: "s7", a: "s5", b: "s6" },
+        { id: "s8", a: "s3", b: "s7" },
+        /* Spare rail. */
+        { id: "s9", a: "s8", b: "D" },
+        { id: "s10", a: "s8" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "and", s4: "or", s5: "not", s6: "xor", s7: "and", s8: "or" },
+      par: 8,
+    },
+    {
+      /* Six wires, the first net the board has asked that many of: two
+       * triples and each must hold exactly one high. Parity alone lies - a
+       * triple all high also toggles it - so each spark needs the pair
+       * product refused before it can report. */
+      id: "k23",
+      labelKey: "cirL23",
+      inputs: ["A", "B", "C", "D", "E", "F"],
+      truth: "0000000001101000011010000000000001101000000000000000000000000000",
+      out: "s11",
+      slots: [
+        { id: "s1", a: "A", b: "B" },
+        { id: "s2", a: "s1", b: "C" },
+        { id: "s3", a: "A", b: "B" },
+        { id: "s4", a: "s3" },
+        { id: "s5", a: "s2", b: "s4" },
+        { id: "s6", a: "D", b: "E" },
+        { id: "s7", a: "s6", b: "F" },
+        { id: "s8", a: "D", b: "E" },
+        { id: "s9", a: "s8" },
+        { id: "s10", a: "s7", b: "s9" },
+        { id: "s11", a: "s5", b: "s10" },
+        /* Spare rail. */
+        { id: "s12", a: "s11", b: "A" },
+        { id: "s13", a: "s11" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "and", s4: "not", s5: "and", s6: "xor", s7: "xor", s8: "and", s9: "not", s10: "and", s11: "and" },
+      par: 11,
+    },
+    {
+      /* The gap law, the summit: a high may not stare across one low wire at
+       * another. Three forbidden windows, and the answer is the ban itself -
+       * a NOT over the OR of the three violations, the most parts any net on
+       * the board has ever asked for. */
+      id: "k24",
+      labelKey: "cirL24",
+      inputs: ["A", "B", "C", "D", "E"],
+      truth: "11111011110010111111000011001011",
+      out: "s12",
+      slots: [
+        { id: "s1", a: "A", b: "C" },
+        { id: "s2", a: "B", b: "D" },
+        { id: "s3", a: "C", b: "E" },
+        { id: "s4", a: "B" },
+        { id: "s5", a: "C" },
+        { id: "s6", a: "D" },
+        { id: "s7", a: "s1", b: "s4" },
+        { id: "s8", a: "s2", b: "s5" },
+        { id: "s9", a: "s3", b: "s6" },
+        { id: "s10", a: "s7", b: "s8" },
+        { id: "s11", a: "s10", b: "s9" },
+        { id: "s12", a: "s11" },
+        /* Spare rail. */
+        { id: "s13", a: "s12", b: "A" },
+        { id: "s14", a: "B", b: "s12" },
+      ],
+      gates: { s1: "and", s2: "and", s3: "and", s4: "not", s5: "not", s6: "not", s7: "and", s8: "and", s9: "and", s10: "or", s11: "or", s12: "not" },
+      par: 12,
     },
   ];
 
@@ -1126,6 +1235,10 @@
       "cirL18": "Prime Nibble",
       "cirL19": "Four of Five",
       "cirL20": "Twin Rails",
+      "cirL21": "Run of Three",
+      "cirL22": "Balanced Four",
+      "cirL23": "Twin Sparks",
+      "cirL24": "The Gap Law",
       "cirPartsLabel": "Parts",
       "cirRowsLabel": "Rows",
       "cirNetSelectLabel": "Pick a net",
@@ -1163,7 +1276,7 @@
       "cirCleared": "Every row holds on {n} parts (par {p}) - {s} stars.",
       "cirBestParts": "best {n} parts",
       "cirNextNet": "Next net unlocked.",
-      "cirCampaignDone": "Twenty nets, all truthing out.",
+      "cirCampaignDone": "Twenty-four nets, all truthing out.",
       "cirLocked": "{name} is taped over until the net before it works.",
       "cirHint": "A dead socket reads as 0, so an OR or XOR on a spare wire passes the live one straight through.",
       "cirHintFree": "Rows printed as don't care ask nothing of the board, so this net does not have to answer its strobe - spend those parts on the half that counts.",
@@ -1191,6 +1304,10 @@
       "cirL18": "质数探针",
       "cirL19": "五中取四",
       "cirL20": "双轨相邻",
+      "cirL21": "三连长明",
+      "cirL22": "四中取二",
+      "cirL23": "双簇孤火",
+      "cirL24": "空档之律",
       "cirPartsLabel": "元件",
       "cirRowsLabel": "行",
       "cirNetSelectLabel": "选择电路",
@@ -1228,7 +1345,7 @@
       "cirCleared": "{n} 个元件让所有行都成立（标准 {p}）- 获得 {s} 星。",
       "cirBestParts": "最佳 {n} 个元件",
       "cirNextNet": "解锁下一张电路。",
-      "cirCampaignDone": "二十张电路全部按预期出电平。",
+      "cirCampaignDone": "二十四张电路全部按预期出电平。",
       "cirLocked": "「{name}」还被胶带封着——先让上一张电路工作。",
       "cirHint": "空插座读作 0，所以把多余的那一路接成或门或异或门，就等于让有效信号直通过去。",
       "cirHintFree": "写着不限的行不必成立：这半张表电路板无需回答，所以别把选通线接进输出，元件留给要紧的那一半。",

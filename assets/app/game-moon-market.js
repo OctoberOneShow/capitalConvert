@@ -88,6 +88,26 @@
     { id: "m20", labelKey: "mktS20", seed: 1741, start: 240, cap: 18, fee: 2,
       amp: [1.5, 1.5, 1.5, 1.5], eventWeights: [1, 7, 1, 1], target: 390,
       starCredits: [541, 465, 390] },
+    /* Seats 21..24 add the tier's own lever, `feeRamp`: the per-unit storage
+     * fee grows by that many credits every night (day d charges fee +
+     * feeRamp*d), so a hold bought early sleeps cheap and the same cargo
+     * carried to the weekend is taxed out of the sky. Every band below was
+     * measured by replaying lines through mktStep on the row's own seed: the
+     * top rung is a line the seat's ramp-blind greedy run cannot reach, the
+     * middle rung sits above that greedy line, and the target sits above what
+     * a buy-and-hold carrier banks once the ramp has bitten it. */
+    { id: "m21", labelKey: "mktS21", seed: 6908, start: 260, cap: 12, fee: 2,
+      amp: [1.2, 1.2, 1.2, 1.2], eventWeights: [1, 1, 2, 1], target: 350, feeRamp: 2,
+      starCredits: [753, 598, 350] },
+    { id: "m22", labelKey: "mktS22", seed: 1418, start: 300, cap: 14, fee: 2,
+      amp: [1.5, 1.5, 1.5, 1.5], eventWeights: [1, 2, 1, 1], target: 430, feeRamp: 4,
+      starCredits: [692, 625, 430] },
+    { id: "m23", labelKey: "mktS23", seed: 5840, start: 340, cap: 12, fee: 4,
+      amp: [1.3, 1.3, 1.3, 1.3], eventWeights: [2, 1, 1, 1], target: 390, feeRamp: 5,
+      starCredits: [645, 544, 390] },
+    { id: "m24", labelKey: "mktS24", seed: 506, start: 380, cap: 14, fee: 3,
+      amp: [1.8, 1.8, 1.8, 1.8], eventWeights: [1, 1, 1, 2], target: 440, feeRamp: 7,
+      starCredits: [1133, 819, 440] },
   ];
 
   function mulberry32(seed) {
@@ -272,7 +292,14 @@
     }
     var sched = mktSchedule(state.level, seed);
     var next = mktCopy(state);
-    var fee = next.level.fee * mktTotal(next.holds);
+    /* The deep tier's carry ramp: `feeRamp` credits per held unit are added to
+     * every night's storage fee after the first, so the price of waiting grows
+     * with the week (day d charges fee + feeRamp*d). The field is absent on
+     * m1..m20, where this line then computes exactly the shipped flat fee and
+     * every shallow week replays byte-identically. */
+    var perUnit = next.level.fee +
+      (next.level.feeRamp ? next.level.feeRamp * next.day : 0);
+    var fee = perUnit * mktTotal(next.holds);
     if (next.cash < fee) {
       next.status = "lost";
       next.cause = "bankrupt";
@@ -798,6 +825,10 @@
       "mktS18": "The Long Famine",
       "mktS19": "The Ice Staircase",
       "mktS20": "The Price War",
+      "mktS21": "The Creeping Toll",
+      "mktS22": "The Hoarder's Week",
+      "mktS23": "The Toll Gate",
+      "mktS24": "The Carry Crunch",
       "mktIce": "Moon Ice",
       "mktGrain": "Hydro Grain",
       "mktAlloy": "Regolith Alloy",
@@ -838,7 +869,7 @@
       "mktShort": "Missed the target: {n} of {t} credits.",
       "mktBankrupt": "The storage fee due on day {n} outran your credits - the colony seizes the cargo.",
       "mktNextSeat": "Next seat unlocked.",
-      "mktAllSeats": "All twenty seats traded.",
+      "mktAllSeats": "All twenty-four seats traded.",
       "mktHint": "Arrows pick a commodity, +/- size the lot, Enter buys, Shift+Enter sells, D ends the day; positions are force-sold on day 7.",
       "logMoonMarket": "Banked {n} credits at the moon market",
     },
@@ -864,6 +895,10 @@
       "mktS18": "漫长饥荒",
       "mktS19": "冰价长阶",
       "mktS20": "价格战",
+      "mktS21": "夜费爬坡",
+      "mktS22": "囤货者的一周",
+      "mktS23": "税关",
+      "mktS24": "仓储绞索",
       "mktIce": "月冰",
       "mktGrain": "水培谷物",
       "mktAlloy": "月壤合金",
@@ -904,7 +939,7 @@
       "mktShort": "没达标：只有 {n}/{t} 信用点。",
       "mktBankrupt": "第 {n} 天的仓储费超出了你的信用点——殖民地没收了货物。",
       "mktNextSeat": "解锁下一个席位。",
-      "mktAllSeats": "二十个席位全部交易完毕。",
+      "mktAllSeats": "二十四个席位全部交易完毕。",
       "mktHint": "方向键选商品，加减号调批量，回车买入，Shift+回车卖出，D 结束当天；第 7 天所有持仓会被强制卖出。",
       "logMoonMarket": "在月球市场赚到了 {n} 信用点",
     },
@@ -940,6 +975,7 @@
         "Watch out: a named event opens every day before prices move - storms shut a route, embargoes and blooms dump it, heat waves spike ice.",
         "Closing: on day 7 everything you still hold is force-sold at the morning price; if the fee outruns your cash the colony seizes it all.",
         "Scoring: stars by final credits - three stars asks for more than the measured greedy run on the seats built to punish it, and every week replays identically from its seed.",
+        "New tier: seats 21-24 add a carry ramp - every night the storage fee grows by feeRamp credits per held unit, so cargo sleeps cheap early in the week and bleeds toward the weekend; keep it moving instead of parking it.",
       ],
       zh: [
         "目标：在七个交易日内把信用点攒到席位目标。",
@@ -948,6 +984,7 @@
         "小心：每天开盘前先公布事件——风暴封航线、禁运与丰收砸价、热浪抬高冰价。",
         "收盘：第 7 天所有持仓按早盘价强制卖出；仓储费超过现金就会被殖民地没收全部货物。",
         "计分：按最终信用点评星——在为惩罚频繁交易而设的席位上，三星线高于贪心策略实测的那条线，同一颗种子每周走势完全重放。",
+        "新层级：第 21-24 席位加入仓储爬坡——每过一夜，每单位持仓的仓储费就再涨 feeRamp 点；周初的货睡得便宜，越临近周末越被费用放血，让货物流动起来，别把它压在舱底。",
       ],
     },
   });

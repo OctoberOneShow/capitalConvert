@@ -131,6 +131,31 @@
       pingRadius: 2, pingCost: 7, docCost: 13, liftCost: 5, silt: 1, bays: 2, ambig: 9, quickReach: 7, starQuality: [6, 4, 1] },
     { id: "d20", labelKey: "ocnZ20", w: 22, h: 15, finds: 12, base: 40, slope: 2, debris: 46, spread: 5, air: 100,
       pingRadius: 2, pingCost: 9, docCost: 20, liftCost: 6, silt: 1, bays: 2, ambig: 10, quickReach: 5, starQuality: [6, 3, 1] },
+
+    /* d21-d24, the trench tier. Each rung pushes one economics lever past
+     * anything the twenty ran and proves the squeeze the only honest way: the
+     * gate relaxes the binding lever on a clone and the best measured line
+     * climbs, so the pressure is the rung, not the scenery. Bands stay the
+     * measured floors of the module's own three lines over the sixty proof
+     * seeds, and the deal filter keeps the three-star anchor live on every
+     * wreck it deals.
+     * d21 sweeps the silt over a twin-bay survey whose every berth is a
+     * look-alike; the tank is what makes it bite - open the air to 130 and
+     * the best line climbs from 7 to 9. d22 is the thinnest tank on the
+     * ladder at 72; relax it to 110 and the best line climbs from 4 to 7.
+     * d23 pairs the dearest record yet (28) with a steep three-slope site
+     * whose bands run wide; reprice the record at 8 and the best line climbs
+     * from 7 to 12. d24 charges the dearest bill at once - record 22, ping
+     * 11, bag 7 over the widest, busiest site - and holds the tank at 96;
+     * reprice all three at once and the best line doubles from 6 to 12. */
+    { id: "d21", labelKey: "ocnZ21", w: 24, h: 16, finds: 12, base: 34, slope: 1, debris: 56, spread: 5, air: 104,
+      pingRadius: 2, pingCost: 8, docCost: 16, liftCost: 6, silt: 2, bays: 2, ambig: 10, quickReach: 5, starQuality: [7, 4, 1] },
+    { id: "d22", labelKey: "ocnZ22", w: 18, h: 12, finds: 10, base: 42, slope: 2, debris: 44, spread: 4, air: 72,
+      pingRadius: 2, pingCost: 10, docCost: 18, liftCost: 6, silt: 1, bays: 1, ambig: 9, quickReach: 4, starQuality: [4, 2, 1] },
+    { id: "d23", labelKey: "ocnZ23", w: 24, h: 16, finds: 12, base: 28, slope: 3, debris: 52, spread: 6, air: 108,
+      pingRadius: 1, pingCost: 4, docCost: 24, liftCost: 5, silt: 0, bays: 2, ambig: 9, quickReach: 6, starQuality: [7, 5, 1] },
+    { id: "d24", labelKey: "ocnZ24", w: 25, h: 17, finds: 12, base: 44, slope: 2, debris: 64, spread: 5, air: 96,
+      pingRadius: 1, pingCost: 11, docCost: 22, liftCost: 7, silt: 2, bays: 2, ambig: 10, quickReach: 4, starQuality: [6, 3, 1] },
   ];
 
   /* --- pure core ---------------------------------------------------------
@@ -609,6 +634,7 @@
   App.diveReachable = ocnReachable;
   App.divePlan = ocnPlan;
   App.diveBeatable = ocnBeatable;
+  App.diveDeal = ocnDeal;
   App.diveLiftLine = ocnLiftLine;
   App.diveQuickLine = ocnQuickLine;
   App.diveLine = ocnLine;
@@ -1524,6 +1550,10 @@
       "ocnZ18": "The Silt Field",
       "ocnZ19": "Twin Bays",
       "ocnZ20": "The Dear Dive",
+      "ocnZ21": "The Buried Bays",
+      "ocnZ22": "Breath Rationed",
+      "ocnZ23": "The Steep Ledger",
+      "ocnZ24": "The Last Manifest",
       "ocnAirLabel": "Air",
       "ocnDepthLabel": "Depth",
       "ocnAscentLabel": "Ascent",
@@ -1642,6 +1672,10 @@
       "ocnZ18": "淤泥场",
       "ocnZ19": "双湾",
       "ocnZ20": "昂贵一潜",
+      "ocnZ21": "淤湾掩埋",
+      "ocnZ22": "气量配给",
+      "ocnZ23": "陡峭账册",
+      "ocnZ24": "末页清单",
       "ocnAirLabel": "气瓶",
       "ocnDepthLabel": "深度",
       "ocnAscentLabel": "返程",

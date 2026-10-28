@@ -288,6 +288,83 @@
         ".....#....",
       ],
     },
+    /* e21-24: the wide tray. Every board above this line lived on ten columns;
+     * the deep tier widens the grid to twelve - the first widening in twenty
+     * rungs - so every clue line runs longer and every sweep has more ground
+     * to cover before the picture closes. The four boards are measured, not
+     * guessed: each one line-solves uniquely, and the deduction waves they
+     * demand rise rung over rung (5, 6, 9, 11 waves against the shipped
+     * ladder's four-wave average) with the summit's eleven the hardest board
+     * the tray has ever carried. Time bands stay content-authored and keep
+     * the shipped ~5% climb. */
+    {
+      id: "e21", labelKey: "skL21", starTimes: [185, 280, 450],
+      art: [
+        "...#....#...",
+        "..###..###..",
+        "..#########.",
+        ".##.####.##.",
+        ".#.######.#.",
+        ".#.##..##.#.",
+        ".#........#.",
+        ".#..#..#..#.",
+        "..#......#..",
+        "..########..",
+        "....#..#....",
+        "....#..#....",
+      ],
+    },
+    {
+      id: "e22", labelKey: "skL22", starTimes: [195, 295, 475],
+      art: [
+        ".....#......",
+        "....###.....",
+        "....###.....",
+        "...#####....",
+        "...#####....",
+        "..##...##...",
+        ".#########..",
+        "#..........#",
+        ".##########.",
+        "...######...",
+        "....####....",
+        "............",
+      ],
+    },
+    {
+      id: "e23", labelKey: "skL23", starTimes: [205, 310, 500],
+      art: [
+        "....#.......",
+        "....#.......",
+        "...###......",
+        "..#####.....",
+        ".##...##....",
+        ".#.....#....",
+        ".#..#..#....",
+        ".#.....#....",
+        ".##...##....",
+        "..#####.....",
+        "...###......",
+        "....#.......",
+      ],
+    },
+    {
+      id: "e24", labelKey: "skL24", starTimes: [215, 325, 525],
+      art: [
+        ".....##.....",
+        "....####....",
+        "...##.##..#.",
+        "..##...##.#.",
+        ".##.....###.",
+        "##.......##.",
+        "#....#....#.",
+        ".....##.....",
+        "....####....",
+        "...######...",
+        "..########..",
+        "############",
+      ],
+    },
   ];
 
   function initGlyphSketchGame() {
@@ -640,6 +717,10 @@
       "skL18": "Key",
       "skL19": "Cauldron",
       "skL20": "Compass",
+      "skL21": "Night Watch",
+      "skL22": "The Crossing",
+      "skL23": "Storm Lantern",
+      "skL24": "The Range",
     },
     zh: {
       "skL9": "同心靶",
@@ -654,6 +735,10 @@
       "skL18": "钥匙",
       "skL19": "大锅",
       "skL20": "罗盘",
+      "skL21": "夜巡",
+      "skL22": "渡海",
+      "skL23": "风灯",
+      "skL24": "群山",
     },
   });
 

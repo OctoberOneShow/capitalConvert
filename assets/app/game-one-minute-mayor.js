@@ -5,7 +5,9 @@
  * nothing until a home is too far from work to walk. Nothing is random - the
  * same district is dealt identically - and the ledger prints every point in
  * words plus digits, so a player can always explain their own score. The bands
- * are measured: a greedy line plus seeded restarts runs the exported scorer. */
+ * are measured: a greedy line plus seeded restarts runs the exported scorer,
+ * and the deep tier is benched the same way - hands that insist on a worksite
+ * land under the bands, because its districts are built to plan without one. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
   var t = App.t;
@@ -53,12 +55,14 @@
     });
   }
 
-  /* Twenty districts, always the same twenty: open land, a river of water, a
-   * brownfield of foul ground, a listed corner that bans worksites, the full
-   * city with all three at once, and then a back ladder of twenty-rung shape -
-   * cuts, lattices, banned rings and shorter ledgers that squeeze the same
-   * knobs with a smaller margin each time. stars/plan/proof are filled by
-   * omvProveAll(), from the measured plan - no band here is invented. */
+  /* Twenty-four districts, always the same twenty-four: open land, a river of
+   * water, a brownfield of foul ground, a listed corner that bans worksites,
+   * the full city with all three at once, then a back ladder of twenty-rung
+   * shape - cuts, lattices, banned rings and shorter ledgers that squeeze the
+   * same knobs with a smaller margin each time - and a deep tier of four
+   * districts where the worksite itself is priced out of the plan. stars/plan/
+   * proof are filled by omvProveAll(), from the measured plan - no band here
+   * is invented. */
   function omvDistrict(id, labelKey, slack, blocked, fouled, heritage) {
     return {
       id: id, labelKey: labelKey, turns: 10, slack: slack,
@@ -121,6 +125,38 @@
   var omvTwinFoul = omvXY([[2, 3], [3, 2]]);
   var omvShelfPool = omvXY([[5, 0]]);
   var omvShelfRow = omvXY([[0, 2], [1, 2], [2, 2], [3, 2], [4, 2]]);
+  /* Rungs 21-24, the deep tier, and the one lesson the ladder has never
+   * taught: a district that plans without a worksite. Every home lot sits
+   * inside the ban rings of a listed old town, so the only legal worksite
+   * lots lie across open water, and every lot a home can stand on off the
+   * works ground lies past even a stop's five-street bridge - the employable
+   * ground is an island with no garden on it, and an empty plant there
+   * scores -2 forever. The measured plan closes with no worksite in it
+   * and prints its jobless homes on purpose: roofs, water and greens carry
+   * the ledger alone. Every layout was measured through omvPlan/omvBands
+   * before it was kept, and the gate benches hands that insist on the plant. */
+  var omvBankTown = omvXY([[0, 0], [1, 0], [2, 0], [3, 0], [0, 1], [1, 1], [2, 1], [0, 2], [1, 2], [0, 3]]);
+  var omvBayWorks = omvXY([[4, 5], [5, 4], [5, 5]]);
+  var omvBankList = omvXY([[0, 2], [1, 0]]);
+  var omvSoundTown = omvXY([[0, 2], [0, 3], [0, 4], [0, 5], [1, 3], [1, 4], [1, 5], [2, 4], [2, 5], [3, 5]]);
+  var omvSoundWorks = omvXY([[4, 0], [5, 0]]);
+  var omvSoundList = omvXY([[0, 3], [2, 5]]);
+  var omvParkLand = omvXY([[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [0, 1], [1, 1], [2, 1], [3, 1], [0, 2], [1, 2], [2, 2], [0, 3], [1, 3], [0, 4]]);
+  var omvParkList = omvXY([[1, 1], [4, 0], [0, 3]]);
+  var omvPointWork = omvXY([[5, 5]]);
+  var omvLastList = omvXY([[0, 1], [2, 0]]);
+  var omvLastFoul = omvXY([[1, 1], [0, 3]]);
+  /* The deep tier's water is everything a district does not keep: the old
+   * town, the far works lots and the listings stay land, the rest is bay. */
+  function omvBayExcept(lots) {
+    var keep = {};
+    lots.forEach(function (n) { keep[n] = 1; });
+    var out = [];
+    for (var i = 0; i < omvSide * omvSide; i += 1) {
+      if (!keep[i]) { out.push(i); }
+    }
+    return out;
+  }
   var omvDistricts = [
     omvDistrict("o1", "omvZ1", 0.34),
     omvDistrict("o2", "omvZ2", 0.32, omvRiver),
@@ -154,6 +190,25 @@
     omvFarDistrict("o18", "omvZ18", 8, 0.09, omvShelfPool, omvShelfRow),
     omvFarDistrict("o19", "omvZ19", 10, 0.06, omvChannelsWater, omvChannelsFoul),
     omvFarDistrict("o20", "omvZ20", 10, 0.05, omvPondsWater, omvPondsFoul),
+    /* The deep tier, rungs 21-24. One shared lesson, four shapes: the district
+     * that plans without a worksite. o21 a listed old town behind the bay with
+     * three work lots across the water nobody can reach; o22 the south shore
+     * split into two greens by a water spine, its works pair fouled spoil in
+     * the north-east; o23 the wide listed park, a single work lot on the point
+     * and room for ten placements; o24 the old town shrunk around fouled
+     * ground, the tightest slack and the shortest ledger. Every home lot sits
+     * inside a listing's ban ring and every garden lot lies past a stop's
+     * five-street bridge of the works ground, so the measured plan closes with
+     * no worksite in it. slack never rises down the ladder; stars/plan/proof
+     * stay measured - omvProveAll() fills them from omvBeatable() at load. */
+    omvFarDistrict("o21", "omvZ21", 7, 0.05,
+      omvBayExcept(omvBankTown.concat(omvBayWorks, omvBankList)), null, omvBankList),
+    omvFarDistrict("o22", "omvZ22", 6, 0.05,
+      omvBayExcept(omvSoundTown.concat(omvSoundWorks, omvSoundList)), omvSoundWorks, omvSoundList),
+    omvFarDistrict("o23", "omvZ23", 10, 0.04,
+      omvBayExcept(omvParkLand.concat(omvPointWork, omvParkList)), null, omvParkList),
+    omvFarDistrict("o24", "omvZ24", 7, 0.03,
+      omvBayExcept(omvBankTown.concat(omvBayWorks, omvLastList)), omvLastFoul, omvLastList),
   ];
 
   /* --- grid helpers -------------------------------------------------------- */
@@ -1128,6 +1183,10 @@
       "omvZ18": "Cinder Row",
       "omvZ19": "Two Channels",
       "omvZ20": "Sunken Quarter",
+      "omvZ21": "The Far Bank",
+      "omvZ22": "The Two Greens",
+      "omvZ23": "The Park Ward",
+      "omvZ24": "The Last Plan",
       "omvTurnLabel": "Placements",
       "omvScoreLabel": "District",
       "omvGoalLabel": "Bands",
@@ -1194,7 +1253,7 @@
       "omvShort": "The district reached {n} points and needed {need}, short by {gap}. The unmet need: {why}",
       "omvNoNeed": "no single need went unmet - the town is simply too small, so build more homes and the worksites and taps they need.",
       "omvNextDistrict": "Next district unlocked.",
-      "omvCampaignDone": "All twenty districts are planned.",
+      "omvCampaignDone": "All twenty-four districts are planned.",
       "omvLockedDistrict": "That district is still sealed - clear the one before it.",
       "omvUnproven": "{name} could not be proven clearable by the measured plan, so it is on hold.",
       "omvHint": "Every blueprint solves one need and opens another: a tap waters three homes but burns the lot a worksite wanted, a worksite employs two homes and fouls the four it fronts, and a stop pays only for a home that had no job within three streets. Nothing is random - rerun a district and it is dealt the same.",
@@ -1222,6 +1281,10 @@
       "omvZ18": "焦土排",
       "omvZ19": "双运河",
       "omvZ20": "沉水区",
+      "omvZ21": "隔湾老城",
+      "omvZ22": "双绿地",
+      "omvZ23": "公园坊",
+      "omvZ24": "最后一城",
       "omvTurnLabel": "放置",
       "omvScoreLabel": "城区",
       "omvGoalLabel": "分档",
@@ -1288,7 +1351,7 @@
       "omvShort": "城区只有 {n} 分，要 {need} 分才过关，差 {gap} 分。没被满足的需求：{why}",
       "omvNoNeed": "没有哪一项单独拖了后腿——就是城太小，多盖住宅，再补上它们要的水站和工作地。",
       "omvNextDistrict": "解锁下一个城区。",
-      "omvCampaignDone": "二十个城区都规划完了。",
+      "omvCampaignDone": "二十四个城区都规划完了。",
       "omvLockedDistrict": "这个城区还没开放——先过掉前一个。",
       "omvUnproven": "{name} 没能被实测规划证明可以过关，所以暂缓开放。",
       "omvHint": "每种图纸都解决一个需求、同时制造另一个：一个水站供三户，却占掉工作地要的那块；工作地招两户，却污染四面；公交站只有让 3 格外的人家找到活才值钱。这里没有随机——同一个城区每次都长一个样，重来就能更好。",
@@ -1320,6 +1383,7 @@
         "Watch out: nothing is free. The tap that waters your row sits on the lot a worksite wanted, a worksite employs only two homes and fouls the four lots it fronts, and a green beside a worksite pays nothing.",
         "Undo: keys u, z or Backspace lift the last building off, and the ledger re-reads after every placement you make.",
         "Scoring: the ledger prints every point in words and digits - homes, watered, employed, jobless, idle taps, quiet greens - each with its own sum, and the number in a cell is exactly what that lot contributes.",
+        "New tier: districts 21 to 24 are listed old towns across the bay - every home lot is inside a landmark's ban ring, the only legal worksite lots lie across the water past even a stop's five-street walk of every garden lot, so the measured plan closes without a single worksite and roofs, water and greens carry the ledger alone.",
       ],
       zh: [
         "目标：把城区的账本刷到 HUD 显示的过关线——三星就是实测规划那条线。",
@@ -1328,6 +1392,7 @@
         "小心：没有白给的东西。替你那一排住宅供水的水站，正踩在工作地想要的那块地上；工作地只招两户，还污染紧邻四面；贴着工作地的绿地一分不得。",
         "悔手：u、z 或退格键能把上一手取回来，每一手都会让账本当场重算。",
         "计分：账本把每一分都写成文字加数字——住着几户、通水几户、就业几户、失业几户、几个空守水站、几块不涨分的绿地——每格上的数字就是这块地自己的贡献。",
+        "新层级：第 21 到 24 关是隔湾的挂牌老城——每块住宅用地都在老建筑的禁建圈里，唯一合法的工作地地块隔水相望，离每块绿地都超出公交站的五格通勤，所以实测规划一张工作地都不盖，住宅、给水和绿地要独自撑起账本。",
       ],
     },
   });

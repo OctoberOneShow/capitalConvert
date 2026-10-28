@@ -62,6 +62,17 @@
     { id: "l21", labelKey: "lfsZ21", need: 9, named: "razor", namedNeed: 5, pool: ["razor", "razor", "lurker", "snatcher", "razor", "glintfin"], fuel: 156, starFuel: [60, 40, 18], band: 82 },
     { id: "l22", labelKey: "lfsZ22", need: 9, named: "lurker", namedNeed: 5, pool: ["lurker", "lurker", "razor", "snatcher", "lurker", "glintfin"], fuel: 158, starFuel: [60, 40, 18], band: 50 },
     { id: "l23", labelKey: "lfsZ23", need: 10, named: "lurker", namedNeed: 4, pool: ["glintfin", "razor", "lurker", "snatcher", "lurker", "razor"], fuel: 168, starFuel: [64, 44, 20], band: 54 },
+
+    /* l24 - The Razor Run. The summit closes on the ladder's fastest fish:
+     * five razors among ten landings, the deepest quota plus the deepest
+     * named share any bed has asked for, with a snatcher working the same
+     * water and the lantern held bright (76) so nothing slow comes to hide
+     * the razor count. The gate's scripted night - strikes at half the
+     * species window, reel fed 150ms late under a limit governor - lands the
+     * quota on every dealt spawn with fuel to spare, and the bands below sit
+     * stepped down from that measured leftover, so three stars is the script
+     * itself with a little slack. */
+    { id: "l24", labelKey: "lfsZ24", need: 10, named: "razor", namedNeed: 5, pool: ["razor", "razor", "snatcher", "glintfin", "razor", "razor"], fuel: 182, starFuel: [28, 22, 14], band: 76 },
   ];
 
   /* --- pure core ---------------------------------------------------------- */
@@ -1009,6 +1020,7 @@
       "lfsZ21": "Obsidian Drop",
       "lfsZ22": "Leviathan Hollow",
       "lfsZ23": "The Starlit Trench",
+      "lfsZ24": "The Razor Run",
       "lfsSpGlintfin": "Glintfin",
       "lfsSpRazor": "Razor",
       "lfsSpLurker": "Pale lurker",
@@ -1066,6 +1078,7 @@
       "lfsZ21": "黑曜崖壁",
       "lfsZ22": "巨兽幽穴",
       "lfsZ23": "星光海沟",
+      "lfsZ24": "刀鱼急流",
       "lfsSpGlintfin": "闪光鱼",
       "lfsSpRazor": "刀鱼",
       "lfsSpLurker": "白潜鱼",

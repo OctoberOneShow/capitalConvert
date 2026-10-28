@@ -90,6 +90,40 @@
      * line sits on the sharpest measured restart and the one-star line on the
      * ninety-ninth percentile hunt, one ping inside the battery. */
     { id: "r20", labelKey: "rrZ20", side: 32, scans: 18, starScans: [8, 13, 17], drift: 2 },
+    /* Deep tier - the wide-air squeeze. The one cadence the ladder never
+     * shipped was measured first: a beacon that shunts every single scan
+     * outruns the ring readings outright, a belief-tracking hunt still losing
+     * a third of its deals on a 24-ping battery, so the deep restlessness
+     * stays at every second scan and the rungs spend their levers on width
+     * and battery instead - the widest floors the game has ever carried
+     * (36-40, past Cold Store's 34) on batteries cut one ping past the
+     * measured worst hunt. Over 30 seeded deals per rung a sharpest-split
+     * belief hunt pins the still spire in at most three, needs at most nine,
+     * ten and eighteen on the restless floors, and each of those batteries is
+     * set one ping past its own worst line. */
+    /* High Spire: the widest still floor ever shipped on the tightest still
+     * battery - six pings where no still rung has ever had fewer than seven.
+     * Width cannot stretch the two-probe pin, so the pin still lands inside
+     * three; what six pings take away is the forgiving slack, and a single
+     * wasted scan now drops a star. */
+    { id: "r21", labelKey: "rrZ21", side: 36, scans: 6, starScans: [3, 4, 5], drift: 0 },
+    /* Rivermouth: the first restless deep floor, a 36 grid shunting every
+     * second scan - wider than any restless rung before it - with its battery
+     * cut to the measured tail: the belief hunt never needed more than nine,
+     * so the one-star line sits one ping inside the ten-ping battery. */
+    { id: "r22", labelKey: "rrZ22", side: 36, scans: 10, starScans: [4, 6, 9], drift: 2 },
+    /* Mistvale: a 38 floor on the same restless air and an eleven-ping
+     * battery. The measured tail grew by one, so the one-star line grows by
+     * one with it, and the rung sweeps more floor per ping than any restless
+     * rung the ladder carried into the deep tier. */
+    { id: "r23", labelKey: "rrZ23", side: 38, scans: 11, starScans: [5, 7, 10], drift: 2 },
+    /* Stormcrown: the capstone - the widest floor the game has ever shipped,
+     * a 40 grid on restless air, and the longest measured hunt on the ladder.
+     * Width stretches the tail badly: the belief hunt needed eighteen scans
+     * on the worst seeded deal, so the one-star line sits there, one ping
+     * inside the nineteen-ping battery, and the three-star line is the
+     * measured sharpest restart the crown allows. */
+    { id: "r24", labelKey: "rrZ24", side: 40, scans: 19, starScans: [6, 10, 18], drift: 2 },
   ];
 
   /* Pure core, exported for the harness: distance is measured between cell
@@ -536,6 +570,10 @@
       "rrZ18": "Cold Store",
       "rrZ19": "Antenna Farm",
       "rrZ20": "Signal Ridge",
+      "rrZ21": "High Spire",
+      "rrZ22": "Rivermouth",
+      "rrZ23": "Mistvale",
+      "rrZ24": "Stormcrown",
       "rrBatteryLabel": "Battery",
       "rrZoneLabel": "Grid",
       "rrZoneSelectLabel": "Choose a zone",
@@ -579,6 +617,10 @@
       "rrZ18": "冷库",
       "rrZ19": "天线场",
       "rrZ20": "信号岭",
+      "rrZ21": "高塔尖",
+      "rrZ22": "河口区",
+      "rrZ23": "雾谷",
+      "rrZ24": "风暴之冠",
       "rrBatteryLabel": "电量",
       "rrZoneLabel": "网格",
       "rrZoneSelectLabel": "选择区域",

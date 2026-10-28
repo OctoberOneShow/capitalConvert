@@ -215,6 +215,78 @@
       ],
       starNudges: [98, 102, 107],
     },
+    /* p21 - the half-turn: the upper arm must swing a full 180 degrees between
+     * the two locked beats. The lamp and the rod never move on the second
+     * beat, so the only road to the second ghost is through the turn itself;
+     * the shortest signed delta charges all 36 angular nudges for it. */
+    {
+      id: "p21", labelKey: "shpP21", briefKey: "shpB21",
+      baseY: 150, l1: 36, l2: 28,
+      start: { lampX: 20, lampY: 40, ang1: 20, ang2: -40, baseX: 150 },
+      solutions: [
+        { lampX: 55, lampY: 90, ang1: 85, ang2: 50, baseX: 180 },
+        { lampX: 55, lampY: 90, ang1: -95, ang2: -50, baseX: 180 },
+      ],
+      targets: [
+        { baseY: 208, aY: 273, bY: 287, tol: 24 },
+        { baseY: 208, aY: 139, bY: 95, tol: 24 },
+      ],
+      starNudges: [110, 114, 119],
+    },
+    /* p22 - the walking plinth: beat two changes the rod and both hinges but
+     * keeps the lamp exactly where beat one left it. The base shadow jumps
+     * 44px while the lamp holds, so the player learns the rod is a lever of
+     * its own rather than a side effect of the light. */
+    {
+      id: "p22", labelKey: "shpP22", briefKey: "shpB22",
+      baseY: 135, l1: 42, l2: 34, baseMovable: true,
+      start: { lampX: 20, lampY: 70, ang1: -50, ang2: 80, baseX: 130 },
+      solutions: [
+        { lampX: 75, lampY: 170, ang1: 95, ang2: -30, baseX: 150 },
+        { lampX: 75, lampY: 170, ang1: 70, ang2: 20, baseX: 205 },
+      ],
+      targets: [
+        { baseY: 65, aY: 192, bY: 147, tol: 22 },
+        { baseY: 109, aY: 177, bY: 191, tol: 22 },
+      ],
+      starNudges: [112, 116, 121],
+    },
+    /* p23 - the mirror pose: two ghosts sit almost exactly mirrored about the
+     * rod's height, and the tolerance is the tightest in the tier. The second
+     * beat is a pure hinge reflection (ang1 and ang2 change sign), so one
+     * extra 5-degree step on both arms drops the fit under the bar. */
+    {
+      id: "p23", labelKey: "shpP23", briefKey: "shpB23",
+      baseY: 150, l1: 34, l2: 28,
+      start: { lampX: 15, lampY: 260, ang1: -140, ang2: 140, baseX: 220 },
+      solutions: [
+        { lampX: 65, lampY: 150, ang1: -35, ang2: 55, baseX: 175 },
+        { lampX: 65, lampY: 150, ang1: 35, ang2: -55, baseX: 175 },
+      ],
+      targets: [
+        { baseY: 150, aY: 117, bY: 155, tol: 12 },
+        { baseY: 150, aY: 183, bY: 144, tol: 12 },
+      ],
+      starNudges: [115, 119, 124],
+    },
+    /* p24 - the closing play: both beats work all four levers (lamp x/y,
+     * upper arm, forearm, rod). Beat one throws a tall low silhouette, beat
+     * two gathers it high and close; neither beat can be reached by holding
+     * any lever still, so the finale chains the whole control row. */
+    {
+      id: "p24", labelKey: "shpP24", briefKey: "shpB24",
+      baseY: 160, l1: 48, l2: 40, baseMovable: true,
+      start: { lampX: 30, lampY: 200, ang1: -20, ang2: 40, baseX: 135 },
+      solutions: [
+        { lampX: 85, lampY: 110, ang1: 55, ang2: -50, baseX: 165 },
+        { lampX: 50, lampY: 210, ang1: -60, ang2: 40, baseX: 195 },
+      ],
+      targets: [
+        { baseY: 244, aY: 289, bY: 205, tol: 22 },
+        { baseY: 124, aY: 75, bY: 128, tol: 22 },
+      ],
+      starNudges: [142, 146, 151],
+    },
   ];
   /* The free performance stage: no target, same geometry, same controls. */
   var shpFreePuppet = {
@@ -1079,6 +1151,10 @@
       "shpP18": "The watchman turns",
       "shpP19": "The ropewalker",
       "shpP20": "The final bow",
+      "shpP21": "The puppet turns its back",
+      "shpP22": "The plinth walks",
+      "shpP23": "The mirror pose",
+      "shpP24": "The closing play",
       "shpPFree": "Free performance",
       "shpB1": "one long, even shadow",
       "shpB2": "the head folds back up",
@@ -1100,6 +1176,10 @@
       "shpB18": "lantern low, shoulder to the wind",
       "shpB19": "one line held over the drop",
       "shpB20": "two beats - the play folds, then one last bow",
+      "shpB21": "two beats - a full half-turn of the upper arm",
+      "shpB22": "two beats - the rod travels while the lamp holds",
+      "shpB23": "two beats - mirror both hinges, never overshoot",
+      "shpB24": "two beats - lamp, both hinges and the rod close the play",
       "shpBFree": "no ghost, just rays",
       "shpLeverLabel": "Lever",
       "shpNudgesLabel": "Nudges",
@@ -1151,6 +1231,10 @@
       "shpP18": "守夜人回身",
       "shpP19": "走索人",
       "shpP20": "最后一躬",
+      "shpP21": "皮影转身",
+      "shpP22": "台座移步",
+      "shpP23": "镜中造型",
+      "shpP24": "终场全戏",
       "shpPFree": "自由演出",
       "shpB1": "一道匀长的影子",
       "shpB2": "头颅折回上方",
@@ -1172,6 +1256,10 @@
       "shpB18": "灯笼压低，肩头迎风",
       "shpB19": "一道细线悬在深渊之上",
       "shpB20": "两个节拍 - 收起整出戏，再深深一躬",
+      "shpB21": "两个节拍 - 上臂整整转过半圈",
+      "shpB22": "两个节拍 - 灯不动，支杆移步",
+      "shpB23": "两个节拍 - 两臂镜像，切莫过冲",
+      "shpB24": "两个节拍 - 灯、双臂与支杆共同收场",
       "shpBFree": "没有目标，只有光线",
       "shpLeverLabel": "操作杆",
       "shpNudgesLabel": "挪动",

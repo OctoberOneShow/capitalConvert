@@ -136,10 +136,26 @@
     return result;
   }
 
+  /* How many parcels the courier is holding right now. */
+  function pdxHands(map, picked, delivered) {
+    var n = 0;
+    for (var i = 0; i < map.parcels.length; i += 1) {
+      var p = map.parcels[i];
+      if (picked[p.id] === true && !delivered[p.id]) { n += 1; }
+    }
+    return n;
+  }
+
+  /* Pick up whatever waits in this room, as much of it as the courier's
+   * hands allow. A map with a capacity leaves the rest on the floor: the
+   * same rule the panel plays by, so a proved plan is a playable plan. */
   function pdxCollect(map, room, picked, delivered) {
+    var cap = map.capacity || 0;
     for (var j = 0; j < map.parcels.length; j += 1) {
       var p = map.parcels[j];
-      if (p.from === room && picked[p.id] !== true && !delivered[p.id]) { picked[p.id] = true; }
+      if (p.from !== room || picked[p.id] === true || delivered[p.id]) { continue; }
+      if (cap > 0 && pdxHands(map, picked, delivered) >= cap) { return; }
+      picked[p.id] = true;
     }
   }
 
@@ -284,14 +300,20 @@
   }
 
   /* ------------------------------------------------------------------
-   * Authored content. One small building, twenty runs through it, dealt in
-   * the order the search measures.
+   * Authored content. One small building, twenty-four runs through it,
+   * dealt in the order the search measures. Rungs 1-20 teach the lying
+   * doors; rungs 21-24, the deep tier, teach the courier's own body:
+   * a map with a capacity gives the courier two hands, so the third
+   * parcel waits on the floor until a delivery frees one, and every
+   * one of those four buildings is proved harder than rung twenty by
+   * the same search that measures their pars.
    *
    * Raw door rows are [room, door, wall, from, to, at]: the doorway
    * called door stands in room on wall, and it only gives at all if you
    * came into that room on side from ("any" for an honest door), in which
    * case it puts you in room to, standing on side at. Raw parcel rows are
-   * [id, from room, to room, label].
+   * [id, from room, to room, label]. An optional capacity row caps how
+   * many parcels may be carried at once (0 or omitted: as many as exist).
    * ------------------------------------------------------------------ */
 
   var pdxPlaces = {
@@ -1026,6 +1048,171 @@
         ["p2", "lift", "print", { en: "A drum of render", zh: "一桶灰泥" }],
         ["p3", "records", "attic", { en: "A bundle of sketching pencils", zh: "一捆绘图铅笔" }]
       ]
+    },
+    {
+      /* Deep tier, rung 21 - the lesson is two hands, on honest doors: the
+       * dark-room spur sits two knocks from the lobby, so with unlimited
+       * hands one sweep grabs all three parcels before the first drop; with
+       * two, the third waits on the spur floor and the proved tour pays for
+       * the return. The search measures this tour at twelve steps. */
+      id: "m21",
+      name: { en: "Two Hands", zh: "一双手" },
+      brief: { en: "Same building, new rule: the courier has two hands, and the third parcel waits on the floor until a delivery frees one. The dark room's parcel can wait longest.", zh: "同一栋楼，新规矩：邮差只有一双手，第三个包裹得先在地上歇着，等送掉一件腾出手。暗房那件最能等。" },
+      hint: { en: "Deliver one before you reach for the third.", zh: "先送掉一件，再去拿第三件。" },
+      rooms: ["hall", "mailroom", "dark", "office", "lift", "bay", "corridor", "cold", "cellar"], start: "hall", at: "south", budget: 18, capacity: 2, order: [],
+      doors: [
+        ["hall", "dNorth", "north", "any", "mailroom", "south"],
+        ["mailroom", "dNorth", "south", "any", "hall", "north"],
+        ["mailroom", "dDark", "east", "any", "dark", "west"],
+        ["dark", "dDark", "west", "any", "mailroom", "east"],
+        ["hall", "dWest", "west", "any", "office", "east"],
+        ["office", "dWest", "east", "any", "hall", "west"],
+        ["office", "dUp", "north", "any", "lift", "south"],
+        ["lift", "dUp", "south", "any", "office", "north"],
+        ["hall", "dStair", "south", "any", "bay", "north"],
+        ["bay", "dStair", "north", "any", "hall", "south"],
+        ["bay", "dRamp", "east", "any", "corridor", "west"],
+        ["corridor", "dRamp", "west", "any", "bay", "east"],
+        ["corridor", "dRun", "south", "any", "cellar", "north"],
+        ["cellar", "dRun", "north", "any", "corridor", "south"],
+        ["office", "dCooler", "south", "any", "cold", "north"],
+        ["cold", "dCooler", "north", "any", "office", "south"],
+        ["cold", "dHatch", "east", "any", "cellar", "west"],
+        ["cellar", "dHatch", "west", "any", "cold", "east"]
+      ],
+      parcels: [
+        ["p1", "hall", "lift", { en: "A drum of cable", zh: "一卷线缆" }],
+        ["p2", "mailroom", "corridor", { en: "A satchel of forms", zh: "一夹表格" }],
+        ["p3", "dark", "office", { en: "A box of stamps", zh: "一盒图章" }]
+      ]
+    },
+    {
+      /* Deep tier, rung 22 - two hands meet the flipped landing again: the
+       * office flue answers only the north side and puts you down facing
+       * the wrong way, the mailroom's only way out is back up that flue,
+       * and the round has more parcels than hands, so the deferred pickup
+       * costs a second climb through the lie. The search proves it at
+       * eleven steps where free hands would do it in seven. */
+      id: "m22",
+      name: { en: "The Third Waits", zh: "第三件等着" },
+      brief: { en: "The office flue answers only the north side and puts you down facing the wrong way, the mailroom's only way out is back up that flue - and this round has more parcels than hands.", zh: "办公室的滑道只应答北边那侧，落地还朝着不对的方向；收发室唯一的出路就是这道滑道——而这趟的包裹比手多。" },
+      hint: { en: "The floor holds what your hands cannot.", zh: "地板替你拿住手里放不下的。" },
+      rooms: ["office", "attic", "hall", "mailroom", "records", "corridor", "bay", "cellar", "cold"], start: "office", at: "north", budget: 17, capacity: 2, order: [],
+      doors: [
+        ["office", "dStair", "north", "any", "attic", "south"],
+        ["attic", "dStair", "south", "any", "office", "north"],
+        ["office", "dFlue", "west", "north", "mailroom", "east"],
+        ["mailroom", "dFlue", "east", "any", "attic", "west"],
+        ["attic", "dBalcony", "east", "any", "hall", "west"],
+        ["hall", "dBalcony", "west", "any", "attic", "east"],
+        ["hall", "dLift", "north", "any", "records", "south"],
+        ["records", "dLift", "south", "any", "hall", "north"],
+        ["records", "dRun", "east", "any", "corridor", "west"],
+        ["corridor", "dRun", "west", "any", "records", "east"],
+        ["corridor", "dRamp", "south", "any", "bay", "north"],
+        ["bay", "dRamp", "north", "any", "corridor", "south"],
+        ["bay", "dHatch", "east", "any", "cellar", "west"],
+        ["cellar", "dHatch", "west", "any", "bay", "east"],
+        ["cellar", "dCellar", "west", "any", "cold", "east"],
+        ["cold", "dCellar", "east", "any", "cellar", "west"],
+        ["records", "dCross", "east", "any", "cold", "west"],
+        ["cold", "dCross", "west", "any", "records", "east"],
+        ["corridor", "dDark", "north", "west", "office", "south"],
+        ["office", "dDark", "south", "any", "corridor", "north"]
+      ],
+      parcels: [
+        ["p1", "office", "bay", { en: "A tin of letters", zh: "一罐信件" }],
+        ["p2", "hall", "cellar", { en: "A flat wooden case", zh: "扁木箱" }],
+        ["p3", "mailroom", "cold", { en: "A register of debts", zh: "一本欠账登记" }]
+      ]
+    },
+    {
+      /* Deep tier, rung 23 - two hands and the crossing: the hall crossing
+       * answers the side you carried in and hands the corridor only to
+       * whoever came from the shop, so the run that empties a hand has to
+       * be planned around the crossing, not through it. */
+      id: "m23",
+      name: { en: "Full Arms, Wrong Side", zh: "满手又站错边" },
+      brief: { en: "Two hands, and the hall crossing still reads the side you came in on: from the shop it answers the corridor, from the bay it answers nothing at all. Empty a hand before you knock.", zh: "只有一双手，大厅的交叉门还认你进来的那一边：从店面来它答后走廊，从月台来它什么也不答。先腾出一只手再敲门。" },
+      hint: { en: "The crossing reads the side, not the arms.", zh: "交叉门认边，不认手。" },
+      rooms: ["shop", "hall", "mailroom", "records", "cold", "cellar", "corridor", "bay", "attic"], start: "shop", at: "south", budget: 17, capacity: 2, order: [],
+      doors: [
+        ["shop", "dBell", "north", "any", "hall", "south"],
+        ["hall", "dBell", "south", "any", "shop", "north"],
+        ["hall", "dLift", "north", "any", "mailroom", "south"],
+        ["mailroom", "dLift", "south", "any", "hall", "north"],
+        ["mailroom", "dChute", "north", "any", "records", "south"],
+        ["records", "dChute", "south", "any", "mailroom", "north"],
+        ["records", "dDesk", "west", "any", "cold", "east"],
+        ["cold", "dDesk", "east", "any", "records", "west"],
+        ["cold", "dRun", "south", "any", "cellar", "north"],
+        ["cellar", "dRun", "north", "any", "cold", "south"],
+        ["cellar", "dHatch", "west", "any", "corridor", "east"],
+        ["corridor", "dHatch", "east", "any", "cellar", "west"],
+        ["corridor", "dStair", "north", "any", "attic", "south"],
+        ["attic", "dStair", "south", "any", "corridor", "north"],
+        ["attic", "dBalcony", "west", "any", "shop", "east"],
+        ["shop", "dBalcony", "east", "any", "attic", "west"],
+        ["shop", "dYard", "south", "any", "bay", "north"],
+        ["bay", "dYard", "north", "any", "shop", "south"],
+        ["bay", "dRamp", "east", "any", "hall", "west"],
+        ["hall", "dRamp", "west", "any", "bay", "east"],
+        ["hall", "dCross", "east", "south", "corridor", "west"],
+        ["corridor", "dCross", "west", "any", "hall", "east"]
+      ],
+      parcels: [
+        ["p1", "mailroom", "cellar", { en: "A roll of film", zh: "一卷胶片" }],
+        ["p2", "records", "bay", { en: "A tray of type", zh: "一盘铅字" }],
+        ["p3", "cold", "attic", { en: "A crate of soda", zh: "一箱汽水" }]
+      ]
+    },
+    {
+      /* Deep tier, rung 24, the capstone - two hands on the longest round:
+       * ten rooms, two crossings that answer the side you carried in plus
+       * a balcony that answers only the shop side, and a third parcel that
+       * rides the floor past both of them. The search measures nineteen
+       * steps where free hands would do it in ten - the longest proved
+       * round the ladder has ever dealt. */
+      id: "m24",
+      name: { en: "Two Hands, Ten Rooms", zh: "一双手，十间房" },
+      brief: { en: "The longest round of the year, and still only two hands. Both crossings answer the side you carried in, the balcony answers only the shop side, and the third parcel spends most of the tour on the floor.", zh: "一年里最长的一趟，还是只有一双手。两道交叉门都认你带进去的那一边，阳台只认店面的那侧，第三个包裹要在地上躺大半趟。" },
+      hint: { en: "Decide which two you hold before you knock once.", zh: "敲第一下之前，先想好手里拿哪两件。" },
+      rooms: ["shop", "hall", "mailroom", "records", "cold", "cellar", "corridor", "bay", "attic", "lift"], start: "shop", at: "south", budget: 24, capacity: 2, order: [],
+      doors: [
+        ["shop", "dBell", "north", "any", "hall", "south"],
+        ["hall", "dBell", "south", "any", "shop", "north"],
+        ["hall", "dLift", "north", "any", "mailroom", "south"],
+        ["mailroom", "dLift", "south", "any", "hall", "north"],
+        ["mailroom", "dChute", "north", "any", "records", "south"],
+        ["records", "dChute", "south", "any", "mailroom", "north"],
+        ["records", "dDesk", "west", "any", "cold", "east"],
+        ["cold", "dDesk", "east", "any", "records", "west"],
+        ["cold", "dRun", "south", "any", "cellar", "north"],
+        ["cellar", "dRun", "north", "any", "cold", "south"],
+        ["cellar", "dHatch", "west", "any", "corridor", "east"],
+        ["corridor", "dHatch", "east", "any", "cellar", "west"],
+        ["corridor", "dStair", "north", "any", "attic", "south"],
+        ["attic", "dStair", "south", "any", "corridor", "north"],
+        ["attic", "dBalcony", "west", "any", "shop", "east"],
+        ["shop", "dBalcony", "east", "any", "attic", "west"],
+        ["shop", "dYard", "south", "any", "bay", "north"],
+        ["bay", "dYard", "north", "any", "shop", "south"],
+        ["bay", "dRamp", "east", "any", "hall", "west"],
+        ["hall", "dRamp", "west", "any", "bay", "east"],
+        ["corridor", "dStair2", "east", "any", "lift", "west"],
+        ["lift", "dStair2", "west", "any", "corridor", "east"],
+        ["hall", "dCross", "east", "south", "corridor", "west"],
+        ["corridor", "dCross", "west", "any", "hall", "east"],
+        ["hall", "dCross", "east", "north", "cold", "west"],
+        ["cold", "dCross", "west", "any", "hall", "east"],
+        ["hall", "dBalcony2", "east", "south", "lift", "east"],
+        ["lift", "dBalcony2", "east", "any", "hall", "south"]
+      ],
+      parcels: [
+        ["p1", "mailroom", "lift", { en: "A roll of carpet", zh: "一卷地毯" }],
+        ["p2", "records", "bay", { en: "A tray of type", zh: "一盘铅字" }],
+        ["p3", "cold", "attic", { en: "A sealed tea chest", zh: "封口的茶叶箱" }]
+      ]
     }
   ];
 
@@ -1038,6 +1225,7 @@
       start: raw.start,
       startSide: raw.at,
       budget: raw.budget,
+      capacity: raw.capacity || 0,
       order: raw.order,
       rooms: [],
       parcels: []
@@ -1182,10 +1370,13 @@
     var i, p;
     for (i = 0; i < pdxMap.parcels.length; i += 1) {
       p = pdxMap.parcels[i];
-      if (p.from === level.room && level.carrying.indexOf(p.id) < 0 && level.done[p.id] !== true) {
-        level.carrying.push(p.id);
-        pdxPush(level, t("pdxPicked", { p: pdxText(p.label) }));
+      if (p.from !== level.room || level.carrying.indexOf(p.id) >= 0 || level.done[p.id] === true) { continue; }
+      if (pdxMap.capacity > 0 && level.carrying.length >= pdxMap.capacity) {
+        pdxPush(level, t("pdxHandsFull", { p: pdxText(p.label) }));
+        continue;
       }
+      level.carrying.push(p.id);
+      pdxPush(level, t("pdxPicked", { p: pdxText(p.label) }));
     }
     for (i = 0; i < pdxMap.parcels.length; i += 1) {
       p = pdxMap.parcels[i];
@@ -1646,6 +1837,7 @@
       "pdxStanding": "You stand on the {s}.",
       "pdxArrived": "You came in on the {s} of {r}.",
       "pdxPicked": "You lifted {p}.",
+      "pdxHandsFull": "Your hands are full; {p} waits on the floor.",
       "pdxLeft": "{p} left with {r}.",
       "pdxTooEarly": "{p} is not due yet.",
       "pdxStuck": "The {d} gives nothing from here.",
@@ -1694,6 +1886,7 @@
       "pdxStanding": "你站在{s}。",
       "pdxArrived": "你从{s}进了{r}。",
       "pdxPicked": "你抱起了{p}。",
+      "pdxHandsFull": "手上拿满了，{p}先在地上等。",
       "pdxLeft": "把{p}交到{r}。",
       "pdxTooEarly": "{p}还不到交的时候。",
       "pdxStuck": "{d}在这一边什么也不给。",
@@ -1741,6 +1934,7 @@
         "Some doors only open from one side and some put you on the far side of the room you left.",
         "A wrong side costs one step, never the run; Step back (U) undoes a move three times a map.",
         "All parcels delivered ends the map; stars come from steps and the low band is measured.",
+        "New tier: from map 21 the courier has only two hands - a third parcel waits on the floor until a delivery frees one.",
       ],
       zh: [
         "在这栋楼里送一整轮包裹：一扇门值多少，取决于你敲的是哪一边。",
@@ -1749,6 +1943,7 @@
         "有些门只从一个边才开，有些会把你放到刚才那间房的对面一边。",
         "推错边只亏一步，不断送；退一步键每张图可以用三次。",
         "全部送到就算通关；星级看步数，最低那一档是算出来的。",
+        "新层级：从第21张图起，邮差只有一双手——第三个包裹先在地上等，送掉一件腾出手再去拿。",
       ],
     },
   });

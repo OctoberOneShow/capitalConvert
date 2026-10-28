@@ -47,6 +47,16 @@
     { id: "c21", labelKey: "echZ21", style: "rooms", pings: 16, quota: 11, starPings: [10, 13, 15], fish: 2 },
     { id: "c22", labelKey: "echZ22", style: "fork", pings: 16, quota: 12, starPings: [10, 13, 15], fish: 2 },
     { id: "c23", labelKey: "echZ23", style: "deep", pings: 16, quota: 12, starPings: [10, 13, 15], fish: 2 },
+
+    /* c24 - The Deepest Seam. The summit closes the style rotation back on
+     * the pinch and takes ink away instead of adding shots: thirteen bagged -
+     * the deepest quota on the ladder - inside thirteen shots, where the
+     * gate's cover solver needs ten on the worst dealt seam. Three stars sits
+     * exactly on that measured floor, and a startle's two spare shots still
+     * reach the one-star band; every rung below leaves five or more shots of
+     * room over its own floor, the seam leaves three, so the squeeze is the
+     * rung. */
+    { id: "c24", labelKey: "echZ24", style: "pinch", pings: 13, quota: 13, starPings: [10, 11, 12], fish: 2 },
   ];
 
   /* --- pure core ----------------------------------------------------------
@@ -511,6 +521,7 @@
   App.echoCave = echCave;
   App.echoPath = echPath;
   App.echoFlood = echFlood;
+  App.echoFishStep = echFishStep;
   App.echoLevels = echLevels;
 
   function initEchoCartographerGame(panelEl) {
@@ -1117,6 +1128,7 @@
       "echZ21": "Chamber of Vaults",
       "echZ22": "Bifurcated Abyss",
       "echZ23": "The Nethermost Vault",
+      "echZ24": "The Deepest Seam",
       "echPingLabel": "Ink",
       "echFossilLabel": "Fossils",
       "echStepLabel": "Steps",
@@ -1169,6 +1181,7 @@
       "echZ21": "穹顶石窟群",
       "echZ22": "分叉深渊",
       "echZ23": "幽冥最深穴",
+      "echZ24": "最深矿层",
       "echPingLabel": "墨量",
       "echFossilLabel": "化石",
       "echStepLabel": "步数",

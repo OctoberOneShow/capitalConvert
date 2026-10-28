@@ -280,6 +280,71 @@
       stations: [{ edge: "r", pos: 1, colour: 0 }, { edge: "t", pos: 2, colour: 1 }, { edge: "r", pos: 5, colour: 2 }, { edge: "b", pos: 6, colour: 1 }, { edge: "r", pos: 3, colour: 0 }],
       trains: [{ c: 0, row: 1, tick: 0 }, { c: 2, row: 5, tick: 4 }, { c: 1, row: 3, tick: 8 }, { c: 0, row: 3, tick: 12 }, { c: 1, row: 1, tick: 16 }, { c: 2, row: 3, tick: 20 }, { c: 0, row: 5, tick: 24 }, { c: 1, row: 5, tick: 28 }, { c: 0, row: 1, tick: 32 }, { c: 2, row: 5, tick: 36 }, { c: 1, row: 3, tick: 40 }, { c: 0, row: 3, tick: 44 }, { c: 1, row: 1, tick: 48 }, { c: 2, row: 3, tick: 52 }, { c: 0, row: 1, tick: 56 }, { c: 1, row: 3, tick: 60 }],
     },
+    {
+      /* The passing place: the express road and the low road meet at one
+       * crossover, and a train dropped onto the low road while the main is busy
+       * wrecks. The berth is thrown in to hold the drops until their slot is
+       * clear, then thrown out before the next express comes up behind it - the
+       * hold, not the crossover, is what makes the timetable run. */
+      id: "d21",
+      labelKey: "cwkZ21",
+      limit: 100,
+      hold: 2,
+      tickMs: 330,
+      rows: ["#########", ".........", "#####.###", ".........", "#########", "#########", "#########"],
+      cells: [{ x: 3, y: 1, kind: "s", init: 0 }, { x: 5, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 3, kind: "p", a: 0, b: 1, init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 1 }, { edge: "r", pos: 3, colour: 0 }],
+      trains: [{ c: 0, row: 1, tick: 0 }, { c: 0, row: 3, tick: 2 }, { c: 1, row: 3, tick: 6 }, { c: 1, row: 1, tick: 10 }, { c: 0, row: 3, tick: 14 }, { c: 0, row: 1, tick: 18 }, { c: 1, row: 1, tick: 22 }, { c: 1, row: 3, tick: 26 }, { c: 0, row: 1, tick: 30 }, { c: 0, row: 3, tick: 34 }, { c: 1, row: 3, tick: 38 }, { c: 1, row: 1, tick: 42 }, { c: 0, row: 3, tick: 46 }, { c: 0, row: 1, tick: 50 }, { c: 1, row: 1, tick: 54 }, { c: 1, row: 3, tick: 58 }, { c: 0, row: 1, tick: 62 }, { c: 0, row: 3, tick: 66 }, { c: 1, row: 3, tick: 70 }, { c: 1, row: 1, tick: 74 }],
+    },
+    {
+      /* The westbound terminus: every platform is on the left edge, so nothing
+       * can run off the east end. Each train runs east to the buffer column,
+       * is handed down one level for the low platform or two for the far one,
+       * and comes back west; the column is the only way down, so both drop
+       * points have to be thrown between trains. */
+      id: "d22",
+      labelKey: "cwkZ22",
+      limit: 124,
+      hold: 2,
+      tickMs: 320,
+      rows: ["#########", "........#", "#######.#", "........#", "#######.#", "........#", "#########"],
+      cells: [{ x: 7, y: 1, kind: "p", a: 3, b: 2, init: 0 }, { x: 7, y: 3, kind: "p", a: 2, b: 3, init: 0 }, { x: 7, y: 5, kind: "p", a: 1, b: 2, init: 0 }],
+      stations: [{ edge: "l", pos: 3, colour: 0 }, { edge: "l", pos: 5, colour: 2 }],
+      trains: [{ c: 0, row: 1, tick: 0 }, { c: 2, row: 1, tick: 4 }, { c: 0, row: 1, tick: 8 }, { c: 2, row: 1, tick: 12 }, { c: 0, row: 1, tick: 16 }, { c: 2, row: 1, tick: 20 }, { c: 0, row: 1, tick: 24 }, { c: 2, row: 1, tick: 28 }, { c: 0, row: 1, tick: 32 }, { c: 2, row: 1, tick: 36 }, { c: 0, row: 1, tick: 40 }, { c: 2, row: 1, tick: 44 }, { c: 0, row: 1, tick: 48 }, { c: 2, row: 1, tick: 52 }, { c: 0, row: 1, tick: 56 }, { c: 2, row: 1, tick: 60 }, { c: 0, row: 1, tick: 64 }, { c: 2, row: 1, tick: 68 }, { c: 0, row: 1, tick: 72 }, { c: 2, row: 1, tick: 76 }, { c: 0, row: 1, tick: 80 }, { c: 2, row: 1, tick: 84 }],
+    },
+    {
+      /* The berth queue: the upper approach is three berths deep. Throwing the
+       * berth nearest the crossover arms a hold for the train that enters it,
+       * and the trains behind it stack on the earlier berths instead of running
+       * into its back; releasing that one berth lets the whole queue follow in
+       * order, so a burst of arrivals is stretched into the gaps on the main. */
+      id: "d23",
+      labelKey: "cwkZ23",
+      limit: 108,
+      hold: 3,
+      tickMs: 310,
+      rows: ["#########", ".........", "#####.###", ".........", "#########", "#########", "#########"],
+      cells: [{ x: 2, y: 1, kind: "s", init: 0 }, { x: 3, y: 1, kind: "s", init: 0 }, { x: 4, y: 1, kind: "s", init: 0 }, { x: 5, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 3, kind: "p", a: 0, b: 1, init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 1 }, { edge: "r", pos: 3, colour: 0 }],
+      trains: [{ c: 0, row: 1, tick: 0 }, { c: 0, row: 3, tick: 2 }, { c: 1, row: 3, tick: 6 }, { c: 1, row: 1, tick: 10 }, { c: 0, row: 3, tick: 14 }, { c: 0, row: 1, tick: 18 }, { c: 1, row: 1, tick: 22 }, { c: 1, row: 3, tick: 26 }, { c: 0, row: 1, tick: 30 }, { c: 0, row: 3, tick: 34 }, { c: 1, row: 3, tick: 38 }, { c: 1, row: 1, tick: 42 }, { c: 0, row: 3, tick: 46 }, { c: 0, row: 1, tick: 50 }, { c: 1, row: 1, tick: 54 }, { c: 1, row: 3, tick: 58 }, { c: 0, row: 1, tick: 62 }, { c: 0, row: 3, tick: 66 }, { c: 1, row: 3, tick: 70 }, { c: 1, row: 1, tick: 74 }, { c: 0, row: 3, tick: 78 }, { c: 0, row: 1, tick: 82 }],
+    },
+    {
+      /* The grand cascade: one column drops the whole timetable onto three
+       * platforms - the upper road for the high platform, the middle road for
+       * the low one, and the bay below. The lowest point starts thrown against
+       * the bay and has to be set down before the first bay train reaches it.
+       * All three points are live, and every colour has to be on the right
+       * level of the column before the next train reaches the top. */
+      id: "d24",
+      labelKey: "cwkZ24",
+      limit: 106,
+      hold: 2,
+      tickMs: 300,
+      rows: ["#########", ".........", "#####.###", ".........", "#####.###", ".........", "#####.###"],
+      cells: [{ x: 5, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 3, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 5, kind: "p", a: 2, b: 3, init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 1 }, { edge: "r", pos: 3, colour: 0 }, { edge: "b", pos: 5, colour: 2 }],
+      trains: [{ c: 1, row: 1, tick: 0 }, { c: 0, row: 3, tick: 3 }, { c: 2, row: 1, tick: 6 }, { c: 0, row: 1, tick: 9 }, { c: 2, row: 3, tick: 12 }, { c: 0, row: 1, tick: 15 }, { c: 1, row: 1, tick: 18 }, { c: 0, row: 3, tick: 21 }, { c: 2, row: 1, tick: 24 }, { c: 0, row: 1, tick: 27 }, { c: 2, row: 3, tick: 30 }, { c: 0, row: 1, tick: 33 }, { c: 1, row: 1, tick: 36 }, { c: 0, row: 3, tick: 39 }, { c: 2, row: 1, tick: 42 }, { c: 0, row: 1, tick: 45 }, { c: 2, row: 3, tick: 48 }, { c: 0, row: 1, tick: 51 }, { c: 1, row: 1, tick: 54 }, { c: 0, row: 3, tick: 57 }, { c: 2, row: 1, tick: 60 }, { c: 0, row: 1, tick: 63 }, { c: 2, row: 3, tick: 66 }, { c: 0, row: 1, tick: 69 }, { c: 1, row: 1, tick: 72 }, { c: 0, row: 3, tick: 75 }, { c: 2, row: 1, tick: 78 }, { c: 0, row: 1, tick: 81 }],
+    },
   ];
 
   function cwkBoard(level) {
@@ -1307,6 +1372,10 @@
       "cwkZ18": "One Way Up",
       "cwkZ19": "The Turnback",
       "cwkZ20": "The Grand Interchange",
+      "cwkZ21": "The Held Halt",
+      "cwkZ22": "The Westbound Terminus",
+      "cwkZ23": "The Berth Queue",
+      "cwkZ24": "The Grand Cascade",
       "cwkClockLabel": "Clock",
       "cwkCrashLabel": "Wrecks",
       "cwkHaulLabel": "Haul",
@@ -1362,6 +1431,10 @@
       "cwkZ18": "单向上行",
       "cwkZ19": "尽头折返",
       "cwkZ20": "全局枢纽",
+      "cwkZ21": "临停让行",
+      "cwkZ22": "西行总站",
+      "cwkZ23": "侧线排队",
+      "cwkZ24": "三色联落",
       "cwkClockLabel": "时钟",
       "cwkCrashLabel": "事故",
       "cwkHaulLabel": "运量",
@@ -1421,6 +1494,7 @@
         "Watch out: two trains in one cell, a train on dead ground, or a train arriving at the wrong colour each count as a wreck.",
         "Clock: Space starts and holds the boards, Escape holds them, X stops and reruns the timetable. Flips apply from the next tick.",
         "Scoring: the solver proves how few flips are enough, and that number is par; a wreck costs dearer than an extra flip.",
+        "New tier: a loop berth can hold a train so a later one goes first, a westbound platform is only reached by running out to the buffer and back, and a queue of berths spaces a burst of arrivals into the gaps on the main road.",
       ],
       zh: [
         "目标：让时刻表上的每一趟列车都进自己的车站，全程不出第三次事故。",
@@ -1429,6 +1503,7 @@
         "小心：两车同格、驶入无轨道处、进错颜色的站，每次都记一次事故。",
         "时钟：空格开闸与暂停，Esc 暂停，X 停轮重排。扳动从下一拍开始生效。",
         "计分：求解器算出最少需要扳几次，那就是标准次数；一次事故的代价比多扳几下更高。",
+        "新层级：环线上的候车侧线可扣住一趟车，让后车先行；西行站台要跑到尽头折返才进得去；一串侧线能把密集到车排进正线的空档。",
       ],
     },
   });

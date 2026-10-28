@@ -93,6 +93,30 @@
     { id: "d20", labelKey: "drmP20", seed: 6020, voices: ["bass", "str", "bell"],
       beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
       rest: 0, rules: { bassRun: 3, strRun: 3, bellRun: 2, bellGap: 2 }, stepMs: 144 },
+    /* Rungs 21-24 are the hard tier: the full sixteen-beat bar throughout,
+     * the tempo walking from d20's 144 ms down to the documented 140 ms
+     * floor, and one rule pushed past every shipped piece - measured on the
+     * dealt targets, not the dials. d21 plants the longest vigil: the bells
+     * wait 14 steps between rings, where no shipped target stretches past
+     * 12 (d18). d22 lets the bass walk five straight steps (the shipped
+     * peak is d20's three). d23 rings the first bell trio, three in a row,
+     * with the gap leash at its loosest - the shipped peak is the pair of
+     * d8 and d17. d24 is the quietest bar in the game: the rest rule skips
+     * 44% of the marked bar, against 33% for the shipped quietest (d4), so
+     * the target itself is mostly silence and every marked beat must be
+     * read exactly. */
+    { id: "d21", labelKey: "drmP21", seed: 6108, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 14 }, stepMs: 144 },
+    { id: "d22", labelKey: "drmP22", seed: 6141, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 5, strRun: 2, bellRun: 1, bellGap: 3 }, stepMs: 142 },
+    { id: "d23", labelKey: "drmP23", seed: 6106, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 3, bellGap: 1 }, stepMs: 141 },
+    { id: "d24", labelKey: "drmP24", seed: 6100, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0.45, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 4 }, stepMs: 140 },
   ];
 
   function mulberry32(seed) {
@@ -930,6 +954,10 @@
       "drmP18": "Tight Weave",
       "drmP19": "Half-Bar Wait",
       "drmP20": "Last Cadence",
+      "drmP21": "The Long Silence",
+      "drmP22": "The Walking Bass",
+      "drmP23": "The Bell Trio",
+      "drmP24": "The Quiet Coda",
       "drmVBass": "Bass",
       "drmVStr": "Strings",
       "drmVBell": "Bells",
@@ -959,7 +987,7 @@
       "drmWon": "{name} matches every marked beat with {n} notes - {s} stars!",
       "drmPaused": "Playback stopped while you were away; the score is untouched.",
       "drmNextPiece": "Next piece unlocked.",
-      "drmAllPieces": "All twenty pieces scored.",
+      "drmAllPieces": "All twenty-four pieces scored.",
       "drmHint": "Fewer notes earn more stars: place only what the target asks for. The playhead reads as text, so the puzzle works on mute.",
       "logDreamOrchestra": "Scored {name} with {n} notes",
     },
@@ -985,6 +1013,10 @@
       "drmP18": "密织紧线",
       "drmP19": "半程长候",
       "drmP20": "末章之律",
+      "drmP21": "长夜禁鸣",
+      "drmP22": "漫步低音",
+      "drmP23": "三连钟鸣",
+      "drmP24": "静默尾声",
       "drmVBass": "低音",
       "drmVStr": "弦乐",
       "drmVBell": "钟琴",
@@ -1014,7 +1046,7 @@
       "drmWon": "{name}全部重拍命中，用了 {n} 个音符——获得 {s} 星！",
       "drmPaused": "离开时已停止播放；你的乐谱原封不动。",
       "drmNextPiece": "解锁下一首乐曲。",
-      "drmAllPieces": "二十首乐曲全部编完。",
+      "drmAllPieces": "二十四首乐曲全部编完。",
       "drmHint": "音符越少星越多：只放目标要求的音。播放头有文字显示，静音也能解谜。",
       "logDreamOrchestra": "为{name}编了 {n} 个音符",
     },

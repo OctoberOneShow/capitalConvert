@@ -158,6 +158,11 @@ function resolveArray(name, fromModule) {
         i = nl < 0 ? src.length : nl + 1;
         continue;
       }
+      if (ch === "/" && src[i + 1] === "*") {
+        const end = src.indexOf("*/", i + 2);
+        i = end < 0 ? src.length : end + 2;
+        continue;
+      }
       if (ch === "(" || ch === "[" || ch === "{") depth += 1;
       else if (ch === ")" || ch === "]" || ch === "}") depth -= 1;
       else if (ch === ";" && depth === 0) {

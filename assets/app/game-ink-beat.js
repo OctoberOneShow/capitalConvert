@@ -49,6 +49,23 @@
     { id: "t18", labelKey: "beatL18", bpm: 196, bars: 26, seed: 251, density: [0.13, 0.095, 0.15, 0.07], swing: 0.34 },
     { id: "t19", labelKey: "beatL19", bpm: 232, bars: 30, seed: 263, density: [0.14, 0.105, 0.155, 0.08] },
     { id: "t20", labelKey: "beatL20", bpm: 224, bars: 30, seed: 269, density: [0.08, 0.155, 0.105, 0.14], swing: 0.34 },
+    /* Tracks 21-24 are the hard tier, and each one pushes a different chart
+     * lever past every shipped track (all numbers measured on the seed's own
+     * chart). t21 hands the melody to the top pair: lanes J and K carry 72%
+     * of the 230 notes while the kick lane nearly rests - no shipped chart
+     * puts more than 51% on its top pair. t22 evens the wall out at an
+     * eighth of a step apiece, so the quietest lane still lands 50 notes
+     * and no shipped chart keeps its quietest lane above 44. t23 is the
+     * long burn: 36 bars and 274 notes, both campaign records, at 240 BPM.
+     * t24 closes by taking t21's hot pair up to 244 BPM in the deepest
+     * swing yet (0.5 against the shipped 0.34) - 299 notes at 9.3 notes a
+     * second, against the shipped peak of 7.3. Measured load climbs through
+     * the tier: 230 -> 244 -> 274 -> 299 notes and 6.5 -> 7.4 -> 7.5 -> 9.3
+     * notes a second. */
+    { id: "t21", labelKey: "beatL21", bpm: 192, bars: 28, seed: 281, density: [0.055, 0.045, 0.24, 0.22] },
+    { id: "t22", labelKey: "beatL22", bpm: 220, bars: 30, seed: 293, density: [0.125, 0.125, 0.125, 0.125] },
+    { id: "t23", labelKey: "beatL23", bpm: 240, bars: 36, seed: 307, density: [0.145, 0.11, 0.165, 0.085] },
+    { id: "t24", labelKey: "beatL24", bpm: 244, bars: 32, seed: 331, density: [0.06, 0.05, 0.25, 0.23], swing: 0.5 },
   ];
 
   function mulberry32(seed) {
@@ -589,4 +606,25 @@
   /* The chart builder is pure (seed in, notes out), so the release gate can
    * replay a track's own stream headlessly without a second copy of it. */
   App.beatChart = buildBeatNotes;
+  /* The level table travels too, so the gate can check the ladder's shape
+   * without regex-scraping this source. */
+  App.beatLevels = beatLevels;
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so the shared dictionary stays authoritative. The
+   * hard tier keeps the cosmic register the shared dictionary carries. */
+  App.addStrings({
+    en: {
+      "beatL21": "Binary Star",
+      "beatL22": "Equilibrium",
+      "beatL23": "Relentless",
+      "beatL24": "Nova Overdrive",
+    },
+    zh: {
+      "beatL21": "双星焰",
+      "beatL22": "均势场",
+      "beatL23": "绵延不绝",
+      "beatL24": "超频新星",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

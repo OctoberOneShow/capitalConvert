@@ -67,6 +67,18 @@
     { id: "f18", labelKey: "blkL18", goal: 34, garbage: 6, startMs: 215, rise: 7, starTimes: [205, 310, 430] },
     { id: "f19", labelKey: "blkL19", goal: 36, garbage: 12, startMs: 200, starTimes: [195, 295, 410] },
     { id: "f20", labelKey: "blkL20", goal: 38, garbage: 7, startMs: 205, pieces: "noI", rise: 8, starTimes: [205, 310, 430] },
+    /* Ranks 21-24: the deep tier's lesson is the twin door. `holes` opens two
+     * columns in every rubble row instead of one, so no row clears until both
+     * doors are built - one column of the pair is always a deliberate build,
+     * never the lucky hole the drop happens to leave. f21 teaches the twin
+     * door on its own; f22 sends the rubble rising while you dig it; f23
+     * takes the I-beams away, so the second door has to be closed with the
+     * L/T/S/Z families; f24 combines all three - twin doors, a rising floor
+     * and no I-beams - at the fastest clock the ladder has asked for. */
+    { id: "f21", labelKey: "blkL21", goal: 40, garbage: 10, startMs: 210, holes: 2, starTimes: [195, 290, 405] },
+    { id: "f22", labelKey: "blkL22", goal: 40, garbage: 5, startMs: 210, holes: 2, rise: 8, starTimes: [265, 400, 545] },
+    { id: "f23", labelKey: "blkL23", goal: 43, garbage: 9, startMs: 200, holes: 2, pieces: "noI", starTimes: [225, 340, 470] },
+    { id: "f24", labelKey: "blkL24", goal: 44, garbage: 6, startMs: 200, holes: 2, pieces: "noI", rise: 6, starTimes: [230, 345, 475] },
   ];
 
   function rotateMatrix(matrix) {
@@ -98,6 +110,32 @@
       line.push(x === hole ? "" : "X");
     }
     return line;
+  }
+
+  /* A rubble row with the given hole columns open. */
+  function blkGarbageRowHoles(holeCols) {
+    var line = [];
+    for (var x = 0; x < blkCols; x += 1) {
+      line.push(holeCols.indexOf(x) === -1 ? "X" : "");
+    }
+    return line;
+  }
+
+  /* The hole columns one rubble row opens: one anywhere, or `holes` distinct
+   * columns when the level asks for the deep tier's twin-door rubble. One
+   * draw per row either way, so the shipped rungs' deals stay byte-identical. */
+  function blkRubbleHoles(level, rng) {
+    if (!level || !level.holes || level.holes < 2) {
+      return [Math.floor(rng() * blkCols)];
+    }
+    var picked = [];
+    while (picked.length < level.holes) {
+      var col = Math.floor(rng() * blkCols);
+      if (picked.indexOf(col) === -1) {
+        picked.push(col);
+      }
+    }
+    return picked;
   }
 
   /* Pure board rules, shared by the game loop below and the headless prover
@@ -167,7 +205,7 @@
         due -= 1;
         tally.risen += 1;
         grid.shift();
-        grid.push(blkGarbageRow(Math.floor(rng() * blkCols)));
+        grid.push(blkGarbageRowHoles(blkRubbleHoles(level, rng)));
       }
     }
     return rows.length;
@@ -266,7 +304,7 @@
       grid.push(row);
     }
     for (var g = 0; g < level.garbage; g += 1) {
-      grid[blkRows - 1 - g] = blkGarbageRow(Math.floor(rng() * blkCols));
+      grid[blkRows - 1 - g] = blkGarbageRowHoles(blkRubbleHoles(level, rng));
     }
     var letters = blkBagLetters(level).slice();
     var bag = [];
@@ -392,7 +430,7 @@
 
     function pourGarbage(count) {
       for (var row = 0; row < count; row += 1) {
-        grid[blkRows - 1 - row] = blkGarbageRow(Math.floor(Math.random() * blkCols));
+        grid[blkRows - 1 - row] = blkGarbageRowHoles(blkRubbleHoles(level, Math.random));
       }
     }
 
@@ -403,7 +441,7 @@
     function riseGarbage(count) {
       for (var row = 0; row < count; row += 1) {
         grid.shift();
-        grid.push(blkGarbageRow(Math.floor(Math.random() * blkCols)));
+        grid.push(blkGarbageRowHoles(blkRubbleHoles(level, Math.random)));
       }
     }
 
@@ -859,6 +897,7 @@
   App.initGlyphBlocksGame = initGlyphBlocksGame;
   App.blkLevels = blkLevels;
   App.blkSimulate = blkSimulate;
+  App.blkRubbleHoles = blkRubbleHoles;
   App.blkShapes = blkShapes;
   App.blkCollides = blkCollides;
   App.blkReachable = blkReachable;

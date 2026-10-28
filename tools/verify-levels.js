@@ -2210,6 +2210,9 @@ if (App.initGlyphEchoGame) {
   echoPads.forEach((pad, index) => {
     const real = pad.classList;
     Object.defineProperty(pad, "classList", {
+      /* configurable so the deep-tier gate snippet can re-hook the same
+       * live pads when it runs later against the shared DOM */
+      configurable: true,
       get() {
         return {
           add(...names) {
@@ -2293,7 +2296,7 @@ if (App.initGlyphEchoGame) {
     (o) => o.value,
   );
   check("game-glyph-echo", "the picker lists the whole ladder",
-    echoIds.length === 20, String(echoIds.length));
+    echoIds.length === 24, String(echoIds.length));
 
   for (const levelId of ["c17", "c18", "c19", "c20"]) {
     const perfect = echoRun(levelId, 0);
@@ -2978,8 +2981,8 @@ if (App.glyphNetGenerate && App.glyphNetWin && App.netLevels) {
   const ftTier = Object.keys(ftRows).filter((id) =>
     ["t17", "t18", "t19", "t20"].includes(id),
   );
-  check("game-glyph-fifteen", "the ladder holds twenty boards with the tier present",
-    Object.keys(ftRows).length === 20 && ftTier.length === 4,
+  check("game-glyph-fifteen", "the ladder holds twenty-four boards with the tier present",
+    Object.keys(ftRows).length === 24 && ftTier.length === 4,
     `${Object.keys(ftRows).length}/${ftTier.length}`);
 
   /* Deterministic PRNG swapped over Math.random; the app sandbox shares the
@@ -4437,12 +4440,6 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
   });
 }
 
-console.log(`pass ${pass}, fail ${failures.length}`);
-if (failures.length) {
-  failures.forEach((line) => console.log("FAIL " + line));
-  process.exitCode = 1;
-}
-
 /* ==== Expansion batch: nine ladders move 20 -> 24 ==========================
  * Eight new gates below were staged by per-game agents in tmp/gates/ and are
  * pasted verbatim; the aurora-flow gate is the staged snippet from
@@ -5571,4 +5568,42 @@ if (App.foldSheets && App.foldDeal && App.foldTargetSolvable) {
       const zh = App.I18N && App.I18N.zh ? App.I18N.zh[key] : null;
       return !!text && text !== key && !!en && en !== key && !!zh && zh !== key;
     }), "a summit label fell back to its key");
+}
+
+/* ==== Deep tier: forty-one more ladders move 20 -> 24 ======================
+ * These gates are kept as snippets under tools/gate-snippets/ so each can be
+ * driven on its own with `node tools/gate-snippets/_runner.js <slug>`, and
+ * are invoked here against the same booted App the rest of this file checks.
+ * Each one re-proves its whole ladder through the game's own solver and then
+ * cuts the new tier's advertised mechanic out of a copy of its own row, so
+ * a rung whose lesson is decorative fails the build. */
+["glyph-echo", "clockwork-dispatch", "courtroom-of-animals", "pinball-courier",
+  "borrowed-bodies", "pocket-detective", "shadow-puppeteer",
+  "circuit-scribe", "lost-language", "glyph-fifteen", "glyph-blocks",
+  "glyph-dots", "bubble-ink", "ink-cascade", "ink-slash",
+  "ink-beat", "dream-orchestra",
+  "echo-cartographer", "lantern-heist", "lantern-fishing",
+  "ocean-archaeologist", "glyph-leap", "rule-thieves",
+  "ink-sort", "morse-rescue", "glyph-glide", "glyph-raid",
+  "whisper-deck", "archive-escape", "glyph-sketch",
+  "kitchen-relay", "moon-market", "tea-house", "paradox-post",
+  "ember-delve", "rooftop-radio", "whale-parliament",
+  "auction-dungeon", "one-minute-mayor", "peg-splash",
+  "blind-sculptor"].forEach((slug) => {
+  const snippetEnv = createEnvironment({});
+  snippetEnv.load(appSource);
+  snippetEnv.domReady();
+  const snippetApp = snippetEnv.sandbox.CapitalConvert || snippetEnv.window.CapitalConvert;
+  require(path.join(root, "tools", "gate-snippets", slug + ".js"))({
+    App: snippetApp, env: snippetEnv, check, fs, path, root,
+  });
+});
+
+/* ==== Summary =============================================================
+ * Kept last on purpose: every gate above (including gates appended later)
+ * must be able to change the printed count and the exit code. */
+console.log(`pass ${pass}, fail ${failures.length}`);
+if (failures.length) {
+  failures.forEach((line) => console.log("FAIL " + line));
+  process.exitCode = 1;
 }

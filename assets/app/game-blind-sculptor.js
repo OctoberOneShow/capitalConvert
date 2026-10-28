@@ -59,7 +59,28 @@
    *   multi-door deals one shelf is packed to all nine cells, so the free count
    *   finishes that layer and a second pair of cuts closes the solid too. It is
    *   the last rung that gets easier on structure instead of harder, so it is
-   *   not shipped. */
+   *   not shipped.
+   * - the deep tier changes the axis instead of the size. Rungs 21-24 deal
+   *   "wall" and "hollow" solids: every block inside two slices of one
+   *   VERTICAL axis (the rung's note names it, front or side), all three
+   *   heights occupied, each plane reaching every column of its axis and at
+   *   least two heights, no height squeezed into one column, no plane packed.
+   *   Those five facts are the mechanic: they close every door that touches
+   *   the height axis or a perpendicular plane, so the shelf pair rungs 11-20
+   *   taught leaves the far shelf's quota loose (84-126 shapes after both
+   *   cuts) and the only pair that pins the solid is the wall's own. Over 200
+   *   streamed rounds per rung (seed + round*101, the deal the panel deals)
+   *   not one rung fell back, every deal sat at par 2 with exactly one
+   *   closing pair among the 36 and never a height-axis door - tighter than
+   *   b19, which shipped with 2 of 40 multi-door deals. The hollow rung keeps
+   *   only the outer planes, so its middle slice reads empty end to end on
+   *   every deal, and reading it first spends the probe that buys the top
+   *   band. Within the named axis the pair stays the deal's secret exactly as
+   *   the shelf pair was: a third of the deals give a two-cut line from a
+   *   cold bench, the rest pay the honest diagnostic line - the same reach
+   *   the shelf rungs ship with. Fog runs 2,220,075 at eight blocks up to
+   *   17,383,860 at twelve, where the capstone matches the deepest fog the
+   *   ladder has dealt. */
   var bldLevels = [
     { id: "b1", labelKey: "bldL1", noteKey: "bldN1", blocks: 3, want: "flat", minPar: 1, maxPar: 2, slack: 2, tries: 3, seed: 11 },
     { id: "b2", labelKey: "bldL2", noteKey: "bldN2", blocks: 4, want: "two", minPar: 2, maxPar: 3, slack: 2, tries: 3, seed: 212 },
@@ -81,6 +102,38 @@
     { id: "b18", labelKey: "bldL18", noteKey: "bldN18", blocks: 10, want: "two", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 104 },
     { id: "b19", labelKey: "bldL19", noteKey: "bldN19", blocks: 11, want: "two", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 134 },
     { id: "b20", labelKey: "bldL20", noteKey: "bldN20", blocks: 12, want: "two", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 1761 },
+    /* --- the deep tier: the wall. Everything above it closes on the height
+     * axis or on a pair the prover finds anywhere; the four rungs below stand
+     * on all three heights while hiding in two slices of one VERTICAL axis,
+     * so the pair that finishes the solid has left the horizontal for good
+     * and the shelf habit from rungs 11-20 cannot even reach the star line.
+     * The flavour ("wall", "hollow") is the lever: no shipped rung carries
+     * it, and its five structural facts - both planes alive but never packed,
+     * each plane spanning every column of its axis and two heights at least,
+     * no height squeezed into one column - are what kill every door that
+     * touches the height axis or a perpendicular plane. Each rung's note
+     * names its axis (filter.axis), the way the shelf rungs' notes named the
+     * heights; the pair inside the axis stays the deal's secret, exactly as
+     * the shelf pair was. Measured notes sit with the rungs. --- */
+    /* Front wall, eight blocks, four probes and three submissions: the intro
+     * rung. The height pair that closed every shelf rung is a proven dead end
+     * here - after both height cuts a whole shelf's quota is still loose - so
+     * the stars live on the front pair, and a living first read cannot say
+     * which partner holds the rest. */
+    { id: "b21", labelKey: "bldL21", noteKey: "bldN21", blocks: 8, want: "wall", axis: "y", minPar: 2, maxPar: 2, slack: 2, tries: 3, seed: 21 },
+    /* Hollow front wall: the pool keeps only the outer front slices, so the
+     * middle front slice reads empty end to end. The nine pinned cells are
+     * bait - the door is the outer pair, and reading the hollow slice first
+     * spends the probe that buys the top band. */
+    { id: "b22", labelKey: "bldL22", noteKey: "bldN22", blocks: 9, want: "hollow", axis: "y", minPar: 2, maxPar: 2, slack: 2, tries: 2, seed: 220 },
+    /* Side wall at eleven blocks with one submission and one spare probe: the
+     * economy of rungs 19-20 on a wall. The axis in the note is not advice
+     * but the whole game - nothing outside the side pair closes anything. */
+    { id: "b23", labelKey: "bldL23", noteKey: "bldN23", blocks: 11, want: "wall", axis: "x", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 2300 },
+    /* Side wall at twelve blocks, matching the deepest fog the ladder has
+     * dealt (17,383,860 solids before the first probe), one submission: the
+     * capstone asks for the side pair straight away. */
+    { id: "b24", labelKey: "bldL24", noteKey: "bldN24", blocks: 12, want: "wall", axis: "x", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 24000 },
   ];
 
   /* --- geometry, all pure --- */
@@ -376,11 +429,68 @@
     return false;
   }
 
+  /* A wall hides every block in two slices of one vertical axis. The flavour
+   * locks the structure the deep tier plays on: both living planes carry
+   * blocks but never all nine, every height stays occupied, each plane
+   * reaches all three columns of its axis and at least two heights, and no
+   * height squeezes into a single column. Those five facts close every door
+   * that touches the height axis or a perpendicular plane - the only pair of
+   * cuts that pins a wall is the pair of its own two planes. */
+  function bldWallOk(mask, hollow) {
+    var ai, p, q, cellsP, cellsQ, inside, i, cell, bit, ok;
+    for (ai = 1; ai <= 2; ai += 1) {
+      for (p = 0; p < 2; p += 1) {
+        for (q = p + 1; q < 3; q += 1) {
+          if (hollow && (p !== 0 || q !== 2)) continue;
+          cellsP = bldPlaneCells(bldAxes[ai], p);
+          cellsQ = bldPlaneCells(bldAxes[ai], q);
+          inside = 0;
+          for (i = 0; i < 9; i += 1) {
+            inside |= 1 << cellsP[i];
+            inside |= 1 << cellsQ[i];
+          }
+          if (mask & ~inside & bldAll) continue; /* a block outside the two planes */
+          var nP = 0, nQ = 0, colsP = 0, colsQ = 0, zP = 0, zQ = 0;
+          var layerCols = [0, 0, 0];
+          ok = true;
+          for (i = 0; i < 9; i += 1) {
+            cell = cellsP[i];
+            bit = 1 << cell;
+            if (mask & bit) {
+              nP += 1;
+              colsP |= 1 << (ai === 1 ? bldX(cell) : bldY(cell));
+              zP |= 1 << bldZ(cell);
+              layerCols[bldZ(cell)] |= 1 << (ai === 1 ? bldX(cell) : bldY(cell));
+            }
+            cell = cellsQ[i];
+            bit = 1 << cell;
+            if (mask & bit) {
+              nQ += 1;
+              colsQ |= 1 << (ai === 1 ? bldX(cell) : bldY(cell));
+              zQ |= 1 << bldZ(cell);
+              layerCols[bldZ(cell)] |= 1 << (ai === 1 ? bldX(cell) : bldY(cell));
+            }
+          }
+          if (!nP || !nQ || nP > 8 || nQ > 8) ok = false;
+          if (ok && (bldCount(colsP) < 3 || bldCount(colsQ) < 3)) ok = false;
+          if (ok && (bldCount(zP) < 2 || bldCount(zQ) < 2)) ok = false;
+          for (i = 0; ok && i < 3; i += 1) {
+            if (bldCount(layerCols[i]) < 2) ok = false;
+          }
+          if (ok) return true;
+        }
+      }
+    }
+    return false;
+  }
+
   function bldFlavorOk(mask, want) {
     if (want === "flat") return bldHeightSpan(mask) === 1;
     if (want === "two") return bldHeightSpan(mask) === 2;
     if (want === "topview") return bldHeightSpan(mask) >= 2 && bldTopViewAmbiguous(mask);
     if (want === "overhang") return bldHeightSpan(mask) >= 2 && bldHasOverhang(mask);
+    if (want === "wall") return bldWallOk(mask, false);
+    if (want === "hollow") return bldWallOk(mask, true);
     return bldHeightSpan(mask) >= 2;
   }
 
@@ -393,7 +503,7 @@
     };
   }
 
-  function bldPool(rng, want) {
+  function bldPool(rng, want, filter) {
     var pool = [], i, a, b;
     if (want === "flat") {
       a = Math.floor(rng() * 3);
@@ -404,6 +514,20 @@
       a = Math.floor(rng() * 3);
       b = (a + 1 + Math.floor(rng() * 2)) % 3;
       for (i = 0; i < 9; i += 1) { pool.push(a * 9 + i); pool.push(b * 9 + i); }
+      return pool;
+    }
+    if (want === "wall" || want === "hollow") {
+      /* Two planes of one vertical axis - the pair that closes a wall never
+       * touches the height axis. The rung's note names the axis (filter.axis,
+       * front or side); a wall leaves it to the deal. The hollow wall takes
+       * the outer planes, so the middle slice of that axis reads empty from
+       * top to bottom. */
+      a = filter && filter.axis === "x" ? 2 : filter && filter.axis === "y" ? 1 : rng() < 0.5 ? 1 : 2;
+      var pair = want === "hollow" ? 1 : Math.floor(rng() * 3); /* (0,1), (0,2), (1,2) - hollow takes the outer pair */
+      b = pair === 2 ? 1 : 0;
+      var hi = pair === 0 ? 1 : 2;
+      for (i = 0; i < 9; i += 1) pool.push(bldPlaneCells(bldAxes[a], b)[i]);
+      for (i = 0; i < 9; i += 1) pool.push(bldPlaneCells(bldAxes[a], hi)[i]);
       return pool;
     }
     for (i = 0; i < bldCells; i += 1) pool.push(i);
@@ -439,7 +563,7 @@
     var need = Math.max(1, Math.min(bldCells - 1, Math.round(blocks) || 3));
     var rng = bldRng(seed), attempt, mask, run;
     for (attempt = 0; attempt < 400; attempt += 1) {
-      mask = bldDeal(rng, need, bldPool(rng, want));
+      mask = bldDeal(rng, need, bldPool(rng, want, filter));
       if (!mask || bldCount(mask) !== need || !bldFlavorOk(mask, want)) continue;
       run = bldSolve(mask, need, 0);
       if (!run.unique || run.probes < minPar || run.probes > maxPar) continue;
@@ -1280,6 +1404,14 @@
       "bldN18": "Ten blocks crowd two shelves: find the shelves and you have found your two cuts; waste one probe and a single submission is all you have left.",
       "bldN19": "Eleven blocks on two shelves leave one pair of cuts that finishes the shape, three probes and one submission to find it.",
       "bldN20": "Twelve blocks out of seventeen million shapes, standing on two shelves: nothing short of that pair of cuts earns three stars.",
+      "bldL21": "The Vertical Pair",
+      "bldL22": "The Hollow Slice",
+      "bldL23": "Eleven on the Wall",
+      "bldL24": "The Last Wall",
+      "bldN21": "Every block hides in two slices of the front axis, and no height is empty: the pair that closes this solid never touches the height axis.",
+      "bldN22": "The middle front slice reads empty from top to bottom - nine cells pinned at once, and not one of the two cuts that close the solid.",
+      "bldN23": "Eleven blocks hide in two side slices, and you get one submission: only that side pair closes the solid - two cuts of the height axis close nothing.",
+      "bldN24": "Twelve blocks and seventeen million shapes, walled into two side slices: the two-shelf habit cannot close this one at any price.",
       "bldProbeLabel": "Probes",
       "bldTargetLabel": "Blocks",
       "bldPlacedLabel": "Placed",
@@ -1339,7 +1471,7 @@
       "bldPrompt": "{name}: {blocks} blocks hidden, {probes} probes, par {par} of them. {note}",
       "bldDone": "This solid is finished - start a new round or pick another one.",
       "bldNextBlock": "Next solid unlocked.",
-      "bldCampaignDone": "Twenty solids, all rebuilt blind.",
+      "bldCampaignDone": "Twenty-four solids, all rebuilt blind.",
       "bldLocked": "{name} waits until the solid before it is rebuilt.",
       "bldLayerNow": "Building height {n}.",
       "bldEscape": "{left} probes left, {placed} blocks placed, {shapes} shapes still fit (par {par}).",
@@ -1389,6 +1521,14 @@
       "bldN18": "十个方块挤在两层里：找着这两层就找到了你那两刀；浪费一刀，剩下的就只有这一次提交。",
       "bldN19": "两层上的十一个方块只剩一对切面能收尾：三刀可花、一次提交，就为了找着那一对。",
       "bldN20": "一千七百三十八万种形状里，十二个方块站在两层上：差那一对切面，三星就拿不到。",
+      "bldL21": "竖直的一对",
+      "bldL22": "空心的切面",
+      "bldL23": "墙上十一块",
+      "bldL24": "最后一面墙",
+      "bldN21": "所有方块都藏在正视轴的两个切面里，而且没有一个高度是空的：收尾的那一对切面，绝不碰高度轴。",
+      "bldN22": "正视中间那个切面从顶到底读出来全是空的——一口气管住九格，但它不是收尾的那两刀之一。",
+      "bldN23": "十一个方块藏在侧视的两个切面里，而且只有一次提交：能收口的只有那一对侧视切面——在高度轴上花两刀，什么也收不住。",
+      "bldN24": "一千七百万种形状里，十二个方块砌在侧视的两个切面上：两层搁板的旧习惯在这里出多大价钱都收不了口。",
       "bldProbeLabel": "探针",
       "bldTargetLabel": "方块数",
       "bldPlacedLabel": "已放",
@@ -1448,7 +1588,7 @@
       "bldPrompt": "{name}：藏着 {blocks} 个方块，给你 {probes} 次探针，标准 {par} 次。{note}",
       "bldDone": "这个立体已经重建好了——换下一个或者开一局新的。",
       "bldNextBlock": "解锁下一个立体。",
-      "bldCampaignDone": "二十个立体全部盲眼重建完毕。",
+      "bldCampaignDone": "二十四个立体全部盲眼重建完毕。",
       "bldLocked": "「{name}」要等前一个立体重建完才开放。",
       "bldLayerNow": "正在搭建第 {n} 层。",
       "bldEscape": "还剩 {left} 次探针，已放 {placed} 块，仍有 {shapes} 种形状符合（标准 {par} 次）。",
@@ -1481,6 +1621,7 @@
         "Count: once your readings show every block, every untouched cell must be empty - that step is what turns slices into one shape.",
         "Build: place blocks on your own grid (click, or arrows plus Enter, z and x for height), then submit; missing and extra blocks are both named in words.",
         "Scoring: probes used are graded against a solver's measured par; a reveal costs two probes and is never required.",
+        "New tier: the deep walls stand on every height yet hide in two slices of one vertical axis - each rung's note names the axis, only that axis's own pair of slices closes the solid, the hollow rung's middle slice reads empty, and the two-shelf habit cannot close these at all.",
       ],
       zh: [
         "目标：重建一个隐藏的 3x3x3 立体。它由几个方块组成会写在面板上，这部分不要钱。",
@@ -1489,6 +1630,7 @@
         "计数：当读数里的方块已经凑满总数，没探过的格子就必然空着——这一步才把切面变成一个形状。",
         "搭建：在自己的网格上放或取方块（点击，或方向键加回车，z 和 x 换层），然后提交；缺哪块、多哪块都会用文字念出来。",
         "计分：用掉的探针次数和解题器实测的标准次数对比给星；揭示一次要花两次探针，但从不必需。",
+        "新层级：深层的墙每个高度都站着方块，却整体藏在同一根竖直轴的两个切面里——每个关卡的说明会写明是哪根轴；能收口的只有那根轴自己的一对切面；空心关卡的中间切面读出来全是空的；两层搁板的旧习惯在这里收不了口。",
       ],
     },
   });

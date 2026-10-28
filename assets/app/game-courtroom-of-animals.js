@@ -17,7 +17,7 @@
   var ctaTrustMax = 5;
   var ctaHasOwn = Object.prototype.hasOwnProperty;
 
-  /* --- the docket: twenty authored cases --------------------------------- */
+  /* --- the docket: twenty-four authored cases ---------------------------- */
   var ctaCases = [
     {
       id: "k1", labelKey: "ctaCase1", time: 8, culprit: "rat",
@@ -1150,6 +1150,265 @@
         { id: "k20c1", accused: "wren", statements: ["k20s1", "k20s6"], exhibits: ["k20e1", "k20e2", "k20e3", "k20e4"], en: "Tib came down to the far side of the board, opened the ring at the seam and took the three keys for the storehouse door", zh: "蒂布落到板子外那一头，顺着缝摊开环，取下三把钥匙去开库房" },
         { id: "k20c2", accused: "mouse", statements: ["k20s2", "k20s5"], exhibits: ["k20e1", "k20e5"], en: "Pip went up from her nest to the board and wound the thread to hold the peg in from the far side", zh: "皮普从窝上到板上，把丝绞住，从外那头把闩顶进去" },
         { id: "k20c3", accused: "hound", statements: ["k20s3", "k20s4"], exhibits: ["k20e2", "k20e6"], en: "Kip laid the ring open with his teeth and let the three keys fall where a bird would be named", zh: "基普用牙把环摊开，让三把钥匙落在一只鸟会被点名的地方" },
+      ],
+    },
+    /* k21 teaches what a deep press costs. The seal is the one witness who can
+     * read the tap, and the bench believes him outright. The court must press
+     * him twice - the first press takes two actions to reconstruct what he
+     * heard - and then mend the trust it spent with exactly one corroboration.
+     * At one action the press would leave his word standing on its own and the
+     * corroboration would buy nothing; at two it is the whole verdict. */
+    {
+      id: "k21", labelKey: "ctaCase21", time: 12, culprit: "crab",
+      bar: { strength: 21, trust: 3 },
+      charge: {
+        en: "The tide-mill's lamp ran dry between the bells and the oil drum under it was found open at dawn. One charge here rests on a witness the bench believes outright, and every question put to him must be mended before the court will close on his word.",
+        zh: "潮磨的灯在两次钟声之间灭了，灯下的油桶天亮时敞着。这里有一条指控，全压在一个法庭原本全然相信的证人身上；问他的每一句话，都得先补回来，法庭才肯凭他的话结案。",
+      },
+      suspects: [
+        { id: "crab", en: "Crabble the Crab", zh: "蟹克拉布" },
+        { id: "gull", en: "Wick the Gull", zh: "海鸥威克" },
+        { id: "otter", en: "Fen the Otter", zh: "水獭芬" },
+      ],
+      exhibits: [
+        { id: "k21e1", weight: 3, en: "The brass tap on the oil drum stands a quarter-turn open, its handle worn bright underneath where a claw closed and turned it against the spring.", zh: "油桶上的铜龙头开着四分之一圈，把手下头磨得发亮——那是有爪子扣住、逆着弹簧拧过的地方。" },
+        { id: "k21e2", weight: 3, en: "A crab's walking-scrape crosses the wet sand at the drum's foot: five points and a drag, deepest on the seaward side where the body leaned back against a pull.", zh: "油桶脚下的湿沙上横着一道蟹的爬痕：五个点，后面拖着一条，靠海那一面最深——那是身子拽着东西往后仰压出来的。" },
+        { id: "k21e3", weight: 3, en: "A line of lamp oil runs down the ebb rocks and stops at a crab's reach above the waterline. Above that line the rock is dry.", zh: "一道灯油顺着退潮的石头往下淌，停在离水线一只蟹够得到的地方。那道线以上，石头是干的。" },
+        { id: "k21e4", weight: 2, en: "A gull's feather on the mill rail, dry to the vane, with no oil in it.", zh: "磨坊栏杆上一根海鸥羽毛，连羽片都是干的，一星油也没沾。" },
+      ],
+      witnesses: [
+        {
+          id: "k21w1", trust: 4, en: "Wick the Gull", zh: "海鸥威克",
+          statements: [
+            { id: "k21s1", claim: "k21c1", en: "The tap was whole at dusk and whole again when I left the rail at the first bell. Whatever turned it did it after the mill went dark.", zh: "天黑时龙头还是好的；一更我离了栏杆，它还是好的。拧它的那位，是在磨坊黑透以后才动的手。" },
+            { id: "k21s2", claim: "k21c1", en: "A feather on a dry rail is a bird that stayed on the rail. The wind off the ebb would have wet it through if I had gone down to the drum.", zh: "干栏杆上的羽毛，是留在栏杆上的鸟。要是我下到油桶那儿，退潮的风早把它打透了。" },
+          ],
+        },
+        {
+          id: "k21w2", trust: 5, en: "Marrow the Seal", zh: "海豹马罗",
+          statements: [
+            { id: "k21s3", claim: "k21c1", en: "I keep the ebb channel. The tap did not sound like a tap: it sounded like a shell being turned over, slow, a quarter at a time, and it stopped when the light went out.", zh: "我守退潮水道。那龙头响得不像龙头，倒像有人把一只壳慢慢翻过来，一次四分之一圈；灯灭的时候，它停了。" },
+            { id: "k21s4", claim: "k21c1", en: "I came up the ramp at the third bell and the drum was open. There was a scrape in the sand and it was not a flipper's scrape; a flipper leaves one line and no points.", zh: "三更我上了坡道，油桶已经开着。沙上有一道刮痕，不是鳍刮的；鳍只留一条线，不留点。" },
+          ],
+        },
+        {
+          id: "k21w3", trust: 3, en: "Crabble the Crab", zh: "蟹克拉布",
+          statements: [
+            { id: "k21s5", claim: "k21c1", en: "I was under the drum at the third bell, and the sand there is mine. A crab goes where the water leaves food, and the drum leaks a little; that is all I went for.", zh: "三更我在油桶底下，那儿的沙是我的。水把吃食留在哪儿，蟹就往哪儿去；油桶有点漏，我下去就为这个。" },
+            { id: "k21s6", claim: "k21c1", en: "Oil on a rock is a thing a crab will walk around, not through. My feet were dry when I went down to the water, and dry when I came up.", zh: "石头上的油，蟹是绕着走的，不会踩过去。我下水时脚是干的，上来时也是干的。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k21p1", witness: "k21w2", with: "k21e1", claim: "k21c1", cost: 2, en: "You heard the tap turn a quarter at a time and stop. Here is the tap, a quarter open, and a tap does not stop itself. Say how you knew it stopped, and say what stopped it, or say you did not.", zh: "你听见龙头一次转四分之一圈，然后停了。龙头就在这儿，开着四分之一圈；龙头不会自己停。说清楚你怎么知道它停了，是什么让它停的；说不清，就说你不知道。" },
+        { id: "k21p2", witness: "k21w2", with: "k21e2", claim: "k21c1", cost: 1, en: "You say a flipper leaves one line and no points. There are five points in the sand at the drum's foot and a drag behind them. Put your flipper beside that print and let the court see which of you made it.", zh: "你说鳍只留一条线、不留点。油桶脚下的沙里有五个点，后面拖着一条。把你的鳍搁到那个印子旁边，让法庭看看是谁留下的。" },
+        { id: "k21p3", witness: "k21w1", with: "k21e4", claim: "k21c2", cost: 1, en: "You sat the rail from dusk to the first bell and saw a light go out and a drum stand open, and you said nothing until the court asked. A bird that watches and does not cry out has a reason for watching.", zh: "你从天黑坐到一更，看见灯灭了、油桶敞着，却直到法庭问起才开口。看着而不叫的鸟，自有它看的道理。" },
+      ],
+      vouches: [
+        { id: "k21v1", witness: "k21w2", exhibit: "k21e3", claim: "k21c1", en: "The oil stops at a crab's reach and the rock above it is dry. The seal's word is worth what the line is worth, and the line says a small body stood at the drum and drank.", zh: "油停在蟹够得到的高度，上面的石头是干的。海豹的话值多少，就看这道线值多少；而这道线说：有个小身子站在桶边喝过。" },
+        { id: "k21v2", witness: "k21w1", exhibit: "k21e4", claim: "k21c2", en: "A dry feather is a bird that stayed dry. The gull's rail is the one place the oil never reached, and the court will believe a bird about the rail it sat on.", zh: "干羽毛，是没沾湿的鸟。海鸥那条栏杆，是油唯一没到过的地方；鸟讲自己坐过的栏杆，法庭是信的。" },
+      ],
+      claims: [
+        { id: "k21c1", accused: "crab", statements: ["k21s1", "k21s2", "k21s3", "k21s4", "k21s5", "k21s6"], exhibits: ["k21e1", "k21e2", "k21e3", "k21e4"], en: "Crabble came up the ebb rocks, turned the drum's tap a quarter with one claw and drank until the lamp went out", zh: "克拉布顺着退潮的石头上来，用一只爪把龙头拧开四分之一圈，一直喝到灯灭" },
+        { id: "k21c2", accused: "gull", statements: ["k21s1", "k21s2"], exhibits: ["k21e4"], en: "Wick left the rail, came down to the drum and drank the oil before the light failed", zh: "威克离开栏杆，下到油桶边，在灯灭之前把油喝了" },
+        { id: "k21c3", accused: "otter", statements: ["k21s3", "k21s5"], exhibits: ["k21e2"], en: "Fen slipped up the ramp, opened the tap and carried the oil away in his mouth", zh: "芬溜上坡道，拧开龙头，用嘴把油叼走了" },
+      ],
+    },
+    /* k22 teaches the cost of a word the charge never uses. The pit-proof names
+     * six statements, but reaching the toad's second word means hearing her
+     * first one too, so the honest line spends seven actions on testimony and
+     * exactly fills the clock. There is one true charge and one line; every
+     * press and every corroboration in it is load-bearing. */
+    {
+      id: "k22", labelKey: "ctaCase22", time: 12, culprit: "marmot",
+      bar: { strength: 22, trust: 4 },
+      charge: {
+        en: "The seed pit under the flat stone was opened from below and the pine-nuts carried off. Three animals speak to it, and the charge names six of their words. The court will make it hear one more.",
+        zh: "平石底下的种子窖被人从下面掏开，松子全搬走了。三只动物为此开口，而指控只引了它们六句话。法庭会让它多听一句。",
+      },
+      suspects: [
+        { id: "marmot", en: "Thistle the Marmot", zh: "旱獭蓟" },
+        { id: "toad", en: "Barrow the Toad", zh: "蟾蜍巴罗" },
+        { id: "adder", en: "Siss the Adder", zh: "蝰蛇西斯" },
+      ],
+      exhibits: [
+        { id: "k22e1", weight: 3, en: "A tunnel scratched up into the seed pit from the burrow side, wide as a marmot's shoulders and clawed in pairs.", zh: "一条从窝那头往上掏进种子窖的地道，宽窄正好是一只旱獭的肩，爪痕成对。" },
+        { id: "k22e2", weight: 3, en: "Pine-nut husks in a line up the marmot's run, fresh and unweathered, and a split husk still wet at the seam.", zh: "松子壳沿着旱獭的跑道排成一线，新鲜，没经过风雨；有一片裂壳的缝里还湿着。" },
+        { id: "k22e3", weight: 3, en: "The pit's flat stone is propped on a wedge of marmot-chewed root, and the tooth-marks on the wedge match the marks on the pit's lip.", zh: "窖上的平石被一块旱獭啃过的树根楔住，楔子上的牙印和窖口的牙印对得上。" },
+        { id: "k22e4", weight: 1, en: "A toad's footprint by the pit mouth, old, pressed into mud that dried before the seed went.", zh: "窖口一个蟾蜍脚印，旧了，踩进泥里；那泥在种子丢失之前就干透了。" },
+        { id: "k22e5", weight: 1, en: "An adder's cast skin on the warm side of the stone, whole and empty.", zh: "石头向阳那面一张蛇蜕，完整，空着。" },
+      ],
+      witnesses: [
+        {
+          id: "k22w1", trust: 5, en: "Barrow the Toad", zh: "蟾蜍巴罗",
+          statements: [
+            { id: "k22s1", claim: "k22c1", en: "I keep the low bank and I hear the pit. The stone was lifted once in the night and set down once, and between the two there was no sound of a bird or a hoof.", zh: "我守低岸，听得见种子窖。夜里石头被抬起一回、又放下一回，中间没有鸟声，也没有蹄声。" },
+            { id: "k22s2", claim: "k22c1", en: "The pit was full at dusk. At dawn the stone was propped and the pit was empty, and nothing had gone in or out over the top of the stone.", zh: "天黑时窖是满的。天亮时石头被支起来，窖空了；可没有东西从石头上头进去或出来。" },
+            { id: "k22s3", claim: "k22c2", en: "A toad's print by the mouth is old mud. I was not at the mouth that night; I was on the bank, and the bank is where I sing.", zh: "窖口那个蟾蜍印是陈泥。那夜我不在窖口，我在岸上；岸上才是我唱歌的地方。" },
+          ],
+        },
+        {
+          id: "k22w2", trust: 4, en: "Thistle the Marmot", zh: "旱獭蓟",
+          statements: [
+            { id: "k22s4", claim: "k22c1", en: "I dug my run before the frost and it comes up under the flat stone. A marmot's run is a marmot's road; that does not make everything carried on it mine.", zh: "上冻之前我就挖好了这条跑道，它从平石底下出头。旱獭的跑道是旱獭的路；路上搬过的东西，不能都算我的。" },
+            { id: "k22s5", claim: "k22c1", en: "The husks on my run are husks I spat there at supper. I have eaten pine-nuts all winter, and the court may count the shells and welcome.", zh: "我跑道上的壳，是我吃晚饭时吐在那儿的。我一冬都在吃松子，法庭要数壳，尽管数。" },
+            { id: "k22s6", claim: "k22c1", en: "I slept from the second bell to light and never left my nest. Ask the adder; she keeps the warm side and she would have seen me go.", zh: "二更到天亮我都在睡，没离过窝。问蝰蛇去；她守着向阳那面，我要是出去，她看得见。" },
+          ],
+        },
+        {
+          id: "k22w3", trust: 5, en: "Siss the Adder", zh: "蝰蛇西斯",
+          statements: [
+            { id: "k22s7", claim: "k22c1", en: "I keep the warm side of the stone and I do not blink. The stone went up once, and what came out from under it came out low and heavy and went down the marmot's run.", zh: "我守石头向阳那面，眼都不眨。石头抬起过一回，从底下出来的东西又低又沉，顺着旱獭的跑道下去了。" },
+            { id: "k22s8", claim: "k22c1", en: "A marmot carries nuts in its cheek-pouches, not in its arms. The line of husks runs up the run from the pit, not down it; that is a loaded animal going home.", zh: "旱獭用腮袋装松子，不用胳膊。那道壳线是从窖口往跑道上去的，不是下来的；那是一只装着东西回家的畜生。" },
+            { id: "k22s9", claim: "k22c1", en: "The pit was opened from below. A stone lifted from above leaves the lip clean; this lip is clawed from underneath, and the claws are a marmot's.", zh: "窖是从下面掏开的。从上面抬石头，窖口是干净的；这个窖口是从底下抓开的，爪印是旱獭的。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k22p1", witness: "k22w1", with: "k22e1", claim: "k22c1", cost: 2, en: "You heard the stone lift and set down, and you told the court only what it was not: no bird, no hoof. You lay on the bank with your ear to the ground. What did you hear under the stone?", zh: "你听见石头被抬起又放下，却只告诉法庭它不是什么：不是鸟，不是蹄。你趴在岸上，耳朵贴着地。石头底下，你到底听见了什么？" },
+        { id: "k22p2", witness: "k22w2", with: "k22e2", claim: "k22c1", cost: 1, en: "You say the husks on your run are your own supper. Then count them. There are husks in that line enough for a winter, and the last of them is three paces short of your nest. A supper does not walk home ahead of the animal that ate it.", zh: "你说跑道上的壳是你自己的晚饭。那就数一数。那条线上的壳够吃一冬，最后一片离你的窝还有三步远。晚饭不会走在吃它的畜生前头回家。" },
+        { id: "k22p3", witness: "k22w3", with: "k22e3", claim: "k22c1", cost: 1, en: "You say the stone was propped on a wedge of root. A wedge is cut and set; the stone did not fall open. Tell the court who was under the stone when the prop went in, and why you did not blink then.", zh: "你说石头是被一块树根楔住的。楔子是砍出来、垫进去的；石头不会自己摔开。告诉法庭，楔子垫进去的时候谁在石头底下，你那时为什么不眨眼。" },
+      ],
+      vouches: [
+        { id: "k22v1", witness: "k22w1", exhibit: "k22e1", claim: "k22c1", en: "The toad's ear is the court's ear under the stone. She heard the lift and the set-down, and the tunnel in the pit was dug before the stone ever moved.", zh: "蟾蜍的耳朵，就是法庭在石头底下的耳朵。她听见了抬起和放下；而窖里那条地道，在石头动之前就挖好了。" },
+        { id: "k22v2", witness: "k22w2", exhibit: "k22e2", claim: "k22c1", en: "The husks on the marmot's run are fresh and wet at the seam. A marmot may lie about a nest, but a husk does not lie about a supper.", zh: "旱獭跑道上的壳是新鲜的，裂缝里还湿。旱獭可以就自己的窝撒谎，可一片壳不会就一顿晚饭撒谎。" },
+      ],
+      claims: [
+        { id: "k22c1", accused: "marmot", statements: ["k22s2", "k22s4", "k22s5", "k22s7", "k22s8", "k22s9"], exhibits: ["k22e1", "k22e2", "k22e3"], en: "Thistle dug up into the pit from below, carried the pine-nuts down the run in her cheeks and left the husks along her own road", zh: "蓟从下面掏进种子窖，用腮袋把松子顺跑道搬走，把壳一路留在自己的路上" },
+        { id: "k22c2", accused: "toad", statements: ["k22s1", "k22s2"], exhibits: ["k22e4"], en: "Barrow came up from the bank, lifted the stone and took the seeds while the pit stood open", zh: "巴罗从岸上过来，抬起石头，趁窖敞着把种子拿了" },
+        { id: "k22c3", accused: "adder", statements: ["k22s8", "k22s9"], exhibits: ["k22e5"], en: "Siss slipped under the stone, ate the seeds where they lay and left her skin for the court", zh: "西斯从石头底下溜进去，就地把种子吃了，把蛇蜕留给法庭" },
+      ],
+    },
+    /* k23 teaches that an outright-believed witness is a debt. All three stand
+     * at five, the bench's ceiling, so every press must be answered by one
+     * corroboration to bring its witness back to five. The bar is five, so a
+     * single unpressed or unmended witness loses the case; the court may not
+     * offer the corroboration until the press has happened, and that order is
+     * the whole mechanic. */
+    {
+      id: "k23", labelKey: "ctaCase23", time: 12, culprit: "lobster",
+      bar: { strength: 23, trust: 5 },
+      charge: {
+        en: "The smokehouse door stood open at dawn and the night's fish were gone from the rack. The bench believes all three witnesses outright. Here every question the court asks must be paid for twice: once in the asking, and once in the mending.",
+        zh: "熏鱼房的门天亮时敞着，一夜的鱼全从架上没了。三位证人，法庭原本个个全信。这里每问一句话都要付两回账：一回是问，一回是补。",
+      },
+      suspects: [
+        { id: "lobster", en: "Grip the Lobster", zh: "龙虾格里普" },
+        { id: "ray", en: "Skate the Ray", zh: "鳐鱼斯凯特" },
+        { id: "eel", en: "Sleeve the Eel", zh: "鳗鱼斯利夫" },
+      ],
+      exhibits: [
+        { id: "k23e1", weight: 3, en: "The smokehouse door-spring was sprung from inside: the hook is straightened, not broken, and the mark of a hard shell is pressed into the wood beside it.", zh: "熏鱼房的门簧是从里头弹开的：挂钩被拉直了，没有断，旁边木头上压着一个硬壳印。" },
+        { id: "k23e2", weight: 3, en: "A wet track crosses the smokehouse floor from the rack to the drain: a broad tail-fan drag with two claw-hooks at the front, and it goes out by the water.", zh: "一道湿痕从架子横过熏鱼房的地面，通到排水口：前面宽宽的尾扇拖痕，带两个爪钩，最后从水里出去了。" },
+        { id: "k23e3", weight: 3, en: "A lobster's antenna-case, whole and glossy, caught under the rack where nothing else reaches.", zh: "架子底下卡着一只龙虾的触角壳，完整，发亮，别的东西够不到那儿。" },
+      ],
+      witnesses: [
+        {
+          id: "k23w1", trust: 5, en: "Skate the Ray", zh: "鳐鱼斯凯特",
+          statements: [
+            { id: "k23s1", claim: "k23c1", en: "I lie over the drain and I feel every foot that crosses that floor. Something crossed at the third bell, heavy at the front and light behind, and it did not come back over the floor.", zh: "我伏在排水口上，地板上有谁的脚走过，我都觉得出。三更有什么东西走了过去，前头沉、后头轻，后来没再从地板上回去。" },
+            { id: "k23s2", claim: "k23c1", en: "The door-spring sang once. A door pushed from outside sings twice, coming and going; this sang once, and the drain pulled after it.", zh: "门簧只响了一声。从外头推的门要响两声，来一声去一声；这个只响了一声，随后排水口那边一抽。" },
+          ],
+        },
+        {
+          id: "k23w2", trust: 5, en: "Grip the Lobster", zh: "龙虾格里普",
+          statements: [
+            { id: "k23s3", claim: "k23c1", en: "I was under the rack at the second bell. The rack is where the salt drips, and salt is good for a shell; that is why I was there and no other reason.", zh: "二更我在架子底下。架子上往下滴盐卤，盐卤对壳好；我就在那儿，不为别的。" },
+            { id: "k23s4", claim: "k23c1", en: "A lobster walks the drain, and a lobster's track is a tail-drag with hooks. The court may look at the floor and see every crawler has written its name there.", zh: "龙虾走排水口，龙虾的痕迹是尾扇一拖、带两个钩。法庭尽管看地板，这儿每个爬过去的都把名字写在地上了。" },
+          ],
+        },
+        {
+          id: "k23w3", trust: 5, en: "Sleeve the Eel", zh: "鳗鱼斯利夫",
+          statements: [
+            { id: "k23s5", claim: "k23c1", en: "I keep the drain mouth and I do not sleep. Something went out at the third bell, wide and hard-shelled, and it went with the ebb and did not come back.", zh: "我守排水口，不睡。三更有什么东西出去了，又宽又硬，跟着退潮走的，没回来。" },
+            { id: "k23s6", claim: "k23c1", en: "A fish is soft and a shell is hard. The thing that passed me had edges, and when I put my whiskers to it the water tasted of smoke and salt.", zh: "鱼是软的，壳是硬的。打我跟前过去的东西有棱，我把须子贴上去，水里有烟味，还有盐味。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k23p1", witness: "k23w1", with: "k23e1", claim: "k23c1", cost: 1, en: "You feel every foot that crosses the floor, and you told the court the door sang once. A door that sings once and a drain that pulls after it is a door opened from inside. Say what crossed, and say why you did not say it before.", zh: "地板上谁的脚走过你都觉得出，你告诉法庭门簧只响了一声。只响一声的门，后面跟着排水口一抽，就是从里头开、从水里走的门。说是什么过去了，再说你先前为什么不说。" },
+        { id: "k23p2", witness: "k23w2", with: "k23e2", claim: "k23c1", cost: 1, en: "You say a lobster's track is a tail-drag with hooks. Here is the track, here are the hooks, and here is your own shell beside it. The court asks you plainly: whose track is this?", zh: "你说龙虾的痕迹是尾扇一拖、带两个钩。痕迹在这儿，钩在这儿，你自己的壳也在旁边。法庭只问你一句：这是谁的痕迹？" },
+        { id: "k23p3", witness: "k23w3", with: "k23e3", claim: "k23c1", cost: 1, en: "You keep the drain mouth and you do not sleep. An antenna-case does not swim; it was carried. Tell the court what carried it past you, and why you let it pass.", zh: "你守排水口，不睡。触角壳不会游水，它是被带过去的。告诉法庭，是什么把它从你身边带过去，你又为什么放它过去。" },
+      ],
+      vouches: [
+        { id: "k23v1", witness: "k23w1", exhibit: "k23e1", claim: "k23c1", en: "The spring was straightened from inside and the hook bears a shell's mark. The ray heard the door sing once; believe the door, and believe the ray for the door.", zh: "门簧是从里头拉直的，钩上压着壳印。鳐鱼听见门只响了一声；信门，也信鳐鱼讲的门。" },
+        { id: "k23v2", witness: "k23w2", exhibit: "k23e2", claim: "k23c1", en: "The track is a tail-drag with hooks and it goes to the drain. The lobster says the floor writes every crawler's name; the floor has written his.", zh: "痕迹是尾扇一拖、带两个钩，一直通到排水口。龙虾说地板会写下每个爬过去的姓名；地板已经写下了他的。" },
+        { id: "k23v3", witness: "k23w3", exhibit: "k23e3", claim: "k23c1", en: "The eel's whiskers tasted smoke and salt on a hard-shelled thing going out with the ebb. An eel does not invent a taste.", zh: "鳗鱼的须子在一个硬壳东西身上尝到了烟味和盐味，那东西正跟着退潮出去。鳗鱼不会凭空尝出一种味道。" },
+      ],
+      claims: [
+        { id: "k23c1", accused: "lobster", statements: ["k23s1", "k23s2", "k23s3", "k23s4", "k23s5", "k23s6"], exhibits: ["k23e1", "k23e2", "k23e3"], en: "Grip came out from under the rack, hooked the door-spring straight and carried the night's fish out through the drain", zh: "格里普从架子底下出来，把门簧钩直，带着一夜的鱼从排水口走了" },
+        { id: "k23c2", accused: "ray", statements: ["k23s1", "k23s2"], exhibits: ["k23e1"], en: "Skate came up over the sill, lifted the fish from the rack and slid back down the drain", zh: "斯凯特越过门槛进来，把鱼从架上取下，又顺着排水口滑了回去" },
+        { id: "k23c3", accused: "eel", statements: ["k23s5", "k23s6"], exhibits: ["k23e3"], en: "Sleeve came up the drain, took the fish from the rack and carried them out with the ebb", zh: "斯利夫从排水口上来，把鱼从架上取了，跟着退潮带了出去" },
+      ],
+    },
+    /* k24 is the whole bench. The true charge has three owners at four, and the
+     * bench wants four, so each owner must be pressed and then mended. The
+     * conger is believed outright and cannot be mended until he is pressed;
+     * one press costs two actions, and one press crosses to another witness's
+     * word and recants the rival charge. The true closing costs thirteen and
+     * the whole docket costs fifteen, which is the clock. */
+    {
+      id: "k24", labelKey: "ctaCase24", time: 15, culprit: "cuttlefish",
+      bar: { strength: 25, trust: 4 },
+      charge: {
+        en: "The hatchery tank's sluice was lifted in the night and the seed oysters were gone from the trays. Three animals speak, and every one of them stands behind the one charge that answers; the bench wants all three at four, and it wants the whole docket reached inside a single tide.",
+        zh: "孵化池的闸门夜里被抬开，育种的牡蛎从托盘上全没了。三只动物开口，能答这件案子的那条指控，三位证人一个也不少；法庭要他们每一个都站在四分上，还要在同一个潮头里把整本案卷都走到。",
+      },
+      suspects: [
+        { id: "cuttlefish", en: "Ink the Cuttlefish", zh: "乌贼墨" },
+        { id: "conger", en: "Coil the Conger", zh: "康吉鳗科伊尔" },
+        { id: "seal", en: "Harbour the Seal", zh: "海豹哈伯" },
+      ],
+      exhibits: [
+        { id: "k24e1", weight: 3, en: "The tank's sluice grate is lifted a hand's width and the bars are bruised with a soft, many-armed grip.", zh: "池子的闸栅被抬起一掌宽，栅条上压着一种又软、又多腕的握痕。" },
+        { id: "k24e2", weight: 3, en: "A cuttlebone floats in the tank's overflow, whole and fresh, the ink-sac still dark.", zh: "池子的溢流口漂着一片乌贼骨，完整，新鲜，墨囊还是黑的。" },
+        { id: "k24e3", weight: 2, en: "The tank floor is printed with a spray of suckers in pairs, small and close, crossing from the oyster trays to the sluice.", zh: "池底印着一片成对的吸盘痕，小而密，从牡蛎托盘一直横到闸口。" },
+        { id: "k24e4", weight: 2, en: "A line of ink in the overflow channel, thinning downstream, and no ink above the sluice.", zh: "溢流槽里一道墨线，越往下越淡，闸口以上一点墨也没有。" },
+        { id: "k24e5", weight: 1, en: "The conger's hole under the tank is empty of oyster shell, though the conger has eaten oysters all summer.", zh: "池底康吉鳗的洞是空的，一片牡蛎壳也没有——可这整个夏天，康吉鳗都在吃牡蛎。" },
+        { id: "k24e6", weight: 1, en: "A tern's feather on the hatchery rail, dry, above the high-water line.", zh: "孵化场栏杆上一根海鸥羽毛，干着，在高水线以上。" },
+        { id: "k24e7", weight: 1, en: "The conger's track in the silt outside the sluice: one long body-drag, entering and leaving by the same mouth.", zh: "闸口外淤泥里康吉鳗的痕迹：一条长长的身子拖痕，进和出都走同一个口。" },
+        { id: "k24e8", weight: 1, en: "A seal's claw-mark on the outer grate, old and weathered, from before the new bars went in.", zh: "外闸栅上一道海豹的爪痕，又旧又经了风雨，是新栅条装上以前留下的。" },
+      ],
+      witnesses: [
+        {
+          id: "k24w1", trust: 4, en: "Pip the Tern", zh: "燕鸥皮普",
+          statements: [
+            { id: "k24s1", claim: "k24c1", en: "I sit the hatchery rail at dusk and I do not fish the tank. The sluice grate was down when I came and up when the light went, and nothing crossed the rail to lift it.", zh: "天黑的时我坐在孵化场栏杆上，从不伸嘴进池。我来时闸栅是落下的，灯灭时它抬起来了，可没有东西越过栏杆去抬它。" },
+            { id: "k24s2", claim: "k24c1", en: "A cuttlebone floats. A cuttlebone does not swim and does not fall from the sky; it came out of the tank with the water, and the water goes one way.", zh: "乌贼骨会漂。乌贼骨不会游水，也不会从天上掉下来；它是跟着水从池子里出来的，而水只往一个方向走。" },
+          ],
+        },
+        {
+          id: "k24w2", trust: 5, en: "Coil the Conger", zh: "康吉鳗科伊尔",
+          statements: [
+            { id: "k24s3", claim: "k24c2", en: "I keep the hole under the tank and I have eaten oysters all summer. The court may look in my hole and see what I have eaten; I do not hide a shell.", zh: "我守在池底那个洞里，吃了一个夏天的牡蛎。法庭尽管到我洞里看，看我吃了什么；我不藏壳。" },
+            { id: "k24s4", claim: "k24c1", en: "The sluice grate was lifted from inside; a body outside pulls a grate down, not up. The bars are bruised where a soft grip closed on them, and a conger has no hands.", zh: "闸栅是从里头抬起来的；外头的身子只会把闸栅往下压，不会往上提。栅条上是有软东西握住压出的痕，可康吉鳗没有手。" },
+            { id: "k24s5", claim: "k24c1", en: "The sucker-prints cross the tank floor in pairs. A conger leaves a body-drag and no pairs; the court may put my track beside that print.", zh: "吸盘印成对地横过池底。康吉鳗只留一条身子拖痕，不留下成对的印；法庭尽管把我的痕迹摆到那印子旁边。" },
+          ],
+        },
+        {
+          id: "k24w3", trust: 4, en: "Ink the Cuttlefish", zh: "乌贼墨",
+          statements: [
+            { id: "k24s6", claim: "k24c1", en: "I came into the tank on the flood for the oyster spawn, as I do every spring. The spawn was gone and the tank was open, and I left by the overflow because the sluice was the only water moving.", zh: "涨潮时我进池子来吃牡蛎的卵，年年春天都这样。这回卵没了，池子敞着；我从溢流口出去，因为闸口那边只有水在动。" },
+            { id: "k24s7", claim: "k24c1", en: "Ink in a channel is a cuttlefish's ink. I will not say it is not mine; I will say I did not carry oysters, and the trays were already empty when I came.", zh: "槽里的墨，是乌贼的墨。我不说它不是我的；我只说我没搬牡蛎，我来的时候托盘已经空了。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k24p1", witness: "k24w1", with: "k24e3", exposes: "k24s3", claim: "k24c1", cost: 1, en: "You sat the rail and saw nothing cross it, and the conger says his hole is empty of shell. A conger that has eaten oysters all summer and keeps no shell has eaten somewhere else or hidden the shell. Which is it, and why did you not say the hole was empty when the court asked what you saw?", zh: "你在栏杆上坐着，说什么也没越过去；康吉鳗呢，说他洞里一片壳也没有。吃了一夏天牡蛎的康吉鳗，洞里不留壳，那他是在别处吃的，就是把壳藏了。是哪一样？法庭问你看见了什么的时候，你为什么不说他的洞是空的？" },
+        { id: "k24p2", witness: "k24w2", with: "k24e2", claim: "k24c1", cost: 2, en: "You say the court may look in your hole; it has looked, and there is no shell. You say a conger has no hands; true. But a conger has a mouth, and there is a fresh cuttlebone in the water you came out of. Account for it, and account for the ink, or leave both on the table.", zh: "你说法庭尽管到你洞里看；它看过了，一片壳也没有。你说康吉鳗没有手；不错。可康吉鳗有嘴，而你出来的水里正漂着一片新鲜乌贼骨。给个说法，连那道墨一起给；给不出，就都留在桌上。" },
+        { id: "k24p3", witness: "k24w3", with: "k24e4", claim: "k24c1", cost: 1, en: "You say the trays were empty when you came. The ink line thins downstream and stops below the sluice; ink laid before the water rose would have smeared above it. The tank was opened after the tide turned, and you were in it. Say when you came, to the bell.", zh: "你说你来的时候托盘已经空了。墨线越往下越淡，止在闸口以下；水涨之前下的墨，会在闸口以上洇开。池子是在潮水转过以后才开的，而你就在池子里。说你是什么时辰进来的，说到钟上。" },
+        { id: "k24p4", witness: "k24w1", with: "k24e7", claim: "k24c2", cost: 1, en: "The conger's track enters and leaves by the same mouth. A body that went in and out by one mouth did not carry a winter of oysters up the overflow; it went in for its own supper and came out again.", zh: "康吉鳗的痕迹，进和出都走同一个口。一个身子从一个口进去、又从一个口出来，搬不走一冬的牡蛎；它是进来吃自己的晚饭，吃完又出去了。" },
+      ],
+      vouches: [
+        { id: "k24v1", witness: "k24w1", exhibit: "k24e5", claim: "k24c1", en: "The tern did not fish the tank and did not cross the rail. The conger's hole is empty of shell, and a hole with no shell in it is a hole that has not been eating. Believe the rail, and believe the tern about the rail.", zh: "燕鸥没有伸嘴进池，也没有越过栏杆。康吉鳗的洞里没有壳；一个没有壳的洞，就是一个没在吃的洞。信栏杆，也信燕鸥讲的栏杆。" },
+        { id: "k24v2", witness: "k24w2", exhibit: "k24e1", claim: "k24c1", en: "The conger has no hands and the grate was lifted from inside. His own track enters and leaves by the same mouth, and the sluice is not that mouth. The court will believe him against his own hole.", zh: "康吉鳗没有手，而闸栅是从里头抬起来的。他自己的痕迹出进走同一个口，那口不是闸口。法庭会信他，拿他的话对他自己的洞。" },
+        { id: "k24v3", witness: "k24w3", exhibit: "k24e4", claim: "k24c1", en: "Ink in the overflow is the cuttlefish's own hand. He does not deny the ink; he denies the oysters. The court will take the ink and weigh the trays.", zh: "溢流槽里的墨，是乌贼自己的手。他不赖墨，他赖的是牡蛎。法庭就把墨收下，把托盘称一称。" },
+        { id: "k24v4", witness: "k24w1", exhibit: "k24e7", claim: "k24c2", en: "The conger's track is a single drag in and out. A track that goes both ways is a track that carried nothing away, and the court has looked in the hole and found it bare.", zh: "康吉鳗的痕迹只有一道，进去出来。来回走同一道的痕迹，是没带走东西的痕迹；法庭已经看过那个洞，里头光着。" },
+      ],
+      claims: [
+        { id: "k24c1", accused: "cuttlefish", statements: ["k24s1", "k24s2", "k24s4", "k24s5", "k24s6", "k24s7"], exhibits: ["k24e1", "k24e2", "k24e3", "k24e4", "k24e5"], en: "Ink came into the tank on the flood, lifted the sluice from inside with its arms, took the seed oysters and left by the overflow", zh: "墨趁着涨潮进了池子，用腕从里头抬起闸门，取了育种的牡蛎，从溢流口走了" },
+        { id: "k24c2", accused: "conger", statements: ["k24s3", "k24s4"], exhibits: ["k24e7"], en: "Coil came up from his hole, forced the grate and carried the oysters down to his hole", zh: "科伊尔从洞里上来，顶开闸栅，把牡蛎搬回自己的洞里" },
+        { id: "k24c3", accused: "seal", statements: ["k24s2", "k24s6"], exhibits: ["k24e8"], en: "Harbour reached over the outer grate, hooked the sluice open and scooped the oysters from the tank", zh: "哈伯越过外闸栅，用爪子钩开闸门，把池里的牡蛎捞走了" },
       ],
     },
   ];
@@ -2698,6 +2957,10 @@
       "ctaCase18": "The Paired Alibi",
       "ctaCase19": "Believed Outright",
       "ctaCase20": "No Slack in the Clock",
+      "ctaCase21": "The Deep Press",
+      "ctaCase22": "The Unnamed Word",
+      "ctaCase23": "Believed at Five",
+      "ctaCase24": "The Whole Bench",
       "ctaCaseSelectLabel": "Take a case from the docket",
       "ctaTimeLabel": "Court time",
       "ctaWordsLabel": "Testimony",
@@ -2813,6 +3076,10 @@
       "ctaCase18": "互相作证的两位",
       "ctaCase19": "信到底的证人",
       "ctaCase20": "没有富余的钟点",
+      "ctaCase21": "深深一压",
+      "ctaCase22": "未引的那句话",
+      "ctaCase23": "信到五分",
+      "ctaCase24": "整个证人席",
       "ctaCaseSelectLabel": "从案卷里挑一件案子",
       "ctaTimeLabel": "庭上时间",
       "ctaWordsLabel": "证词",
@@ -2925,7 +3192,7 @@
         '<rect x="72" y="46" width="34" height="16" rx="3" fill="none" stroke="#ff6b35" stroke-width="2"/>' +
         '<text x="89" y="57" font-size="8" fill="#ff6b35" text-anchor="middle">trust</text></svg>',
       en: [
-        "Goal: close one of twenty cases with a verdict the numbers behind it actually support.",
+        "Goal: close one of twenty-four cases with a verdict the numbers behind it actually support.",
         "Action: click a witness to take their testimony in order, click an exhibit to mark it, then press 1 to 4 to spend an action, Enter to confirm, Escape back to the bench, L to read out everything you have established.",
         "Two numbers: claim strength comes from testimony, exhibit weight and contradictions; witness trust is separate, starts at the case's own value, and is what the bench will believe.",
         "The trade-off: pressing a witness adds 2 to the charge it serves and costs that witness 1 trust; corroborating a witness with a marked exhibit adds 1 to both.",
@@ -2933,7 +3200,7 @@
         "Scoring: the verdict quality is the gate, the case strength of your closing sets the stars, and the bands are measured from each case's own best-play line.",
       ],
       zh: [
-        "目标：在二十件案子里结一件，判决要能被它背后的数字真正撑住。",
+        "目标：在二十四件案子里结一件，判决要能被它背后的数字真正撑住。",
         "操作：点证人按顺序取他的证词，点物证把它呈堂，再按 1 到 4 花掉一次庭上动作，回车确认，Esc 回证人席，L 键念出你已确立的一切。",
         "两个数字：指控强度来自证词、物证分量与矛盾；证人信任是另一回事，由案子自己给定，那才是法庭愿意信多少。",
         "取舍：逼一个证人，替他服务的那条指控加 2，可这位证人的信任减 1；用已呈堂的物证为他旁证，两边各加 1。",

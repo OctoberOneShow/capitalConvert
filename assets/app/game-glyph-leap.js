@@ -50,7 +50,148 @@
     { id: "h18", labelKey: "lvlNum18", goal: 14000, gapMin: 82, gapMax: 92, moving: 0.52, spring: 0.14, starTimes: [136, 190, 250] },
     { id: "h19", labelKey: "lvlNum19", goal: 14900, gapMin: 82, gapMax: 92, moving: 0.54, spring: 0.13, starTimes: [143, 201, 265] },
     { id: "h20", labelKey: "lvlNum20", goal: 15800, gapMin: 84, gapMax: 92, moving: 0.56, spring: 0.12, starTimes: [151, 212, 281] },
+    /* Ascents 21-24. The tiers below kept the ledge fat and tightened
+     * everything around it; the deep tier's lesson is the ledge itself.
+     * `ledge` scales every platform the ascent spawns - springs included -
+     * so the landing window a normal bounce can hit closes rung by rung
+     * (0.8 -> 0.65 of the shipped width) while the springs fade with it
+     * (0.12 -> 0.09) and the drifting share keeps climbing (0.56 -> 0.62).
+     * The gaps hold at the shipped ceiling because 92 is what a normal
+     * bounce still clears, and the summit keeps its +900 a rung, so each
+     * ascent is the same tower built on less standing room. */
+    { id: "h21", labelKey: "lvlNum21", goal: 16700, gapMin: 84, gapMax: 92, moving: 0.58, spring: 0.11, ledge: 0.8, starTimes: [159, 224, 297] },
+    { id: "h22", labelKey: "lvlNum22", goal: 17600, gapMin: 84, gapMax: 92, moving: 0.6, spring: 0.1, ledge: 0.75, starTimes: [169, 237, 315] },
+    { id: "h23", labelKey: "lvlNum23", goal: 18500, gapMin: 86, gapMax: 92, moving: 0.62, spring: 0.09, ledge: 0.7, starTimes: [180, 252, 335] },
+    { id: "h24", labelKey: "lvlNum24", goal: 19400, gapMin: 86, gapMax: 92, moving: 0.64, spring: 0.08, ledge: 0.65, starTimes: [192, 269, 358] },
   ];
+
+  /* One more ledge above topY, drawn from the level's mix: gap, kind, width
+   * and drift all come from the level's own numbers, and `ledge` narrows the
+   * board every kind stands on. The live loop and the headless prover share
+   * this one spawn law, so a rung proven winnable is winnable on the exact
+   * ledges the player faces. */
+  function leapSpawn(level, topY, rng) {
+    var gap = level.gapMin + rng() * (level.gapMax - level.gapMin);
+    var y = topY - gap;
+    var roll = rng();
+    var kind = roll < level.spring ? "spring" : roll < level.spring + level.moving ? "move" : "static";
+    var w = Math.round((kind === "spring" ? 52 : 64) * (level.ledge || 1));
+    var baseX = 10 + rng() * (leapWidth - 20 - w);
+    return {
+      baseX: baseX,
+      x: baseX,
+      y: y,
+      w: w,
+      kind: kind,
+      phase: rng() * Math.PI * 2,
+      amp: kind === "move" ? 34 + rng() * 36 : 0,
+      speed: 0.8 + rng() * 0.6,
+    };
+  }
+
+  /* The headless ascent: the shared spawn law, the live loop's platform
+   * motion, bounce physics and screen wrap, integrated at a fixed tick with
+   * a steering hand instead of keys. `hand(probe)` returns -1, 0 or 1 each
+   * tick - the same choice a player's arrow key makes - and the probe
+   * carries the player, the climb and the ledges currently on screen, so a
+   * rung proven winnable here is winnable on the physics the player faces.
+   * No rendering and no fx; the clock is the sim's own integrated seconds. */
+  function leapSimulate(level, hand, rng) {
+    var platforms = [
+      { baseX: 120, x: 120, y: leapGroundY, w: 80, kind: "static", phase: 0, amp: 0, speed: 0 },
+    ];
+    var player = { x: 160, y: leapGroundY - 9, vx: 0, vy: 0, r: 9 };
+    var camY = 0;
+    var height = 0;
+    var seconds = 0;
+    var jumps = 0;
+    var topY = leapGroundY;
+    var dt = 1 / 60;
+    var guard = 0;
+    function spawnAbove() {
+      while (topY > camY - 120) {
+        var platform = leapSpawn(level, topY, rng);
+        platforms.push(platform);
+        topY = platform.y;
+      }
+    }
+    spawnAbove();
+    while (guard < 432000) {
+      guard += 1;
+      var now = seconds * 1000;
+      platforms.forEach(function (p) {
+        if (p.kind === "move") {
+          var prevX = p.x;
+          p.x = p.baseX + Math.sin(p.phase + now / 1000 * p.speed) * p.amp;
+          p.drift = p.x - prevX;
+        } else {
+          p.drift = 0;
+        }
+      });
+      var probe = {
+        levelId: level.id,
+        height: height,
+        seconds: seconds,
+        jumps: jumps,
+        player: { x: player.x, y: player.y, vx: player.vx, vy: player.vy },
+        camY: camY,
+        platforms: platforms.map(function (p) {
+          return { x: p.x, y: p.y, w: p.w, kind: p.kind, drift: p.drift || 0 };
+        }),
+      };
+      var steer = hand(probe) || 0;
+      if (steer !== 0) {
+        player.vx += steer * leapRunAccel * dt;
+        player.vx = Math.max(-leapRunSpeed, Math.min(leapRunSpeed, player.vx));
+      } else {
+        player.vx -= player.vx * Math.min(1, dt * 6);
+      }
+      player.vy += leapGravity * dt;
+      var prevY = player.y;
+      player.x += player.vx * dt;
+      player.y += player.vy * dt;
+      if (player.x < -player.r) {
+        player.x = leapWidth + player.r;
+      } else if (player.x > leapWidth + player.r) {
+        player.x = -player.r;
+      }
+      if (player.vy > 0) {
+        for (var index = 0; index < platforms.length; index += 1) {
+          var p = platforms[index];
+          if (
+            prevY + player.r <= p.y + 4 &&
+            player.y + player.r >= p.y &&
+            player.x > p.x - player.r &&
+            player.x < p.x + p.w + player.r
+          ) {
+            player.y = p.y - player.r;
+            player.vy = p.kind === "spring" ? -leapSpringBounce : -leapBounce;
+            jumps += 1;
+            break;
+          }
+        }
+      }
+      if (player.y - camY < leapHeight * 0.42) {
+        camY = player.y - leapHeight * 0.42;
+      }
+      spawnAbove();
+      platforms = platforms.filter(function (platform) {
+        return platform.y <= camY + leapHeight + 40;
+      });
+      var climbed = Math.floor(leapGroundY - player.y);
+      if (climbed > height) {
+        height = climbed;
+      }
+      seconds += dt;
+      if (height >= level.goal) {
+        return { cleared: true, seconds: Math.round(seconds * 10) / 10, jumps: jumps, height: height };
+      }
+      if (player.y - camY > leapHeight + 40) {
+        return { cleared: false, seconds: Math.round(seconds * 10) / 10, jumps: jumps, height: height };
+      }
+    }
+    return { cleared: false, seconds: Math.round(seconds * 10) / 10, jumps: jumps, height: height, stalled: true };
+  }
 
   function initGlyphLeapGame() {
     var canvas = getElement("leapCanvas");
@@ -116,23 +257,9 @@
 
     function generateAbove(topY) {
       while (topY > camY - 120) {
-        var gap = level.gapMin + Math.random() * (level.gapMax - level.gapMin);
-        var y = topY - gap;
-        var roll = Math.random();
-        var kind = roll < level.spring ? "spring" : roll < level.spring + level.moving ? "move" : "static";
-        var w = kind === "spring" ? 52 : 64;
-        var baseX = 10 + Math.random() * (leapWidth - 20 - w);
-        platforms.push({
-          baseX: baseX,
-          x: baseX,
-          y: y,
-          w: w,
-          kind: kind,
-          phase: Math.random() * Math.PI * 2,
-          amp: kind === "move" ? 34 + Math.random() * 36 : 0,
-          speed: 0.8 + Math.random() * 0.6,
-        });
-        topY = y;
+        var platform = leapSpawn(level, topY, Math.random);
+        platforms.push(platform);
+        topY = platform.y;
       }
     }
 
@@ -458,6 +585,13 @@
   }
 
 
-  /* Exported for the other modules. */
+  /* Exported for the other modules and the headless checks. */
   App.initGlyphLeapGame = initGlyphLeapGame;
+  App.leapLevels = leapLevels;
+  App.leapSimulate = leapSimulate;
+  App.leapSpawn = leapSpawn;
+  App.leapBounce = leapBounce;
+  App.leapGravity = leapGravity;
+  App.leapWidth = leapWidth;
+  App.leapHeight = leapHeight;
 })(window.CapitalConvert = window.CapitalConvert || {});

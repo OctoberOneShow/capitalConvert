@@ -42,6 +42,21 @@
     { id: "c18", labelKey: "echoL18", goal: 29, stepMs: 150, flashMs: 230 },
     { id: "c19", labelKey: "echoL19", goal: 31, stepMs: 140 },
     { id: "c20", labelKey: "echoL20", goal: 16, stepMs: 180, reverse: true, flashMs: 210 },
+    /* c21-c24 are the hard tier, and each one pushes one dial past every
+     * shipped chime. c21 is the longest chain the game has ever asked for:
+     * 33 links against the shipped 31 of c19. c22 holds that summit length
+     * at the fastest plain pace, 135 ms a link under the 140 ms c19 set.
+     * c23 is the backwards marathon - 29 mirrored links against the 16 of
+     * c20. c24 sprints: backwards again, at 105 ms a link with a 160 ms
+     * glow, the fastest chime in the campaign on every clock it carries.
+     * Measured effort - links per engaged second, counting shows and the
+     * pauses between rounds - climbs 5.1 -> 5.5 -> 5.8 -> 6.1 across the
+     * tier against 3.7 for the shipped peak, and a winning echo taps
+     * 561 links on c21 alone against 136 on c20. */
+    { id: "c21", labelKey: "echoL21", goal: 33, stepMs: 150 },
+    { id: "c22", labelKey: "echoL22", goal: 31, stepMs: 135 },
+    { id: "c23", labelKey: "echoL23", goal: 29, stepMs: 120, reverse: true },
+    { id: "c24", labelKey: "echoL24", goal: 25, stepMs: 105, reverse: true, flashMs: 160 },
   ];
 
   function initGlyphEchoGame() {
@@ -335,4 +350,26 @@
 
   /* Exported for the other modules. */
   App.initGlyphEchoGame = initGlyphEchoGame;
+  /* The chime table travels too, so the gate can check the ladder's shape
+   * without regex-scraping this source. (Echo Cartographer ships its own
+   * App.echoLevels, so this one carries the campaign key's name.) */
+  App.glyphEchoLevels = echoLevels;
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so the shared dictionary stays authoritative. The
+   * hard tier keeps the cosmic register the shared dictionary carries. */
+  App.addStrings({
+    en: {
+      "echoL21": "The Longest Night",
+      "echoL22": "Swift Summit",
+      "echoL23": "Mirror Labyrinth",
+      "echoL24": "Prestissimo",
+    },
+    zh: {
+      "echoL21": "漫漫长夜",
+      "echoL22": "疾峰快板",
+      "echoL23": "镜中迷宫",
+      "echoL24": "最急板",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

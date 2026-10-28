@@ -93,6 +93,31 @@
     { id: "t18", labelKey: "ftL18", grid: 4, walk: 4600, starMoves: [415, 625, 900] },
     { id: "t19", labelKey: "ftL19", grid: 4, walk: 5600, starMoves: [450, 675, 970] },
     { id: "t20", labelKey: "ftL20", grid: 5, walk: 1400, starMoves: [172, 258, 378] },
+
+    /* t21-t24, the deep tier - the summit. The one lesson no earlier rung
+     * teaches: the blank is a tile too. These walks deal the quintet fully
+     * mixed - on the gate's seeded bench not one plate starts at home - so
+     * dragging a run after a stray plate drags half the tray with it, and the
+     * cheap lines are the ones that route the gap home with the plates
+     * instead of chasing tiles past it. Every deal below is measured on the
+     * gate's seeded bench, and every seeded line proves dearer than t20's. */
+    /* t21 opens the tier one full turn of the walk ladder past t20: the same
+     * big tray dealt past the depth where edges settle for free, so the
+     * three-star line lifts clear of t20's for the first time. */
+    { id: "t21", labelKey: "ftL21", grid: 5, walk: 2000, starMoves: [192, 288, 422] },
+    /* t22 walks deeper still: the seeded deal strands the blank four steps
+     * from home with every plate out of place, and a line that ignores the
+     * gap's own route pays for it in the bands. */
+    { id: "t22", labelKey: "ftL22", grid: 5, walk: 2800, starMoves: [206, 309, 453] },
+    /* t23 carries the walk past the old four-by-four ladder's close, now on
+     * the quintet: its seeded deal holds the tier's highest provable floor -
+     * no line of any kind can beat it - so the depth is in the board, not
+     * just the band. */
+    { id: "t23", labelKey: "ftL23", grid: 5, walk: 4200, starMoves: [218, 327, 480] },
+    /* t24 closes the campaign on the deepest deal the drawer has ever dealt:
+     * the walk the old peak shipped, now on the big tray, with the deepest
+     * proven line in the game and the top of every band curve. */
+    { id: "t24", labelKey: "ftL24", grid: 5, walk: 5600, starMoves: [230, 345, 506] },
   ];
 
   function easeOut(k) {
@@ -1460,6 +1485,24 @@
     loadLevel(ftLevels[campaign.indexOf(campaign.nextLevelId())]);
   }
 
+
+  /* The deep tier's names travel with the game: addStrings only fills keys
+   * i18n.js does not already own, so the shared dictionary stays the
+   * authority for the pages and the drawer chrome. */
+  App.addStrings({
+    en: {
+      "ftL21": "Midnight Zone",
+      "ftL22": "The Trench",
+      "ftL23": "Hadal Reach",
+      "ftL24": "Deepest Quintet",
+    },
+    zh: {
+      "ftL21": "无光层",
+      "ftL22": "海沟",
+      "ftL23": "超深渊",
+      "ftL24": "渊底终章",
+    },
+  });
 
   /* Exported for the other modules. */
   App.initGlyphFifteenGame = initGlyphFifteenGame;

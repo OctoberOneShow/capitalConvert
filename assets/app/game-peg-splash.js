@@ -55,6 +55,23 @@
     { id: "b18", labelKey: "lvlNum18", balls: 6, orange: 36, bucketSpeed: 440, seed: 269 },
     { id: "b19", labelKey: "lvlNum19", balls: 6, orange: 38, bucketSpeed: 470, seed: 271 },
     { id: "b20", labelKey: "lvlNum20", balls: 6, orange: 40, bucketSpeed: 500, seed: 277 },
+    /* Boards 21-24, the deep tier. Everything b20 fixed stays fixed - six
+     * balls, forty oranges out of the same 84-peg field, the bucket sweeping
+     * at five times its opening speed - and the whole lesson is spent on the
+     * one lever the calm ladder never touched: crosswind. From b21 the ball
+     * is shoved sideways in flight, the gust climbing twenty a rung and
+     * switching banks, so the vertical drop the first twenty boards drilled
+     * is now a compensation problem: every shot has to be led upwind, the
+     * bucket catch has to be led twice, and the gust chevrons by the cannon
+     * are the only warning. Six balls still has to do the whole board, so
+     * the three-star lines below (bands over balls left) ask for banked
+     * bucket catches on top of reading the drift. The bench that measured
+     * the boards (seeds 322/342/337/314) and the bands lives in
+     * tools/gate-snippets/peg-splash.js. */
+    { id: "b21", labelKey: "lvlNum21", balls: 6, orange: 40, bucketSpeed: 500, wind: 40, starBands: [3, 2, 1], seed: 322 },
+    { id: "b22", labelKey: "lvlNum22", balls: 6, orange: 40, bucketSpeed: 500, wind: -60, starBands: [3, 2, 1], seed: 342 },
+    { id: "b23", labelKey: "lvlNum23", balls: 6, orange: 40, bucketSpeed: 500, wind: 80, starBands: [3, 2, 1], seed: 337 },
+    { id: "b24", labelKey: "lvlNum24", balls: 6, orange: 40, bucketSpeed: 500, wind: -100, starBands: [3, 2, 1], seed: 314 },
   ];
 
   function mulberry32(seed) {
@@ -65,6 +82,111 @@
       mixed = (mixed + Math.imul(mixed ^ (mixed >>> 7), 61 | mixed)) ^ mixed;
       return ((mixed ^ (mixed >>> 14)) >>> 0) / 4294967296;
     };
+  }
+
+  /* The bucket's sweep: shared by the panel's draw and the flight law. */
+  function pegBucketX(phase) {
+    return 160 + Math.sin(phase) * 118;
+  }
+
+  function pegOrangesLeft(field) {
+    var n = 0;
+    for (var i = 0; i < field.length; i += 1) {
+      if (field[i].alive && field[i].orange) {
+        n += 1;
+      }
+    }
+    return n;
+  }
+
+  /* The field deal: every board builds its pegs from its seed through this
+   * one deal - the panel plays it and the gate replays it, so a benched
+   * board is the board the player sees. */
+  function pegBuildField(level) {
+    var rng = mulberry32(level.seed);
+    var pegs = [];
+    for (var row = 0; row < pegFieldRows; row += 1) {
+      var cols = row % 2 === 0 ? 11 : 10;
+      for (var col = 0; col < cols; col += 1) {
+        if (rng() < 0.12) {
+          continue;
+        }
+        pegs.push({
+          x: 20 + col * 28 + (row % 2 ? 14 : 0),
+          y: 60 + row * 26,
+          orange: false,
+          alive: true,
+        });
+      }
+    }
+    var shuffled = pegs.slice();
+    for (var i = shuffled.length - 1; i > 0; i -= 1) {
+      var j = Math.floor(rng() * (i + 1));
+      var swap = shuffled[i];
+      shuffled[i] = shuffled[j];
+      shuffled[j] = swap;
+    }
+    for (var o = 0; o < level.orange && o < shuffled.length; o += 1) {
+      shuffled[o].orange = true;
+    }
+    return pegs;
+  }
+
+  /* One integration step of the ball: the flight law the panel plays and
+   * the bench replays. Gravity pulls, the rung's crosswind (boards 21-24
+   * only - no shipped rung carries a wind) shoves, walls and pegs bounce,
+   * the first peg touched dies, and the bucket or the floor ends the
+   * flight. Returns what happened this step. */
+  function pegStepBall(level, field, ball, phase, dt) {
+    ball.vy += pegGravity * dt;
+    if (level.wind) {
+      ball.vx += level.wind * dt;
+    }
+    ball.x += ball.vx * dt;
+    ball.y += ball.vy * dt;
+    if (ball.x < pegBallR) {
+      ball.x = pegBallR;
+      ball.vx = Math.abs(ball.vx) * 0.95;
+    } else if (ball.x > pegWidth - pegBallR) {
+      ball.x = pegWidth - pegBallR;
+      ball.vx = -Math.abs(ball.vx) * 0.95;
+    }
+    var hit = null;
+    for (var p = 0; p < field.length; p += 1) {
+      var peg = field[p];
+      if (!peg.alive) {
+        continue;
+      }
+      var dx = ball.x - peg.x;
+      var dy = ball.y - peg.y;
+      var distSq = dx * dx + dy * dy;
+      var minDist = pegR + pegBallR + 1;
+      if (distSq < minDist * minDist && distSq > 0.0001) {
+        var dist = Math.sqrt(distSq);
+        var nx = dx / dist;
+        var ny = dy / dist;
+        var dot = ball.vx * nx + ball.vy * ny;
+        ball.vx = (ball.vx - 2 * dot * nx) * 0.82;
+        ball.vy = (ball.vy - 2 * dot * ny) * 0.82;
+        ball.x = peg.x + nx * minDist;
+        ball.y = peg.y + ny * minDist;
+        peg.alive = false;
+        hit = peg;
+        break;
+      }
+    }
+    var caught = false;
+    var lost = false;
+    if (
+      ball.y > pegHeight - 16 &&
+      ball.vy > 0 &&
+      Math.abs(ball.x - pegBucketX(phase)) < 26
+    ) {
+      caught = true;
+    } else if (ball.y > pegHeight + 12) {
+      lost = true;
+    }
+    return { hit: hit, caught: caught, lost: lost };
   }
 
   function initPegSplashGame() {
@@ -129,36 +251,11 @@
     }
 
     function buildField() {
-      var rng = mulberry32(level.seed);
-      pegs = [];
-      for (var row = 0; row < pegFieldRows; row += 1) {
-        var cols = row % 2 === 0 ? 11 : 10;
-        for (var col = 0; col < cols; col += 1) {
-          if (rng() < 0.12) {
-            continue;
-          }
-          pegs.push({
-            x: 20 + col * 28 + (row % 2 ? 14 : 0),
-            y: 60 + row * 26,
-            orange: false,
-            alive: true,
-          });
-        }
-      }
-      var shuffled = pegs.slice();
-      for (var i = shuffled.length - 1; i > 0; i -= 1) {
-        var j = Math.floor(rng() * (i + 1));
-        var swap = shuffled[i];
-        shuffled[i] = shuffled[j];
-        shuffled[j] = swap;
-      }
-      for (var o = 0; o < level.orange && o < shuffled.length; o += 1) {
-        shuffled[o].orange = true;
-      }
+      pegs = pegBuildField(level);
     }
 
     function bucketX() {
-      return 160 + Math.sin(phase) * 118;
+      return pegBucketX(phase);
     }
 
     function burst(x, y, color, count) {
@@ -190,9 +287,7 @@
     }
 
     function orangeLeft() {
-      return pegs.filter(function (peg) {
-        return peg.alive && peg.orange;
-      }).length;
+      return pegOrangesLeft(pegs);
     }
 
     function gameOver() {
@@ -204,7 +299,10 @@
 
     function levelCleared() {
       alive = false;
-      var starsWon = Math.max(1, starsFor(ballsLeft, [3, 2, 1], "high"));
+      var starsWon = Math.max(
+        1,
+        starsFor(ballsLeft, level.starBands || [3, 2, 1], "high"),
+      );
       var outcome = campaign.record(level.id, {
         stars: starsWon,
         best: level.balls - ballsLeft,
@@ -257,53 +355,24 @@
       if (ball.trail.length > 9) {
         ball.trail.shift();
       }
-      ball.vy += pegGravity * dt;
-      ball.x += ball.vx * dt;
-      ball.y += ball.vy * dt;
-      if (ball.x < pegBallR) {
-        ball.x = pegBallR;
-        ball.vx = Math.abs(ball.vx) * 0.95;
-      } else if (ball.x > pegWidth - pegBallR) {
-        ball.x = pegWidth - pegBallR;
-        ball.vx = -Math.abs(ball.vx) * 0.95;
-      }
-      for (var p = 0; p < pegs.length; p += 1) {
-        var peg = pegs[p];
-        if (!peg.alive) {
-          continue;
-        }
-        var dx = ball.x - peg.x;
-        var dy = ball.y - peg.y;
-        var distSq = dx * dx + dy * dy;
-        var minDist = pegR + pegBallR + 1;
-        if (distSq < minDist * minDist && distSq > 0.0001) {
-          var dist = Math.sqrt(distSq);
-          var nx = dx / dist;
-          var ny = dy / dist;
-          var dot = ball.vx * nx + ball.vy * ny;
-          ball.vx = (ball.vx - 2 * dot * nx) * 0.82;
-          ball.vy = (ball.vy - 2 * dot * ny) * 0.82;
-          ball.x = peg.x + nx * minDist;
-          ball.y = peg.y + ny * minDist;
-          peg.alive = false;
-          score += peg.orange ? pegOrangeScore : pegBlueScore;
-          burst(peg.x, peg.y, peg.orange ? pegOrangeColor : pegBlueColor, 8);
-          renderHud();
-          if (orangeLeft() === 0) {
-            levelCleared();
-            return;
-          }
-          break;
+      var step = pegStepBall(level, pegs, ball, phase, dt);
+      if (step.hit) {
+        score += step.hit.orange ? pegOrangeScore : pegBlueScore;
+        burst(step.hit.x, step.hit.y, step.hit.orange ? pegOrangeColor : pegBlueColor, 8);
+        renderHud();
+        if (orangeLeft() === 0) {
+          levelCleared();
+          return;
         }
       }
-      if (ball.y > pegHeight - 16 && ball.vy > 0 && Math.abs(ball.x - bucketX()) < 26) {
+      if (step.caught) {
         ball = null;
         ballsLeft += 1;
         caughtFlash = 1;
         renderHud();
         return;
       }
-      if (ball.y > pegHeight + 12) {
+      if (step.lost) {
         ball = null;
         if (ballsLeft <= 0) {
           gameOver();
@@ -340,6 +409,22 @@
       ctx.arc(pegCannonX, pegCannonY, 9, 0, Math.PI * 2);
       ctx.fillStyle = "#e2e8f0";
       ctx.fill();
+      /* Crosswind chevrons: the deep tier's only warning. One growing gust
+       * line per twenty of wind, drawn downwind of the cannon. */
+      if (level.wind) {
+        var windDir = level.wind > 0 ? 1 : -1;
+        var gusts = Math.min(5, Math.max(1, Math.round(Math.abs(level.wind) / 20)));
+        ctx.strokeStyle = "rgba(255, 255, 255, 0.4)";
+        ctx.lineWidth = 2;
+        for (var gust = 0; gust < gusts; gust += 1) {
+          var gustY = 46 + gust * 9;
+          ctx.beginPath();
+          ctx.moveTo(pegCannonX - windDir * 24, gustY);
+          ctx.lineTo(pegCannonX + windDir * (24 + gust * 9), gustY);
+          ctx.stroke();
+        }
+        ctx.lineWidth = 1;
+      }
       if (ball) {
         for (var t2 = 0; t2 < ball.trail.length; t2 += 1) {
           ctx.globalAlpha = (t2 / ball.trail.length) * 0.5;
@@ -485,6 +570,134 @@
   }
 
 
+  /* The bench: replays a board through the panel's own field deal and
+   * flight law on a fixed headless clock (1/120s steps, no die of its own -
+   * rand only flows to the hand). policy(shotIndex, view) returns the next
+   * shot { angle, hold }; hold idles the board clock before firing so a
+   * hand can wait the bucket around. view.probe flies a candidate shot
+   * against a throwaway copy of the field without spending the board, the
+   * way a player reads a line before shooting it. Returns the record the
+   * campaign pays stars on, stars computed by the same bands levelCleared
+   * pays. */
+  function pegSimulate(level, policy, rand) {
+    var field = pegBuildField(level);
+    var ballsLeft = level.balls;
+    var score = 0;
+    var phase = 0;
+    var fired = 0;
+    var catches = 0;
+    var cleared = false;
+    var STEP = 1 / 120;
+    var GUARD = 60 * 60 * 2; /* two board-minutes of steps, a never-in-practice stop */
+
+    function orangesLeft() {
+      return pegOrangesLeft(field);
+    }
+
+    /* One ball from cannon to catch, loss or last orange. Returns the
+     * flight record and the board clock it ended on; safe to run against a
+     * throwaway field copy (the probe does exactly that). */
+    function flyBall(fieldArg, shot, startClock) {
+      var ball = {
+        x: pegCannonX,
+        y: pegCannonY,
+        vx: Math.cos(shot.angle) * pegSpeed,
+        vy: Math.sin(shot.angle) * pegSpeed,
+      };
+      var clock = startClock + (shot.hold || 0) * (level.bucketSpeed / 118);
+      var gained = 0;
+      var orangeKilled = 0;
+      for (var step = 0; step < GUARD; step += 1) {
+        clock += STEP * (level.bucketSpeed / 118);
+        var outcome = pegStepBall(level, fieldArg, ball, clock, STEP);
+        if (outcome.hit) {
+          gained += outcome.hit.orange ? pegOrangeScore : pegBlueScore;
+          if (outcome.hit.orange) {
+            orangeKilled += 1;
+          }
+          if (pegOrangesLeft(fieldArg) === 0) {
+            return { end: "cleared", gained: gained, orangeKilled: orangeKilled, clock: clock };
+          }
+        }
+        if (outcome.caught) {
+          return { end: "caught", gained: gained, orangeKilled: orangeKilled, clock: clock };
+        }
+        if (outcome.lost) {
+          return { end: "lost", gained: gained, orangeKilled: orangeKilled, clock: clock };
+        }
+      }
+      return { end: "lost", gained: gained, orangeKilled: orangeKilled, clock: clock };
+    }
+
+    var guard = 4 * level.balls + 16; /* a hand that farms the bucket past this is not clearing */
+    while (guard > 0) {
+      guard -= 1;
+      if (orangesLeft() === 0) {
+        cleared = true;
+        break;
+      }
+      if (ballsLeft <= 0) {
+        break;
+      }
+      var view = {
+        ballsLeft: ballsLeft,
+        score: score,
+        shots: fired,
+        orangeLeft: orangesLeft,
+        /* Where the surviving targets sit, so a hand can aim at them. */
+        targets: function () {
+          return field.map(function (peg) {
+            return peg.alive && peg.orange ? { x: peg.x, y: peg.y } : null;
+          }).filter(function (spot) {
+            return spot !== null;
+          });
+        },
+        rand: rand,
+        probe: function (shot) {
+          var copy = field.map(function (peg) {
+            return { x: peg.x, y: peg.y, orange: peg.orange, alive: peg.alive };
+          });
+          var record = flyBall(copy, shot, phase);
+          return {
+            end: record.end,
+            gained: record.gained,
+            orangeKilled: record.orangeKilled,
+          };
+        },
+      };
+      var shot = policy(fired, view);
+      if (!shot) {
+        break;
+      }
+      fired += 1;
+      ballsLeft -= 1;
+      var flight = flyBall(field, shot, phase);
+      phase = flight.clock;
+      score += flight.gained;
+      if (flight.end === "caught") {
+        ballsLeft += 1;
+        catches += 1;
+      }
+      if (flight.end === "cleared") {
+        cleared = true;
+        break;
+      }
+    }
+    return {
+      cleared: cleared,
+      ballsLeft: ballsLeft,
+      score: score,
+      shots: fired,
+      catches: catches,
+      stars: Math.max(1, starsFor(ballsLeft, level.starBands || [3, 2, 1], "high")),
+    };
+  }
+
+
   /* Exported for the other modules. */
   App.initPegSplashGame = initPegSplashGame;
+  /* The ladder, the field deal and the bench, for the verify-levels gate. */
+  App.pegSplashLevels = pegLevels;
+  App.pegSplashField = pegBuildField;
+  App.pegSplashSimulate = pegSimulate;
 })(window.CapitalConvert = window.CapitalConvert || {});

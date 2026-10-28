@@ -12,8 +12,9 @@
  * (one faction's vote), parliamentRound (the whole turn: amendments, votes,
  * obligations, trust, walkouts), parliamentTrustFloor, parliamentLedgerFlips
  * (whether a pod's ballot actually rests on its ledger) and parliamentSolvable.
- * Twenty parliaments climb the ladder, each one dealt by the same construction
- * path from a seeded PRNG only, so a session replays bit for bit, and each
+ * Twenty-four parliaments climb the ladder, each one dealt by the same
+ * construction path from a seeded PRNG only, so a session replays bit for bit,
+ * and each
  * rung's star bands are the scores its own scripted lines reach when replayed
  * through that resolver - measured, never invented. Turn-based: no timers, no
  * frames, nothing that can tick behind a hidden panel. */
@@ -105,17 +106,21 @@
     });
   }
 
-  /* --- The twenty parliaments: generous priorities, a clash over the trench, a
-   * debt-heavy start, a hall where a walked-out pod can be won back, the
-   * deep-water treaty that combines all three, and then five deeper halls where
-   * the ledger tightens rung by rung. From the Single Whip onward every hall
-   * bends a different part of the rules - the whip budget, who owns a goal,
-   * which wishes a bloc can be bought with, which ledger tools the hand is
-   * missing, how many seats the treaty has to survive on. Each carries three
-   * scripted lines, replayed below to measure its star bands: the bands are what
-   * those lines score through App.parliamentRound, never numbers written by
-   * hand, and the treaty target climbs while the points per adopted package
-   * fall. --- */
+  /* --- The twenty-four parliaments: generous priorities, a clash over the
+   * trench, a debt-heavy start, a hall where a walked-out pod can be won back,
+   * the deep-water treaty that combines all three, then five deeper halls where
+   * the ledger tightens rung by rung, and finally the deep tier's own lesson -
+   * the calendar. Every shipped hall sits six rounds; rungs 21-24 shorten the
+   * session itself, and the treaty quota stands while the gavel falls sooner:
+   * fewer rounds to pay favours down, fewer chances for a thin seat to recover,
+   * and a score ceiling compressed with the horizon. From the Single Whip
+   * onward every hall bends a different part of the rules - the whip budget,
+   * who owns a goal, which wishes a bloc can be bought with, which ledger tools
+   * the hand is missing, how many seats the treaty has to survive on, and now
+   * how long the hall sits at all. Each carries three scripted lines, replayed
+   * below to measure its star bands: the bands are what those lines score
+   * through App.parliamentRound, never numbers written by hand, and the treaty
+   * target climbs while the points per adopted package fall. --- */
   var whpLevels = [
     {
       id: "w1", labelKey: "whpP1", twistKey: "whpTwist1", maxCards: 2, need: 3, mercy: false, seed: 20261003,
@@ -426,6 +431,76 @@
       start: [{ id: "gray", trust: 38, owed: 0 }, { id: "tusk", trust: 43, owed: 1 }, { id: "orca", trust: 37, owed: 1 }],
       lines: { high: [[], [4, 5], [1, 2], [], [], []], mid: [[], [4, 5], [1, 2], [3], [], []], low: [[], [4, 5], [1, 2], [], [3], []] },
     },
+    {
+      /* Short Tide opens the deep tier's lesson - the calendar. Five rounds sit
+       * where six did, and four packages still have to carry: the clan claims
+       * the reef ours alone, so its seat is bought with reef closures the whip
+       * can barely afford, and every favour the hall writes has a round less
+       * to be paid down in before the gavel falls. */
+      id: "w21", labelKey: "whpP21", twistKey: "whpTwist21", maxCards: 2, need: 4, mercy: false, rounds: 5, seed: 640073,
+      decks: ["crossTrench", "strait", "split", "hunters", "narrowRun", "bothWays"],
+      hand: whpHand([["grant", "deep", "gray", 1], ["grant", "deep", "orca", 1], ["restrict", "ice", "tusk", 1], ["restrict", "reef", "gray", 1], ["restrict", "reef", "tusk", 1], ["waive", "", "tusk", 0], ["grant", "kelp", "tusk", 1]]),
+      prio: {
+        gray: [["deep", "open", 3], ["reef", "open", 2], ["kelp", "shut", 1]],
+        tusk: [["ice", "shut", 3], ["kelp", "mine", 2], ["deep", "shut", 1]],
+        orca: [["reef", "mine", 3], ["deep", "open", 2], ["ice", "shut", 1]],
+      },
+      start: [{ id: "gray", trust: 50, owed: 1 }, { id: "tusk", trust: 48, owed: 2 }, { id: "orca", trust: 46, owed: 1 }],
+      lines: { high: [[], [4, 5], [3], [], [7]], mid: [[], [], [], [], [7]], low: [[], [], [3], [], []] },
+    },
+    {
+      /* Deadline Hall keeps five rounds and strikes the slack: five gavels,
+       * five packages, no round to lose. The strait and the trench carry on
+       * their own, but the twin gates need the deep bought open, and the herd,
+       * which claims the deep ours alone, writes a favour against every round
+       * the water carries - on five rounds there is no gavel left to pay them
+       * down. */
+      id: "w22", labelKey: "whpP22", twistKey: "whpTwist22", maxCards: 2, need: 5, mercy: false, rounds: 5, seed: 811501,
+      decks: ["hunters", "crossTrench", "strait", "twinGates", "split", "wide"],
+      hand: whpHand([["grant", "deep", "gray", 1], ["grant", "deep", "orca", 1], ["restrict", "ice", "tusk", 1], ["restrict", "kelp", "tusk", 1], ["grant", "reef", "orca", 1], ["waive", "", "tusk", 0]]),
+      prio: {
+        gray: [["deep", "open", 3], ["kelp", "open", 2], ["ice", "shut", 1]],
+        tusk: [["ice", "shut", 3], ["deep", "mine", 2], ["kelp", "shut", 1]],
+        orca: [["deep", "open", 3], ["reef", "mine", 2], ["ice", "shut", 1]],
+      },
+      start: [{ id: "gray", trust: 44, owed: 3 }, { id: "tusk", trust: 43, owed: 3 }, { id: "orca", trust: 44, owed: 2 }],
+      lines: { high: [[], [], [1, 2], [3], []], mid: [[], [], [], [3], []], low: [[], [], [], [], []] },
+    },
+    {
+      /* The Four Round House cuts the calendar to four: four cheap packages,
+       * four rounds, and favours that start at five a pod. A carried package
+       * pays a favour only to the pod whose top wish it served, so a whip spent
+       * on relief buys nothing - the debts ride every ballot to the final
+       * gavel, and only a pledge or a grudge-leaving waiver clears one early. */
+      id: "w23", labelKey: "whpP23", twistKey: "whpTwist23", maxCards: 2, need: 4, mercy: false, rounds: 4, seed: 555777,
+      decks: ["quiet", "nursery", "cold", "twoBays", "tuskRun", "halfGate"],
+      hand: whpHand([["grant", "deep", "orca", 1], ["restrict", "deep", "gray", 1], ["grant", "reef", "tusk", 1], ["restrict", "kelp", "tusk", 1], ["pledge", "", "orca", 0], ["waive", "", "gray", 0]]),
+      prio: {
+        gray: [["kelp", "shut", 3], ["ice", "shut", 2], ["reef", "shut", 1]],
+        tusk: [["ice", "shut", 3], ["reef", "shut", 2], ["kelp", "open", 1]],
+        orca: [["kelp", "shut", 3], ["deep", "open", 2], ["reef", "shut", 1]],
+      },
+      start: [{ id: "gray", trust: 36, owed: 5 }, { id: "tusk", trust: 37, owed: 5 }, { id: "orca", trust: 38, owed: 5 }],
+      lines: { high: [[5], [2, 3], [1], []], mid: [[5], [2, 3], [], []], low: [[], [2, 3], [1], []] },
+    },
+    {
+      /* The Brief Parliament is the deadline at its tightest: four rounds,
+       * four packages, and the herd on nine points of trust. The first two
+       * rounds carry on the thin seat's credit - every bypass writes a favour
+       * and takes two points it cannot spare - so the third round's ice
+       * closure and pledge are the whole treaty: buy the herd's yea back
+       * before the fourth gavel, or the session ends with the seat empty. */
+      id: "w24", labelKey: "whpP24", twistKey: "whpTwist24", maxCards: 2, need: 4, mercy: false, rounds: 4, seed: 512433,
+      decks: ["hunters", "crossTrench", "narrowRun", "split", "wide"],
+      hand: whpHand([["grant", "deep", "gray", 1], ["grant", "deep", "orca", 1], ["restrict", "ice", "tusk", 1], ["restrict", "ice", "orca", 1], ["restrict", "ice", "gray", 1], ["waive", "", "tusk", 0], ["pledge", "", "tusk", 0]]),
+      prio: {
+        gray: [["deep", "open", 3], ["ice", "shut", 2], ["kelp", "shut", 1]],
+        tusk: [["ice", "shut", 3], ["deep", "shut", 2], ["kelp", "shut", 1]],
+        orca: [["deep", "open", 3], ["ice", "shut", 2], ["kelp", "open", 1]],
+      },
+      start: [{ id: "gray", trust: 42, owed: 3 }, { id: "tusk", trust: 9, owed: 3 }, { id: "orca", trust: 42, owed: 3 }],
+      lines: { high: [[], [1, 2], [3, 7], []], mid: [[], [], [3, 7], []], low: [[], [], [], []] },
+    },
   ];
 
   /* ---------------- pure core ---------------- */
@@ -621,12 +696,14 @@
     return next;
   }
 
-  /* App.parliamentStart: the opening session of a parliament. */
+  /* App.parliamentStart: the opening session of a parliament. A hall may sit
+   * its own number of rounds; the deep tier deals short sessions, and every
+   * shipped hall leaves the field off and keeps the six-round calendar. */
   function parliamentStart(level) {
     var def = level || whpLevels[0];
     var order = whpShuffle(def.decks, whpPrng(def.seed));
     var start = whpSkeleton({
-      pid: def.id, rounds: WHP_ROUNDS, maxCards: def.maxCards, need: def.need, mercy: def.mercy, order: order,
+      pid: def.id, rounds: whpInt(def.rounds) || WHP_ROUNDS, maxCards: def.maxCards, need: def.need, mercy: def.mercy, order: order,
     });
     start.round = 1;
     start.score = 0;
@@ -1503,7 +1580,8 @@
       "whpP11": "Single Whip", "whpP12": "Unfinished Bills", "whpP13": "The Exclusive Bloc",
       "whpP14": "Paid at the Ballot", "whpP15": "The Promise Bank", "whpP16": "Fatal Floor",
       "whpP17": "Favour Tide Rises", "whpP18": "The Two-Seat Hall", "whpP19": "Poor House",
-      "whpP20": "Six of Six",
+      "whpP20": "Six of Six", "whpP21": "Short Tide", "whpP22": "Deadline Hall",
+      "whpP23": "The Four Round House", "whpP24": "The Brief Parliament",
       "whpTwist1": "Generous priorities", "whpTwist2": "Two pods clash over the trench",
       "whpTwist3": "The hall starts in debt", "whpTwist4": "A walked-out pod can be won back",
       "whpTwist5": "Clash, debt and a second seat",
@@ -1520,6 +1598,10 @@
       "whpTwist18": "Lose the thin seat and both survivors must agree",
       "whpTwist19": "Penny motions, so the goal bonus decides",
       "whpTwist20": "Every round must pass, or nothing does",
+      "whpTwist21": "Five rounds for four packages",
+      "whpTwist22": "Five rounds, five packages, no round to lose",
+      "whpTwist23": "Four rounds, and favours that ride to the gavel",
+      "whpTwist24": "Four rounds with a seat on nine points",
       "whpFGray": "Grey Drifters", "whpFTusk": "Tusk Herd", "whpFOrca": "Orca Clan",
       "whpCkelp": "Kelp Gate", "whpCice": "Ice Bay", "whpCdeep": "Deep Trench", "whpCreef": "Reef Strait",
       "whpPlanWide": "Wide Water", "whpPlanQuiet": "Quiet Ice", "whpPlanHunters": "Hunter's Deep",
@@ -1556,7 +1638,7 @@
       "whpBlockRefuse": "the {fac} will not hear a promise", "whpBlockClear": "nothing owed to cancel",
       "whpBlockAlready": "changes nothing", "whpBlockGone": "not on the table", "whpBlockOver": "the session is over",
       "whpBtnVote": "Open the Vote", "whpBtnClear": "Set Aside", "whpBtnRestart": "New Session",
-      "whpHallNote": "{name}: six rounds, {need} adopted packages carry the treaty. Trust floor {word} {n}.",
+      "whpHallNote": "{name}: {total} rounds, {need} adopted packages carry the treaty. Trust floor {word} {n}.",
       "whpNextPlan": "Next package on the floor: {name} (round {n}/{total}).",
       "whpAdopted": "{name} carried {yea}-{nay}: +{gain} treaty points.",
       "whpFailed": "{name} falls {yea}-{nay}: no points, and the hall loses patience.",
@@ -1565,7 +1647,7 @@
       "whpPledgeBroken": "{fac} calls your promise broken.", "whpPledgeLost": "{fac}'s pledge ran out: nothing delivered.",
       "whpWalkout": "{fac} walks out.", "whpReturn": "{fac} takes the second seat again.",
       "whpWon": "Treaty adopted with {n} points - {s} stars.", "whpNextHall": "Next parliament open.",
-      "whpCampaignDone": "All twenty parliaments seated.",
+      "whpCampaignDone": "All twenty-four parliaments seated.",
       "whpLostTrust": "The {fac} left the hall: no coalition is possible.",
       "whpLostEmpty": "Too few seats remain to pass anything.",
       "whpLostTreaty": "Six rounds gone with {n}/{need} adopted - the treaty dies.",
@@ -1581,7 +1663,8 @@
       "whpP11": "单鞭议会", "whpP12": "未竟议案", "whpP13": "独占同盟",
       "whpP14": "表决偿债", "whpP15": "承诺钱庄", "whpP16": "致命下限",
       "whpP17": "人情潮再涨", "whpP18": "两席之厅", "whpP19": "薄水院",
-      "whpP20": "六案全数",
+      "whpP20": "六案全数", "whpP21": "短潮议会", "whpP22": "限期之厅",
+      "whpP23": "四轮之院", "whpP24": "短会终章",
       "whpTwist1": "诉求宽松", "whpTwist2": "两族在深海沟上对立",
       "whpTwist3": "开局便欠着人情", "whpTwist4": "离席的族群可以请回",
       "whpTwist5": "对立、债务与第二把座椅俱全",
@@ -1598,6 +1681,10 @@
       "whpTwist18": "丢了那把薄席，剩下两席都得赞成",
       "whpTwist19": "议案皆薄值，目标奖励定生死",
       "whpTwist20": "六轮一轮不容有失",
+      "whpTwist21": "五轮会期，四案缔约",
+      "whpTwist22": "五轮五案，一轮不容有失",
+      "whpTwist23": "四轮会期，人情压顶",
+      "whpTwist24": "四轮四案，还有一把九点信任的薄席",
       "whpFGray": "灰鲸群", "whpFTusk": "角鲸群", "whpFOrca": "虎鲸群",
       "whpCkelp": "海藻门", "whpCice": "冰海湾", "whpCdeep": "深海沟", "whpCreef": "礁海峡",
       "whpPlanWide": "宽阔水域", "whpPlanQuiet": "静寂冰海", "whpPlanHunters": "猎者深沟",
@@ -1634,7 +1721,7 @@
       "whpBlockRefuse": "{fac}不再听任何承诺", "whpBlockClear": "并不欠人情，无需勾销",
       "whpBlockAlready": "改了也等于没改", "whpBlockGone": "桌上没有这张牌", "whpBlockOver": "本届会期已结束",
       "whpBtnVote": "交付表决", "whpBtnClear": "收回选择", "whpBtnRestart": "重新开始",
-      "whpHallNote": "{name}：共六轮，通过 {need} 项议案才算缔约。当前信任下限：{word} {n}。",
+      "whpHallNote": "{name}：共 {total} 轮，通过 {need} 项议案才算缔约。当前信任下限：{word} {n}。",
       "whpNextPlan": "下一份议案：{name}（第 {n}/{total} 轮）。",
       "whpAdopted": "{name} 以 {yea} 比 {nay} 通过：条约加 {gain} 分。",
       "whpFailed": "{name} 以 {yea} 比 {nay} 遭否：不得分，厅中耐心亦受损。",
@@ -1643,7 +1730,7 @@
       "whpPledgeBroken": "{fac}指你背弃承诺。", "whpPledgeLost": "{fac}的承诺落空：迟迟未兑现。",
       "whpWalkout": "{fac}离席。", "whpReturn": "{fac}重回第二把座椅。",
       "whpWon": "条约缔结，得 {n} 分——{s} 星。", "whpNextHall": "下一届议会已开启。",
-      "whpCampaignDone": "二十届议会全部坐稳。",
+      "whpCampaignDone": "二十四届议会全部坐稳。",
       "whpLostTrust": "{fac}拂袖而去：再无多数可言。",
       "whpLostEmpty": "在席者太少，任何议案都通不过。",
       "whpLostTreaty": "六轮过去，仅通过 {n}/{need}，条约作废。",
@@ -1672,6 +1759,7 @@
         "The twist: a package that passes writes an owed favour against every faction whose top priority it bypassed, so tomorrow's votes cost more.",
         "Promises are remembered: a broken pledge drops trust hard, and that faction stops accepting new promises until you earn grace back.",
         "Scoring: treaty points come from the package's worth, its goal and the yea count; zero trust walks a faction out and the session is lost.",
+        "New tier: the deep parliaments sit a shorter calendar - five rounds, then four - while the treaty quota stands, so every favour has to be paid before the gavel falls.",
       ],
       zh: [
         "目标：六轮里让议案通过三票中的两票，条约便能缔结。",
@@ -1680,6 +1768,7 @@
         "关键：议案一旦通过，凡被绕过首愿的族群都会记下你欠它一笔人情，明日表决便更贵。",
         "承诺会被记住：背弃承诺重挫信任，那个族群此后不再接受你的新承诺。",
         "计分：条约分来自议案本身、目标奖励与赞成票数；信任归零的族群当场离席，本届会期即告失败。",
+        "新层级：深层议会的会期更短——先压到五轮，再压到四轮——而缔约数不变，人情必须在散会之前还清。",
       ],
     },
   });
