@@ -16,7 +16,15 @@
  * and the gate proves that watchman is the rung: strip it from a clone and a
  * bounded search walks the vault in sixteen turns, ten under the shipped
  * line, while the shipped script with its waits deleted is seen twice on the
- * same floor. Every wait in the script answers to a real pair of eyes. */
+ * same floor. Every wait in the script answers to a real pair of eyes.
+ *
+ * The under-vault tier h25-h30 keeps the summit's fourth guard as its single
+ * lever: strip the lane watchman from any of the six clones and the same
+ * floor opens in exactly fourteen turns, ten or more under the shipped line,
+ * because the watchman's beat is the only thing re-pricing the lane. h29 adds
+ * a second live guard - its row-five sweep is worth four turns - and h27's
+ * two waits are load-bearing: drop them and the runner trips two alarms. The
+ * par bands run [n, n+4, n+10] off each shipped line. */
 
 const ACTIONS = ["l", "r", "u", "d", "L", "R", "U", "D", "a", "w"];
 
@@ -86,15 +94,24 @@ module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const rooms = App.heistRooms;
   const byId = (id) => rooms.find((room) => room.id === id);
-  const tierIds = ["h21", "h22", "h23", "h24"];
+  const summitIds = ["h21", "h22", "h23", "h24"];
+  const vaultIds = ["h25", "h26", "h27", "h28", "h29", "h30"];
+  const tierIds = summitIds.concat(vaultIds);
 
-  check("game-lantern-heist", "the vault ladder holds twenty-four rooms",
-    rooms.length === 24, String(rooms.length));
+  check("game-lantern-heist", "the vault ladder holds thirty rooms",
+    rooms.length === 30, String(rooms.length));
   check("game-lantern-heist", "every room id is distinct",
     new Set(rooms.map((room) => room.id)).size === rooms.length,
     rooms.map((room) => room.id).join(","));
+  const shapeProblems = rooms.map((room, index) =>
+    room.id === "h" + (index + 1) && room.labelKey === "lheR" + (index + 1)
+      ? null
+      : "slot " + (index + 1) + " carries " + room.id + "/" + room.labelKey
+  ).filter(Boolean);
+  check("game-lantern-heist", "the rooms sit in order h1-h30 with matching labels",
+    shapeProblems.length === 0, shapeProblems.join(" | "));
   const missing = tierIds.filter((id) => !byId(id));
-  check("game-lantern-heist", "the summit tier h21-h24 is present",
+  check("game-lantern-heist", "the summit and under-vault tiers h21-h30 are present",
     missing.length === 0, missing.join(","));
 
   /* Every room's own script replays clean: won at exactly its length (no
@@ -147,7 +164,62 @@ module.exports = function gate(ctx) {
     rushed.status !== "won" || rushed.alarms > 0,
     `${rushed.status} alarms=${rushed.alarms}`);
 
-  /* Summit labels travel in both dictionaries and never fall back to keys. */
+  /* The under-vault tier repeats the summit's lever room by room: the lane
+   * watchman is the fourth guard on every floor, and with it stripped a
+   * bounded search walks each vault in exactly fourteen turns - ten or more
+   * under the shipped line - while the par band runs [n, n+4, n+10] off that
+   * line. h29 pins a second live guard: its row-five sweep is worth four
+   * turns. h27 pins the waits: delete them and the runner trips two alarms. */
+  const vaultProblems = [];
+  vaultIds.forEach((id) => {
+    const room = byId(id);
+    const strippedRoom = JSON.parse(JSON.stringify(room));
+    strippedRoom.guards = strippedRoom.guards.slice(0, 3);
+    rooms.push(strippedRoom);
+    const fast = search(App, rooms.length - 1, 17);
+    rooms.pop();
+    if (!fast || fast.length !== 14) {
+      vaultProblems.push(id + ": without the lane watchman the vault opens in " +
+        (fast ? fast.length : "no") + " turns, not fourteen");
+    }
+    if (!fast || room.solution.length - fast.length < 10) {
+      vaultProblems.push(id + ": the lane watchman is only worth " +
+        (fast ? room.solution.length - fast.length : "?") + " turns");
+    }
+  });
+  check("game-lantern-heist",
+    "stripping the lane watchman opens every under-vault room in exactly fourteen turns, ten or more under par",
+    vaultProblems.length === 0, vaultProblems.join(" | "));
+  check("game-lantern-heist",
+    "the under-vault par bands run n, n+4, n+10 off each shipped line",
+    vaultIds.every((id) => {
+      const room = byId(id);
+      return room.starTurns[0] === room.solution.length &&
+        room.starTurns[1] === room.starTurns[0] + 4 &&
+        room.starTurns[2] === room.starTurns[0] + 10;
+    }), vaultIds.map((id) => id + ":" + byId(id).starTurns.join("/")).join(" "));
+
+  /* h29's second lever: the row-five sweep is worth four turns on the snare. */
+  const snare = byId("h29");
+  const noSweep = JSON.parse(JSON.stringify(snare));
+  noSweep.guards = noSweep.guards.slice(0, 2).concat(noSweep.guards.slice(3));
+  rooms.push(noSweep);
+  const snareFast = search(App, rooms.length - 1, 26);
+  rooms.pop();
+  check("game-lantern-heist",
+    "the snare's row-five sweep is worth four turns of par",
+    !!snareFast && snareFast.length <= 25 && snare.solution.length - snareFast.length >= 4,
+    snare.solution.length + " vs " + (snareFast ? snareFast.length : "?"));
+
+  /* h27's two waits answer to the eyes: drop them and the run is seen twice. */
+  const wax = byId("h27");
+  const waxRash = replay(App, rooms.indexOf(wax), wax.solution.replace(/w/g, ""));
+  check("game-lantern-heist",
+    "drop the wax gallery's waits and the runner is seen twice before the gate",
+    waxRash.status !== "won" || waxRash.alarms > 0,
+    `${waxRash.status} alarms=${waxRash.alarms}`);
+
+  /* Every tier label travels in both dictionaries and never falls back. */
   ["en", "zh"].forEach((lang) => {
     const ok = tierIds.every((id) => {
       const room = byId(id);
@@ -155,7 +227,24 @@ module.exports = function gate(ctx) {
       return typeof text === "string" && text && text !== room.labelKey &&
         App.t(room.labelKey) !== room.labelKey;
     });
-    check("game-lantern-heist", `the summit labels resolve in ${lang}`,
+    check("game-lantern-heist", `the summit and under-vault labels resolve in ${lang}`,
       !!ok, tierIds.join(","));
   });
+
+  /* The guide announces the new tier in both languages. */
+  const guide = (App.getRegistryGuides ? App.getRegistryGuides() : [])
+    .filter((entry) => entry.id === "lanternHeist")[0];
+  const guideProblems = [];
+  if (!guide) {
+    guideProblems.push("the game ships no guide");
+  } else {
+    if (!(guide.en || []).some((line) => line.indexOf("New tier:") === 0)) {
+      guideProblems.push("the English guide has no New tier line");
+    }
+    if (!(guide.zh || []).some((line) => line.indexOf("新层级：") === 0)) {
+      guideProblems.push("the Chinese guide has no 新层级 line");
+    }
+  }
+  check("game-lantern-heist", "the guide announces the under-vault tier in both languages",
+    guideProblems.length === 0, guideProblems.join(" | "));
 };

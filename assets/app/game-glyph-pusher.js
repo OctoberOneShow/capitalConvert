@@ -331,6 +331,105 @@
         "##########"
       ],
     },
+    /* The far shed, rooms 25-30 - the summit tier. The depot's two hardest
+     * stages come back as harder fills: the switchback line (k25, k27, k29
+     * and k30) is cut from k23's eleven-wide floor and the terrace line
+     * (k26, k28) from k24's ten-wide one, each rung keeping the older wall
+     * skeleton and pinching it with at most two new teeth while the crates
+     * and diamonds stay at three, so the whole escalation lives in the
+     * geometry - a crate opening deeper in the shelf, a doorway grown
+     * narrow, a start set farther from its diamond. Every room below was
+     * cut by the search the gate runs and kept only when the exact solver
+     * measured a longer minimum than the rung before it, so the optima
+     * climb 24, 25, 26, 27, 29 and 32 pushes where the old summit stood at
+     * 23, and every row here is measured, not hoped: the same breadth-first
+     * pass that prices the first twenty-four rooms prices these, the
+     * three-star line sits on the measured minimum, the two-star line gives
+     * four pushes and the one-star line nine - five and ten on the
+     * capstone, the summit's own curve - and no room asks for a push the
+     * solver cannot replay through the engine. */
+    {
+      id: "k25", labelKey: "lvlNum25", starMoves: [24, 28, 33],
+      map: [
+        "###########",
+        "#    #    #",
+        "# $$ # o  #",
+        "# $     # #",
+        "## ###  # #",
+        "#       o #",
+        "#  @#   o #",
+        "#         #",
+        "###########"
+      ],
+    },
+    {
+      id: "k26", labelKey: "lvlNum26", starMoves: [25, 29, 34],
+      map: [
+        "##########",
+        "#        #",
+        "# $$$    #",
+        "##   # ###",
+        "#  ### o #",
+        "#    @ o #",
+        "#  ##  o #",
+        "##########"
+      ],
+    },
+    {
+      id: "k27", labelKey: "lvlNum27", starMoves: [26, 30, 35],
+      map: [
+        "###########",
+        "#    #    #",
+        "# $$ # o  #",
+        "#   #   # #",
+        "## ###  # #",
+        "#       o #",
+        "#  @#  $o #",
+        "#         #",
+        "###########"
+      ],
+    },
+    {
+      id: "k28", labelKey: "lvlNum28", starMoves: [27, 31, 36],
+      map: [
+        "##########",
+        "#        #",
+        "# $$$    #",
+        "##   # ###",
+        "#  ### o #",
+        "##   @ o #",
+        "#  ##  o #",
+        "##########"
+      ],
+    },
+    {
+      id: "k29", labelKey: "lvlNum29", starMoves: [29, 33, 38],
+      map: [
+        "###########",
+        "#    #    #",
+        "# $$ # o  #",
+        "#   #   # #",
+        "## ###  # #",
+        "#    $  o #",
+        "#  @#   o #",
+        "#         #",
+        "###########"
+      ],
+    },
+    {
+      id: "k30", labelKey: "lvlNum30", starMoves: [32, 37, 42],
+      map: [
+        "###########",
+        "#    #    #",
+        "# $$ # o  #",
+        "#   #   # #",
+        "## ###  # #",
+        "# $     o #",
+        "#  @#   o #",
+        "#         #",
+        "###########"
+      ],
+    },
   ];
 
   function initGlyphPusherGame() {
@@ -792,6 +891,12 @@
   }
 
 
+  /* The far shed reuses the shared lvlNum25-30 stage names; addStrings only
+   * fills keys i18n.js lacks, so shipping a copy here would be dead weight
+   * (and the shadowing audit treats a duplicate as a defect). */
+
+
   /* Exported for the other modules. */
+  App.pushLevels = pushLevels;
   App.initGlyphPusherGame = initGlyphPusherGame;
 })(window.CapitalConvert = window.CapitalConvert || {});

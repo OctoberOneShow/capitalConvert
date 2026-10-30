@@ -117,6 +117,61 @@
     { id: "d24", labelKey: "drmP24", seed: 6100, voices: ["bass", "str", "bell"],
       beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
       rest: 0.45, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 4 }, stepMs: 140 },
+    /* Rungs 25-30 are the summit: the full sixteen-beat bar at the 140 ms
+     * floor, plus rule families the shipped set never read - an answer
+     * window between strings and bells, a rest leash on each voice, a law
+     * that only bites in the coda, and a hush that empties steps outright.
+     * Each rung below records the deal it produced, against d24's nine-note
+     * par, and the gate proves each new family by re-dealing the same seed
+     * with that family lifted: the shipped law then rejects the line. */
+    /* d25 - The Echo Window. A bell may not answer a string until three
+     * steps have passed, so every answer in the deal waits the window out:
+     * fourteen notes, with the closest answer four steps behind its string.
+     * Lift the window and the same seed answers at distance one, which the
+     * shipped law rejects. */
+    { id: "d25", labelKey: "drmP25", seed: 6251, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0.15, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 4, echoGap: 3 }, stepMs: 140 },
+    /* d26 - The Breathing Strings. The strings take a leash: two steps of
+     * air between them, so the full sixteen-beat bar is filled without the
+     * strings ever touching. The leash is the law that shapes the deal -
+     * lift it and the same seed clusters strings one step apart four
+     * times. */
+    { id: "d26", labelKey: "drmP26", seed: 6262, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 3, strGap: 2 }, stepMs: 140 },
+    /* d27 - The Coda Law. Up to the eighth beat the strings may walk three
+     * in a row; from the eighth on they may not touch at all. The deal
+     * keeps that promise - a three-step walk at 2-4, a pair at 6-7, then
+     * three spaced singles - and lifting the law hands the same seed a
+     * string at the boundary that breaks it. */
+    { id: "d27", labelKey: "drmP27", seed: 6273, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 2, strRun: 3, bellRun: 1, bellGap: 4, codaFrom: 8, codaStrRun: 1 }, stepMs: 140 },
+    /* d28 - The Silent Core. Steps six through nine are hushed: no voice may
+     * sound, so the deal carries ten notes around a four-step hole. Lift the
+     * hush and the same seed fills three of those steps - the silence is
+     * drawn, not left over. */
+    { id: "d28", labelKey: "drmP28", seed: 6284, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0.05, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 4, hushFrom: 6, hushTo: 9 }, stepMs: 140 },
+    /* d29 - The Mirror Law. Bass and strings both take a rest leash - four
+     * steps for the bass, three for the strings - and both run caps drop to
+     * one, so neither voice may repeat at all. The deal spreads fifteen
+     * notes across the bar; lift the leashes and the same seed stacks bass
+     * notes two steps apart. */
+    { id: "d29", labelKey: "drmP29", seed: 6295, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0.05, rules: { bassRun: 1, strRun: 1, bellRun: 2, bellGap: 2, bassGap: 4, strGap: 3 }, stepMs: 140 },
+    /* d30 - The Whole Score. Finale: the bar sounds on fifteen of sixteen
+     * beats, with one hushed beat as the only silence, the bass leashed to
+     * three steps, bells answering only after two, and the coda law waiting
+     * from the eighth beat. Every family is live - lift any one of them and
+     * the same seed deals a line the shipped law rejects. */
+    { id: "d30", labelKey: "drmP30", seed: 6291, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 4, bassGap: 3,
+        echoGap: 2, codaFrom: 8, codaStrRun: 1, hushFrom: 10, hushTo: 10 }, stepMs: 140 },
   ];
 
   function mulberry32(seed) {
@@ -159,14 +214,40 @@
     return null;
   }
 
-  function drmRunLimit(rules, id) {
+  /* Run caps are per voice. A coda cap can tighten only the closing half:
+   * the run still counts across the boundary, so a phrase that crosses it is
+   * judged by the stricter rule. */
+  function drmRunLimit(rules, id, step) {
+    var limit;
     if (id === "bass") {
-      return rules.bassRun;
+      limit = rules.bassRun;
+    } else if (id === "str") {
+      limit = rules.strRun;
+    } else {
+      limit = rules.bellRun;
     }
-    if (id === "str") {
-      return rules.strRun;
+    if (id === "str" && rules.codaStrRun != null && rules.codaFrom != null &&
+        step >= rules.codaFrom) {
+      limit = Math.min(limit, rules.codaStrRun);
     }
-    return rules.bellRun;
+    return limit;
+  }
+
+  /* The rest leashes: bells have always had one, bass and strings earn theirs
+   * only in the summit tier. A zero/absent value leaves a voice unshackled. */
+  function drmGapOf(rules, id) {
+    if (id === "bell") {
+      return rules.bellGap || 0;
+    }
+    if (id === "bass") {
+      return rules.bassGap || 0;
+    }
+    return rules.strGap || 0;
+  }
+
+  function drmHushed(rules, step) {
+    return rules.hushFrom != null && rules.hushTo != null &&
+      step >= rules.hushFrom && step <= rules.hushTo;
   }
 
   /* The target is drawn as a legal line of notes on the level's beats: a voice
@@ -188,13 +269,22 @@
     for (j = 0; j < level.beats.length; j += 1) {
       var step = level.beats[j];
       var eligible = [];
+      if (drmHushed(level.rules, step)) {
+        continue;
+      }
       for (i = 0; i < level.voices.length; i += 1) {
         var id = level.voices[i];
         var prevRun = last[id] === step - 1 ? run[id] : 0;
-        if (prevRun + 1 > drmRunLimit(level.rules, id)) {
+        if (prevRun + 1 > drmRunLimit(level.rules, id, step)) {
           continue;
         }
-        if (id === "bell" && step - last.bell < level.rules.bellGap) {
+        var gap = drmGapOf(level.rules, id);
+        if (gap && step - last[id] < gap) {
+          continue;
+        }
+        /* Bells answer the strings only after the imitation window closes. */
+        if (id === "bell" && level.rules.echoGap &&
+            last.str !== undefined && step - last.str < level.rules.echoGap) {
           continue;
         }
         eligible.push(id);
@@ -276,23 +366,50 @@
       }
       var runLen = 0;
       var lastAt = -99;
-      var limit = drmRunLimit(rules, voice.id);
-      var gap = voice.id === "bell" ? rules.bellGap : 0;
+      var gap = drmGapOf(rules, voice.id);
       for (var s = 0; s < drmSteps; s += 1) {
         if (line[s] === -1) {
           runLen = 0;
           continue;
         }
         runLen = s === lastAt + 1 ? runLen + 1 : 1;
+        var limit = drmRunLimit(rules, voice.id, s);
         if (runLen > limit) {
-          out.push({ voice: voice.id, step: s, kind: "run", n: limit });
+          out.push({
+            voice: voice.id,
+            step: s,
+            kind: voice.id === "str" && rules.codaStrRun != null &&
+              rules.codaFrom != null && s >= rules.codaFrom ? "coda" : "run",
+            n: limit,
+          });
         }
         if (gap && lastAt >= 0 && s - lastAt < gap) {
-          out.push({ voice: voice.id, step: s, kind: "gap", n: gap });
+          out.push({
+            voice: voice.id,
+            step: s,
+            kind: voice.id === "bell" ? "gap" : "rest",
+            n: gap,
+          });
+        }
+        if (drmHushed(rules, s)) {
+          out.push({ voice: voice.id, step: s, kind: "hush", n: 0 });
         }
         lastAt = s;
       }
     });
+    /* A cross-voice window: every bell owes the strings a full gap before it
+     * may answer. A bell sharing a string's step is an answer at distance 0. */
+    if (rules.echoGap && pattern.bell && pattern.str) {
+      var lastStr = -99;
+      for (var e = 0; e < drmSteps; e += 1) {
+        if (pattern.str[e] !== -1) {
+          lastStr = e;
+        }
+        if (pattern.bell[e] !== -1 && lastStr >= 0 && e - lastStr < rules.echoGap) {
+          out.push({ voice: "bell", step: e, kind: "echo", n: rules.echoGap });
+        }
+      }
+    }
     return out;
   }
 
@@ -569,11 +686,14 @@
         for (var i = 0; i < breaks.length && i < 3; i += 1) {
           var b = breaks[i];
           var v = drmVoiceById(b.voice);
-          parts.push(
-            b.kind === "run"
-              ? t("drmViolRun", { voice: t(v.keyName), n: b.n, s: b.step + 1 })
-              : t("drmViolGap", { voice: t(v.keyName), n: b.n, s: b.step + 1 }),
-          );
+          var key = b.kind === "run" ? "drmViolRun"
+            : b.kind === "rest" ? "drmViolRest"
+            : b.kind === "echo" ? "drmViolEcho"
+            : b.kind === "coda" ? "drmViolCoda"
+            : b.kind === "hush" ? "drmViolHush"
+            : b.kind === "cap" ? "drmViolCap"
+            : "drmViolGap";
+          parts.push(t(key, { voice: t(v.keyName), n: b.n, s: b.step + 1 }));
         }
         if (!finished) {
           result.textContent = parts.join(" ") + (breaks.length > 3 ? " +" + (breaks.length - 3) : "");
@@ -958,6 +1078,12 @@
       "drmP22": "The Walking Bass",
       "drmP23": "The Bell Trio",
       "drmP24": "The Quiet Coda",
+      "drmP25": "The Echo Window",
+      "drmP26": "The Breathing Strings",
+      "drmP27": "The Coda Law",
+      "drmP28": "The Silent Core",
+      "drmP29": "The Mirror Law",
+      "drmP30": "Every Law at Once",
       "drmVBass": "Bass",
       "drmVStr": "Strings",
       "drmVBell": "Bells",
@@ -983,11 +1109,16 @@
       "drmSoundOff": "Sound: off",
       "drmViolRun": "{voice} sounds more than {n} steps in a row at step {s}.",
       "drmViolGap": "{voice} at step {s} must wait {n} steps after its last ring.",
+      "drmViolRest": "{voice} at step {s} must wait {n} steps after its last note.",
+      "drmViolEcho": "The bells at step {s} answer less than {n} steps after the strings.",
+      "drmViolCoda": "{voice} breaks the closing cap of {n} at step {s}.",
+      "drmViolHush": "{voice} sounds at step {s}, inside the silent core.",
+      "drmViolCap": "{voice} sounds more than {n} times in the bar, first at step {s}.",
       "drmPrompt": "Match {name} on the marked beats without breaking a voice rule. Par is {n} notes.",
       "drmWon": "{name} matches every marked beat with {n} notes - {s} stars!",
       "drmPaused": "Playback stopped while you were away; the score is untouched.",
       "drmNextPiece": "Next piece unlocked.",
-      "drmAllPieces": "All twenty-four pieces scored.",
+      "drmAllPieces": "All thirty pieces scored.",
       "drmHint": "Fewer notes earn more stars: place only what the target asks for. The playhead reads as text, so the puzzle works on mute.",
       "logDreamOrchestra": "Scored {name} with {n} notes",
     },
@@ -1017,6 +1148,12 @@
       "drmP22": "漫步低音",
       "drmP23": "三连钟鸣",
       "drmP24": "静默尾声",
+      "drmP25": "回声之窗",
+      "drmP26": "弦间呼吸",
+      "drmP27": "尾章之律",
+      "drmP28": "静默核心",
+      "drmP29": "镜像法则",
+      "drmP30": "万律齐鸣",
       "drmVBass": "低音",
       "drmVStr": "弦乐",
       "drmVBell": "钟琴",
@@ -1042,11 +1179,16 @@
       "drmSoundOff": "声音：关",
       "drmViolRun": "{voice}在第 {s} 步连续响了超过 {n} 步。",
       "drmViolGap": "第 {s} 步的{voice}离上次响铃不足 {n} 步。",
+      "drmViolRest": "第 {s} 步的{voice}离上一个音符不足 {n} 步。",
+      "drmViolEcho": "第 {s} 步的钟琴距弦乐不足 {n} 步就作答。",
+      "drmViolCoda": "{voice}在第 {s} 步超过尾章上限 {n}。",
+      "drmViolHush": "{voice}在第 {s} 步发声，落在静默核心之内。",
+      "drmViolCap": "{voice}在本小节发声超过 {n} 次，最早在第 {s} 步。",
       "drmPrompt": "让{name}在每个重拍上命中目标，且不违反声部规则。标准音符数是 {n}。",
       "drmWon": "{name}全部重拍命中，用了 {n} 个音符——获得 {s} 星！",
       "drmPaused": "离开时已停止播放；你的乐谱原封不动。",
       "drmNextPiece": "解锁下一首乐曲。",
-      "drmAllPieces": "二十四首乐曲全部编完。",
+      "drmAllPieces": "三十首乐曲全部编完。",
       "drmHint": "音符越少星越多：只放目标要求的音。播放头有文字显示，静音也能解谜。",
       "logDreamOrchestra": "为{name}编了 {n} 个音符",
     },

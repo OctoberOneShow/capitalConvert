@@ -102,6 +102,45 @@
     { id: "t22", labelKey: "diceTable22", ruleKey: "diceRule22", target: 300, burn: [1, 2], tax: -66, pairs: true },
     { id: "t23", labelKey: "diceTable23", ruleKey: "diceRule23", target: 150, burn: [1, 2, 6], tax: -32, pairs: false },
     { id: "t24", labelKey: "diceTable24", ruleKey: "diceRule24", target: 240, burn: [1, 2, 6], tax: -111, pairs: true },
+
+    /* Tables 25-30, the summit past the Last Ember - and the dial moves from
+     * the target to the felt itself. The forge measures the pairs felts as
+     * target-invariant at the starvation edge: whatever target a two-ember
+     * pairs table carries, its smallest in-band bounty lands the solver's
+     * three-star line at 19.6-19.7%, and the classic three-ember pairs pins
+     * at 25.1%, so no deeper number can make those tables one notch harder.
+     * The only lever the solver answers to is which faces burn - the yield
+     * of the rolls that survive. So every rung below lights a burn set the
+     * room never combined (the Quiet felt stops burning the 1 outright;
+     * the Hearth family burns 2 and 6 while 1 and 3,4,5 pay; the Vault
+     * takes that to three faces on one die) and each is its own family's
+     * deepest ask: 320 on the twin-ember pairs past Pyre Stair's 280 - the
+     * deepest target in the room, past The Cold Deep's 300 - 280 on the
+     * first pairs felt without a 1, 150 on the small hearth, 105 and 120
+     * on the new one-die felts. All numbers were measured through the
+     * game's own solver in tools/dice-forge.js - exact value iteration over
+     * (turns, bank, stake) under the best stopping policy, no dice rolled:
+     * every table stays in the shipped bands (a best policy clears inside
+     * ten turns at least 45% of the time, the three-star line lands between
+     * 15% and 50%) and the tier is monotone in the solver's own currency -
+     * the three-star line falls rung over rung, 22.8, 19.7, 19.6, 16.7,
+     * 16.2, 15.0%, each under the Last Ember's 25.1. Every bounty below is
+     * again the smallest one the solver still measures inside the bands, so
+     * the edge is provable one bounty stingier: 25's clear falls to 40.8%,
+     * 26's line to 12.4%, 27's to 10.5% (clear 40.6%), 28's to 9.6%, 29's
+     * to 11.0%, 30's to 11.8%. And the felt, not the bounty, is what the
+     * tier prices - the twins prove it: at the Quiet felt's own target and
+     * bounty the classic three-ember pairs measures easier on both lines
+     * (47.3% clear, 25.1% line against 25's 45.3 and 22.8), the twin-ember
+     * pairs at 28's and 29's economies measures 54.4/19.6 and 69.6/17.7
+     * against 49.9/16.7 and 68.8/16.2, and the trinity felt at 30's economy
+     * measures 55.4/18.1 against 53.0/15.0. */
+    { id: "t25", labelKey: "diceTable25", ruleKey: "diceRule25", target: 240, burn: [2, 3, 6], tax: -111, pairs: true },
+    { id: "t26", labelKey: "diceTable26", ruleKey: "diceRule26", target: 105, burn: [2, 3, 6], tax: -22, pairs: false },
+    { id: "t27", labelKey: "diceTable27", ruleKey: "diceRule27", target: 320, burn: [1, 6], tax: -73, pairs: true },
+    { id: "t28", labelKey: "diceTable28", ruleKey: "diceRule28", target: 280, burn: [2, 6], tax: -63, pairs: true },
+    { id: "t29", labelKey: "diceTable29", ruleKey: "diceRule29", target: 150, burn: [2, 6], tax: -25, pairs: false },
+    { id: "t30", labelKey: "diceTable30", ruleKey: "diceRule30", target: 120, burn: [2, 3, 6], tax: -25, pairs: false },
   ];
 
   function initEmberDiceGame() {
@@ -353,6 +392,18 @@
       "diceRule22": "The Cold Deep: two dice add together, a 1 or a 2 on either die burns the stake, and every bank pays you an extra 66. Target {t}.",
       "diceRule23": "Ember Crown: one die, a 1, a 2 or a 6 burns the stake, and every bank pays you an extra 32. Target {t}.",
       "diceRule24": "The Last Ember: two dice add together, a 1, a 2 or a 6 on either die burns the stake, and every bank pays you an extra 111. Target {t}.",
+      "diceTable25": "The Quiet One",
+      "diceTable26": "Quiet Court",
+      "diceTable27": "Pyre Summit",
+      "diceTable28": "Furnace Twins",
+      "diceTable29": "The Hearth",
+      "diceTable30": "The Ash Vault",
+      "diceRule25": "The Quiet One: two dice add together, a 2, a 3 or a 6 on either die burns the stake, and every bank pays you an extra 111. Target {t}.",
+      "diceRule26": "Quiet Court: one die, a 2, a 3 or a 6 burns the stake, and every bank pays you an extra 22. Target {t}.",
+      "diceRule27": "Pyre Summit: two dice add together, a 1 or a 6 on either die burns the stake, and every bank pays you an extra 73. Target {t}.",
+      "diceRule28": "Furnace Twins: two dice add together, a 2 or a 6 on either die burns the stake, and every bank pays you an extra 63. Target {t}.",
+      "diceRule29": "The Hearth: one die, a 2 or a 6 burns the stake, and every bank pays you an extra 25. Target {t}.",
+      "diceRule30": "The Ash Vault: one die, a 2, a 3 or a 6 burns the stake, and every bank pays you an extra 25. Target {t}.",
       "diceBurns": "A {f}! The stake burns to ash.",
       "diceAllTables": " All {n} tables are yours!",
     },
@@ -395,6 +446,18 @@
       "diceRule22": "深寒桌：两颗骰子相加，任何一颗掷出 1 或 2 就烧光赌注，每次「收下」额外给 66。目标 {t}。",
       "diceRule23": "烬冠桌：一颗骰子，1、2、6 任何一点都会烧光赌注，每次「收下」额外给 32。目标 {t}。",
       "diceRule24": "末烬桌：两颗骰子相加，1、2、6 任何一点都会烧光赌注，每次「收下」额外给 111。目标 {t}。",
+      "diceTable25": "静一桌",
+      "diceTable26": "静庭桌",
+      "diceTable27": "焚顶桌",
+      "diceTable28": "炉火双骰",
+      "diceTable29": "灶火桌",
+      "diceTable30": "灰窖桌",
+      "diceRule25": "静一桌：两颗骰子相加，任何一颗掷出 2、3 或 6 就烧光赌注，每次「收下」额外给 111。目标 {t}。",
+      "diceRule26": "静庭桌：一颗骰子，掷出 2、3 或 6 就烧光赌注，每次「收下」额外给 22。目标 {t}。",
+      "diceRule27": "焚顶桌：两颗骰子相加，任何一颗掷出 1 或 6 就烧光赌注，每次「收下」额外给 73。目标 {t}。",
+      "diceRule28": "炉火双骰：两颗骰子相加，任何一颗掷出 2 或 6 就烧光赌注，每次「收下」额外给 63。目标 {t}。",
+      "diceRule29": "灶火桌：一颗骰子，掷出 2 或 6 就烧光赌注，每次「收下」额外给 25。目标 {t}。",
+      "diceRule30": "灰窖桌：一颗骰子，掷出 2、3 或 6 就烧光赌注，每次「收下」额外给 25。目标 {t}。",
       "diceBurns": "掷出 {f}！赌注化为灰烬。",
       "diceAllTables": " {n} 张牌桌都是你的了！",
     },

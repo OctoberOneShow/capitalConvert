@@ -367,8 +367,8 @@
      * at 160-176 while all three road base lanes run left - a tide-race
      * split the full width of the ford, the first in the campaign - and
      * the counter-trains thread it at 166, 180 and 198, 198 the fastest
-     * lane the ladder ships. Row 5's 86 window and the tier's longest
-     * clean route close the ladder. */
+     * lane the deep tier ships. Row 5's 86 window and the tier's longest
+     * clean route close the tier. */
     {
       id: "c24", labelKey: "croL24",
       lanes: [
@@ -383,6 +383,155 @@
         { row: 5, dir: 1, speed: 166, len: 62, gap: 116 },
       ],
       starTimes: [158, 238, 325],
+    },
+
+    /* ------------------------------------------------------------------
+     * The summit tier (c25-c30). The deep tier had doubled three rows on
+     * every rung - two mirrored streets (6 and 7, then 6 and 5) plus row
+     * 2's river counter-train - so one street was always left quiet, and
+     * the summit closes it: every rung mirrors all three streets at once,
+     * rows 5, 6 and 7 each running two ways on top of row 2's river
+     * train. Ten lanes a rung - the first double-digit ford - while the
+     * brief bands keep tightening rung over rung (140/182/80/104 opens,
+     * 166/208/72/86 closes) and every rung's fastest lane outruns the
+     * deep summit's 198 while its tightest gap dips under the deep
+     * summit's 86. As ever a ford ships only because
+     * tools/crossing-forge.js proves it: each rung was laid against its
+     * own brief at the seed the brief pins, and ships because the
+     * prover's breadth-first search over (pads, row, position, time)
+     * found a route that stands on all four pads. The rungs sit in the
+     * order that proof measured - the cleanest route lengthens 3.35s ->
+     * 3.7s -> 3.8s -> 4.3s -> 4.65s -> 5.25s, every one past c24's 3.3s -
+     * and the star bands are quoted from each ford's own measured route
+     * at the deep tier's own margin (48x the prover's route), widened by
+     * the same 1.5x / 2.05x steps. The mirrored streets are load-bearing
+     * by ablation: pull the row-7 train from the shipped lanes - the
+     * street the deep summit itself left quiet - and the same seeds hand
+     * the street back its breathing room, the prover's own lethal() law
+     * measuring row 7's rest moments rising by 16,500 to 21,796 over the
+     * same thirty simulated seconds, while the nine-lane twin's cleanest
+     * route collapses to 33t-67t against the shipped 67t-105t. Every
+     * number was measured through the forge; nothing here is hand-tuned.
+     * ------------------------------------------------------------------ */
+    /* The Last Quiet Street: row 7 - quiet since The Overflow - runs both
+     * ways at the deep summit's own working tempo. The counter-trains
+     * come back at 200, 192 and 170, and the ford's cleanest route steps
+     * past the deep summit's own for the first time. */
+    {
+      id: "c25", labelKey: "croL25",
+      lanes: [
+        { row: 1, dir: 1, speed: 158, len: 100, gap: 92 },
+        { row: 2, dir: 1, speed: 174, len: 88, gap: 90 },
+        { row: 3, dir: -1, speed: 164, len: 92, gap: 98 },
+        { row: 5, dir: 1, speed: 160, len: 88, gap: 100 },
+        { row: 6, dir: 1, speed: 144, len: 92, gap: 98 },
+        { row: 7, dir: 1, speed: 162, len: 84, gap: 100 },
+        { row: 6, dir: -1, speed: 200, len: 68, gap: 76 },
+        { row: 2, dir: -1, speed: 174, len: 76, gap: 80 },
+        { row: 7, dir: -1, speed: 192, len: 70, gap: 106 },
+        { row: 5, dir: -1, speed: 170, len: 70, gap: 78 },
+      ],
+      starTimes: [161, 241, 330],
+    },
+    /* Rush Hour: every street now runs an express. The counter-trains
+     * read 188, 214 and 178, the base lanes hold 156 or better on every
+     * row, and row 2's 208 counter-train is the fastest river lane yet
+     * fielded. */
+    {
+      id: "c26", labelKey: "croL26",
+      lanes: [
+        { row: 1, dir: -1, speed: 158, len: 80, gap: 92 },
+        { row: 2, dir: 1, speed: 166, len: 94, gap: 92 },
+        { row: 3, dir: 1, speed: 164, len: 78, gap: 88 },
+        { row: 5, dir: -1, speed: 156, len: 100, gap: 84 },
+        { row: 6, dir: -1, speed: 160, len: 72, gap: 80 },
+        { row: 7, dir: -1, speed: 156, len: 74, gap: 92 },
+        { row: 6, dir: 1, speed: 188, len: 66, gap: 104 },
+        { row: 2, dir: -1, speed: 208, len: 70, gap: 80 },
+        { row: 7, dir: 1, speed: 214, len: 70, gap: 80 },
+        { row: 5, dir: 1, speed: 178, len: 72, gap: 76 },
+      ],
+      starTimes: [178, 266, 364],
+    },
+    /* Crosscurrent: the tightest street yet - row 7 and its counter-train
+     * both close to 78, the narrowest windows the ladder ships - and the
+     * first 200-plus pace on a street train, row 6's counter at 202. The
+     * cleanest route is already half a second longer than c24's. */
+    {
+      id: "c27", labelKey: "croL27",
+      lanes: [
+        { row: 1, dir: -1, speed: 166, len: 84, gap: 82 },
+        { row: 2, dir: -1, speed: 178, len: 92, gap: 90 },
+        { row: 3, dir: 1, speed: 186, len: 80, gap: 88 },
+        { row: 5, dir: 1, speed: 156, len: 74, gap: 96 },
+        { row: 6, dir: 1, speed: 192, len: 96, gap: 86 },
+        { row: 7, dir: -1, speed: 180, len: 80, gap: 78 },
+        { row: 6, dir: -1, speed: 202, len: 66, gap: 78 },
+        { row: 2, dir: 1, speed: 164, len: 74, gap: 92 },
+        { row: 7, dir: 1, speed: 194, len: 64, gap: 92 },
+        { row: 5, dir: -1, speed: 218, len: 76, gap: 86 },
+      ],
+      starTimes: [182, 274, 374],
+    },
+    /* The Double Tide: the bands step past the deep summit's ceiling for
+     * good - 154/196 opens, every base lane 162 or better - and row 2's
+     * 212 counter-train carries the fastest river lane into the summit's
+     * second half. */
+    {
+      id: "c28", labelKey: "croL28",
+      lanes: [
+        { row: 1, dir: -1, speed: 178, len: 74, gap: 88 },
+        { row: 2, dir: 1, speed: 166, len: 82, gap: 82 },
+        { row: 3, dir: 1, speed: 180, len: 98, gap: 94 },
+        { row: 5, dir: 1, speed: 192, len: 82, gap: 82 },
+        { row: 6, dir: 1, speed: 162, len: 88, gap: 78 },
+        { row: 7, dir: 1, speed: 170, len: 86, gap: 92 },
+        { row: 6, dir: -1, speed: 198, len: 76, gap: 82 },
+        { row: 2, dir: -1, speed: 212, len: 64, gap: 76 },
+        { row: 7, dir: -1, speed: 208, len: 68, gap: 88 },
+        { row: 5, dir: -1, speed: 196, len: 64, gap: 88 },
+      ],
+      starTimes: [206, 310, 423],
+    },
+    /* The Riptide: the pace record falls twice - row 1's base lanes at
+     * 196 and row 5's counter-train at 220, the fastest street lane yet
+     * shipped - while row 1's 76 window is the tightest the ladder has
+     * asked for. */
+    {
+      id: "c29", labelKey: "croL29",
+      lanes: [
+        { row: 1, dir: 1, speed: 196, len: 88, gap: 76 },
+        { row: 2, dir: -1, speed: 200, len: 96, gap: 84 },
+        { row: 3, dir: 1, speed: 168, len: 74, gap: 88 },
+        { row: 5, dir: -1, speed: 190, len: 80, gap: 88 },
+        { row: 6, dir: -1, speed: 192, len: 98, gap: 82 },
+        { row: 7, dir: 1, speed: 196, len: 86, gap: 86 },
+        { row: 6, dir: 1, speed: 202, len: 72, gap: 84 },
+        { row: 2, dir: 1, speed: 176, len: 58, gap: 86 },
+        { row: 7, dir: -1, speed: 218, len: 70, gap: 92 },
+        { row: 5, dir: 1, speed: 220, len: 66, gap: 92 },
+      ],
+      starTimes: [223, 335, 458],
+    },
+    /* The Flood: the summit. Ten lanes a ford, a 234 counter-train - the
+     * fastest lane the campaign has ever fielded - a 72 window, the
+     * tightest in the ladder, and the longest clean route the prover has
+     * measured: 5.25s where the deep summit closed at 3.3s. */
+    {
+      id: "c30", labelKey: "croL30",
+      lanes: [
+        { row: 1, dir: 1, speed: 204, len: 80, gap: 74 },
+        { row: 2, dir: 1, speed: 196, len: 100, gap: 84 },
+        { row: 3, dir: 1, speed: 200, len: 84, gap: 84 },
+        { row: 5, dir: 1, speed: 196, len: 98, gap: 78 },
+        { row: 6, dir: -1, speed: 192, len: 78, gap: 78 },
+        { row: 7, dir: 1, speed: 208, len: 80, gap: 74 },
+        { row: 6, dir: 1, speed: 190, len: 66, gap: 82 },
+        { row: 2, dir: -1, speed: 230, len: 70, gap: 88 },
+        { row: 7, dir: -1, speed: 234, len: 60, gap: 72 },
+        { row: 5, dir: -1, speed: 214, len: 74, gap: 86 },
+      ],
+      starTimes: [252, 378, 517],
     },
   ];
   var STREAK_COLORS = ["#f472b6", "#fb7185", "#fbbf24", "#a78bfa"];
@@ -874,8 +1023,8 @@
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already hold, so the shared dictionary stays the authority for
    * the drawer chrome and the first twenty rung names. The deep tier's four
-   * names are new here - the shared dictionary stops at croL20 - so they
-   * travel with the module. */
+   * names and the summit's six are new here - the shared dictionary stops at
+   * croL20 - so they travel with the module. */
   App.addStrings({
     en: {
       "croL10": "Two-Way Street",
@@ -883,6 +1032,12 @@
       "croL22": "The Maelstrom",
       "croL23": "The Overflow",
       "croL24": "The Washout",
+      "croL25": "The Last Quiet Street",
+      "croL26": "Rush Hour",
+      "croL27": "Crosscurrent",
+      "croL28": "The Double Tide",
+      "croL29": "The Riptide",
+      "croL30": "The Flood",
     },
     zh: {
       "croL10": "双向街",
@@ -890,6 +1045,12 @@
       "croL22": "大漩涡",
       "croL23": "漫堤",
       "croL24": "决堤",
+      "croL25": "最后的静街",
+      "croL26": "晚高峰",
+      "croL27": "逆流",
+      "croL28": "双潮",
+      "croL29": "裂流",
+      "croL30": "大洪水",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

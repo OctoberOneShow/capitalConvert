@@ -31,6 +31,19 @@
  * sovereign, and any node budget past three thousand, which measured game
  * for game with the sovereign's - past that the ring has no more bottom to
  * read. `list` judges whatever the module ships, in ladder order.
+ *
+ * Ranks 25-30 were tuned here the same way, on the bench's own beaten
+ * margins: the ransom tier keeps the seamless ring's search and prices and
+ * asks you to win by more - five, nine, thirteen, seventeen, nineteen,
+ * twenty-five stones - each band authored from the distribution the bench
+ * actually beats that rung by, and each rung's tell widened (slip 0, 0,
+ * 0.03, 0.03, 0.12, 0.12) because a rout that big has to come from
+ * somewhere: the seamless ring's own losses never reach twenty-five, so
+ * the deep bands measure out of the fairness band on its tell and the tell
+ * is what pays them. Deeper cups were benched for the tier and rejected:
+ * at five through sixteen stones a cup the bench's outcome goes bimodal -
+ * it either routs the rank outright or never wins a game - so no deep-cups
+ * rank can be judged hard-but-fair by the bench at all.
  */
 "use strict";
 

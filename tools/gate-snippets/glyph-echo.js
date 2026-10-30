@@ -25,7 +25,18 @@
  * faster chime cannot fail a patient hand); for those the gate proves the
  * honest alternative - each rung's measured effort (links per engaged
  * second, shows and pauses included) climbs strictly through the tier, and
- * each rung sets a campaign record on the dial it advertises. */
+ * each rung sets a campaign record on the dial it advertises.
+ *
+ * The summit c25-c30 plays the same hands in the same boot (each perfect
+ * rung clears the next into reach, the save a player actually carries).
+ * Its identity is the pair: every summit chime is a backwards chime under
+ * a shortened glow, the length climbs strictly to the campaign record and
+ * the tempo never eases, so the measured effort opens above c24 and ends
+ * at the ladder's highest on c30. The cut takes the pair's mechanics off
+ * the live def - `reverse` relaxed to a forwards chime - and the mirrored
+ * hand, the only hand that cleared the rung, loses all three lives on the
+ * first non-palindromic chain of a seeded deal: the backwards order is
+ * the summit's lesson, and without it the tier pays nothing. */
 module.exports = function gate(ctx) {
   const { App, env, check } = ctx;
   /* The module ships its table as glyphEchoLevels - Echo Cartographer owns
@@ -33,17 +44,21 @@ module.exports = function gate(ctx) {
    * the wrong game's ladder. */
   const levels = App.glyphEchoLevels;
   const tierIds = ["c21", "c22", "c23", "c24"];
+  const summitIds = ["c25", "c26", "c27", "c28", "c29", "c30"];
   const byId = (id) => levels.find((level) => level.id === id);
 
   /* ---- ladder shape ---- */
-  check("game-glyph-echo", "the ladder holds at least twenty-four chimes",
-    levels.length >= 24, String(levels.length));
+  check("game-glyph-echo", "the ladder holds all thirty chimes",
+    levels.length >= 30, String(levels.length));
   check("game-glyph-echo", "every chime id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
   const missing = tierIds.filter((id) => !byId(id));
   check("game-glyph-echo", "the hard tier c21-c24 is present",
     missing.length === 0, missing.join(","));
+  const missingSummit = summitIds.filter((id) => !byId(id));
+  check("game-glyph-echo", "the summit tier c25-c30 is present",
+    missingSummit.length === 0, missingSummit.join(","));
 
   /* ---- measured pressure, off the module's own table ---- */
   /* Effort = mean links per engaged second. A win replays every length from
@@ -311,12 +326,146 @@ module.exports = function gate(ctx) {
       JSON.stringify(readSave().cleared[id] || null));
   }
 
+  /* ---- the summit: six backwards chimes under short glows, one boot ---- */
+  /* The tier loop left c1-c24 cleared at three stars, exactly the save a
+   * player brings out of the hard tier; each summit rung is then played on
+   * the live engine with the same hands, and each perfect rung clears the
+   * next into reach. The cut relaxes `reverse` on the live def (the
+   * panel's closure shares the object), the rung is re-selected so the
+   * engine reloads the cut chime, and the mirrored hand - the only hand
+   * that cleared it - still reads backwards and dies on the first
+   * non-palindromic chain of a seeded deal. */
+  const seeded = (seedValue, fn) => {
+    const original = Math.random;
+    let value = seedValue >>> 0;
+    Math.random = function () {
+      value = (value + 0x6d2b79f5) >>> 0;
+      let mixed = Math.imul(value ^ (value >>> 15), 1 | value);
+      mixed = (mixed + Math.imul(mixed ^ (mixed >>> 7), 61 | mixed)) ^ mixed;
+      return ((mixed ^ (mixed >>> 14)) >>> 0) / 4294967296;
+    };
+    try {
+      return fn();
+    } finally {
+      Math.random = original;
+    }
+  };
+  const summitCuts = [];
+  for (const id of summitIds) {
+    const perfect = echoRun(id, {});
+    check("game-glyph-echo", id + ": a perfect-memory hand rings three stars",
+      perfect.stars === 3, JSON.stringify(perfect));
+    const steady = echoRun(id, { slips: 1 });
+    check("game-glyph-echo", id + ": one slip lands two stars",
+      steady.stars === 2, JSON.stringify(steady));
+    const shaky = echoRun(id, { slips: 2 });
+    check("game-glyph-echo", id + ": two slips land one star",
+      shaky.stars === 1, JSON.stringify(shaky));
+    const mash = echoRun(id, { slips: 3 });
+    check("game-glyph-echo", id + ": three wrong taps end the chime - no rung is free",
+      mash.outOfLives, JSON.stringify(mash));
+    check("game-glyph-echo", id + " is recorded cleared in the campaign save",
+      readSave().cleared[id] && readSave().cleared[id].stars === 3,
+      JSON.stringify(readSave().cleared[id] || null));
+
+    /* Goal length stays load-bearing on every summit rung. */
+    const short = echoRun(id, { stopShort: true });
+    check("game-glyph-echo", id + ": a hand that stops one link short of the goal " +
+        "never clears", short.stars === null && (short.stalled || short.outOfLives),
+      JSON.stringify(short));
+
+    /* The cut: the backwards echo relaxed to a forwards chime on the live
+     * def, the mirrored hand unchanged - the rung's lesson removed. */
+    const live = byId(id);
+    const savedDef = JSON.parse(JSON.stringify(live));
+    live.reverse = false;
+    let found = null;
+    for (let seed = 1; seed <= 50 && !found; seed += 1) {
+      const run = seeded(seed, () => echoRun(id, { mirror: true }));
+      if (run.outOfLives) {
+        found = { seed, run };
+      }
+    }
+    Object.assign(live, savedDef);
+    sel.value = id;
+    env.dispatch(sel, "change");
+    summitCuts.push(id + (found ? ":seed " + found.seed : ":alive"));
+    check("game-glyph-echo", id + " (backwards echo relaxed): the mirrored hand loses its " +
+        "lives on a seeded deal (seed " + (found ? found.seed : "-") + ")",
+      !!found && found.run.stars === null,
+      JSON.stringify(found ? found.run : { outOfLives: false }));
+    check("game-glyph-echo", id + " stays cleared after the cut hand's loss",
+      readSave().cleared[id] && readSave().cleared[id].stars === 3,
+      JSON.stringify(readSave().cleared[id] || null));
+
+    const index = summitIds.indexOf(id);
+    if (index + 1 < summitIds.length) {
+      const nextId = summitIds[index + 1];
+      sel.value = nextId;
+      env.dispatch(sel, "change");
+      check("game-glyph-echo", nextId + " unlocks once " + id + " is cleared",
+        sel.value === nextId, sel.value);
+    }
+  }
+  check("game-glyph-echo", "every cut left its summit rung unwinnable for the mirrored hand",
+    summitCuts.every((line) => line.indexOf(":seed") >= 0), summitCuts.join(" "));
+
+  /* ---- the summit's shape, off the module's own table ---- */
+  /* The summit is the hard tier's pressure carried to both edges at once:
+   * every rung pairs the backwards echo with a shortened glow (the glow
+   * never outruns the step by more than the 55 ms c24 already ships), the
+   * length climbs strictly to the campaign record, the tempo never eases
+   * and ends at the record, and the measured effort opens above c24 and
+   * closes at the ladder's highest on c30. */
+  const climbs = (list) => list.every((value, index) =>
+    index === 0 || value > list[index - 1]);
+  const summitEfforts = summitIds.map((id) => effort(byId(id)));
+  const hardMaxEffort = Math.max.apply(null, tierIds.map((id) => effort(byId(id))));
+  check("game-glyph-echo", "the summit's measured effort opens above c24 and climbs: " +
+      summitEfforts.map((value) => value.toFixed(1)).join(" -> ") +
+      " against the hard tier's " + hardMaxEffort.toFixed(1),
+    climbs(summitEfforts) && summitEfforts[0] > hardMaxEffort &&
+      summitEfforts[summitEfforts.length - 1] ===
+        Math.max.apply(null, levels.map(effort)),
+    summitEfforts.map((value) => value.toFixed(3)).join(","));
+  check("game-glyph-echo", "every summit chime pairs the backwards echo with a shortened glow",
+    summitIds.every((id) => byId(id).reverse && byId(id).flashMs &&
+      byId(id).flashMs - byId(id).stepMs <= 55),
+    summitIds.map((id) => byId(id).flashMs + "/" + byId(id).stepMs).join(" "));
+  const summitGoals = summitIds.map((id) => byId(id).goal);
+  const preSummitMaxReverseGoal = Math.max.apply(null,
+    levels.slice(0, 24).filter((level) => level.reverse)
+      .map((level) => level.goal));
+  check("game-glyph-echo", "the summit's mirrored length climbs to the campaign record: " +
+      summitGoals.join(" -> ") + " against the " + preSummitMaxReverseGoal +
+      " mirrored links of the shipped chimes",
+    climbs(summitGoals) && summitGoals[0] > preSummitMaxReverseGoal &&
+      byId("c30").goal === Math.max.apply(null, levels.map((level) => level.goal)),
+    summitGoals.join("/") + " vs " + preSummitMaxReverseGoal);
+  const summitSteps = summitIds.map((id) => byId(id).stepMs);
+  const preSummitMinStep = Math.min.apply(null,
+    levels.slice(0, 24).map((level) => level.stepMs));
+  const eases = (list) => list.every((value, index) =>
+    index === 0 || value <= list[index - 1]);
+  check("game-glyph-echo", "the summit's tempo never eases and c30 sets the pace record: " +
+      summitSteps.join(" -> ") + " ms against the shipped " + preSummitMinStep,
+    eases(summitSteps) && byId("c30").stepMs < preSummitMinStep,
+    summitSteps.join("/") + " vs " + preSummitMinStep);
+  const preSummitMinFlash = Math.min.apply(null,
+    levels.slice(0, 24).map((level) => level.flashMs || 300));
+  check("game-glyph-echo", "c30 carries the shortest glow in the campaign",
+    byId("c30").flashMs < preSummitMinFlash &&
+      summitIds.every((id, index) => index === 0 ||
+        byId(id).flashMs <= byId(summitIds[index - 1]).flashMs),
+    byId("c30").flashMs + " ms vs " + preSummitMinFlash);
+
   /* Copy travels with the module. */
-  const copyKeys = ["echoL21", "echoL22", "echoL23", "echoL24"];
+  const copyKeys = ["echoL21", "echoL22", "echoL23", "echoL24",
+    "echoL25", "echoL26", "echoL27", "echoL28", "echoL29", "echoL30"];
   const copyProblems = copyKeys.filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-glyph-echo", "the four chime names resolve in both languages",
+  check("game-glyph-echo", "the ten hard and summit chime names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 };

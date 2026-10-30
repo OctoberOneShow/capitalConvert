@@ -205,6 +205,82 @@
       pad: { x0: 0.26, x1: 0.36, y: 320 },
       starFuel: [11, 7, 4],
     },
+
+    /* ------------------------------------------------------------------
+     * The last ridge tier (s25-s30). The summit ended on a wedge at 170;
+     * these six carry the same engines across the final range, one idea
+     * per sector. Gravity's walk flattens here - six units across the
+     * whole tier, 171 to 176, still 59 inside the engine's 235 of thrust
+     * - because the pull is already at the edge of what the tanks pay
+     * for; the ridge itself now makes the difficulty, while the tank
+     * drains from 63 to 58 so every hover is borrowed fuel.
+     *
+     * s25 hangs a broad false terrace past the pad's right lip: the flat
+     * the eye picks first sits forty-four units of sky above the window,
+     * and every line that flares onto it breaks there. s26 sinks the pad
+     * into a saddle - a peak on each side, the left one standing over
+     * the spawn line - so the descent is a V between two walls. s27
+     * pinches the window to 27 pixels, the wedge's trick five pixels
+     * tighter, between a shoulder and a spire with same-height rock
+     * running past both lips. s28 tucks the pad against an eave: the
+     * ground past the right lip climbs sixty-four units inside
+     * thirty-four pixels, so only a shallow line from the left lives.
+     * s29 lays a causeway between two basins, each a dozen units deeper
+     * than the shelf, and the window is the high ground between them -
+     * sink early and the flight ends in the marsh. s30 closes the game
+     * with the last inch: a 24-pixel window in a same-height floor, a
+     * basin sunk past its right lip and a spire standing over the left
+     * approach.
+     *
+     * Every sector here was flown before it shipped, exactly the way the
+     * tiers above were: tools/starfall-forge.js re-implements this
+     * module's flight and lands its swarm of scripted pilots on each
+     * candidate; the rung ships only when one of them touches down
+     * inside the pad window with fuel still on the gauge, and the star
+     * bands are that measured landing's own line - 62/42/22 percent of
+     * the best fuel it leaves. Measured landings, for the record:
+     *   s25  false terrace  16% left
+     *   s26  saddle         14% left
+     *   s27  27px pinch     11% left
+     *   s28  eave           11% left
+     *   s29  causeway       12% left
+     *   s30  last inch      11% left */
+    {
+      id: "s25", labelKey: "lantL25", gravity: 171, fuel: 63,
+      terrain: [[0, 284], [0.12, 258], [0.2, 300], [0.25, 316], [0.4, 316], [0.5, 272], [0.62, 272], [0.74, 300], [0.88, 282], [1, 292]],
+      pad: { x0: 0.26, x1: 0.375, y: 316 },
+      starFuel: [10, 7, 4],
+    },
+    {
+      id: "s26", labelKey: "lantL26", gravity: 172, fuel: 62,
+      terrain: [[0, 266], [0.12, 246], [0.2, 296], [0.26, 318], [0.37, 318], [0.44, 296], [0.5, 250], [0.62, 282], [0.78, 290], [1, 300]],
+      pad: { x0: 0.265, x1: 0.36, y: 318 },
+      starFuel: [9, 6, 3],
+    },
+    {
+      id: "s27", labelKey: "lantL27", gravity: 173, fuel: 61,
+      terrain: [[0, 276], [0.1, 254], [0.17, 296], [0.235, 292], [0.26, 318], [0.345, 318], [0.39, 270], [0.48, 298], [0.6, 272], [0.76, 278], [1, 290]],
+      pad: { x0: 0.26, x1: 0.345, y: 318 },
+      starFuel: [7, 5, 2],
+    },
+    {
+      id: "s28", labelKey: "lantL28", gravity: 174, fuel: 60,
+      terrain: [[0, 296], [0.12, 262], [0.22, 300], [0.26, 314], [0.4, 314], [0.49, 250], [0.58, 238], [0.72, 272], [0.87, 264], [1, 290]],
+      pad: { x0: 0.26, x1: 0.385, y: 314 },
+      starFuel: [7, 5, 2],
+    },
+    {
+      id: "s29", labelKey: "lantL29", gravity: 175, fuel: 59,
+      terrain: [[0, 270], [0.1, 248], [0.17, 296], [0.21, 318], [0.25, 306], [0.365, 306], [0.41, 320], [0.53, 320], [0.66, 250], [0.81, 264], [1, 290]],
+      pad: { x0: 0.25, x1: 0.36, y: 306 },
+      starFuel: [7, 5, 3],
+    },
+    {
+      id: "s30", labelKey: "lantL30", gravity: 176, fuel: 58,
+      terrain: [[0, 272], [0.1, 250], [0.18, 298], [0.21, 316], [0.42, 316], [0.48, 326], [0.59, 326], [0.71, 256], [0.85, 274], [1, 296]],
+      pad: { x0: 0.225, x1: 0.3, y: 316 },
+      starFuel: [7, 5, 2],
+    },
   ];
 
   function initStarfallGame() {
@@ -706,12 +782,24 @@
       "lantL22": "The Narrows",
       "lantL23": "High Shelf",
       "lantL24": "The Wedge",
+      "lantL25": "False Terrace",
+      "lantL26": "The Saddle",
+      "lantL27": "The Stitch",
+      "lantL28": "Under the Eave",
+      "lantL29": "The Causeway",
+      "lantL30": "The Last Inch",
     },
     zh: {
       "lantL21": "幻谷",
       "lantL22": "窄峡",
       "lantL23": "浮台",
       "lantL24": "夹缝",
+      "lantL25": "惑台",
+      "lantL26": "鞍谷",
+      "lantL27": "针脚",
+      "lantL28": "檐下",
+      "lantL29": "栈道",
+      "lantL30": "最后一寸",
     },
   });
 

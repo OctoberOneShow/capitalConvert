@@ -48,23 +48,37 @@ function arcade(name) {
   }
   env.load(fs.readFileSync(path.join(root, "assets", "app", "game-campaign.js"), "utf8"));
   /* The hook has to land INSIDE the initializer, because these probes reach
-   * into its locals (update, die, level, frog...). Splicing on the shape that
-   * used to sit next to the export banner broke the moment a module's tail
-   * became a call - App.addStrings({...}); - so walk back to the last
-   * top-level closing brace and insert before it instead. */
+   * into its locals (update, die, level, frog...). Anchor on the initializer's
+   * own declaration and splice before its closing brace: walking back from the
+   * export banner landed inside a trailing bench helper (pegSimulate,
+   * raidSimulate) once the gates added one, and those probes then found no
+   * hook at all. The banner walk stays as a fallback for shapes the anchor
+   * regex does not recognise. */
   const rows = source.split(/\r?\n/);
-  const banner = rows.findIndex((row) => /^ {2}\/\* Exported/.test(row));
+  const initializer = /App\.(init\w+) =/.exec(source)[1];
+  const anchor = rows.findIndex((row) =>
+    new RegExp("^ {2}function " + initializer + "\\s*\\(").test(row));
   let close = -1;
-  for (let index = banner - 1; index >= 0; index -= 1) {
-    if (rows[index] === "  }") {
-      close = index;
-      break;
+  if (anchor >= 0) {
+    for (let index = anchor + 1; index < rows.length; index += 1) {
+      if (rows[index] === "  }") {
+        close = index;
+        break;
+      }
+    }
+  }
+  if (close < 0) {
+    const banner = rows.findIndex((row) => /^ {2}\/\* Exported/.test(row));
+    for (let index = banner - 1; index >= 0; index -= 1) {
+      if (rows[index] === "  }") {
+        close = index;
+        break;
+      }
     }
   }
   if (close < 0) throw new Error("inspection marker missing: " + name);
   rows.splice(close, 0, "    App.arcadeInspect = function (code) { return eval(code); };");
   env.load(rows.join("\n"));
-  const initializer = /App\.(init\w+) =/.exec(source)[1];
   App[initializer]();
   if (!App.arcadeInspect) throw new Error("fixture failed to initialize: " + name);
   return Object.assign(env, { App, frames, inspect: App.arcadeInspect });
@@ -170,8 +184,15 @@ run("arcade-dice-table-rules", () => {
   const env = arcade("ember-dice");
   const tables = env.inspect("diceTables.length");
   for (let index = 0; index < tables; index += 1) {
-    env.inspect("table = diceTables[" + index + "]; startRun(); rollFace = function () { return table.burn.indexOf(3) === -1 ? 3 : 4; }; roll();");
-    check("arcade-dice-table-rules", "table " + (index + 1) + " correctly totals its safe dice", env.inspect("stake === (table.pairs ? 6 : 3) && turn === 1"));
+    /* The safe face is whatever this table does not burn - the summit rows burn
+     * three faces now, so a fixture pinned to face 3 would roll a burn there and
+     * measure nothing. */
+    env.inspect("table = diceTables[" + index + "];");
+    const safeFace = env.inspect("[1, 2, 3, 4, 5, 6].filter(function (face) { return table.burn.indexOf(face) === -1; })[0]");
+    env.inspect("startRun(); rollFace = function () { return " + safeFace + "; }; roll();");
+    check("arcade-dice-table-rules", "table " + (index + 1) + " correctly totals its safe dice",
+      env.inspect("stake === " + safeFace + " * (table.pairs ? 2 : 1) && turn === 1"),
+      "safe face " + safeFace);
     const net = env.inspect("Math.max(0, stake - table.tax)");
     env.byId("diceBankBtn").click();
     check("arcade-dice-table-rules", "table " + (index + 1) + " applies its tax or bounty once", env.inspect("bank") === net && env.inspect("stake === 0 && turn === 2"));

@@ -2,14 +2,16 @@
  * Each net is a hand-authored DAG with a target truth table, and the shipped
  * gate assignment is the one a brute-force pass proved cheapest over the very
  * sockets the net offers, so every net can be completed and the star line is
- * honest. Twenty-four nets, one new idea each: two-wire difference, a three-wire
+ * honest. Thirty nets, one new idea each: two-wire difference, a three-wire
  * vote, a counted vote, an inhibited difference, a staged relay, then a
  * steered pair, a half-specified strobe table, a difference two branches
  * share, a four-wire consensus, a two-bit comparison, a four-wire quorum,
  * a carry chain, a perfect square, strict alternation, a long month, a
  * top-right bar, a rule of three, a prime nibble, four of five, twin rails,
  * a shared run of three, a balanced four, two lone sparks on six wires and
- * the gap law. */
+ * the gap law, then a three-bit tie relay, twin thermometer decoders, a
+ * carry with a spare rail hanging off the answer, an equal-nonzero decoder,
+ * a refused comparison and the finale that chains them. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
   var t = App.t;
@@ -586,6 +588,175 @@
       ],
       gates: { s1: "and", s2: "and", s3: "and", s4: "not", s5: "not", s6: "not", s7: "and", s8: "and", s9: "and", s10: "or", s11: "or", s12: "not" },
       par: 12,
+    },
+    {
+      /* Six wires, two 3-bit words. The top pair decides; the middle pair is
+       * read only when the tops tie, the low pair only when both do, and each
+       * difference is seated once and read twice. Sixty-four required rows to
+       * the gap law's thirty-two; the cone refuses every eleven-part seating,
+       * so par is twelve. */
+      id: "k25",
+      labelKey: "cirL25",
+      inputs: ["A", "B", "C", "D", "E", "F"],
+      truth: "0000000010000000110000001110000011110000111110001111110011111110",
+      out: "s12",
+      slots: [
+        { id: "s1", a: "A", b: "D" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "C", b: "F" },
+        { id: "s4", a: "s1" },
+        { id: "s5", a: "s2" },
+        { id: "s6", a: "A", b: "s1" },
+        { id: "s7", a: "B", b: "s2" },
+        { id: "s8", a: "C", b: "s3" },
+        { id: "s9", a: "s8", b: "s5" },
+        { id: "s10", a: "s7", b: "s9" },
+        { id: "s11", a: "s10", b: "s4" },
+        { id: "s12", a: "s6", b: "s11" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "xor", s4: "not", s5: "not", s6: "and", s7: "and", s8: "and", s9: "and", s10: "or", s11: "and", s12: "or" },
+      par: 12,
+    },
+    {
+      /* Two thermometer codes: a triple may only read 000, 001, 011 or 111,
+       * so two implication products accept it without expanding its four
+       * minterms. Sixty-four required rows to the gap law's thirty-two,
+       * sixteen of them high; the cone refuses every ten-part seating, so
+       * par is eleven. */
+      id: "k26",
+      labelKey: "cirL26",
+      inputs: ["A", "B", "C", "D", "E", "F"],
+      truth: "1101000111010001000000001101000100000000000000000000000011010001",
+      out: "s11",
+      slots: [
+        { id: "s1", a: "A" },
+        { id: "s2", a: "B" },
+        { id: "s3", a: "s1", b: "s2" },
+        { id: "s4", a: "B", b: "C" },
+        { id: "s5", a: "s3", b: "s4" },
+        { id: "s6", a: "D" },
+        { id: "s7", a: "E" },
+        { id: "s8", a: "s6", b: "s7" },
+        { id: "s9", a: "E", b: "F" },
+        { id: "s10", a: "s8", b: "s9" },
+        { id: "s11", a: "s5", b: "s10" },
+      ],
+      gates: { s1: "not", s2: "not", s3: "and", s4: "and", s5: "or", s6: "not", s7: "not", s8: "and", s9: "and", s10: "or", s11: "and" },
+      par: 11,
+    },
+    {
+      /* The first spare rail to hang off the answer: the carry chain finishes
+       * at s9, and the last OR passes it while the bare spare reads 0. Seat
+       * the spare and it can never carry the answer - the cut leaves the
+       * output dead. Sixty-four required rows to the gap law's thirty-two,
+       * twenty-eight of them high; the cone refuses every nine-part seating,
+       * so par is ten. */
+      id: "k27",
+      labelKey: "cirL27",
+      inputs: ["A", "B", "C", "D", "E", "F"],
+      truth: "0000000000000001000000110000011100001111000111110011111101111111",
+      out: "s11",
+      slots: [
+        { id: "s1", a: "C", b: "F" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "B", b: "E" },
+        { id: "s4", a: "s1", b: "s2" },
+        { id: "s5", a: "s3", b: "s4" },
+        { id: "s6", a: "A", b: "D" },
+        { id: "s7", a: "s5", b: "s6" },
+        { id: "s8", a: "A", b: "D" },
+        { id: "s9", a: "s7", b: "s8" },
+        { id: "s10", a: "A", b: "F" },
+        { id: "s11", a: "s9", b: "s10" },
+      ],
+      gates: { s1: "and", s2: "xor", s3: "and", s4: "and", s5: "or", s6: "xor", s7: "and", s8: "and", s9: "or", s11: "or" },
+      par: 10,
+    },
+    {
+      /* Two words that agree and are not the zero code. Equality is the
+       * difference tree refused, and once the halves agree the zero test only
+       * has to read four rails. Sixty-four required rows to the gap law's
+       * thirty-two, seven of them high - seven minterms would cost more than
+       * forty parts - and the cone refuses every nine-part seating, so par is
+       * ten. */
+      id: "k28",
+      labelKey: "cirL28",
+      inputs: ["A", "B", "C", "D", "E", "F"],
+      truth: "0000000001000000001000000001000000001000000001000000001000000001",
+      out: "s10",
+      slots: [
+        { id: "s1", a: "A", b: "D" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "C", b: "F" },
+        { id: "s4", a: "s1", b: "s2" },
+        { id: "s5", a: "s4", b: "s3" },
+        { id: "s6", a: "s5" },
+        { id: "s7", a: "C", b: "D" },
+        { id: "s8", a: "E", b: "F" },
+        { id: "s9", a: "s7", b: "s8" },
+        { id: "s10", a: "s6", b: "s9" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "xor", s4: "or", s5: "or", s6: "not", s7: "or", s8: "or", s9: "or", s10: "and" },
+      par: 10,
+    },
+    {
+      /* The comparison upside down: the tie chain answers greater-than at s12
+       * and the last socket refuses it, so the low pair's tie still has to be
+       * carried. Sixty-four required rows to the gap law's thirty-two,
+       * thirty-six of them high; the cone refuses every twelve-part seating,
+       * so par is thirteen, one over the gap law. */
+      id: "k29",
+      labelKey: "cirL29",
+      inputs: ["A", "B", "C", "D", "E", "F"],
+      truth: "1111111101111111001111110001111100001111000001110000001100000001",
+      out: "s13",
+      slots: [
+        { id: "s1", a: "A", b: "D" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "C", b: "F" },
+        { id: "s4", a: "s1" },
+        { id: "s5", a: "s2" },
+        { id: "s6", a: "A", b: "s1" },
+        { id: "s7", a: "B", b: "s2" },
+        { id: "s8", a: "C", b: "s3" },
+        { id: "s9", a: "s8", b: "s5" },
+        { id: "s10", a: "s7", b: "s9" },
+        { id: "s11", a: "s10", b: "s4" },
+        { id: "s12", a: "s6", b: "s11" },
+        { id: "s13", a: "s12" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "xor", s4: "not", s5: "not", s6: "and", s7: "and", s8: "and", s9: "and", s10: "or", s11: "and", s12: "or", s13: "not" },
+      par: 13,
+    },
+    {
+      /* The finale chains the summit: the tie chain, the refusal at the
+       * output, and the low difference seated once and read twice - inside
+       * the last product and again at the last gate. Sixty-four required rows
+       * to the gap law's thirty-two, sixteen high; the cone refuses every
+       * thirteen-part seating, so par is fourteen, two over the gap law. */
+      id: "k30",
+      labelKey: "cirL30",
+      inputs: ["A", "B", "C", "D", "E", "F"],
+      truth: "0101010100101010000101010000101000000101000000100000000100000000",
+      out: "s14",
+      slots: [
+        { id: "s1", a: "A", b: "D" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "C", b: "F" },
+        { id: "s4", a: "s1" },
+        { id: "s5", a: "s2" },
+        { id: "s6", a: "A", b: "s1" },
+        { id: "s7", a: "B", b: "s2" },
+        { id: "s8", a: "C", b: "s3" },
+        { id: "s9", a: "s8", b: "s5" },
+        { id: "s10", a: "s7", b: "s9" },
+        { id: "s11", a: "s10", b: "s4" },
+        { id: "s12", a: "s6", b: "s11" },
+        { id: "s13", a: "s12" },
+        { id: "s14", a: "s13", b: "s3" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "xor", s4: "not", s5: "not", s6: "and", s7: "and", s8: "and", s9: "and", s10: "or", s11: "and", s12: "or", s13: "not", s14: "and" },
+      par: 14,
     },
   ];
 
@@ -1239,6 +1410,12 @@
       "cirL22": "Balanced Four",
       "cirL23": "Twin Sparks",
       "cirL24": "The Gap Law",
+      "cirL25": "Tie Relay",
+      "cirL26": "Thermometer Pair",
+      "cirL27": "Spare Carry",
+      "cirL28": "Same Fire",
+      "cirL29": "The Refusal",
+      "cirL30": "Final Ledger",
       "cirPartsLabel": "Parts",
       "cirRowsLabel": "Rows",
       "cirNetSelectLabel": "Pick a net",
@@ -1276,7 +1453,7 @@
       "cirCleared": "Every row holds on {n} parts (par {p}) - {s} stars.",
       "cirBestParts": "best {n} parts",
       "cirNextNet": "Next net unlocked.",
-      "cirCampaignDone": "Twenty-four nets, all truthing out.",
+      "cirCampaignDone": "Thirty nets, all truthing out.",
       "cirLocked": "{name} is taped over until the net before it works.",
       "cirHint": "A dead socket reads as 0, so an OR or XOR on a spare wire passes the live one straight through.",
       "cirHintFree": "Rows printed as don't care ask nothing of the board, so this net does not have to answer its strobe - spend those parts on the half that counts.",
@@ -1308,6 +1485,12 @@
       "cirL22": "四中取二",
       "cirL23": "双簇孤火",
       "cirL24": "空档之律",
+      "cirL25": "平局接力",
+      "cirL26": "温度计双码",
+      "cirL27": "余轨进位",
+      "cirL28": "同码有火",
+      "cirL29": "反相判决",
+      "cirL30": "终局连算",
       "cirPartsLabel": "元件",
       "cirRowsLabel": "行",
       "cirNetSelectLabel": "选择电路",
@@ -1345,7 +1528,7 @@
       "cirCleared": "{n} 个元件让所有行都成立（标准 {p}）- 获得 {s} 星。",
       "cirBestParts": "最佳 {n} 个元件",
       "cirNextNet": "解锁下一张电路。",
-      "cirCampaignDone": "二十四张电路全部按预期出电平。",
+      "cirCampaignDone": "三十张电路全部按预期出电平。",
       "cirLocked": "「{name}」还被胶带封着——先让上一张电路工作。",
       "cirHint": "空插座读作 0，所以把多余的那一路接成或门或异或门，就等于让有效信号直通过去。",
       "cirHintFree": "写着不限的行不必成立：这半张表电路板无需回答，所以别把选通线接进输出，元件留给要紧的那一半。",

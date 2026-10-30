@@ -68,7 +68,7 @@
      * ranks nearest the ship, where the landing threat lives; v23 triples
      * the vanguard's plates, so a half-killed raider still marches and
      * still shoots; v24 plates both lower ranks twice at the fastest tempo
-     * the raid has ever asked for - the summit. The plates raise every
+     * the raid had ever asked for - the deep summit. The plates raise every
      * rung's shot floor above v20's (70, 80, 90, 100 rounds against v20's
      * 60) while the tempo keeps tightening, so each deep rung is measurably
      * the harder fight in both of the engine's own currencies. The names
@@ -80,6 +80,35 @@
     { id: "v22", labelKey: "lvlNum22", rows: 6, cols: 10, stepMs: 141, dropMs: 330, armor: 1, armorRanks: 2, starTimes: [224, 295, 369] },
     { id: "v23", labelKey: "lvlNum23", rows: 6, cols: 10, stepMs: 133, dropMs: 312, armor: 3, starTimes: [238, 313, 392] },
     { id: "v24", labelKey: "lvlNum24", rows: 6, cols: 10, stepMs: 126, dropMs: 296, armor: 2, armorRanks: 2, starTimes: [252, 332, 416] },
+    /* Waves 25-30 - the summit tier. The deep tier spent plating, so the
+     * summit pulls the two levers the raid has never had, and both stay
+     * inert for v1-24: `volley` throws more than one bomb per drop beat,
+     * each shooter rolled from the live formation so a three-volley is
+     * three independent lanes and not one wider bomb; and `stride` widens
+     * the march's sideways step, which shortens every sweep and buys the
+     * formation its edge-flip drops sooner - the descent clock is the one
+     * currency v14-24 never re-priced. v25 teaches the volley alone at the
+     * deep summit's own economy: v24's plates and tempo, a longer beat, and
+     * twice the bombs, so the price is the lanes and not the clock. v26
+     * adds the wider stride. v27 triples the vanguard's plates under both.
+     * v28 raises the volley to three at a beat so long the net pressure
+     * only just climbs. v29 plates four ranks twice - eighty plates, the
+     * most the raid has ever fielded. v30 stacks all of it: ninety plates,
+     * three-lane volleys, the widest stride, the fastest march - the
+     * summit. The engine's own currencies price the tier rung over rung:
+     * the drop pressure (volley over beat) climbs strictly every rung,
+     * the shot floor (the 330ms cadence is law and plates demand
+     * raiders+plates rounds) never falls below the deep summit's and tops
+     * out at 49.5s, and the march only ever gets faster. The names ride
+     * the shared numbered-label shelf (lvlNum25-30). The volley and stride
+     * fields are inert for v1-24, so those fights replay the shipped
+     * streams exactly. */
+    { id: "v25", labelKey: "lvlNum25", rows: 6, cols: 10, stepMs: 122, dropMs: 330, armor: 2, armorRanks: 2, volley: 2, starTimes: [266, 351, 440] },
+    { id: "v26", labelKey: "lvlNum26", rows: 6, cols: 10, stepMs: 116, dropMs: 316, armor: 2, armorRanks: 2, volley: 2, stride: 9, starTimes: [280, 370, 464] },
+    { id: "v27", labelKey: "lvlNum27", rows: 6, cols: 10, stepMs: 110, dropMs: 304, armor: 3, armorRanks: 2, volley: 2, stride: 9, starTimes: [295, 390, 489] },
+    { id: "v28", labelKey: "lvlNum28", rows: 6, cols: 10, stepMs: 105, dropMs: 400, armor: 3, armorRanks: 2, volley: 3, stride: 10, starTimes: [310, 411, 515] },
+    { id: "v29", labelKey: "lvlNum29", rows: 6, cols: 10, stepMs: 100, dropMs: 380, armor: 2, armorRanks: 4, volley: 3, stride: 10, starTimes: [326, 433, 542] },
+    { id: "v30", labelKey: "lvlNum30", rows: 6, cols: 10, stepMs: 96, dropMs: 372, armor: 3, armorRanks: 3, volley: 3, stride: 11, starTimes: [343, 456, 570] },
   ];
 
   function initGlyphRaidGame() {
@@ -255,7 +284,7 @@
         dir = -dir;
         shiftY += 10;
       } else {
-        shiftX += dir * 8;
+        shiftX += dir * (level.stride || 8);
       }
       var landed = aliveList.some(function (inv) {
         return invaderY(inv) >= raidReachY;
@@ -286,8 +315,17 @@
       if (dropAcc >= level.dropMs) {
         dropAcc = 0;
         var list = aliveInvaders();
-        var shooter = list[Math.floor(Math.random() * list.length)];
-        drops.push({ x: invaderX(shooter), y: invaderY(shooter) + 8, vy: 175 });
+        /* Summit tier: a volley throws more than one bomb per drop beat, each
+         * shooter rolled from the live formation - three independent lanes,
+         * not one wider bomb. Dead code for v1-24, which volley one shooter
+         * a beat and consume exactly one Math.random per beat as before. */
+        for (var s = 0; s < (level.volley || 1); s += 1) {
+          if (!list.length) {
+            break;
+          }
+          var shooter = list[Math.floor(Math.random() * list.length)];
+          drops.push({ x: invaderX(shooter), y: invaderY(shooter) + 8, vy: 175 });
+        }
       }
       var move = (keyDir || pointerDir) * 240;
       shipX = Math.max(16, Math.min(raidWidth - 16, shipX + move * dt));
@@ -660,7 +698,7 @@
         dir = -dir;
         shiftY += 10;
       } else {
-        shiftX += dir * 8;
+        shiftX += dir * (level.stride || 8);
       }
       for (var index = 0; index < list.length; index += 1) {
         if (invY(list[index]) >= raidReachY) {
@@ -727,8 +765,15 @@
       dropAcc += dt * 1000;
       if (dropAcc >= level.dropMs) {
         dropAcc = 0;
-        var shooter = list[Math.floor(rng() * list.length)];
-        drops.push({ x: invX(shooter), y: invY(shooter) + 8 });
+        /* The panel's volley law, mirrored: one rng draw per shooter, from
+         * the same live list the panel holds at the beat. */
+        for (var s = 0; s < (level.volley || 1); s += 1) {
+          if (!list.length) {
+            break;
+          }
+          var shooter = list[Math.floor(rng() * list.length)];
+          drops.push({ x: invX(shooter), y: invY(shooter) + 8 });
+        }
       }
       var move = steer * 240;
       shipX = Math.max(16, Math.min(raidWidth - 16, shipX + move * dt));

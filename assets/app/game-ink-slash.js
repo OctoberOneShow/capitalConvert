@@ -67,6 +67,51 @@
     { id: "s22", labelKey: "slashL22", target: 12400, timeS: 40, spawnMs: 330, bomb: 0.34 },
     { id: "s23", labelKey: "slashL23", target: 12000, timeS: 30, spawnMs: 360, bomb: 0.28, rush: 15 },
     { id: "s24", labelKey: "slashL24", target: 12500, timeS: 30, spawnMs: 225, bomb: 0.36 },
+    /* Rounds 25-30 are the summit, and no dial on them sits alone: every
+     * card pairs the flood with a second extreme, and the target is priced
+     * against the pair. All numbers were measured through the real panel
+     * with the gate's threading hand over four seeded rounds per card (seed
+     * k*104729): the hand cleared every card on every seed - the finals run
+     * 22320-40000 against targets of 19800-27900, the short-stroke hand
+     * lands under 2000 everywhere - and the demand per second climbs
+     * strictly through the six: 430 -> 620 -> 747 -> 873 -> 920 -> 930,
+     * against the hard tier's 417 peak. s25 stretches the clock past every
+     * round the ladder had shipped (46s against the teaching rounds' 45)
+     * and lets the chain economy pay for the length; s26 pours the fastest
+     * constant flood to date (205ms); s27 doubles the feed for the final
+     * twenty seconds, the longest sprint in the campaign; s28 deepens the
+     * constant flood to 190ms, the fastest pour the ladder ships without a
+     * sprint; s29 pairs a sixteen-second sprint with the iron haze its
+     * target is priced against; and s30 closes by hanging the biggest
+     * target in the game on a sprint, a flood and the haze at once - the
+     * highest demand per second the ladder asks for. Cut the paired dial on
+     * any card and the same threading hand lands under 22000 - under the
+     * target everywhere (measured cut finals: 12070-21850). */
+    /* The long rain: forty-six seconds, one past the teaching clock and six
+     * past the long haul, at a feed quick enough to keep the chain growing
+     * the whole time. The target is the length's own interest: a 46-second
+     * chain outgrows a 30-second one faster than the clock grows. */
+    { id: "s25", labelKey: "slashL25", target: 19800, timeS: 46, spawnMs: 320, bomb: 0.30 },
+    /* The cataract: the fastest constant pour to date at 205ms, with the
+     * bomb share the shipped gauntlet normalized - the flood is the card,
+     * and the target is what the flood delivers. */
+    { id: "s26", labelKey: "slashL26", target: 18600, timeS: 30, spawnMs: 205, bomb: 0.36 },
+    /* The long sprint: the rush doubles an already live feed for the final
+     * twenty seconds - two thirds of the round is sprint, against the
+     * shipped summit's ten and the hard tier's fifteen. */
+    { id: "s27", labelKey: "slashL27", target: 22400, timeS: 30, spawnMs: 340, bomb: 0.30, rush: 20 },
+    /* The deepest rapid: 190ms of constant pour, the fastest the ladder
+     * ships without a sprint, and the biggest target to date priced
+     * directly on what that pour delivers. */
+    { id: "s28", labelKey: "slashL28", target: 26200, timeS: 30, spawnMs: 190, bomb: 0.28 },
+    /* The iron sprint: sixteen seconds of doubled feed through a haze live
+     * enough that every dodge costs chain - the pairing the target is
+     * priced against, and the biggest target the ladder had asked for. */
+    { id: "s29", labelKey: "slashL29", target: 27600, timeS: 30, spawnMs: 250, bomb: 0.34, rush: 16 },
+    /* The last deluge: sprint, flood and haze on one card, under the
+     * biggest target in the game - the highest demand per second the
+     * ladder asks for, and the round everything before it was feeding. */
+    { id: "s30", labelKey: "slashL30", target: 27900, timeS: 30, spawnMs: 205, bomb: 0.40, rush: 12 },
   ];
 
   function initInkSlashGame() {
@@ -551,12 +596,24 @@
       "slashL22": "The Long Rain",
       "slashL23": "Iron Hail",
       "slashL24": "The Twin Deluge",
+      "slashL25": "The Endless Rain",
+      "slashL26": "The Cataract",
+      "slashL27": "The Long Sprint",
+      "slashL28": "The Ninth Rapid",
+      "slashL29": "The Iron Sprint",
+      "slashL30": "The Last Deluge",
     },
     zh: {
       "slashL21": "骤雨狂澜",
       "slashL22": "长霖漫卷",
       "slashL23": "铁雹风暴",
       "slashL24": "双生洪澜",
+      "slashL25": "霖雨不歇",
+      "slashL26": "悬瀑倾落",
+      "slashL27": "长驱直入",
+      "slashL28": "九级激湍",
+      "slashL29": "铁雨疾驰",
+      "slashL30": "末世洪澜",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

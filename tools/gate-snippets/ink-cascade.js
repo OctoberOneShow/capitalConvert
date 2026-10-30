@@ -19,22 +19,36 @@
  * re-selected so the engine re-deals under the cut, and the same greedy line
  * cannot reach the target on a single seeded deal. Star bands are derived,
  * never authored: the engine scores starsFor(score, [1.4t, 1.2t, t], "high")
- * and no new pool carries band fields of its own. */
+ * and no new pool carries band fields of its own.
+ *
+ * The summit tier p25-p30 gets the same treatment, and the cut runs on a
+ * copy: a clone of the rung with colors forced back to six is swapped into
+ * App.cascadeLevels at the rung's index, the panel deals whatever sits there,
+ * and the same greedy line must fall short on every deal. The derived bands
+ * have to fall strictly from the three-star line to the target inside each
+ * rung, the price per move has to climb through the six and open above p24,
+ * and p30 has to end the ladder as its biggest target and heaviest demand. */
 module.exports = function gate(ctx) {
   const { App, env, check } = ctx;
   const levels = App.cascadeLevels;
   const tierIds = ["p21", "p22", "p23", "p24"];
+  const summitIds = ["p25", "p26", "p27", "p28", "p29", "p30"];
   const byId = (id) => levels.find((level) => level.id === id);
 
   /* ---- ladder shape ---- */
   check("game-ink-cascade", "the ladder holds at least twenty-four pools",
     levels.length >= 24, String(levels.length));
+  check("game-ink-cascade", "the ladder holds all thirty pools",
+    levels.length >= 30, String(levels.length));
   check("game-ink-cascade", "every pool id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
   const missing = tierIds.filter((id) => !byId(id));
   check("game-ink-cascade", "the hard tier p21-p24 is present",
     missing.length === 0, missing.join(","));
+  const missingSummit = summitIds.filter((id) => !byId(id));
+  check("game-ink-cascade", "the summit tier p25-p30 is present",
+    missingSummit.length === 0, missingSummit.join(","));
 
   /* ---- stage the real panel in the stub DOM ---- */
   if (env.timers && env.timers.advance) env.timers.advance(10000);
@@ -358,6 +372,117 @@ module.exports = function gate(ctx) {
   check("game-ink-cascade", "every cut left the tier unbeatable in its advertised shape",
     tierProofs.every((p) => p.endsWith(":ok")), tierProofs.join(" "));
 
+  /* ---- the summit tier: the same proofs, with the cut made on a copy ---- */
+  const summitProofs = [];
+  for (const id of summitIds) {
+    const level = byId(id);
+    const deals = [];
+    for (let k = 1; k <= 6; k += 1) deals.push(playDeal(id, k * 7919, "greedy"));
+    const clears = deals.filter((d) => d.cleared).length;
+    const threeStars = deals.filter((d) => d.stars === 3).length;
+    check("game-ink-cascade", id + ": the greedy line clears most seeded deals and lands the top band",
+      deals.every((d) => d.selected) && clears >= 4 && threeStars >= 1,
+      "clears " + clears + "/6, three-star " + threeStars + " " +
+        JSON.stringify(deals.map((d) => [d.score, d.stars])));
+
+    const ordinary = [];
+    for (let k = 1; k <= 6; k += 1) ordinary.push(playDeal(id, k * 7919, "one"));
+    const ordClears = ordinary.filter((d) => d.cleared).length;
+    const ordStars = ordinary.map((d) => d.stars);
+    check("game-ink-cascade", id + ": the ordinary one-ply hand still clears inside the bands",
+      ordClears >= 2 && ordStars.every((stars) => stars >= 0 && stars <= 3),
+      "clears " + ordClears + "/6 stars " + JSON.stringify(ordStars));
+
+    /* A pool that plays itself is not a pool: no swaps, no score, no clear. */
+    const idle = seeded(97, () => {
+      sel.value = id;
+      env.dispatch(sel, "change");
+      for (let tick = 0; tick < 40; tick += 1) {
+        env.timers.advance(100);
+        if (env.timers.pendingTimeouts() === 0) break;
+      }
+      return {
+        score: env.byId("inkScore").textContent,
+        text: resultEl.textContent,
+        moves: env.byId("inkMoves").textContent,
+      };
+    });
+    const wild = [];
+    for (let k = 1; k <= 5; k += 1) wild.push(playDeal(id, k * 6271, "random"));
+    const wildMax = Math.max.apply(null, wild.map((d) => d.score));
+    const greedyMax = Math.max.apply(null, deals.map((d) => d.score));
+    check("game-ink-cascade", id + ": doing nothing never scores and the searched line outscores every random hand",
+      idle.score === "0/" + level.target && !/Cleared /.test(idle.text) &&
+        wildMax < greedyMax,
+      "idle " + idle.score + " wild max " + wildMax + " vs greedy " + greedyMax);
+
+    /* The advertised mechanic is load-bearing, cut on a copy this time: a
+     * clone with the pour forced back to the classic six inks is swapped
+     * into the level table at the rung's index, the panel deals whatever
+     * sits there, and the same greedy line cannot reach the target on any
+     * deal. The original goes straight back. */
+    const index = levels.indexOf(level);
+    const clone = JSON.parse(JSON.stringify(level));
+    clone.colors = 6;
+    levels[index] = clone;
+    const cutDeals = [];
+    for (let k = 1; k <= 4; k += 1) cutDeals.push(playDeal(id, k * 7919, "greedy"));
+    levels[index] = level;
+    sel.value = id;
+    env.dispatch(sel, "change");
+    const cutClears = cutDeals.filter((d) => d.cleared).length;
+    summitProofs.push(id + (cutClears === 0 ? ":ok" : ":" + cutClears + "/4"));
+    check("game-ink-cascade", id + " (pour cut to six inks on a copy): the same greedy line cannot reach the target",
+      cutClears === 0 && cutDeals.every((d) => d.selected),
+      "cut clears " + cutClears + "/4 " + JSON.stringify(cutDeals.map((d) => [d.score, d.target])));
+
+    /* The bands are the engine's own derivation, not authored fields, and
+     * they fall strictly from the three-star line down to the target. */
+    const bands = [
+      Math.round(level.target * 1.4),
+      Math.round(level.target * 1.2),
+      level.target,
+    ];
+    check("game-ink-cascade", id + " carries no authored star band and its bands fall strictly",
+      level.starBands === undefined && level.bands === undefined && level.stars === undefined &&
+        bands[0] > bands[1] && bands[1] > bands[2],
+      JSON.stringify(Object.keys(level)) + " bands " + bands.join("/"));
+
+    /* The clear survived the cut and the idle hand. */
+    check("game-ink-cascade", id + " stays cleared in the campaign save",
+      readSave().cleared[id] && readSave().cleared[id].stars >= 1,
+      JSON.stringify(readSave().cleared[id] || null));
+
+    /* The next summit rung unlocks only through the clear just recorded. */
+    const at = summitIds.indexOf(id);
+    if (at + 1 < summitIds.length) {
+      sel.value = summitIds[at + 1];
+      env.dispatch(sel, "change");
+      check("game-ink-cascade", summitIds[at + 1] + " unlocks once " + id + " is cleared",
+        sel.value === summitIds[at + 1], sel.value);
+    }
+  }
+
+  /* The summit is priced on the card's own currency: the price per move
+   * climbs strictly through the six and opens above the Confluence's, and
+   * the last rung ends the ladder as its biggest target and heaviest
+   * demand. */
+  const p24 = byId("p24");
+  const fittedDemand = p24.target / p24.moves;
+  const summitDemands = summitIds.map((id) => byId(id).target / byId(id).moves);
+  check("game-ink-cascade", "the summit's demand per move climbs and opens above p24 (" +
+      summitDemands.map((n) => n.toFixed(0)).join(" -> ") + " vs " + fittedDemand.toFixed(0) + ")",
+    summitDemands.every((v, i) => (i === 0 || v > summitDemands[i - 1]) && v > fittedDemand),
+    summitDemands.join("/") + " vs " + fittedDemand);
+  check("game-ink-cascade", "p30 is the summit: the biggest target and the heaviest demand in the ladder",
+    byId("p30").target === Math.max.apply(null, levels.map((level) => level.target)) &&
+      summitDemands[summitDemands.length - 1] ===
+        Math.max.apply(null, levels.map((level) => level.target / level.moves)),
+    "target " + byId("p30").target + ", demand " +
+      summitDemands[summitDemands.length - 1].toFixed(0));
+  check("game-ink-cascade", "every summit cut left its rung unbeatable in the advertised shape",
+    summitProofs.every((p) => p.endsWith(":ok")), summitProofs.join(" "));
+
   /* Copy travels with the module. */
   const copyKeys = ["inkL21", "inkL22", "inkL23", "inkL24"];
   const copyProblems = copyKeys.filter((key) =>
@@ -366,4 +491,13 @@ module.exports = function gate(ctx) {
     !App.t(key) || App.t(key) === key);
   check("game-ink-cascade", "the four pool names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
+
+  /* Copy travels with the module. */
+  const summitKeys = ["inkL25", "inkL26", "inkL27", "inkL28", "inkL29", "inkL30"];
+  const summitCopyProblems = summitKeys.filter((key) =>
+    !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
+    !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
+    !App.t(key) || App.t(key) === key);
+  check("game-ink-cascade", "the six summit names resolve in both languages",
+    summitCopyProblems.length === 0, summitCopyProblems.join(","));
 };

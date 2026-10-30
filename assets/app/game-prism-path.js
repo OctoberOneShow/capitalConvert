@@ -421,6 +421,154 @@
       ],
       starTimes: [112, 166, 224],
     },
+    /* ------------------------------------------------------------------
+     * The summit tier (p25-p30) keeps the wide ten-across bench and grows
+     * the fan rung over rung: eight marks on ten elements, then the bench
+     * itself rising to eleven and twelve elements with a fifth splitter
+     * riding it, nine marks, and the closer's ten - a third of the panel
+     * lit at once. Every rung solves from exactly one orientation and sits
+     * five flips off the handed deal, and every board was forged, not
+     * guessed - `node tools/prism-forge.js verify` re-reads the shipped
+     * table and replays every reachable orientation of every board through
+     * the same beam tracer the page runs.
+     * ------------------------------------------------------------------ */
+    /* Wormhole: eight targets off the deep summit's own ten-element bench,
+     * and the handed deal lights nothing at all - the first deal in the
+     * campaign that starts in the dark. */
+    {
+      id: "p25", labelKey: "prismL25", w: 10, h: 10,
+      emitter: { x: 8, y: 0, dir: 1 },
+      targets: [[4, 9], [7, 5], [7, 2], [7, 1], [5, 0], [4, 4], [4, 2], [9, 4]],
+      walls: [[0, 3], [0, 2], [3, 0], [0, 7], [8, 8], [3, 5], [6, 9], [5, 5]],
+      mirrors: [
+        { x: 6, y: 3, slope: 1 },
+        { x: 9, y: 6, slope: 0 },
+        { x: 7, y: 0, slope: 0, split: true },
+        { x: 4, y: 0, slope: 1 },
+        { x: 7, y: 3, slope: 0, split: true },
+        { x: 9, y: 5, slope: 0, split: true },
+        { x: 8, y: 7, slope: 0, locked: true },
+        { x: 9, y: 2, slope: 1, locked: true },
+        { x: 8, y: 6, slope: 1, split: true },
+        { x: 6, y: 7, slope: 0, locked: true },
+      ],
+      starTimes: [118, 177, 236],
+    },
+    /* Event Horizon: the bench rises to eleven elements, and the solution
+     * beam folds forty-four cells through all of them. */
+    {
+      id: "p26", labelKey: "prismL26", w: 10, h: 10,
+      emitter: { x: 7, y: 0, dir: 1 },
+      targets: [[7, 3], [3, 5], [8, 6], [0, 4], [5, 1], [7, 6], [9, 0], [5, 6]],
+      walls: [[6, 7], [4, 8], [7, 9], [4, 3], [4, 1], [7, 8], [1, 8], [4, 9]],
+      mirrors: [
+        { x: 8, y: 1, slope: 1, split: true },
+        { x: 7, y: 4, slope: 0, locked: true },
+        { x: 7, y: 5, slope: 0, split: true },
+        { x: 3, y: 2, slope: 0 },
+        { x: 8, y: 4, slope: 0 },
+        { x: 1, y: 5, slope: 1 },
+        { x: 1, y: 4, slope: 0, split: true },
+        { x: 9, y: 2, slope: 1, locked: true },
+        { x: 9, y: 5, slope: 1, split: true },
+        { x: 3, y: 6, slope: 0 },
+        { x: 8, y: 0, slope: 0, locked: true },
+      ],
+      starTimes: [124, 186, 248],
+    },
+    /* Quasar: nine marks and a fifth splitter - more forks than any board
+     * before it, thirteen bends in the solving route. */
+    {
+      id: "p27", labelKey: "prismL27", w: 10, h: 10,
+      emitter: { x: 5, y: 9, dir: 3 },
+      targets: [[8, 7], [4, 7], [7, 3], [7, 9], [0, 8], [6, 4], [9, 7], [6, 6], [5, 6]],
+      walls: [[5, 0], [2, 2], [3, 1], [8, 1], [1, 3], [8, 8], [7, 0], [0, 3]],
+      mirrors: [
+        { x: 4, y: 3, slope: 1 },
+        { x: 6, y: 3, slope: 0, split: true },
+        { x: 7, y: 2, slope: 0, locked: true },
+        { x: 5, y: 2, slope: 1, split: true },
+        { x: 5, y: 5, slope: 1 },
+        { x: 6, y: 2, slope: 1 },
+        { x: 6, y: 7, slope: 0, split: true },
+        { x: 8, y: 5, slope: 1, locked: true },
+        { x: 4, y: 8, slope: 0, split: true },
+        { x: 8, y: 3, slope: 1, locked: true },
+        { x: 5, y: 3, slope: 1, split: true },
+      ],
+      starTimes: [132, 198, 264],
+    },
+    /* Pulsar: the bench tops out at twelve elements, five of them forks,
+     * and the beam still touches every one on its way to nine marks. */
+    {
+      id: "p28", labelKey: "prismL28", w: 10, h: 10,
+      emitter: { x: 7, y: 9, dir: 3 },
+      targets: [[9, 4], [9, 9], [8, 8], [7, 2], [4, 1], [5, 3], [7, 7], [3, 4], [1, 0]],
+      walls: [[6, 9], [5, 4], [9, 5], [4, 8], [0, 4], [4, 6], [6, 2], [4, 0], [1, 9]],
+      mirrors: [
+        { x: 2, y: 3, slope: 1, locked: true },
+        { x: 7, y: 5, slope: 0, split: true },
+        { x: 7, y: 1, slope: 0 },
+        { x: 8, y: 6, slope: 1, split: true },
+        { x: 1, y: 2, slope: 0, locked: true },
+        { x: 3, y: 5, slope: 0 },
+        { x: 7, y: 4, slope: 1, split: true },
+        { x: 2, y: 5, slope: 0, locked: true },
+        { x: 8, y: 9, slope: 1 },
+        { x: 3, y: 2, slope: 1 },
+        { x: 7, y: 6, slope: 0, split: true },
+        { x: 7, y: 3, slope: 0, split: true },
+      ],
+      starTimes: [140, 210, 280],
+    },
+    /* Supernova: four welds and the longest beam the campaign has carried -
+     * fifty-seven cells swept on the way to nine marks. */
+    {
+      id: "p29", labelKey: "prismL29", w: 10, h: 10,
+      emitter: { x: 9, y: 1, dir: 2 },
+      targets: [[2, 0], [2, 2], [8, 9], [2, 8], [4, 1], [5, 9], [1, 3], [6, 9], [3, 6]],
+      walls: [[7, 2], [0, 7], [5, 0], [6, 3], [0, 3], [5, 8], [9, 4], [9, 9], [6, 8]],
+      mirrors: [
+        { x: 2, y: 1, slope: 0, split: true },
+        { x: 4, y: 5, slope: 1, locked: true },
+        { x: 4, y: 7, slope: 0, split: true },
+        { x: 2, y: 4, slope: 1, split: true },
+        { x: 1, y: 9, slope: 0 },
+        { x: 2, y: 6, slope: 0 },
+        { x: 7, y: 9, slope: 0, split: true },
+        { x: 4, y: 4, slope: 1, locked: true },
+        { x: 7, y: 5, slope: 1, locked: true },
+        { x: 4, y: 0, slope: 1, locked: true },
+        { x: 2, y: 7, slope: 0, split: true },
+        { x: 1, y: 0, slope: 1 },
+      ],
+      starTimes: [148, 222, 296],
+    },
+    /* First Light: the summit. Ten of the panel's hundred cells glow at
+     * once off twelve elements and five forks, the route bends fifteen
+     * times, and exactly one orientation out of two hundred and fifty-six
+     * lights them all. */
+    {
+      id: "p30", labelKey: "prismL30", w: 10, h: 10,
+      emitter: { x: 9, y: 8, dir: 2 },
+      targets: [[0, 1], [4, 8], [9, 1], [9, 5], [0, 8], [4, 2], [7, 5], [8, 5], [1, 7], [6, 2]],
+      walls: [[2, 5], [6, 6], [3, 2], [2, 9], [9, 7], [1, 5], [1, 9], [6, 7], [4, 9]],
+      mirrors: [
+        { x: 8, y: 6, slope: 1, split: true },
+        { x: 1, y: 0, slope: 1 },
+        { x: 9, y: 0, slope: 1, locked: true },
+        { x: 2, y: 8, slope: 1, split: true },
+        { x: 1, y: 1, slope: 0, locked: true },
+        { x: 2, y: 6, slope: 1 },
+        { x: 8, y: 0, slope: 0, split: true },
+        { x: 9, y: 2, slope: 0, split: true },
+        { x: 1, y: 6, slope: 1, locked: true },
+        { x: 9, y: 6, slope: 1, locked: true },
+        { x: 8, y: 8, slope: 1, split: true },
+        { x: 7, y: 6, slope: 0 },
+      ],
+      starTimes: [158, 237, 316],
+    },
   ];
   /* "/" is slope 1, "\" is slope 0. */
   var SLOPE_SLASH = 1;
@@ -949,6 +1097,12 @@
       "prismL22": "Vortex",
       "prismL23": "Anvil",
       "prismL24": "Singularity",
+      "prismL25": "Wormhole",
+      "prismL26": "Event Horizon",
+      "prismL27": "Quasar",
+      "prismL28": "Pulsar",
+      "prismL29": "Supernova",
+      "prismL30": "First Light",
       "prismSplitHint": "Violet forks split the beam: one ray turns, one carries straight on.",
       "prismLockedHint": "Amber elements are welded down and never rotate.",
       "prismWelded": "That element is welded to the bench - build the route around it.",
@@ -970,6 +1124,12 @@
       "prismL22": "漩涡",
       "prismL23": "铁砧",
       "prismL24": "奇点",
+      "prismL25": "虫洞",
+      "prismL26": "视界",
+      "prismL27": "类星体",
+      "prismL28": "脉冲星",
+      "prismL29": "超新星",
+      "prismL30": "原初之光",
       "prismSplitHint": "紫色分光叉会把光束劈成两路：一路转向，一路直穿。",
       "prismLockedHint": "琥珀色元件已被焊死，永远不会转动。",
       "prismWelded": "这个元件焊死在台面上——请绕开它设计光路。",

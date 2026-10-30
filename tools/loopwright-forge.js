@@ -130,7 +130,31 @@ function searchMinimum(floor, options) {
   return null;
 }
 
-module.exports = { load, replayRuns, prefixGhosts, searchMinimum, gridWith };
+/* Exhaustive bounded search over an already-parsed grid and ghost list - the
+ * same walk as searchMinimum, but against a base the caller built (the
+ * summit's crateless twin needs a board the panel never parses). */
+function searchMinProgram(base, ghosts, alphabet, maxLen) {
+  const { App } = load();
+  const width = alphabet.length;
+  for (let len = 1; len <= maxLen; len += 1) {
+    const total = Math.pow(width, len);
+    for (let n = 0; n < total; n += 1) {
+      const program = new Array(len);
+      let rest = n;
+      for (let i = 0; i < len; i += 1) {
+        program[i] = alphabet[rest % width];
+        rest = (rest / width) | 0;
+      }
+      const sim = App.loopSim(gridWith(base, ghosts), program, 64);
+      if (sim.win) {
+        return { length: len, program };
+      }
+    }
+  }
+  return null;
+}
+
+module.exports = { load, replayRuns, prefixGhosts, searchMinimum, searchMinProgram, gridWith };
 
 /* ---- CLI audit -----------------------------------------------------------
  * Whole-ladder table through the game's own solver, plus - with --deep - the
@@ -212,6 +236,67 @@ if (require.main === module) {
       console.log(
         `  ${floor.id}: min>${floor.parOps - 1} over chips=${shorterOk ? "proven" : "BROKEN " + JSON.stringify(shorter)}` +
           extraNote,
+      );
+    });
+  }
+
+  if (process.argv.includes("--summit")) {
+    /* Summit-tier probes (f25-f30). The dial is the plate count the win law
+     * holds - every plate must still be pressed on the winning frame - and
+     * the rooms climb three plates to eight. Each probe prices that dial:
+     * - min: no final run of par-1 ops or fewer over the movement chips and
+     *   Push wins, given the authored ghosts.
+     * - twin: the same floor with every crate erased (from the board AND
+     *   the ghosts' frozen frames) - no final run wins at par length, be-
+     *   cause the plates the crates held outnumber the bodies left (a ghost
+     *   body holds one plate, and the closer's own frame is owed to G).
+     * - straight: the authored closer with its waits stripped dies on the
+     *   shut door - a ghost only holds its plate once its run has settled. */
+    const summit = floors.filter((floor) =>
+      ["f25", "f26", "f27", "f28", "f29", "f30"].indexOf(floor.id) !== -1);
+    if (summit.length !== 6) {
+      console.log(`  summit: expected six floors f25-f30, found ${summit.length}`);
+      bad += 1;
+    }
+    summit.forEach((floor) => {
+      const ghosts = prefixGhosts(floor);
+      const base = App.loopParse(floor);
+      const shorter = searchMinimum(floor, {
+        ghosts,
+        alphabet: ["F", "B", "L", "R", "W", "P"],
+        maxLen: floor.parOps - 1,
+      });
+      const shorterOk = shorter === null;
+      /* the crateless twin: board without crates, ghosts without crates */
+      const twinBase = Object.assign({}, base, { crates: [] });
+      const twinGhosts = ghosts.map((frames) =>
+        frames.map((frame) => Object.assign({}, frame, { crates: [] })));
+      const twinGrid = (ghostList) => ({
+        w: twinBase.w, h: twinBase.h, walls: twinBase.walls, plates: twinBase.plates,
+        doors: twinBase.doors, crates: twinBase.crates, pads: twinBase.pads,
+        pistons: twinBase.pistons, goal: twinBase.goal, start: twinBase.start,
+        ghosts: ghostList,
+      });
+      let twinOk = true;
+      let twinNote = "proven";
+      const twinWin = searchMinProgram(twinBase, twinGhosts,
+        ["F", "B", "L", "R", "W"], floor.parOps);
+      if (twinWin) {
+        twinOk = false;
+        twinNote = "BROKEN " + JSON.stringify(twinWin);
+      }
+      const straight = floor.programs[floor.programs.length - 1]
+        .filter((op) => op !== "W");
+      const straightSim = App.loopSim(twinGrid(ghosts), straight, 64);
+      const straightOk = straightSim.reason === "wall" && !straightSim.win;
+      if (!shorterOk || !twinOk || !straightOk) {
+        bad += 1;
+      }
+      console.log(
+        `  ${floor.id}: plates=${base.plates.length} runs=${floor.parRuns}` +
+          ` min>${floor.parOps - 1}=${shorterOk ? "proven" : "BROKEN " + JSON.stringify(shorter)}` +
+          ` crateless-twin<=${floor.parOps}=${twinNote}` +
+          ` no-wait-walk=${straightSim.reason}${straightOk ? "" : " <-- WALKED STRAIGHT THROUGH"}`,
       );
     });
   }

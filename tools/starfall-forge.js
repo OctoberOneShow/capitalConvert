@@ -383,6 +383,21 @@ function main() {
         need: 8,
       };
     }
+    /* The last ridge tier (s25-s30) ships hand-laid the same way - false
+     * terrace, saddle, stitch, eave, causeway, last inch - and its brief
+     * carries the flattened gravity walk (171-176) and the draining tank
+     * (63-58) the tier comment in game-starfall.js commits to. */
+    for (let i = 25; i <= 30; i += 1) {
+      brief["s" + i] = {
+        id: "s" + i,
+        labelKey: "lantL" + i,
+        gravity: 170 + (i - 24),
+        fuel: 64 - (i - 24),
+        points: i < 28 ? 10 : 11,
+        bump: (i - 10) * 37,
+        need: 8,
+      };
+    }
     (ids.length ? ids : Object.keys(brief)).forEach(function (id) {
       const spec = brief[id];
       let level = null;

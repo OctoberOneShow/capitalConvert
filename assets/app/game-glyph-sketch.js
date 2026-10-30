@@ -294,9 +294,8 @@
      * to cover before the picture closes. The four boards are measured, not
      * guessed: each one line-solves uniquely, and the deduction waves they
      * demand rise rung over rung (5, 6, 9, 11 waves against the shipped
-     * ladder's four-wave average) with the summit's eleven the hardest board
-     * the tray has ever carried. Time bands stay content-authored and keep
-     * the shipped ~5% climb. */
+     * ladder's four-wave average) until the tier above takes the title.
+     * Time bands stay content-authored and keep the shipped ~5% climb. */
     {
       id: "e21", labelKey: "skL21", starTimes: [185, 280, 450],
       art: [
@@ -363,6 +362,134 @@
         "...######...",
         "..########..",
         "############",
+      ],
+    },
+    /* e25-30 are the summit tier, and it climbs the range e24 named. The
+     * second widening of the campaign puts every board on a fourteen-wide
+     * tray - the deep tier's twelve was the first widening - and the
+     * deduction chains stretch with the altitude. The six boards are
+     * measured, not guessed: each one line-solves uniquely, the waves they
+     * demand rise rung over rung (13, 14, 15, 16, 17, 18 against the deep
+     * tier's eleven at the top), and the clue lines fragment with them
+     * (runs per line 1.89 -> 2.11). The tier's defining deal is the
+     * line-solvable promise itself: every board sits one pixel above the
+     * ambiguity edge, and clearing any of its keystone pixels - 13, 13,
+     * 14, 17, 17, 18 of them rung over rung - stalls the sweep with cells
+     * no line can place, a shape the gate refuses. Time bands stay
+     * content-authored: the wider tray takes about a ninth more than e24,
+     * then the shipped climb resumes. */
+    {
+      id: "e25", labelKey: "skL25", starTimes: [235, 355, 575],
+      art: [
+        "......###.....",
+        ".....#####....",
+        "....#####..#..",
+        "...##...##.##.",
+        "..##.....####.",
+        ".##......###..",
+        "##...##...###.",
+        "##...###....#.",
+        "....#######..#",
+        "##############",
+        "##############",
+        "##############",
+        "##############",
+        "##############",
+      ],
+    },
+    {
+      id: "e26", labelKey: "skL26", starTimes: [245, 370, 600],
+      art: [
+        "......###.....",
+        ".....#####....",
+        "....###.#..#..",
+        "...##...##.##.",
+        "..##.....####.",
+        ".##......###..",
+        "##...##...###.",
+        "##...###....#.",
+        "....#######..#",
+        "##############",
+        "##############",
+        "##############",
+        "##############",
+        "##############",
+      ],
+    },
+    {
+      id: "e27", labelKey: "skL27", starTimes: [255, 385, 625],
+      art: [
+        ".....####.....",
+        "....###.##....",
+        "....###.#..#..",
+        "...##...##.##.",
+        "..##.....####.",
+        ".##......###..",
+        "##...##...###.",
+        "##...###....#.",
+        "....#######..#",
+        "##############",
+        "##############",
+        "##############",
+        "##############",
+        "##############",
+      ],
+    },
+    {
+      id: "e28", labelKey: "skL28", starTimes: [265, 400, 650],
+      art: [
+        ".....####.....",
+        "....##..##....",
+        "....###.#..#..",
+        "...##..###.##.",
+        "..##.....####.",
+        ".##......###..",
+        "##...##...###.",
+        "##...###....#.",
+        "....#######..#",
+        "##############",
+        "##############",
+        "##############",
+        "##############",
+        "##############",
+      ],
+    },
+    {
+      id: "e29", labelKey: "skL29", starTimes: [275, 415, 680],
+      art: [
+        ".....####.....",
+        "....##..##....",
+        "....###.#..#..",
+        "...##..###.##.",
+        "..##.....####.",
+        ".##......###..",
+        "#...###...###.",
+        "##..####....#.",
+        ".#.########..#",
+        "##############",
+        "##############",
+        "##############",
+        "##############",
+        "##############",
+      ],
+    },
+    {
+      id: "e30", labelKey: "skL30", starTimes: [290, 435, 715],
+      art: [
+        ".....####.....",
+        "....##..##....",
+        "....###.#..#..",
+        "...##..###.##.",
+        "..##.....####.",
+        ".##......###..",
+        "#...###...###.",
+        "##..####....#.",
+        ".#.########..#",
+        "#############.",
+        "##############",
+        "##############",
+        "##############",
+        "##############",
       ],
     },
   ];
@@ -702,7 +829,8 @@
 
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already own, so the eight original rung names stay in the shared
-   * dictionary and the twelve newer ones ride here. */
+   * dictionary and the twenty-two newer ones ride here. The summit keeps the
+   * range e24 named and climbs it. */
   App.addStrings({
     en: {
       "skL9": "Target",
@@ -721,6 +849,12 @@
       "skL22": "The Crossing",
       "skL23": "Storm Lantern",
       "skL24": "The Range",
+      "skL25": "Tree Line",
+      "skL26": "The Scree",
+      "skL27": "The High Camp",
+      "skL28": "The Glacier",
+      "skL29": "The Cornice",
+      "skL30": "The Summit",
     },
     zh: {
       "skL9": "同心靶",
@@ -739,6 +873,12 @@
       "skL22": "渡海",
       "skL23": "风灯",
       "skL24": "群山",
+      "skL25": "林线",
+      "skL26": "碎石坡",
+      "skL27": "高山营地",
+      "skL28": "冰川",
+      "skL29": "雪檐",
+      "skL30": "顶峰",
     },
   });
 

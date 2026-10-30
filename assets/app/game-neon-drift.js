@@ -205,6 +205,61 @@
       points: [{ x: 28, y: 384 }, { x: 84, y: 340 }, { x: 140, y: 384 }, { x: 196, y: 340 }, { x: 252, y: 384 }, { x: 308, y: 340 }, { x: 364, y: 296 }, { x: 204, y: 296 }, { x: 44, y: 296 }, { x: 14, y: 244 }, { x: 44, y: 192 }, { x: 206, y: 192 }, { x: 368, y: 192 }, { x: 398, y: 140 }, { x: 368, y: 88 }, { x: 204, y: 88 }, { x: 40, y: 88 }],
       pads: [],
     },
+    /* Twin slalom ranks, two wall gaps per rank. The second rank is entered
+     * from the outside of the first, so the exit of one gap sets the entry of
+     * the next on the 20px tape. Measured par 35.0 against n24's 28.6 over
+     * sixteen gates; removing the second rank drops the same lap to 24.0. */
+    {
+      id: "n25", labelKey: "nirZ25", width: 20, limit: 67, basePar: 35,
+      points: [{ x: 40, y: 360 }, { x: 96, y: 316 }, { x: 152, y: 360 }, { x: 208, y: 316 }, { x: 264, y: 360 }, { x: 320, y: 316 }, { x: 376, y: 360 }, { x: 404, y: 310 }, { x: 376, y: 260 }, { x: 320, y: 216 }, { x: 264, y: 260 }, { x: 208, y: 216 }, { x: 152, y: 260 }, { x: 96, y: 216 }, { x: 40, y: 260 }, { x: 20, y: 210 }, { x: 40, y: 160 }],
+      pads: [],
+    },
+    /* Six strips, five hairpins on a 66px pitch: every exit is the next apex's
+     * entry, and the 20px wall gap decides whether a pair can be straightened
+     * at all. Par 41.2 against 28.6 over twenty-six gates; widening the tape
+     * to 24 gives the reference 40.1, so the narrow gap is the lesson. */
+    {
+      id: "n26", labelKey: "nirZ26", width: 20, limit: 79, basePar: 41,
+      points: [{ x: 40, y: 40 }, { x: 96, y: 84 }, { x: 152, y: 40 }, { x: 208, y: 84 }, { x: 264, y: 40 }, { x: 320, y: 84 }, { x: 380, y: 40 }, { x: 404, y: 73 }, { x: 380, y: 106 }, { x: 210, y: 106 }, { x: 40, y: 106 }, { x: 16, y: 139 }, { x: 40, y: 172 }, { x: 210, y: 172 }, { x: 380, y: 172 }, { x: 404, y: 205 }, { x: 380, y: 238 }, { x: 210, y: 238 }, { x: 40, y: 238 }, { x: 16, y: 271 }, { x: 40, y: 304 }, { x: 210, y: 304 }, { x: 380, y: 304 }, { x: 404, y: 337 }, { x: 380, y: 370 }, { x: 210, y: 370 }, { x: 40, y: 370 }],
+      pads: [],
+    },
+    /* A bowtie whose crossing carries the only pad on the board. The racing
+     * line crosses it twice (36.5s and 44.3s in the measured lap), so the pad
+     * pays on both passes. Par 45.0 against 28.6 over twenty-two gates; moving
+     * the pad to a single prelude pass leaves par at 45.1 but slows the
+     * keyboard witness 18.8 -> 22.3, so the double tap is load-bearing. */
+    {
+      id: "n27", labelKey: "nirZ27", width: 22, limit: 86, basePar: 45,
+      points: [{ x: 20, y: 360 }, { x: 80, y: 320 }, { x: 140, y: 360 }, { x: 200, y: 320 }, { x: 260, y: 360 }, { x: 320, y: 320 }, { x: 380, y: 360 }, { x: 400, y: 300 }, { x: 340, y: 260 }, { x: 280, y: 300 }, { x: 220, y: 260 }, { x: 160, y: 300 }, { x: 100, y: 260 }, { x: 40, y: 300 }, { x: 20, y: 240 }, { x: 20, y: 160 }, { x: 20, y: 80 }, { x: 40, y: 40 }, { x: 250, y: 110 }, { x: 380, y: 180 }, { x: 380, y: 40 }, { x: 250, y: 110 }, { x: 100, y: 180 }],
+      pads: [{ x: 250, y: 110 }],
+    },
+    /* The whole 250 limit is spent before the first tooth: 320px of start
+     * straight, then three sawtooth ranks. Par 48.2 against 28.6 over
+     * twenty-six gates; cutting the straight (start at its far end) drops it
+     * to 45.9, so the run-up is the lesson, not the teeth alone. */
+    {
+      id: "n28", labelKey: "nirZ28", width: 20, limit: 92, basePar: 48,
+      points: [{ x: 40, y: 380 }, { x: 360, y: 380 }, { x: 400, y: 340 }, { x: 400, y: 300 }, { x: 340, y: 260 }, { x: 280, y: 300 }, { x: 220, y: 260 }, { x: 160, y: 300 }, { x: 100, y: 260 }, { x: 40, y: 300 }, { x: 20, y: 260 }, { x: 20, y: 220 }, { x: 40, y: 220 }, { x: 100, y: 180 }, { x: 160, y: 220 }, { x: 220, y: 180 }, { x: 280, y: 220 }, { x: 340, y: 180 }, { x: 400, y: 220 }, { x: 400, y: 180 }, { x: 400, y: 140 }, { x: 340, y: 100 }, { x: 280, y: 140 }, { x: 220, y: 100 }, { x: 160, y: 140 }, { x: 100, y: 100 }, { x: 40, y: 140 }],
+      pads: [],
+    },
+    /* The lap folds back and crosses its own bottom straight to get out: the
+     * shared waypoint at (283,360) is crossed twice, at the start and on the
+     * exit diagonal. Par 56.1 against 28.6 over twenty gates; stopping at the
+     * top-left removes the crossing and the lap falls to 37.8. */
+    {
+      id: "n29", labelKey: "nirZ29", width: 20, limit: 107, basePar: 56,
+      points: [{ x: 40, y: 360 }, { x: 96, y: 316 }, { x: 152, y: 360 }, { x: 208, y: 316 }, { x: 264, y: 360 }, { x: 283, y: 360 }, { x: 380, y: 360 }, { x: 380, y: 300 }, { x: 340, y: 260 }, { x: 380, y: 220 }, { x: 340, y: 180 }, { x: 380, y: 140 }, { x: 380, y: 40 }, { x: 320, y: 80 }, { x: 264, y: 40 }, { x: 208, y: 80 }, { x: 152, y: 40 }, { x: 96, y: 80 }, { x: 40, y: 40 }, { x: 283, y: 360 }, { x: 380, y: 396 }],
+      pads: [],
+    },
+    /* The finale chains it all: a four-rank comb, two pads on the racing line
+     * and a 22px tape, thirty gates. Par 59.3 against 28.6; flattening the
+     * second rank drops it to 48.3, and pulling both pads slows the keyboard
+     * witness 16.8 -> 18.2, so neither the gaps nor the boost is decoration. */
+    {
+      id: "n30", labelKey: "nirZ30", width: 22, limit: 113, basePar: 59,
+      points: [{ x: 44, y: 75 }, { x: 100, y: 45 }, { x: 156, y: 75 }, { x: 212, y: 45 }, { x: 268, y: 75 }, { x: 324, y: 45 }, { x: 380, y: 75 }, { x: 404, y: 110 }, { x: 380, y: 175 }, { x: 324, y: 145 }, { x: 268, y: 175 }, { x: 212, y: 145 }, { x: 156, y: 175 }, { x: 100, y: 145 }, { x: 44, y: 175 }, { x: 20, y: 210 }, { x: 44, y: 275 }, { x: 100, y: 245 }, { x: 156, y: 275 }, { x: 212, y: 245 }, { x: 268, y: 275 }, { x: 324, y: 245 }, { x: 380, y: 275 }, { x: 404, y: 310 }, { x: 380, y: 375 }, { x: 324, y: 345 }, { x: 268, y: 375 }, { x: 212, y: 345 }, { x: 156, y: 375 }, { x: 100, y: 345 }, { x: 44, y: 375 }],
+      pads: [{ x: 100, y: 45 }, { x: 324, y: 145 }],
+    },
   ];
 
   /* --- pure core ---------------------------------------------------------- */
@@ -609,7 +664,11 @@
    * tier was held to the same bar through the forge replay (tools/drift-forge.js,
    * same stepper, worst of three phase offsets for the best line variant):
    *   n21 15.5 vs 49.9   n22 13.2 vs 22.2   n23 11.3 vs 17.3   n24 17.0 vs 28.6
-   * All four clear with room, and no band was lifted to get there. Rule for later
+   * All four clear with room, and no band was lifted to get there. The 25-30
+   * summit was held to the same bar:
+   *   n25 14.2 vs 35.0   n26 28.3 vs 41.2   n27 18.8 vs 45.0
+   *   n28 22.6 vs 48.2   n29 26.4 vs 56.1   n30 16.8 vs 59.3
+   * All six clear, and no band was lifted to get there. Rule for later
    * passes: only ever lift a band a keyboard lap cannot reach - and re-run this
    * replay after any change to points, width, pads or the stepper. */
   function nirBands(course) {
@@ -1178,6 +1237,12 @@
       "nirZ22": "The Coil",
       "nirZ23": "The Comb",
       "nirZ24": "The Last Apex",
+      "nirZ25": "Twin Gaps",
+      "nirZ26": "Twin Apexes",
+      "nirZ27": "Double Tap",
+      "nirZ28": "Redline",
+      "nirZ29": "The Knot",
+      "nirZ30": "The Crucible",
       "nirClockLabel": "Clock",
       "nirGateLabel": "Gates",
       "nirScrapLabel": "Scrapes",
@@ -1228,6 +1293,12 @@
       "nirZ22": "收紧螺旋",
       "nirZ23": "梳齿长廊",
       "nirZ24": "终极弯心",
+      "nirZ25": "双缝穿行",
+      "nirZ26": "双重心弯",
+      "nirZ27": "二段加速",
+      "nirZ28": "红线",
+      "nirZ29": "回环结",
+      "nirZ30": "终局熔炉",
       "nirClockLabel": "计时",
       "nirGateLabel": "门",
       "nirScrapLabel": "撞墙",

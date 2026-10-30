@@ -6,13 +6,16 @@
  * answers it, so a route is proved by driving it - draws the encounter, answer
  * it or spend the turn on energy, bank the Evol skill when the gauge is full -
  * and asking how often a mission wins, and how often it wins inside the
- * three-star band. The engine's own numbers are copied here: move stats, the
- * match bonus and its chain, the pressure penalty, each partner's boost, and
- * the gates (energy above zero, trust at 24 or more, resonance at the target).
+ * three-star band. The engine's own numbers are copied here: the mission's
+ * starting strength (72 energy, 56 trust - startRoute's own values), the move
+ * stats, the match bonus and its chain, the pressure penalty, each partner's
+ * boost, and the gates (energy above zero, trust at 24 or more, resonance at
+ * the target).
  *
  * Usage:
- *   node tools/lds-forge.js list
- *   node tools/lds-forge.js forge
+ *   node tools/lds-forge.js list     measure every shipped route
+ *   node tools/lds-forge.js forge    print the tier rows the ladder shipped
+ *   node tools/lds-forge.js summit   the sweep that chose the summit economy
  */
 "use strict";
 
@@ -52,11 +55,12 @@ function clamp(value, min, max) {
 
 /* One mission. The policy: answer the encounter while the team can afford it,
  * spend a turn on energy when energy is running thin, and fire Evol whenever
- * the gauge is full - the three choices the module itself shows the player. */
+ * the gauge is full - the three choices the module itself shows the player.
+ * The mission starts at the strength startRoute deals: 72 energy, 56 trust. */
 function playRoute(api, route, partner, rng, policy) {
   let state = {
-    energy: 100,
-    trust: 100,
+    energy: 72,
+    trust: 56,
     resonance: 0,
     turn: 0,
     charge: 0,
@@ -109,15 +113,25 @@ const POLICIES = [
   { energyFloor: 42, trustFloor: 42 },
 ];
 
-/* Measure a route across every partner and every policy, over seeded draws. */
-function measure(api, route, trials) {
+/* The cut-bench hand: a rest-heavy crew that refills energy long before the
+ * expert floors ask for it. On a six-turn clock the spare turn forgives every
+ * extra recover; on the summit's five it does not - which is what makes the
+ * clock the load-bearing lever. */
+const NERVOUS = [{ energyFloor: 54, trustFloor: 44 }];
+
+/* Measure a route across every partner and every policy, over seeded draws.
+ * Reports the best win line and, separately, the best three-star line - the
+ * summit bands are rare enough that they no longer ride the win-best hand. */
+function measure(api, route, trials, policies) {
   let best = null;
-  api.partners.forEach(function (partner) {
-    POLICIES.forEach(function (policy) {
+  let bestThree = null;
+  (policies || POLICIES).forEach(function (policy) {
+    api.partners.forEach(function (partner) {
       let wins = 0;
       let three = 0;
       let two = 0;
-      for (let trial = 0; trial < (trials || 400); trial += 1) {
+      const total = trials || 400;
+      for (let trial = 0; trial < total; trial += 1) {
         const rng = mulberry(trial * 7919 + route.target * 31 + partner.id.length);
         const state = playRoute(api, route, partner, rng, policy);
         if (state.outcome !== "win") continue;
@@ -125,14 +139,67 @@ function measure(api, route, trials) {
         if (state.turn <= route.stars[0]) three += 1;
         if (state.turn <= route.stars[1]) two += 1;
       }
-      const total = trials || 400;
       const score = { wins: (100 * wins) / total, three: (100 * three) / total, two: (100 * two) / total };
       if (!best || score.wins > best.score.wins || (score.wins === best.score.wins && score.three > best.score.three)) {
         best = { partner: partner.id, policy: policy, score: score };
       }
+      if (
+        !bestThree || score.three > bestThree.score.three ||
+        (score.three === bestThree.score.three && score.wins > bestThree.score.wins)
+      ) {
+        bestThree = { partner: partner.id, policy: policy, score: score };
+      }
+    });
+  });
+  best.bestThree = bestThree;
+  return best;
+}
+
+/* The nervous hand's best win share over partners - the cut test's bench. */
+function nervousShare(api, route, trials) {
+  let best = 0;
+  api.partners.forEach(function (partner) {
+    NERVOUS.forEach(function (policy) {
+      let wins = 0;
+      const total = trials || 400;
+      for (let trial = 0; trial < total; trial += 1) {
+        const rng = mulberry(trial * 7919 + route.target * 31 + partner.id.length + policy.energyFloor * 131);
+        const state = playRoute(api, route, partner, rng, policy);
+        if (state.outcome === "win") wins += 1;
+      }
+      best = Math.max(best, (100 * wins) / total);
     });
   });
   return best;
+}
+
+function isSummit(route) {
+  return Number(route.id.slice(3)) >= 25;
+}
+
+/* The shipped bar: clear almost always, three-star line at least sometimes.
+ * The summit bar: the five-turn clock is allowed to bite the win share, but
+ * every rung must stay winnable, its three-star band reachable and rare, and
+ * the nervous cut hand must lose to its own six-turn twin. */
+function verdict(route, best, cut) {
+  if (isSummit(route)) {
+    const rare = best.bestThree.score.three > 0 && best.bestThree.score.three <= 30;
+    const ok = best.score.wins >= 60 && rare && (!cut || cut.six > cut.five);
+    return (ok ? "ok  " : "FAIL");
+  }
+  return best.score.wins >= 60 && best.score.three >= 8 ? "ok  " : "FAIL";
+}
+
+function measureLine(route, best) {
+  return (
+    "turns " + route.turns +
+    "  target " + route.target +
+    "  bands " + route.stars.join("/") +
+    "  wins " + best.score.wins.toFixed(0) + "%" +
+    "  3-star " + best.score.three.toFixed(0) + "%" +
+    "  2-star " + best.score.two.toFixed(0) + "%" +
+    "  (" + best.partner + ")"
+  );
 }
 
 function main() {
@@ -143,17 +210,19 @@ function main() {
     const t0 = Date.now();
     api.routes.forEach(function (route) {
       const best = measure(api, route, 400);
-      console.log(
-        (best.score.wins >= 60 && best.score.three >= 8 ? "ok  " : "FAIL") +
-          "  " + route.id +
-          "  turns " + route.turns +
-          "  target " + route.target +
-          "  bands " + route.stars.join("/") +
-          "  wins " + best.score.wins.toFixed(0) + "%" +
-          "  3-star " + best.score.three.toFixed(0) + "%" +
-          "  2-star " + best.score.two.toFixed(0) + "%" +
-          "  (" + best.partner + ")",
-      );
+      const cut = isSummit(route)
+        ? { five: nervousShare(api, route, 400), six: nervousShare(api, Object.assign({}, route, { turns: 6 }), 400) }
+        : null;
+      const cutLine = cut
+        ? "  cut " + cut.five.toFixed(0) + "%->" + cut.six.toFixed(0) + "%"
+        : "";
+      console.log(verdict(route, best, cut) + "  " + route.id + "  " + measureLine(route, best) + cutLine);
+      if (isSummit(route)) {
+        console.log(
+          "     best 3-star line: " + best.bestThree.score.three.toFixed(1) + "% of wins" +
+            " (" + best.bestThree.partner + ", wins " + best.bestThree.score.wins.toFixed(0) + "%)",
+        );
+      }
     });
     console.log("measured in " + (Date.now() - t0) + "ms");
     return;
@@ -163,7 +232,8 @@ function main() {
     /* The ladder continues the shipped shape: one more turn per route, ten more
      * resonance, and the bands sitting three, two and one turn under the budget
      * - the same offset every shipped route uses. 120 is the resonance ceiling,
-     * so the last route asks for nearly all of it. */
+     * so the last route asks for nearly all of it. The summit rows (25-30) are
+     * the five-turn economy the summit sweep chose. */
     const brief = [
       { id: "lds9", labelKey: "ldsRoute9", turns: 12, target: 120, stars: [9, 10, 11] },
       { id: "lds10", labelKey: "ldsRoute10", turns: 12, target: 116, stars: [9, 10, 11] },
@@ -181,18 +251,18 @@ function main() {
       { id: "lds22", labelKey: "ldsRoute22", turns: 6, target: 94, stars: [3, 4, 5] },
       { id: "lds23", labelKey: "ldsRoute23", turns: 6, target: 88, stars: [3, 4, 5] },
       { id: "lds24", labelKey: "ldsRoute24", turns: 6, target: 82, stars: [3, 4, 5] },
+      { id: "lds25", labelKey: "ldsRoute25", turns: 5, target: 84, stars: [3, 4, 5] },
+      { id: "lds26", labelKey: "ldsRoute26", turns: 5, target: 88, stars: [3, 4, 5] },
+      { id: "lds27", labelKey: "ldsRoute27", turns: 5, target: 96, stars: [3, 4, 5] },
+      { id: "lds28", labelKey: "ldsRoute28", turns: 5, target: 112, stars: [4, 5, 6] },
+      { id: "lds29", labelKey: "ldsRoute29", turns: 5, target: 116, stars: [4, 5, 6] },
+      { id: "lds30", labelKey: "ldsRoute30", turns: 5, target: 120, stars: [4, 5, 6] },
     ];
     brief.forEach(function (route) {
       const best = measure(api, route, 400);
       console.log(
         route.id +
-          ": turns " + route.turns +
-          ", target " + route.target +
-          ", bands " + route.stars.join("/") +
-          "  wins " + best.score.wins.toFixed(0) + "%" +
-          "  3-star " + best.score.three.toFixed(0) + "%" +
-          "  2-star " + best.score.two.toFixed(0) + "%" +
-          "  (" + best.partner + ")",
+          ": " + measureLine(route, best),
       );
       console.log(
         '    { id: "' + route.id + '", labelKey: "' + route.labelKey +
@@ -201,9 +271,58 @@ function main() {
       );
     });
   }
+
+  if (mode === "summit") {
+    /* The sweep that chose routes 25-30. The lever is the clock: every shipped
+     * route kept a sixth turn in reserve, and the summit spends it - five-turn
+     * missions with the gauge bought back up the marks 22-24 sold off (82, 88,
+     * 94) to the full 120 ceiling. The bands leave the shipped three/two/one
+     * offsets because a five-turn mission has no slack turn to price them
+     * under; the three-star line rides the three-turn chain while it pays
+     * (105 is the most three matched turns can bank) and walks to the fourth
+     * turn past 105. The grid below is what the sweep measured; the cut test
+     * restores the sixth turn on every rung and the nervous hand does strictly
+     * better each time, which is the proof the clock is the load-bearing lever. */
+    console.log("-- the sweep: five-turn candidates, expert bench (module start: 72 energy, 56 trust) --");
+    [82, 84, 88, 90, 94, 96, 100, 104, 105].forEach(function (target) {
+      const route = { id: "cand", labelKey: "x", turns: 5, target: target, stars: [3, 4, 5] };
+      const best = measure(api, route, 400);
+      console.log(
+        "  5t T" + target + " [3/4/5]: " + measureLine(route, best) +
+          " | best 3-star " + best.bestThree.score.three.toFixed(1) + "% (" + best.bestThree.partner + ")",
+      );
+    });
+    [104, 108, 110, 112, 114, 116, 118, 120].forEach(function (target) {
+      const route = { id: "cand", labelKey: "x", turns: 5, target: target, stars: [4, 5, 6] };
+      const best = measure(api, route, 400);
+      console.log(
+        "  5t T" + target + " [4/5/6]: " + measureLine(route, best) +
+          " | best 3-star " + best.bestThree.score.three.toFixed(1) + "% (" + best.bestThree.partner + ")",
+      );
+    });
+    console.log("-- the chosen six, with the cut test: nervous hand on five turns vs its six-turn twin --");
+    [
+      { id: "lds25", labelKey: "ldsRoute25", turns: 5, target: 84, stars: [3, 4, 5] },
+      { id: "lds26", labelKey: "ldsRoute26", turns: 5, target: 88, stars: [3, 4, 5] },
+      { id: "lds27", labelKey: "ldsRoute27", turns: 5, target: 96, stars: [3, 4, 5] },
+      { id: "lds28", labelKey: "ldsRoute28", turns: 5, target: 112, stars: [4, 5, 6] },
+      { id: "lds29", labelKey: "ldsRoute29", turns: 5, target: 116, stars: [4, 5, 6] },
+      { id: "lds30", labelKey: "ldsRoute30", turns: 5, target: 120, stars: [4, 5, 6] },
+    ].forEach(function (route) {
+      const best = measure(api, route, 400);
+      const five = nervousShare(api, route, 400);
+      const six = nervousShare(api, Object.assign({}, route, { turns: 6 }), 400);
+      console.log(
+        "  " + route.id + ": " + measureLine(route, best) +
+          " | best 3-star " + best.bestThree.score.three.toFixed(1) + "%" +
+          " | nervous " + five.toFixed(0) + "% on five turns, " + six.toFixed(0) + "% with the sixth back" +
+          (six > five ? "  cut-ok" : "  CUT FAILED"),
+      );
+    });
+  }
 }
 
-module.exports = { loadAll, measure, playRoute };
+module.exports = { loadAll, measure, playRoute, nervousShare, POLICIES, NERVOUS };
 
 if (require.main === module) {
   main();

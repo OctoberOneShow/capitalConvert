@@ -109,6 +109,32 @@
     /* Master grand conservatory: 3 plots open, premium 4.5x botanical harvest on
      * a 42-second clock, demanding balanced management to hit the 90,000 summit. */
     { id: "g24", labelKey: "gdnB24", cost: 700, crop: 3150, start: 2100, growMs: 42000, goal: 90000, starTimes: [480, 629, 850] },
+    /* ------------------------------------------------------------------
+     * The harvest-ledger summit (g25-g30). The pavilion arc had scaled the
+     * purse and the goal; this tier puts the garden on the books: every
+     * summit target is an exact number of harvests - goal = k x crop with
+     * k a whole number - so a perfect run crosses the line on a ripe plot
+     * and not a coin over it. The returns all stay fractional (no rung
+     * gives a whole number of seeds back, so none of them replays g8's
+     * triple ledger), the seed price and the target both climb on every
+     * rung, and the six beds keep the house habit of breaking one lever
+     * each: three plots at a mid return on a 39-second clock, a single
+     * six-and-two-thirds vine on an 84-second one, a four-plot rapid
+     * market at the thinnest summit return, a two-plot heavy terrace, a
+     * four-plot mid on a 26-second clock, and the capstone - one plot, a
+     * 96-second wait, the longest single round the garden has ever asked
+     * for, thirty-five heavy harvests to 210,000. Star bands keep the
+     * shipped pace: the greedy floor (App.gardenSecondsToGoal) clears the
+     * three-star line with the same double-digit headroom the pavilion
+     * arc ships at, and the two- and one-star lines stay at its 1.31x and
+     * 1.77x ratios.
+     * ------------------------------------------------------------------ */
+    { id: "g25", labelKey: "gdnB25", cost: 780, crop: 2500, start: 2340, growMs: 39000, goal: 105000, starTimes: [713, 934, 1262] },
+    { id: "g26", labelKey: "gdnB26", cost: 900, crop: 6000, start: 900, growMs: 84000, goal: 126000, starTimes: [767, 1005, 1358] },
+    { id: "g27", labelKey: "gdnB27", cost: 1000, crop: 2450, start: 4000, growMs: 15000, goal: 147000, starTimes: [446, 584, 789] },
+    { id: "g28", labelKey: "gdnB28", cost: 1150, crop: 6000, start: 2300, growMs: 58000, goal: 168000, starTimes: [662, 867, 1172] },
+    { id: "g29", labelKey: "gdnB29", cost: 1250, crop: 3000, start: 5000, growMs: 26000, goal: 189000, starTimes: [801, 1049, 1418] },
+    { id: "g30", labelKey: "gdnB30", cost: 1400, crop: 6000, start: 1400, growMs: 96000, goal: 210000, starTimes: [1424, 1865, 2520] },
   ];
 
   function gdnRipe(plots, index, now, bed) {
@@ -381,6 +407,27 @@
       "gdnB22": "古树盆景台",
       "gdnB23": "夜茉莉花格",
       "gdnB24": "空中植物殿",
+    },
+  });
+
+  /* The summit carries its own names: addStrings only fills keys i18n.js
+   * does not already hold, so the picker never prints a raw key. */
+  App.addStrings({
+    en: {
+      "gdnB25": "Ledger Row",
+      "gdnB26": "Wisteria Vault",
+      "gdnB27": "Glass Cloche",
+      "gdnB28": "Peony Terrace",
+      "gdnB29": "Starlight Nursery",
+      "gdnB30": "Celestial Orchard",
+    },
+    zh: {
+      "gdnB25": "\u8d26\u7c3f\u7530\u5784",
+      "gdnB26": "\u7d2b\u85e4\u7a79\u5e93",
+      "gdnB27": "\u73bb\u7483\u949f\u7f69",
+      "gdnB28": "\u7261\u4e39\u82b1\u575b",
+      "gdnB29": "\u661f\u5149\u82d7\u5703",
+      "gdnB30": "\u5929\u5883\u679c\u56ed",
     },
   });
 

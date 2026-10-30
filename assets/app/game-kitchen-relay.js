@@ -52,7 +52,7 @@
     pot: { id: "pot", nameKey: "kchRPot", price: 18, steps: [{ kind: "sear", held: 0.6, idle: 0.05 }, { kind: "chop", count: 3 }, { kind: "simmer", held: 0.4, idle: 0.09 }] },
   };
 
-  /* Twenty services: window, seeded queue, walking cost, rack size and the jam
+  /* Thirty services: window, seeded queue, walking cost, rack size and the jam
    * script. The starCovers band is filled in by kchBands from the scripted line,
    * and the chain runs in the order that line measures - 8, 10, 11, 11, 13, 14,
    * 15, 16, 17, 18 covers for the first ten, so svc3 sits ahead of svc2 because
@@ -111,6 +111,43 @@
     { id: "svc22", labelKey: "kchS22", window: 106, seed: 2222, count: 28, every: 4.2, jitter: 1, lead: 26, recipes: ["fillet", "duck", "garden", "sauce"], rack: 2, moveTime: 0.35, holdWin: 10, jams: [{ at: 36, station: "pan", need: 1.7 }, { at: 36, station: "board", need: 1.6 }, { at: 36, station: "pass", need: 1.6 }] },
     { id: "svc23", labelKey: "kchS23", window: 104, seed: 2323, count: 29, every: 4.1, jitter: 1, lead: 26, recipes: ["duck", "fillet", "garden", "sauce"], rack: 1, moveTime: 0.35, holdWin: 9, jams: [{ at: 32, station: "pan", need: 1.5 }, { at: 32, station: "board", need: 1.4 }, { at: 70, station: "pass", need: 1.6 }, { at: 70, station: "pan", need: 1.4 }] },
     { id: "svc24", labelKey: "kchS24", window: 100, seed: 2424, count: 30, every: 4, jitter: 1, lead: 25, recipes: ["duck", "sauce", "fillet", "garden"], rack: 1, moveTime: 0.35, holdWin: 8, jams: [{ at: 30, station: "pan", need: 1.6 }, { at: 30, station: "board", need: 1.5 }, { at: 30, station: "pass", need: 1.4 }, { at: 64, station: "pan", need: 1.6 }, { at: 64, station: "pass", need: 1.5 }] },
+
+    /* svc25-30: the fast pan. Every rung the pass has ever thrown leaves the
+     * cook in charge of when the hands leave the heat; the summit tier prices
+     * the leaving itself. `creep` multiplies how fast everything left on the
+     * pan keeps cooking unattended - the same number the pan face reads as
+     * its burn clock - and no rung before the summit carries the field, so
+     * v1-24 replay byte for byte as shipped. The ratchet climbs 1.2-1.75
+     * across the six, one notch a rung:
+     *   svc25 the fast pan alone on a calm board - the slack a sear has from
+     *     the moment it enters its band shrinks from 2.2s to 1.8s, and the
+     *     walk back from the pass is suddenly a bet;
+     *   svc26 the fast pan behind a jam - a pan jam holds the back half, and
+     *     the seconds it costs are seconds a resting sear no longer has;
+     *   svc27 the fast pan on a single rack - the rescue valve holds one
+     *     dish, so a loose sear waiting for the rack is a sear still cooking;
+     *   svc28 the fast pan on the six second hold - parking was already a
+     *     loss, and now the pan will not wait for the plate either;
+     *   svc29 the fast pan behind a long walk - 0.45s of dead hands per
+     *     station change stretches every rescue past what a 1.6x pan will
+     *     forgive, with the deep tier's board-and-pass pile-up on top;
+     *   svc30 the summit - the fastest arrivals, the tightest window, the
+     *     triple pile-up the deep tier closed on with a late pass jam behind
+     *     it, and the 1.75x pan under all of it.
+     * Bands are measured off the plan the way the shipped rungs were, never
+     * guessed: on each rung's own seed the game's own chef covers 13 of 24,
+     * 14 of 26, 14 of 28, 8 of 26, 16 of 28 and 10 of 30 - each rung's own
+     * three-star line - and the same chef on the no-creep twin of the same
+     * rung covers 20, 17, 21, 21, 20 and 13, so the creep is what holds the
+     * pass back on every rung. The tightest burn clock a pan face can show
+     * falls rung over rung, 1.79s to 1.23s, every one under the shipped
+     * 2.15s, and the one-star band survives four probe seeds on every rung. */
+    { id: "svc25", labelKey: "kchS25", window: 110, seed: 2525, count: 24, every: 4.4, jitter: 1, lead: 28, recipes: ["garden", "fillet", "duck", "sauce"], rack: 2, moveTime: 0.35, holdWin: 12, jams: [], creep: 1.2 },
+    { id: "svc26", labelKey: "kchS26", window: 106, seed: 2626, count: 26, every: 4.2, jitter: 1, lead: 30, recipes: ["garden", "sauce", "duck", "fillet"], rack: 2, moveTime: 0.3, holdWin: 14, jams: [{ at: 52, station: "pan", need: 1.5 }], creep: 1.3 },
+    { id: "svc27", labelKey: "kchS27", window: 104, seed: 2727, count: 28, every: 3.9, jitter: 1, lead: 26, recipes: ["garden", "garden", "duck", "sauce"], rack: 1, moveTime: 0.35, holdWin: 12, jams: [], creep: 1.4 },
+    { id: "svc28", labelKey: "kchS28", window: 106, seed: 2828, count: 26, every: 4.2, jitter: 1, lead: 26, recipes: ["fillet", "garden", "duck", "garden"], rack: 2, moveTime: 0.3, holdWin: 6, jams: [], creep: 1.5 },
+    { id: "svc29", labelKey: "kchS29", window: 104, seed: 2929, count: 28, every: 4.1, jitter: 1, lead: 28, recipes: ["garden", "garden", "fillet", "sauce"], rack: 2, moveTime: 0.45, holdWin: 16, jams: [{ at: 36, station: "board", need: 1.5 }, { at: 36, station: "pass", need: 1.4 }], creep: 1.6 },
+    { id: "svc30", labelKey: "kchS30", window: 100, seed: 3030, count: 30, every: 4, jitter: 1, lead: 25, recipes: ["garden", "fillet", "duck", "sauce"], rack: 3, moveTime: 0.35, holdWin: 12, jams: [{ at: 30, station: "pan", need: 1.6 }, { at: 30, station: "board", need: 1.5 }, { at: 30, station: "pass", need: 1.4 }, { at: 70, station: "pass", need: 1.6 }], creep: 1.75 },
   ];
 
   var kchQuiet = null;
@@ -265,7 +302,8 @@
     return kchAllAccepted(tk) && !kchChopWanted(tk) && !kchHeatWanted(tk);
   }
 
-  function kchBuildSteps(recipe) {
+  function kchBuildSteps(recipe, creep) {
+    var rate = Number(creep) > 0 ? Number(creep) : 1;
     var list = [];
     for (var i = 0; i < recipe.steps.length; i += 1) {
       var src = recipe.steps[i];
@@ -274,7 +312,7 @@
         index: i, kind: src.kind, station: kind.station, word: kind.word,
         count: Math.max(1, Math.round(Number(src.count) || 4)), presses: 0, value: 0,
         held: Math.max(0.01, Number(src.held) || kind.held || 0.2),
-        idle: Math.max(0.01, Number(src.idle) || kind.idle || 0.08),
+        idle: Math.max(0.01, (Number(src.idle) || kind.idle || 0.08) * rate),
         ok: kind.ok, perfect: kind.perfect, started: false, offHeat: false, ruined: "",
       });
     }
@@ -286,7 +324,10 @@
   }
 
   /* Seeded ticket queue: arrival, deadline and recipe all come from the level
-   * seed, so the same service always opens the same way. */
+   * seed, so the same service always opens the same way. `creep` - a level
+   * that carries it multiplies how fast everything left on the pan keeps
+   * cooking unattended, so the slack a dish has once it reaches its band
+   * shrinks. A level without the field cooks exactly as shipped. */
   function kchBuildTickets(level) {
     var rng = kchRng(level.seed);
     var ids = level.recipes && level.recipes.length ? level.recipes : ["garden"];
@@ -299,7 +340,7 @@
       var work = Math.max(0, recipe.steps.length - 1) * 5;
       list.push({
         id: "T" + (i + 1), number: i + 1, recipeId: recipe.id, nameKey: recipe.nameKey,
-        price: Number(recipe.price) || 10, steps: kchBuildSteps(recipe), arrive: clock,
+        price: Number(recipe.price) || 10, steps: kchBuildSteps(recipe, level.creep), arrive: clock,
         due: clock + (Number(level.lead) || 30) + work, arrived: false, status: "open",
         plated: false, platedAt: 0, restedAt: 0, cold: false, tipValue: 0, gone: "",
       });
@@ -1249,6 +1290,8 @@
       "kchS19": "One Rack", "kchS20": "The Full House",
       "kchS21": "The Pile-Up", "kchS22": "Three Lines Down",
       "kchS23": "The Long Pile-Up", "kchS24": "Blackout Night",
+      "kchS25": "The Fast Pan", "kchS26": "The Stolen Second", "kchS27": "Nowhere to Rest",
+      "kchS28": "Burnt or Cold", "kchS29": "The Long Walk Back", "kchS30": "The Last Order",
       "kchRGarden": "garden salad",
       "kchRFillet": "seared fillet",
       "kchRDuck": "duck with orange",
@@ -1351,6 +1394,8 @@
       "kchS19": "单层晾架", "kchS20": "满座之夜",
       "kchS21": "双灶同堵", "kchS22": "三线齐卡",
       "kchS23": "连环堵灶", "kchS24": "大堵塞之夜",
+      "kchS25": "急火灶台", "kchS26": "堵灶急火", "kchS27": "无处落架",
+      "kchS28": "不凉就糊", "kchS29": "折返路长", "kchS30": "收官之夜",
       "kchRGarden": "田园沙拉",
       "kchRFillet": "香煎鱼排",
       "kchRDuck": "橙香鸭胸",
@@ -1459,6 +1504,7 @@
         "Twist: everything on the heat keeps cooking while your hands are somewhere else, so the sauce you left to save another dish is the one that crosses into burnt.",
         "Rescue: a sear that is in its band but not yet dinner comes off the heat onto the rack - the rack is small, its capacity changes service to service, and resting food still goes cold.",
         "Scoring: paid tickets are covers, a step stopped inside its perfect band pays tips, and a burnt or walked ticket costs points plus one of your three chances.",
+        "Summit: services 25-30 turn up the pan itself - a level's creep dial multiplies how fast everything left on the heat keeps cooking unattended, so the slack a dish had in its band shrinks rung by rung, and the last service turns it all the way up behind the tightest window, the fastest arrivals and a triple jam.",
       ],
       zh: [
         "目标：在两分钟的服务结束前尽可能多出单，同时别连丢三张单。",
@@ -1466,6 +1512,7 @@
         "关键：你走开的时候锅上照样在熟，为了救另一道菜而离开的那几秒，正好会把酱汁煎糊。",
         "抢救：已经到位但整道菜还没做完的，要离火放上保温架 - 架子很小，每场服务能放几份都写在保温架那一行，放着不管一样会凉。",
         "计分：结账的单据数就是出单数，步骤停在完美区间里给小费，煎糊或超时要扣分并吃掉三次机会里的一次。",
+        "巅峰段：第 25-30 场把灶火本身调快——每场的 creep 系数会乘大离手后锅上继续自熟的速度，步骤在合格区间里的余量一关比一关窄，最后一场在最紧的时间、最快的来单和三灶齐堵之下把它开到最大。",
       ],
     },
   });

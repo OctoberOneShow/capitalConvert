@@ -149,7 +149,7 @@
     warden: { key: "audFoeWarden", gl: "#", hp: 22, soak: 3, pattern: [{ k: "hit", n: 6 }, { k: "rend", n: 5 }, { k: "guard", n: 5 }] }
   };
 
-  /* Twenty-four runs: each level owns its lot pool, its rivals' nerve, its
+  /* Thirty runs: each level owns its lot pool, its rivals' nerve, its
    * purse and its doors, so the three pressures (greedy rivals, jockeys, rests)
    * stack. `buff` is the extra knob the back half of the ladder uses: it bolts
    * hit points onto every foe behind a door, so a late run demands a harder kit
@@ -238,7 +238,7 @@
     /* The fuse tier. Every rung above sat the shipped sixteen-round door cap, so
      * a party that could not break a door could at least outlast it, and the
      * lesson the ladder taught was to hoard: coins are the score and the only
-     * healing. These four rungs spend the one lever left - time. `cap` authors
+     * healing. These four rungs spend the lever the ladder had left - time. `cap` authors
      * the door's fuse in rounds, twelve down to eight, and structurally nothing
      * before the tier carries the field. The counter's question changes for the
      * last time: the coins the ladder taught you to hoard now have to become
@@ -261,7 +261,66 @@
       restPrice: 10, restHeal: 9, rests: 2, rivalPurse: 78, greed: 1.34, jockey: 1.5, miser: 0.76, miserRaises: 3 },
     { id: "a24", labelKey: "audR24", twistKey: "audTwist24", seed: 20261218, purse: 84, hp: 44, slots: 5, step: 2, reserve: 1.45, cap: 8, buff: 2,
       pool: ["dirk", "axe", "buckler", "vial", "goad", "lantern"], packs: [["warden"], ["brute", "brute", "hook"], ["warden", "warden", "brute"]],
-      restPrice: 11, restHeal: 9, rests: 2, rivalPurse: 100, greed: 1.4, jockey: 1.6, miser: 0.8, miserRaises: 3 }
+      restPrice: 11, restHeal: 9, rests: 2, rivalPurse: 100, greed: 1.4, jockey: 1.6, miser: 0.8, miserRaises: 3 },
+    /* The summit tier. The fuse tier put time on the doors; these six put it on
+     * the sales. `hammer` authors the house bell: after that many paddles the
+     * lot closes with the top bid taking it - no last seat standing required -
+     * and structurally nothing before the tier carries the field, so every
+     * shipped sale resolves exactly as it always did. The counter's question
+     * changes one last time: a paddle is now a bid and a tick of the bell, so a
+     * contested crate can close on a rival's raise at a price you would have
+     * paid, and the coins you held back cannot buy it back. The bands stay
+     * lines the planner replayed through auctionRound, audFightRound and
+     * audAdvance, never a guess: the bell caps contested climbs, so the
+     * summit's richest line keeps 7, 11, 9, 12, 5 and 3 coins of purses 68,
+     * 68, 70, 72, 72 and 88 - 83 to 97 per cent burned, back up from the fuse
+     * tier's 8, 5, 4 and 8 because a capped sale sells cheaper, then down
+     * again to the deepest burn in the game as the bell walks fourteen paddles
+     * to eight. The bell is load-bearing: of the gate bench's forty seeded
+     * hands a rung, 8, 7, 9, 9, 11 and 8 that clear the same rung with the
+     * bell cut out are driven off it, and 8, 11, 9, 6, 8 and 5 only clear WITH
+     * the bell, because a sale the wide calendar prices out of their purse
+     * closes affordable under it. */
+    /* The First Bell: the gentlest sale of the tier, and the lesson is the
+     * ladder's own arithmetic turned upside down - fourteen paddles is long
+     * enough to outbid the way you always have and short enough that the
+     * greediest paddle, not the last one standing, takes the crate. */
+    { id: "a25", labelKey: "audR25", twistKey: "audTwist25", seed: 20261223, purse: 68, hp: 44, slots: 5, step: 2, reserve: 1.35, cap: 10, buff: 2, hammer: 14,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern"], packs: [["adder", "adder"], ["brute", "hook"], ["warden", "brute"]],
+      restPrice: 10, restHeal: 9, rests: 2, rivalPurse: 80, greed: 1.4, jockey: 1.55, miser: 0.78, miserRaises: 3 },
+    /* The Setter's Tally: Margra only lifts a paddle while you stand, so under
+     * the twelve-paddle bell every paddle you raise is one she cannot, and
+     * every fold hands her the count for free. */
+    { id: "a26", labelKey: "audR26", twistKey: "audTwist26", seed: 20270105, purse: 68, hp: 44, slots: 5, step: 2, reserve: 1.35, cap: 9, buff: 2, hammer: 12,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "canteen"], packs: [["hook", "adder"], ["brute", "brute"], ["warden", "brute"]],
+      restPrice: 10, restHeal: 8, rests: 2, rivalPurse: 80, greed: 1.4, jockey: 1.7, miser: 0.7, miserRaises: 2 },
+    /* The Bell and the Miser: Ost lifts five paddles at nearly the stated
+     * worth, so his spree alone walks a contested sale to the eleven-paddle
+     * bell and closes it before your price is ready - the fuse tier's shield
+     * lesson in auction form. */
+    { id: "a27", labelKey: "audR27", twistKey: "audTwist27", seed: 20270116, purse: 70, hp: 44, slots: 5, step: 2, reserve: 1.3, cap: 9, buff: 2, hammer: 11,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern", "canteen"], packs: [["adder", "adder"], ["warden", "hook"], ["brute", "brute", "hook"]],
+      restPrice: 10, restHeal: 9, rests: 2, rivalPurse: 83, greed: 1.3, jockey: 1.45, miser: 0.9, miserRaises: 5 },
+    /* The Bell and the Warden: ten paddles to the bell, four slots for six
+     * crates, and a warden behind both late doors, so every crate the bell
+     * hands to a rival is a strike the wardens will not forgive - the two
+     * clocks squeeze from both ends. */
+    { id: "a28", labelKey: "audR28", twistKey: "audTwist28", seed: 20270113, purse: 72, hp: 44, slots: 4, step: 2, reserve: 1.3, cap: 9, buff: 2, hammer: 10,
+      pool: ["dirk", "axe", "buckler", "vial", "goad", "lantern"], packs: [["brute", "adder"], ["warden", "brute"], ["warden", "warden"]],
+      restPrice: 10, restHeal: 9, rests: 2, rivalPurse: 85, greed: 1.35, jockey: 1.55, miser: 0.75, miserRaises: 3 },
+    /* One Fire Left: nine paddles to the bell, the warden at the first door
+     * again, and one rest on the whole run - what the bell takes from your kit
+     * or your hit points, no campfire gives back. */
+    { id: "a29", labelKey: "audR29", twistKey: "audTwist29", seed: 20270104, purse: 72, hp: 46, slots: 4, step: 2, reserve: 1.3, cap: 8, buff: 2, hammer: 9,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern"], packs: [["warden"], ["brute", "brute", "adder"], ["warden", "brute"]],
+      restPrice: 11, restHeal: 9, rests: 1, rivalPurse: 85, greed: 1.35, jockey: 1.5, miser: 0.72, miserRaises: 2 },
+    /* The Closing Bell: the summit. The doors breathe out to ten rounds, but
+     * the house closes every sale on the eighth paddle, eight crates crowd
+     * four slots and every reserve sits in the top of its band - the whole
+     * purse is one fast kit's price, and the ledger shuts at three coins. */
+    { id: "a30", labelKey: "audR30", twistKey: "audTwist30", seed: 20270311, purse: 88, hp: 46, slots: 4, step: 2, reserve: 1.45, cap: 10, buff: 2, hammer: 8,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern", "canteen"], packs: [["warden"], ["brute", "brute", "hook"], ["warden", "warden", "brute"]],
+      restPrice: 10, restHeal: 9, rests: 2, rivalPurse: 104, greed: 1.4, jockey: 1.6, miser: 0.8, miserRaises: 3 }
   ];
 
   function audInt(value) {
@@ -465,7 +524,13 @@
     }
     lot.done = true;
     lot.winner = live.length === 1 ? live[0] : -1;
-    var winner = lot.winner;
+    audSettleLot(run, lot);
+  }
+
+  /* Every settlement, from whatever close reached it: the winner pays the
+   * standing price and the crate goes into the kit that has room for it. */
+  function audSettleLot(run, lot) {
+    var winner = audInt(lot.winner);
     var item = audItem(lot.item);
     var price = winner >= 0 ? audInt(lot.price) : 0;
     if (winner === 0) {
@@ -528,6 +593,40 @@
     return next <= ceiling;
   }
 
+  /* The house bell a sale sits under: the shipped sale has no bell, so rungs
+   * 1-24 leave `hammer` off and this seats the shipped sale guard. The
+   * summit's rungs author fourteen paddles down to eight. Reads a level or a
+   * live run, so the panel, the planner and the checks all ask once. */
+  function audHammerOf(input) {
+    var def = input && input.level ? input.level : input;
+    var hammer = audInt(def && def.hammer);
+    return hammer > 0 ? hammer : AUD_SALE_CAP;
+  }
+
+  /* The bell that ends a sale early: after the authored count of paddles the
+   * house closes the lot and the top bid takes it, no last seat standing
+   * required - the paddle that rang the bell is the standing price, and its
+   * seat pays it. False wherever no hammer is authored, so every shipped rung
+   * resolves exactly as it always did. */
+  function audRingBell(run, lot, seat) {
+    var authored = audInt(run.level.hammer);
+    if (authored <= 0) {
+      return false;
+    }
+    var raises = 0;
+    for (var i = 0; i < 4; i += 1) {
+      raises += audInt(lot.counts[i]);
+    }
+    if (raises < authored) {
+      return false;
+    }
+    lot.done = true;
+    lot.winner = audInt(seat);
+    lot.why = "bell";
+    audSettleLot(run, lot);
+    return true;
+  }
+
   /* One sale, played from the standing lot state. bids is the player's own line
    * for this lot: every entry is the raise they place on their next turn and a
    * zero entry means they pass. The rival seats answer with their policies, so
@@ -563,10 +662,16 @@
           continue;
         }
         audRaise(lot, 0, bid);
+        if (audRingBell(run, lot, 0)) {
+          break;
+        }
         continue;
       }
       if (audRivalBid(run, lot, lot.turn)) {
         audRaise(lot, lot.turn, lot.step);
+        if (audRingBell(run, lot, lot.turn)) {
+          break;
+        }
       } else {
         audFoldSeat(run, lot, lot.turn, "plan");
       }
@@ -585,8 +690,9 @@
 
   /* The fuse a door sits on: the shipped sixteen-round cap unless the rung
    * authors its own count. Rungs 1-20 leave `cap` off and keep the shipped
-   * calendar; the fuse tier's rungs carry twelve down to eight. Reads a level
-   * or a live run, so the panel, the planner and the checks all ask once. */
+   * calendar; the fuse tier's rungs carry twelve down to eight and the
+   * summit's carry their own down to the fuse tier's floor. Reads a level or
+   * a live run, so the panel, the planner and the checks all ask once. */
   function audCapOf(input) {
     var def = input && input.level ? input.level : input;
     var cap = audInt(def && def.cap);
@@ -1528,12 +1634,13 @@
         portraitIcon.appendChild(audIcon(ispec[0], ispec[1], 78));
       }
       /* The ladder ticks: one rung for every paddle raised on this lot, the
-       * newest ones stamped in as they land. */
-      var rungs = 0;
+       * newest ones stamped in as they land. Under a house bell the same count
+       * is the sale's own fuse, so the band line prints what is left. */
+      var raises = 0;
       for (var r = 0; r < 4; r += 1) {
-        rungs += audInt(run.lot.counts[r]);
+        raises += audInt(run.lot.counts[r]);
       }
-      rungs = Math.min(rungs, 14);
+      var rungs = Math.min(raises, 14);
       if (ladder.__count !== rungs) {
         var prevCount = ladder.__count || 0;
         ladder.textContent = "";
@@ -1554,7 +1661,8 @@
       }
       lotHead.textContent = t("audLotHead", { n: seen, total: lots, name: t(item.key) });
       lotFx.textContent = t("audLotFx", { text: t(item.fx, { n: audInt(item.fxv) }) });
-      lotBand.textContent = t("audLotBand", { low: coins(item.band[0]), high: coins(item.band[1]), reserve: coins(run.lot.reserve) });
+      lotBand.textContent = t("audLotBand", { low: coins(item.band[0]), high: coins(item.band[1]), reserve: coins(run.lot.reserve) }) +
+        (audInt(level.hammer) > 0 ? " " + t("audBellLine", { n: audInt(level.hammer), left: Math.max(0, audInt(level.hammer) - raises) }) : "");
       lotPrice.textContent = run.lot.done
         ? t("audSaleDone", { who: run.sale && run.sale.winner >= 0 ? seatName(run.sale.winner) : t("audNobody"), n: coins(run.sale ? run.sale.price : 0) })
         : t("audPriceNow", { n: coins(run.lot.price), step: t("audBidStep", { n: coins(bidAmount()) }), top: topBidder() });
@@ -1961,6 +2069,12 @@
       "audR22": "The Fuse and the Shield",
       "audR23": "The Fuse and the Fang",
       "audR24": "The Last Fuse",
+      "audR25": "The First Bell",
+      "audR26": "The Setter's Tally",
+      "audR27": "The Bell and the Miser",
+      "audR28": "The Bell and the Warden",
+      "audR29": "One Fire Left",
+      "audR30": "The Closing Bell",
       "audTwist1": "three honest lots, one soft door",
       "audTwist2": "Margra sets every price against you",
       "audTwist3": "the healer's vial is in the pool and a rest decides the run",
@@ -1985,6 +2099,12 @@
       "audTwist22": "the fuse burns ten rounds and every door braces behind a shield: guard soaks your strikes, so a blunt kit can no longer outlast anything",
       "audTwist23": "nine rounds to a door and the adders bite in packs: mending keeps the party standing, but only damage beats the bell",
       "audTwist24": "the fuse is down to eight rounds, the warden holds the first door, and every reserve sits in the top of its band - the whole purse is the price of one fast kit",
+      "audTwist25": "every sale now sits under a house bell: after fourteen paddles the lot closes and the top bid takes it, so a paddle you hold back can hand the crate to a rival at your own price",
+      "audTwist26": "the bell falls after twelve paddles and Margra lifts hers only while you stand: your paddles spend the bell on your prices, and every fold spends it on hers for free",
+      "audTwist27": "eleven paddles to the bell and Ost lifts five of them at nearly the stated worth: his spree walks a contested sale to the bell and closes it before your price is ready",
+      "audTwist28": "ten paddles to the bell, four slots for six crates, and a warden behind both late doors: every crate the bell hands to a rival is a strike the wardens will not forgive",
+      "audTwist29": "nine paddles to the bell, the warden holds the first door again, and one rest on the whole run - what the bell takes from your kit, no campfire gives back",
+      "audTwist30": "the doors breathe out to ten rounds but the house closes every sale on the eighth paddle: eight crates crowd four slots and the whole purse is one fast kit's price - the ledger shuts at three coins",
       "audItDirk": "Iron Dirk",
       "audItAxe": "Splitter Axe",
       "audItBuckler": "Tin Buckler",
@@ -2036,6 +2156,7 @@
       "audLotHead": "Lot {n} of {total}: {name}",
       "audLotFx": "Effect: {text}.",
       "audLotBand": "Stated value {low} to {high}. Reserve {reserve}.",
+      "audBellLine": "The house bell falls after {n} paddles: {left} left on this lot.",
       "audPriceNow": "Price now {n}. Your raise {step}. Top bid: {top}.",
       "audSaleDone": "Sold to {who} for {n}.",
       "audYourKit": "Kit ({count}): {items}.",
@@ -2104,7 +2225,7 @@
       "audLostHp": "The party fell at encounter {n}. Run {seed} replays this auction - pass more and spend it on rests.",
       "audLostStall": "Encounter {n} would not break: {cap} rounds and the door still stood. Run {seed} - your kit was too blunt to clear it.",
       "audNextRun": "Next run unlocked.",
-      "audAllRuns": "All twenty-four runs cleared.",
+      "audAllRuns": "All thirty runs cleared.",
       "audBands": "Three stars keeps {three}; one star keeps {one}.",
       "audBest": "Best keep: {n}.",
       "audHint": "Passing is a bid too: every coin left between encounters buys the only healing the run has.",
@@ -2136,6 +2257,12 @@
       "audR22": "引线与盾",
       "audR23": "引线与毒牙",
       "audR24": "最后的引线",
+      "audR25": "第一声铃",
+      "audR26": "设局者的账数",
+      "audR27": "铃与吝啬鬼",
+      "audR28": "铃与狱卒",
+      "audR29": "只剩一堆火",
+      "audR30": "打烊铃",
       "audTwist1": "三件实在货，一扇软门",
       "audTwist2": "玛格丽特专门针对你抬价",
       "audTwist3": "治疗师小瓶在货架上，一次扎营决定成败",
@@ -2160,6 +2287,12 @@
       "audTwist22": "引线只烧十轮，而每道门后都架着盾：架防会吞掉你的劈砍——钝装备再也拖不垮任何东西",
       "audTwist23": "每扇门只有九轮，蝰蛇还成群撕咬：治疗能让队伍站着，但只有输出才赶得上钟声",
       "audTwist24": "引线只剩八轮，狱卒守在头一道门后，底价又都贴着价位带顶端——整个钱袋就是一套快刀的价钱",
+      "audTwist25": "每场拍卖现在都压着一口宅铃：举满十四块牌，货物落槌，当场价最高者得——你攥着不举的那块牌，可能正以你本来肯出的价钱把货送到对手席上",
+      "audTwist26": "铃在第十二块牌落下，而玛格丽特只在你还在场时举牌：你的牌为你的价钱烧掉铃数，你一撤场，她的牌就免费替她烧",
+      "audTwist27": "十一块牌落铃，而奥斯特几乎贴着标称价值连举五块：他这一阵挥霍会把竞拍直接推到铃前，赶在你的价钱凑好之前落槌",
+      "audTwist28": "十块牌落铃，四个格子装六件货，而最后两道门后各站着一名狱卒：铃替对手接走的每一件货，都是狱卒不会轻饶的那一记劈砍",
+      "audTwist29": "九块牌落铃，狱卒再度镇守头一道门，而整趟只有一次扎营——铃从你的装备里拿走什么，营火就还不回什么",
+      "audTwist30": "门后的引线放宽到十轮，可宅子在第八块牌就替每场拍卖落槌：八件货挤四个格子，整个钱袋就是一套快刀的价钱——账簿在三枚钱币时合上",
       "audItDirk": "铁匕首",
       "audItAxe": "劈裂斧",
       "audItBuckler": "锡圆盾",
@@ -2211,6 +2344,7 @@
       "audLotHead": "第 {n} 件，共 {total} 件：{name}",
       "audLotFx": "效果：{text}。",
       "audLotBand": "标称价值 {low} 至 {high}。底价 {reserve}。",
+      "audBellLine": "宅铃在 {n} 块牌后落下：这件货还剩 {left} 块。",
       "audPriceNow": "当前价 {n}。你的加价 {step}。最高叫价：{top}。",
       "audSaleDone": "{who}以 {n} 拍得。",
       "audYourKit": "装备（{count}）：{items}。",
@@ -2279,7 +2413,7 @@
       "audLostHp": "队伍倒在第 {n} 关。种子 {seed} 可完整重放这趟拍卖——多放弃几次，把钱留给扎营。",
       "audLostStall": "第 {n} 关打不穿：{cap} 轮过去门还立着。种子 {seed}——你的装备太钝，啃不下它。",
       "audNextRun": "解锁下一趟拍卖。",
-      "audAllRuns": "二十四趟拍卖全部打通。",
+      "audAllRuns": "三十趟拍卖全部打通。",
       "audBands": "三星需要剩下 {three}；一星只需剩下 {one}。",
       "audBest": "最佳结余：{n}。",
       "audHint": "放弃也是一种出价：关卡之间剩下的每一枚钱币，都是这趟旅程唯一的医术。",
@@ -2318,8 +2452,9 @@
         "Rivals: Greed the Cox bids until he cannot pay, Margra the Setter only raises while you are still in and quits the moment you do, Ost the Miser lifts a set number of paddles at his own share of the worth and then hoards - and each run sets that number and that share.",
         "Fight: foes telegraph their intent - hits, bites, guards and rends. Strike, Brace and Patch cost the round's actions, and 16 rounds without a break drives you off.",
         "Rest: coins only turn into healing between encounters, at the run's price per rest - take every lot and you will meet the last door bleeding.",
-        "Ladder: twenty-four runs, from Stall Fares to The Last Fuse, and every rung's stars are the planner's own measured line - a clear that keeps coins burns four in ten of the purse at the front of the ladder and twenty-six in twenty-seven by The Last Ledger.",
+        "Ladder: thirty runs, from Stall Fares to The Closing Bell, and every rung's stars are the planner's own measured line - a clear that keeps coins burns four in ten of the purse at the front of the ladder and twenty-six in twenty-seven by The Last Ledger.",
         "New tier: the deep halls sit on a fuse - twelve rounds at the Twelve-Round Bell, eight at The Last Fuse - so a party that cannot break a door is driven off it, and the coins the first twenty runs taught you to hoard have to become damage.",
+        "Summit: the last six runs put a house bell on every sale - after so many paddles the lot closes and the top bid takes it - so a paddle is a bid and a tick of the bell at once, fourteen paddles at The First Bell falling to eight at The Closing Bell, and a crate you lose to the bell is a strike the doors will miss.",
       ],
       zh: [
         "目标：让队伍活着打通这趟拍卖的三个关卡，并且尽量把钱留在袋里——终局钱袋就是分数；星级由导出的规划器实测得出，同一个种子完全重放同一趟拍卖。",
@@ -2328,8 +2463,9 @@
         "对手：贪心的科克斯一直叫到付不起；设局的玛格丽特只在你还在场时抬价，你一撤她立刻收手；吝啬的奥斯特只按本趟设定的次数举牌，只出他自己那一份价值，之后就抱着钱不动——举几次、出几成，每一趟都由这一趟的规则定。",
         "战斗：敌人会预告意图——重打、撕咬、架防、撕裂。劈砍、格挡、包扎消耗本轮行动数，16 轮打不穿就被赶下门。",
         "扎营：钱币只在关卡之间变成治疗，每处营地按本趟价格收费——每件货物都抢，最后一道门你就会流着血进去。",
-        "阶梯：从摊位小市到最后的引线一共二十四趟，每一趟的星级都由规划器实测得出——一次合法的通关，在阶梯前半段要烧掉钱袋的十之三四，到最后的账簿要烧掉二十七份里的二十六。",
+        "阶梯：从摊位小市到打烊铃一共三十趟，每一趟的星级都由规划器实测得出——一次合法的通关，在阶梯前半段要烧掉钱袋的十之三四，到最后的账簿要烧掉二十七份里的二十六。",
         "新阶梯：深层关卡都装上了引线——十二轮的钟声处十二轮，最后的引线处只剩八轮——打不穿门的队伍会被赶下门去，前二十关教你攒下的钱，如今必须买成输出。",
+        "巅峰段：最后六趟的每场拍卖都压着一口宅铃——举满规定块数货物即落槌、当场价最高者得——于是每块牌既是出价也是铃上的一响，从第一声铃的十四块一路收到打烊铃的八块，而输给铃的那件货，就是门后缺的那一记输出。",
       ]
     }
   });
@@ -2347,6 +2483,7 @@
   App.auctionTakeAll = audTakeAll;
   App.auctionBand = audBand;
   App.auctionCap = audCapOf;
+  App.auctionHammer = audHammerOf;
   App.auctionKit = audKit;
   App.auctionIntent = audIntent;
   App.auctionEnter = audEnter;

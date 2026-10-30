@@ -3,7 +3,7 @@
 /* game-ember-delve: the deep tier's bands are measured by seeded hands, and
  * its one new lesson - the drain - is proved three ways.
  *
- * The four new rungs (d21-d24) carry `vitals` and open the delve already
+ * The four deep rungs (d21-d24) carry `vitals` and open the delve already
  * wounded - 24, 22, 20, 18 against the shipped 30 - so rest stops being a
  * luxury a clean route can skip and becomes a budget the climb spends. The
  * gate replays whole delves through the game's own exported engine
@@ -19,32 +19,57 @@
  * straight back when the drain is cut out of a copy of the same rows, so the
  * lesson costs the bench something rather than decorating it. The engine
  * itself is then booted on the real panel with the campaign progressed past
- * d20, and the vitals gauge reads 24/24 where a shipped rung reads 30/30. */
+ * d20, and the vitals gauge reads 24/24 where a shipped rung reads 30/30.
+ *
+ * The summit tier (d25-d30) gets the same treatment, plus the plate: the
+ * rows lift armour past the shipped four - five, then six, where a strike
+ * cannot bite and the heavy is the only answer - while the drain sinks past
+ * the deep tier's floor to twelve. The bench gains a walker (the mid hand's
+ * combat, but it never routes around anything) because the summit's fights,
+ * not its drain, are what kill the careless there. The strong hand clears
+ * all six seeds of all six rungs and its measured lines fix the bands, whose
+ * two-star edges tighten under d24's and never loosen; the naive hand wins
+ * nothing and falls on the first floor of every summit seed; the walker
+ * bleeds from the deep tier into the summit and wins nothing at all on the
+ * capstone; and each rung's advertised mechanic - the plate, the mending,
+ * the deepest drain - is cut out of a copy and hands the bench its wins
+ * straight back. The panel boots the capstone with the gauge at 12/12. */
 
 module.exports = function gate(ctx) {
   const { App, env, check } = ctx;
   const levels = App.delveLevels;
   const deepIds = ["d21", "d22", "d23", "d24"];
+  const summitIds = ["d25", "d26", "d27", "d28", "d29", "d30"];
 
-  check("game-ember-delve", "the ladder holds twenty-four floors",
-    levels.length === 24, String(levels.length));
+  check("game-ember-delve", "the ladder holds thirty floors",
+    levels.length === 30, String(levels.length));
   check("game-ember-delve", "every floor id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
   const missing = deepIds.filter((id) => !levels.some((level) => level.id === id));
   check("game-ember-delve", "the deep tier d21-d24 is present",
     missing.length === 0, missing.join(","));
+  const missingSummit = summitIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-ember-delve", "the summit tier d25-d30 is present",
+    missingSummit.length === 0, missingSummit.join(","));
+  check("game-ember-delve", "the deep and summit tiers sit at the tail in order",
+    levels.slice(20).map((level) => level.id).join(",") ===
+      deepIds.concat(summitIds).join(","),
+    levels.slice(20).map((level) => level.id).join(","));
 
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
   const deep = deepIds.map((id) => byId[id]);
-  const shallow = levels.filter((level) => !deepIds.includes(level.id));
+  const summit = summitIds.map((id) => byId[id]);
+  const shipped = levels.filter((level) =>
+    !deepIds.includes(level.id) && !summitIds.includes(level.id));
 
   /* The lesson is structural: no shipped rung carries the field, every deep
-   * rung does, and the drain ratchets strictly downwards below the shipped
-   * 30. The anti-stall law survives untouched - the deep tier still delves
-   * to depth 8, so the route bound still clears the turn cap. */
-  const leaky = shallow.filter((level) => level.vitals !== undefined);
+   * and summit rung does, and the drain ratchets strictly downwards - 24-22-
+   * 20-18 across the deep tier, then 16-16-14-14-12-12 under it. The
+   * anti-stall law survives untouched - the whole ladder still delves to
+   * depth 8, so the route bound still clears the turn cap. */
+  const leaky = shipped.filter((level) => level.vitals !== undefined);
   check("game-ember-delve", "no shipped rung opens the delve drained",
     leaky.length === 0, leaky.map((level) => level.id).join(","));
   const drained = deep.map((level) => level.vitals);
@@ -53,6 +78,12 @@ module.exports = function gate(ctx) {
     drained.join(",") === "24,22,20,18" &&
     drained.every((v) => v > 0 && v < 30),
     drained.join(","));
+  const sunk = summit.map((level) => level.vitals);
+  check("game-ember-delve",
+    "every summit rung opens drained, ratcheting 16-16-14-14-12-12 under the deep tier's floor",
+    sunk.join(",") === "16,16,14,14,12,12" &&
+    sunk.every((v) => v > 0 && v < 18),
+    sunk.join(","));
 
   /* --- the bench: whole delves replayed through the exported engine ---
    * Constants, species table, spawn/pack and the rest draw are re-hosted
@@ -70,6 +101,7 @@ module.exports = function gate(ctx) {
   const REST_TWISTS = {
     edlTwist4: true, edlTwist5: true, edlTwist11: true,
     edlTwist15: true, edlTwist20: true, edlTwist24: true,
+    edlTwist27: true, edlTwist30: true,
   };
   const edlBeasts = {
     imp: { glyph: "\u25b2", hp: 10, armor: 0, pattern: [{ k: "strike", v: 4 }, { k: "strike", v: 3 }, { k: "bite" }] },
@@ -304,6 +336,15 @@ module.exports = function gate(ctx) {
     rest: (hero) => hero.hp <= 8,
   };
 
+  /* The walker: the mid hand's combat, but it never routes around anything -
+   * every wake and every placed pack lands in its face, which is where the
+   * summit's plate does its killing. */
+  const walker = {
+    plan: midPlan,
+    avoid: null,
+    rest: (hero) => hero.hp <= 8,
+  };
+
   /* The naive hand: three strikes and pray. It never guards, never focuses,
    * never rests in time - the floor the bands are not allowed to promise. */
   const naive = {
@@ -324,6 +365,7 @@ module.exports = function gate(ctx) {
       total: runs.length,
       best: wins.length ? Math.min.apply(null, wins.map((run) => run.turns)) : null,
       worst: wins.length ? Math.max.apply(null, wins.map((run) => run.turns)) : null,
+      runs: runs,
     };
   };
 
@@ -399,13 +441,118 @@ module.exports = function gate(ctx) {
     `undrained ${midUndrainedTotal}/24 vs drained ${midDeep}/24` +
       (ablationProblems.length ? " | " + ablationProblems.join(" | ") : ""));
 
-  /* The engine itself opens the deep tier drained: boot the real panel with
-   * the campaign progressed past d20 and the vitals gauge reads the drain;
-   * boot it fresh and it reads the shipped 30. The store is left clean. */
+  /* --- the summit tier: the same bench, the plate added ---
+   * Every summit rung: the strong hand's authored line clears all six seeds,
+   * its worst line lands inside the two-star band, its best plays for the
+   * three-star line, and the bands run in order under the cap. */
+  const summitProblems = [];
+  summit.forEach((level) => {
+    const run = bench(level, strong);
+    const name = `${level.id} vitals=${level.vitals} armor=${level.armor}` +
+      ` bands=${level.starTurns.join("/")}`;
+    if (run.won !== 6) {
+      summitProblems.push(`${name} the strong hand cleared ${run.won}/6`);
+    }
+    if (run.worst === null || run.worst > level.starTurns[1]) {
+      summitProblems.push(`${name} a winning line missed the two-star band` +
+        ` (worst ${run.worst})`);
+    }
+    if (run.best === null || run.best > level.starTurns[0]) {
+      summitProblems.push(`${name} the three-star line is not played for` +
+        ` (best ${run.best})`);
+    }
+    if (!(level.starTurns[0] < level.starTurns[1] &&
+        level.starTurns[1] < level.starTurns[2] &&
+        level.starTurns[2] < TURN_CAP)) {
+      summitProblems.push(`${name} bands do not run downwards under the cap` +
+        ` ${level.starTurns.join("/")}`);
+    }
+  });
+  check("game-ember-delve",
+    "the strong hand clears every summit seed and its lines fix the bands",
+    summitProblems.length === 0, summitProblems.join(" | "));
+
+  /* The summit bands are the hard bands: every two-star edge lands strictly
+   * under d24's 39, and the edges never loosen as the tier climbs. */
+  const d24TwoStar = byId.d24.starTurns[1];
+  const summitTwoStars = summit.map((level) => level.starTurns[1]);
+  const bandProblems = [];
+  summitTwoStars.forEach((edge, index) => {
+    if (edge >= d24TwoStar) {
+      bandProblems.push(`${summit[index].id} two-star edge ${edge}` +
+        ` opens past d24's ${d24TwoStar}`);
+    }
+    if (index > 0 && edge > summitTwoStars[index - 1]) {
+      bandProblems.push(`${summit[index].id} two-star edge loosens to ${edge}` +
+        ` from ${summitTwoStars[index - 1]}`);
+    }
+  });
+  check("game-ember-delve",
+    "the summit's two-star edges sit under d24's and never loosen down the tier",
+    bandProblems.length === 0, bandProblems.join(" | "));
+
+  /* Not free on the summit either: the naive hand wins nothing, and it does
+   * not even see the second floor - the plate kills it at the door where the
+   * deep tier let it reach the third. */
+  const naiveSummit = summit.reduce((sum, level) => sum + bench(level, naive).won, 0);
+  const firstFloor = summit.every((level) =>
+    bench(level, naive).runs.every((run) => !run.won && run.why === "fell" && run.depth === 1));
+  check("game-ember-delve",
+    "a naive hand three-stars nothing on the summit tier and falls on every first floor",
+    naiveSummit === 0 && firstFloor, `${naiveSummit} naive wins`);
+
+  /* The summit bleeds the bench harder than the deep tier did. The walker -
+   * the mid hand's combat, never routing - clears most of the deep tier's
+   * seeds, then loses ground across the summit and cannot win the capstone
+   * at all: twelve vitals behind six-plate is where the ladder finally
+   * out-climbs it. */
+  const walkerDeep = deep.reduce((sum, level) => sum + bench(level, walker).won, 0);
+  const walkerSummit = summit.reduce((sum, level) => sum + bench(level, walker).won, 0);
+  const walkerCapstone = bench(byId.d30, walker);
+  check("game-ember-delve",
+    `the walker clears the deep tier (${walkerDeep}/24) but bleeds on the summit (${walkerSummit}/36) and wins nothing on d30`,
+    walkerDeep >= 15 && walkerSummit < walkerDeep &&
+      walkerSummit <= 18 && walkerCapstone.won === 0,
+    `deep ${walkerDeep}/24, summit ${walkerSummit}/36,` +
+      ` d30 ${walkerCapstone.won}/6`);
+
+  /* Each summit lesson is load-bearing: cut the advertised mechanic out of a
+   * copy of the rung - d25 and d27's five-plate back to the shipped four,
+   * d26's mending off, d28's six-plate back to the shipped four, d29 and
+   * d30's pool back to the deep tier's floor - and the bench hands its wins
+   * straight back, so the rung's own bite is what the climb pays for. d27's
+   * plate reads through the walker, whose fights, not its route, meet it. */
+  const cuts = [
+    { id: "d25", hand: mid, cut: { armor: 4 }, what: "five-plate" },
+    { id: "d26", hand: mid, cut: { regen: 0 }, what: "mending" },
+    { id: "d27", hand: walker, cut: { armor: 4 }, what: "five-plate" },
+    { id: "d28", hand: mid, cut: { armor: 4 }, what: "six-plate" },
+    { id: "d29", hand: mid, cut: { vitals: 18 }, what: "the twelve-vital pool" },
+    { id: "d30", hand: mid, cut: { vitals: 18 }, what: "the twelve-vital pool" },
+  ];
+  const cutProblems = [];
+  cuts.forEach((spec) => {
+    const level = byId[spec.id];
+    const plain = bench(level, spec.hand);
+    const cut = bench(Object.assign({}, level, spec.cut), spec.hand);
+    if (!(plain.won < cut.won)) {
+      cutProblems.push(`${spec.id} kept its wins with ${spec.what} cut` +
+        ` (${plain.won} vs ${cut.won})`);
+    }
+  });
+  check("game-ember-delve",
+    "cutting each summit rung's advertised mechanic out of a copy hands the bench its wins back",
+    cutProblems.length === 0, cutProblems.join(" | "));
+
+  /* The engine itself opens the drained tiers drained: boot the real panel
+   * with the campaign progressed past d20 and the vitals gauge reads the
+   * deep drain; progress it past d29 and the gauge reads the summit's
+   * twelve; boot it fresh and it reads the shipped 30. The store is left
+   * clean. */
   const store = env.localStorage;
   const campaignKey = "ember-delve-campaign";
   const cleared = {};
-  shallow.forEach((level) => { cleared[level.id] = { stars: 3, best: 30 }; });
+  shipped.forEach((level) => { cleared[level.id] = { stars: 3, best: 30 }; });
   const panelVitals = (record) => {
     if (record) {
       store.setItem(campaignKey, record);
@@ -424,8 +571,16 @@ module.exports = function gate(ctx) {
     "the engine boots d21 with the gauge at 24/24 where a shipped rung reads 30/30",
     drainedGauge === "24/24" && freshGauge === "30/30",
     `deep boot ${drainedGauge}, fresh boot ${freshGauge}`);
+  const clearedThrough = {};
+  levels.slice(0, 29).forEach((level) => {
+    clearedThrough[level.id] = { stars: 3, best: 30 };
+  });
+  const summitGauge = panelVitals(JSON.stringify({ v: 1, cleared: clearedThrough }));
+  check("game-ember-delve",
+    "the engine boots the d30 capstone with the gauge at 12/12",
+    summitGauge === "12/12", `summit boot ${summitGauge}`);
 
-  /* The tier's names and twists travel with the game: both languages hold a
+  /* The tiers' names and twists travel with the game: both languages hold a
    * real string and t() never falls back to the raw key. */
   const copyKeys = deep.reduce((keys, level) =>
     keys.concat([level.labelKey, level.twistKey]), []);
@@ -435,9 +590,17 @@ module.exports = function gate(ctx) {
     !App.t(key) || App.t(key) === key);
   check("game-ember-delve", "the four deep floor names and twists resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
+  const summitKeys = summit.reduce((keys, level) =>
+    keys.concat([level.labelKey, level.twistKey]), []);
+  const summitCopyProblems = summitKeys.filter((key) =>
+    !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
+    !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
+    !App.t(key) || App.t(key) === key);
+  check("game-ember-delve", "the six summit floor names and twists resolve in both languages",
+    summitCopyProblems.length === 0, summitCopyProblems.join(","));
 
   /* The unlock chain is derived, never stored: clearing each floor in order
-   * hands the player exactly the next one, all twenty-four times. */
+   * hands the player exactly the next one, all thirty times. */
   const chain = App.createCampaign({
     key: "ember-delve-gate-chain",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -450,6 +613,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-ember-delve", "the unlock chain walks all twenty-four floors in order",
-    walked === 24 && chained && chain.clearedCount() === 24, walked + " first clears");
+  check("game-ember-delve", "the unlock chain walks all thirty floors in order",
+    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
 };

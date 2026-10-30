@@ -22,14 +22,30 @@
  * grid, is the tier's mechanic. Bands are reachable but not free: the proven
  * line pays three stars, the same line padded with round trips pays exactly
  * two and still clears inside the one-star line, and the padded replay is the
- * rung's first clear so the two-star payout is observed, not derived. */
+ * rung's first clear so the two-star payout is observed, not derived.
+ *
+ * The summit t25-t30 runs the deal out past every walk the drawer had
+ * dealt, and holds the same bar on every currency: each seeded deal takes
+ * its whole walk on the quintet, passes the sliding-parity rule and leaves
+ * all twenty-four plates displaced (the deep tier's fully-mixed lesson,
+ * kept), its admissible floor climbs past the deep peak's 92, its proven
+ * line is dearer than the shipped summit's 156 and anchors its own
+ * three-star band, and t30 closes the game on its deepest proven line
+ * (202). The walk is load-bearing per rung: the same seed dealt at the
+ * deep tier's ceiling walk (5600) proves a line under the rung's, every
+ * time. Bands stay on the shipped curve and climb past the deep peak's on
+ * all three thresholds, the padded and proven lines replay through the
+ * real tray in order, and the save walks out holding three stars for
+ * t20-t30. */
 
 const DEEP = ["t21", "t22", "t23", "t24"];
-/* The shipped gate seeds its benches; the deep bench continues the pattern.
- * The seeds are tuned so the measured lines rise clear of t20's and the
- * finale carries the tier's deepest line - the assertions below were checked
- * against exactly these deals. */
-const FT_SEEDS = { t20: 32001, t21: 37002, t22: 42011, t23: 44016, t24: 57033 };
+const SUMMIT = ["t25", "t26", "t27", "t28", "t29", "t30"];
+/* The shipped gate seeds its benches; the deep and summit benches continue
+ * the pattern. The seeds are tuned so the measured floors climb past the
+ * tier below and the lines anchor their bands - the assertions below were
+ * checked against exactly these deals. */
+const FT_SEEDS = { t20: 32001, t21: 37002, t22: 42011, t23: 44016, t24: 57033,
+  t25: 61040, t26: 63727, t27: 63294, t28: 65331, t29: 66406, t30: 80477 };
 const FT_WEIGHT = 2.5;
 const FT_BUDGET_MS = 15000;
 
@@ -237,8 +253,9 @@ module.exports = function gate(ctx) {
     };
   }
 
-  check("game-glyph-fifteen", "the ladder holds twenty-four boards with the deep tier present",
-    order.length === 24 && DEEP.every((id) => order.indexOf(id) >= 0),
+  check("game-glyph-fifteen", "the ladder holds thirty boards with the deep and summit tiers present",
+    order.length === 30 && DEEP.every((id) => order.indexOf(id) >= 0) &&
+      SUMMIT.every((id) => order.indexOf(id) >= 0),
     order.length + " rows");
   check("game-glyph-fifteen", "every board id is distinct",
     new Set(order).size === order.length, order.join(","));
@@ -261,6 +278,14 @@ module.exports = function gate(ctx) {
   check("game-glyph-fifteen", "each deep row carries only the fields the engine reads, on the quintet tray",
     fieldDrift.length === 0, fieldDrift.join(","));
 
+  const summitDrift = SUMMIT.filter((id) => {
+    const keys = Array.from(rows[id].text.matchAll(/([a-zA-Z]+)\s*:/g)).map((m) => m[1]);
+    return keys.join(",") !== "id,labelKey,grid,walk,starMoves" ||
+      rows[id].labelKey !== "ftL" + id.slice(1) || rows[id].grid !== 5;
+  });
+  check("game-glyph-fifteen", "each summit row carries only the fields the engine reads, on the quintet tray",
+    summitDrift.length === 0, summitDrift.join(","));
+
   const quintetPeak = Math.max.apply(null,
     SHIPPED.filter((row) => row[1] === 5).map((row) => row[2]));
   const walkDrift = DEEP.filter((id) => rows[id].walk <= quintetPeak);
@@ -268,6 +293,11 @@ module.exports = function gate(ctx) {
     walkDrift.length === 0 && rows.t24.walk === Math.max.apply(null, SHIPPED.map((row) => row[2])),
     "deep walks " + DEEP.map((id) => rows[id].walk).join("/") +
     " vs quintet peak " + quintetPeak);
+  const summitWalkDrift = SUMMIT.filter((id) => rows[id].walk <= rows.t24.walk);
+  check("game-glyph-fifteen", "every summit deal walks past the deep tier's ceiling, and t30 closes the ladder at its peak",
+    summitWalkDrift.length === 0 && rows.t30.walk === Math.max.apply(null, order.map((id) => rows[id].walk)),
+    "summit walks " + SUMMIT.map((id) => rows[id].walk).join("/") +
+    " vs deep peak " + rows.t24.walk);
 
   const bandProblems = [];
   ["t20"].concat(DEEP).forEach((id, index, ladder) => {
@@ -288,6 +318,24 @@ module.exports = function gate(ctx) {
   });
   check("game-glyph-fifteen", "the deep bands climb past the shipped summit on all three thresholds and keep the shipped curve",
     bandProblems.length === 0, bandProblems.join(" | "));
+
+  const summitBandProblems = [];
+  ["t24"].concat(SUMMIT).forEach((id, index, ladder) => {
+    if (index === 0) return;
+    const prev = rows[ladder[index - 1]].bands;
+    const cur = rows[id].bands;
+    for (let k = 0; k < 3; k += 1) {
+      if (!(cur[k] > prev[k])) summitBandProblems.push(id + ":band" + k);
+    }
+  });
+  SUMMIT.forEach((id) => {
+    const [a, b, c] = rows[id].bands;
+    if (!(b > a * 1.4 && b < a * 1.6) || !(c > a * 2.1 && c < a * 2.35)) {
+      summitBandProblems.push(id + ":curve " + (b / a).toFixed(2) + "/" + (c / a).toFixed(2));
+    }
+  });
+  check("game-glyph-fifteen", "the summit bands climb past the deep peak's on all three thresholds and keep the shipped curve",
+    summitBandProblems.length === 0, summitBandProblems.join(" | "));
 
   /* ---- boot the real tray (the deal generator rides on the game) ------- */
   env.setMotion("off");
@@ -317,7 +365,7 @@ module.exports = function gate(ctx) {
   const deals = {};
   const floors = {};
   const dealProblems = [];
-  ["t20"].concat(DEEP).forEach((id) => {
+  ["t20"].concat(DEEP).concat(SUMMIT).forEach((id) => {
     const deal = ftSeededRun(FT_SEEDS[id], () =>
       App.glyphFifteenShuffle(rows[id].grid, rows[id].walk));
     deals[id] = deal;
@@ -355,10 +403,41 @@ module.exports = function gate(ctx) {
     "every deep deal takes its whole walk, passes the sliding-parity rule, leaves no plate at home, and starts further from home than the shipped summit's",
     dealProblems.length === 0, dealProblems.join(" | "));
 
+  const summitDealProblems = [];
+  SUMMIT.forEach((id) => {
+    const deal = deals[id];
+    if (!deal || deal.board.length !== 25 || deal.blank < 0) {
+      summitDealProblems.push(id + ":deal");
+      return;
+    }
+    if (deal.walk !== rows[id].walk) {
+      summitDealProblems.push(id + ":walk " + deal.walk + "/" + rows[id].walk);
+    }
+    const tiles = deal.board.filter((v) => v !== 0);
+    let inversions = 0;
+    for (let i = 0; i < tiles.length; i += 1) {
+      for (let j = i + 1; j < tiles.length; j += 1) {
+        if (tiles[i] > tiles[j]) inversions += 1;
+      }
+    }
+    if (inversions % 2 !== 0) summitDealProblems.push(id + ":parity " + inversions);
+    let displaced = 0;
+    for (let i = 0; i < deal.board.length; i += 1) {
+      if (deal.board[i] !== 0 && deal.board[i] !== (i + 1) % deal.board.length) displaced += 1;
+    }
+    if (displaced !== 24) summitDealProblems.push(id + ":settled " + (24 - displaced) + " plates at home");
+    if (!(floors[id] > floors.t24)) {
+      summitDealProblems.push(id + ":floor " + floors[id] + " vs t24 " + floors.t24);
+    }
+  });
+  check("game-glyph-fifteen",
+    "every summit deal takes its whole walk, passes the sliding-parity rule, leaves all twenty-four plates displaced, and starts further from home than the deep peak's",
+    summitDealProblems.length === 0, summitDealProblems.join(" | "));
+
   /* ---- the lines: the shipped gate's weighted search, like for like ---- */
   const lines = {};
   const solverProblems = [];
-  ["t20"].concat(DEEP).forEach((id) => {
+  ["t20"].concat(DEEP).concat(SUMMIT).forEach((id) => {
     try {
       lines[id] = ftSearch(rows[id].grid, deals[id].board, FT_WEIGHT, FT_BUDGET_MS);
     } catch (error) {
@@ -368,7 +447,7 @@ module.exports = function gate(ctx) {
     }
     if (!lines[id]) solverProblems.push(id + ": no line");
   });
-  check("game-glyph-fifteen", "the gate's solver finds a complete line on the shipped summit's deal and on every deep deal",
+  check("game-glyph-fifteen", "the gate's solver finds a complete line on the shipped summit's deal, on every deep deal, and on every summit deal",
     solverProblems.length === 0, solverProblems.join(" | "));
 
   const deepLines = DEEP.map((id) => lines[id] ? lines[id].len : 0);
@@ -383,6 +462,49 @@ module.exports = function gate(ctx) {
   check("game-glyph-fifteen", "every deep line anchors its three-star band",
     anchorProblems.length === 0,
     anchorProblems.map((id) => id + " " + lines[id].len + "/" + rows[id].bands[0]).join(" | "));
+
+  const summitLineProblems = [];
+  SUMMIT.forEach((id) => {
+    if (!lines[id]) {
+      summitLineProblems.push(id + ": no line");
+      return;
+    }
+    if (!(lines[id].len > lines.t20.len)) {
+      summitLineProblems.push(id + ":line " + lines[id].len + " vs t20 " + lines.t20.len);
+    }
+    if (lines[id].len > rows[id].bands[0]) {
+      summitLineProblems.push(id + ":anchor " + lines[id].len + "/" + rows[id].bands[0]);
+    }
+  });
+  if (lines.t30 && SUMMIT.every((id) => lines[id])) {
+    const summitMax = Math.max.apply(null, SUMMIT.map((id) => lines[id].len));
+    if (lines.t30.len !== summitMax) summitLineProblems.push("t30:crown " + lines.t30.len + " vs " + summitMax);
+  }
+  check("game-glyph-fifteen",
+    "every summit line is dearer than the shipped summit's and anchors its band, and t30 closes the game on its deepest proven line",
+    summitLineProblems.length === 0, summitLineProblems.join(" | "));
+
+  /* Load-bearing walk, per summit rung: the same seed dealt at the deep
+   * tier's ceiling walk (5600) proves a line under the rung's - the depth,
+   * not the seed's luck, is what the summit sells. */
+  const shallowSummitProblems = [];
+  SUMMIT.forEach((id) => {
+    const shallow = ftSeededRun(FT_SEEDS[id], () => App.glyphFifteenShuffle(5, rows.t24.walk));
+    let shallowLine = null;
+    try {
+      shallowLine = ftSearch(5, shallow.board, FT_WEIGHT, FT_BUDGET_MS);
+    } catch (error) {
+      shallowSummitProblems.push(id + ": " + error.message);
+      return;
+    }
+    if (!shallowLine || !lines[id] || shallowLine.len >= lines[id].len) {
+      shallowSummitProblems.push(id + ": shallow " +
+        (shallowLine ? shallowLine.len : "?") + " vs summit " + (lines[id] ? lines[id].len : "?"));
+    }
+  });
+  check("game-glyph-fifteen",
+    "on the same seed the deep tier's ceiling walk deals cheaper on every summit rung, so the summit's walk is load-bearing",
+    shallowSummitProblems.length === 0, shallowSummitProblems.join(" | "));
 
   /* Load-bearing walk: the same tray at the third tier's walk still deals a
    * board whose line sits under the whole deep tier - the depth, not the
@@ -410,6 +532,23 @@ module.exports = function gate(ctx) {
   });
   check("game-glyph-fifteen", "each proven line padded with round trips drops out of the three-star band into the two-star band and still clears inside the one-star line",
     planProblems.length === 0, planProblems.join(" | "));
+
+  const summitPlanProblems = [];
+  const summitPlans = {};
+  SUMMIT.forEach((id) => {
+    const len = lines[id] ? lines[id].len : Infinity;
+    const pairs = Math.floor((rows[id].bands[0] - len) / 2) + 4;
+    const padded = len + pairs * 2;
+    summitPlans[id] = { pairs, padded };
+    if (!(padded > rows[id].bands[0] && padded <= rows[id].bands[1])) {
+      summitPlanProblems.push(id + ":two-star " + padded + " vs " + rows[id].bands[0] + "/" + rows[id].bands[1]);
+    }
+    if (padded > rows[id].bands[2]) {
+      summitPlanProblems.push(id + ":one-star " + padded + " vs " + rows[id].bands[2]);
+    }
+  });
+  check("game-glyph-fifteen", "each summit line padded with round trips drops out of the three-star band into the two-star band and still clears inside the one-star line",
+    summitPlanProblems.length === 0, summitPlanProblems.join(" | "));
 
   /* ---- the replay: every proof played through the real tray ------------ */
   const ftCanvasEl = env.byId("ftCanvas");
@@ -489,10 +628,36 @@ module.exports = function gate(ctx) {
   check("game-glyph-fifteen", "each deep rung's padded line clears inside the two-star band and its proven line pays three stars for exactly the proven count",
     replayProblems.length === 0, replayProblems.join(" | "));
 
+  const summitReplayProblems = [];
+  SUMMIT.forEach((id) => {
+    const deal = deals[id];
+    const line = lines[id];
+    const plan = summitPlans[id];
+    /* Padded first, so the rung's first clear is the two-star one: the band
+     * payout is then observed through the engine, not derived. */
+    ftSelectLevel(id, FT_SEEDS[id]);
+    playPadded(deal, plan.pairs, line.line, 5);
+    const padded = ftRecord(id);
+    if (padded.stars !== 2) {
+      summitReplayProblems.push(id + ":padded stars " + padded.stars);
+    }
+    /* Then the proven line: three stars, and the tray's own move counter
+     * must agree with the solver's cost to the slide. */
+    ftSelectLevel(id, FT_SEEDS[id]);
+    playLine(deal, line.line, 5);
+    const cleared = ftRecord(id);
+    if (cleared.stars !== 3) summitReplayProblems.push(id + ":line stars " + cleared.stars);
+    if (cleared.best !== line.len) {
+      summitReplayProblems.push(id + ":best " + cleared.best + " vs " + line.len);
+    }
+  });
+  check("game-glyph-fifteen", "each summit rung's padded line clears inside the two-star band and its proven line pays three stars for exactly the proven count",
+    summitReplayProblems.length === 0, summitReplayProblems.join(" | "));
+
   const ledger = JSON.parse(env.store.get("glyph-fifteen-campaign")).cleared;
-  const ledgerProblems = ["t20"].concat(DEEP).filter((id) =>
+  const ledgerProblems = ["t20"].concat(DEEP).concat(SUMMIT).filter((id) =>
     !ledger[id] || ledger[id].stars !== 3);
-  check("game-glyph-fifteen", "the deep tier clears through the real tray in order and the save holds three stars for t20-t24",
+  check("game-glyph-fifteen", "the deep tier and the summit clear through the real tray in order and the save holds three stars for t20-t30",
     ledgerProblems.length === 0, ledgerProblems.join(","));
 
   /* ---- the chain, derived and never stored ----------------------------- */
@@ -508,18 +673,18 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < order.length ? order[index + 1] : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-glyph-fifteen", "the unlock chain hands each rung to the next, all twenty-four",
-    walked === 24 && chained && chain.clearedCount() === 24,
+  check("game-glyph-fifteen", "the unlock chain hands each rung to the next, all thirty",
+    walked === 30 && chained && chain.clearedCount() === 30,
     walked + " first clears, chained " + chained);
 
   /* ---- the names travel with the module, in both languages ------------- */
-  const labelProblems = DEEP.map((id) => rows[id].labelKey).filter((key) => {
+  const labelProblems = DEEP.concat(SUMMIT).map((id) => rows[id].labelKey).filter((key) => {
     const en = App.I18N && App.I18N.en && App.I18N.en[key];
     const zh = App.I18N && App.I18N.zh && App.I18N.zh[key];
     return typeof en !== "string" || !en.length ||
       typeof zh !== "string" || !zh.length || zh === en ||
       !App.t(key) || App.t(key) === key;
   });
-  check("game-glyph-fifteen", "the four deep names resolve in both languages as real strings",
+  check("game-glyph-fifteen", "the ten deep and summit names resolve in both languages as real strings",
     labelProblems.length === 0, labelProblems.join(","));
 };

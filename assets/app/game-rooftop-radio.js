@@ -124,6 +124,45 @@
      * inside the nineteen-ping battery, and the three-star line is the
      * measured sharpest restart the crown allows. */
     { id: "r24", labelKey: "rrZ24", side: 40, scans: 19, starScans: [6, 10, 18], drift: 2 },
+    /* Summit tier - the ring plateau. Measured first, like every rung above:
+     * past Stormcrown the hunt's tail does not keep growing. Widths 41 to 46
+     * quantize their distance rings identically - six consecutive floors
+     * whose readings slice the belief the same way, tails of eight, nine and
+     * ten - and past 46 the rings re-align with the grid outright: a 49
+     * floor hunts to six and no worse. So the summit sits on the plateau
+     * itself, every rung restless at the every-second shunt, each battery
+     * cut one ping past its own measured worst hunt, and every rung sweeping
+     * more floor per ping than any restless rung below the tier. The crown
+     * carries the longest plateau tail (ten) on the widest floor the ladder
+     * has ever carried, and its one-star line
+     * load-bearing: one ping below it and three deals in thirty are lost
+     * outright. The bench that measured the plateau, the crown and the
+     * re-alignment receipt lives in tools/gate-snippets/rooftop-radio.js. */
+    /* Gravel Flats: the first floor past Stormcrown, and the shallowest
+     * plateau tail - eight scans on the worst deal, so a nine-ping battery
+     * with the three-star line on the four-scan split. */
+    { id: "r25", labelKey: "rrZ25", side: 41, scans: 9, starScans: [4, 6, 8], drift: 2 },
+    /* Whistling Yard: the plateau proper begins. The tail is nine and the
+     * battery is ten - the same floor per ping the deep crown spent nineteen
+     * pings to sweep, in a little over half the battery. */
+    { id: "r26", labelKey: "rrZ26", side: 42, scans: 10, starScans: [4, 6, 9], drift: 2 },
+    /* The Grey Belt: the same quantization as the Yard one ping tighter on
+     * the same battery - the plateau gives nothing back for width here. */
+    { id: "r27", labelKey: "rrZ27", side: 43, scans: 10, starScans: [4, 6, 9], drift: 2 },
+    /* Slate Moor: the widest floor the game had ever shipped before this
+     * tier, on the plateau's own terms - the two-probe pin is gone, the
+     * three-star line is the four-scan split, and the tail still reaches
+     * nine. */
+    { id: "r28", labelKey: "rrZ28", side: 44, scans: 10, starScans: [4, 6, 9], drift: 2 },
+    /* Widow's Ford: the last floor before the rings re-align, and the
+     * shallowest three-star split on the tier - the pin is spent by scan
+     * six on most deals. */
+    { id: "r29", labelKey: "rrZ29", side: 45, scans: 10, starScans: [4, 6, 9], drift: 2 },
+    /* The Ring Plateau: the crown. The longest tail the plateau gives (ten)
+     * on the widest floor the ladder has ever carried - eleven pings to
+     * sweep 2,116 cells - and one ping below its one-star line three deals
+     * in thirty are lost outright. */
+    { id: "r30", labelKey: "rrZ30", side: 46, scans: 11, starScans: [6, 8, 10], drift: 2 },
   ];
 
   /* Pure core, exported for the harness: distance is measured between cell
@@ -574,6 +613,12 @@
       "rrZ22": "Rivermouth",
       "rrZ23": "Mistvale",
       "rrZ24": "Stormcrown",
+      "rrZ25": "Gravel Flats",
+      "rrZ26": "Whistling Yard",
+      "rrZ27": "The Grey Belt",
+      "rrZ28": "Slate Moor",
+      "rrZ29": "Widow's Ford",
+      "rrZ30": "The Ring Plateau",
       "rrBatteryLabel": "Battery",
       "rrZoneLabel": "Grid",
       "rrZoneSelectLabel": "Choose a zone",
@@ -621,6 +666,12 @@
       "rrZ22": "河口区",
       "rrZ23": "雾谷",
       "rrZ24": "风暴之冠",
+      "rrZ25": "砾石滩",
+      "rrZ26": "呜哨场",
+      "rrZ27": "灰带",
+      "rrZ28": "石板泽",
+      "rrZ29": "寡妇渡",
+      "rrZ30": "环带高原",
       "rrBatteryLabel": "电量",
       "rrZoneLabel": "网格",
       "rrZoneSelectLabel": "选择区域",

@@ -39,18 +39,31 @@ function sweep(api, tables) {
     seed = (seed * 1103515245 + 12345) % 2147483648;
     return seed / 2147483648;
   };
-  const settle = (player, dealer, bet) => {
+  const settle = (player, dealer, bet, table) => {
     const you = api.bjCount(player).total;
     const house = api.bjCount(dealer).total;
     const youNatural = api.bjNatural(player);
     const houseNatural = api.bjNatural(dealer);
     if (you > 21) return -bet;
-    if (youNatural && !houseNatural) return Math.round(bet * 1.5);
+    if (youNatural && !houseNatural) return Math.round(bet * (table.pays || 1.5));
     if (houseNatural && !youNatural) return -bet;
     if (house > 21) return bet;
     if (you > house) return bet;
     if (you < house) return -bet;
+    if (table.pushLose) return -bet;
     return 0;
+  };
+  /* The bench dealer mirrors the engine's housePlay exactly: it draws to 17,
+   * and on the summit felts it also pushes a soft 17 - the same two loops the
+   * module plays. */
+  const houseDraw = (dealer, draw, table) => {
+    for (;;) {
+      while (api.bjCount(dealer).total < 17) dealer.push(draw());
+      if (!(table.soft17 && api.bjCount(dealer).total === 17 && api.bjCount(dealer).soft)) {
+        return;
+      }
+      dealer.push(draw());
+    }
   };
   const stats = [];
   try {
@@ -73,11 +86,11 @@ function sweep(api, tables) {
           const dealer = [draw(), draw()];
           if (!api.bjNatural(player) && !api.bjNatural(dealer)) {
             while (api.bjCount(player).total < 18) player.push(draw());
-            while (api.bjCount(dealer).total < 17) dealer.push(draw());
+            houseDraw(dealer, draw, table);
           }
-          chips += settle(player, dealer, bet);
+          chips += settle(player, dealer, bet, table);
           hands += 1;
-          if (chips < table.bets[0]) chips = table.start;
+          if (chips < table.bets[0]) chips = table.restake !== undefined ? table.restake : table.start;
         }
         if (chips >= table.target) {
           reached += 1;
@@ -121,23 +134,23 @@ function main() {
   }
 
   if (mode === "forge") {
-    /* Tables 21-24: the salon above the pit. The stack keeps doubling - the
-     * last felt stakes every bankroll the shipped ladder owns on one hand -
-     * and the shoe halves table by table: eight decks, the house's own
-     * standard felt, then four, two, and the single deck the game began on,
-     * with the bands never loosening from the last shipped felt and walking
-     * down to a three-hand clear on the final deck. Swept here appended to
-     * the shipped ladder, in table order, because the shared stream makes
-     * every number depend on position. */
+    /* Tables 25-30: the rope above the salon. One deck throughout, and the
+     * rules climb rung over rung: the dealer pushes a soft 17, every tie
+     * pays the house, the naturals shorten to seven for five, and then the
+     * buy-back shrinks - one and a half top bets, three quarters, one half.
+     * Swept here appended to the shipped ladder, in table order, because
+     * the shared stream makes every number depend on position. */
     const brief = [
-      { id: "b21", labelKey: "bjT21", decks: 8, start: 104857600, bets: [6553600, 13107200, 26214400], target: 157286400, starHands: [5, 10, 24] },
-      { id: "b22", labelKey: "bjT22", decks: 4, start: 209715200, bets: [13107200, 26214400, 52428800], target: 314572800, starHands: [4, 9, 24] },
-      { id: "b23", labelKey: "bjT23", decks: 2, start: 419430400, bets: [26214400, 52428800, 104857600], target: 629145600, starHands: [4, 9, 23] },
-      { id: "b24", labelKey: "bjT24", decks: 1, start: 838860800, bets: [52428800, 104857600, 209715200], target: 1258291200, starHands: [3, 9, 23] },
+      { id: "b25", labelKey: "bjT25", decks: 1, start: 1677721600, bets: [104857600, 209715200, 419430400], target: 2516582400, starHands: [3, 10, 25], soft17: true },
+      { id: "b26", labelKey: "bjT26", decks: 1, start: 3355443200, bets: [209715200, 419430400, 838860800], target: 5033164800, starHands: [3, 10, 26], soft17: true, pushLose: true },
+      { id: "b27", labelKey: "bjT27", decks: 1, start: 6710886400, bets: [419430400, 838860800, 1677721600], target: 10066329600, starHands: [3, 12, 33], soft17: true, pushLose: true, pays: 1.4 },
+      { id: "b28", labelKey: "bjT28", decks: 1, start: 13421772800, bets: [838860800, 1677721600, 3355443200], target: 20132659200, starHands: [3, 20, 72], soft17: true, pushLose: true, pays: 1.4, restake: 5033164800 },
+      { id: "b29", labelKey: "bjT29", decks: 1, start: 26843545600, bets: [1677721600, 3355443200, 6710886400], target: 40265318400, starHands: [3, 16, 69], soft17: true, pushLose: true, pays: 1.4, restake: 5033164800 },
+      { id: "b30", labelKey: "bjT30", decks: 1, start: 53687091200, bets: [3355443200, 6710886400, 13421772800], target: 80530636800, starHands: [3, 16, 84], soft17: true, pushLose: true, pays: 1.4, restake: 6710886400 },
     ];
-    /* Sweep the twenty shipped tables plus the brief, in table order - the
-     * shared stream makes every number depend on position, so the brief is
-     * never measured on its own. */
+    /* Sweep the shipped ladder plus the brief, in table order - the shared
+     * stream makes every number depend on position, so the brief is never
+     * measured on its own. */
     sweep(api, api.bjTables.slice(0, api.bjTables.length - brief.length).concat(brief))
       .slice(brief.length * -1)
       .forEach(function (entry) {

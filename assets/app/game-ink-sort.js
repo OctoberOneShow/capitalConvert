@@ -64,6 +64,33 @@
     { id: "q22", labelKey: "sorL22", tubes: 18, colors: 15, shuffle: 122, starMoves: [92, 112, 132], maxPath: 92 },
     { id: "q23", labelKey: "sorL23", tubes: 17, colors: 15, shuffle: 126, starMoves: [96, 116, 136], maxPath: 96 },
     { id: "q24", labelKey: "sorL24", tubes: 17, colors: 15, shuffle: 150, starMoves: [105, 126, 147], maxPath: 105 },
+    /* Ranks 25-30 are the summit, and the rack is spent: fifteen tints over
+     * two spares is the floor the deep tier proved, so the lever left is the
+     * band itself. Every number below was measured through the dealer's own
+     * solver on the gate's seeded deals, eight per rung at seed 91500 +
+     * k*23. The deep tier's bands printed tens of moves of slack over the
+     * lines the solver actually replays - q24's own bench walks land at
+     * 59-72 under its 105 - and the summit takes that slack back rung over
+     * rung: the three-star line descends 71, 69, 66, 63, 60, 57 while the
+     * bench's longest replay shortens from 66 at the open to 57 at the
+     * close, and on each rung's pinned line deal (seeds 92811, 95019,
+     * 91546, 91615, 91569, 91500) the solver's replay lands exactly on the
+     * band, so a single wasted pour costs the top band. The selection is
+     * load-bearing by cut: relax the rung's acceptance back to the deep
+     * tier's loosest (maxPath 105) and re-deal on the cut seeds (92700 +
+     * k*31, k = 5/7/10/29) - the engine's own unfiltered racks carry walks
+     * of 72, 72, 74, 73, every one past every summit band, so the printed
+     * line stops being a line the dealer has replayed and the solver's own
+     * cut line lands two stars. Below the close the dealer's edge is
+     * measured too: maxPath 52 already starves seven of ten pinned deals
+     * and 48 starves every deal the gate pins, so 57 shuts the ladder a
+     * hair above the collapse line, as tight as the dealer still deals. */
+    { id: "q25", labelKey: "sorL25", tubes: 17, colors: 15, shuffle: 150, starMoves: [71, 91, 111], maxPath: 71 },
+    { id: "q26", labelKey: "sorL26", tubes: 17, colors: 15, shuffle: 150, starMoves: [69, 89, 109], maxPath: 69 },
+    { id: "q27", labelKey: "sorL27", tubes: 17, colors: 15, shuffle: 150, starMoves: [66, 86, 106], maxPath: 66 },
+    { id: "q28", labelKey: "sorL28", tubes: 17, colors: 15, shuffle: 150, starMoves: [63, 83, 103], maxPath: 63 },
+    { id: "q29", labelKey: "sorL29", tubes: 17, colors: 15, shuffle: 150, starMoves: [60, 80, 100], maxPath: 60 },
+    { id: "q30", labelKey: "sorL30", tubes: 17, colors: 15, shuffle: 150, starMoves: [57, 77, 97], maxPath: 57 },
   ];
 
   /* Bilingual copy for the deeper rack. addStrings only fills keys the shared
@@ -77,6 +104,9 @@
       "sorL19": "One Vial Shy", "sorL20": "The Final Palette",
       "sorL21": "The Nineteenth Vial", "sorL22": "Three Spares",
       "sorL23": "Two Spares", "sorL24": "The Squeezed Rack",
+      "sorL25": "The Solver's Line", "sorL26": "The Counted Pour",
+      "sorL27": "The Measured Rack", "sorL28": "The Narrow Line",
+      "sorL29": "The Last Slack", "sorL30": "To the Last Drop",
     },
     zh: {
       "sorL11": "\u7b2c\u4e94\u53ea\u7a7a\u74f6", "sorL12": "\u7a84\u67b6",
@@ -86,6 +116,9 @@
       "sorL19": "\u53ea\u5dee\u4e00\u74f6", "sorL20": "\u7ec8\u8272\u76d8",
       "sorL21": "\u7b2c\u5341\u4e5d\u53ea\u74f6", "sorL22": "\u4e09\u53ea\u7a7a\u74f6",
       "sorL23": "\u4e24\u53ea\u7a7a\u74f6", "sorL24": "\u6324\u7d27\u7684\u74f6\u67b6",
+      "sorL25": "\u89e3\u6cd5\u4e4b\u7ebf", "sorL26": "\u70b9\u6ef4\u5fc5\u8f83",
+      "sorL27": "\u6beb\u5398\u74f6\u67b6", "sorL28": "\u4e00\u7ebf\u4e4b\u5bbd",
+      "sorL29": "\u6700\u540e\u7684\u4f59\u91cf", "sorL30": "\u4e00\u6ef4\u4e0d\u5269",
     },
   });
 

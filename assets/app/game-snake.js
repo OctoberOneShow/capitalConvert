@@ -52,6 +52,33 @@
     { id: "h22", labelKey: "snkL22", goal: 26, starTimes: [100, 140, 201], wrap: true, start: { x: 2, y: 13, dx: -1 }, walls: [[2, 4, 5, 4], [2, 5, 2, 10], [2, 11, 5, 11], [10, 4, 13, 4], [13, 5, 13, 10], [10, 11, 13, 11], [3, 7, 4, 8], [11, 7, 12, 8], [7, 7, 8, 8], [7, 1, 8, 2], [7, 13, 8, 14], [0, 6, 1, 7], [14, 8, 15, 9]] },
     { id: "h23", labelKey: "snkL23", goal: 26, starTimes: [104, 146, 210], wrap: true, start: { x: 2, y: 5, dx: 1 }, walls: [[7, 0, 8, 3], [7, 5, 8, 10], [7, 12, 8, 15], [0, 7, 4, 8], [11, 7, 15, 8]] },
     { id: "h24", labelKey: "snkL24", goal: 27, starTimes: [110, 154, 222], wrap: true, start: { x: 5, y: 1, dx: 1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 6, 6], [9, 5, 10, 6], [5, 9, 6, 10], [9, 9, 10, 10], [7, 7, 8, 8], [0, 0, 0, 0], [15, 0, 15, 0], [0, 15, 0, 15], [15, 15, 15, 15]] },
+
+    /* Houses 25-30, the summit above the crown. The dial is the fill: the
+     * quota climbs one bite a rung (28 to 33) while the court keeps the
+     * crown's floor, so the share of open stone the serpent must occupy
+     * climbs rung over rung - 27/196 on h24 is 13.8%, and the summit runs
+     * 14.6%, 14.8%, 16.5%, 17.1%, 17.2% and 18.8%, every house measured by
+     * the release gate's routing hand through the engine's own tick. The
+     * plans remix the shipped motifs at that tighter fill: the throne room
+     * seats the coil's ring around a hollow throne; the spire stairs wind
+     * six shelves with a riser stone in every lane; the long gallery stacks
+     * three walls whose doors alternate ends and whose pillars each leave
+     * one brick of daylight; the arrow slits run five full-height columns
+     * on a single slit row; the royal maze braids the comb rack's verticals
+     * with doors and stringers; and the sky crown rebuilds the crown's
+     * four courts with sills on every gate lane and stone pairs astride the
+     * wrap seams. All numbers were measured, not guessed: the strong hand
+     * clears every summit house on every seed with margin under its own
+     * three-star line, a greedy hand cannot hold the tier, and the star
+     * bands are cut from the strong hand's own seconds (three stars at the
+     * median plus a breath, one star at three times the median - the same
+     * law the keep's rows ship under). */
+    { id: "h25", labelKey: "snkL25", goal: 28, starTimes: [115, 161, 232], wrap: false, start: { x: 8, y: 8, dx: 1 }, walls: [[2, 2, 13, 2], [2, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 10, 6], [5, 9, 10, 10]] },
+    { id: "h26", labelKey: "snkL26", goal: 29, starTimes: [120, 168, 242], wrap: true, start: { x: 1, y: 7, dx: 1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 6, 6], [9, 5, 10, 6], [5, 9, 6, 10], [9, 9, 10, 10], [7, 7, 8, 8], [0, 0, 0, 0], [15, 0, 15, 0], [0, 15, 0, 15], [15, 15, 15, 15], [0, 6, 1, 6], [14, 8, 15, 8]] },
+    { id: "h27", labelKey: "snkL27", goal: 30, starTimes: [126, 177, 254], wrap: true, start: { x: 10, y: 8, dx: -1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 6, 6], [9, 5, 10, 6], [5, 9, 6, 10], [9, 9, 10, 10], [7, 7, 8, 8], [0, 0, 0, 0], [15, 0, 15, 0], [0, 15, 0, 15], [15, 15, 15, 15], [0, 7, 1, 7], [14, 8, 15, 8], [7, 0, 8, 0], [7, 15, 8, 15]] },
+    { id: "h28", labelKey: "snkL28", goal: 31, starTimes: [132, 185, 266], wrap: true, start: { x: 2, y: 7, dx: -1 }, walls: [[3, 3, 6, 3], [9, 3, 12, 3], [3, 12, 6, 12], [9, 12, 12, 12], [3, 4, 3, 6], [3, 9, 3, 11], [12, 4, 12, 6], [12, 9, 12, 11], [6, 6, 9, 6], [6, 9, 9, 9], [6, 7, 6, 8], [1, 1, 2, 1], [13, 1, 14, 1], [1, 14, 2, 14], [13, 14, 14, 14], [0, 7, 0, 8], [15, 7, 15, 8], [8, 0, 8, 1], [7, 14, 8, 14], [5, 0, 6, 0], [9, 15, 10, 15], [0, 3, 1, 3], [14, 12, 15, 12]] },
+    { id: "h29", labelKey: "snkL29", goal: 32, starTimes: [138, 194, 278], wrap: true, start: { x: 7, y: 12, dx: 1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 6, 6], [9, 5, 10, 6], [5, 9, 6, 10], [9, 9, 10, 10], [7, 7, 8, 8], [0, 7, 0, 8], [15, 7, 15, 8], [7, 0, 8, 1], [7, 14, 8, 15]] },
+    { id: "h30", labelKey: "snkL30", goal: 33, starTimes: [146, 205, 294], wrap: true, start: { x: 5, y: 1, dx: 1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 6, 6], [9, 5, 10, 6], [5, 9, 6, 10], [9, 9, 10, 10], [7, 7, 8, 8], [0, 0, 0, 0], [15, 0, 15, 0], [0, 15, 0, 15], [15, 15, 15, 15], [0, 7, 1, 7], [14, 8, 15, 8], [7, 0, 8, 0], [7, 15, 8, 15], [3, 4, 3, 4], [12, 4, 12, 4], [3, 11, 3, 11], [12, 11, 12, 11], [7, 3, 8, 3], [7, 12, 8, 12]] },
   ];
 
   /* The court takes its tint from the panel hue; the serpent stays jade and the
@@ -1343,7 +1370,7 @@
       if (outcome.unlockedNext) {
         message += " " + t("snkNextHouse");
       } else if (campaign.clearedCount() === snkLevels.length) {
-        message += " " + t("snkCampaignDone");
+        message += " " + t("snkCampaignDone", { n: snkLevels.length });
       }
       logAction(t("logSnk", { n: snake.length }));
       var rect = startBtn.getBoundingClientRect();
@@ -1528,19 +1555,32 @@
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already own, so the shared dictionary stays authoritative. The
    * inner keep continues the fortress ascent the shared dictionary carries
-   * through the citadel. */
+   * through the citadel, and the summit climbs past the crown into the
+   * rooms a royal serpent rules. */
   App.addStrings({
     en: {
       "snkL21": "The Coil",
       "snkL22": "The Twin Keeps",
       "snkL23": "The Four Courts",
       "snkL24": "The Crown",
+      "snkL25": "The Throne Room",
+      "snkL26": "The Spire Stairs",
+      "snkL27": "The Long Gallery",
+      "snkL28": "The Arrow Slits",
+      "snkL29": "The Royal Maze",
+      "snkL30": "The Sky Crown",
     },
     zh: {
       "snkL21": "盘环阵",
       "snkL22": "双子堡",
       "snkL23": "四合院",
       "snkL24": "御冠殿",
+      "snkL25": "王座厅",
+      "snkL26": "塔旋梯",
+      "snkL27": "长画廊",
+      "snkL28": "箭窗阵",
+      "snkL29": "王家迷阵",
+      "snkL30": "天冠殿",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

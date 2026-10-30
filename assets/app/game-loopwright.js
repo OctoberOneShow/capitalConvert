@@ -450,6 +450,154 @@
         ["W", "F", "F", "F", "F", "F", "R", "F"],
       ],
     },
+    /* Floors 25-30 are the summit, and its dial is the plate count the win
+     * law itself holds: a floor only clears when EVERY plate in the room is
+     * still pressed on the winning frame, and the rooms climb from three
+     * plates to the full eight - f25 carries three, f26 four, f27 five,
+     * f28 six, f29 seven, and f30 eight, one plate per column of the summit's
+     * four-wide crate yard. The crew grows with the room (par 3, 3, 4, 4, 5,
+     * 5 runs) because a parked body holds one plate and a shoveled crate one
+     * more, so eight presses take four ghosts each delivering a crate and
+     * then its own body, while the closer ends on G and can press nothing.
+     * Every floor was walked by its own shipped runs in
+     * tools/loopwright-forge.js and came back solved, and the forge's
+     * searches came back empty: no final run of par-1 ops or fewer over the
+     * movement chips and Push wins any of them given the authored ghosts,
+     * the final run alone - ghosts stripped - dies on the shut door of
+     * every one, and f30's closer spends exactly the eight slots the panel
+     * allows. The presses are the load: strip the crates from a summit floor
+     * and no final run wins at par length, because the plates the crates
+     * held outnumber the bodies left to hold them (eight plates, four
+     * ghosts, and the worker's own frame owed to G); and the no-wait walk
+     * dies on the door of every summit floor - a ghost only holds its plate
+     * once its own run has settled, so the waits are the clock. */
+    /* Three plates, two ghosts: one shoveled crate presses the top plate and
+     * its ghost's body walks on to the side plate, the other ghost takes the
+     * far column, and the closer waits out both settles before climbing. */
+    {
+      id: "f25", labelKey: "lpwF25",
+      map: ["########",
+            "#..G...#",
+            "#..D...#",
+            "#.P.P..#",
+            "#..P...#",
+            "#.C....#",
+            "#..W...#",
+            "########"],
+      doorPlates: [0], pistonOffsets: [],
+      programs: [
+        ["L", "F", "R", "P", "P", "R", "F"],
+        ["R", "F", "L", "F", "F", "F"],
+        ["W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
+    /* Four plates, two crate-and-body ghosts: each column is pushed once and
+     * parked on, and the closer's first wait is the ghost's settle, its
+     * second the door's own opening beat. */
+    {
+      id: "f26", labelKey: "lpwF26",
+      map: ["########",
+            "#..G...#",
+            "#..D...#",
+            "#.P..P.#",
+            "#.P..P.#",
+            "#.C..C.#",
+            "#..W...#",
+            "########"],
+      doorPlates: [0], pistonOffsets: [],
+      programs: [
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "F", "L", "P", "P"],
+        ["W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
+    /* Five plates, three ghosts: the two crate columns feed top and bottom
+     * pairs while the third ghost merely parks on the corner plate - from
+     * here on every spare body in the room is a press. */
+    {
+      id: "f27", labelKey: "lpwF27",
+      map: ["########",
+            "#..G...#",
+            "#..D...#",
+            "#.P..P.#",
+            "#.P..P.#",
+            "#.C..C.#",
+            "#..W.P.#",
+            "########"],
+      doorPlates: [0], pistonOffsets: [],
+      programs: [
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "F", "L", "P", "P"],
+        ["R", "F", "F"],
+        ["W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
+    /* Six plates, three crate-and-body ghosts in three columns: the room is
+     * fully doubled, top plate fed by the crate, bottom held by the body
+     * that pushed it. */
+    {
+      id: "f28", labelKey: "lpwF28",
+      map: ["########",
+            "#..G...#",
+            "#..D...#",
+            "#.P.P.P#",
+            "#.P.P.P#",
+            "#.C.C.C#",
+            "#..W...#",
+            "########"],
+      doorPlates: [0], pistonOffsets: [],
+      programs: [
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "L", "P", "P"],
+        ["R", "F", "F", "F", "L", "P", "P"],
+        ["W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
+    /* Seven plates, four ghosts: the sixth column's crate joins the yard and
+     * a fourth ghost takes the left wing, so the closer waits out three
+     * crates and a parked body before the door will answer. */
+    {
+      id: "f29", labelKey: "lpwF29",
+      map: ["########",
+            "#..G...#",
+            "#..D...#",
+            "#.P.P.P#",
+            "#.P.P.P#",
+            "#.C.C.C#",
+            "#P.W...#",
+            "########"],
+      doorPlates: [0], pistonOffsets: [],
+      programs: [
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "F", "F", "L", "P", "P"],
+        ["R", "F", "L", "P", "P"],
+        ["L", "F", "F"],
+        ["W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
+    /* The full house: eight plates, four crate-and-body ghosts in a
+     * four-wide yard, and a closer that needs three waits to outlast the
+     * last crate's settle - eight ops, exactly the slots the panel allows,
+     * and the forge found nothing shorter. */
+    {
+      id: "f30", labelKey: "lpwF30",
+      map: ["########",
+            "#..G...#",
+            "#..D...#",
+            "#PP..PP#",
+            "#PP..PP#",
+            "#CC..CC#",
+            "#..W...#",
+            "########"],
+      doorPlates: [0], pistonOffsets: [],
+      programs: [
+        ["L", "F", "F", "R", "P", "P"],
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "F", "L", "P", "P"],
+        ["R", "F", "F", "F", "L", "P", "P"],
+        ["W", "W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
   ];
 
   function mulberry32(seed) {
@@ -1321,6 +1469,12 @@
       "lpwF22": "The Stamping Press",
       "lpwF23": "Carry It Through",
       "lpwF24": "The Night Shift",
+      "lpwF25": "Swing Shift",
+      "lpwF26": "Overtime",
+      "lpwF27": "Full House",
+      "lpwF28": "The Long Shift",
+      "lpwF29": "The Union",
+      "lpwF30": "The Last Shift",
       "lpwOpF": "Forward",
       "lpwOpB": "Back",
       "lpwOpL": "Turn left",
@@ -1352,7 +1506,7 @@
       "lpwFailShort": "The queue ran out short of the goal. Rewound - and that ghost is now your crew.",
       "lpwNextFloor": "Next floor unlocked.",
       "lpwAllFloors": "Every floor is running.",
-      "lpwHint": "Keys 1-9 insert (9 is the loop marker; re-click it to change its target), arrows move the queue cursor, Enter inserts the armed chip, Backspace clears a slot, R runs, X rewinds. Empty slots act as waits. 3 stars: par runs AND no more than par instructions.",
+      "lpwHint": "Keys 1-9 insert (9 is the loop marker; re-click it to change its target), arrows move the queue cursor, Enter inserts the armed chip, Backspace clears a slot, R runs, X rewinds. Empty slots act as waits. 3 stars: par runs AND no more than par instructions. The summit floors (25-30) only clear when every plate is still pressed on the winning frame.",
       "logLoopwright": "Cleared {name} in {n} runs",
     },
     zh: {
@@ -1381,6 +1535,12 @@
       "lpwF22": "冲压车间",
       "lpwF23": "携垫过闸",
       "lpwF24": "夜班交接",
+      "lpwF25": "翻班",
+      "lpwF26": "加班",
+      "lpwF27": "满员",
+      "lpwF28": "长班",
+      "lpwF29": "工会",
+      "lpwF30": "最后一班",
       "lpwOpF": "前进",
       "lpwOpB": "后退",
       "lpwOpL": "左转",
@@ -1412,7 +1572,7 @@
       "lpwFailShort": "指令跑完时还没达成目标。已倒带——这个分身现在是你的一名工友。",
       "lpwNextFloor": "解锁下一层。",
       "lpwAllFloors": "全部楼层都运转起来了。",
-      "lpwHint": "数字键 1-9 直接插入（9 是回环标记，再点一次可切换跳回的目标），方向键移动队列光标，回车插入选中的指令，退格清空槽位，R 运行，X 倒带。空槽按等待处理。三星条件：恰好标准运行数且指令数不超过标准。",
+      "lpwHint": "数字键 1-9 直接插入（9 是回环标记，再点一次可切换跳回的目标），方向键移动队列光标，回车插入选中的指令，退格清空槽位，R 运行，X 倒带。空槽按等待处理。三星条件：恰好标准运行数且指令数不超过标准。顶层楼层（25-30）要求通关瞬间所有压板仍被按住。",
       "logLoopwright": "用 {n} 次运行通关{name}",
     },
   });
@@ -1458,6 +1618,7 @@
         "Ghosts: every finished run leaves a ghost of that walk playing beside the next one - park an old self on a plate and it holds the door open for the new you.",
         "Watch out: bumping a wall, wedging a crate into a corner, or an endless loop rewinds all actors and costs one run; dropped pads and crates rewind too, only the ghost stays.",
         "Scoring: fewer runs earn more stars - three stars means par runs and no more than par instructions.",
+        "New tier: the summit floors (25-30) only clear when every plate in the room is still pressed on the winning frame - the rooms climb from three plates to the full eight, so every ghost must deliver a crate and then park its own body.",
       ],
       zh: [
         "目标：让所有压板保持按下，并让工人 W 在程序结束时站在 G 上。",
@@ -1466,6 +1627,7 @@
         "分身：每跑完一次，上一次的身影就会在旁边同步重演——让旧的分身站在压板上，就能为新来的你顶住门。",
         "小心：撞墙、把货箱推进死角、或无限循环都会把所有角色倒回起点并消耗一次运行；压垫与货箱也会倒回，只有分身留下。",
         "计分：运行次数越少星越多——三星要求恰好标准运行数，且指令数不超过标准。",
+        "新层级：顶层楼层（25-30）要求通关瞬间房间里的每一块压板都仍被按住——压板从三块一路加到满员八块，每个分身都要先推箱到位、再驻守压板。",
       ],
     },
   });

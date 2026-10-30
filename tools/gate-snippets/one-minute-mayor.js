@@ -22,20 +22,20 @@
  * strategy), and the naive sprawl does not even clear one star - the bands
  * are reachable but not free. Fourth, the copy: the four district names and
  * the guide's new-tier line resolve in both languages, and the unlock chain
- * walks all twenty-four rungs in order. */
+ * walks all thirty rungs in order. */
 
 module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const levels = App.mayorDistricts;
-  const deepIds = ["o21", "o22", "o23", "o24"];
+  const deepIds = ["o21", "o22", "o23", "o24", "o25", "o26", "o27", "o28", "o29", "o30"];
 
-  check("game-one-minute-mayor", "the ladder holds twenty-four districts",
-    levels.length === 24, String(levels.length));
+  check("game-one-minute-mayor", "the ladder holds thirty districts",
+    levels.length === 30, String(levels.length));
   check("game-one-minute-mayor", "every district id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
   const missing = deepIds.filter((id) => !levels.some((level) => level.id === id));
-  check("game-one-minute-mayor", "the deep tier o21-o24 is present",
+  check("game-one-minute-mayor", "the deep tier o21-o30 is present",
     missing.length === 0, missing.join(","));
 
   const byId = {};
@@ -254,7 +254,7 @@ module.exports = function gate(ctx) {
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-one-minute-mayor", "the four deep district names resolve in both languages",
+  check("game-one-minute-mayor", "the ten deep district names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 
   /* The guide carries the new-tier line in both languages. */
@@ -275,7 +275,7 @@ module.exports = function gate(ctx) {
     guideProblems.length === 0, guideProblems.join(" | "));
 
   /* The unlock chain is derived, never stored: clearing each district in
-   * order hands the player exactly the next one, all twenty-four times. */
+   * order hands the player exactly the next one, all thirty times. */
   const chain = App.createCampaign({
     key: "one-minute-mayor-gate-chain",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -290,6 +290,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-one-minute-mayor", "the unlock chain walks all twenty-four districts in order",
-    walked === 24 && chained && chain.clearedCount() === 24, walked + " first clears");
+  check("game-one-minute-mayor", "the unlock chain walks all thirty districts in order",
+    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
 };

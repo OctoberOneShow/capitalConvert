@@ -79,6 +79,31 @@
     { id: "f22", labelKey: "blkL22", goal: 40, garbage: 5, startMs: 210, holes: 2, rise: 8, starTimes: [265, 400, 545] },
     { id: "f23", labelKey: "blkL23", goal: 43, garbage: 9, startMs: 200, holes: 2, pieces: "noI", starTimes: [225, 340, 470] },
     { id: "f24", labelKey: "blkL24", goal: 44, garbage: 6, startMs: 200, holes: 2, pieces: "noI", rise: 6, starTimes: [230, 345, 475] },
+    /* Ranks 25-30 are the summit, and its one lesson is the third door:
+     * `holes: 3` opens three columns in every rubble row - no row clears
+     * until all three are built, and one of the three is always a
+     * deliberate build, never the lucky hole the drop happens to leave.
+     * Every rung keeps the triple door; the other dials layer the deep
+     * tier's twists back on top of it. All numbers were measured on the
+     * gate's seeded bench (the one-ply Dellacherie stacker plus a best
+     * reply, seeds 1000-1385): the bench clears every rung in a realistic
+     * share of seeds, its winning lines run 130.9-266.4 seconds against
+     * three-star bands of 165-250, and every summit line is slower than
+     * the deep peak's best (121.1 on f24) - the third door costs time on
+     * every rung even where the bench squeaks out the win. Cut any rung
+     * back to the twin door and the same bench wins more or lands faster
+     * (measured cut benches below the gate), so the door is the lesson.
+     * f25 teaches the triple door on its own; f26 sends the rubble rising
+     * under it; f27 takes the I-beams away; f28 layers rise and no I-beams
+     * at once; f29 is the fastest clock the triple door has run at; and
+     * f30 closes on the deepest goal in the campaign with the full
+     * cocktail - triple doors, a rising floor and no I-beams. */
+    { id: "f25", labelKey: "blkL25", goal: 46, garbage: 8, startMs: 210, holes: 3, starTimes: [165, 250, 350] },
+    { id: "f26", labelKey: "blkL26", goal: 46, garbage: 5, startMs: 210, holes: 3, rise: 7, starTimes: [205, 310, 430] },
+    { id: "f27", labelKey: "blkL27", goal: 46, garbage: 6, startMs: 200, holes: 3, pieces: "noI", starTimes: [240, 360, 500] },
+    { id: "f28", labelKey: "blkL28", goal: 46, garbage: 2, startMs: 215, holes: 3, pieces: "noI", rise: 9, starTimes: [265, 400, 545] },
+    { id: "f29", labelKey: "blkL29", goal: 46, garbage: 5, startMs: 190, holes: 3, starTimes: [200, 300, 420] },
+    { id: "f30", labelKey: "blkL30", goal: 50, garbage: 3, startMs: 205, holes: 3, pieces: "noI", rise: 7, starTimes: [250, 375, 515] },
   ];
 
   function rotateMatrix(matrix) {
@@ -904,4 +929,27 @@
   App.blkRotate = rotateMatrix;
   App.blkRows = blkRows;
   App.blkCols = blkCols;
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so the shared dictionary stays authoritative. The
+   * summit keeps the mining register the deep tier carries and names the
+   * third door on every rung. */
+  App.addStrings({
+    en: {
+      "blkL25": "Triple Shafts",
+      "blkL26": "Three-Door Tide",
+      "blkL27": "Beamless Triple",
+      "blkL28": "The Deep Triple",
+      "blkL29": "Breakneck Triple",
+      "blkL30": "The Triple Core",
+    },
+    zh: {
+      "blkL25": "三竖井",
+      "blkL26": "三门渣潮",
+      "blkL27": "无梁三门",
+      "blkL28": "深部三门",
+      "blkL29": "险段三门",
+      "blkL30": "三重核心",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

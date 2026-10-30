@@ -55,11 +55,11 @@
     });
   }
 
-  /* Twenty-four districts, always the same twenty-four: open land, a river of
+  /* Thirty districts, always the same thirty: open land, a river of
    * water, a brownfield of foul ground, a listed corner that bans worksites,
    * the full city with all three at once, then a back ladder of twenty-rung
    * shape - cuts, lattices, banned rings and shorter ledgers that squeeze the
-   * same knobs with a smaller margin each time - and a deep tier of four
+   * same knobs with a smaller margin each time - and a deep tier of ten
    * districts where the worksite itself is priced out of the plan. stars/plan/
    * proof are filled by omvProveAll(), from the measured plan - no band here
    * is invented. */
@@ -125,7 +125,7 @@
   var omvTwinFoul = omvXY([[2, 3], [3, 2]]);
   var omvShelfPool = omvXY([[5, 0]]);
   var omvShelfRow = omvXY([[0, 2], [1, 2], [2, 2], [3, 2], [4, 2]]);
-  /* Rungs 21-24, the deep tier, and the one lesson the ladder has never
+  /* Rungs 21-30, the deep tier, and the one lesson the ladder has never
    * taught: a district that plans without a worksite. Every home lot sits
    * inside the ban rings of a listed old town, so the only legal worksite
    * lots lie across open water, and every lot a home can stand on off the
@@ -133,8 +133,13 @@
    * ground is an island with no garden on it, and an empty plant there
    * scores -2 forever. The measured plan closes with no worksite in it
    * and prints its jobless homes on purpose: roofs, water and greens carry
-   * the ledger alone. Every layout was measured through omvPlan/omvBands
-   * before it was kept, and the gate benches hands that insist on the plant. */
+   * the ledger alone. Rungs 25-30 keep cutting the same lesson into new
+   * shapes and shorter ledgers; the last two spend five placements, where
+   * a no-worksite line caps at 23 (two watered homes, one tap and two
+   * greens, with both homes' jobless penalty already paid), and fouling
+   * one of those homes prints 21, so the final measured step is 23 to 21.
+   * Every layout was measured through omvPlan/omvBands before it was kept,
+   * and the gate benches hands that insist on the plant. */
   var omvBankTown = omvXY([[0, 0], [1, 0], [2, 0], [3, 0], [0, 1], [1, 1], [2, 1], [0, 2], [1, 2], [0, 3]]);
   var omvBayWorks = omvXY([[4, 5], [5, 4], [5, 5]]);
   var omvBankList = omvXY([[0, 2], [1, 0]]);
@@ -146,6 +151,36 @@
   var omvPointWork = omvXY([[5, 5]]);
   var omvLastList = omvXY([[0, 1], [2, 0]]);
   var omvLastFoul = omvXY([[1, 1], [0, 3]]);
+  /* The six shorter deep shapes. o25 climbs a stair of listed lots wedged
+   * against the bay; o26 gathers the town at a tram terminus with its works
+   * pair across the water; o27 steps three terraces down to a single work
+   * lot; o28 is the wide shelf banked against open water; o29 spends the
+   * full market triangle; o30 leaves one last light on the eastern shelf,
+   * with a fouled home paying for the final point. */
+  var omvStairLots = omvXY([[0, 0], [1, 0], [2, 0], [0, 1], [2, 1], [2, 2], [1, 3], [0, 4]]);
+  var omvStairLands = omvXY([[1, 1], [1, 3], [2, 2]]);
+  var omvStairFoul = omvXY([[0, 1]]);
+  var omvStairWorks = omvXY([[5, 5]]);
+  var omvTerminusLots = omvXY([[0, 0], [1, 0], [2, 0], [3, 0], [0, 1], [1, 1], [2, 1], [0, 2], [1, 2], [0, 3]]);
+  var omvTerminusLands = omvXY([[2, 0], [1, 2], [0, 1]]);
+  var omvTerminusFoul = omvXY([[0, 2], [0, 1]]);
+  var omvTerminusWorks = omvXY([[4, 5], [5, 4], [5, 5]]);
+  var omvTerraceLots = omvXY([[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [4, 1], [3, 2], [4, 2]]);
+  var omvTerraceLands = omvXY([[2, 1], [4, 1], [5, 4]]);
+  var omvTerraceFoul = omvXY([[4, 0]]);
+  var omvTerraceWorks = omvXY([[0, 5]]);
+  var omvWideBankLots = omvXY([[1, 0], [2, 0], [3, 0], [4, 0], [5, 0], [2, 1], [3, 1], [4, 1], [5, 1], [3, 2], [4, 2], [5, 2], [4, 3], [5, 4]]);
+  var omvWideBankLands = omvXY([[5, 2], [3, 0]]);
+  var omvWideBankFoul = omvXY([[4, 1], [3, 0]]);
+  var omvWideBankWorks = omvXY([[0, 5]]);
+  var omvTriangleLots = omvXY([[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [0, 1], [1, 1], [2, 1], [3, 1], [0, 2], [1, 2], [2, 2], [0, 3], [1, 3], [0, 4]]);
+  var omvTriangleLands = omvXY([[2, 0], [0, 2]]);
+  var omvTriangleFoul = omvXY([[1, 2], [4, 0]]);
+  var omvTriangleWorks = omvXY([[5, 5]]);
+  var omvBeaconLots = omvXY([[2, 0], [3, 0], [4, 0], [2, 1], [3, 1], [4, 1], [5, 1], [3, 2], [4, 2], [5, 2], [4, 3], [5, 3], [5, 4]]);
+  var omvBeaconLands = omvXY([[3, 1], [5, 2]]);
+  var omvBeaconFoul = omvXY([[4, 1], [2, 0], [5, 3]]);
+  var omvBeaconWorks = omvXY([[0, 5]]);
   /* The deep tier's water is everything a district does not keep: the old
    * town, the far works lots and the listings stay land, the rest is bay. */
   function omvBayExcept(lots) {
@@ -190,17 +225,20 @@
     omvFarDistrict("o18", "omvZ18", 8, 0.09, omvShelfPool, omvShelfRow),
     omvFarDistrict("o19", "omvZ19", 10, 0.06, omvChannelsWater, omvChannelsFoul),
     omvFarDistrict("o20", "omvZ20", 10, 0.05, omvPondsWater, omvPondsFoul),
-    /* The deep tier, rungs 21-24. One shared lesson, four shapes: the district
+    /* The deep tier, rungs 21-30. One shared lesson, ten shapes: the district
      * that plans without a worksite. o21 a listed old town behind the bay with
      * three work lots across the water nobody can reach; o22 the south shore
      * split into two greens by a water spine, its works pair fouled spoil in
      * the north-east; o23 the wide listed park, a single work lot on the point
      * and room for ten placements; o24 the old town shrunk around fouled
-     * ground, the tightest slack and the shortest ledger. Every home lot sits
-     * inside a listing's ban ring and every garden lot lies past a stop's
-     * five-street bridge of the works ground, so the measured plan closes with
-     * no worksite in it. slack never rises down the ladder; stars/plan/proof
-     * stay measured - omvProveAll() fills them from omvBeatable() at load. */
+     * ground, the tightest slack and the shortest ledger. Then six shorter
+     * shapes: o25 a stair of listed lots, o26 a tram terminus, o27 three
+     * terraces, o28 a wide banked shelf, o29 the full market triangle and o30
+     * the last light on a fouled eastern shelf. Every home lot sits inside a
+     * listing's ban ring and every garden lot lies past a stop's five-street
+     * bridge of the works ground, so the measured plan closes with no worksite
+     * in it. slack never rises down the ladder; stars/plan/proof stay measured
+     * - omvProveAll() fills them from omvBeatable() at load. */
     omvFarDistrict("o21", "omvZ21", 7, 0.05,
       omvBayExcept(omvBankTown.concat(omvBayWorks, omvBankList)), null, omvBankList),
     omvFarDistrict("o22", "omvZ22", 6, 0.05,
@@ -209,6 +247,18 @@
       omvBayExcept(omvParkLand.concat(omvPointWork, omvParkList)), null, omvParkList),
     omvFarDistrict("o24", "omvZ24", 7, 0.03,
       omvBayExcept(omvBankTown.concat(omvBayWorks, omvLastList)), omvLastFoul, omvLastList),
+    omvFarDistrict("o25", "omvZ25", 7, 0.03,
+      omvBayExcept(omvStairLots.concat(omvStairLands, omvStairWorks)), omvStairFoul, omvStairLands),
+    omvFarDistrict("o26", "omvZ26", 7, 0.03,
+      omvBayExcept(omvTerminusLots.concat(omvTerminusLands, omvTerminusWorks)), omvTerminusFoul, omvTerminusLands),
+    omvFarDistrict("o27", "omvZ27", 7, 0.03,
+      omvBayExcept(omvTerraceLots.concat(omvTerraceLands, omvTerraceWorks)), omvTerraceFoul, omvTerraceLands),
+    omvFarDistrict("o28", "omvZ28", 6, 0.03,
+      omvBayExcept(omvWideBankLots.concat(omvWideBankLands, omvWideBankWorks)), omvWideBankFoul, omvWideBankLands),
+    omvFarDistrict("o29", "omvZ29", 5, 0.03,
+      omvBayExcept(omvTriangleLots.concat(omvTriangleLands, omvTriangleWorks)), omvTriangleFoul, omvTriangleLands),
+    omvFarDistrict("o30", "omvZ30", 5, 0.03,
+      omvBayExcept(omvBeaconLots.concat(omvBeaconLands, omvBeaconWorks)), omvBeaconFoul, omvBeaconLands),
   ];
 
   /* --- grid helpers -------------------------------------------------------- */
@@ -1187,6 +1237,12 @@
       "omvZ22": "The Two Greens",
       "omvZ23": "The Park Ward",
       "omvZ24": "The Last Plan",
+      "omvZ25": "The Landmark Stair",
+      "omvZ26": "The Tram Terminus",
+      "omvZ27": "The Three Terraces",
+      "omvZ28": "The Wide Bank",
+      "omvZ29": "The Market Triangle",
+      "omvZ30": "The Last Light",
       "omvTurnLabel": "Placements",
       "omvScoreLabel": "District",
       "omvGoalLabel": "Bands",
@@ -1253,7 +1309,7 @@
       "omvShort": "The district reached {n} points and needed {need}, short by {gap}. The unmet need: {why}",
       "omvNoNeed": "no single need went unmet - the town is simply too small, so build more homes and the worksites and taps they need.",
       "omvNextDistrict": "Next district unlocked.",
-      "omvCampaignDone": "All twenty-four districts are planned.",
+      "omvCampaignDone": "All thirty districts are planned.",
       "omvLockedDistrict": "That district is still sealed - clear the one before it.",
       "omvUnproven": "{name} could not be proven clearable by the measured plan, so it is on hold.",
       "omvHint": "Every blueprint solves one need and opens another: a tap waters three homes but burns the lot a worksite wanted, a worksite employs two homes and fouls the four it fronts, and a stop pays only for a home that had no job within three streets. Nothing is random - rerun a district and it is dealt the same.",
@@ -1285,6 +1341,12 @@
       "omvZ22": "双绿地",
       "omvZ23": "公园坊",
       "omvZ24": "最后一城",
+      "omvZ25": "老宅石阶",
+      "omvZ26": "电车总站",
+      "omvZ27": "三级台",
+      "omvZ28": "宽滩",
+      "omvZ29": "三角集市",
+      "omvZ30": "最后一盏灯",
       "omvTurnLabel": "放置",
       "omvScoreLabel": "城区",
       "omvGoalLabel": "分档",
@@ -1351,7 +1413,7 @@
       "omvShort": "城区只有 {n} 分，要 {need} 分才过关，差 {gap} 分。没被满足的需求：{why}",
       "omvNoNeed": "没有哪一项单独拖了后腿——就是城太小，多盖住宅，再补上它们要的水站和工作地。",
       "omvNextDistrict": "解锁下一个城区。",
-      "omvCampaignDone": "二十四个城区都规划完了。",
+      "omvCampaignDone": "三十个城区都规划完了。",
       "omvLockedDistrict": "这个城区还没开放——先过掉前一个。",
       "omvUnproven": "{name} 没能被实测规划证明可以过关，所以暂缓开放。",
       "omvHint": "每种图纸都解决一个需求、同时制造另一个：一个水站供三户，却占掉工作地要的那块；工作地招两户，却污染四面；公交站只有让 3 格外的人家找到活才值钱。这里没有随机——同一个城区每次都长一个样，重来就能更好。",
@@ -1383,7 +1445,7 @@
         "Watch out: nothing is free. The tap that waters your row sits on the lot a worksite wanted, a worksite employs only two homes and fouls the four lots it fronts, and a green beside a worksite pays nothing.",
         "Undo: keys u, z or Backspace lift the last building off, and the ledger re-reads after every placement you make.",
         "Scoring: the ledger prints every point in words and digits - homes, watered, employed, jobless, idle taps, quiet greens - each with its own sum, and the number in a cell is exactly what that lot contributes.",
-        "New tier: districts 21 to 24 are listed old towns across the bay - every home lot is inside a landmark's ban ring, the only legal worksite lots lie across the water past even a stop's five-street walk of every garden lot, so the measured plan closes without a single worksite and roofs, water and greens carry the ledger alone.",
+        "New tier: districts 21 to 30 are listed old towns across the bay - every home lot is inside a landmark's ban ring, the only legal worksite lots lie across the water past even a stop's five-street walk of every garden lot, so the measured plan closes without a single worksite and roofs, water and greens carry the ledger alone.",
       ],
       zh: [
         "目标：把城区的账本刷到 HUD 显示的过关线——三星就是实测规划那条线。",
@@ -1392,7 +1454,7 @@
         "小心：没有白给的东西。替你那一排住宅供水的水站，正踩在工作地想要的那块地上；工作地只招两户，还污染紧邻四面；贴着工作地的绿地一分不得。",
         "悔手：u、z 或退格键能把上一手取回来，每一手都会让账本当场重算。",
         "计分：账本把每一分都写成文字加数字——住着几户、通水几户、就业几户、失业几户、几个空守水站、几块不涨分的绿地——每格上的数字就是这块地自己的贡献。",
-        "新层级：第 21 到 24 关是隔湾的挂牌老城——每块住宅用地都在老建筑的禁建圈里，唯一合法的工作地地块隔水相望，离每块绿地都超出公交站的五格通勤，所以实测规划一张工作地都不盖，住宅、给水和绿地要独自撑起账本。",
+        "新层级：第 21 到 30 关是隔湾的挂牌老城——每块住宅用地都在老建筑的禁建圈里，唯一合法的工作地地块隔水相望，离每块绿地都超出公交站的五格通勤，所以实测规划一张工作地都不盖，住宅、给水和绿地要独自撑起账本。",
       ],
     },
   });

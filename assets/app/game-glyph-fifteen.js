@@ -114,10 +114,36 @@
      * no line of any kind can beat it - so the depth is in the board, not
      * just the band. */
     { id: "t23", labelKey: "ftL23", grid: 5, walk: 4200, starMoves: [218, 327, 480] },
-    /* t24 closes the campaign on the deepest deal the drawer has ever dealt:
-     * the walk the old peak shipped, now on the big tray, with the deepest
-     * proven line in the game and the top of every band curve. */
+    /* t24 closes the deep tier on the deepest deal its walk had dealt:
+     * the walk the old peak shipped, now on the big tray, with the deep
+     * tier's proven line and the top of its band curve. */
     { id: "t24", labelKey: "ftL24", grid: 5, walk: 5600, starMoves: [230, 345, 506] },
+
+    /* t25-t30, the summit - the walk run out past every deal the drawer
+     * had dealt. The deep tier's lesson (the blank is a tile too, no plate
+     * starts at home) is held on every rung: each seeded deal takes its
+     * whole walk, passes the sliding-parity rule, and leaves all
+     * twenty-four plates displaced. Every number below was measured on the
+     * gate's seeded bench through the shipped solver: the admissible
+     * floors - no line of any kind can beat them - run 102, 102, 94, 94,
+     * 94, 96, all past the deep peak's 92; the proven lines run 196, 196,
+     * 190, 188, 182, 202, all dearer than the shipped summit's 156, and
+     * t30 closes the game on its deepest proven line. The walk is
+     * load-bearing on every rung: the same seed dealt at the deep tier's
+     * ceiling walk (5600) proves a line of 130-174, under every summit
+     * line. Bands stay on the shipped curve - two-star near one and a
+     * half times the three-star line, one-star near two and a seventh -
+     * and climb past the deep peak's on all three thresholds. t25 steps
+     * past the deep ceiling; t26 walks deeper still; t27 passes the old
+     * four-by-four ladder's close on the quintet; t28 crosses eight
+     * thousand; t29 leaves the shipped walk ladder four trebles behind;
+     * and t30 closes the drawer on the deepest deal it has ever dealt. */
+    { id: "t25", labelKey: "ftL25", grid: 5, walk: 6200, starMoves: [236, 350, 512] },
+    { id: "t26", labelKey: "ftL26", grid: 5, walk: 6800, starMoves: [240, 352, 516] },
+    { id: "t27", labelKey: "ftL27", grid: 5, walk: 7400, starMoves: [244, 356, 522] },
+    { id: "t28", labelKey: "ftL28", grid: 5, walk: 8000, starMoves: [248, 362, 528] },
+    { id: "t29", labelKey: "ftL29", grid: 5, walk: 8600, starMoves: [252, 368, 536] },
+    { id: "t30", labelKey: "ftL30", grid: 5, walk: 9200, starMoves: [256, 374, 544] },
   ];
 
   function easeOut(k) {
@@ -1495,12 +1521,24 @@
       "ftL22": "The Trench",
       "ftL23": "Hadal Reach",
       "ftL24": "Deepest Quintet",
+      "ftL25": "Subduction",
+      "ftL26": "The Seafloor Rift",
+      "ftL27": "The Undercurrent",
+      "ftL28": "Full Pressure",
+      "ftL29": "The Last Fathom",
+      "ftL30": "Challenger Deep",
     },
     zh: {
       "ftL21": "无光层",
       "ftL22": "海沟",
       "ftL23": "超深渊",
       "ftL24": "渊底终章",
+      "ftL25": "俯冲带",
+      "ftL26": "海底裂谷",
+      "ftL27": "底流",
+      "ftL28": "全压深境",
+      "ftL29": "最后一浔",
+      "ftL30": "挑战者深渊",
     },
   });
 

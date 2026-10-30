@@ -57,6 +57,56 @@
      * room over its own floor, the seam leaves three, so the squeeze is the
      * rung. */
     { id: "c24", labelKey: "echZ24", style: "pinch", pings: 13, quota: 13, starPings: [10, 11, 12], fish: 2 },
+
+    /* c25 - The Hollow Crown. The ladder's first ring seam closes eight
+     * chambers around one solid core, and the core is the teacher: its bulk
+     * splits the loop into two echo worlds, so quota on both arcs has to be
+     * sounded twice. Fifteen fossils in fourteen shots - c24's thirteen in
+     * thirteen - and the gate's worst dealt seam needs eleven pings against
+     * c24's ten; holing the core and its wall ring drops that floor to eight,
+     * so the crown is load-bearing. Three stars sits on the measured eleven. */
+    { id: "c25", labelKey: "echZ25", style: "ring", pings: 14, quota: 15, starPings: [11, 12, 13], fish: 2 },
+
+    /* c26 - The Twin Ladder. Two parallel trunks joined like a ladder: a ping
+     * on one trunk never reaches the other, so the ink has to be split lane
+     * by lane. Sixteen fossils in fifteen shots; the worst dealt seam costs
+     * twelve pings, two over c24's ten, and hollowing the block between the
+     * trunks drops that floor to nine. Three stars sits on the measured
+     * twelve. */
+    { id: "c26", labelKey: "echZ26", style: "doublefork", pings: 15, quota: 16, starPings: [12, 13, 14], fish: 2 },
+
+    /* c27 - The Iron Comb. A spine with eight closed teeth: each tooth is its
+     * own echo pocket, so sweeping the spine maps the corridor and none of
+     * the chambers behind it. Seventeen fossils in twenty shots; the worst
+     * dealt seam costs seventeen, seven over c24's ten, and widening the
+     * spine from one row to three drops that floor to eleven. Three stars
+     * sits on the measured seventeen. */
+    { id: "c27", labelKey: "echZ27", style: "comb", pings: 20, quota: 17, starPings: [17, 18, 19], fish: 2 },
+
+    /* c28 - Warp and Weft. A lattice of one-cell galleries: the crossings
+     * offer routes, but a sight line only runs down its own gallery, so the
+     * quota is scattered down both axes. Seventeen fossils in twenty-two
+     * shots; the worst dealt seam costs nineteen, nine over c24's ten, and
+     * opening the stone rows between the galleries drops that floor to ten.
+     * Three stars sits on the measured nineteen. */
+    { id: "c28", labelKey: "echZ28", style: "lattice", pings: 22, quota: 17, starPings: [19, 20, 21], fish: 2 },
+
+    /* c29 - The Coiled Dark. One one-cell spiral wound twice around a kernel:
+     * the stone between coils is the lesson, because a corridor that never
+     * branches still has to be sounded bend by bend. Seventeen fossils in
+     * thirty-three shots; the worst dealt seam costs thirty, twenty over
+     * c24's ten, and knocking out the walls between coils drops that floor to
+     * fourteen. Three stars sits on the measured thirty. */
+    { id: "c29", labelKey: "echZ29", style: "spiral", pings: 33, quota: 17, starPings: [30, 31, 32], fish: 2 },
+
+    /* c30 - The Last Hairpin. Six switchback legs stacked one stone apart,
+     * every hairpin hiding the next leg: the capstone pays for each blind
+     * turn. Nineteen fossils in thirty-four shots; the worst dealt seam costs
+     * thirty-two, twenty-two over c24's ten and the deepest floor on the
+     * ladder, and flattening the hairpins into one gallery drops it to eight.
+     * Three stars sits on the measured thirty-two. The capstone leaves two
+     * spare shots where c24 left three, so the summit's squeeze is the rung. */
+    { id: "c30", labelKey: "echZ30", style: "switchback", pings: 34, quota: 19, starPings: [32, 33, 34], fish: 2 },
   ];
 
   /* --- pure core ----------------------------------------------------------
@@ -343,6 +393,124 @@
         }
         grid[by][bx] = 0;
         echCarveRoom(grid, Math.max(1, bx - 1), Math.max(1, Math.min(by - 1, echH - 4)), 3, 3);
+      }
+    } else if (style === "spiral") {
+      /* One one-cell coil wound inward: the stone between coils is what stops
+       * an echo, so a corridor that never branches still has to be sounded
+       * bend by bend. */
+      var sc;
+      for (sc = 1; sc <= 15; sc += 1) {
+        grid[1][sc] = 0;
+      }
+      for (sc = 2; sc <= 11; sc += 1) {
+        grid[sc][15] = 0;
+      }
+      for (sc = 14; sc >= 1; sc -= 1) {
+        grid[11][sc] = 0;
+      }
+      for (sc = 10; sc >= 3; sc -= 1) {
+        grid[sc][1] = 0;
+      }
+      grid[3][2] = 0;
+      for (sc = 3; sc <= 13; sc += 1) {
+        grid[3][sc] = 0;
+      }
+      for (sc = 4; sc <= 9; sc += 1) {
+        grid[sc][13] = 0;
+      }
+      for (sc = 12; sc >= 3; sc -= 1) {
+        grid[9][sc] = 0;
+      }
+      for (sc = 8; sc >= 5; sc -= 1) {
+        grid[sc][3] = 0;
+      }
+      grid[5][4] = 0;
+      echCarveRoom(grid, 5, 5, 7, 3);
+    } else if (style === "comb") {
+      /* A spine with eight closed teeth; each tooth is its own echo pocket,
+       * so the room behind it is invisible until that tooth is sounded. */
+      var cb;
+      for (cb = 1; cb <= 15; cb += 1) {
+        grid[6][cb] = 0;
+      }
+      var combTop = [2, 6, 10, 14];
+      var combBot = [4, 8, 12, 15];
+      for (cb = 0; cb < combTop.length; cb += 1) {
+        grid[4][combTop[cb]] = 0;
+        grid[5][combTop[cb]] = 0;
+        echCarveRoom(grid, combTop[cb] - 1, 1, 3, 3);
+      }
+      for (cb = 0; cb < combBot.length; cb += 1) {
+        grid[7][combBot[cb]] = 0;
+        grid[8][combBot[cb]] = 0;
+        echCarveRoom(grid, Math.min(13, combBot[cb] - 1), 9, 3, 3);
+      }
+    } else if (style === "ring") {
+      /* A closed loop of eight chambers around a solid core: the core splits
+       * the echo into two worlds, so fossils on the far arc stay unknown
+       * until that arc is sounded. */
+      var ringRooms = [
+        { x: 1, y: 1 }, { x: 7, y: 1 }, { x: 13, y: 1 },
+        { x: 1, y: 5 }, { x: 13, y: 5 },
+        { x: 1, y: 9 }, { x: 7, y: 9 }, { x: 13, y: 9 },
+      ];
+      for (i = 0; i < ringRooms.length; i += 1) {
+        echCarveRoom(grid, ringRooms[i].x, ringRooms[i].y, 3, 3);
+      }
+      echTunnel(grid, { x: 3, y: 2 }, { x: 7, y: 2 });
+      echTunnel(grid, { x: 9, y: 2 }, { x: 13, y: 2 });
+      echTunnel(grid, { x: 14, y: 3 }, { x: 14, y: 5 });
+      echTunnel(grid, { x: 14, y: 7 }, { x: 14, y: 9 });
+      echTunnel(grid, { x: 13, y: 10 }, { x: 9, y: 10 });
+      echTunnel(grid, { x: 7, y: 10 }, { x: 3, y: 10 });
+      echTunnel(grid, { x: 2, y: 9 }, { x: 2, y: 7 });
+      echTunnel(grid, { x: 2, y: 5 }, { x: 2, y: 3 });
+    } else if (style === "doublefork") {
+      /* Two parallel trunks joined like a ladder: a ping on one trunk never
+       * reaches the other, so the ink has to be split lane by lane. */
+      var df;
+      for (df = 1; df <= 15; df += 1) {
+        grid[3][df] = 0;
+        grid[9][df] = 0;
+      }
+      echCarveRoom(grid, 1, 1, 3, 3);
+      echCarveRoom(grid, 13, 1, 3, 3);
+      echCarveRoom(grid, 1, 9, 3, 3);
+      echCarveRoom(grid, 13, 9, 3, 3);
+      for (df = 4; df <= 8; df += 1) {
+        grid[df][5] = 0;
+        grid[df][11] = 0;
+      }
+      echCarveRoom(grid, 6, 1, 3, 2);
+      echCarveRoom(grid, 6, 10, 3, 2);
+    } else if (style === "lattice") {
+      /* A grid of one-cell galleries cut by stone teeth: the crossings offer
+       * routes, but a sight line only runs down its own gallery. */
+      var lt;
+      var latRows = [2, 5, 8, 11];
+      var latCols = [2, 5, 8, 11, 14];
+      for (lt = 0; lt < latRows.length; lt += 1) {
+        for (i = 1; i <= 15; i += 1) {
+          grid[latRows[lt]][i] = 0;
+        }
+      }
+      for (lt = 0; lt < latCols.length; lt += 1) {
+        for (i = 1; i <= 11; i += 1) {
+          grid[i][latCols[lt]] = 0;
+        }
+      }
+    } else if (style === "switchback") {
+      /* Six hairpins stacked one stone apart: each leg echoes only its own
+       * straight, and the turn hides the next leg completely. */
+      var sw;
+      for (sw = 0; sw < 6; sw += 1) {
+        var legY = 1 + sw * 2;
+        for (i = 1; i <= 15; i += 1) {
+          grid[legY][i] = 0;
+        }
+        if (sw < 5) {
+          grid[legY + 1][sw % 2 === 0 ? 15 : 1] = 0;
+        }
       }
     } else {
       /* rooms / deep: a jittered lattice of chambers joined in a chain. */
@@ -1129,6 +1297,12 @@
       "echZ22": "Bifurcated Abyss",
       "echZ23": "The Nethermost Vault",
       "echZ24": "The Deepest Seam",
+      "echZ25": "The Hollow Crown",
+      "echZ26": "The Twin Ladder",
+      "echZ27": "The Iron Comb",
+      "echZ28": "Warp and Weft",
+      "echZ29": "The Coiled Dark",
+      "echZ30": "The Last Hairpin",
       "echPingLabel": "Ink",
       "echFossilLabel": "Fossils",
       "echStepLabel": "Steps",
@@ -1182,6 +1356,12 @@
       "echZ22": "分叉深渊",
       "echZ23": "幽冥最深穴",
       "echZ24": "最深矿层",
+      "echZ25": "空心环窟",
+      "echZ26": "双脊石梯",
+      "echZ27": "铁齿长梳",
+      "echZ28": "石格经纬",
+      "echZ29": "盘蛇暗廊",
+      "echZ30": "末道发卡弯",
       "echPingLabel": "墨量",
       "echFossilLabel": "化石",
       "echStepLabel": "步数",

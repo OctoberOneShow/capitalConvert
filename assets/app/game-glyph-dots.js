@@ -36,7 +36,11 @@
    * a tail of three on the flipped seven wins the plate for the rival
    * outright, so the deep rungs tune the tails per plate instead. The deep
    * bands are tuned by the seeded bench in
-   * tools/gate-snippets/glyph-dots.js. */
+   * tools/gate-snippets/glyph-dots.js. Ranks 25-30 are the summit above
+   * them, and it pairs the two extremes the ladder kept apart: the first
+   * eight-box plates it ever pours, under tails the wide flipped plate
+   * bears, and the heaviest shake it ever hands a flipped full-plate
+   * reader. The summit bands are tuned by the same bench. */
   var dotRanks = [
     { id: "d1", labelKey: "dotsL1", boxes: 3, blunder: 0.4, margin: [3, 2, 1] },
     { id: "d2", labelKey: "dotsL2", boxes: 3, blunder: 0.15, margin: [4, 2, 1] },
@@ -102,6 +106,36 @@
     { id: "d22", labelKey: "dotsL22", boxes: 6, blunder: 0, hold: 3, foeFirst: true, setup: true, count: true, margin: [4, 2, 1] },
     { id: "d23", labelKey: "dotsL23", boxes: 6, blunder: 0.015, hold: 2, foeFirst: true, setup: true, count: true, margin: [12, 8, 1] },
     { id: "d24", labelKey: "dotsL24", boxes: 7, blunder: 0.015, hold: 2, foeFirst: true, setup: true, count: true, margin: [15, 5, 1] },
+    /* Ranks 25-30 are the summit, and it pairs the two extremes the ladder
+     * kept apart: the widest plate it never poured and the heaviest shake
+     * it ever handed a flipped full-plate reader. Nothing below sits on
+     * eight boxes and no flipped rank below shakes past the deep tier's
+     * 0.015 - the summit ships both. The wide half spends three tails on
+     * the great plate, unshaken: five back, then one, then two, and the
+     * strong hand's win narrows at every step - twenty-four boxes, then
+     * fourteen, then two, the narrowest win in the campaign and the largest
+     * share of the plate any strong line concedes (0.484 against d21's
+     * 0.472). The tail sweep on the flipped eight-box plate - holds zero
+     * through five - lands wins of 12, 14, 2, lost outright, 20 and 24, so
+     * every shipped tail is load-bearing: cut the tail from the five or
+     * the one and the strong line drops under its band, widen the two to
+     * three and the plate is lost. The shaken half climbs the shake on the
+     * flipped seven - 0.02, 0.03, 0.035 - and the three-star ask climbs
+     * with it, twenty-one, twenty-five, twenty-nine boxes, past the deep
+     * tier's fifteen; unshake any of the three and the strong line lands
+     * nine, under every band, so the shake is what the bands are made of.
+     * At 0.04 the greedy hand overtakes the strong one - one seeded deal
+     * hands it thirty-five boxes where the strong line's best is
+     * thirty-one - which is where the shake stops. Every band is tuned to
+     * the seeded bench in tools/gate-snippets/glyph-dots.js, which replays
+     * the shipped players against every summit deal - the wide rungs over
+     * two seeds, the shaken rungs over fifteen. */
+    { id: "d25", labelKey: "dotsL25", boxes: 8, blunder: 0, hold: 5, foeFirst: true, setup: true, count: true, margin: [24, 12, 2] },
+    { id: "d26", labelKey: "dotsL26", boxes: 8, blunder: 0, hold: 1, foeFirst: true, setup: true, count: true, margin: [14, 7, 2] },
+    { id: "d27", labelKey: "dotsL27", boxes: 8, blunder: 0, hold: 2, foeFirst: true, setup: true, count: true, margin: [2, 1, 1] },
+    { id: "d28", labelKey: "dotsL28", boxes: 7, blunder: 0.02, hold: 2, foeFirst: true, setup: true, count: true, margin: [21, 9, 1] },
+    { id: "d29", labelKey: "dotsL29", boxes: 7, blunder: 0.03, hold: 2, foeFirst: true, setup: true, count: true, margin: [25, 9, 1] },
+    { id: "d30", labelKey: "dotsL30", boxes: 7, blunder: 0.035, hold: 2, foeFirst: true, setup: true, count: true, margin: [29, 9, 1] },
   ];
 
   function dotsIndex(y, x, width) {
@@ -826,6 +860,11 @@
       if (boxes <= 3) {
         return 40;
       }
+      if (boxes >= 8) {
+        /* seventeen columns at twenty-two pixels is the widest plate the
+         * drawer holds: the summit's eight-box boards shrink to fit it */
+        return 22;
+      }
       return boxes === 4 ? 36 : 30;
     }
 
@@ -1039,9 +1078,11 @@
    * does not already own, so the eight shipped rung names stay in the shared
    * dictionary and only the new ones ride here. The names say what each
    * rival does: one builds the chains it wants to hold, one reads the whole
-   * plate, one keeps two boxes back, one takes the first stick - and the
+   * plate, one keeps two boxes back, one takes the first stick - the
    * deep tier retunes the keeping for the small flipped plate: one box back,
-   * three back, the small plate shaken, the wide plate shaken. */
+   * three back, the small plate shaken, the wide plate shaken - and the
+   * summit pairs the two extremes, the widest plate the campaign pours and
+   * the heaviest shake it hands a reader. */
   App.addStrings({
     en: {
       "dotsL9": "Chainwright",
@@ -1060,6 +1101,12 @@
       "dotsL22": "Three Keeper",
       "dotsL23": "Small Plate",
       "dotsL24": "Shaky Keeper",
+      "dotsL25": "The Widest Plate",
+      "dotsL26": "Lone Keeper",
+      "dotsL27": "The Narrowest Win",
+      "dotsL28": "The Heavy Shake",
+      "dotsL29": "The Heavier Shake",
+      "dotsL30": "The Heaviest Shake",
     },
     zh: {
       "dotsL9": "织链匠",
@@ -1078,6 +1125,12 @@
       "dotsL22": "留三者",
       "dotsL23": "小盘者",
       "dotsL24": "颤留者",
+      "dotsL25": "至宽盘者",
+      "dotsL26": "孤留者",
+      "dotsL27": "险胜者",
+      "dotsL28": "重颤者",
+      "dotsL29": "愈颤者",
+      "dotsL30": "极颤者",
     },
   });
 

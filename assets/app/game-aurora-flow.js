@@ -16,12 +16,15 @@
    * full disjoint path set, so a ribbon solution always exists. Star times
    * are [3-star, 2-star, 1-star] seconds.
    *
-   * Twenty-four boards in three tiers. Rungs 1-10 grow the grid (5x5 up to
+   * Thirty boards in four tiers. Rungs 1-10 grow the grid (5x5 up to
    * 8x8) and the ribbon count with it while the boards stay airy enough that
    * every pair is legible at a glance. Rungs 11-20 grow the density instead:
    * they are forged solution-first by tools/aurora-forge.js, laid out in the
    * order that forge measured, so each rung needs more inked cells than the
-   * one before it (60 up to 76) and their star bands follow the same climb. */
+   * one before it (60 up to 76) and their star bands follow the same climb.
+   * Rungs 21-24 open the 10x10 panel at the full sixteen-ribbon deck, and
+   * the summit (25-30) opens the eleventh row, where the same deck has to
+   * weave a bigger panel - past a hundred inked cells. */
   var auroraLevels = [
     {
       id: "f1", labelKey: "auroL1", size: 5,
@@ -169,6 +172,55 @@
       id: "f24", labelKey: "auroL24", size: 10,
       pairs: [[8, 4, 9, 0], [8, 0, 6, 0], [5, 0, 1, 1], [2, 1, 8, 3], [7, 3, 2, 2], [1, 2, 0, 3], [0, 4, 0, 6], [0, 7, 5, 9], [6, 9, 9, 8], [9, 7, 2, 8], [1, 8, 2, 3], [2, 4, 2, 6], [2, 7, 7, 6], [7, 7, 5, 5], [5, 4, 4, 6], [4, 7, 5, 6]],
       starTimes: [96, 149, 206],
+    },
+    /* ------------------------------------------------------------------
+     * The summit tier (f25-f30). The deep tier had taken the ten-across
+     * panel as far as density would go - the forge measured that no
+     * shipped-size board re-solves above its 94 inked cells - so this tier
+     * opens the grid to 11x11, a size no earlier rung used, and keeps the
+     * sixteen-ribbon cap: the same ribbons now weave a bigger panel, so
+     * every ribbon runs longer and the solver's own answer climbs
+     * 101 up to 113 inked cells (83% up to 93% of the
+     * panel) against the deep tier's ceiling of 94. Every board was forged
+     * solution-first by tools/aurora-forge.js (`node
+     * tools/aurora-forge.js summit` rebuilds this block from
+     * tools/_aurora_summit.json) and re-solved from the pairs alone; a
+     * candidate only ships when that solver proves it at the screen cap,
+     * because a board the solver cannot prove in half a million steps is
+     * too slow a neighbour for every future gate run. The rungs sit in the
+     * order that re-solve measured - no rung needs less ribbon than the
+     * one before it - and the star bands follow the same
+     * one-second-per-inked-cell pace the whole forged ladder ships at.
+     * ------------------------------------------------------------------ */
+    {
+      id: "f25", labelKey: "auroL25", size: 11,
+      pairs: [[8, 8, 9, 9], [9, 8, 7, 8], [7, 9, 2, 10], [1, 10, 0, 5], [0, 4, 2, 0], [3, 0, 8, 0], [9, 0, 10, 5], [10, 6, 9, 4], [8, 4, 9, 1], [8, 1, 6, 2], [6, 3, 1, 9], [1, 8, 1, 1], [2, 1, 2, 8], [3, 8, 5, 5], [5, 4, 3, 1], [3, 2, 3, 5]],
+      starTimes: [103, 160, 221],
+    },
+    {
+      id: "f26", labelKey: "auroL26", size: 11,
+      pairs: [[5, 3, 10, 0], [10, 1, 10, 8], [10, 9, 9, 6], [9, 5, 8, 1], [8, 2, 8, 9], [8, 10, 2, 10], [1, 10, 0, 6], [0, 5, 1, 0], [2, 0, 1, 1], [1, 2, 1, 6], [1, 7, 5, 9], [6, 9, 7, 2], [7, 1, 6, 4], [6, 5, 5, 7], [5, 6, 3, 8], [2, 8, 3, 5]],
+      starTimes: [105, 163, 226],
+    },
+    {
+      id: "f27", labelKey: "auroL27", size: 11,
+      pairs: [[10, 10, 10, 3], [10, 2, 6, 0], [5, 0, 0, 1], [0, 2, 0, 9], [0, 10, 1, 5], [1, 4, 2, 3], [2, 4, 2, 10], [3, 10, 3, 4], [3, 3, 7, 1], [8, 1, 5, 2], [4, 2, 9, 3], [9, 4, 8, 10], [7, 10, 4, 7], [4, 6, 5, 7], [5, 8, 8, 4], [8, 5, 8, 9]],
+      starTimes: [106, 164, 228],
+    },
+    {
+      id: "f28", labelKey: "auroL28", size: 11,
+      pairs: [[10, 4, 8, 10], [7, 10, 0, 10], [0, 9, 8, 9], [9, 9, 3, 8], [2, 8, 0, 6], [0, 5, 1, 0], [1, 1, 1, 6], [1, 7, 2, 2], [2, 1, 8, 0], [9, 0, 4, 1], [3, 1, 9, 2], [10, 2, 8, 7], [8, 6, 7, 5], [7, 6, 3, 6], [3, 5, 4, 6], [5, 6, 6, 4]],
+      starTimes: [109, 169, 234],
+    },
+    {
+      id: "f29", labelKey: "auroL29", size: 11,
+      pairs: [[5, 9, 2, 10], [1, 10, 0, 8], [0, 7, 0, 1], [0, 0, 6, 0], [7, 0, 10, 3], [10, 4, 9, 10], [9, 9, 9, 3], [9, 2, 8, 5], [8, 6, 6, 9], [7, 9, 2, 7], [1, 7, 1, 4], [1, 3, 3, 4], [3, 3, 7, 2], [6, 2, 4, 6], [4, 7, 5, 5], [5, 4, 6, 5]],
+      starTimes: [110, 171, 237],
+    },
+    {
+      id: "f30", labelKey: "auroL30", size: 11,
+      pairs: [[2, 0, 8, 0], [9, 0, 5, 1], [4, 1, 0, 2], [1, 2, 7, 2], [8, 2, 10, 8], [10, 9, 3, 10], [2, 10, 0, 5], [0, 4, 1, 8], [1, 9, 2, 3], [3, 3, 8, 3], [9, 3, 4, 4], [3, 4, 3, 9], [4, 9, 8, 5], [9, 5, 5, 7], [6, 7, 8, 9], [8, 8, 5, 9]],
+      starTimes: [115, 178, 247],
     },  ];
   /* Sixteen entries so a fourteen-ribbon board still gives every ribbon its
    * own colour; the first eight are the shipped ramp, so no existing board
@@ -1170,7 +1222,7 @@
   }
 
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
-   * does not already hold, so the picker never prints a raw key. */
+   * does not already hold, so the shared dictionary stays authoritative. */
   App.addStrings({
     en: {
       "auroL21": "Tapestry",
@@ -1183,6 +1235,28 @@
       "auroL22": "星霄",
       "auroL23": "星极",
       "auroL24": "星幕",
+    },
+  });
+
+  /* The summit climbs out of the firmament: the naming arc leaves the sky
+   * shelf and goes deep-space, past the crown of the atmosphere to the
+   * source of the light the whole game is named for. */
+  App.addStrings({
+    en: {
+      "auroL25": "Zenith",
+      "auroL26": "Corona",
+      "auroL27": "Nebula",
+      "auroL28": "Galaxy",
+      "auroL29": "Starforge",
+      "auroL30": "First Light",
+    },
+    zh: {
+      "auroL25": "星巅",
+      "auroL26": "星冕",
+      "auroL27": "星云",
+      "auroL28": "星河",
+      "auroL29": "星炉",
+      "auroL30": "星源",
     },
   });
 

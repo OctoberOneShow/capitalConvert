@@ -25,21 +25,29 @@
  * back under the record, which is exactly the claim "this dial shaped this
  * piece". Difficulty also climbs inside the tier the one way the engine
  * measures it: the tempo walks 144 -> 142 -> 141 -> 140 ms, ending at the
- * documented 140 ms playability floor, over the full sixteen-beat bar. */
+ * documented 140 ms playability floor, over the full sixteen-beat bar.
+ *
+ * The summit d25-d30 adds rule families the shipped set never read: an echo
+ * window between bells and strings, a rest leash on each voice, a coda law
+ * that only bites in the closing half, and a hush that empties steps
+ * outright. Each rung's family is proven by re-dealing the same seed with
+ * that family lifted: the deal must change and the line it produces must
+ * break the shipped law with a violation of exactly that family's kind. */
 module.exports = function gate(ctx) {
   const { App, env, check } = ctx;
   const levels = App.drmLevels;
   const tierIds = ["d21", "d22", "d23", "d24"];
+  const summitIds = ["d25", "d26", "d27", "d28", "d29", "d30"];
   const byId = (id) => levels.find((level) => level.id === id);
 
   /* ---- ladder shape ---- */
-  check("game-dream-orchestra", "the ladder holds at least twenty-four pieces",
-    levels.length >= 24, String(levels.length));
+  check("game-dream-orchestra", "the ladder holds at least thirty pieces",
+    levels.length >= 30, String(levels.length));
   check("game-dream-orchestra", "every piece id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
-  const missing = tierIds.filter((id) => !byId(id));
-  check("game-dream-orchestra", "the hard tier d21-d24 is present",
+  const missing = tierIds.concat(summitIds).filter((id) => !byId(id));
+  check("game-dream-orchestra", "the hard tier d21-d24 and the summit d25-d30 are present",
     missing.length === 0, missing.join(","));
 
   /* ---- the load-time deal still holds for every piece ---- */
@@ -73,7 +81,7 @@ module.exports = function gate(ctx) {
   /* The bands are demanding: three stars is the exact minimum, one extra
    * note drops a star, and five extra notes pay nothing. */
   const bandProblems = [];
-  tierIds.forEach((id) => {
+  tierIds.concat(summitIds).forEach((id) => {
     const level = byId(id);
     const par = level.starCredits[0];
     if (App.starsFor(par, level.starCredits, "low") !== 3 ||
@@ -84,9 +92,7 @@ module.exports = function gate(ctx) {
   });
   check("game-dream-orchestra", "the tier's bands pay three stars only for the exact " +
       "par line and nothing for five extra notes",
-    bandProblems.length === 0, bandProblems.join(","));
-
-  /* ---- the advertised dials, measured on the dealt targets ---- */
+    bandProblems.length === 0, bandProblems.join(","));  /* ---- the advertised dials, measured on the dealt targets ---- */
   const exercised = (level) => {
     const bell = [];
     const bass = [];
@@ -201,6 +207,53 @@ module.exports = function gate(ctx) {
         ", notes " + measured.d24.count);
   }
 
+  /* ---- the summit: each new family is proven by re-dealing without it ---- */
+  const lifted = {
+    d25: { echoGap: undefined },
+    d26: { strGap: undefined },
+    d27: { codaFrom: undefined, codaStrRun: undefined },
+    d28: { hushFrom: undefined, hushTo: undefined },
+    d29: { bassGap: undefined, strGap: undefined },
+    d30: { bassGap: undefined, echoGap: undefined, codaFrom: undefined,
+      codaStrRun: undefined, hushFrom: undefined, hushTo: undefined },
+  };
+  const familyKind = { d25: "echo", d26: "rest", d27: "coda", d28: "hush", d29: "rest",
+    d30: ["rest", "echo", "coda", "hush"] };
+  const summitCutProblems = [];
+  summitIds.forEach((id) => {
+    const level = byId(id);
+    const cut = redeal(level, { rules: Object.assign({}, level.rules, lifted[id]) });
+    const cutPattern = App.orchestraEmptyPattern();
+    cut.target.forEach((note, step) => {
+      if (note) cutPattern[note.v][step] = note.r;
+    });
+    const breaks = App.orchestraViolations(cutPattern, level.rules);
+    const kinds = new Set(breaks.map((entry) => entry.kind));
+    const wanted = [].concat(familyKind[id]);
+    const missingKinds = wanted.filter((kind) => !kinds.has(kind));
+    if (compact(cut.target) === compact(level.target) || missingKinds.length) {
+      summitCutProblems.push(id + ":" + (compact(cut.target) === compact(level.target)
+        ? "same-deal" : "missing " + missingKinds.join("+")) +
+        " (" + (breaks.map((entry) => entry.kind).join(",") || "no breaks") + ")");
+    }
+  });
+  check("game-dream-orchestra", "every summit family is live: lifting it re-deals the same " +
+      "seed into a line the shipped law rejects with that family's own violation",
+    summitCutProblems.length === 0, summitCutProblems.join(" "));
+
+  /* d24's four families against the summit's: d30 keeps four of the new
+   * families live in one piece, which no shipped piece does. */
+  const liveSummit = ["bassGap", "echoGap", "codaFrom", "hushFrom"];
+  const d30Live = liveSummit.filter((key) => {
+    const rules = Object.assign({}, byId("d30").rules);
+    delete rules[key];
+    const cut = App.orchestraDeal(Object.assign(cloneOf(byId("d30"), {}), { rules: rules }));
+    return compact(cut) !== compact(byId("d30").target);
+  });
+  check("game-dream-orchestra", "d30 keeps four new rule families live at once: " +
+      d30Live.join("/"),
+    d30Live.length === liveSummit.length, d30Live.join(","));
+
   /* ---- beat the new pieces through the real panel ---- */
   const doc = env.document;
   const panel = doc.createElement("div");
@@ -246,6 +299,32 @@ module.exports = function gate(ctx) {
       "cells to three stars, record it, and pay nothing for an untouched board",
     tierProblems.length === 0, tierProblems.join(" | "));
 
+  /* The summit unlocks behind the tier, so the same panel is driven again:
+   * select each new piece, click its dealt line, read three stars and the
+   * save. */
+  const summitProblems = [];
+  summitIds.forEach((id) => {
+    const level = byId(id);
+    sel.value = id;
+    env.dispatch(sel, "change");
+    if (sel.value !== id) {
+      summitProblems.push(id + ":locked");
+      return;
+    }
+    level.target.forEach((note, step) => {
+      if (note) cells[(7 - note.r) * 16 + step].click();
+    });
+    const won = /(\d) stars!/.exec(resultEl.textContent);
+    const stars = won ? Number(won[1]) : 0;
+    const saved = readSave().cleared[id];
+    if (stars !== 3 || !saved || saved.stars !== 3) {
+      summitProblems.push(id + ":replay " + stars + "/" + JSON.stringify(saved || null));
+    }
+  });
+  check("game-dream-orchestra", "d25-d30 each replay their dealt line through the real " +
+      "cells to three stars and record it",
+    summitProblems.length === 0, summitProblems.join(" | "));
+
   /* An empty pattern can never match: the engine's own matcher on the
    * tier's targets. */
   const emptyProblems = tierIds.filter((id) => {
@@ -256,11 +335,12 @@ module.exports = function gate(ctx) {
     emptyProblems.length === 0, emptyProblems.join(","));
 
   /* Copy travels with the module. */
-  const copyKeys = ["drmP21", "drmP22", "drmP23", "drmP24"];
+  const copyKeys = ["drmP21", "drmP22", "drmP23", "drmP24",
+    "drmP25", "drmP26", "drmP27", "drmP28", "drmP29", "drmP30"];
   const copyProblems = copyKeys.filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-dream-orchestra", "the four piece names resolve in both languages",
+  check("game-dream-orchestra", "the ten piece names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 };

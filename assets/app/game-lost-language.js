@@ -103,6 +103,33 @@
     { id: "lng22", labelKey: "lngChamber22", nouns: 15, verbs: 10, scenes: 22, tests: 7, marks: lngMarkIds, truth: ["many", "doer"], many: 2, wide: true, deep: true },
     { id: "lng23", labelKey: "lngChamber23", nouns: 16, verbs: 10, scenes: 23, tests: 7, marks: lngMarkIds, truth: "many", many: 2, wide: true, deep: true },
     { id: "lng24", labelKey: "lngChamber24", nouns: 16, verbs: 10, scenes: 24, tests: 7, marks: lngMarkIds, truth: ["many", "doer", "object"], many: 2, wide: true, deep: true },
+    /* The summit shelf. Six chambers on a third floor: a `peak` chamber
+     * concatenates the peak pools onto the deep ones, so the summit reads the
+     * whole tongue the campaign has gathered - eighteen nouns and eleven verbs
+     * - and pays for it with the longest benches the panel has shown. lng25
+     * opens the third floor on a seventeen-noun lexicon and a twenty-five
+     * rubbing bench; lng26 stretches the bench to twenty-six; lng27 adds the
+     * campaign's eighth unseen wall; lng28 pours the whole summit floor,
+     * eighteen nouns; lng29 and lng30 stretch the bench to twenty-nine and
+     * thirty rubbings, the longest the game has shown. Chambers one to
+     * twenty-four never touch these shelves, so their deals stay
+     * byte-identical. Measured as ever: chambers 25-30 were dealt at seeds
+     * 1..40 through App.tongueGenerate with mean honest cost 22.30, 22.70,
+     * 23.80, 24.68, 25.15, 26.48 and mean carve 12.50, 12.45, 12.63, 12.78,
+     * 12.97, 12.88 - every chamber above the shelf's 20.8 and 11.7, the
+     * honest line rising chamber by chamber, zero failed deals in all 240.
+     * The floor is the load-bearing dial: strip the three stacked pools off a
+     * summit chamber and the engine refuses every deal outright - the bare
+     * base pools cannot clothe seventeen-eighteen nouns and eleven verbs -
+     * and with the dials relaxed to what those pools hold the same deals dig
+     * clean but the honest line collapses to 19.38, 19.57, 20.15, 20.15,
+     * 20.02, 20.30, below the shelf's 20.8 on every chamber. */
+    { id: "lng25", labelKey: "lngChamber25", nouns: 17, verbs: 11, scenes: 25, tests: 7, marks: lngMarkIds, truth: ["many", "doer", "object"], many: 2, wide: true, deep: true, peak: true },
+    { id: "lng26", labelKey: "lngChamber26", nouns: 17, verbs: 11, scenes: 26, tests: 7, marks: lngMarkIds, truth: ["many", "doer", "object"], many: 2, wide: true, deep: true, peak: true },
+    { id: "lng27", labelKey: "lngChamber27", nouns: 17, verbs: 11, scenes: 27, tests: 8, marks: lngMarkIds, truth: ["many", "doer", "object"], many: 2, wide: true, deep: true, peak: true },
+    { id: "lng28", labelKey: "lngChamber28", nouns: 18, verbs: 11, scenes: 28, tests: 8, marks: lngMarkIds, truth: ["many", "doer", "object"], many: 2, wide: true, deep: true, peak: true },
+    { id: "lng29", labelKey: "lngChamber29", nouns: 18, verbs: 11, scenes: 29, tests: 8, marks: lngMarkIds, truth: ["many", "doer", "object"], many: 2, wide: true, deep: true, peak: true },
+    { id: "lng30", labelKey: "lngChamber30", nouns: 18, verbs: 11, scenes: 30, tests: 8, marks: lngMarkIds, truth: ["many", "doer", "object"], many: 2, wide: true, deep: true, peak: true },
   ];
 
   /* Participants and acts every chamber draws its words from. Plurals are
@@ -147,6 +174,16 @@
   var lngDeepVerbs = [
     { en: "depicts", enPl: "depict", zh: "\u63cf\u753b" },
   ];
+  /* The summit shelf draws from three words more. They live apart from the
+   * deep pools so the second shelf keeps dealing the same hands; only a
+   * `peak` chamber concatenates them as well. */
+  var lngPeakNouns = [
+    { en: "the diver", enPl: "the divers", zh: "\u6f5c\u6c34\u4eba", zhPl: "\u51e0\u4f4d\u6f5c\u6c34\u4eba" },
+    { en: "the bellringer", enPl: "the bellringers", zh: "\u6572\u949f\u4eba", zhPl: "\u51e0\u4f4d\u6572\u949f\u4eba" },
+  ];
+  var lngPeakVerbs = [
+    { en: "remembers", enPl: "remember", zh: "\u8bb0\u8d77" },
+  ];
 
   /* The sound inventory: noun roots and verb roots never mix and no root is a
    * prefix of another, so the eye can always cut a line into words. */
@@ -157,6 +194,8 @@
   var lngWideRootsB = ["corin"];
   var lngDeepRootsA = ["sevir", "othar"];
   var lngDeepRootsB = ["vess"];
+  var lngPeakRootsA = ["valra", "hollin"];
+  var lngPeakRootsB = ["ryel"];
 
   /* --- seeded random: a dig is reproducible from (level, seed) -------------- */
   function lngRng(seed) {
@@ -528,13 +567,17 @@
   function lngMakeDig(def, rng) {
     var i;
     /* 1. the lexicon: which root stands for which participant or act. */
-    var nounPool = def.deep ? lngNounPool.concat(lngWideNouns, lngDeepNouns)
+    var nounPool = def.peak ? lngNounPool.concat(lngWideNouns, lngDeepNouns, lngPeakNouns)
+      : def.deep ? lngNounPool.concat(lngWideNouns, lngDeepNouns)
       : def.wide ? lngNounPool.concat(lngWideNouns) : lngNounPool;
-    var verbPool = def.deep ? lngVerbPool.concat(lngWideVerbs, lngDeepVerbs)
+    var verbPool = def.peak ? lngVerbPool.concat(lngWideVerbs, lngDeepVerbs, lngPeakVerbs)
+      : def.deep ? lngVerbPool.concat(lngWideVerbs, lngDeepVerbs)
       : def.wide ? lngVerbPool.concat(lngWideVerbs) : lngVerbPool;
-    var rootPoolA = def.deep ? lngRootsA.concat(lngWideRootsA, lngDeepRootsA)
+    var rootPoolA = def.peak ? lngRootsA.concat(lngWideRootsA, lngDeepRootsA, lngPeakRootsA)
+      : def.deep ? lngRootsA.concat(lngWideRootsA, lngDeepRootsA)
       : def.wide ? lngRootsA.concat(lngWideRootsA) : lngRootsA;
-    var rootPoolB = def.deep ? lngRootsB.concat(lngWideRootsB, lngDeepRootsB)
+    var rootPoolB = def.peak ? lngRootsB.concat(lngWideRootsB, lngDeepRootsB, lngPeakRootsB)
+      : def.deep ? lngRootsB.concat(lngWideRootsB, lngDeepRootsB)
       : def.wide ? lngRootsB.concat(lngWideRootsB) : lngRootsB;
     var nouns = lngShuffle(rng, nounPool).slice(0, def.nouns);
     var verbs = lngShuffle(rng, verbPool).slice(0, def.verbs);
@@ -1280,6 +1323,9 @@
       "lngChamber19": "Lightless Repository", "lngChamber20": "The Last Scribe",
       "lngChamber21": "The Second Shelf", "lngChamber22": "Flooded Stacks",
       "lngChamber23": "Cartographer's Alcove", "lngChamber24": "The Sunken Lexicon",
+      "lngChamber25": "The Third Shelf", "lngChamber26": "Abyssal Reading Room",
+      "lngChamber27": "Hall of Eight Walls", "lngChamber28": "The Silent Concordance",
+      "lngChamber29": "The Last Key", "lngChamber30": "The Living Tongue",
       "lngChipsLabel": "Rubbings", "lngReadLabel": "Read", "lngGlossLabel": "Glosses",
       "lngRulesLabel": "Rules", "lngCount": "{n}", "lngSetCount": "{n}/{max}",
       "lngLevelSelectLabel": "Choose a chamber",
@@ -1346,6 +1392,9 @@
       "lngChamber19": "\u65e0\u5149\u85cf\u5ba4", "lngChamber20": "\u6700\u540e\u4e00\u4f4d\u4e66\u540f",
       "lngChamber21": "\u7b2c\u4e8c\u5c42\u67b6", "lngChamber22": "\u6ca1\u9876\u4e66\u5e93",
       "lngChamber23": "\u5236\u56fe\u58c1\u9f9b", "lngChamber24": "\u6c89\u6ca1\u8bcd\u5178",
+      "lngChamber25": "\u7b2c\u4e09\u5c42\u67b6", "lngChamber26": "\u6df1\u6e0a\u9605\u89c8\u5ba4",
+      "lngChamber27": "\u516b\u58c1\u4e4b\u5385", "lngChamber28": "\u65e0\u58f0\u7d22\u5f15",
+      "lngChamber29": "\u6700\u540e\u7684\u94a5\u5319", "lngChamber30": "\u590d\u82cf\u4e4b\u8bed",
       "lngChipsLabel": "\u62d3\u7247", "lngReadLabel": "\u5df2\u8bfb", "lngGlossLabel": "\u8bcd\u4e49",
       "lngRulesLabel": "\u8bed\u6cd5", "lngCount": "{n}", "lngSetCount": "{n}/{max}",
       "lngLevelSelectLabel": "\u9009\u62e9\u77f3\u5ba4",

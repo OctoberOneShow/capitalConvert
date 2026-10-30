@@ -29,13 +29,14 @@
   var BITE_VALUE = 3;
   var REST_HEAL = 5;
   var FLEE_COST = 3;
-  /* The vitals a delve opens with. The deep tier (rungs 21-24) overrides this
-   * per rung through levelDef.vitals, so the drain, not the cap, is the lesson. */
+  /* The vitals a delve opens with. The deep tier and the summit (rungs 21-30)
+   * override this per rung through levelDef.vitals, so the drain, not the
+   * cap, is the lesson. */
   var HERO_VITALS = 30;
   /* Twist keys whose rest is punished: the pack wakes in a room beside you and
    * its first beast is tougher. d4/d5 keep their original rule; the later
-   * rungs that promise the same rule opt in here. */
-  var REST_TWISTS = { edlTwist4: true, edlTwist5: true, edlTwist11: true, edlTwist15: true, edlTwist20: true, edlTwist24: true };
+   * rungs that promise the same rule opt in here (d27 and d30 in the summit). */
+  var REST_TWISTS = { edlTwist4: true, edlTwist5: true, edlTwist11: true, edlTwist15: true, edlTwist20: true, edlTwist24: true, edlTwist27: true, edlTwist30: true };
 
   /* Intents cycle through a fixed pattern per species, which is what makes the
    * telegraph readable: the shown intent is the one that will resolve. */
@@ -48,8 +49,9 @@
 
   /* One row per rung: a monster mix plus the one rule twist the resolver reads.
    * armour is a floor over a species' own shell and regen is mended per round,
-   * so the peak rungs push past the innate armour of every beast; the deep
-   * tier's rows also carry `vitals`, the pool the delve opens with. */
+   * so the peak rungs push past the innate armour of every beast; the drained
+   * rows - the deep tier and the summit - also carry `vitals`, the pool the
+   * delve opens with. */
   var edlLevels = [
     { id: "d1", labelKey: "edlZ1", twistKey: "edlTwist1", seed: 20260107, kinds: ["imp", "adder"], count: 2, armor: 0, regen: 0, starTurns: [30, 34, 46] },
     { id: "d2", labelKey: "edlZ2", twistKey: "edlTwist2", seed: 20260213, kinds: ["imp", "husk"], count: 3, armor: 2, regen: 0, starTurns: [28, 36, 48] },
@@ -85,6 +87,29 @@
     { id: "d22", labelKey: "edlZ22", twistKey: "edlTwist22", seed: 20270601, kinds: ["husk", "adder"], count: 4, armor: 4, regen: 2, vitals: 22, starTurns: [29, 39, 57] },
     { id: "d23", labelKey: "edlZ23", twistKey: "edlTwist23", seed: 20270617, kinds: ["husk", "adder", "imp"], count: 4, armor: 3, regen: 1, vitals: 20, starTurns: [31, 36, 57] },
     { id: "d24", labelKey: "edlZ24", twistKey: "edlTwist24", seed: 20270703, kinds: ["husk", "adder", "imp"], count: 4, armor: 3, regen: 1, vitals: 18, starTurns: [29, 39, 57] },
+    /* The summit tier, rungs 25-30: the plate finally passes everything the
+     * shipped ladder can field, and the drain bottoms out. Measured on the
+     * gate's bench - the strong turtle hand replayed through the exported
+     * engine over the six seeds the panel deals first - every rung clears
+     * 6/6, and the winning lines land between 28 and 37 turns (best/worst
+     * 28/37, 30/37, 30/37, 28/34, 28/34, 29/33), which is what the star
+     * bands are cut from - the three-star line sits one turn above the best,
+     * the two-star one or two above the worst - so any change here has to
+     * re-measure them. The wardens stay behind, because a summoner behind
+     * five-plate crowds the stair fight past what the bench can hold, so the
+     * mix is shell and fang, and the climb spends two lessons. The plate
+     * lifts past the shipped four: d25's five-plate turns every strike away,
+     * so the heavy is the only answer; d26 teaches that plate to mend; d28
+     * peaks it at six, where the heavy lands for just eight. The drain sinks
+     * past the deep tier's floor: d27 crosses to fourteen and curses the
+     * rest, d29 bottoms the pool out at twelve, and the d30 capstone closes
+     * the vise - twelve vitals, six-plate, and the rest-twist, all at once. */
+    { id: "d25", labelKey: "edlZ25", twistKey: "edlTwist25", seed: 20270719, kinds: ["husk", "adder", "imp"], count: 4, armor: 5, regen: 1, vitals: 16, starTurns: [29, 38, 57] },
+    { id: "d26", labelKey: "edlZ26", twistKey: "edlTwist26", seed: 20270804, kinds: ["husk", "adder", "imp"], count: 4, armor: 5, regen: 2, vitals: 16, starTurns: [31, 38, 57] },
+    { id: "d27", labelKey: "edlZ27", twistKey: "edlTwist27", seed: 20270820, kinds: ["husk", "adder"], count: 4, armor: 5, regen: 1, vitals: 14, starTurns: [31, 38, 57] },
+    { id: "d28", labelKey: "edlZ28", twistKey: "edlTwist28", seed: 20270905, kinds: ["husk", "adder", "imp"], count: 4, armor: 6, regen: 0, vitals: 14, starTurns: [29, 36, 57] },
+    { id: "d29", labelKey: "edlZ29", twistKey: "edlTwist29", seed: 20270921, kinds: ["husk", "adder", "imp"], count: 4, armor: 5, regen: 2, vitals: 12, starTurns: [29, 36, 57] },
+    { id: "d30", labelKey: "edlZ30", twistKey: "edlTwist30", seed: 20271007, kinds: ["husk", "adder", "imp"], count: 4, armor: 6, regen: 1, vitals: 12, starTurns: [30, 35, 57] },
   ];
 
   function edlInt(value) {
@@ -1095,6 +1120,12 @@
       "edlZ22": "The Ash Tithe",
       "edlZ23": "The Withered Court",
       "edlZ24": "The Last Ember",
+      "edlZ25": "The Blunted Edge",
+      "edlZ26": "The Stitched Plate",
+      "edlZ27": "The Restless Dark",
+      "edlZ28": "The Iron Silence",
+      "edlZ29": "The Marrow Bed",
+      "edlZ30": "The Cinder Heart",
       "edlTwist1": "plain run",
       "edlTwist2": "armoured strikers",
       "edlTwist3": "biters that mend",
@@ -1119,6 +1150,12 @@
       "edlTwist22": "you arrive drained to 22 vitals; adamant plate that mends",
       "edlTwist23": "you arrive drained to 20 vitals; the plated pack mends still",
       "edlTwist24": "you arrive drained to 18 vitals; rest wakes a pack beside you",
+      "edlTwist25": "you arrive drained to 16 vitals; plate no strike can bite",
+      "edlTwist26": "you arrive drained to 16 vitals; five-plate that mends",
+      "edlTwist27": "you arrive drained to 14 vitals; strikes die on the plate, and rest wakes a pack beside you",
+      "edlTwist28": "you arrive drained to 14 vitals; peak plate, and nothing mends",
+      "edlTwist29": "you arrive drained to 12 vitals; the plated pack mends still",
+      "edlTwist30": "you arrive drained to 12 vitals; the plate peaks, and rest wakes a pack beside you",
       "edlDepthLabel": "Depth",
       "edlVitalLabel": "Vitals",
       "edlTurnLabel": "Turns left",
@@ -1213,6 +1250,12 @@
       "edlZ22": "灰烬之税",
       "edlZ23": "枯萎之庭",
       "edlZ24": "最后余烬",
+      "edlZ25": "钝刃之厅",
+      "edlZ26": "缝甲之厅",
+      "edlZ27": "不眠之暗",
+      "edlZ28": "铁之寂静",
+      "edlZ29": "髓底之窟",
+      "edlZ30": "烬心",
       "edlTwist1": "规则如常",
       "edlTwist2": "来袭者披甲",
       "edlTwist3": "撕咬者能自愈",
@@ -1237,6 +1280,12 @@
       "edlTwist22": "抵达时已被抽干，仅余 22 点体力；精金甲且能自愈",
       "edlTwist23": "抵达时已被抽干，仅余 20 点体力；披甲兽群仍旧自愈",
       "edlTwist24": "抵达时已被抽干，仅余 18 点体力；歇息会惊醒身旁的怪群",
+      "edlTwist25": "抵达时已被抽干，仅余 16 点体力；劈砍打不动的厚甲",
+      "edlTwist26": "抵达时已被抽干，仅余 16 点体力；五点厚甲还能自愈",
+      "edlTwist27": "抵达时已被抽干，仅余 14 点体力；厚甲让劈砍落空，歇息还会惊醒身旁的怪群",
+      "edlTwist28": "抵达时已被抽干，仅余 14 点体力；厚甲登峰，且无人自愈",
+      "edlTwist29": "抵达时已被抽干，仅余 12 点体力；披甲兽群仍旧自愈",
+      "edlTwist30": "抵达时已被抽干，仅余 12 点体力；厚甲登峰，歇息还会惊醒身旁的怪群",
       "edlDepthLabel": "层数",
       "edlVitalLabel": "体力",
       "edlTurnLabel": "剩余回合",
@@ -1328,7 +1377,8 @@
         "Rest: heal 5, but a wandering monster wakes - on cursed floors it wakes right beside you.",
         "Floor: you may always flee, and the wounds you dealt stay on the monster, so no fight can dead-end; the stair always sits 2 to 4 steps from the door.",
         "Scoring: fewer turns earn more stars. A run ends at depth 8, at 0 vitals, or at the 60 turn cap.",
-        "New tier: the deep floors drain you before the first step - every delve below the twentieth opens at 18 to 24 vitals instead of 30, so rest stops being optional. Clear rooms to catch your breath, walk the shortest stair, and spend a turn resting only when the drain truly demands it.",
+        "New tier: the deep floors drain you before the first step - the deep tier opens at 18 to 24 vitals instead of 30, so rest stops being optional. Clear rooms to catch your breath, walk the shortest stair, and spend a turn resting only when the drain truly demands it.",
+        "Summit: from the twenty-fifth rung the plate passes everything shipped - strikes die on five- and six-point plate, so the two-charge heavy blow is the only answer - while the drain sinks to 12 vitals and on the cursed floors the wake is right beside you.",
       ],
       zh: [
         "目标：60 回合内打到第 8 层。移动、歇息、下潜各占一个回合，战斗轮次不计回合。",
@@ -1337,7 +1387,8 @@
         "歇息：回 5 点体力，但会吵醒一只游荡的怪物——在诅咒之层，它直接醒在你脚边。",
         "底线：打不过随时能脱离，而且你砍伤的额度会记在怪物身上，所以没有任何一场仗是死局；阶梯永远离门口只有 2 到 4 步。",
         "计分：回合越少星越高。抵达第 8 层、体力归零或打满 60 回合，本局都会结束。",
-        "新梯队：深层在下第一步之前就抽干了你——第二十层之下的每次探险都以 18 到 24 点体力开场，而非满额 30 点，歇息从此不再是可选项。清房喘息、直走阶梯，只在真正被逼到墙角时才花一回合歇息。",
+        "新梯队：深层在下第一步之前就抽干了你——深层的每次探险都以 18 到 24 点体力开场，而非满额 30 点，歇息从此不再是可选项。清房喘息、直走阶梯，只在真正被逼到墙角时才花一回合歇息。",
+        "巅峰段：从第二十五层起，护甲越过了此前的一切——劈砍打不动五点、六点厚甲，攒满两层凝火的重击是唯一的答案——而体力一路沉到 12 点，诅咒之层的惊醒就在你脚边。",
       ],
     },
   });

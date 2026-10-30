@@ -109,6 +109,43 @@
      * with fresh normals, the exploders flank the seal itself, and the
      * tough-glyph foot phases the final descent. */
     { id: "x24", world: 2, labelKey: "brkL24", speed: 3.3, rows: ["t.g..g.t", ".dd..dd.", "xgtnntgx", ".s.ss.s.", "t.g..g.t"] },
+    /* The tier of six sets the mirrored law down and picks the greenhouse up:
+     * every course of all six walls carries a seed, so wherever the breach
+     * opens, the wall grows shut again behind it. No shipped wall ever kept
+     * seeds in all five courses at once - the keeps healed a single shelf and
+     * the seal kept none - and these six make the regrowth itself the
+     * opponent. The healing hardens as the tier climbs: more plate over the
+     * pods, a faster ball behind it, less open ground for the sprouts to
+     * claim, so the rally the bench's scripted paddle needs keeps lengthening
+     * even as the wall heals less. */
+    /* The living lattice: the plain statement of the new law. A seed course
+     * on every row behind open ground, so almost any breach sprouts a fresh
+     * hand of tiles and the clear is never where you left it. */
+    { id: "x25", world: 2, labelKey: "brkL25", speed: 3.35, rows: ["t..ss..t", "ts....st", "t..ss..t", "ts....st", "n..ss..n"] },
+    /* The powder garden: two charges banked in the open niches of the crown.
+     * The blast is the fastest tool on the table and nearly a useless one
+     * here - banked where it catches nothing but air, each charge is one more
+     * tile to dig out before the pods underneath can be reached. */
+    { id: "x26", world: 2, labelKey: "brkL26", speed: 3.4, rows: ["x..ss..x", "..ss.ss.", "tt.ss.tt", "..ss.ss.", "tt.ss.tt"] },
+    /* The ghost garden: the wall heals while half of it blinks. Tough-backed
+     * ghost posts stand over a seed course on every row, so the rally keeps
+     * climbing into a wall that phases out from under it and back in front
+     * of it. */
+    { id: "x27", world: 2, labelKey: "brkL27", speed: 3.45, rows: ["tgtsstgt", "gs....sg", "tgtsstgt", "gs....sg", "tgtsstgt"] },
+    /* The drift meadow: drift flanks slide on every save while the densest
+     * seed course of the tier sits mid-wall, so the lanes the sprouts need
+     * wander while they are being opened and the regrowth lands where the
+     * tide says, not where the breach was. */
+    { id: "x28", world: 2, labelKey: "brkL28", speed: 3.5, rows: ["td.ss.dt", "dsttntsd", "ddssssdd", "dsttntsd", "td.ss.dt"] },
+    /* The iron grove: three courses of tough plate over two seed shelves.
+     * The pods only pay once the armor over them is ground open, and the
+     * sprouts come back into ground that cost two hits a tile to reach. */
+    { id: "x29", world: 2, labelKey: "brkL29", speed: 3.55, rows: ["tttssttt", "tts..stt", "tttssttt", "tts..stt", "tttssttt"] },
+    /* The evergreen seal: every kind the engine knows over a seed course on
+     * every row - the sixfold seal's alphabet grown back alive. The fastest
+     * ball in the campaign carries the densest plate, and the heal never
+     * quite stops. */
+    { id: "x30", world: 2, labelKey: "brkL30", speed: 3.6, rows: ["tttssttx", "ttst.stt", "dtgssntd", "tttssttt", "tttssttt"] },
   ];
 
   function initBreakoutGame() {
@@ -1745,16 +1782,29 @@
       "brkL22": "The Greenhouse",
       "brkL23": "The Powder Vault",
       "brkL24": "The Sixfold Seal",
+      "brkL25": "The Living Lattice",
+      "brkL26": "The Powder Garden",
+      "brkL27": "The Ghost Garden",
+      "brkL28": "The Drift Meadow",
+      "brkL29": "The Iron Grove",
+      "brkL30": "The Evergreen Seal",
     },
     zh: {
       "brkL21": "逆潮闸",
       "brkL22": "花房",
       "brkL23": "火药库",
       "brkL24": "六合封印",
+      "brkL25": "\u6D3B\u683C\u67B6",
+      "brkL26": "\u706B\u836F\u82B1\u5703",
+      "brkL27": "\u5E7D\u7075\u82B1\u56ED",
+      "brkL28": "\u6F02\u79FB\u8349\u7538",
+      "brkL29": "\u94C1\u6728\u6797",
+      "brkL30": "\u5E38\u9752\u5C01\u5370",
     },
   });
 
 
   /* Exported for the other modules. */
+  App.brkLevels = brkLevels;
   App.initBreakoutGame = initBreakoutGame;
 })(window.CapitalConvert = window.CapitalConvert || {});

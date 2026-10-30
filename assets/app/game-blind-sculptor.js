@@ -134,6 +134,53 @@
      * dealt (17,383,860 solids before the first probe), one submission: the
      * capstone asks for the side pair straight away. */
     { id: "b24", labelKey: "bldL24", noteKey: "bldN24", blocks: 12, want: "wall", axis: "x", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 24000 },
+    /* --- the summit: the dark wall. The deep tier named its axis; the six
+     * rungs below take the name away and climb the size to the cube's fog
+     * ceiling. Thirteen blocks is the end of that road, measured: the fog
+     * before the first probe is 20,058,300 solids, the cube's maximum
+     * (C(27,13), matched only by fourteen - and fourteen is no use, the
+     * greedy opens on the empty plane on 40 of 40 streamed deals and no
+     * par-2 deal ever lands there), and thirteen is the only size where the
+     * peak fog and the two-cut ask coexist. The door stays unique by the
+     * wall contract's own arithmetic: both planes hold five to eight blocks
+     * (a packed plane would open the empty-plane door) and every height
+     * keeps two blocks in two columns at least (a thinner layer would open
+     * the height door), so no pair of cuts but the wall's own can close
+     * anything. Over 200 streamed rounds per rung (seed + round*101, the
+     * deal the panel deals) not one rung fell back, every deal sat at par 2
+     * with exactly one closing pair among the 36 and never a height slice,
+     * and after both height cuts 84-126 shapes still stood - the deep
+     * tier's loose quota at a deeper fog. The note stops naming the axis:
+     * the pool picks front or side when the rung stays silent, the hollow
+     * rungs keep their empty middle slice on the unlabeled axis, and the
+     * economy reopens the way b11 reopened it for the shelves - three rungs
+     * of cushion (two spare probes, two submissions) while the dark axis is
+     * learned, then the ladder's floor: one spare probe, one submission.
+     * Measured notes sit with the rungs. --- */
+    /* Front wall at thirteen blocks, the axis still named: the size lesson
+     * alone. The fog jumps past the deep tier's deepest, and the front pair
+     * still closes every one of the twenty million solids. */
+    { id: "b25", labelKey: "bldL25", noteKey: "bldN25", blocks: 13, want: "wall", axis: "y", minPar: 2, maxPar: 2, slack: 2, tries: 2, seed: 25 },
+    /* The note goes dark: the wall hides in two slices of the front OR the
+     * side axis and the deal decides. Six vertical pairs to rule out before
+     * the two cuts, and the height habit closes nothing at any price. */
+    { id: "b26", labelKey: "bldL26", noteKey: "bldN26", blocks: 13, want: "wall", minPar: 2, maxPar: 2, slack: 2, tries: 2, seed: 260 },
+    /* The hollow wall goes dark too: some axis's middle slice reads empty
+     * end to end, and nothing says which axis holds it - the free nine-cell
+     * read is back, unlabeled. */
+    { id: "b27", labelKey: "bldL27", noteKey: "bldN27", blocks: 13, want: "hollow", minPar: 2, maxPar: 2, slack: 2, tries: 2, seed: 2700 },
+    /* The dark wall at the ladder's floor economy: one spare probe, one
+     * submission. Name the axis before spending - a wrong first cut costs
+     * the run. */
+    { id: "b28", labelKey: "bldL28", noteKey: "bldN28", blocks: 13, want: "wall", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 28 },
+    /* The mercy rung: the hollow's axis comes back named at the floor
+     * economy - the map is given back, the deepest fog and the one
+     * submission are not. */
+    { id: "b29", labelKey: "bldL29", noteKey: "bldN29", blocks: 13, want: "hollow", axis: "x", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 290 },
+    /* The summit: the hollow wall, dark, at thirteen blocks, one spare
+     * probe and one submission - the cube's deepest fog behind an unlabeled
+     * axis, with the empty slice waiting to mislead. */
+    { id: "b30", labelKey: "bldL30", noteKey: "bldN30", blocks: 13, want: "hollow", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 3000 },
   ];
 
   /* --- geometry, all pure --- */
@@ -1412,6 +1459,18 @@
       "bldN22": "The middle front slice reads empty from top to bottom - nine cells pinned at once, and not one of the two cuts that close the solid.",
       "bldN23": "Eleven blocks hide in two side slices, and you get one submission: only that side pair closes the solid - two cuts of the height axis close nothing.",
       "bldN24": "Twelve blocks and seventeen million shapes, walled into two side slices: the two-shelf habit cannot close this one at any price.",
+      "bldL25": "Thirteen on the Wall",
+      "bldL26": "Front or Side",
+      "bldL27": "The Hollow in the Dark",
+      "bldL28": "Diagnose First",
+      "bldL29": "The Hollow, by Name",
+      "bldL30": "The Last Hollow",
+      "bldN25": "Thirteen blocks - more than the shelves ever held - walled into two front slices: twenty million shapes before the first probe, and the front pair still closes every one of them.",
+      "bldN26": "No axis is named this time: the wall hides in two slices of the front or the side axis, and the deal decides which - six vertical pairs to rule out, and the height axis closes nothing at any price.",
+      "bldN27": "The hollow wall went dark too: some axis's middle slice reads empty from top to bottom, and nothing tells you which axis holds it - the free read is a trap with no label.",
+      "bldN28": "One spare probe, one submission, and no axis on the label: name the wall before you spend - a wrong first cut costs the whole run.",
+      "bldN29": "The axis is given back - the hollow hides in two side slices again - but the fog is the cube's deepest and one submission is all you get.",
+      "bldN30": "The last solid: thirteen blocks in the darkest fog the cube deals, a hollow slice on an axis nobody names, one spare probe and one submission.",
       "bldProbeLabel": "Probes",
       "bldTargetLabel": "Blocks",
       "bldPlacedLabel": "Placed",
@@ -1471,7 +1530,7 @@
       "bldPrompt": "{name}: {blocks} blocks hidden, {probes} probes, par {par} of them. {note}",
       "bldDone": "This solid is finished - start a new round or pick another one.",
       "bldNextBlock": "Next solid unlocked.",
-      "bldCampaignDone": "Twenty-four solids, all rebuilt blind.",
+      "bldCampaignDone": "Thirty solids, all rebuilt blind.",
       "bldLocked": "{name} waits until the solid before it is rebuilt.",
       "bldLayerNow": "Building height {n}.",
       "bldEscape": "{left} probes left, {placed} blocks placed, {shapes} shapes still fit (par {par}).",
@@ -1529,6 +1588,18 @@
       "bldN22": "正视中间那个切面从顶到底读出来全是空的——一口气管住九格，但它不是收尾的那两刀之一。",
       "bldN23": "十一个方块藏在侧视的两个切面里，而且只有一次提交：能收口的只有那一对侧视切面——在高度轴上花两刀，什么也收不住。",
       "bldN24": "一千七百万种形状里，十二个方块砌在侧视的两个切面上：两层搁板的旧习惯在这里出多大价钱都收不了口。",
+      "bldL25": "墙上十三块",
+      "bldL26": "不分正侧",
+      "bldL27": "暗处的空心",
+      "bldL28": "先辨轴向",
+      "bldL29": "指名的空心",
+      "bldL30": "最后的空心",
+      "bldN25": "两千万种形状里，十三个方块——比搁板层级装过的都多——砌在正视的两个切面上：而那对正视切面照样收得了口。",
+      "bldN26": "这一次没有写明轴向：墙藏在正视或侧视的两个切面里，由发牌决定——六对竖直切面要排查，而高度轴出多大价钱都收不了口。",
+      "bldN27": "空心墙也不报名了：某根轴的中间切面从顶到底读出来全是空的，却没有任何提示是哪根轴——那次免费的读数成了没有标签的陷阱。",
+      "bldN28": "一次余量、一次提交，轴向也不写在标签上：先认出这面墙再动手——第一刀切错，这一局就没了。",
+      "bldN29": "轴向还给了回来——空心依然藏在侧视的两个切面里——但雾是整个立方体最深的，而且只有一次提交。",
+      "bldN30": "最后一个立体：十三个方块沉在立方体最深的雾里，空心的切面藏在一根没人指名的轴上，一次余量、一次提交。",
       "bldProbeLabel": "探针",
       "bldTargetLabel": "方块数",
       "bldPlacedLabel": "已放",
@@ -1588,7 +1659,7 @@
       "bldPrompt": "{name}：藏着 {blocks} 个方块，给你 {probes} 次探针，标准 {par} 次。{note}",
       "bldDone": "这个立体已经重建好了——换下一个或者开一局新的。",
       "bldNextBlock": "解锁下一个立体。",
-      "bldCampaignDone": "二十四个立体全部盲眼重建完毕。",
+      "bldCampaignDone": "三十个立体全部盲眼重建完毕。",
       "bldLocked": "「{name}」要等前一个立体重建完才开放。",
       "bldLayerNow": "正在搭建第 {n} 层。",
       "bldEscape": "还剩 {left} 次探针，已放 {placed} 块，仍有 {shapes} 种形状符合（标准 {par} 次）。",
@@ -1622,6 +1693,7 @@
         "Build: place blocks on your own grid (click, or arrows plus Enter, z and x for height), then submit; missing and extra blocks are both named in words.",
         "Scoring: probes used are graded against a solver's measured par; a reveal costs two probes and is never required.",
         "New tier: the deep walls stand on every height yet hide in two slices of one vertical axis - each rung's note names the axis, only that axis's own pair of slices closes the solid, the hollow rung's middle slice reads empty, and the two-shelf habit cannot close these at all.",
+        "Summit: the last six walls carry thirteen blocks - the deepest fog the cube deals - and the note stops naming the axis: the wall hides in two slices of the front or side axis and the deal decides which, the hollow slice goes unlabeled, and the ladder closes at one spare probe and one submission.",
       ],
       zh: [
         "目标：重建一个隐藏的 3x3x3 立体。它由几个方块组成会写在面板上，这部分不要钱。",
@@ -1631,6 +1703,7 @@
         "搭建：在自己的网格上放或取方块（点击，或方向键加回车，z 和 x 换层），然后提交；缺哪块、多哪块都会用文字念出来。",
         "计分：用掉的探针次数和解题器实测的标准次数对比给星；揭示一次要花两次探针，但从不必需。",
         "新层级：深层的墙每个高度都站着方块，却整体藏在同一根竖直轴的两个切面里——每个关卡的说明会写明是哪根轴；能收口的只有那根轴自己的一对切面；空心关卡的中间切面读出来全是空的；两层搁板的旧习惯在这里收不了口。",
+        "巅峰段：最后六面墙砌十三个方块——整个立方体最深的雾——而且说明不再写明轴向：墙藏在正视或侧视的两个切面里，由发牌决定；空心的切面也没有了标签；全梯以一次余量、一次提交收束。",
       ],
     },
   });

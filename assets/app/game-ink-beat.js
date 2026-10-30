@@ -20,9 +20,10 @@
   var beatKeys = ["d", "f", "j", "k"];
   /* Every track is generated from a seed: a 16th-step grid where each lane
    * fires with its own probability, so songs are deterministic but compact.
-   * Densities are tuned for a casual curve: roughly 1.2 notes per second on
-   * the first track up to about 3.5 on the last, and buildNotes additionally
-   * refuses same-lane notes on adjacent steps so charts never machine-gun. */
+   * The densities climb from the casual teaching ranks to the summit wall,
+   * and buildNotes additionally refuses same-lane notes on adjacent steps
+   * so charts never machine-gun; every tier comment below carries its own
+   * measured numbers. */
   var beatLevels = [
     { id: "t1", labelKey: "beatL1", bpm: 92, bars: 12, seed: 11, density: [0.07, 0.03, 0.04, 0.008] },
     { id: "t2", labelKey: "beatL2", bpm: 104, bars: 14, seed: 23, density: [0.08, 0.045, 0.06, 0.015] },
@@ -66,6 +67,40 @@
     { id: "t22", labelKey: "beatL22", bpm: 220, bars: 30, seed: 293, density: [0.125, 0.125, 0.125, 0.125] },
     { id: "t23", labelKey: "beatL23", bpm: 240, bars: 36, seed: 307, density: [0.145, 0.11, 0.165, 0.085] },
     { id: "t24", labelKey: "beatL24", bpm: 244, bars: 32, seed: 331, density: [0.06, 0.05, 0.25, 0.23], swing: 0.5 },
+    /* Tracks 25-30 are the summit, and its one lever is the four-lane wall:
+     * every rung is an even wall - no lane may rest - at a weight or speed
+     * no shipped wall has carried (all numbers measured on the seed's own
+     * chart through the engine's builder). Measured load climbs strictly
+     * through the six: 9.94 -> 10.06 -> 10.43 -> 10.76 -> 11.89 -> 12.37
+     * notes a second, against the hard tier's 9.3 peak. t25 is the first
+     * wall past that peak and keeps every lane above 67 notes - the shipped
+     * no-rest record was 50. t26 hangs the shipped 0.34 swing on a 252 BPM
+     * wall. t27 is the long burn: 40 bars and 404 notes, both campaign
+     * records, so three stars demands 372 hits - more than any earlier
+     * track holds notes. t28 swings deeper than anything shipped (0.42)
+     * without trading the wall away. t29 is the fastest plain wall at
+     * 258 BPM, and t30 closes by singing the same wall at 262 BPM in the
+     * deepest swing the engine has (0.5) - 12.37 notes a second, the
+     * ladder's peak. */
+    { id: "t25", labelKey: "beatL25", bpm: 248, bars: 30, seed: 337, density: [0.16, 0.16, 0.16, 0.16] },
+    { id: "t26", labelKey: "beatL26", bpm: 252, bars: 30, seed: 347, density: [0.165, 0.165, 0.165, 0.165], swing: 0.34 },
+    /* The burn rung: length, not density, is what t27 asks for that no
+     * earlier track did - 40 bars against the hard tier's 36, at wall
+     * weight. A chart that long has no second wind: one slip costs the
+     * same share of the grade as anywhere else, but there is nowhere left
+     * to spend the recovery. */
+    { id: "t27", labelKey: "beatL27", bpm: 252, bars: 40, seed: 353, density: [0.18, 0.18, 0.18, 0.18] },
+    /* The swing rung: every odd sixteenth lands 0.42 of a step late -
+     * deeper than the shipped 0.34 - and the wall gives nothing back for
+     * it, so the groove leans while the load keeps climbing. */
+    { id: "t28", labelKey: "beatL28", bpm: 256, bars: 32, seed: 359, density: [0.19, 0.19, 0.19, 0.19], swing: 0.42 },
+    /* The plain-speed rung: no swing to lean on, 258 BPM of even wall -
+     * the fastest chart the ladder ships without a groove offset. */
+    { id: "t29", labelKey: "beatL29", bpm: 258, bars: 30, seed: 367, density: [0.2, 0.2, 0.2, 0.2] },
+    /* The closer: the wall at the ladder's top tempo and its deepest swing
+     * at once - 262 BPM, 0.5, 12.37 notes a second. Every lever the summit
+     * built sits on one chart, which is what makes it the last one. */
+    { id: "t30", labelKey: "beatL30", bpm: 262, bars: 32, seed: 373, density: [0.21, 0.21, 0.21, 0.21], swing: 0.5 },
   ];
 
   function mulberry32(seed) {
@@ -619,12 +654,24 @@
       "beatL22": "Equilibrium",
       "beatL23": "Relentless",
       "beatL24": "Nova Overdrive",
+      "beatL25": "Pulsar Wall",
+      "beatL26": "Perihelion",
+      "beatL27": "Chain Reaction",
+      "beatL28": "Gravity Well",
+      "beatL29": "Escape Velocity",
+      "beatL30": "Singularity",
     },
     zh: {
       "beatL21": "双星焰",
       "beatL22": "均势场",
       "beatL23": "绵延不绝",
       "beatL24": "超频新星",
+      "beatL25": "脉冲星阵",
+      "beatL26": "近日点",
+      "beatL27": "链式反应",
+      "beatL28": "引力深井",
+      "beatL29": "逃逸速度",
+      "beatL30": "奇点",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

@@ -81,6 +81,35 @@
     { id: "w22", labelKey: "bubL22", target: 850, shots: 12, colors: 3, rows: 10, starGain: [1.1, 1.04, 1] },
     { id: "w23", labelKey: "bubL23", target: 1000, shots: 14, colors: 3, rows: 9, starGain: [1.1, 1.05, 1], sparse: 0.18 },
     { id: "w24", labelKey: "bubL24", target: 880, shots: 10, colors: 3, rows: 10, starGain: [1.08, 1.04, 1] },
+    /* Springs 25-30 are the summit, and its currency is still the shot -
+     * but every card now pairs the two extremes the deep tier kept apart:
+     * the deepest wall the field can hold and the emptiest quiver that
+     * wall leaves alive. All numbers were measured through the real panel
+     * with the gate's aim planner over six seeded deals per card (seed
+     * k*31337): the planner clears at least four of six deals on every
+     * card and lands the three-star line on at least two, the demand per
+     * shot climbs strictly through the six (91.0 -> 95.0 -> 96.7 -> 100.0
+     * -> 106.3 -> 108.8, against w24's 88) and the three-star line per
+     * shot climbs with it (98.3 -> 102.6 -> 103.4 -> 108.0 -> 114.8 ->
+     * 116.7, against w24's 96.8). The field's own floor sets the wall
+     * record: eleven rows is the deepest pour the well holds - twelve
+     * puts the wall on the deadline and the round is lost at the deal, a
+     * shape the gate refuses. w25 pours that record wall under a ten-shot
+     * quiver; w26 widens the shafts to 0.22 and lifts the prize to 950;
+     * w27 empties the quiver to nine for the first time in the campaign;
+     * w28 hangs the summit's first thousand-point prize on the wide
+     * shafts; w29 empties the quiver to eight; and w30 closes on the
+     * highest demand per shot the ladder asks for, eight shots under the
+     * widest shafts. Cut the paired dial on any card - the shafts poured
+     * solid, or the pour back to six inks - and the same planner cannot
+     * reach the target on a single seeded deal (measured cut maxima: 0,
+     * 0, 315, 0, 285, 285 against three-star lines of 983-1080). */
+    { id: "w25", labelKey: "bubL25", target: 910, shots: 10, colors: 3, rows: 11, starGain: [1.08, 1.04, 1], sparse: 0.18 },
+    { id: "w26", labelKey: "bubL26", target: 950, shots: 10, colors: 3, rows: 11, starGain: [1.08, 1.04, 1], sparse: 0.22 },
+    { id: "w27", labelKey: "bubL27", target: 870, shots: 9, colors: 3, rows: 10, starGain: [1.07, 1.04, 1], sparse: 0.18 },
+    { id: "w28", labelKey: "bubL28", target: 1000, shots: 10, colors: 3, rows: 11, starGain: [1.08, 1.04, 1], sparse: 0.22 },
+    { id: "w29", labelKey: "bubL29", target: 850, shots: 8, colors: 3, rows: 10, starGain: [1.07, 1.04, 1], sparse: 0.18 },
+    { id: "w30", labelKey: "bubL30", target: 870, shots: 8, colors: 3, rows: 10, starGain: [1.07, 1.04, 1], sparse: 0.22 },
   ];
 
   /* ------------------------------------------------------------ colour math */
@@ -1574,12 +1603,24 @@
       "bubL22": "The Narrow Seam",
       "bubL23": "The Triad Slab",
       "bubL24": "The Ten-Shot Triad",
+      "bubL25": "The Deepest Well",
+      "bubL26": "The Wide Shafts",
+      "bubL27": "The Nine-Shot Seam",
+      "bubL28": "The Loaded Slab",
+      "bubL29": "The Eight-Shot Seam",
+      "bubL30": "The Last Spring",
     },
     zh: {
       "bubL21": "三色墨井",
       "bubL22": "窄缝矿脉",
       "bubL23": "三色石板",
       "bubL24": "十发三色井",
+      "bubL25": "最深墨井",
+      "bubL26": "宽缝深井",
+      "bubL27": "九发窄缝",
+      "bubL28": "满载石板",
+      "bubL29": "八发窄缝",
+      "bubL30": "末泉之井",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

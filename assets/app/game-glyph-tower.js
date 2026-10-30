@@ -87,6 +87,39 @@
     { id: "tw24", labelKey: "towL24", discs: 22, opt: 4200,
       deal: [[12, 11, 10, 9, 8, 5], [13, 4], [22, 21, 20, 19, 18, 17, 16, 15, 14, 7, 6, 3, 2, 1]],
       starMoves: [4200, 4330, 4725] },
+
+    /* The fifth tier, the deep night. Every bench below is the classic
+     * perfect solve frozen a whisker from done: the deal is the optimal
+     * line with exactly `opt` moves left in it, so the pinned par is the
+     * true remaining distance and the suffix replays to three stars. The
+     * rings climb past the night shift's peak - twenty-four up to thirty -
+     * while the frozen tails stay the length of a shift, so the eye sees
+     * an impossible tower and the counter sees a night's work. tw25
+     * re-opens a twenty-four-ring job with 5,200 moves on the clock; tw26
+     * and tw27 stretch the same tail over twenty-five and twenty-six
+     * rings; tw28 and tw29 push to twenty-seven and twenty-eight; tw30,
+     * the capstone, freezes thirty rings with 13,600 moves left - the
+     * tallest bench the shop has ever rung, still inside one shift. The
+     * bands keep the shop's convention: three stars for the proven
+     * optimum, two for three percent over, one for an eighth over. */
+    { id: "tw25", labelKey: "towL25", discs: 24, opt: 5200,
+      deal: [[12, 7, 4, 3, 2, 1], [13, 10, 9, 8, 5], [24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 11, 6]],
+      starMoves: [5200, 5361, 5850] },
+    { id: "tw26", labelKey: "towL26", discs: 25, opt: 6400,
+      deal: [[13, 12, 9], [8, 7, 6, 5, 4, 3, 2, 1], [25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 11, 10]],
+      starMoves: [6400, 6598, 7200] },
+    { id: "tw27", labelKey: "towL27", discs: 26, opt: 7800,
+      deal: [[], [13, 12, 11, 10, 7, 6, 5, 4], [26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 14, 9, 8, 3, 2, 1]],
+      starMoves: [7800, 8042, 8775] },
+    { id: "tw28", labelKey: "towL28", discs: 27, opt: 9400,
+      deal: [[13, 12, 7], [14, 11, 8, 3, 2, 1], [27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 10, 9, 6, 5, 4]],
+      starMoves: [9400, 9691, 10575] },
+    { id: "tw29", labelKey: "towL29", discs: 28, opt: 11200,
+      deal: [[14, 11, 6, 5, 4, 3, 2, 1], [13, 10, 9, 8, 7], [28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 12]],
+      starMoves: [11200, 11547, 12600] },
+    { id: "tw30", labelKey: "towL30", discs: 30, opt: 13600,
+      deal: [[14, 13, 10, 5, 4, 3, 2, 1], [11, 8, 7], [30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 12, 9, 6]],
+      starMoves: [13600, 14022, 15300] },
   ];
 
   /* Pure optimum, exported for the static checks. */
@@ -1813,15 +1846,28 @@
 
 
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
-   * does not already hold, so the shared dictionary stays the authority for the
-   * drawer chrome and the nine shipped rung names. Rung ten is the first whose
-   * 3-star bar is the optimum itself, and its name says that in both languages. */
+   * does not already hold, so the shared dictionary stays the authority for
+   * the drawer chrome and the shipped rung names. The deep-night rungs keep
+   * the night shift's vocabulary and walk it to dawn: the capstone ends the
+   * night the first tier began. */
   App.addStrings({
     en: {
       "towL10": "Zero Tolerance",
+      "towL25": "Deep Night",
+      "towL26": "The Long Count",
+      "towL27": "The Cold Bench",
+      "towL28": "First Light",
+      "towL29": "The Morning Ferry",
+      "towL30": "Day Shift",
     },
     zh: {
       "towL10": "零公差塔",
+      "towL25": "深夜台",
+      "towL26": "长夜清点",
+      "towL27": "冷炉台",
+      "towL28": "初晓",
+      "towL29": "晨渡",
+      "towL30": "白班",
     },
   });
 

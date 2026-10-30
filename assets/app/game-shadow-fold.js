@@ -352,6 +352,138 @@
        * heaviest single print the game has ever dealt. */
       authored: [{ x: 3, y: 0 }, { x: 0, y: 0 }, { x: 5, y: 0 }, { x: 3, y: 5 }, { x: 2, y: 0 }, { x: 0, y: 5 }, { x: 5, y: 5 }],
     },
+    /* ------------------------------------------------------------------
+     * The deep tier (f25-f30). The summit filled its nine-cell paper with
+     * creases and stamps; this tier widens the paper instead. Ten and
+     * eleven cells give every crease a longer walk, so the same seven
+     * creases reach targets the nine-cell sheets cannot hold, and a
+     * keep-clear block now removes whole orbits from the stamp pool rather
+     * than single cells. f30 is the only sheet in the drawer that asks for
+     * eight creases. Every sheet here is clean under the forge's three
+     * questions: every seeded deal stays solvable, every intended crease is
+     * needed for the deals it dealt, and the authored reserve is itself
+     * solvable as written. */
+    {
+      id: "f25", labelKey: "shfS25",
+      side: 10,
+      wants: 7,
+      par: 7,
+      intended: [
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 7 },
+        { axis: "h", line: 17 },
+        { axis: "v", line: 1 },
+        { axis: "v", line: 5 },
+        { axis: "v", line: 17 },
+      ],
+      /* The first sheet past nine cells. The widest orbit floods thirty-two
+       * of the hundred cells, and the corner keep-clear block takes away the
+       * two thinnest orbits, leaving eight ways to stamp seven. */
+      avoid: ["6,8", "6,9", "7,8", "7,9"],
+      authored: [{ x: 0, y: 0 }, { x: 2, y: 0 }, { x: 8, y: 0 }, { x: 6, y: 0 }, { x: 7, y: 0 }, { x: 0, y: 8 }, { x: 2, y: 8 }],
+    },
+    {
+      id: "f26", labelKey: "shfS26",
+      side: 10,
+      wants: 8,
+      par: 7,
+      intended: [
+        { axis: "h", line: 3 },
+        { axis: "h", line: 5 },
+        { axis: "h", line: 17 },
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 13 },
+        { axis: "v", line: 17 },
+      ],
+      /* Eight stamps on ten-cell paper, with a 2x2 keep-clear block inside
+       * the field rather than at its edge - the target has to part around a
+       * hole in the middle of the walk. */
+      avoid: ["6,6", "7,6", "6,7", "7,7"],
+      authored: [{ x: 0, y: 0 }, { x: 4, y: 0 }, { x: 6, y: 0 }, { x: 0, y: 8 }, { x: 4, y: 8 }, { x: 0, y: 6 }, { x: 4, y: 6 }, { x: 0, y: 7 }],
+    },
+    {
+      id: "f27", labelKey: "shfS27",
+      side: 10,
+      wants: 9,
+      par: 7,
+      intended: [
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 15 },
+        { axis: "h", line: 17 },
+        { axis: "v", line: 5 },
+        { axis: "v", line: 15 },
+        { axis: "v", line: 17 },
+      ],
+      /* Nine stamps: the most the game has ever asked for. Sixteen orbits,
+       * and the keep-clear row removes the two thinnest of them, leaving
+       * fourteen ways to stamp nine. */
+      avoid: ["1,5", "4,5", "2,5", "3,5"],
+      authored: [{ x: 6, y: 0 }, { x: 6, y: 6 }, { x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 0, y: 6 }, { x: 1, y: 6 }, { x: 2, y: 6 }, { x: 6, y: 4 }],
+    },
+    {
+      id: "f28", labelKey: "shfS28",
+      side: 11,
+      wants: 8,
+      par: 7,
+      intended: [
+        { axis: "h", line: 3 },
+        { axis: "h", line: 13 },
+        { axis: "h", line: 19 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 5 },
+        { axis: "v", line: 17 },
+        { axis: "v", line: 19 },
+      ],
+      /* Eleven-cell paper for the first time. The two heaviest orbits reach
+       * thirty and twenty cells across a 121-cell field; the keep-clear
+       * column takes the two thinnest orbits out of the pool. */
+      avoid: ["6,5", "6,8", "6,6", "6,7"],
+      authored: [{ x: 0, y: 0 }, { x: 7, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 5 }, { x: 0, y: 6 }, { x: 7, y: 1 }, { x: 7, y: 5 }, { x: 7, y: 6 }],
+    },
+    {
+      id: "f29", labelKey: "shfS29",
+      side: 11,
+      wants: 10,
+      par: 7,
+      intended: [
+        { axis: "h", line: 1 },
+        { axis: "h", line: 11 },
+        { axis: "h", line: 19 },
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 15 },
+        { axis: "v", line: 19 },
+      ],
+      /* Ten stamps on the widest paper, with a four-cell keep-clear column
+       * through the middle - fourteen orbits remain, and every one of them
+       * has to be found. */
+      avoid: ["4,4", "4,7", "4,5", "4,6"],
+      authored: [{ x: 0, y: 0 }, { x: 5, y: 0 }, { x: 7, y: 0 }, { x: 0, y: 3 }, { x: 5, y: 3 }, { x: 0, y: 4 }, { x: 5, y: 4 }, { x: 0, y: 5 }, { x: 5, y: 5 }, { x: 4, y: 0 }],
+    },
+    {
+      id: "f30", labelKey: "shfS30",
+      side: 11,
+      wants: 8,
+      par: 8,
+      intended: [
+        { axis: "h", line: 1 },
+        { axis: "h", line: 5 },
+        { axis: "h", line: 17 },
+        { axis: "h", line: 19 },
+        { axis: "v", line: 1 },
+        { axis: "v", line: 13 },
+        { axis: "v", line: 17 },
+        { axis: "v", line: 19 },
+      ],
+      /* The Eight-Fold: the only sheet in the drawer that asks for eight
+       * creases. Four creases on each axis, an orbit that covers thirty-two
+       * cells, and two keep-clear pockets that every stamp must fold around. */
+      avoid: ["2,2", "2,3", "0,6", "1,6"],
+      authored: [{ x: 3, y: 0 }, { x: 3, y: 7 }, { x: 3, y: 2 }, { x: 0, y: 0 }, { x: 3, y: 6 }, { x: 0, y: 7 }, { x: 2, y: 0 }, { x: 0, y: 2 }],
+    },
   ];
 
   function shfKey(x, y) {
@@ -935,6 +1067,7 @@
       cursor = { x: 0, y: 0 };
       solved = false;
       sheetEl.dataset.side = String(side);
+      sheetBox.dataset.side = String(side);
       buildSheet();
       refreshPicker();
       render();
@@ -1043,6 +1176,12 @@
       "shfS22": "The Seven-Fold",
       "shfS23": "Seven Stamps",
       "shfS24": "The Deep Fold",
+      "shfS25": "Ten-Cell Paper",
+      "shfS26": "Eight on Ten",
+      "shfS27": "Nine on Ten",
+      "shfS28": "Eleven Cells",
+      "shfS29": "Ten Stamps",
+      "shfS30": "The Eight-Fold",
       "shfInkLabel": "Ink",
       "shfFoldLabel": "Creases",
       "shfSheetSelectLabel": "Pick a sheet",
@@ -1070,7 +1209,7 @@
       "shfAlready": "{name} is already pressed - take a new sheet.",
       "shfBestFolds": "best {n} creases",
       "shfNextSheet": "Next sheet unlocked.",
-      "shfCampaignDone": "All twenty-four sheets pressed clean.",
+      "shfCampaignDone": "All thirty sheets pressed clean.",
       "shfLocked": "{name} is still folded away behind the sheet before it.",
       "shfHint": "Extra ink is a failure, so a crease you do not need is a trap - and the crossing cell of two creases often has to stay bare.",
       "logShadowFold": "Pressed a sheet on {n} creases",
@@ -1101,6 +1240,12 @@
       "shfS22": "七折",
       "shfS23": "七枚印章",
       "shfS24": "深折",
+      "shfS25": "十格纸",
+      "shfS26": "十格八印",
+      "shfS27": "十格九印",
+      "shfS28": "十一格",
+      "shfS29": "十枚印章",
+      "shfS30": "八折",
       "shfInkLabel": "墨点",
       "shfFoldLabel": "折痕",
       "shfSheetSelectLabel": "选择纸张",
@@ -1128,7 +1273,7 @@
       "shfAlready": "「{name}」已经拓好了——换一张纸再来。",
       "shfBestFolds": "最佳 {n} 道折痕",
       "shfNextSheet": "解锁下一张纸。",
-      "shfCampaignDone": "二十四张纸都拓干净了。",
+      "shfCampaignDone": "三十张纸都拓干净了。",
       "shfLocked": "「{name}」还压在上一张纸后面。",
       "shfHint": "多出图案之外的墨就算失败，所以用不上的折痕是个陷阱；两条折线的交叉格常常必须留空。",
       "logShadowFold": "用 {n} 道折痕拓好了一张纸",

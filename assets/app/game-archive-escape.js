@@ -39,7 +39,7 @@
   var arcItemArt = { key: "key", card: "card", lamp: "lantern", rope: "chain", chit: "stamp", tea: "flask", ledger: "book" };
   var arcClueArt = { c1: "card", c2: "map", c3: "scroll", c4: "magnifier", c5: "wave" };
 
-  /* Same map, twenty escalating nights. The first eight are graded purely off the
+  /* Same map, thirty escalating nights. The first eight are graded purely off the
    * solved minimum turn count for each goal; the two chute nights are graded off
    * their stored solution line, whose hop count is band0, so replaying the line
    * as written earns exactly three stars. `solution` is the node path, joined on
@@ -95,6 +95,24 @@
     { id: "a22", labelKey: "arcZ22", goal: "secretEveryItemFull" },
     { id: "a23", labelKey: "arcZ23", goal: "ledgerDryFull" },
     { id: "a24", labelKey: "arcZ24", goal: "yardDryFull" },
+    /* Nights twenty-five to thirty: the water tier. The capstone dry walk
+     * only proved the yard could be crossed empty-handed; these six send the
+     * full case back down into the parts of the building the plans forgot.
+     * a25 kills the backup power under the full loadout, so the walk has to
+     * lean on the plant and the chute alone. a26 opens the survey cage, a27
+     * wades the drowned stacks and cages the roof, a28 adds the weigh-house
+     * manifest to the dry yard, a29 takes the wet stacks and the manifest up
+     * to the roof, and a30 - the capstone - presses a copy of a page that is
+     * not in the building and carries it to the secret ending. Every branch
+     * is a dead end: it grants only its own flag and never shortens a
+     * shipped route. The BFS below prices each rung, and bands hang off that
+     * measured minimum. */
+    { id: "a25", labelKey: "arcZ25", goal: "yardNoPowerFull" },
+    { id: "a26", labelKey: "arcZ26", goal: "yardCageDryFull" },
+    { id: "a27", labelKey: "arcZ27", goal: "roofWetCageFull" },
+    { id: "a28", labelKey: "arcZ28", goal: "yardCageManifestDryFull" },
+    { id: "a29", labelKey: "arcZ29", goal: "roofWetManifestFull" },
+    { id: "a30", labelKey: "arcZ30", goal: "secretCageManifestPressFull" },
   ];
 
   /* The additive case-file layer. A goal named here is met only at its named
@@ -154,6 +172,47 @@
       items: ["key", "card", "lamp", "rope", "chit", "ledger"],
       clues: ["c1", "c2", "c3", "c4", "c5"],
       ban: { items: ["tea"] },
+    },
+    /* The water tier. a25's case is a foreclosed tool: the full loadout at
+     * the yard, but the backup power must never be restored. The rest ask
+     * for one of the dead-end side rooms to be opened on the way out. */
+    yardNoPowerFull: {
+      ending: "yard",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      ban: { flags: ["power"] },
+    },
+    yardCageDryFull: {
+      ending: "yard",
+      items: ["key", "card", "lamp", "rope", "chit", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["caged"],
+      ban: { items: ["tea"] },
+    },
+    roofWetCageFull: {
+      ending: "roof",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["wet", "caged"],
+    },
+    yardCageManifestDryFull: {
+      ending: "yard",
+      items: ["key", "card", "lamp", "rope", "chit", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["caged", "manifest"],
+      ban: { items: ["tea"] },
+    },
+    roofWetManifestFull: {
+      ending: "roof",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["wet", "manifest"],
+    },
+    secretCageManifestPressFull: {
+      ending: "secret",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["caged", "manifest", "pressed"],
     },
   };
 
@@ -250,6 +309,7 @@
         { to: "shaft", en: "Climb the hoist ladder", zh: "爬吊装梯" },
         { to: "shelf", en: "Back up to the shelf", zh: "回架子" },
         { to: "stair", en: "Up to the stairwell", zh: "上楼梯间" },
+        { to: "pumpRoom", en: "Wade behind the sump to the pump housing", zh: "涉水绕到集水坑后的泵房" },
       ],
     },
     {
@@ -287,6 +347,7 @@
       choices: [
         { to: "endYard", need: { item: "chit" }, en: "Give the gate its chit", zh: "把通行证交给门" },
         { to: "chutetop", en: "Climb back up the chute", zh: "顺着滑道爬回去" },
+        { to: "weighHouse", en: "Cross to the weigh house beside the gate", zh: "走到门边的地磅房" },
       ],
     },
     {
@@ -318,6 +379,7 @@
       choices: [
         { to: "aisles", en: "Back between the shelves", zh: "回到书架间" },
         { to: "landing", en: "To the landing", zh: "去平台" },
+        { to: "survey", en: "Climb the survey ladder behind the false plaque", zh: "爬上假巷道牌后的检修梯" },
       ],
     },
     {
@@ -364,6 +426,7 @@
         { to: "strongbox", en: "Examine the strongbox", zh: "查看保险柜" },
         { to: "turnstile", en: "Out through the turnstile", zh: "从转闸出去" },
         { to: "landing", en: "All the way back to the landing", zh: "一路退回平台" },
+        { to: "copyRoom", en: "Step into the copy room", zh: "走进旁边的复印室" },
       ],
     },
     {
@@ -447,6 +510,87 @@
       choices: [
         { to: "lobby", en: "Start the night over, properly", zh: "把这一夜重新走一遍" },
         { to: "yardGate", en: "Back in through the gate", zh: "从门里再进去" },
+      ],
+    },
+    /* The water tier's dead ends. Each branch is a one-way detour: it hands
+     * back exactly one flag and nothing an earlier night ever needed, so the
+     * shipped routes and their minima stay put while the case files below
+     * can ask for the room by name. */
+    {
+      id: "pumpRoom", room: "plant",
+      en: "A service door behind the sump stands open on a pump room no plan admits to. The floor is wet to the ankle and the walls are furred with lime. A sump pump the size of a boiler idles in the dark, and a handwheel beside it is painted the colour of a thing that wants turning.",
+      zh: "集水坑后面一扇检修门开着，通向一间图纸上从不存在的泵房。地面积水到脚踝，墙上结着石灰的白霜。一台锅炉大小的排水泵在黑暗里空转，旁边的握手轮漆着一种\u201c该转我\u201d的颜色。",
+      choices: [
+        { to: "cistern", en: "Follow the pump's discharge pipe", zh: "沿排水泵的出水管走" },
+        { to: "sump", en: "Back to the sump", zh: "回集水坑" },
+      ],
+    },
+    {
+      id: "cistern", room: "plant",
+      en: "The discharge pipe climbs into a brick cistern whose ceiling is out of sight. A service walkway crosses the black water at shoulder height, and on the far side a stack of record crates has been left in the dry, labelled in a hand that stopped writing decades ago.",
+      zh: "出水管爬进一口砖砌蓄水池，池顶望不见。一条检修走道齐肩高，横过黑色的水面；对岸干处堆着一摞档案箱，标签上的字迹几十年前就停笔了。",
+      choices: [
+        { to: "wetStack", en: "Cross the walkway to the crates", zh: "走过检修道去箱子那边" },
+        { to: "pumpRoom", en: "Back through the pump room", zh: "穿过泵房回去" },
+      ],
+    },
+    {
+      id: "wetStack", room: "plant", set: "wet",
+      en: "The crates are swollen shut, but the top one has split along its lid. Inside is a drowned register with the archive's true floor plan inked on the endpaper: the sump, the cistern, the chute, and a coal yard that was never on the map. You take the page. The water below takes one step closer to the walkway.",
+      zh: "箱子都泡胀了打不开，最上面那只却沿盖缝裂开。里面是一本泡水的登记册，衬页上画着档案馆真正的平面图：集水坑、蓄水池、滑道，还有一座从没上过图纸的堆煤场。你撕下这一页。脚下的水又朝检修道逼近一步。",
+      choices: [
+        { to: "cistern", en: "Fold the page and cross back", zh: "折好这一页，原路回去" },
+      ],
+    },
+    {
+      id: "survey", room: "stacks",
+      en: "Behind the false plaque a service ladder goes up into the dark between the shelf tops. It ends at a survey cage bolted under the roof trusses, the kind the city sends a man into once a decade with a plumb line and a bad temper.",
+      zh: "假巷道牌后面有一道检修梯，向上没入书架顶之间的黑暗。梯子通到一只固定在天花桁架下的测绘铁笼——市里每十年才派人带着铅垂线和一肚子火气爬进去一次的那种。",
+      choices: [
+        { to: "cage", en: "Open the cage's inspection hatch", zh: "打开检修笼的检查口" },
+        { to: "plaques", en: "Back down to the plaques", zh: "下回巷道牌那里" },
+      ],
+    },
+    {
+      id: "cage", room: "stacks", set: "caged",
+      en: "Inside, a surveyor's level still sits on its tripod and a brass tag is wired to the rail: every wall in the stacks has been measured for movement, and the readings have been getting worse since spring. You take the tag and wire the cage door open behind you.",
+      zh: "笼里，一台水准仪还架在三脚架上，栏杆上系着一块铜牌：书架区每一面墙都测过位移，而读数从春天起越来越糟。你取下铜牌，又用牌上的铁丝把笼门别住，让它敞在身后。",
+      choices: [
+        { to: "survey", en: "Climb back down the ladder", zh: "顺梯子爬回去" },
+      ],
+    },
+    {
+      id: "weighHouse", room: "yard",
+      en: "A weigh house stands beside the gate, brick to the sill and glass above it, with a ticket window papered over from the inside. The door is not locked. It has merely been nailed shut once and opened again many times since.",
+      zh: "门边立着一间地磅房，砖砌到窗台，上面全是玻璃；售票窗口从里面糊死了。门没锁——它只是被钉死过一次，之后又被打开过很多次。",
+      choices: [
+        { to: "dispatch", en: "Step into the dispatch desk", zh: "走进调度台" },
+        { to: "yardGate", en: "Back to the gate", zh: "回大门" },
+      ],
+    },
+    {
+      id: "dispatch", room: "yard", set: "manifest",
+      en: "The dispatch desk is a slab of deal under a dead lamp. Every lorry that ever left this yard is in the book, and every load is signed for twice: once by the driver, and once by someone whose signature is a single vertical stroke. The last manifest is still in the machine, dated tomorrow. You take it.",
+      zh: "调度台是一块松木板，头顶一盏死灯。这院子开出去的每辆卡车都记在簿上，每车货都签两次：一次是司机，一次是某个只画一道竖线的人。最后一张清单还卡在机器里，日期是明天。你把它抽了出来。",
+      choices: [
+        { to: "weighHouse", en: "Fold the manifest and go back", zh: "折起清单，退回去" },
+      ],
+    },
+    {
+      id: "copyRoom", room: "ledger",
+      en: "A copy room opens off the ledger room, no wider than a corridor. A wet-process copier stands against one wall with its tray full of blank paper and its crank still warm. The door closes behind you on a spring.",
+      zh: "台账室侧面开着一间复印室，窄得像走廊。靠墙一台湿法复印机，纸盘里全是白纸，摇柄还是温的。门在身后被弹簧带上了。",
+      choices: [
+        { to: "press", en: "Turn the copier's crank", zh: "摇动复印机的摇柄" },
+        { to: "ledgerRoom", en: "Back into the ledger room", zh: "回台账室" },
+      ],
+    },
+    {
+      id: "press", room: "ledger", set: "pressed",
+      en: "The copier takes the blank sheet, hesitates, and gives you back a copy of a page that is not in the building: the same strongbox dial, the same five slots, and a fifth name added in the margin in the same vertical hand as the yard manifests. The original stays inside the glass. You take the copy.",
+      zh: "复印机吃进白纸，迟疑了一下，吐回一页楼里根本不存在的纸：同样的保险柜转盘，同样的五个槽，页边还多用与煤场清单相同的竖笔迹添了第五个名字。原件留在玻璃里。你拿走副本。",
+      choices: [
+        { to: "copyRoom", en: "Take the copy and step out", zh: "拿着副本退出去" },
       ],
     },
   ];
@@ -661,7 +805,7 @@
     var guard = 0;
     seen[arcStateKey(start)] = 1;
     reached.lobby = 1;
-    while (head < queue.length && guard < 40000) {
+    while (head < queue.length && guard < 300000) {
       var state = queue[head];
       head += 1;
       var node = arcNode(state.node);
@@ -691,6 +835,9 @@
       "roofNoLamp", "yardTea", "ledgerTeaNoLamp", "everyItem", "secretTeaFull",
       "secretLedger", "roofTeaFull", "yardEveryItem", "yardLedgerFull", "yardEveryItemFull",
       "roofEveryItemFull", "secretEveryItemFull", "ledgerDryFull", "yardDryFull",
+      "yardNoPowerFull", "yardCageDryFull", "roofWetCageFull",
+      "yardCageManifestDryFull", "roofWetManifestFull",
+      "secretCageManifestPressFull",
     ];
     var turns = {};
     var i;
@@ -1539,6 +1686,12 @@
       "arcZ22": "The Stacks Take",
       "arcZ23": "The Dry Ledger",
       "arcZ24": "The Dry Yard",
+      "arcZ25": "The Dead Power",
+      "arcZ26": "The Survey Cage",
+      "arcZ27": "The Drowned Stacks",
+      "arcZ28": "The Weigh-House Night",
+      "arcZ29": "The Wet Manifest",
+      "arcZ30": "The Press Copy",
       "arcTurnLabel": "Turns",
       "arcClueLabel": "Clues",
       "arcRoomLabel": "Room",
@@ -1565,7 +1718,7 @@
       "arcEndingOff": "You reached {g} in {n} turns, but tonight asked for {want}. Walk it again.",
       "arcFiled": "{g}, filed in {n} turns - {s} stars.",
       "arcNextNight": "Next night unlocked.",
-      "arcAllNights": "Twenty nights, twenty ways out of it.",
+      "arcAllNights": "Thirty nights, thirty ways out of it.",
       "arcPaused": "Paused at turn {n}. The archive keeps your place.",
       "arcGraphBroken": "The story map failed its own solvability proof. Report it.",
       "arcObjective": "{name}: {want}. The route is known to take {p} turns, so shorter is better.",
@@ -1586,6 +1739,10 @@
       "arcItLedger": "\u2263 spring ledger",
       "arcFlagPower": "backup power",
       "arcFlagFlue": "the open flue",
+      "arcFlagWet": "the drowned floor plan",
+      "arcFlagCaged": "the open survey cage",
+      "arcFlagManifest": "the weigh-house manifest",
+      "arcFlagPressed": "the pressed copy",
       "arcClue1": "\u2500 tram ticket",
       "arcClue2": "\u2502 true aisle",
       "arcClue3": "\u250c coolant log",
@@ -1611,6 +1768,16 @@
       "arcGoalYardEveryItem": "get out through the coal yard still carrying every item in the building",
       "arcGoalYardLedgerFull": "get out through the coal yard with the spring ledger and all five clues",
       "arcGoalYardEveryItemFull": "get out through the coal yard with every item and all five clues",
+      "arcGoalRoofEveryItemFull": "reach the roof ending with every item and all five clues",
+      "arcGoalSecretEveryItemFull": "reach the secret ending with every item and all five clues",
+      "arcGoalLedgerDryFull": "reach the ledger ending dry-handed with all five clues",
+      "arcGoalYardDryFull": "get out through the coal yard dry-handed with all five clues",
+      "arcGoalYardNoPowerFull": "get out through the coal yard with every item and all five clues while the backup power stays dead",
+      "arcGoalYardCageDryFull": "get out through the coal yard dry-handed with all five clues and the survey cage checked",
+      "arcGoalRoofWetCageFull": "reach the roof ending with every item, all five clues, the drowned stacks and the survey cage",
+      "arcGoalYardCageManifestDryFull": "get out through the coal yard dry-handed with all five clues, the survey cage and the weigh-house manifest",
+      "arcGoalRoofWetManifestFull": "reach the roof ending with every item, all five clues, the drowned stacks and the weigh-house manifest",
+      "arcGoalSecretCageManifestPressFull": "reach the secret ending with every item, all five clues, the survey cage, the weigh-house manifest and the copy press",
       "arcEndLedger": "Ledger ending",
       "arcEndRoof": "Roof ending",
       "arcEndSecret": "Secret ending",
@@ -1642,6 +1809,12 @@
       "arcZ22": "书架满载",
       "arcZ23": "干手账本",
       "arcZ24": "干手煤场",
+      "arcZ25": "断电之夜",
+      "arcZ26": "测绘铁笼",
+      "arcZ27": "淹水书库",
+      "arcZ28": "地磅房之夜",
+      "arcZ29": "湿清单",
+      "arcZ30": "压印副本",
       "arcTurnLabel": "步数",
       "arcClueLabel": "线索",
       "arcRoomLabel": "房间",
@@ -1668,7 +1841,7 @@
       "arcEndingOff": "你用了 {n} 步走到{g}，可今夜要的是{want}。再走一遍。",
       "arcFiled": "{g}，用了 {n} 步 - 获得 {s} 星。",
       "arcNextNight": "解锁下一夜。",
-      "arcAllNights": "二十个夜晚，二十种出来的法子。",
+      "arcAllNights": "三十个夜晚，三十种出来的法子。",
       "arcPaused": "停在第 {n} 步。档案楼替你看住位置。",
       "arcGraphBroken": "故事图没通过它自己的可解性校验，请报告。",
       "arcObjective": "{name}：{want}。已测出这条路最短要 {p} 步，越少越好。",
@@ -1689,6 +1862,10 @@
       "arcItLedger": "\u2263 春季台账",
       "arcFlagPower": "备用电源",
       "arcFlagFlue": "敞开的烟道",
+      "arcFlagWet": "泡水的平面图",
+      "arcFlagCaged": "敞开的测绘笼",
+      "arcFlagManifest": "地磅房清单",
+      "arcFlagPressed": "压印副本",
       "arcClue1": "\u2500 电车月票",
       "arcClue2": "\u2502 真正的巷道",
       "arcClue3": "\u250c 冷却液记录",
@@ -1714,6 +1891,16 @@
       "arcGoalYardEveryItem": "带着楼里所有物件从堆煤场走出去",
       "arcGoalYardLedgerFull": "抱着春季台账、带齐五条线索从堆煤场走出去",
       "arcGoalYardEveryItemFull": "带齐所有物件和五条线索从堆煤场走出去",
+      "arcGoalRoofEveryItemFull": "带着所有物件和五条线索走到屋顶结局",
+      "arcGoalSecretEveryItemFull": "带着所有物件和五条线索走到隐藏结局",
+      "arcGoalLedgerDryFull": "不带保温壶、带齐五条线索走到台账结局",
+      "arcGoalYardDryFull": "不带保温壶、带齐五条线索从堆煤场走出去",
+      "arcGoalYardNoPowerFull": "在备用电源始终不恢复的情况下，带着所有物件和五条线索从堆煤场走出去",
+      "arcGoalYardCageDryFull": "不带保温壶、带着五条线索和已打开的测绘笼，从堆煤场走出去",
+      "arcGoalRoofWetCageFull": "带着所有物件、五条线索、淹水书库和测绘笼走到屋顶结局",
+      "arcGoalYardCageManifestDryFull": "不带保温壶、带着五条线索、测绘笼和地磅房清单，从堆煤场走出去",
+      "arcGoalRoofWetManifestFull": "带着所有物件、五条线索、淹水书库和地磅房清单走到屋顶结局",
+      "arcGoalSecretCageManifestPressFull": "带着所有物件、五条线索、测绘笼、地磅房清单和压印副本走到隐藏结局",
       "arcEndLedger": "台账结局",
       "arcEndRoof": "屋顶结局",
       "arcEndSecret": "隐藏结局",
@@ -1736,7 +1923,7 @@
         '<text x="93" y="40" font-size="10" fill="#ffd166" text-anchor="middle">5?</text>' +
         '<text x="30" y="68" font-size="8" fill="#b9c1cc">1 desk  2 stair  3 lift</text></svg>',
       en: [
-        "Goal: get out of the closed archive - the twenty nights each ask for a different way out.",
+        "Goal: get out of the closed archive - the thirty nights each ask for a different way out.",
         "Action: click a choice or press its number 1-4; Backspace retraces one passage and L reads your clue log aloud.",
         "Rule: a greyed choice is not a dead end, it names the item, flag or clue it still wants; the mapped rooms, satchel and clues stay on screen so you never have to remember.",
         "Turns: a shorter route scores better, so a run that walks the whole map will finish - it just will not shine.",
@@ -1744,7 +1931,7 @@
         "Before the night is dealt the story graph is checked by machine: every passage reachable, all three standard endings reachable, no passage without a way onward.",
       ],
       zh: [
-        "目标：从夜里关门的档案楼里出去——二十个夜晚，各要你走一种不同的出去法。",
+        "目标：从夜里关门的档案楼里出去——三十个夜晚，各要你走一种不同的出去法。",
         "操作：点选项，或按它前面的数字 1-4；退格键退回一段，L 键把线索日志念出来。",
         "规则：灰掉的选项不是死路，它会写明还缺哪件东西、哪个状态或哪条线索；已探明的房间、口袋和线索一直摆在屏上，不用你记。",
         "步数：路线越短分越高，所以把整栋楼走完也能通关——只是不会太亮眼。",

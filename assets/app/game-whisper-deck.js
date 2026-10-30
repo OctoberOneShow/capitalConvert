@@ -197,6 +197,48 @@
       deck: ["gust", "gust", "claw", "claw", "fang", "lance", "riposte", "riposte", "wall", "sidewall", "shell", "sip", "airy", "hush"],
       foes: ["choir", "wraith", "thunder", "deacon", "hollow", "thunder"],
     },
+    /* w25-30: the summit is the long watch. The deep tier stretched the run
+     * to six duels; the summit walks the deck to the engine's own ceiling -
+     * seven, then eight - and pairs the longest nights with the thinnest
+     * breath. w25 files the whole foe table through one night; w26 holds
+     * seven duels on two breath, w22's lesson one encore further; w27 sets
+     * a wall-and-sip battery under two thunders and two wraiths; w28 rings
+     * eight bells for the first time; w29 walks eight on two breath alone;
+     * and w30 seats three thunders over eight duels - the heaviest table
+     * the campaign has ever dealt, with a one-star line at a single point
+     * of resolve. Bands are the scripted hand's own measured lines, not
+     * invented: the bench that measured them lives in
+     * tools/gate-snippets/whisper-deck.js. */
+    {
+      id: "w25", labelKey: "wsdZ25", twistKey: "wsdTwist25", seed: 14611, breath: 3, duels: 7, starResolve: [20, 13, 7],
+      deck: ["gust", "gust", "claw", "claw", "fang", "lance", "riposte", "wall", "sidewall", "shell", "sip", "sip", "airy", "hush", "sip"],
+      foes: ["murmur", "caller", "choir", "deacon", "hollow", "wraith", "thunder"],
+    },
+    {
+      id: "w26", labelKey: "wsdZ26", twistKey: "wsdTwist26", seed: 14671, breath: 2, duels: 7, starResolve: [22, 15, 9],
+      deck: ["gust", "gust", "claw", "fang", "fang", "lance", "riposte", "wall", "sidewall", "sip", "sip", "airy", "hush", "hush", "sip", "hush"],
+      foes: ["murmur", "murmur", "caller", "murmur", "caller", "murmur", "caller"],
+    },
+    {
+      id: "w27", labelKey: "wsdZ27", twistKey: "wsdTwist27", seed: 14629, breath: 3, duels: 7, starResolve: [26, 22, 18],
+      deck: ["gust", "claw", "claw", "fang", "wall", "wall", "sidewall", "sidewall", "shell", "sip", "sip", "airy", "hush", "hush"],
+      foes: ["murmur", "thunder", "wraith", "hollow", "thunder", "wraith", "deacon"],
+    },
+    {
+      id: "w28", labelKey: "wsdZ28", twistKey: "wsdTwist28", seed: 14641, breath: 3, duels: 8, starResolve: [24, 18, 14],
+      deck: ["gust", "gust", "claw", "claw", "fang", "lance", "riposte", "wall", "sidewall", "shell", "sip", "sip", "airy", "hush", "sip", "wall"],
+      foes: ["murmur", "caller", "choir", "hollow", "deacon", "wraith", "thunder", "hollow"],
+    },
+    {
+      id: "w29", labelKey: "wsdZ29", twistKey: "wsdTwist29", seed: 14697, breath: 2, duels: 8, starResolve: [25, 17, 10],
+      deck: ["gust", "gust", "claw", "fang", "fang", "lance", "riposte", "wall", "sidewall", "shell", "sip", "sip", "airy", "hush", "hush", "sip", "hush"],
+      foes: ["murmur", "caller", "murmur", "caller", "murmur", "caller", "murmur", "caller"],
+    },
+    {
+      id: "w30", labelKey: "wsdZ30", twistKey: "wsdTwist30", seed: 14659, breath: 3, duels: 8, starResolve: [10, 5, 1],
+      deck: ["gust", "gust", "claw", "claw", "fang", "lance", "riposte", "riposte", "wall", "sidewall", "shell", "sip", "airy", "hush"],
+      foes: ["choir", "wraith", "thunder", "deacon", "hollow", "thunder", "wraith", "thunder"],
+    },
   ];
 
   function wsdInt(value) {
@@ -900,7 +942,7 @@
         message += " " + t("wsdDone");
       }
       result.textContent = message;
-      logAction(t("logWhisperDeck", { n: state.resolve }));
+      logAction(t("logWhisperDeck", { n: state.resolve, total: wsdRunDuels(level) }));
       var rect = endBtn.getBoundingClientRect();
       createConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
       petNotifyGame(outcome.isBest || outcome.firstClear);
@@ -1059,6 +1101,12 @@
       "wsdZ22": "Thin Breath",
       "wsdZ23": "The Gobbler Watch",
       "wsdZ24": "Six Bells",
+      "wsdZ25": "Seven Bells",
+      "wsdZ26": "The Thin Seven",
+      "wsdZ27": "The Tolling Watch",
+      "wsdZ28": "Eight Bells",
+      "wsdZ29": "The Thin Eighth",
+      "wsdZ30": "The Thunder Court",
       "wsdTwist1": "the starter deck",
       "wsdTwist2": "one more echo card",
       "wsdTwist3": "two breath a turn",
@@ -1083,6 +1131,12 @@
       "wsdTwist22": "thin breath: five duels on two breath a turn",
       "wsdTwist23": "the gobbler watch: six duels, and two of the encores eat cards",
       "wsdTwist24": "six bells: six duels, every foe a headliner",
+      "wsdTwist25": "seven bells: the whole foe table files through one night",
+      "wsdTwist26": "the thin seven: seven duels on two breath a turn",
+      "wsdTwist27": "the tolling watch: a wall-and-sip battery under two thunders and two wraiths",
+      "wsdTwist28": "eight bells: the engine's own ceiling, and the last encore arrives unmended",
+      "wsdTwist29": "the thin eighth: eight duels on two breath, walked on draws alone",
+      "wsdTwist30": "the thunder court: three thunders over eight duels, the heaviest table yet",
       "wsdBreathLabel": "Breath",
       "wsdResolveLabel": "Resolve",
       "wsdDuelLabel": "Duel",
@@ -1146,8 +1200,8 @@
       "wsdDone": "Every chamber has heard you.",
       "wsdBest": "best {h} resolve",
       "wsdSilence": "The room waits.",
-      "wsdHint": "Guard the lane the arrow points at, and keep a cheap card back so an echo has something to answer.",
-      "logWhisperDeck": "Held four duels with {n} resolve",
+      "wsdHint": "Guard the lane the arrow points at, and keep a cheap card back so an echo has something to answer. Summit: the long watch runs to the engine's own ceiling - seven and eight duels a night, the thin-breath nights walked on draws alone, and the thunder court asking for the whole deck.",
+      "logWhisperDeck": "Held {total} duels with {n} resolve",
       "wsdCgust": "Gust",
       "wsdCclaw": "Left Claw",
       "wsdCfang": "Right Fang",
@@ -1187,6 +1241,12 @@
       "wsdZ22": "气息薄夜",
       "wsdZ23": "饕餐守夜",
       "wsdZ24": "六声钟",
+      "wsdZ25": "七声钟",
+      "wsdZ26": "窄息七钟",
+      "wsdZ27": "鸣钟守望",
+      "wsdZ28": "八声钟",
+      "wsdZ29": "窄息八场",
+      "wsdZ30": "雷霆法庭",
       "wsdTwist1": "起始牌组",
       "wsdTwist2": "多一张回音牌",
       "wsdTwist3": "每回合两口气",
@@ -1211,6 +1271,12 @@
       "wsdTwist22": "气息薄夜：五场对决，每回合只有两口气",
       "wsdTwist23": "饕餐守夜：六场对决，其中两场会吃牌",
       "wsdTwist24": "六声钟：六场对决，场场都是硬手",
+      "wsdTwist25": "七声钟：整张敌手表在一夜里依次过堂",
+      "wsdTwist26": "窄息七钟：两口气打七场",
+      "wsdTwist27": "鸣钟守望：墙与啜饮的蓄电池硬扛双雷霆双怨灵",
+      "wsdTwist28": "八声钟：引擎自己的上限，休整未完第八场也要开打",
+      "wsdTwist29": "窄息八场：两口气走八场，全靠抽牌走完",
+      "wsdTwist30": "雷霆法庭：三记雷霆压八场，战役至今最重的一桌",
       "wsdBreathLabel": "气息",
       "wsdResolveLabel": "心气",
       "wsdDuelLabel": "对决",
@@ -1274,8 +1340,8 @@
       "wsdDone": "每一间经堂都听见了你。",
       "wsdBest": "最佳 {h} 点心气",
       "wsdSilence": "房间在等。",
-      "wsdHint": "箭头顶着哪条道就守哪条，手里留一张便宜牌，回音才有东西可接。",
-      "logWhisperDeck": "守住四场对决，余 {n} 点心气",
+      "wsdHint": "箭头顶着哪条道就守哪条，手里留一张便宜牌，回音才有东西可接。巅峰段：长夜值守走到引擎的上限——一夜七场、八场，窄息之夜全靠抽牌走完，雷霆法庭更是要倾尽整副牌。",
+      "logWhisperDeck": "守住{total}场对决，余 {n} 点心气",
       "wsdCgust": "阵风",
       "wsdCclaw": "左爪",
       "wsdCfang": "右牙",

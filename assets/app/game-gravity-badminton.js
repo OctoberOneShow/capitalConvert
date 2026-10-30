@@ -34,7 +34,7 @@
   var gbmG = [{ x: 0, y: 1 }, { x: -1, y: 0 }, { x: 0, y: -1 }, { x: 1, y: 0 }];
   var gbmDirKeys = ["gbmPullDown", "gbmPullLeft", "gbmPullUp", "gbmPullRight"];
 
-  /* Twenty opponents, all data, so a level can be replayed and measured:
+  /* Thirty opponents, all data, so a level can be replayed and measured:
    *   speed/reach/height  baseline slide, reach, and the height it can swing at
    *   lock                gravity indexes where it never miscues (the wall)
    *   offLock             its speed multiplier while the pull is sideways
@@ -267,6 +267,93 @@
       speed: 160, reach: 18, height: 68, power: 1.25, err: 0.16, offLock: 1.30, freeze: 0.1,
       react: 0.04, spread: 2.3, lock: [0, 2], targets: [46, 96, 24, 8], baseBands: [1, 3, 5],
       line: [{ u: 92, target: 230, track: true }, { u: 20, target: 132, track: true }, { u: 108, target: 132, track: true }, { u: 24, target: 152, track: true }, { u: 100, target: 226, track: true }, { u: 30, target: 144, track: true }, { u: 96, target: 220, track: true }],
+    },
+    /* b25-b30: the Event Horizon tier. Everything past the grand apex is
+     * built on one rule: nothing comes back. The grand court still leaked -
+     * gifts on the unlocked pulls, a park window after a strike, a wall that
+     * slowed crosswise - and these six close the leaks rung by rung while
+     * the three dials the ladder reads climb monotonically past the apex
+     * wall: power 1.3 up to 1.4, err 0.1 down to nothing, base pace 170 up
+     * to 190 against the apex's 160. Each stored line below wins its match
+     * outright against its own rung - the par the bands hang off is that
+     * line's measured concession through gbmRally, never a guess. */
+
+    /* b25: the reader with no park window. b16 gave a third of a second to
+     * change your mind after it read you; this one re-reads the instant the
+     * shot leaves your racket, so a planned shot is a met shot and only a
+     * late change of angle lands. */
+    {
+      id: "b25", labelKey: "gbmL25", style: "reader", seed: 91801, cap: 38,
+      speed: 170, reach: 18, height: 60, power: 1.3, err: 0.1, offLock: 1, freeze: 0,
+      react: 0.02, spread: 2.2, lock: [], targets: [20, 114, 66], baseBands: [0, 2, 4],
+      line: [{ u: 28, target: 132, track: true }, { u: 108, target: 132, track: true },
+        { u: 84, target: 202, track: true }, { u: 60, target: 152, track: true },
+        { u: 24, target: 226, track: true }, { u: 36, target: 144, track: true },
+        { u: 60, target: 236, track: true }],
+    },
+
+    /* b26: the wall that sprints crosswise. The sideways pull is not its bad
+     * court but its best - offLock 1.4, faster than any shipped wall moves
+     * off its lock - while the vertical pulls stay locked, so half the
+     * rotation is a chase you cannot win and the other half is locked shut. */
+    {
+      id: "b26", labelKey: "gbmL26", style: "wall", seed: 91902, cap: 36,
+      speed: 172, reach: 18, height: 64, power: 1.32, err: 0.08, offLock: 1.4, freeze: 0.1,
+      react: 0.04, spread: 2.3, lock: [0, 2], targets: [46, 96, 24, 8], baseBands: [0, 2, 4],
+      line: [{ u: 60, target: 236, track: true }, { u: 108, target: 132, track: true },
+        { u: 84, target: 202, track: true }, { u: 60, target: 152, track: true },
+        { u: 24, target: 226, track: true }, { u: 36, target: 144, track: true }],
+    },
+
+    /* b27: the counter with the long arms. Locked crosswise it reaches
+     * forty-four and hits harder than the apex wall, and it plants itself
+     * opposite you and answers your corner with its own - the vertical pulls
+     * are the only court there is to win on, and it covers those too. */
+    {
+      id: "b27", labelKey: "gbmL27", style: "counter", seed: 92003, cap: 36,
+      speed: 174, reach: 44, height: 80, power: 1.34, err: 0.06, offLock: 1, freeze: 0.05,
+      react: 0.04, spread: 2.4, lock: [1, 3], targets: [8, 116], baseBands: [1, 3, 5],
+      line: [{ u: 74, target: 240, track: true }, { u: 44, target: 134, track: true },
+        { u: 84, target: 164, track: true }, { u: 64, target: 152, track: true },
+        { u: 60, target: 142, track: true }],
+    },
+
+    /* b28: the canopy closed. A fifty-two-unit swing under a ceiling above
+     * the loft on a slide that still out-paces a serve, hitting harder than
+     * anything before it - the only ground it leaves is the two ends of its
+     * own arms, and finding them means alternating them all match long. */
+    {
+      id: "b28", labelKey: "gbmL28", style: "sitter", seed: 92104, cap: 36,
+      speed: 178, reach: 52, height: 116, power: 1.36, err: 0.04, offLock: 1, freeze: 0,
+      react: 0.14, spread: 2.5, lock: [], targets: [6, 117], baseBands: [0, 2, 4],
+      line: [{ u: 36, target: 170, track: true }, { u: 24, target: 134, track: true },
+        { u: 74, target: 202, track: true }, { u: 24, target: 152, track: true },
+        { u: 44, target: 134, track: true }],
+    },
+
+    /* b29: the runner that arrives first. Full-length coverage at a pace the
+     * shuttle cannot out-run and a re-read on the way, running to where your
+     * shot is going instead of where it was - so the only shot that beats it
+     * is the one that gets there sooner. */
+    {
+      id: "b29", labelKey: "gbmL29", style: "mover", seed: 92205, cap: 38,
+      speed: 186, reach: 17, height: 60, power: 1.38, err: 0.02, offLock: 1, freeze: 0,
+      react: 0.03, spread: 2.5, lock: [], targets: [10, 118], baseBands: [0, 2, 4],
+      line: [{ u: 68, target: 240, track: true }, { u: 56, target: 134, track: true },
+        { u: 84, target: 202, track: true }, { u: 24, target: 152, track: true },
+        { u: 96, target: 214, track: true }],
+    },
+
+    /* b30: the locked champion, and the capstone. No gifts on any pull, no
+     * park window worth the name, the fastest base pace and the heaviest hit
+     * in the ladder - and the match still has to be won clean: the proven
+     * line concedes nothing, and so does the three-star band. */
+    {
+      id: "b30", labelKey: "gbmL30", style: "mover", seed: 92306, cap: 38,
+      speed: 190, reach: 18, height: 62, power: 1.4, err: 0, offLock: 1, freeze: 0.35,
+      react: 0.02, spread: 2.6, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [0, 2, 4],
+      line: [{ u: 108, target: 132, track: true }, { u: 108, target: 132, track: true },
+        { u: 20, target: 170, track: true }, { u: 24, target: 152, track: true }],
     },
   ];
 
@@ -1431,6 +1518,12 @@
       "gbmL22": "Gravity Well Duel",
       "gbmL23": "Hyper-Drive Court",
       "gbmL24": "Grand Court Pinnacle",
+      "gbmL25": "Zero-Window Reader",
+      "gbmL26": "Sprinting Bulwark",
+      "gbmL27": "Long-Arm Counter",
+      "gbmL28": "Total Canopy",
+      "gbmL29": "Everywhere Runner",
+      "gbmL30": "The Locked Champion",
       "gbmScoreLabel": "Score",
       "gbmPullLabel": "Pull",
       "gbmPowerLabel": "Power",
@@ -1471,7 +1564,7 @@
       "gbmYouLose": "Match lost {a}-{b}. {name} reads the rotation better.",
       "gbmCapHit": "The rally cap of {n} was reached at {a}-{b}, so the match is dropped.",
       "gbmNextFoe": "Next opponent unlocked.",
-      "gbmAllBeat": "All twenty opponents beaten.",
+      "gbmAllBeat": "All thirty opponents beaten.",
       "gbmHint":
         "Read the arrow, not the memory: every rally turns the court. Slide under the shuttle, raise the aim, then smash.",
       "logGravityBadminton": "Beat {name} in gravity badminton {a}-{b}",
@@ -1502,6 +1595,12 @@
       "gbmL22": "引力深渊对决",
       "gbmL23": "超光速球场",
       "gbmL24": "星际羽皇巅峰",
+      "gbmL25": "无隙读线者",
+      "gbmL26": "疾行壁垒",
+      "gbmL27": "长臂反击手",
+      "gbmL28": "遮天华盖",
+      "gbmL29": "满场奔跑者",
+      "gbmL30": "全域锁王",
       "gbmScoreLabel": "比分",
       "gbmPullLabel": "引力",
       "gbmPowerLabel": "力量",
@@ -1541,7 +1640,7 @@
       "gbmYouLose": "以 {a}-{b} 落败。「{name}」更懂得利用旋转。",
       "gbmCapHit": "打到 {n} 回合的上限，比分 {a}-{b}，本局作废。",
       "gbmNextFoe": "解锁下一位对手。",
-      "gbmAllBeat": "二十位对手全部取胜。",
+      "gbmAllBeat": "三十位对手全部取胜。",
       "gbmHint": "要看箭头而不是凭记忆：每一回合球场都会旋转。跑到球下，抬高瞄准角，再扣杀。",
       "logGravityBadminton": "在重力羽毛球中以 {a}-{b} 战胜了「{name}」",
     },

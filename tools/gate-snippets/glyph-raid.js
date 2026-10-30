@@ -33,27 +33,51 @@
  *   rank, every deep deal measurably soaks shots into plates, and an
  *   armor-stripped twin of the same rung on the same seeds converts those
  *   soaked rounds into kills - the plates, not the tempo, are what the tier
- *   prices. */
+ *   prices.
+ *
+ * The summit tier v25-v30 pulls the two levers the deep tier left, and the
+ * gate prices them the same way. `volley` and `stride` are dead fields for
+ * v1-24, so the shipped streams replay untouched; the tick-for-tick mirror
+ * replay is re-run on v26, the first rung that strides and volleys at once,
+ * so the mirror's volley law is pinned to the live panel. The tier is the
+ * harder fight in the engine's own currencies rung over rung: the untouched
+ * descent clock keeps falling (naive runs land sooner on every summit rung
+ * than on the one before it, all the way to 161 ticks at v30), the march
+ * only ever quickens, the drop pressure (volley over beat) climbs strictly,
+ * and the shot floor never falls below the deep summit's 33s, topping out
+ * at 49.5s - a hundred and fifty rounds at the 330ms cadence before a
+ * single bullet may miss. The volley is priced by twins: the same rung at
+ * volley one costs the dodging hand fewer lives in aggregate over twelve
+ * seeds, on every rung probed. */
 
 module.exports = function gate(ctx) {
   const { App, env, check } = ctx;
   const levels = App.raidLevels;
   const deepIds = ["v21", "v22", "v23", "v24"];
+  const summitIds = ["v25", "v26", "v27", "v28", "v29", "v30"];
 
   /* ---- ladder shape ---- */
-  check("game-glyph-raid", "the ladder holds twenty-four waves",
-    levels.length === 24, String(levels.length));
+  check("game-glyph-raid", "the ladder holds thirty waves",
+    levels.length === 30, String(levels.length));
   check("game-glyph-raid", "every wave id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
   const missing = deepIds.filter((id) => !levels.some((level) => level.id === id));
   check("game-glyph-raid", "the deep tier v21-v24 is present",
     missing.length === 0, missing.join(","));
+  const summitMissing = summitIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-glyph-raid", "the summit tier v25-v30 is present in order",
+    summitMissing.length === 0 &&
+      summitIds.every((id, index) => levels.findIndex((level) => level.id === id) >
+        (index === 0 ? -1 : levels.findIndex((level) => level.id === summitIds[index - 1]))),
+    summitMissing.join(",") || "ordered");
 
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
   const v20 = byId.v20;
+  const v24 = byId.v24;
   const deep = deepIds.map((id) => byId[id]);
+  const summit = summitIds.map((id) => byId[id]);
 
   const shapeProblems = [];
   deep.forEach((level) => {
@@ -76,6 +100,59 @@ module.exports = function gate(ctx) {
     "the deep rungs keep the shipped board, tighten its tempo and band like shipped rungs",
     shapeProblems.length === 0, shapeProblems.join(" | "));
 
+  /* ---- the summit keeps the board and climbs in every currency ---- */
+  const CADENCE_S = 0.33;
+  const floorOf = (level) => {
+    const ranks = level.armorRanks || 1;
+    const plates = level.armor ? level.armor * level.cols * ranks : 0;
+    return (level.rows * level.cols + plates) * CADENCE_S;
+  };
+  const summitProblems = [];
+  let prevPressure = (v24.volley || 1) / v24.dropMs;
+  let prevStride = v24.stride || 8;
+  summit.forEach((level) => {
+    if (level.rows !== 6 || level.cols !== 10) {
+      summitProblems.push(level.id + " leaves the shipped 6x10 board");
+    }
+    if (!(level.stepMs < v24.stepMs)) {
+      summitProblems.push(level.id + " marches no faster than the deep summit");
+    }
+    if (!((level.stride || 8) >= prevStride)) {
+      summitProblems.push(level.id + " narrows the march stride to " + level.stride);
+    }
+    const pressure = (level.volley || 1) / level.dropMs;
+    if (!(level.volley >= 2)) {
+      summitProblems.push(level.id + " does not volley");
+    }
+    if (!(pressure > prevPressure)) {
+      summitProblems.push(level.id + " drop pressure " + pressure.toFixed(3) +
+        "/s does not beat the rung before it (" + prevPressure.toFixed(3) + "/s)");
+    }
+    prevPressure = pressure;
+    prevStride = level.stride || 8;
+    const bands = level.starTimes;
+    if (!bands || bands.length !== 3 ||
+        !(bands[0] < bands[1] && bands[1] < bands[2])) {
+      summitProblems.push(level.id + " star bands do not run downwards");
+    }
+    if (!(bands[0] > floorOf(level))) {
+      summitProblems.push(level.id + " three-star band " + bands[0] +
+        "s does not clear its own shot floor of " + floorOf(level).toFixed(1) + "s");
+    }
+    if (!(floorOf(level) >= floorOf(v24))) {
+      summitProblems.push(level.id + " shot floor falls below the deep summit's");
+    }
+  });
+  if (!(floorOf(byId.v30) > floorOf(byId.v29) && floorOf(byId.v30) === 150 * CADENCE_S)) {
+    summitProblems.push("v30 is not the economy summit: its floor is " +
+      floorOf(byId.v30).toFixed(1) + "s");
+  }
+  check("game-glyph-raid",
+    "the summit rungs volley harder, march faster and price their economy above the deep summit on every dial (" +
+      summitIds.map((id) => byId[id].id + " " + floorOf(byId[id]).toFixed(1) + "s").join(", ") +
+      " vs v24 " + floorOf(v24).toFixed(1) + "s)",
+    summitProblems.length === 0, summitProblems.join(" | "));
+
   /* ---- the plates are structural ---- */
   const shallowPlated = [];
   levels.slice(0, 20).forEach((level) => {
@@ -88,6 +165,16 @@ module.exports = function gate(ctx) {
   check("game-glyph-raid",
     "no shipped rung marches a plated rank - the armor branch is dead for v1-v20",
     shallowPlated.length === 0, shallowPlated.join(","));
+
+  const summitFielded = [];
+  levels.slice(0, 24).forEach((level) => {
+    if (level.volley || level.stride) {
+      summitFielded.push(level.id);
+    }
+  });
+  check("game-glyph-raid",
+    "no shipped rung volleys or strides - the summit levers are dead for v1-v24",
+    summitFielded.length === 0, summitFielded.join(","));
 
   const plateProblems = [];
   deep.forEach((level) => {
@@ -288,6 +375,12 @@ module.exports = function gate(ctx) {
       replayV14.compared + " frames, the shipped tempo cliff)",
     replayV14.compared >= 200 && replayV14.mismatches === 0,
     replayV14.firstBad || replayV14.compared + " frames");
+  const replayV26 = replay("v26", 909, 240);
+  check("game-glyph-raid",
+    "the mirror replays the live panel tick for tick on v26 (" +
+      replayV26.compared + " frames, the first rung that strides and volleys at once)",
+    replayV26.compared >= 200 && replayV26.mismatches === 0,
+    replayV26.firstBad || replayV26.compared + " frames");
 
   /* ---- the bench: two hands, seeded, through the mirror ---- */
   const SHIP_Y = 220;
@@ -390,10 +483,10 @@ module.exports = function gate(ctx) {
       v1Raider.filter((run) => run.cleared).length + "/6)",
     v1Raider.every((run) => run.cleared),
     "cleared " + v1Raider.filter((run) => run.cleared).length + "/6");
-  const freeProblems = ["v20"].concat(deepIds)
+  const freeProblems = ["v20"].concat(deepIds, summitIds)
     .filter((id) => bench(id, naiveHand).some((run) => run.cleared));
   check("game-glyph-raid",
-    "the naive hand clears nothing on the shipped peak or the deep tier - no wave is free",
+    "the naive hand clears nothing on the shipped peak, the deep tier or the summit - no wave is free",
     freeProblems.length === 0, freeProblems.join(","));
 
   /* determinism: a seed replays byte-identically */
@@ -408,7 +501,7 @@ module.exports = function gate(ctx) {
    * line every time. The ticks fall rung over rung into the deep tier. */
   const clockProblems = [];
   let prevClock = Infinity;
-  ["v20"].concat(deepIds).forEach((id) => {
+  ["v20"].concat(deepIds, summitIds).forEach((id) => {
     const runs = bench(id, naiveHand);
     const allLanded = runs.every((run) => run.landed);
     const clock = Math.max.apply(null, runs.map((run) => run.ticks));
@@ -420,19 +513,13 @@ module.exports = function gate(ctx) {
     prevClock = clock;
   });
   check("game-glyph-raid",
-    "the untouched landing clock falls rung over rung into the deep tier",
+    "the untouched landing clock falls rung over rung into the deep tier and down the summit",
     clockProblems.length === 0, clockProblems.join(" | "));
 
   /* The shot floor: the engine's own fire cadence (a bullet every 330ms) is
    * law, and the plates demand raiders+plates rounds, so no hand of any
    * skill can clear a rung faster than that floor. The deep floors climb
    * strictly above the shipped peak's and into the summit. */
-  const CADENCE_S = 0.33;
-  const floorOf = (level) => {
-    const ranks = level.armorRanks || 1;
-    const plates = level.armor ? level.armor * level.cols * ranks : 0;
-    return (level.rows * level.cols + plates) * CADENCE_S;
-  };
   const floorProblems = [];
   let prevFloor = floorOf(v20);
   deep.forEach((level) => {
@@ -456,13 +543,13 @@ module.exports = function gate(ctx) {
   if (bench("v20", raiderHand).some((run) => run.soaked !== 0)) {
     soakProblems.push("v20 soaked shots it should never soak");
   }
-  deepIds.forEach((id) => {
+  deepIds.concat(summitIds).forEach((id) => {
     if (!bench(id, raiderHand).every((run) => run.soaked > 0)) {
       soakProblems.push(id + " let a seed through without soaking a plate");
     }
   });
   check("game-glyph-raid",
-    "the deep deals demonstrably soak shots into plates; v20 soaks none",
+    "the deep and summit deals demonstrably soak shots into plates; v20 soaks none",
     soakProblems.length === 0, soakProblems.join(" | "));
 
   /* ---- the plates are priced by twins ---- */
@@ -498,12 +585,37 @@ module.exports = function gate(ctx) {
     "stripping a deep rung's plates drops its shot floor by exactly plates x 330ms",
     twinFloorProblems.length === 0, twinFloorProblems.join(","));
 
+  /* The volley is priced by twins: the same rung at volley one faces a
+   * third (or half) of the bombs a beat. The rng streams diverge once the
+   * volley changes, so the comparison is aggregate: over twelve seeds the
+   * dodging hand keeps more hull on the single-lane twin than on the rung
+   * as shipped, on every rung probed. */
+  const volleyTwelve = [700, 750, 800, 850, 900, 950,
+    1000, 1050, 1100, 1150, 1200, 1250];
+  const volleyProblems = [];
+  ["v25", "v28", "v30"].forEach((id) => {
+    const twin = Object.assign({}, byId[id], { volley: 1 });
+    let livesFull = 0;
+    let livesTwin = 0;
+    volleyTwelve.forEach((seed) => {
+      livesFull += App.raidSimulate(byId[id], raiderHand(), raidRng(seed)).lives;
+      livesTwin += App.raidSimulate(twin, raiderHand(), raidRng(seed)).lives;
+    });
+    if (!(livesFull < livesTwin)) {
+      volleyProblems.push(id + ": the volley kept " + livesFull +
+        " hulls against the single-lane twin's " + livesTwin);
+    }
+  });
+  check("game-glyph-raid",
+    "the volley costs the dodging hand hull in aggregate against single-lane twins",
+    volleyProblems.length === 0, volleyProblems.join(" | "));
+
   /* ---- the names travel with the page ---- */
-  const copyProblems = deep.map((level) => level.labelKey).filter((key) =>
+  const copyProblems = deep.concat(summit).map((level) => level.labelKey).filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-glyph-raid", "the four deep wave names resolve in both languages",
+  check("game-glyph-raid", "the ten deep and summit wave names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 
   /* ---- the unlock chain is derived, never stored ---- */
@@ -520,14 +632,14 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-glyph-raid", "the unlock chain walks all twenty-four waves in order",
-    walked === 24 && chained && chain.clearedCount() === 24, walked + " first clears");
+  check("game-glyph-raid", "the unlock chain walks all thirty waves in order",
+    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
 
   /* ---- the live panel wires the tier the way a player meets it ---- */
   const panel = makePanel();
   env.store.delete("glyph-raid-campaign");
   const save = { v: 1, cleared: {} };
-  for (let c = 1; c <= 20; c += 1) save.cleared["v" + c] = { stars: 3, best: 1 };
+  for (let c = 1; c <= 29; c += 1) save.cleared["v" + c] = { stars: 3, best: 1 };
   env.store.set("glyph-raid-campaign", JSON.stringify(save));
   let wiringProblems = [];
   try {
@@ -537,20 +649,20 @@ module.exports = function gate(ctx) {
       const node = panel.raidLevelSel.childNodes[i];
       if (node.nodeType === 1) options.push(node);
     }
-    if (options.length !== 24) {
+    if (options.length !== 30) {
       wiringProblems.push("the picker holds " + options.length + " waves");
     }
     options.forEach((option, index) => {
-      const shouldOpen = index <= 20;
+      const shouldOpen = index <= 29;
       if (!!option.disabled !== !shouldOpen) {
         wiringProblems.push(option.value + " is " +
           (option.disabled ? "locked" : "open") + " at position " + index);
       }
     });
-    panel.raidLevelSel.value = "v21";
+    panel.raidLevelSel.value = "v30";
     env.dispatch(panel.raidLevelSel, "change");
     if (panel.raidResult.textContent !== App.t("raidReady", { n: 60 })) {
-      wiringProblems.push("selecting v21 loaded \"" +
+      wiringProblems.push("selecting v30 loaded \"" +
         panel.raidResult.textContent + "\"");
     }
   } catch (error) {
@@ -559,6 +671,6 @@ module.exports = function gate(ctx) {
     removePanel();
   }
   check("game-glyph-raid",
-    "the panel picker holds all twenty-four waves and v21 loads as a plated 6x10 wave",
+    "the panel picker holds all thirty waves and v30 loads as a plated, volleying 6x10 wave",
     wiringProblems.length === 0, wiringProblems.join(" | "));
 };

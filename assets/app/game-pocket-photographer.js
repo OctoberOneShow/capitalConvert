@@ -323,6 +323,51 @@
       momentScale: 0.87, drift: 0.12, wind: true, scoreMin: 82, behaviourMin: 26,
       frameW: 176, frameH: 130, start: { x: 208, y: 172, focus: 0.42 },
       roster: [{ sp: "heron", n: 2 }, { sp: "otter", n: 2 }, { sp: "coot", n: 3 }, { sp: "warbler", n: 3 }] },
+    /* ------------------------------------------------------------------
+     * The last ponds (pph25-pph30). The master gallery had closed the
+     * shipped ladder on a balanced chorus; the last ponds each load one
+     * dial to an extreme the tour had only ever brushed, and no two of
+     * them lean on the same one. The Single Flock crowds the water with
+     * six coots - more of one bird than any pond has ever dealt - so the
+     * album is only as good as its three loners. The Tight Hour narrows
+     * the behaviour window to 0.85 of its length, the narrowest timing
+     * the deep tiers have asked for at this drift. The Pinhole cuts the
+     * viewfinder to 172 across - the smallest glass on the tour - and
+     * raises the composition bar to 84 with it. The Last Exposure hands
+     * over six frames for four species, so two spares cover the whole
+     * roll. The High Bar asks 84 for the frame and 28 for the behaviour
+     * at once, the strictest pair the pond has ever printed together.
+     * The Still Hour closes the tour: the six-frame roll, the drift past
+     * the shipped ceiling, and the raised bar together. Every seed was
+     * chosen by the house law - at least half the twenty-four rounds the
+     * pond actually deals reach their own measured band - and every band
+     * still sits on the scripted line the module proves at load, with the
+     * tour's best album (367) photographed on the Single Flock.
+     * ------------------------------------------------------------------ */
+    { id: "pph25", labelKey: "pphZ25", seed: 17999, budget: 7, need: 4,
+      momentScale: 0.87, drift: 0.12, wind: true, scoreMin: 82, behaviourMin: 26,
+      frameW: 176, frameH: 130, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "coot", n: 6 }, { sp: "warbler", n: 1 }, { sp: "heron", n: 1 }, { sp: "otter", n: 1 }] },
+    { id: "pph26", labelKey: "pphZ26", seed: 17407, budget: 8, need: 4,
+      momentScale: 0.85, drift: 0.12, wind: true, scoreMin: 82, behaviourMin: 26,
+      frameW: 176, frameH: 130, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "heron", n: 2 }, { sp: "otter", n: 3 }, { sp: "coot", n: 3 }, { sp: "warbler", n: 2 }] },
+    { id: "pph27", labelKey: "pphZ27", seed: 17074, budget: 7, need: 4,
+      momentScale: 0.87, drift: 0.12, wind: true, scoreMin: 84, behaviourMin: 26,
+      frameW: 172, frameH: 126, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "otter", n: 2 }, { sp: "heron", n: 3 }, { sp: "coot", n: 3 }, { sp: "warbler", n: 2 }] },
+    { id: "pph28", labelKey: "pphZ28", seed: 17333, budget: 6, need: 4,
+      momentScale: 0.88, drift: 0.12, wind: true, scoreMin: 82, behaviourMin: 26,
+      frameW: 176, frameH: 130, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "coot", n: 3 }, { sp: "otter", n: 3 }, { sp: "warbler", n: 2 }, { sp: "heron", n: 2 }] },
+    { id: "pph29", labelKey: "pphZ29", seed: 18628, budget: 7, need: 4,
+      momentScale: 0.88, drift: 0.12, wind: true, scoreMin: 84, behaviourMin: 28,
+      frameW: 176, frameH: 130, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "heron", n: 2 }, { sp: "otter", n: 2 }, { sp: "coot", n: 3 }, { sp: "warbler", n: 3 }] },
+    { id: "pph30", labelKey: "pphZ30", seed: 18443, budget: 6, need: 4,
+      momentScale: 0.86, drift: 0.125, wind: true, scoreMin: 84, behaviourMin: 27,
+      frameW: 176, frameH: 130, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "otter", n: 2 }, { sp: "coot", n: 3 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 2 }] },
   ];
 
   /* Every control is one tap of the same pure stepper, so a key press and a
@@ -2106,6 +2151,27 @@
       "pphUnproven": "这个水塘还没证明目标能在胶卷内达成。",
       "pphHint": "读秒，然后稳住：相机在动就会扣时机分，而错过精彩时刻的快门会把生灵赶到新的路线上。",
       "logPocketPhotographer": "成册 {v} 分，收录 {k} 个物种",
+    },
+  });
+
+  /* The last ponds carry their own names: addStrings only fills keys i18n.js
+   * does not already hold, so the picker never prints a raw key. */
+  App.addStrings({
+    en: {
+      "pphZ25": "The Single Flock",
+      "pphZ26": "The Tight Hour",
+      "pphZ27": "The Pinhole",
+      "pphZ28": "The Last Exposure",
+      "pphZ29": "The High Bar",
+      "pphZ30": "The Still Hour",
+    },
+    zh: {
+      "pphZ25": "\u6ee1\u5858\u4e00\u65cf",
+      "pphZ26": "\u7d27\u8feb\u65f6\u5206",
+      "pphZ27": "\u9488\u5b54\u955c\u7b52",
+      "pphZ28": "\u672b\u5f20\u5e95\u7247",
+      "pphZ29": "\u9ad8\u95e8\u69db",
+      "pphZ30": "\u9759\u6c34\u4e00\u523b",
     },
   });
 

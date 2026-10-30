@@ -57,6 +57,43 @@
     { id: "n22", labelKey: "netL22", size: 13, starPad: [0, 3, 8] },
     { id: "n23", labelKey: "netL23", size: 13, tangle: 0.8, starPad: [0, 4, 8] },
     { id: "n24", labelKey: "netL24", size: 14, tangle: 0.75, starPad: [0, 4, 9] },
+
+    /* ------------------------------------------------------------------
+     * The summit tier (n25-n30). The deep tier had walked the loom's two
+     * dials as far as they went - fourteen-wide plates at the three-fifths
+     * storm (n24), thirteen wide at four fifths (n23) - so the summit
+     * opens the loom's last two frames, fifteen and sixteen wide, and
+     * storms them harder than any deal the ladder has ever shipped: the
+     * tangle climbs 0.75 -> 0.85 -> 0.9 across the fifteen-wide rungs,
+     * steps back to the deep working storm to open the sixteen-wide
+     * plate, then climbs again to 0.95 - nineteen twentieths of the plate
+     * scrambled, about a dozen tiles reading true on a 255-tile frame.
+     * The star pads still hang from the dealt optimum, and the first pad
+     * stays 0: three stars ask for the optimum itself. The consolation
+     * pads are quoted, not guessed - n24's own two- and one-star pads sit
+     * at 1.7% and 3.9% of its measured optimum, and every summit rung
+     * prices its own mean optimum at those same ratios, rounded. All
+     * numbers were measured through the game's own generator and win
+     * check on the checker's twenty-four seeds (7000 + s*131): the mean
+     * optimum climbs 233.1 (n24) -> 267.3 -> 301.2 -> 318.5 -> 345.7 ->
+     * 365.6 -> 386.6 clicks rung over rung, every deal is a real tangle
+     * with three bulbs to spare, the honest optimum line solves every
+     * deal at exactly the dealt optimum, and a blind one-more-turn sweep
+     * never powers the grid. A fresh eighty-seed sweep of the wildest
+     * summit deals (sixteen wide at 0.95) found no fallback, no blind win
+     * and no deal the loom needed more than 11 ms to lay - the widest
+     * frame deals as briskly as the first. The tangle is the load-bearing
+     * dial by twins: hold the frame and relax the deal back to the
+     * shipped three-fifths storm, and the same seeds measure the mean
+     * optimum falling to 210.9 on the fifteen-wide plate and 245.5 on the
+     * sixteen-wide - the storm, not the width alone, prices the summit.
+     * ------------------------------------------------------------------ */
+    { id: "n25", labelKey: "netL25", size: 15, tangle: 0.75, starPad: [0, 5, 10] },
+    { id: "n26", labelKey: "netL26", size: 15, tangle: 0.85, starPad: [0, 5, 12] },
+    { id: "n27", labelKey: "netL27", size: 15, tangle: 0.9, starPad: [0, 5, 12] },
+    { id: "n28", labelKey: "netL28", size: 16, tangle: 0.85, starPad: [0, 6, 13] },
+    { id: "n29", labelKey: "netL29", size: 16, tangle: 0.9, starPad: [0, 6, 14] },
+    { id: "n30", labelKey: "netL30", size: 16, tangle: 0.95, starPad: [0, 7, 15] },
   ];
 
   /* Pure generator + checker, exported for the static checks. Returns
@@ -615,4 +652,28 @@
 
   /* Exported for the other modules. */
   App.initGlyphNetGame = initGlyphNetGame;
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so the shared dictionary stays authoritative. The
+   * shared dictionary carries netL1-netL24; the summit falls past the event
+   * horizon the shared dictionary stopped at, so its six names travel with
+   * the module. */
+  App.addStrings({
+    en: {
+      "netL25": "Ergosphere",
+      "netL26": "Photon Ring",
+      "netL27": "Accretion Storm",
+      "netL28": "Frame Drag",
+      "netL29": "Tidal Shear",
+      "netL30": "The Naked Singularity",
+    },
+    zh: {
+      "netL25": "能层",
+      "netL26": "光子环",
+      "netL27": "吸积风暴",
+      "netL28": "参考系拖曳",
+      "netL29": "潮汐剪切",
+      "netL30": "裸奇点",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

@@ -108,6 +108,54 @@
     { id: "m24", labelKey: "mktS24", seed: 506, start: 380, cap: 14, fee: 3,
       amp: [1.8, 1.8, 1.8, 1.8], eventWeights: [1, 1, 1, 2], target: 440, feeRamp: 7,
       starCredits: [1133, 819, 440] },
+    /* Seats 25..30 are the summit tier and bend the last lever the house
+     * owns: `toll`, the credits a unit pays the house on every exit - each
+     * sale hands it over and the day-7 bell liquidation hands it over too,
+     * so a round trip has to clear the toll on top of the storage fees and
+     * a churned week pays it again on every re-entry. The ratchet climbs
+     * 4-5-6-7-8-9, mixed with the levers the ladder already taught: every
+     * band below was measured by replaying lines through mktStep on the
+     * row's own seed, where the toll-aware line - the deep tier's own shape
+     * with the toll netted into the round trip and a hold kept through a
+     * dip a later exit still wins - banks exactly its top band, while the
+     * toll-blind bench that three-stars m24 (the shipped greedy, the
+     * ramp-aware prover, the daily flipper, the buy-and-hold carrier)
+     * cannot bank a single star on any of them. */
+    /* The house cut arrives on a quiet week: the old line's round trips
+     * still clear the fee, so it keeps trading - and pays the house for the
+     * privilege, twice on the cargo it churns. */
+    { id: "m25", labelKey: "mktS25", seed: 1933, start: 340, cap: 14, fee: 1,
+      amp: [1.2, 1.2, 1.2, 1.2], eventWeights: [1, 1, 1, 1], target: 500, toll: 4,
+      starCredits: [1050, 775, 500] },
+    /* No storms force anything and the board swings every day, so every dip
+     * is a bait: selling a swing and re-entering it pays the toll twice -
+     * the lesson is to hold through a dip a later exit still wins. */
+    { id: "m26", labelKey: "mktS26", seed: 3544, start: 360, cap: 16, fee: 1,
+      amp: [1.9, 1.9, 1.9, 1.9], eventWeights: [0, 2, 2, 2], target: 700, toll: 5,
+      starCredits: [1765, 1233, 700] },
+    /* The deep tier's ramp is back under the toll: waiting taxes the hold
+     * while leaving taxes the exit, and only a rise that clears both is
+     * worth carrying at all. */
+    { id: "m27", labelKey: "mktS27", seed: 5053, start: 400, cap: 12, fee: 2,
+      amp: [1.4, 1.4, 1.4, 1.4], eventWeights: [1, 1, 1, 1], target: 800, feeRamp: 4,
+      toll: 6, starCredits: [1106, 953, 800] },
+    /* Four slots: the cap sends the hold back through the dock again and
+     * again and every pass pays - only the wide trips are worth the pass. */
+    { id: "m28", labelKey: "mktS28", seed: 3712, start: 320, cap: 4, fee: 2,
+      amp: [1.6, 1.2, 1.2, 1.2], eventWeights: [1, 1, 1, 3], target: 850, toll: 7,
+      starCredits: [1661, 1256, 850] },
+    /* Storms shut the routes on the days the exits were planned for, so the
+     * week picks the exit day - and the bell settlement, toll included, has
+     * to be priced before it rings. */
+    { id: "m29", labelKey: "mktS29", seed: 4258, start: 320, cap: 14, fee: 2,
+      amp: [1.6, 1.6, 1.6, 1.6], eventWeights: [7, 1, 1, 1], target: 900, toll: 8,
+      starCredits: [1532, 1216, 900] },
+    /* The summit: ramp and toll together, on a board that collapses every
+     * good but ice - the whole week has to be priced exit-first, and the
+     * bell pays nine less a unit on whatever is still aboard. */
+    { id: "m30", labelKey: "mktS30", seed: 3769, start: 420, cap: 12, fee: 3,
+      amp: [1.6, 1.6, 1.6, 1.6], eventWeights: [2, 2, 1, 2], target: 950, feeRamp: 5,
+      toll: 9, starCredits: [1303, 1127, 950] },
   ];
 
   function mulberry32(seed) {
@@ -277,7 +325,11 @@
           notes.push("empty" + i);
           continue;
         }
-        next.cash += take * price;
+        /* The summit tier's exit toll: `toll` credits per unit go to the house
+         * on every sale, so a round trip pays it once and a churned week pays
+         * it again and again. The field is absent on m1..m24, where this line
+         * pays nothing and every shallow week replays byte-identically. */
+        next.cash += take * (price - (next.level.toll || 0));
         next.holds[i] -= take;
         next.sold[i] = true;
         notes.push("sold" + i);
@@ -311,7 +363,10 @@
       var settle = sched.prices[mktDays];
       var credits = next.cash;
       for (var i = 0; i < mktGoodCount; i += 1) {
-        credits += next.holds[i] * settle[i];
+        /* The bell liquidates through the same exit toll: a forced sale is
+         * still a sale, and the house takes its cut on every exit. */
+        credits += next.holds[i] *
+          Math.max(0, settle[i] - (next.level.toll || 0));
         next.holds[i] = 0;
       }
       next.credits = credits;
@@ -731,13 +786,14 @@
       lines = [];
       render();
       refreshPicker();
-      result.textContent = t("mktPrompt", {
+      result.textContent = t(level.toll ? "mktPromptToll" : "mktPrompt", {
         name: t(level.labelKey),
         t: level.target,
         d: mktDays,
         c: level.start,
         cap: level.cap,
         fee: level.fee,
+        toll: level.toll || 0,
       });
     }
 
@@ -829,6 +885,12 @@
       "mktS22": "The Hoarder's Week",
       "mktS23": "The Toll Gate",
       "mktS24": "The Carry Crunch",
+      "mktS25": "The House Cut",
+      "mktS26": "The Churn Trap",
+      "mktS27": "The Double Squeeze",
+      "mktS28": "The Turnstile",
+      "mktS29": "The Forced Exit",
+      "mktS30": "The Bell Tolls",
       "mktIce": "Moon Ice",
       "mktGrain": "Hydro Grain",
       "mktAlloy": "Regolith Alloy",
@@ -851,6 +913,7 @@
       "mktHoldCell": "x{n}",
       "mktBtnEnd": "End Day (D)",
       "mktPrompt": "Seat {name}: make {t} credits in {d} days from {c}, cap {cap}, fee {fee} per held unit a day.",
+      "mktPromptToll": "Seat {name}: make {t} credits in {d} days from {c}, cap {cap}, fee {fee} per held unit a day - and the house takes {toll} a unit on every sale, the day-7 bell included.",
       "mktDayOpen": "Day {n} opens - {event}",
       "mktEvStorm": "Dust storm shuts the {name} route.",
       "mktEvEmbargo": "Embargo halves the {name} price.",
@@ -869,7 +932,7 @@
       "mktShort": "Missed the target: {n} of {t} credits.",
       "mktBankrupt": "The storage fee due on day {n} outran your credits - the colony seizes the cargo.",
       "mktNextSeat": "Next seat unlocked.",
-      "mktAllSeats": "All twenty-four seats traded.",
+      "mktAllSeats": "All thirty seats traded.",
       "mktHint": "Arrows pick a commodity, +/- size the lot, Enter buys, Shift+Enter sells, D ends the day; positions are force-sold on day 7.",
       "logMoonMarket": "Banked {n} credits at the moon market",
     },
@@ -899,6 +962,12 @@
       "mktS22": "囤货者的一周",
       "mktS23": "税关",
       "mktS24": "仓储绞索",
+      "mktS25": "庄家抽成",
+      "mktS26": "换手陷阱",
+      "mktS27": "双重抽税",
+      "mktS28": "十字转门",
+      "mktS29": "强制离场",
+      "mktS30": "收盘钟税",
       "mktIce": "月冰",
       "mktGrain": "水培谷物",
       "mktAlloy": "月壤合金",
@@ -921,6 +990,7 @@
       "mktHoldCell": "持 {n}",
       "mktBtnEnd": "结束本天（D）",
       "mktPrompt": "席位「{name}」：从 {c} 信用点起步，{d} 天内赚到 {t}；货舱上限 {cap}，每单位每天仓储费 {fee}。",
+      "mktPromptToll": "席位「{name}」：从 {c} 信用点起步，{d} 天内赚到 {t}；货舱上限 {cap}，每单位每天仓储费 {fee}——且每次卖出（含第 7 天强平）每单位要给庄家 {toll} 抽成。",
       "mktDayOpen": "第 {n} 天开盘——{event}",
       "mktEvStorm": "沙尘暴封锁了{name}航线。",
       "mktEvEmbargo": "禁运令使{name}价格腰斩。",
@@ -939,7 +1009,7 @@
       "mktShort": "没达标：只有 {n}/{t} 信用点。",
       "mktBankrupt": "第 {n} 天的仓储费超出了你的信用点——殖民地没收了货物。",
       "mktNextSeat": "解锁下一个席位。",
-      "mktAllSeats": "二十四个席位全部交易完毕。",
+      "mktAllSeats": "三十个席位全部交易完毕。",
       "mktHint": "方向键选商品，加减号调批量，回车买入，Shift+回车卖出，D 结束当天；第 7 天所有持仓会被强制卖出。",
       "logMoonMarket": "在月球市场赚到了 {n} 信用点",
     },
@@ -976,6 +1046,7 @@
         "Closing: on day 7 everything you still hold is force-sold at the morning price; if the fee outruns your cash the colony seizes it all.",
         "Scoring: stars by final credits - three stars asks for more than the measured greedy run on the seats built to punish it, and every week replays identically from its seed.",
         "New tier: seats 21-24 add a carry ramp - every night the storage fee grows by feeRamp credits per held unit, so cargo sleeps cheap early in the week and bleeds toward the weekend; keep it moving instead of parking it.",
+        "Summit: seats 25-30 let the house skim a toll on every exit - toll credits come off each unit sold, and off the day-7 bell settlement too, so a round trip has to clear the toll on top of the storage fees, a churned week pays it again on every re-entry, and a cheap good can be taxed to nothing.",
       ],
       zh: [
         "目标：在七个交易日内把信用点攒到席位目标。",
@@ -985,6 +1056,7 @@
         "收盘：第 7 天所有持仓按早盘价强制卖出；仓储费超过现金就会被殖民地没收全部货物。",
         "计分：按最终信用点评星——在为惩罚频繁交易而设的席位上，三星线高于贪心策略实测的那条线，同一颗种子每周走势完全重放。",
         "新层级：第 21-24 席位加入仓储爬坡——每过一夜，每单位持仓的仓储费就再涨 feeRamp 点；周初的货睡得便宜，越临近周末越被费用放血，让货物流动起来，别把它压在舱底。",
+        "巅峰段：第 25-30 席位让庄家从每次出场抽成——每卖出一单位都要上缴 toll 点，第 7 天强制清算也不例外；一轮买卖除了仓储费还得赚回抽成，反复换手等于每进一次场再交一次税，便宜货甚至会被抽到归零。",
       ],
     },
   });

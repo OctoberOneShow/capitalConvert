@@ -156,6 +156,44 @@
       pingRadius: 1, pingCost: 4, docCost: 24, liftCost: 5, silt: 0, bays: 2, ambig: 9, quickReach: 6, starQuality: [7, 5, 1] },
     { id: "d24", labelKey: "ocnZ24", w: 25, h: 17, finds: 12, base: 44, slope: 2, debris: 64, spread: 5, air: 96,
       pingRadius: 1, pingCost: 11, docCost: 22, liftCost: 7, silt: 2, bays: 2, ambig: 10, quickReach: 4, starQuality: [6, 3, 1] },
+
+    /* d25-d30, the summit tier. Every rung here falls below d24's three-star
+     * floor of 6, teaches one engine lever the trench tier left alone, and
+     * proves it in the gate by relaxing that lever on a clone and watching the
+     * best measured line climb. */
+    /* d25, the three bays: three berth sheets grow outward through the same
+     * depth bands and every bag is worth one. Flatten the bays to row bands and
+     * the best line's floor climbs from 3 to 6 (3.02 to 6.00 on average). */
+    { id: "d25", labelKey: "ocnZ25", w: 26, h: 18, finds: 12, base: 36, slope: 2, debris: 70, spread: 6, air: 72,
+      pingRadius: 1, pingCost: 7, docCost: 40, liftCost: 3, silt: 0, bays: 3, ambig: 12, quickReach: 5, starQuality: [3, 3, 1] },
+    /* d26, breath rationed: at air 50 only 13 of the sixty proof wrecks are
+     * diveable at all, no line files a record, and the hurried line is the
+     * measured best on 8 of the 13. Open the tank to 110 and the floor climbs
+     * from 4 to 10 (5.54 to 12.07 on average). */
+    { id: "d26", labelKey: "ocnZ26", w: 20, h: 14, finds: 11, base: 32, slope: 2, debris: 40, spread: 4, air: 50,
+      pingRadius: 2, pingCost: 7, docCost: 28, liftCost: 3, silt: 0, bays: 0, ambig: 8, quickReach: 12, starQuality: [4, 4, 4] },
+    /* d27, blind water: every berth is a look-alike and a ping costs 12, so the
+     * best line mixes one record with cheap bags. Reprice the ping at 2 and the
+     * floor climbs from 4 to 6 (5.10 to 6.67 on average). */
+    { id: "d27", labelKey: "ocnZ27", w: 26, h: 18, finds: 12, base: 40, slope: 1, debris: 64, spread: 6, air: 92,
+      pingRadius: 1, pingCost: 12, docCost: 24, liftCost: 6, silt: 1, bays: 2, ambig: 12, quickReach: 6, starQuality: [4, 2, 1] },
+    /* d28, the silt fan: spread 7 and debris 80 bury twelve finds under silt
+     * that halves every bag. Clear the silt and the floor climbs from 4 to 6
+     * (4.00 to 7.33 on average) as the same bags read twice as well. */
+    { id: "d28", labelKey: "ocnZ28", w: 27, h: 19, finds: 12, base: 44, slope: 2, debris: 80, spread: 7, air: 84,
+      pingRadius: 2, pingCost: 7, docCost: 34, liftCost: 3, silt: 2, bays: 0, ambig: 10, quickReach: 12, starQuality: [4, 3, 2] },
+    /* d29, the bag's ledger: a record costs 40 against a bag at 3, so the
+     * measured best line is the bag line on all 17 diveable wrecks and files no
+     * record. Reprice the record at 6 and the floor climbs from 4 to 6 (5.53 to
+     * 6.24 on average). */
+    { id: "d29", labelKey: "ocnZ29", w: 24, h: 16, finds: 12, base: 32, slope: 2, debris: 58, spread: 5, air: 60,
+      pingRadius: 2, pingCost: 7, docCost: 40, liftCost: 3, silt: 0, bays: 0, ambig: 8, quickReach: 8, starQuality: [4, 4, 2] },
+    /* d30, the last bill: a record at 32, a ping at 14 and a bag at 9 - the
+     * dearest total on the ladder (55 against d24's 40) - over a starved tank
+     * of 82; only 23 of the sixty proof wrecks are diveable. Open the tank to
+     * 130 and the floor climbs from 3 to 6 (3.04 to 6.00 on average). */
+    { id: "d30", labelKey: "ocnZ30", w: 27, h: 18, finds: 12, base: 46, slope: 2, debris: 78, spread: 5, air: 82,
+      pingRadius: 1, pingCost: 14, docCost: 32, liftCost: 9, silt: 2, bays: 3, ambig: 12, quickReach: 4, starQuality: [3, 2, 1] },
   ];
 
   /* --- pure core ---------------------------------------------------------
@@ -1554,6 +1592,12 @@
       "ocnZ22": "Breath Rationed",
       "ocnZ23": "The Steep Ledger",
       "ocnZ24": "The Last Manifest",
+      "ocnZ25": "The Three Bays",
+      "ocnZ26": "The Thin Breath",
+      "ocnZ27": "Blind Water",
+      "ocnZ28": "The Silt Fan",
+      "ocnZ29": "The Bag's Ledger",
+      "ocnZ30": "The Last Bill",
       "ocnAirLabel": "Air",
       "ocnDepthLabel": "Depth",
       "ocnAscentLabel": "Ascent",
@@ -1676,6 +1720,12 @@
       "ocnZ22": "气量配给",
       "ocnZ23": "陡峭账册",
       "ocnZ24": "末页清单",
+      "ocnZ25": "三湾分歧",
+      "ocnZ26": "一息之潜",
+      "ocnZ27": "盲水微声",
+      "ocnZ28": "淤扇埋珍",
+      "ocnZ29": "起捞账本",
+      "ocnZ30": "末笔账单",
       "ocnAirLabel": "气瓶",
       "ocnDepthLabel": "深度",
       "ocnAscentLabel": "返程",

@@ -44,6 +44,25 @@
     { id: "j22", par: [13, 17, 22], cars: [[0, 2, 2, 1], [3, 0, 3, 1], [1, 5, 2, 1], [2, 0, 3, 0], [3, 1, 3, 0]] },
     { id: "j23", par: [14, 18, 23], cars: [[0, 2, 2, 1], [3, 0, 3, 0], [2, 0, 3, 0], [5, 3, 2, 0], [4, 0, 3, 0]] },
     { id: "j24", par: [14, 18, 23], cars: [[0, 2, 2, 1], [2, 0, 3, 0], [1, 5, 3, 1], [1, 3, 3, 1], [1, 4, 3, 1], [3, 0, 2, 0]] },
+
+    /* Boards 25-30, the depot tier: nine-car grids the generator dealt and the
+     * lot's own slide rules measured. Every number here was measured, not
+     * guessed: a unit-step breadth-first walk through trafSlide prices each
+     * board's shortest escape (24, 25, 26, 27, 30 and 34 steps - the shipped
+     * peak j24 costs 13), trafficSolvable re-proves each one through the same
+     * rules the build ships, and the three-star line sits one step above the
+     * measured optimum - the tightest slack the lot hands out (the shipped
+     * summit runs +1 too, the early boards +2 or more). The two- and one-star
+     * lines keep the shipped +4/+9 spread. The grids pile on cars the way the
+     * optima climb: eight or nine vehicles against the shipped peak's six,
+     * with a truck in every deal, so the taxi's lane is walled by traffic the
+     * escape has to negotiate rather than decorate. */
+    { id: "j25", par: [25, 29, 34], cars: [[1, 2, 2, 1], [4, 2, 2, 0], [3, 0, 3, 0], [4, 5, 2, 1], [4, 4, 2, 1], [5, 0, 3, 0], [2, 3, 3, 0], [0, 0, 3, 1]] },
+    { id: "j26", par: [26, 30, 35], cars: [[1, 2, 2, 1], [3, 1, 3, 0], [1, 4, 2, 0], [3, 4, 2, 1], [5, 2, 2, 0], [5, 0, 2, 0], [4, 0, 3, 0], [3, 5, 2, 1]] },
+    { id: "j27", par: [27, 31, 36], cars: [[1, 2, 2, 1], [4, 0, 2, 0], [3, 1, 3, 0], [2, 3, 3, 0], [0, 1, 2, 0], [4, 4, 2, 1], [1, 3, 2, 0], [4, 2, 2, 0]] },
+    { id: "j28", par: [28, 32, 37], cars: [[0, 4, 2, 1], [2, 3, 2, 1], [2, 5, 2, 1], [4, 2, 2, 1], [1, 1, 2, 0], [5, 4, 2, 0], [2, 0, 3, 0], [3, 0, 3, 0], [4, 4, 2, 0]] },
+    { id: "j29", par: [31, 35, 40], cars: [[0, 4, 2, 1], [5, 0, 2, 0], [1, 2, 2, 1], [0, 0, 2, 0], [3, 3, 3, 0], [4, 2, 2, 0], [2, 4, 2, 0], [1, 1, 3, 1], [5, 3, 2, 0]] },
+    { id: "j30", par: [35, 39, 44], cars: [[0, 3, 2, 1], [4, 3, 3, 0], [0, 1, 2, 0], [1, 0, 2, 0], [5, 1, 3, 0], [2, 2, 3, 0], [3, 2, 2, 1], [4, 0, 2, 1], [5, 4, 2, 0]] },
   ];
 
   function trafGrid(cars) {
@@ -848,7 +867,7 @@
       if (outcome.unlockedNext) {
         message += " " + t("trafNext");
       } else if (campaign.clearedCount() === trafLevels.length) {
-        message += " " + t("trafAllBoards");
+        message += " " + t("trafAllBoards", { n: trafLevels.length });
       }
       resultEl.textContent = message;
       logAction(t("logTraf", { n: moves }));
@@ -914,7 +933,12 @@
   }
 
 
-  /* Exported for the other modules. */
+  /* Exported for the other modules. trafSlide/trafTaxiOut/trafGrid let the
+   * level gate measure an optimum through the lot's own movement rules. */
   App.trafficSolvable = trafficSolvable;
+  App.trafSlide = trafSlide;
+  App.trafTaxiOut = trafTaxiOut;
+  App.trafGrid = trafGrid;
+  App.trafLevels = trafLevels;
   App.initTrafficGame = initTrafficGame;
 })(window.CapitalConvert = window.CapitalConvert || {});

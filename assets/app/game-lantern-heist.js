@@ -528,6 +528,178 @@
       starTurns: [24, 28, 34],
       solution: "RRruuUrwruaUadDllrlddDrr",
     },
+
+    /* The under-vault tier h25-h30. Each room below the throne re-cuts the
+     * eight-by-eight vault and moves the lane watchman's starting beat; the
+     * ledger road grows one turn per rung while the stripped floor stays at
+     * fourteen. Every solution below is the measured optimum for its room. */
+    /* h25 - The first under-vault rung. A pier at the middle of the old hall splits the
+     * gate approach, and the lane watchman starts one step deeper, so the ledger
+     * road costs 25 turns. Strip that watchman and the same floor falls in 14;
+     * the difference is all timing. Removing any of the three cross-lane guards
+     * changes nothing, which is the point: the lane, not the hall, is the rung.
+     */
+    {
+      id: "h25",
+      labelKey: "lheR25",
+      plan: [
+        "#....##G",
+        "......#=",
+        "##.#..#.",
+        ".L......",
+        "..#.#.#.",
+        ".L......",
+        "..#.....",
+        "S......E",
+      ],
+      guards: [
+        { loop: [[0, 1], [1, 1], [2, 1], [1, 1]] },
+        { loop: [[0, 3], [1, 3], [2, 3], [1, 3]] },
+        { loop: [[1, 5], [2, 5], [3, 5], [2, 5]] },
+        { loop: [[5, 5], [6, 5], [7, 5], [7, 4], [7, 3], [7, 4], [7, 5], [7, 6], [7, 5], [6, 5]] },
+      ],
+      starTurns: [25, 29, 35],
+      solution: "rrrrRUlUrruauuadudddLddDR",
+    },
+    /* h26 - The cold forge. The pier moves down into the fifth-row lane and the lane
+     * watchman opens from the far end, adding a beat before the gate. The shipped
+     * line needs 26; without the lane watchman it is 14. The cross-lane guards
+     * still sweep the hall, so the shortcut below them cannot be dashed.
+     */
+    {
+      id: "h26",
+      labelKey: "lheR26",
+      plan: [
+        "#.....#G",
+        "...##.#=",
+        ".#.#..#.",
+        ".L......",
+        "..#...#.",
+        ".L..#...",
+        "..#.....",
+        "S......E",
+      ],
+      guards: [
+        { loop: [[0, 1], [1, 1], [2, 1], [1, 1]] },
+        { loop: [[1, 3], [2, 3], [1, 3], [0, 3]] },
+        { loop: [[3, 5], [2, 5], [1, 5], [2, 5]] },
+        { loop: [[7, 5], [6, 5], [5, 5], [6, 5], [7, 5], [7, 4], [7, 3], [7, 4], [7, 5], [7, 6]] },
+      ],
+      starTurns: [26, 30, 36],
+      solution: "rrrrruuuurruauuadudddLddDR",
+    },
+    /* h27 - The wax gallery. A service door is bricked up at the bottom-right corner,
+     * so the retreat from the ledger has to use the middle stair. The lane
+     * watchman's phase costs one more turn than the forge: 27 shipped, 14 if it
+     * is removed. Its two waits are load-bearing - delete them and the runner
+     * trips two alarms before the gate.
+     */
+    {
+      id: "h27",
+      labelKey: "lheR27",
+      plan: [
+        "#.....#G",
+        "...#..#=",
+        "##.#..#.",
+        ".L......",
+        "..#...#.",
+        ".L......",
+        "..#..#..",
+        "S......E",
+      ],
+      guards: [
+        { loop: [[0, 1], [1, 1], [2, 1], [1, 1]] },
+        { loop: [[1, 3], [2, 3], [1, 3], [0, 3]] },
+        { loop: [[1, 5], [2, 5], [3, 5], [2, 5]] },
+        { loop: [[6, 5], [5, 5], [6, 5], [7, 5], [7, 4], [7, 3], [7, 4], [7, 5], [7, 6], [7, 5]] },
+      ],
+      starTurns: [27, 31, 37],
+      solution: "rrruUwrruwRuauuadudddLddrDr",
+    },
+    /* h28 - The broken clock. The bottom row is cut at the fourth column, forcing the
+     * exit crawl through the right-hand lane while the lane watchman crosses the
+     * vault window. The shipped line is 28 turns; stripping the watchman opens a
+     * 14-turn floor. The row-five guard is not the rung here - taking it out
+     * leaves the room at 28.
+     */
+    {
+      id: "h28",
+      labelKey: "lheR28",
+      plan: [
+        "#....##G",
+        "......#=",
+        ".###..#.",
+        ".L..#...",
+        "..#...#.",
+        ".L......",
+        "..#.....",
+        "S...#..E",
+      ],
+      guards: [
+        { loop: [[0, 1], [1, 1], [2, 1], [1, 1]] },
+        { loop: [[0, 3], [1, 3], [2, 3], [1, 3]] },
+        { loop: [[1, 5], [2, 5], [3, 5], [2, 5]] },
+        { loop: [[7, 6], [7, 5], [6, 5], [5, 5], [6, 5], [7, 5], [7, 4], [7, 3], [7, 4], [7, 5]] },
+      ],
+      starTurns: [28, 32, 38],
+      solution: "rlrrrurUrurruauuadudddLddrDr",
+    },
+    /* h29 - The gilded snare. Two piers pinch the lower hall and the exit road runs
+     * through the sixth column, so both the row-five sweep and the lane watchman
+     * bind: 29 turns shipped, 25 with the row-five guard removed, 14 with the
+     * lane watchman gone. The extra four turns over the clock are the second
+     * guard's timing, not a longer walk.
+     */
+    {
+      id: "h29",
+      labelKey: "lheR29",
+      plan: [
+        "#.....#G",
+        "....#.#=",
+        ".#.#..#.",
+        ".L......",
+        "#.#.#.#.",
+        ".L......",
+        "..#.....",
+        "S....#.E",
+      ],
+      guards: [
+        { loop: [[0, 1], [1, 1], [2, 1], [1, 1]] },
+        { loop: [[0, 3], [1, 3], [2, 3], [1, 3]] },
+        { loop: [[1, 5], [2, 5], [3, 5], [2, 5]] },
+        { loop: [[5, 5], [6, 5], [7, 5], [7, 4], [7, 3], [7, 4], [7, 5], [7, 6], [7, 5], [6, 5]] },
+      ],
+      starTurns: [29, 33, 39],
+      solution: "rRuRuuurruauuadududddllddrddr",
+    },
+    /* h30 - The last lantern. Three piers close the under-vault and the lane watchman
+     * starts with its back to the gate, so every pass has to be paid for twice.
+     * Thirty turns shipped, fourteen with the watchman stripped - the widest
+     * guard gap in the drawer. The old cross-lanes still sweep the hall, and the
+     * lantern is the last thing between the runner and the door.
+     */
+    {
+      id: "h30",
+      labelKey: "lheR30",
+      plan: [
+        "#....##G",
+        "......#=",
+        "##.#..#.",
+        ".L..#...",
+        "..#.#.#.",
+        ".L..#...",
+        "..#..#..",
+        "S......E",
+      ],
+      guards: [
+        { loop: [[0, 1], [1, 1], [2, 1], [1, 1]] },
+        { loop: [[2, 3], [1, 3], [0, 3], [1, 3]] },
+        { loop: [[1, 5], [2, 5], [3, 5], [2, 5]] },
+        { loop: [[7, 4], [7, 5], [7, 6], [7, 5], [6, 5], [5, 5], [6, 5], [7, 5], [7, 4], [7, 3]] },
+      ],
+      starTurns: [30, 34, 40],
+      solution: "rlrRrrruuluurruauuadudddLddrDr",
+    },
   ];
 
   function lheKey(x, y) {
@@ -1407,6 +1579,12 @@
       "lheR22": "The Grand Conservatory",
       "lheR23": "The Archon's Keep",
       "lheR24": "The Lantern Throne",
+      "lheR25": "The Sunken Stair",
+      "lheR26": "The Cold Forge",
+      "lheR27": "The Wax Gallery",
+      "lheR28": "The Broken Clock",
+      "lheR29": "The Gilded Snare",
+      "lheR30": "The Last Lantern",
       "lheTurnsLabel": "Turns",
       "lheSeenLabel": "Alarms",
       "lheRoomSelectLabel": "Pick a room",
@@ -1462,6 +1640,12 @@
       "lheR22": "温室花厅",
       "lheR23": "执政官要塞",
       "lheR24": "提灯王座",
+      "lheR25": "沉陷石阶",
+      "lheR26": "冷炉金房",
+      "lheR27": "蜡影长廊",
+      "lheR28": "破钟库",
+      "lheR29": "金丝罗网",
+      "lheR30": "最后一盏灯",
       "lheTurnsLabel": "回合",
       "lheSeenLabel": "警报",
       "lheRoomSelectLabel": "选择房间",
@@ -1515,6 +1699,7 @@
         "Noise: a dash freezes the nearest guard for one turn, but a guard within two blocks of the landing hears it and you are caught.",
         "Tools: Space grabs the ledger or springs an adjacent gate; Enter waits a turn. A locker K hides you for exactly one turn, once.",
         "Scoring: turns decide the stars, and three alarms fail the run for good.",
+        "New tier: rooms 25 to 30 sit under the vault, where the lane watchman's beat prices every pass and the last lantern is the longest road.",
       ],
       zh: [
         "目标：先踩到账册格，再从出口格走出去。",
@@ -1523,6 +1708,7 @@
         "声响：冲刺会把最近的守卫定住一回合，但落点两格内有守卫就会听见，当场被拿。",
         "工具：空格拿走账册或撬开旁边的铁门，回车原地等一回合。储物柜 K 只挡一回视线，且只能用一次。",
         "计分：回合数决定星级；三次警报这局彻底失败。",
+        "新层级：第 25 到 30 个房间藏在地库之下，巡灯人的步点决定每一次穿行的代价，最后一盏灯是最长的路。",
       ],
     },
   });

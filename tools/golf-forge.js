@@ -267,6 +267,16 @@ function main() {
       g22: { bump: 12, wells: 6, r: 11 },
       g23: { bump: 13, wells: 7, r: 11 },
       g24: { bump: 14, wells: 7, r: 10 },
+      /* The deep-sky tier past g24: the wells climb to eight, nine, then
+       * ten in the same 320x360 sky while the ring settles at nine - the
+       * forge's bar does not move, so every one of these still needs a
+       * repeatable one-shot (basin >= 6 of 25) to ship. */
+      g25: { bump: 15, wells: 8, r: 10 },
+      g26: { bump: 16, wells: 8, r: 10 },
+      g27: { bump: 17, wells: 9, r: 10 },
+      g28: { bump: 18, wells: 9, r: 9 },
+      g29: { bump: 19, wells: 10, r: 9 },
+      g30: { bump: 20, wells: 10, r: 9 },
     };
     const stars = {
       g9: [2, 4, 6], g10: [2, 4, 7],
@@ -274,6 +284,8 @@ function main() {
       g15: [2, 3, 5], g16: [2, 4, 6], g17: [2, 4, 6], g18: [2, 4, 7],
       g19: [2, 4, 7], g20: [2, 4, 8],
       g21: [2, 4, 8], g22: [2, 5, 8], g23: [2, 5, 9], g24: [2, 5, 10],
+      g25: [2, 5, 11], g26: [2, 5, 11], g27: [2, 6, 12],
+      g28: [2, 6, 12], g29: [2, 6, 13], g30: [2, 6, 13],
     };
     (ids.length ? ids : Object.keys(brief)).forEach(function (id) {
       const spec = brief[id];

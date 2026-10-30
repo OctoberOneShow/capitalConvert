@@ -62,6 +62,17 @@
     { id: "bf22", labelKey: "fltL22", skill: 14, starShots: [22, 29, 38] },
     { id: "bf23", labelKey: "fltL23", skill: 14, starShots: [22, 28, 37] },
     { id: "bf24", labelKey: "fltL24", skill: 14, starShots: [21, 28, 36] },
+    /* Ranks 25-30: the admiral has no stronger arm left - skill fourteen is
+     * the ceiling - so the last six ranks ride the shot purse alone. The
+     * three-star line falls to the range's measured floor of eighteen, and
+     * the one-star line to thirty-one, still inside what the parity hunt
+     * wins in about one deal in six even against the skill-14 admiral. */
+    { id: "bf25", labelKey: "fltL25", skill: 14, starShots: [21, 27, 35] },
+    { id: "bf26", labelKey: "fltL26", skill: 14, starShots: [20, 27, 34] },
+    { id: "bf27", labelKey: "fltL27", skill: 14, starShots: [20, 26, 33] },
+    { id: "bf28", labelKey: "fltL28", skill: 14, starShots: [19, 26, 33] },
+    { id: "bf29", labelKey: "fltL29", skill: 14, starShots: [19, 25, 32] },
+    { id: "bf30", labelKey: "fltL30", skill: 14, starShots: [18, 25, 31] },
   ];
   var FLT_EMPTY = 0;
   var FLT_MISS = 1;
@@ -957,6 +968,12 @@
       "fltL22": "The Silent Armada",
       "fltL23": "Storm Bastion",
       "fltL24": "Ocean's Sovereign Apex",
+      "fltL25": "The Leviathan Line",
+      "fltL26": "Deepwater Sovereign",
+      "fltL27": "The Abyssal Fleet",
+      "fltL28": "Triton's Grip",
+      "fltL29": "The Drowned Crown",
+      "fltL30": "Ocean's Last Horizon",
     },
     zh: {
       "fltL9": "海军大将",
@@ -975,6 +992,12 @@
       "fltL22": "无声舰队",
       "fltL23": "风暴堡垒",
       "fltL24": "大洋主权巅峰",
+      "fltL25": "巨鲸战线",
+      "fltL26": "深水之主",
+      "fltL27": "深渊舰队",
+      "fltL28": "海神之握",
+      "fltL29": "沉没之冠",
+      "fltL30": "沧海终章",
     },
   });
 

@@ -214,6 +214,55 @@
       one: [0, 5, 1], two: [8, 12, 21], tok: [23, 19, 15, 24],
       starMoves: [8, 10, 13],
     },
+    /* The summit: six re-deals of the guarded-door economy at par seventeen.
+     * The deep tier's o21 opened this geometry at par thirteen - three walls
+     * guarding the banner's north, west and east with one door to the south -
+     * and the summit plays nothing else: the same door, the same two squads,
+     * and the four laws re-hung each time. The forge searched this family
+     * for positions whose exact forced win is exactly seventeen plies (nine
+     * mover moves, each proved minimal by the terminal-only search) and kept
+     * six: the board with two laws missing entirely, the jump exiled to the
+     * south edge, the diagonal exiled there instead, a fourth wall
+     * shuttering the south-east, the jump standing in the doorway beneath
+     * the flag, and the crown - a diagonal nailed to the banner itself, so
+     * the fight is three laws and the winning square can never be bought.
+     * Bands are the measured par plus the standing slack of two and five. */
+    {
+      id: "o25", labelKey: "rltO25", twistKey: "rltTwist25", rank: 2, cap: 34,
+      obj: 12, walls: [7, 11, 13],
+      one: [3, 0, 4], two: [9, 10, 2], tok: [-1, -1, 6, 17],
+      starMoves: [9, 11, 14],
+    },
+    {
+      id: "o26", labelKey: "rltO26", twistKey: "rltTwist26", rank: 2, cap: 34,
+      obj: 12, walls: [7, 11, 13],
+      one: [3, 0, 4], two: [9, 10, 2], tok: [-1, 22, 6, 17],
+      starMoves: [9, 11, 14],
+    },
+    {
+      id: "o27", labelKey: "rltO27", twistKey: "rltTwist27", rank: 2, cap: 34,
+      obj: 12, walls: [7, 11, 13],
+      one: [3, 0, 4], two: [9, 10, 2], tok: [22, -1, 6, 17],
+      starMoves: [9, 11, 14],
+    },
+    {
+      id: "o28", labelKey: "rltO28", twistKey: "rltTwist28", rank: 2, cap: 34,
+      obj: 12, walls: [7, 11, 13, 23],
+      one: [3, 0, 4], two: [9, 10, 2], tok: [22, -1, 6, 17],
+      starMoves: [9, 11, 14],
+    },
+    {
+      id: "o29", labelKey: "rltO29", twistKey: "rltTwist29", rank: 2, cap: 34,
+      obj: 12, walls: [7, 11, 13],
+      one: [3, 0, 4], two: [9, 10, 2], tok: [-1, 17, 6, 22],
+      starMoves: [9, 11, 14],
+    },
+    {
+      id: "o30", labelKey: "rltO30", twistKey: "rltTwist30", rank: 2, cap: 34,
+      obj: 17, walls: [7, 11, 13],
+      one: [3, 0, 4], two: [9, 10, 2], tok: [17, -1, 6, 22],
+      starMoves: [9, 11, 14],
+    },
   ];
 
   /* --- pure rules ------------------------------------------------------- */
@@ -1160,7 +1209,7 @@
         if (outcome.unlockedNext) {
           line += " " + t("rltNextOpen");
         } else if (campaign.clearedCount() === rltLevels.length) {
-          line += " " + t("rltCampaignDone");
+          line += " " + t("rltCampaignDone", { n: rltLevels.length });
         }
         logAction(t("logRuleThieves", { n: myMoves }));
         notify = outcome.isBest || outcome.firstClear;
@@ -1330,6 +1379,12 @@
       "rltO22": "Boot On The Banner",
       "rltO23": "The Open North",
       "rltO24": "Beneath The Flag",
+      "rltO25": "Two Laws Short",
+      "rltO26": "Exile In The South",
+      "rltO27": "The Distant Diagonal",
+      "rltO28": "The Fourth Wall",
+      "rltO29": "The Doorway Hop",
+      "rltO30": "The Nailed Diagonal",
       "rltTwist11": "two of the four laws start buried under a rival thief, so the second one you lift decides it and the banner never matters",
       "rltTwist12": "three walls ring the banner and the fourth face is a law in its own right, yet the win is a swap spent on the road to two laws",
       "rltTwist13": "the token file is walled at its mouth, so its diagonal law sits behind the jump law, and two of your three first steps lose outright",
@@ -1344,6 +1399,12 @@
       "rltTwist22": "the visitor's boot is already on the banner, so the duel is keeping it - three walls fence the cellar and the diagonal law is sealed inside the stone",
       "rltTwist23": "no wall stands anywhere in the north-west, the rival's pair pinches the middle file, and the hold law opens the game from the top-left corner",
       "rltTwist24": "the diagonal law stands directly beneath the walled flag and the visitor stacks three deep on the left rail, so every approach has to be answered twice over",
+      "rltTwist25": "the diagonal and the jump never muster at all - only the swap and the hold are on the board, so every route is orthogonal and every swap is spent for good",
+      "rltTwist26": "the jump law is exiled to the south edge while the diagonal never musters, so the only shortcut on the board runs through the coldest square",
+      "rltTwist27": "the diagonal waits in the south corner and the jump never musters, so the approach is angled or it is nothing",
+      "rltTwist28": "a fourth wall shutters the south-east face, so the guarded door is the only way in and every hop through it has to be re-proved",
+      "rltTwist29": "the jump law stands in the doorway directly beneath the banner, so the winning approach is a hop the rival can see coming for nine moves",
+      "rltTwist30": "the diagonal law is nailed to the banner itself - o15's buried freeze replayed on the guarded door - so the fight is three laws and the winning square can never be bought",
       "rltRankPick": "Pickpocket",
       "rltRankCut": "Cutpurse",
       "rltRankChamp": "Fence",
@@ -1399,7 +1460,7 @@
       "rltDrawOut": "The night ran out after {n} plies ({why}).",
       "rltTwoWin": "{p} wins after {n} plies ({why}). Two-player rounds keep no stars.",
       "rltNextOpen": "Next opening unlocked.",
-      "rltCampaignDone": "All twenty openings cleaned out.",
+      "rltCampaignDone": "All {n} openings cleaned out.",
       "rltIllegalNote": "That cell is not legal under the laws in force - and the laws belong to both of you.",
       "rltFrozenNote": "That cell is frozen for one turn by the rival's hold.",
       "rltOverNote": "The round is over. Press R or New Round for another.",
@@ -1449,6 +1510,12 @@
       "rltO22": "踏旗之靴",
       "rltO23": "北面敞地",
       "rltO24": "旗下之律",
+      "rltO25": "缺律之局",
+      "rltO26": "南隅跳律",
+      "rltO27": "远斜之律",
+      "rltO28": "第四堵墙",
+      "rltO29": "门槛跳律",
+      "rltO30": "旗上斜行",
       "rltTwist11": "四枚令牌里有两枚开局就压在对手棋子底下，举起第二枚就赢，旗帜全程用不上",
       "rltTwist12": "旗帜三面被墙围死，第四面正压着一条例法，可赢局是一次换位换来的两条律法",
       "rltTwist13": "整列令牌被墙堵在列口，斜行压在跳过后面；三步开局里有两步会让对手反手必胜",
@@ -1463,6 +1530,12 @@
       "rltTwist22": "对手的靴子已经踏在旗上，胜负在于守不守得住——三堵墙围住地下室，斜行律被封在石头里",
       "rltTwist23": "西北方向一堵墙都没有，对手的一对棋子掐住中路，牵制律从左上角开局",
       "rltTwist24": "斜行律就立在封死的旗正下方，访客在左沿叠了三层，每一条接近路线都要被算上两遍",
+      "rltTwist25": "斜行与跳过根本没有入场——盘上只剩换位与牵制两条律法，每一步都是直行，每一次换位都不可撤销",
+      "rltTwist26": "跳过律被流放到南缘，斜行根本没有入场；盘面上唯一的捷径要穿过最冷的那一格",
+      "rltTwist27": "斜行律候在南角，跳过根本没有入场，接近旗子的路要么走斜线，要么无路可走",
+      "rltTwist28": "第四堵墙封死了东南面，那扇被守的门成了唯一入口，穿过门的每一次跳跃都要重新算过",
+      "rltTwist29": "跳过律就立在旗正下方的门槛里，获胜的接近是一记对手提前九拍就看得见的跳",
+      "rltTwist30": "斜行律被钉在旗帜本身——第十五关的旗上冻结在守门之局里重演——这一仗只剩三条律法，而制胜的那一格永远买不到",
       "rltRankPick": "三只手",
       "rltRankCut": "飞贼",
       "rltRankChamp": "销赃人",
@@ -1518,7 +1591,7 @@
       "rltDrawOut": "{n} 步后夜色用尽（{why}），判和。",
       "rltTwoWin": "{p} 在 {n} 步后获胜（{why}）。双人模式不记星。",
       "rltNextOpen": "解锁下一个开局。",
-      "rltCampaignDone": "二十个开局全部清空了。",
+      "rltCampaignDone": "{n} 个开局全部清空了。",
       "rltIllegalNote": "这个格子按当前生效的律法并不合法——而律法属于双方。",
       "rltFrozenNote": "这一格被对手的「冻结」定住一回合。",
       "rltOverNote": "这一局已经结束了，按 R 或「新一局」再来一局。",
@@ -1562,7 +1635,7 @@
         "Action: click one of your pieces - the legal cells light up and carry a glyph too: . step, / diagonal, ^ jump, X swap.",
         "The twist: a grabbed token is a law for the whole board, not a power for you alone. Take 'diagonal' or 'jump' and your rival may use it on their very next move; only 'swap' and 'hold' stay tied to whoever holds them, and only the count in hand is private.",
         "Win one of three ways: step onto the banner with any piece, hold two of the four tokens at once, or leave the side to move with no legal cell at all.",
-        "Keys: arrows move the cursor, Enter selects and confirms, U undoes a full round, R restarts. In two-player mode player 1 drives WASD + E, player 2 drives the arrows + Enter; solo stars count your moves, two-player rounds keep none. The picker holds twenty openings, each one a proved forced win, and the next unlocks only when the one before it is cleared.",
+        "Keys: arrows move the cursor, Enter selects and confirms, U undoes a full round, R restarts. In two-player mode player 1 drives WASD + E, player 2 drives the arrows + Enter; solo stars count your moves, two-player rounds keep none. The picker holds a ladder of openings, each one a proved forced win, and the next unlocks only when the one before it is cleared.",
       ],
       zh: [
         "目标：5×5 盘上各有三枚窃贼争夺同一面旗帜，而走子规则是放在标记格上的令牌。",
@@ -1570,7 +1643,7 @@
         "操作：点自己的棋子，合法落点会亮起并附带符号：· 直行、/ 斜行、^ 跳过、X 换位。",
         "反转之处：令牌一旦被拿走就成了整盘的律法，不是某个人的特权。拿了「斜行」或「跳过」，对手下一步照样能用；只有「换位」和「冻结」绑在持有者身上，而「在手法条数」始终是私有的。",
         "三种获胜方式：任一棋子踏上旗帜；同时手握四枚令牌中的两枚；或让轮到走子的一方一个合法格都没有。",
-        "按键：方向键移动光标，回车选择并落子，U 悔掉完整一回合，R 重开。双人模式下玩家 1 用 WASD + E，玩家 2 用方向键 + 回车；单人按你的步数计星，双人不计星。选择框里是二十个开局，每一个都被证明先手必胜，打赢前一个才会解锁下一个。",
+        "按键：方向键移动光标，回车选择并落子，U 悔掉完整一回合，R 重开。双人模式下玩家 1 用 WASD + E，玩家 2 用方向键 + 回车；单人按你的步数计星，双人不计星。选择框里是一整条开局阶梯，每一个都被证明先手必胜，打赢前一个才会解锁下一个。",
       ],
     },
   });

@@ -191,6 +191,54 @@
       solution: [[2,4,3,4],[3,4,7,4],[7,4,11,4],[0,0,4,4],[4,0,8,4],[7,0,7,4],[7,0,11,4],[7,0,3,4],[2,3,3,4],[2,3,1,4],[2,3,2,4]],
     },
 
+    /* Master works 25-30, the yard's final term above the final term. The
+     * canyons were dealt for variety - a barren staircase down, a keel tied
+     * to the sea floor, one long diagonal soar off the shelf, a launch from
+     * a stranded island, two masts carrying one deck, and the widest barren
+     * flat of the tour - and every plan was found by search, not by hand:
+     * each one stands through bridgeCheck, the game's own word for "the cart
+     * rolls and the deck holds", and cannot spare a single beam (lift any
+     * one and the span falls). The limit sits exactly on the proven plan, so
+     * the master term hands out exact change only - one wasted beam fails
+     * the purse the way b16-b20 taught, now on ground that never showed a
+     * shortcut. Every number was measured, not guessed. */
+    {
+      id: "b25", labelKey: "pbrZ25", grip: 1, limit: 6,
+      startAt: [2, 1], targetAt: [10, 4],
+      ground: [[0,2,1],[10,11,4]],
+      solution: [[2,1,4,1],[4,1,7,1],[7,1,10,4],[2,1,2,3],[2,3,4,1],[0,1,2,3]],
+    },
+    {
+      id: "b26", labelKey: "pbrZ26", grip: 0, limit: 5,
+      startAt: [1, 2], targetAt: [10, 2],
+      ground: [[0,1,2],[10,11,2],[4,7,5]],
+      solution: [[1,2,4,2],[4,2,7,2],[7,2,10,2],[4,2,7,5],[7,2,7,5]],
+    },
+    {
+      id: "b27", labelKey: "pbrZ27", grip: 1, limit: 6,
+      startAt: [1, 5], targetAt: [11, 0],
+      ground: [[0,1,5],[10,11,0],[10,11,1]],
+      solution: [[1,5,5,1],[5,1,9,1],[9,1,10,0],[9,1,11,1],[2,4,5,1],[6,1,9,1]],
+    },
+    {
+      id: "b28", labelKey: "pbrZ28", grip: 0, limit: 5,
+      startAt: [4, 2], targetAt: [11, 2],
+      ground: [[4,5,2],[10,11,2],[0,1,0]],
+      solution: [[4,2,8,2],[8,2,11,2],[5,2,8,5],[8,2,8,5],[8,5,11,2]],
+    },
+    {
+      id: "b29", labelKey: "pbrZ29", grip: 0, limit: 6,
+      startAt: [1, 3], targetAt: [10, 3],
+      ground: [[0,1,3],[10,11,3],[5,6,0]],
+      solution: [[1,3,3,3],[3,3,6,3],[6,3,10,3],[3,3,6,0],[6,0,6,3],[4,3,8,3]],
+    },
+    {
+      id: "b30", labelKey: "pbrZ30", grip: 0, limit: 10,
+      startAt: [2, 5], targetAt: [11, 5],
+      ground: [[0,2,5],[11,11,5]],
+      solution: [[2,5,4,5],[4,5,8,5],[8,5,11,5],[7,5,8,5],[2,3,2,5],[2,3,4,5],[0,5,2,3],[2,3,4,1],[4,1,4,5],[4,1,8,5]],
+    },
+
   ];
 
   function pbrAt(x, y) {
@@ -1060,6 +1108,12 @@
       "pbrZ22": "The Keel Span",
       "pbrZ23": "The Long Ramp",
       "pbrZ24": "The Full Crossing, Re-Measured",
+      "pbrZ25": "The Staircase Down",
+      "pbrZ26": "The Sea-Floor Keel",
+      "pbrZ27": "The Long Soar",
+      "pbrZ28": "The Stranded Launch",
+      "pbrZ29": "The Two Masts",
+      "pbrZ30": "The Grand Truss",
       "pbrBeamLabel": "Beams",
       "pbrParLabel": "Par",
       "pbrGapLabel": "Span",
@@ -1128,6 +1182,12 @@
       "pbrZ22": "龙骨跨",
       "pbrZ23": "长栈道",
       "pbrZ24": "全渡·复尺",
+      "pbrZ25": "下行天梯",
+      "pbrZ26": "触底龙骨",
+      "pbrZ27": "长空飞渡",
+      "pbrZ28": "孤墩起飞",
+      "pbrZ29": "双桅平渡",
+      "pbrZ30": "大桁架",
       "pbrBeamLabel": "梁数",
       "pbrParLabel": "标准",
       "pbrGapLabel": "跨距",

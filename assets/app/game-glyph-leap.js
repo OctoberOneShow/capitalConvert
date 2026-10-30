@@ -63,6 +63,42 @@
     { id: "h22", labelKey: "lvlNum22", goal: 17600, gapMin: 84, gapMax: 92, moving: 0.6, spring: 0.1, ledge: 0.75, starTimes: [169, 237, 315] },
     { id: "h23", labelKey: "lvlNum23", goal: 18500, gapMin: 86, gapMax: 92, moving: 0.62, spring: 0.09, ledge: 0.7, starTimes: [180, 252, 335] },
     { id: "h24", labelKey: "lvlNum24", goal: 19400, gapMin: 86, gapMax: 92, moving: 0.64, spring: 0.08, ledge: 0.65, starTimes: [192, 269, 358] },
+    /* Ascents 25-30 are the summit, and its dial is the window itself: the
+     * floor rises rung over rung while the ceiling holds at 92, until h30
+     * deals nothing but ceiling gaps - every hop is the tallest jump a
+     * normal bounce can make, where the margin over the gap is 4 px of
+     * rise. The drift share climbs to seven in ten rolls and the boards
+     * hold at the deep tier's floor width (0.62, 40 px), while the
+     * springs come back as the rope (0.08 -> 0.12, 0.14 on the closer):
+     * on a 40 px board the skip a spring buys is the only pace the climb
+     * has left. All numbers were measured through the game's own
+     * leapSimulate - the shared spawn law, platform motion, bounce
+     * physics and screen wrap at a fixed tick - with a scripted
+     * model-predictive hand over six seeded 1200-unit slices per rung
+     * (seeds 81011, 81023, 81047, 81061, 81083, 81097; a slice rides the
+     * rung's own spawn law, which draws from the dials alone, so its
+     * seconds per 1000 project to the full climb). The hand's clean climbs
+     * number three to five of the six seeds on every rung - a script falls
+     * where a player recovers - and its median slice pace runs 8.1 to 9.0
+     * seconds per 1000 across the six, against h24's 7.9, while the weaker
+     * lag-and-chase hand the gate keeps never finishes a slice at all (0 of
+     * 36), so the summit's three-star lines - authored from the measured
+     * pace, not the shipped 7% step - are reachable for a strong hand and
+     * out of reach for a weak one, and they bite: the shipped rung's own
+     * clean seeds straddle its line (median under, slowest seed over it, on
+     * all six). The board is the load-bearing dial by re-deal: relax
+     * `ledge` back to the shipped 1.0 and the deal machinery measures the
+     * margin coming back - the mean landing slack a hop leaves rises from
+     * 110.0 to 134.8 px on h24 (+24.8) and by 26.6 to 26.9 px on every
+     * summit rung, the same 4800 seeded hops per rung - while the hand's
+     * cut median finishes under the line on every rung it only straddled
+     * at 0.62. */
+    { id: "h25", labelKey: "leapL25", goal: 20300, gapMin: 86, gapMax: 92, moving: 0.66, spring: 0.12, ledge: 0.62, starTimes: [200, 280, 373] },
+    { id: "h26", labelKey: "leapL26", goal: 21200, gapMin: 88, gapMax: 92, moving: 0.66, spring: 0.12, ledge: 0.62, starTimes: [215, 301, 401] },
+    { id: "h27", labelKey: "leapL27", goal: 22100, gapMin: 88, gapMax: 92, moving: 0.68, spring: 0.12, ledge: 0.62, starTimes: [245, 343, 457] },
+    { id: "h28", labelKey: "leapL28", goal: 23000, gapMin: 90, gapMax: 92, moving: 0.68, spring: 0.12, ledge: 0.62, starTimes: [250, 350, 466] },
+    { id: "h29", labelKey: "leapL29", goal: 23900, gapMin: 90, gapMax: 92, moving: 0.7, spring: 0.12, ledge: 0.62, starTimes: [252, 353, 470] },
+    { id: "h30", labelKey: "leapL30", goal: 24800, gapMin: 92, gapMax: 92, moving: 0.7, spring: 0.14, ledge: 0.63, starTimes: [255, 357, 476] },
   ];
 
   /* One more ledge above topY, drawn from the level's mix: gap, kind, width
@@ -116,7 +152,10 @@
       }
     }
     spawnAbove();
-    while (guard < 432000) {
+    /* The runaway valve: a real ascent is settled one way or the other long
+     * before 1800 sim-seconds - the loosest shipped one-star band is 504 - so
+     * a climb still running here is a stuck loop, not a player. */
+    while (guard < 108000) {
       guard += 1;
       var now = seconds * 1000;
       platforms.forEach(function (p) {
@@ -594,4 +633,28 @@
   App.leapGravity = leapGravity;
   App.leapWidth = leapWidth;
   App.leapHeight = leapHeight;
+
+  /* Bilingual copy travels with the game: addStrings only fills keys
+   * i18n.js does not already own, so the shared dictionary stays
+   * authoritative. The summit climbs out of the shared numbered shelf and
+   * back into the sky names the first ten ascents carry, past the
+   * mesosphere to the last leap. */
+  App.addStrings({
+    en: {
+      "leapL25": "Thermosphere",
+      "leapL26": "Ionosphere",
+      "leapL27": "Aurora",
+      "leapL28": "The Karman Line",
+      "leapL29": "Orbit",
+      "leapL30": "The Last Leap",
+    },
+    zh: {
+      "leapL25": "热层",
+      "leapL26": "电离层",
+      "leapL27": "极光",
+      "leapL28": "卡门线",
+      "leapL29": "星轨",
+      "leapL30": "最后一跃",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

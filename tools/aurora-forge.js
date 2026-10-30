@@ -418,6 +418,11 @@ function main() {
     return;
   }
 
+  if (mode === "summit") {
+    summitEmit();
+    return;
+  }
+
   if (mode === "list") {
     const levels = loadLevels();
     let bad = 0;
@@ -464,7 +469,217 @@ function main() {
   }
 }
 
-module.exports = { solve, loadLevels, checkBoard, generateBoard, boardStats, measure, emit };
+/* ------------------------------------------------------------- summit -- */
+/* The summit tier f25-f30 opens the eleventh row: the same sixteen ribbons
+ * now have to weave a bigger panel, so the solver's own answer climbs well
+ * past the deep tier's 94-inked-cell ceiling. Boards come from the same
+ * solution-first construction - one long self-avoiding snake, cut into
+ * consecutive pieces that cannot collide - with the pieces drawn long and
+ * the snake covering as much of the panel as Warnsdorff can give, then the
+ * independent solver re-solves each board from the pairs alone at the
+ * shipped step cap. A candidate ships only when that solver proves it, and
+ * the rung's ink is the solver's own measure, never the generator's. */
+
+function summitMulberry(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a |= 0;
+    a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/* The longest snake of `attempts` Warnsdorff walks - a full-coverage snake
+ * biases the cut toward dense boards, but the solver's measure is what
+ * ships. */
+function summitSnake(size, seed, attempts) {
+  const rng = summitMulberry(seed);
+  const key = (x, y) => y * size + x;
+  const inside = (x, y) => x >= 0 && y >= 0 && x < size && y < size;
+  const neighboursOf = (x, y) => {
+    const out = [];
+    if (inside(x - 1, y)) out.push([x - 1, y]);
+    if (inside(x + 1, y)) out.push([x + 1, y]);
+    if (inside(x, y - 1)) out.push([x, y - 1]);
+    if (inside(x, y + 1)) out.push([x, y + 1]);
+    return out;
+  };
+  let snake = [];
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    const sx = Math.floor(rng() * size);
+    const sy = Math.floor(rng() * size);
+    const path = [[sx, sy]];
+    const onPath = new Set([key(sx, sy)]);
+    for (;;) {
+      const [cx, cy] = path[path.length - 1];
+      const open = neighboursOf(cx, cy).filter(([nx, ny]) => !onPath.has(key(nx, ny)));
+      if (!open.length) break;
+      open.sort(function (p, q) {
+        const gp = neighboursOf(p[0], p[1]).filter(([nx, ny]) => !onPath.has(key(nx, ny))).length;
+        const gq = neighboursOf(q[0], q[1]).filter(([nx, ny]) => !onPath.has(key(nx, ny))).length;
+        return gp - gq || rng() - 0.5;
+      });
+      const [nx, ny] = open[0];
+      onPath.add(key(nx, ny));
+      path.push([nx, ny]);
+    }
+    if (path.length > snake.length) snake = path;
+    if (snake.length === size * size) break;
+  }
+  return snake;
+}
+
+/* Exact-composition cut: `count` consecutive pieces of the snake whose
+ * lengths sum to `cover`, each at least `minPiece`, endpoints at manhattan
+ * distance >= 2 so no pair closes in one hop. */
+function summitCut(snake, count, minPiece, cover, rng) {
+  if (cover < minPiece * count || cover > snake.length) return null;
+  const lengths = new Array(count).fill(minPiece);
+  let rest = cover - minPiece * count;
+  while (rest > 0) {
+    lengths[Math.floor(rng() * count)] += 1;
+    rest -= 1;
+  }
+  for (let i = lengths.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(rng() * (i + 1));
+    const hold = lengths[i];
+    lengths[i] = lengths[j];
+    lengths[j] = hold;
+  }
+  const pieces = [];
+  let at = 0;
+  for (let i = 0; i < count; i += 1) {
+    const piece = snake.slice(at, at + lengths[i]);
+    at += lengths[i];
+    const head = piece[0];
+    const tail = piece[piece.length - 1];
+    if (Math.abs(head[0] - tail[0]) + Math.abs(head[1] - tail[1]) < 2) return null;
+    pieces.push(piece);
+  }
+  return pieces;
+}
+
+function summitSpread(pairs) {
+  let minX = 99;
+  let maxX = -1;
+  let minY = 99;
+  let maxY = -1;
+  pairs.forEach((p) => {
+    minX = Math.min(minX, p[0], p[2]);
+    maxX = Math.max(maxX, p[0], p[2]);
+    minY = Math.min(minY, p[1], p[3]);
+    maxY = Math.max(maxY, p[1], p[3]);
+  });
+  return Math.max(maxX - minX, maxY - minY);
+}
+
+/* Screen cap: a board the solver cannot prove in half a million steps is
+ * too slow a neighbour for every future gate run, so it never ships. */
+const SUMMIT_SCREEN_CAP = 500000;
+const SUMMIT_PAIRS = 16;
+
+function summitCandidates(spec, seedBase) {
+  const size = spec.size;
+  const keep = spec.keep || 12;
+  const found = [];
+  for (let seed = 1; seed <= spec.seeds && found.length < keep; seed += 1) {
+    const snake = summitSnake(size, seed * 48731 + seedBase, 80);
+    if (snake.length < size * size) continue;
+    const rng = summitMulberry(seed * 977 + seedBase);
+    const batch = [];
+    for (let v = 0; v < 8; v += 1) {
+      const cover = spec.coverMin + Math.floor(rng() * (spec.coverMax - spec.coverMin + 1));
+      const minPiece = (spec.minPieceMin || 5) + Math.floor(rng() * (spec.minPieceSpan || 3));
+      const pieces = summitCut(snake, SUMMIT_PAIRS, minPiece, cover, rng);
+      if (!pieces) continue;
+      const pairs = pieces.map((piece) => [
+        piece[0][0], piece[0][1], piece[piece.length - 1][0], piece[piece.length - 1][1],
+      ]);
+      batch.push({ pairs: pairs, spread: summitSpread(pairs) });
+    }
+    batch.sort((a, b) => b.spread - a.spread);
+    batch.slice(0, 2).forEach((candidate) => {
+      const board = { id: spec.id, size: size, pairs: candidate.pairs };
+      const report = checkBoard(board, SUMMIT_SCREEN_CAP);
+      if (report.problems.length) return;
+      found.push({
+        id: spec.id,
+        size: size,
+        pairs: candidate.pairs,
+        ink: report.measure.cells,
+        steps: report.measure.steps,
+        ms: 0,
+      });
+    });
+  }
+  return found;
+}
+
+/* The summit briefs: each rung asks for strictly more ribbon than the deep
+ * tier's 94-cell ceiling and than the rung before it, so the six rungs
+ * climb in the solver's own currency. Seeds are fixed, so the search is
+ * reproducible. */
+const SUMMIT_BRIEFS = [
+  { id: "f25", labelKey: "auroL25", size: 11, minInk: 96, seeds: 260, coverMin: 100, coverMax: 121, seedBase: 6173 },
+  { id: "f26", labelKey: "auroL26", size: 11, minInk: 99, seeds: 260, coverMin: 104, coverMax: 121, seedBase: 8191 },
+  { id: "f27", labelKey: "auroL27", size: 11, minInk: 102, seeds: 260, coverMin: 108, coverMax: 121, seedBase: 10427 },
+  { id: "f28", labelKey: "auroL28", size: 11, minInk: 105, seeds: 260, coverMin: 110, coverMax: 121, seedBase: 12907 },
+  /* The top two rungs need weaves the deep panel could not even hold, so
+   * their streams cut longer pieces against higher covers and keep more
+   * proven candidates before settling. */
+  { id: "f29", labelKey: "auroL29", size: 11, minInk: 108, keep: 40, seeds: 400, coverMin: 114, coverMax: 121, minPieceMin: 6, minPieceSpan: 2, seedBase: 15401 },
+  { id: "f30", labelKey: "auroL30", size: 11, minInk: 110, keep: 40, seeds: 400, coverMin: 116, coverMax: 121, minPieceMin: 6, minPieceSpan: 2, seedBase: 17881 },
+];
+
+function summitEmit() {
+  const out = [];
+  /* Each rung ships strictly more ribbon than the one before it: the search
+   * below never picks a candidate at or under the previous rung's ink, so
+   * the six rungs climb in the solver's own currency even when two briefs
+   * land on the same best ink. */
+  let lastInk = 94; /* the deep tier's ceiling */
+  SUMMIT_BRIEFS.forEach(function (spec) {
+    const candidates = summitCandidates(spec, spec.seedBase || 6173);
+    /* The rung ships the smallest weave that clears its floor - headroom
+     * for the rungs above it - tie-broken to the fastest proof: the ink is
+     * the solver's own answer, the pace is the shipped
+     * one-second-per-inked-cell law. */
+    const qualified = candidates
+      .filter((c) => c.ink >= spec.minInk && c.ink > lastInk)
+      .sort((a, b) => a.ink - b.ink || a.steps - b.steps);
+    if (!qualified.length) {
+      console.log(`!! ${spec.id}: no board reached ${spec.minInk} inked cells over ${lastInk}`);
+      return;
+    }
+    const best = qualified[0];
+    lastInk = best.ink;
+    const three = Math.round(best.ink * 1.02);
+    best.starTimes = [three, Math.round(three * 1.55), Math.round(three * 2.15)];
+    out.push(best);
+    console.log(
+      `${spec.id}: size ${best.size} pairs ${best.pairs.length} ink ${best.ink} ` +
+        `fill ${((best.ink / (best.size * best.size)) * 100).toFixed(0)}% ` +
+        `steps ${best.steps} stars ${best.starTimes.join("/")}`,
+    );
+  });
+  if (out.length === SUMMIT_BRIEFS.length) {
+    out.sort((a, b) => a.ink - b.ink || a.steps - b.steps);
+    out.forEach((board, index) => {
+      board.id = "f" + (25 + index);
+      board.labelKey = "auroL" + (25 + index);
+    });
+    fs.writeFileSync(
+      path.join(__dirname, "_aurora_summit.json"),
+      JSON.stringify(out, null, 2) + "\n",
+    );
+    console.log(`wrote ${out.length} summit boards to _aurora_summit.json`);
+  }
+  return out;
+}
+
+module.exports = { solve, loadLevels, checkBoard, generateBoard, boardStats, measure, emit, summitEmit, summitCandidates, summitSnake, summitCut };
 
 if (require.main === module) {
   main();

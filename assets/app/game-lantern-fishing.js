@@ -63,16 +63,45 @@
     { id: "l22", labelKey: "lfsZ22", need: 9, named: "lurker", namedNeed: 5, pool: ["lurker", "lurker", "razor", "snatcher", "lurker", "glintfin"], fuel: 158, starFuel: [60, 40, 18], band: 50 },
     { id: "l23", labelKey: "lfsZ23", need: 10, named: "lurker", namedNeed: 4, pool: ["glintfin", "razor", "lurker", "snatcher", "lurker", "razor"], fuel: 168, starFuel: [64, 44, 20], band: 54 },
 
-    /* l24 - The Razor Run. The summit closes on the ladder's fastest fish:
-     * five razors among ten landings, the deepest quota plus the deepest
-     * named share any bed has asked for, with a snatcher working the same
-     * water and the lantern held bright (76) so nothing slow comes to hide
-     * the razor count. The gate's scripted night - strikes at half the
-     * species window, reel fed 150ms late under a limit governor - lands the
-     * quota on every dealt spawn with fuel to spare, and the bands below sit
-     * stepped down from that measured leftover, so three stars is the script
-     * itself with a little slack. */
+    /* l24 - The Razor Run. The deep summit closes on the ladder's fastest
+     * fish: five razors among ten landings, the deepest quota and the
+     * deepest named share the first twenty-four beds asked for, with a
+     * snatcher working the same water and the lantern held bright (76) so
+     * nothing slow comes to hide the razor count. The gate's scripted
+     * night - strikes at half the species window, reel fed 150ms late
+     * under a limit governor - lands the quota on every dealt spawn with
+     * fuel to spare, and the bands below sit stepped down from that
+     * measured leftover, so three stars is the script itself with a
+     * little slack. */
     { id: "l24", labelKey: "lfsZ24", need: 10, named: "razor", namedNeed: 5, pool: ["razor", "razor", "snatcher", "glintfin", "razor", "razor"], fuel: 182, starFuel: [28, 22, 14], band: 76 },
+
+    /* Rungs 25-30 - The Long Night. Every approach lever was spent by l24:
+     * the quota, the named share, the pool, the fuel and the band have all
+     * been pushed, and pushing them again only re-deals longer versions of
+     * nights the ladder already fished. So the summit tier spends the one
+     * dial no rung has ever touched - the fight itself. `surge` stretches
+     * every run a hooked fish makes (runLen x surge) without adding a run:
+     * the rhythm is unchanged, the pull just lasts longer, and the pauses
+     * you wind in shrink beside it. Every shipped bed leaves the field off,
+     * so v1-24 replay byte for byte. The tier climbs 1.2 to 1.6, and its
+     * deep half clears the thief out: a rung 27 fight is too long a night
+     * to share with a snatcher, so rungs 25-26 carry the ladder's last one.
+     * The fuel lines and bands below were set by replaying the pure core
+     * (approach + tension steppers) against the gate's scripted night -
+     * strikes at half the species window, reel fed 150ms late under a limit
+     * governor - over the gate's twenty dealt spawns per bed and a
+     * hundred-seed sweep besides. The script landed the quota on every dealt
+     * night on every rung, and its worst leftover across the sweep is the
+     * line each band sits under: l25 31s, l26 20s, l27 30s, l28 18s,
+     * l29 43s, l30 23s. Each band sits stepped down from that measured
+     * worst, so three stars is the script itself with a little slack on
+     * every dealt night. */
+    { id: "l25", labelKey: "lfsZ25", need: 10, named: "glintfin", namedNeed: 5, pool: ["glintfin", "razor", "glintfin", "snatcher", "glintfin", "razor"], fuel: 176, starFuel: [28, 22, 12], band: 68, surge: 1.2 },
+    { id: "l26", labelKey: "lfsZ26", need: 10, named: "lurker", namedNeed: 5, pool: ["lurker", "glintfin", "lurker", "snatcher", "lurker", "razor"], fuel: 198, starFuel: [18, 13, 6], band: 50, surge: 1.3 },
+    { id: "l27", labelKey: "lfsZ27", need: 11, named: "razor", namedNeed: 5, pool: ["razor", "razor", "glintfin", "razor", "razor", "glintfin"], fuel: 224, starFuel: [27, 21, 10], band: 84, surge: 1.4 },
+    { id: "l28", labelKey: "lfsZ28", need: 11, named: "glintfin", namedNeed: 6, pool: ["glintfin", "razor", "lurker", "glintfin", "razor", "glintfin", "razor"], fuel: 252, starFuel: [15, 11, 5], band: 60, surge: 1.45 },
+    { id: "l29", labelKey: "lfsZ29", need: 11, named: "lurker", namedNeed: 6, pool: ["lurker", "glintfin", "lurker", "lurker", "lurker", "razor", "glintfin"], fuel: 264, starFuel: [40, 30, 14], band: 44, surge: 1.5 },
+    { id: "l30", labelKey: "lfsZ30", need: 12, named: "razor", namedNeed: 6, pool: ["razor", "razor", "glintfin", "razor", "razor", "glintfin", "razor"], fuel: 276, starFuel: [20, 15, 8], band: 78, surge: 1.6 },
   ];
 
   /* --- pure core ---------------------------------------------------------- */
@@ -204,7 +233,9 @@
   /* The fight. `state` is the line: how hard it is loaded, how tired the fish
    * is, how deep it is coming up. Reeling loads the line and works the fish;
    * over the limit for more than 0.4s and it parts, near zero and the hook
-   * slides out. */
+   * slides out. `surge` is a bed's mood: it stretches every run the fish
+   * makes without adding one, so the rhythm is the same and the pull simply
+   * lasts longer. Beds that leave it off fight exactly as they always did. */
   function lfsTension(state, input, dt) {
     var step = dt > 0 ? Math.min(dt, 0.032) : 0;
     var next = {
@@ -218,6 +249,7 @@
       runTimer: state.runTimer || 0,
       waitTimer: state.waitTimer || 0,
       inRun: !!state.inRun,
+      surge: state.surge || 1,
       depth: state.depth || 10,
       reel: input && input.reel ? 1 : 0,
       snapped: false,
@@ -237,7 +269,7 @@
         next.waitTimer -= step;
         if (next.waitTimer <= 0) {
           next.inRun = true;
-          next.runTimer = spec.runLen;
+          next.runTimer = spec.runLen * next.surge;
         }
       }
     }
@@ -493,6 +525,7 @@
           runTimer: 0,
           waitTimer: spec.wait * 0.5,
           inRun: false,
+          surge: level.surge,
           depth: lfsDepth(biting.y),
           snapped: false,
           landed: false,
@@ -1021,6 +1054,12 @@
       "lfsZ22": "Leviathan Hollow",
       "lfsZ23": "The Starlit Trench",
       "lfsZ24": "The Razor Run",
+      "lfsZ25": "The Long Pull",
+      "lfsZ26": "The Vigil",
+      "lfsZ27": "The Runaway",
+      "lfsZ28": "The Long Haul",
+      "lfsZ29": "The Lightless Grounds",
+      "lfsZ30": "The Longest Night",
       "lfsSpGlintfin": "Glintfin",
       "lfsSpRazor": "Razor",
       "lfsSpLurker": "Pale lurker",
@@ -1079,6 +1118,12 @@
       "lfsZ22": "巨兽幽穴",
       "lfsZ23": "星光海沟",
       "lfsZ24": "刀鱼急流",
+      "lfsZ25": "漫长的冲刺",
+      "lfsZ26": "守夜",
+      "lfsZ27": "脱缰之鱼",
+      "lfsZ28": "长夜重网",
+      "lfsZ29": "无光渔场",
+      "lfsZ30": "最漫长的一夜",
       "lfsSpGlintfin": "闪光鱼",
       "lfsSpRazor": "刀鱼",
       "lfsSpLurker": "白潜鱼",
@@ -1137,6 +1182,7 @@
         "Strike: when the timer shows BITE, Enter sets the hook; miss the window and it spits.",
         "Fight: holding Enter loads the line. Above 100% for more than 0.4s it snaps, near 0% the hook shakes out, so wind during the pause and ease during the pull.",
         "Scoring: stars come from the fuel left when your nets are full, and a snatcher stealing bites costs you that time.",
+        "Summit: the last six beds fish water that makes every run run long - the pull you ease through stretches and the pause you wind in stays short. The deepest quotas ride on the longest nights.",
       ],
       zh: [
         "目标：在灯油耗尽前钓满这一夜的渔获，有些钓点还指定必须留下的鱼。",
@@ -1145,6 +1191,7 @@
         "刺鱼：屏上报出 BITE 计时时按回车刺鱼，错过窗口它就吐钩。",
         "搏鱼：按住回车会给线加载。张力超 100% 撑过 0.4 秒就断线，接近 0% 钩子会被甩掉，所以它停你收、它冲你松。",
         "计分：星级看封网时剩下的灯油秒数，抢食者抢走的每一口都在偷你的时间。",
+        "巅峰段：最后六个钓点的水域让每一次冲刺都拖得更长——要松的线更久，能收的歇更短。最深的渔获压在最长的夜里。",
       ],
     },
   });

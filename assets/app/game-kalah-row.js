@@ -104,6 +104,34 @@
     { id: "m22", labelKey: "malR22", depth: 8, noise: 0, keep: 14, threat: 4.5, deny: 6, tempo: 4.5, count: 28, nodes: 3000, slip: 0.02, flub: 0.08, margin: [3, 2, 1] },
     { id: "m23", labelKey: "malR23", depth: 8, noise: 0, keep: 16, threat: 4, deny: 6, tempo: 5, count: 28, nodes: 3000, slip: 0.01, flub: 0.08, margin: [3, 2, 1] },
     { id: "m24", labelKey: "malR24", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 6, tempo: 5, count: 28, nodes: 3000, slip: 0, flub: 0.04, margin: [3, 2, 1] },
+
+    /* Ranks 25-30: the ransom tier. The play stays exactly the seamless
+     * ring's - depth eight, sixteen guarded stones, the four-and-a-half
+     * threat, six denials, the five-stone tempo, the twenty-eight count,
+     * the three-thousand node budget, flub 0.04 - and the climb is charged
+     * on the score instead: each rung asks to be beaten by more stones than
+     * the last, five, nine, thirteen, seventeen, nineteen and twenty-five,
+     * with the two-star band set a shade over half the three-star line off
+     * the margins the bench actually pays and the one-star line left at any
+     * win. A rout that big has to come from somewhere: the seamless ring's
+     * own losses never reach twenty-five, so from twenty-seven on the tell
+     * reopens - the runner-up sow played at three and then twelve games in
+     * a hundred - and the deep bands are paid out of that tell. Deeper cups
+     * were benched for the tier and rejected: from five through sixteen
+     * stones a cup the bench's outcome goes bimodal, it either routs the
+     * rank outright or never wins a game, so no deep-cups rank can be
+     * judged hard-but-fair by the bench at all. Every rank below was run
+     * against the same seeded bench that judged the twenty-four above,
+     * beaten outright in at least one game in twenty and by its own
+     * three-star band in at least three games in twenty - before it
+     * shipped: band 5 at 20% (wins 20%), 9 at 18% (20%), 13 at 23% (30%),
+     * 17 at 20% (30%), 19 at 33% (48%) and 25 at 20% (48%). */
+    { id: "m25", labelKey: "malR25", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 6, tempo: 5, count: 28, nodes: 3000, slip: 0, flub: 0.04, margin: [5, 3, 1] },
+    { id: "m26", labelKey: "malR26", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 6, tempo: 5, count: 28, nodes: 3000, slip: 0, flub: 0.04, margin: [9, 5, 1] },
+    { id: "m27", labelKey: "malR27", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 6, tempo: 5, count: 28, nodes: 3000, slip: 0.03, flub: 0.04, margin: [13, 8, 1] },
+    { id: "m28", labelKey: "malR28", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 6, tempo: 5, count: 28, nodes: 3000, slip: 0.03, flub: 0.04, margin: [17, 10, 1] },
+    { id: "m29", labelKey: "malR29", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 6, tempo: 5, count: 28, nodes: 3000, slip: 0.12, flub: 0.04, margin: [19, 12, 1] },
+    { id: "m30", labelKey: "malR30", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 6, tempo: 5, count: 28, nodes: 3000, slip: 0.12, flub: 0.04, margin: [25, 15, 1] },
   ];
 
   function malFresh() {
@@ -647,6 +675,12 @@
       "malR22": "The Star Farmer",
       "malR23": "The Long Siege",
       "malR24": "The Seamless Ring",
+      "malR25": "The Toll",
+      "malR26": "The Heavy Purse",
+      "malR27": "The Tribute Collector",
+      "malR28": "The Ledger Keeper",
+      "malR29": "The King's Ransom",
+      "malR30": "The Gilded Ring",
     },
     zh: {
       "malR5": "石墙凳",
@@ -669,6 +703,12 @@
       "malR22": "养星手",
       "malR23": "长围手",
       "malR24": "无缝之环",
+      "malR25": "买路钱",
+      "malR26": "沉钱袋",
+      "malR27": "收贡者",
+      "malR28": "记账翁",
+      "malR29": "王者赎金",
+      "malR30": "鎏金之环",
     },
   });
 

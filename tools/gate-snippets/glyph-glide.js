@@ -4,7 +4,7 @@
  *
  * The README law for this rink is that the printed par is a line the game's
  * own BFS has replayed, so the deep tier is held to that law in the engine's
- * own currency rather than to a plausible-looking board. Four proofs:
+ * own currency rather than to a plausible-looking board. Five proofs:
  *
  * 1. The quoted par is the true optimum. Every deep rung is dealt on a
  *    pinned stream through the module's own drift dealer, and the deal's par
@@ -28,6 +28,14 @@
  *    pinned stream the live module must produce byte-identical deals and
  *    byte-identical draw counts for the shallow rungs - the deep tier is
  *    strictly additive, so every shipped deal replays exactly as it shipped.
+ * 5. The summit i25-i30 answers to the same law on its own pinned stream
+ *    (88000 + trial*37 + drifts, eight deals a rung): one more drift per
+ *    rung, seven through twelve, every deal re-proven by both provers inside
+ *    the printed window, the mean proven par climbing strictly through the
+ *    six and opening past i24's mean on the same stream, and the cut measured
+ *    on the dealt boards themselves - strip the snow off them and the
+ *    driftless replay prices below each rung's printed floor, so the summit's
+ *    demand is unreachable on the bare ice.
  *
  * Everything loops over fixed small counts (8 deals a rung, capped BFS
  * depth), so the gate finishes in seconds and nothing can hang. */
@@ -36,22 +44,30 @@ module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const levels = App.glyphGlideLevels;
   const deepIds = ["i21", "i22", "i23", "i24"];
+  const summitIds = ["i25", "i26", "i27", "i28", "i29", "i30"];
 
-  check("game-glyph-glide", "the ladder holds twenty-four rinks",
-    Array.isArray(levels) && levels.length === 24, String(levels && levels.length));
+  check("game-glyph-glide", "the ladder holds thirty rinks",
+    Array.isArray(levels) && levels.length === 30, String(levels && levels.length));
   check("game-glyph-glide", "every rink id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
   const missing = deepIds.filter((id) => !levels.some((level) => level.id === id));
   check("game-glyph-glide", "the deep tier i21-i24 is present",
     missing.length === 0, missing.join(","));
-  check("game-glyph-glide", "the deep tier is the summit: the last four rungs in order",
+  check("game-glyph-glide", "the deep tier sits at rungs 21-24 in order",
     deepIds.every((id, index) => levels[20 + index] && levels[20 + index].id === id),
-    levels.slice(20).map((level) => level.id).join(","));
+    levels.slice(20, 24).map((level) => level.id).join(","));
+  const missingSummit = summitIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-glyph-glide", "the summit tier i25-i30 is present",
+    missingSummit.length === 0, missingSummit.join(","));
+  check("game-glyph-glide", "the summit tier closes the ladder: the last six rungs in order",
+    summitIds.every((id, index) => levels[24 + index] && levels[24 + index].id === id),
+    levels.slice(24).map((level) => level.id).join(","));
 
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
   const deep = deepIds.map((id) => byId[id]);
+  const summit = summitIds.map((id) => byId[id]);
 
   /* One pinned stream per deal - the same Math.random the panel deals with,
    * counting draws so the inertness proof can compare stream consumption. */
@@ -323,13 +339,16 @@ module.exports = function gate(ctx) {
   };
 
   /* Deal one rung on a pinned stream. Eight deals a rung keeps the whole
-   * gate in seconds; the seed scheme is fixed, so the run is deterministic. */
+   * gate in seconds; the seed scheme is fixed, so the run is deterministic.
+   * The deep tier rides the 91000 stream it has always ridden; the summit
+   * deals on its own 88000 stream, the one the tier's evidence comment
+   * quotes, because the deep stream starves the dealer at twelve drifts. */
   const DEALS = 8;
-  const dealRung = (level, trial) =>
+  const dealRung = (level, trial, base) =>
     level.drifts
-      ? stream(91000 + trial * 37 + level.drifts).run(() =>
+      ? stream((base || 91000) + trial * 37 + level.drifts).run(() =>
         App.glyphGlideDriftGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density, level.drifts))
-      : stream(91000 + trial * 37).run(() =>
+      : stream((base || 91000) + trial * 37).run(() =>
         App.glyphGlideTrailGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density));
 
   /* 1+3. Every deep deal is real, and its quoted par is the truth: the
@@ -445,13 +464,169 @@ module.exports = function gate(ctx) {
     "the deep star bands are reachable by the proven line and not free for a sloppy one",
     bandProblems.length === 0, bandProblems.join(" | "));
 
+  /* ---- the summit i25-i30: the deep law one drift higher ---- */
+  /* The tier's authored shape is the escalation itself: one more drift per
+   * rung, seven through twelve (each past the crown's six), windows that
+   * step 29-39/58-68 past i24's 28-54, and the deepest floor and the most
+   * sockets the ladder has held. */
+  const shapeProblems = [];
+  summit.forEach((level, index) => {
+    const prev = index === 0 ? byId.i24 : summit[index - 1];
+    if (level.drifts !== prev.drifts + 1) {
+      shapeProblems.push(`${level.id} sows ${level.drifts} drifts, not one more than ${prev.drifts}`);
+    }
+    if (!(level.minPar > prev.minPar) || !(level.maxPar > prev.maxPar)) {
+      shapeProblems.push(`${level.id} does not raise its window past ${prev.minPar}-${prev.maxPar}`);
+    }
+  });
+  const shipped = levels.slice(0, 24);
+  const record = (pick) => Math.max.apply(null, shipped.map(pick));
+  if (!(summit[5].w > record((l) => l.w)) || !(summit[5].h > record((l) => l.h))) {
+    shapeProblems.push("the summit does not hold the deepest floor the ladder has seen");
+  }
+  if (!(summit[5].stars > record((l) => l.stars))) {
+    shapeProblems.push("the summit does not hold the most sockets the ladder has seen");
+  }
+  check("game-glyph-glide",
+    "the summit escalates the dials the engine deals: one more drift per rung 7-12, windows past the crown's, and the campaign's deepest floor and most sockets",
+    shapeProblems.length === 0, shapeProblems.join(" | "));
+
+  /* Every summit deal meets the deep law on the summit's own pinned stream:
+   * a true drift board, its quoted par re-proven by the module's prover and
+   * the independent one, the par inside the printed window, and the same
+   * board without its snow strictly cheaper. */
+  const summitMean = {};
+  const summitOpen = {};
+  const summitCost = {};
+  summit.forEach((level) => {
+    const problems = [];
+    let parSum = 0;
+    let openSum = 0;
+    let costSum = 0;
+    for (let trial = 0; trial < DEALS; trial += 1) {
+      const deal = dealRung(level, trial, 88000);
+      const tag = `${level.id} trial ${trial}`;
+      if (!deal || !deal.drifts) {
+        problems.push(`${tag}: the dealer fell back, no drifts dealt`);
+        continue;
+      }
+      let laid = 0;
+      for (let cell = 0; cell < deal.drifts.length; cell += 1) {
+        if (!deal.drifts[cell]) {
+          continue;
+        }
+        laid += 1;
+        if (deal.wall[cell]) {
+          problems.push(`${tag}: a drift is sown on a wall cell`);
+        }
+        if (cell === deal.start || cell === deal.goal || deal.stars.indexOf(cell) >= 0) {
+          problems.push(`${tag}: a drift doubles as the start, the goal or a star`);
+        }
+      }
+      if (laid !== level.drifts) {
+        problems.push(`${tag}: dealt ${laid} drifts, the rung asks for ${level.drifts}`);
+      }
+      const par = App.glyphGlideSolve(deal.wall, level.w, level.h, deal.start, deal.goal, deal.stars, deal.drifts);
+      const par2 = gateSolve(deal.wall, deal.drifts, level.w, level.h, deal.start, deal.goal, deal.stars);
+      if (par !== deal.par || par2 !== deal.par) {
+        problems.push(`${tag}: quoted ${deal.par}, engine ${par}, independent ${par2}`);
+      }
+      if (deal.par < level.minPar || deal.par > level.maxPar) {
+        problems.push(`${tag}: par ${deal.par} outside the printed window ${level.minPar}-${level.maxPar}`);
+      }
+      const open = App.glyphGlideSolve(deal.wall, level.w, level.h, deal.start, deal.goal, deal.stars);
+      if (open < 1 || open >= deal.par) {
+        problems.push(`${tag}: driftless line ${open} is not strictly under par ${deal.par}`);
+      }
+      parSum += deal.par;
+      openSum += open;
+      costSum += deal.par - open;
+    }
+    check("game-glyph-glide",
+      `${level.id}: its eight pinned deals are true drift boards, proven at their quoted par by both provers inside the printed window and strictly dearer than the bare board`,
+      problems.length === 0, problems.slice(0, 3).join(" | "));
+    summitMean[level.id] = parSum / DEALS;
+    summitOpen[level.id] = openSum / DEALS;
+    summitCost[level.id] = costSum / DEALS;
+  });
+
+  /* The summit is the top of the ladder in the BFS's own currency: floors
+   * step 29-39 past the crown's 28, every summit rung's mean proven par
+   * beats i24's mean on the same pinned stream, the means climb strictly
+   * through the six, and the snow pays real slides on every rung. */
+  const i24SummitMean = (() => {
+    let sum = 0;
+    for (let trial = 0; trial < DEALS; trial += 1) {
+      sum += dealRung(byId.i24, trial, 88000).par;
+    }
+    return sum / DEALS;
+  })();
+  const climbProblems = [];
+  summit.forEach((level, index) => {
+    const floor = index === 0 ? byId.i24.minPar : summit[index - 1].minPar;
+    if (!(level.minPar > floor)) {
+      climbProblems.push(`${level.id} floor ${level.minPar} does not clear ${floor}`);
+    }
+    if (!(summitMean[level.id] > i24SummitMean)) {
+      climbProblems.push(`${level.id} mean par ${summitMean[level.id].toFixed(1)} not above i24 ${i24SummitMean.toFixed(1)}`);
+    }
+    if (index && !(summitMean[level.id] > summitMean[summit[index - 1].id])) {
+      climbProblems.push(`${level.id} mean par does not clear the rung before it`);
+    }
+    if (!(summitCost[level.id] > 0)) {
+      climbProblems.push(`${level.id} drifts cost nothing on average`);
+    }
+  });
+  check("game-glyph-glide",
+    "the summit's pars climb past the crown: floors rise 29/31/33/35/37/39 and every summit mean proven par beats i24's on the same stream, strictly through the six",
+    climbProblems.length === 0,
+    climbProblems.join(" | ") ||
+      `i24 ${i24SummitMean.toFixed(1)} -> ${summitIds.map((id) => `${id} ${summitMean[id].toFixed(1)}`).join(" -> ")}`);
+
+  /* The cut, measured on the dealt boards themselves: the driftless replay
+   * of every pinned deal is strictly under the dealt par (checked per deal
+   * above), and each rung's mean driftless price falls below the rung's own
+   * printed floor - the summit's demand is unreachable on the bare ice the
+   * same dealer lays, which is the tier mechanic being load-bearing. */
+  const cutProblems = summit
+    .filter((level) => !(summitOpen[level.id] < level.minPar))
+    .map((level) => `${level.id} driftless mean ${summitOpen[level.id].toFixed(1)} not under floor ${level.minPar}`);
+  check("game-glyph-glide",
+    "the cut: the snowless replay of each rung's own deals prices below that rung's printed floor, so the summit's demand is unreachable without its drifts",
+    cutProblems.length === 0,
+    cutProblems.join(" | ") ||
+      summitIds.map((id) => `${id} bare ${summitOpen[id].toFixed(1)} < floor ${byId[id].minPar}`).join(", "));
+
+  /* The summit's star bands against the engine's own law, on its own deals:
+   * the proven line earns three stars, two extra slides cost the third, four
+   * cost the second, and a line eight over par earns nothing the engine has
+   * to round up. */
+  const summitBandProblems = [];
+  summit.forEach((level) => {
+    const deal = dealRung(level, 0, 88000);
+    if (!deal || !deal.drifts) {
+      summitBandProblems.push(level.id + " dealt no drifts for the band probe");
+      return;
+    }
+    const par = deal.par;
+    const bands = [par + 1, par + 3, par + 7];
+    const earned = (moves) => App.starsFor(moves, bands, "low");
+    if (earned(par) !== 3) summitBandProblems.push(`${level.id} the optimal ${par}-slide line does not earn three stars`);
+    if (earned(par + 2) !== 2) summitBandProblems.push(`${level.id} two over par still earns three stars`);
+    if (earned(par + 4) !== 1) summitBandProblems.push(`${level.id} four over par still earns two stars`);
+    if (earned(par + 8) !== 0) summitBandProblems.push(`${level.id} eight over par still earns one star`);
+  });
+  check("game-glyph-glide",
+    "the summit's star bands are reachable by the proven line and not free for a sloppy one",
+    summitBandProblems.length === 0, summitBandProblems.join(" | "));
+
   /* 4. The shipped twenty are untouched. No shallow rung carries the field,
    * and under a pinned stream the live generators deal byte-identical boards
    * with byte-identical draw counts against the verbatim pre-deep copies -
    * plain rinks, white rinks, and the solver itself. */
-  const shallow = levels.filter((level) => deepIds.indexOf(level.id) < 0);
+  const shallow = levels.slice(0, 20);
   check("game-glyph-glide",
-    "no shipped rung carries the drift field",
+    "no rung before the deep tier carries the drift field",
     shallow.every((level) => !level.drifts),
     shallow.filter((level) => level.drifts).map((level) => level.id).join(","));
   const inertProblems = [];
@@ -509,13 +684,14 @@ module.exports = function gate(ctx) {
     `masked ${openMasked}, bare ${openBare}, independent ${openGate}, par ${deepDeal.par}`);
 
   /* The tier's names travel with the page: both languages hold a real string
-   * and t() never falls back to the raw key. The guide line carries the new
-   * stopping law in both languages too. */
-  const copyProblems = deep.map((level) => level.labelKey).filter((key) =>
+   * and t() never falls back to the raw key - the four deep rinks and the six
+   * summit rinks. The guide line carries the stopping law in both languages
+   * too. */
+  const copyProblems = deep.concat(summit).map((level) => level.labelKey).filter((key) =>
     !(App.I18N && App.I18N.en && typeof App.I18N.en[key] === "string" && App.I18N.en[key].length) ||
     !(App.I18N && App.I18N.zh && typeof App.I18N.zh[key] === "string" && App.I18N.zh[key].length) ||
     !App.t(key) || App.t(key) === key);
-  check("game-glyph-glide", "the four deep rink names resolve in both languages",
+  check("game-glyph-glide", "the ten deep and summit rink names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
   const hintEn = (App.I18N && App.I18N.en && App.I18N.en.glHint) || "";
   const hintZh = (App.I18N && App.I18N.zh && App.I18N.zh.glHint) || "";
@@ -527,8 +703,8 @@ module.exports = function gate(ctx) {
     ", zh " + /新层级/.test(hintZh) + "/" + /雪堆/.test(hintZh));
 
   /* The unlock chain is derived, never stored: clearing each rink in order
-   * hands the player exactly the next one, all twenty-four times, on the
-   * game's own campaign key. */
+   * hands the player exactly the next one, all thirty times, on the game's
+   * own campaign key. */
   const chain = App.createCampaign({
     key: "glyph-glide-campaign",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -541,6 +717,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-glyph-glide", "the unlock chain walks all twenty-four rinks in order",
-    walked === 24 && chained && chain.clearedCount() === 24, walked + " first clears");
+  check("game-glyph-glide", "the unlock chain walks all thirty rinks in order",
+    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
 };

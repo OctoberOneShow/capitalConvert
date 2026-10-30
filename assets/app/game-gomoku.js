@@ -67,6 +67,21 @@
     { id: "r22", labelKey: "gomokuRank22", noise: 0.14, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, hold: 2, depth: 13, starMoves: [98, 146, 198] },
     { id: "r23", labelKey: "gomokuRank23", noise: 0.12, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, hold: 2, depth: 13, starMoves: [102, 152, 206] },
     { id: "r24", labelKey: "gomokuRank24", noise: 0.10, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, hold: 2, depth: 14, starMoves: [106, 158, 214] },
+    /* Ranks 25-30: the quiet summit. The sight is already at the engine's
+     * honest ceiling - the deep read costs seconds a move on an open board,
+     * and a rank that searched deeper would stall the panel, not sharpen it
+     * - so the summit is paid for where every shipped rank above five pays:
+     * the hand goes perfectly steady and the front widens. The blink drains
+     * from 0.09 to a near-zero 0.04, the tempo tax climbs to five, and the
+     * last three ranks must hold three fronts at once (hold 3), the widest
+     * read the drawer ships. Every rung keeps the ladder's own star law,
+     * four and six and eight moves a band, rising all the way up. */
+    { id: "r25", labelKey: "gomokuRank25", noise: 0.09, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 3, hold: 2, depth: 14, starMoves: [110, 164, 222] },
+    { id: "r26", labelKey: "gomokuRank26", noise: 0.08, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 4, hold: 2, depth: 14, starMoves: [114, 170, 230] },
+    { id: "r27", labelKey: "gomokuRank27", noise: 0.07, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 4, hold: 3, depth: 14, starMoves: [118, 176, 238] },
+    { id: "r28", labelKey: "gomokuRank28", noise: 0.06, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 4, hold: 3, depth: 14, starMoves: [122, 182, 246] },
+    { id: "r29", labelKey: "gomokuRank29", noise: 0.05, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 4, hold: 3, depth: 14, starMoves: [126, 188, 254] },
+    { id: "r30", labelKey: "gomokuRank30", noise: 0.04, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 5, hold: 3, depth: 14, starMoves: [130, 194, 262] },
   ];
   var gmDirs = [[1, 0], [0, 1], [1, 1], [1, -1]];
 
@@ -1193,7 +1208,7 @@
       if (outcome.unlockedNext) {
         message += " " + t("gomokuNextRank");
       } else if (campaign.clearedCount() === gmRanks.length) {
-        message += " " + t("gomokuAllRanks");
+        message += " " + t("gomokuAllRanks", { n: gmRanks.length });
       }
       say(message, "win");
       /* Ring the five and draw the stroke through them before the plate lands,
@@ -1318,6 +1333,27 @@
       "gomokuRank22": "无声经纬",
       "gomokuRank23": "双杀之威",
       "gomokuRank24": "天元棋圣",
+    },
+  });
+
+  /* The quiet summit carries its own names: addStrings only fills keys
+   * i18n.js does not already hold, so the picker never prints a raw key. */
+  App.addStrings({
+    en: {
+      "gomokuRank25": "The Steady Hand",
+      "gomokuRank26": "The Four-Beat Tempo",
+      "gomokuRank27": "The Triple Front",
+      "gomokuRank28": "The Still Deep",
+      "gomokuRank29": "The Quiet Eye",
+      "gomokuRank30": "The Unblinking Saint",
+    },
+    zh: {
+      "gomokuRank25": "\u6c89\u7a33\u4e4b\u624b",
+      "gomokuRank26": "\u56db\u62cd\u8282\u594f",
+      "gomokuRank27": "\u4e09\u7ebf\u9f50\u5f00",
+      "gomokuRank28": "\u9759\u6c34\u6df1\u6d41",
+      "gomokuRank29": "\u9759\u89c2\u4e4b\u773c",
+      "gomokuRank30": "\u4e0d\u7728\u4e4b\u5723",
     },
   });
 

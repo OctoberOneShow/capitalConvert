@@ -11,21 +11,38 @@
  * doors, every deep rung's starting heap opens twice the ground a single-door
  * twin opens, and the tier as a whole wins strictly less often than the
  * shipped peak does on the same seeds, so the lesson costs the bench real
- * wins rather than decoration. */
+ * wins rather than decoration.
+ *
+ * The summit f25-f30 holds every rung to the same bench with the third door:
+ * `holes: 3` opens three columns in every rubble row, so no row clears until
+ * all three are built. The gate proves the door three ways. Structurally: no
+ * earlier rung opens three doors, every summit deal really lays three
+ * distinct doors per row through the game's own hole chooser, and the
+ * summit's starting heaps open exactly three times the ground a single-door
+ * twin opens. On the clock: every summit winning line is slower than the
+ * deep peak's best on the same bench - the third door costs time even where
+ * the bench squeaks out the win - and every rung's bands are played for and
+ * landed from both directions. And the ladder is whole: thirty floors, the
+ * unlock chain walks them all, and the six summit names resolve in both
+ * languages. */
 
 module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const levels = App.blkLevels;
   const deepIds = ["f21", "f22", "f23", "f24"];
+  const summitIds = ["f25", "f26", "f27", "f28", "f29", "f30"];
 
-  check("game-glyph-blocks", "the ladder holds twenty-four floors",
-    levels.length === 24, String(levels.length));
+  check("game-glyph-blocks", "the ladder holds all thirty floors",
+    levels.length === 30, String(levels.length));
   check("game-glyph-blocks", "every floor id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
   const missing = deepIds.filter((id) => !levels.some((level) => level.id === id));
   check("game-glyph-blocks", "the deep tier f21-f24 is present",
     missing.length === 0, missing.join(","));
+  const missingSummit = summitIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-glyph-blocks", "the summit tier f25-f30 is present",
+    missingSummit.length === 0, missingSummit.join(","));
 
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
@@ -215,7 +232,8 @@ module.exports = function gate(ctx) {
    * open exactly twice the ground a single-door twin opens, column by
    * column, through the game's own hole chooser on a seeded stream. */
   const shallowHoles = levels.filter((level) =>
-    !deepIds.includes(level.id) && level.holes !== undefined && level.holes >= 2);
+    !deepIds.includes(level.id) && !summitIds.includes(level.id) &&
+    level.holes !== undefined && level.holes >= 2);
   check("game-glyph-blocks",
     "no shipped rung opens two doors in its rubble",
     shallowHoles.length === 0, shallowHoles.map((level) => level.id).join(","));
@@ -258,18 +276,95 @@ module.exports = function gate(ctx) {
     shippedOpens === byId.f20.garbage && twinOpens(byId.f16) === byId.f16.garbage,
     `f20 ${shippedOpens}/${byId.f20.garbage}, f16 ${twinOpens(byId.f16)}/${byId.f16.garbage}`);
 
+  /* ---- the summit: the third door, on the same bench ---- */
+  const f24Bench = bench(byId.f24, blkSeeds);
+  const summit = summitIds.map((id) => byId[id]);
+  const summitProblems = [];
+  let summitBest = null;
+  summit.forEach((level) => {
+    const run = bench(level, blkSeeds);
+    const name = `${level.id} goal=${level.goal} garbage=${level.garbage} startMs=${level.startMs}` +
+      ` holes=${level.holes}` +
+      `${level.pieces ? " " + level.pieces : ""}${level.rise ? " rise=" + level.rise : ""}`;
+    if (!(run.won >= 3 && run.won >= f24Bench.won - 1)) {
+      summitProblems.push(`${name} won ${run.won}/6 (f24 ${f24Bench.won}/6)`);
+    }
+    if (run.worst === null || run.worst > level.starTimes[1]) {
+      summitProblems.push(`${name} a won line missed the two-star band` +
+        ` (worst ${run.worst} vs ${level.starTimes[1]})`);
+    }
+    if (run.best === null || run.best > level.starTimes[0] ||
+        level.starTimes[0] >= level.starTimes[1]) {
+      summitProblems.push(`${name} the three-star line is not played for` +
+        ` (best ${run.best} vs ${level.starTimes[0]})`);
+    }
+    if (!(level.starTimes[0] < level.starTimes[1] &&
+        level.starTimes[1] < level.starTimes[2])) {
+      summitProblems.push(`${name} bands do not run downwards ${level.starTimes.join("/")}`);
+    }
+    if (run.best !== null && (summitBest === null || run.best < summitBest)) {
+      summitBest = run.best;
+    }
+  });
+  check("game-glyph-blocks",
+    "every summit rung clears the bench at the deep peak's bar and lands its own bands",
+    summitProblems.length === 0, summitProblems.join(" | "));
+  check("game-glyph-blocks",
+    "the third door costs time: the summit's fastest winning line (" + summitBest +
+      "s) is slower than the deep peak's best (" + f24Bench.best + "s)",
+    summitBest !== null && f24Bench.best !== null && summitBest > f24Bench.best,
+    `summit best ${summitBest} vs f24 ${f24Bench.best}`);
+
+  /* The third door is structural: no earlier rung opens three doors, every
+   * summit deal lays three distinct doors per row through the game's own
+   * chooser, and the summit's heaps open exactly three times the ground a
+   * single-door twin opens. */
+  const shallowTriples = levels.filter((level) =>
+    !summitIds.includes(level.id) && level.holes !== undefined && level.holes >= 3);
+  check("game-glyph-blocks",
+    "no earlier rung opens three doors in its rubble",
+    shallowTriples.length === 0, shallowTriples.map((level) => level.id).join(","));
+  const tripleProblems = [];
+  summit.forEach((level) => {
+    if (level.holes !== 3) {
+      tripleProblems.push(level.id + " does not ask for three doors");
+      return;
+    }
+    for (let probe = 0; probe < 40; probe += 1) {
+      const holes = App.blkRubbleHoles(level, blkRng(91000 + probe * 7));
+      if (holes.length !== 3 || new Set(holes).size !== 3) {
+        tripleProblems.push(`${level.id} dealt ${holes.length} doors on seed ${probe}`);
+      }
+    }
+  });
+  check("game-glyph-blocks",
+    "every summit rung's rubble really opens three distinct doors per row",
+    tripleProblems.length === 0, tripleProblems.join(" | "));
+  const single = Object.assign({}, byId.f25, { holes: 1 });
+  const groundOpens = (level) => {
+    let opens = 0;
+    for (let row = 0; row < level.garbage; row += 1) {
+      App.blkRubbleHoles(level, blkRng(515000 + row * 13)).forEach(() => { opens += 1; });
+    }
+    return opens;
+  };
+  check("game-glyph-blocks",
+    "f25's starting heap opens three times the ground its single-door twin opens",
+    groundOpens(byId.f25) === 3 * groundOpens(single),
+    `${groundOpens(byId.f25)} vs ${groundOpens(single)}`);
+
   /* The tier's names travel with the page: both languages hold a real string
    * and t() never falls back to the raw key. */
-  const copyProblems = deepIds.map((id) =>
+  const copyProblems = deepIds.concat(summitIds).map((id) =>
     byId[id].labelKey).filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-glyph-blocks", "the four deep floor names resolve in both languages",
+  check("game-glyph-blocks", "the ten deep and summit floor names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 
   /* The unlock chain is derived, never stored: clearing each floor in order
-   * hands the player exactly the next one, all twenty-four times. */
+   * hands the player exactly the next one, all thirty times. */
   const chain = App.createCampaign({
     key: "glyph-blocks-gate-chain",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -282,6 +377,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-glyph-blocks", "the unlock chain walks all twenty-four floors in order",
-    walked === 24 && chained && chain.clearedCount() === 24, walked + " first clears");
+  check("game-glyph-blocks", "the unlock chain walks all thirty floors in order",
+    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
 };

@@ -105,6 +105,24 @@
     { id: "w22", labelKey: "twrR22", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.0006, starBeats: [26, 35, 40] },
     { id: "w23", labelKey: "twrR23", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.0004, starBeats: [26, 35, 40] },
     { id: "w24", labelKey: "twrR24", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.0002, starBeats: [27, 36, 40] },
+    /* Ranks 25-30: the still-read summit. Every other dial already sits at
+     * its stop - the window rests on the engine's own 900 floor and
+     * prediction, rush and greed are all at one - so the one lever left is
+     * the flicker: the grain of noise the machine stirs into the close
+     * calls its evaluator cannot separate. That grain drains three
+     * hundred-thousandths a rung, from seventeen down to two - a tenth of
+     * the Grand Champion Apex's own flicker - and the beat bands rise a
+     * step with it, because a rival this still gives nothing away and a
+     * clean win against it takes longer to land. The machine never changes
+     * shape here either; it stops trembling. The verification bench
+     * replays seeded scripted bouts through twrExchange itself, so every
+     * rung here is beaten and no rung is easier than the one before it. */
+    { id: "w25", labelKey: "twrR25", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.00017, starBeats: [28, 37, 40] },
+    { id: "w26", labelKey: "twrR26", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.00014, starBeats: [29, 37, 40] },
+    { id: "w27", labelKey: "twrR27", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.00011, starBeats: [30, 38, 40] },
+    { id: "w28", labelKey: "twrR28", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.00008, starBeats: [31, 38, 40] },
+    { id: "w29", labelKey: "twrR29", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.00005, starBeats: [32, 39, 40] },
+    { id: "w30", labelKey: "twrR30", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.00002, starBeats: [33, 39, 40] },
   ];
 
   /* --- pure core, exported for the checks -------------------------- */
@@ -1129,6 +1147,28 @@
       "twrDuoStale": "裁判在第 {n} 拍判了平局——双人对局不计段位星级。", "twrRankNext": "已解锁「{label}」——在上面选它。",
       "twrLadderDone": "十个段位全部通关——这块擂台归你了。", "twrLog": "用 {n} 拍把{name}推出擂台",
       "twrHint": "绕退能让对方的抓把扑空——可边线之后再退一步，就是擂台外了。",
+    },
+  });
+
+  /* The summit tier carries its own names: addStrings only fills keys
+   * i18n.js does not already hold, so the shared dictionary stays
+   * authoritative and the picker never prints a raw key. */
+  App.addStrings({
+    en: {
+      "twrR25": "The Steady Eye",
+      "twrR26": "Mirror Step",
+      "twrR27": "The Silent Lock",
+      "twrR28": "No Hesitation",
+      "twrR29": "The Perfect Read",
+      "twrR30": "The Living Mirror",
+    },
+    zh: {
+      "twrR25": "\u6C89\u9759\u4E4B\u773C",
+      "twrR26": "\u955C\u50CF\u6B65\u6CD5",
+      "twrR27": "\u65E0\u58F0\u9501\u6280",
+      "twrR28": "\u6BEB\u4E0D\u8FDF\u7591",
+      "twrR29": "\u6D1E\u82E5\u89C2\u706B",
+      "twrR30": "\u5FC3\u5982\u660E\u955C",
     },
   });
 

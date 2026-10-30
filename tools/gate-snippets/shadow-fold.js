@@ -1,29 +1,34 @@
 "use strict";
 
 /* game-shadow-fold: the whole ladder replays the forge's seeded deals, and the
- * summit tier is the hard tier
+ * two summit tiers are held to their own design briefs
  *
  * The forge (tools/fold-forge.js) transcribes the panel's own mirror
  * arithmetic (shfPositions / shfUnit / shfTargetSolvable / shfDeal) and asks
  * three questions of a sheet: the seeded deals all solve and none falls
  * through to the authored reserve, every intended crease is provably needed,
  * and the reserve itself is clean. This gate re-judges the whole shipped
- * ladder through that checker, then holds the summit tier to its design
- * brief: the shipped paper with more creases and more stamps asked than the
- * shipped ceiling, star bands that hang off the creases the forge measured
- * and cut where the module's own scorer says they do, the module's own deal
- * path dealing solvable sheets live, names that resolve in both languages,
- * and an unlock chain that still walks one rung per sheet at twenty-four. */
+ * ladder through that checker, then separates the ladder into three tiers:
+ * the calibration rows stay at nine-cell paper, six creases and six stamps;
+ * the wide tier holds that paper and raises both ceilings; the deep tier
+ * widens the paper to ten and eleven cells, asks for up to ten stamps, keeps
+ * its keep-clear blocks whole (every avoid cell's full orbit is inside the
+ * block, so the dealer removes real stamp choices rather than singletons),
+ * and ships the only eight-crease sheet in the drawer. The deepest deals are
+ * measured through the module's own dealer and must reach further than any
+ * nine-cell sheet's. Star bands, both languages and the unlock chain are
+ * checked last. */
 module.exports = function gate(ctx) {
   const { App, check, path, root } = ctx;
   const foldForge = require(path.join(root, "tools", "fold-forge.js"));
   const shfSheets = App.foldSheets;
+  const shfKeyOf = (cell) => cell.x + "," + cell.y;
 
-  check("game-shadow-fold", "the ladder holds twenty-four sheets",
-    shfSheets.length === 24, String(shfSheets.length));
+  check("game-shadow-fold", "the ladder holds thirty sheets",
+    shfSheets.length === 30, String(shfSheets.length));
   check("game-shadow-fold", "every sheet id is distinct",
     new Set(shfSheets.map((sheet) => sheet.id)).size === shfSheets.length);
-  check("game-shadow-fold", "the ids run f1 through f24 in order",
+  check("game-shadow-fold", "the ids run f1 through f30 in order",
     shfSheets.every((sheet, index) => sheet.id === "f" + (index + 1)),
     shfSheets.map((sheet) => sheet.id).join(","));
 
@@ -43,8 +48,8 @@ module.exports = function gate(ctx) {
     try { return fn(); } finally { Math.random = real; }
   };
 
-  /* The three questions, re-run over the whole ladder - the shipped twenty
-   * included, so the summit tier cannot ship with a quietly broken elder. */
+  /* The three questions, re-run over the whole ladder - the shipped rows
+   * included, so the summit tiers cannot ship with a quietly broken elder. */
   shfSeeded(41027, () => {
     shfSheets.forEach((sheet) => {
       const report = foldForge.checkSheet(sheet, 12);
@@ -53,23 +58,72 @@ module.exports = function gate(ctx) {
     });
   });
 
-  /* The tier rows all exist, and the tier is the hard tier in the ladder's
-   * own terms: the shipped calibration is nine-cell paper with at most six
-   * creases and six stamps, and the summit holds that paper while raising
-   * both ceilings, with one rung maxing them together. */
-  const shfTierIds = ["f21", "f22", "f23", "f24"];
-  const shfTier = shfSheets.filter((sheet) => shfTierIds.includes(sheet.id));
-  const shfShipped = shfSheets.filter((sheet) => !shfTierIds.includes(sheet.id));
-  check("game-shadow-fold", "the summit tier rows all exist", shfTier.length === 4,
-    shfTier.map((sheet) => sheet.id).join(","));
-  check("game-shadow-fold",
-    "the summit tier holds the shipped paper and maxes the crease and tray ceilings",
-    shfShipped.every((sheet) => sheet.side <= 9 && sheet.par <= 6 && sheet.wants <= 6) &&
-    shfTier.every((sheet) => sheet.side === 9 && sheet.par >= 6 && sheet.wants >= 6) &&
-    shfTier.some((sheet) => sheet.par === 7) &&
-    shfTier.some((sheet) => sheet.wants === 7) &&
-    shfTier.some((sheet) => sheet.par === 7 && sheet.wants === 7),
-    shfTier.map((sheet) => sheet.id + ":p" + sheet.par + "/w" + sheet.wants).join(" "));
+  const shfWideIds = ["f21", "f22", "f23", "f24"];
+  const shfDeepIds = ["f25", "f26", "f27", "f28", "f29", "f30"];
+  const shfWide = shfSheets.filter((sheet) => shfWideIds.includes(sheet.id));
+  const shfDeep = shfSheets.filter((sheet) => shfDeepIds.includes(sheet.id));
+  const shfCalibration = shfSheets.filter((sheet) =>
+    !shfWideIds.includes(sheet.id) && !shfDeepIds.includes(sheet.id));
+
+  /* Tier one: the calibration rows never leave nine-cell paper. Tier two:
+   * the wide tier holds that paper and raises both ceilings together. */
+  check("game-shadow-fold", "the calibration rows stay at nine-cell paper, six creases and six stamps",
+    shfCalibration.length === 20 &&
+    shfCalibration.every((sheet) => sheet.side <= 9 && sheet.par <= 6 && sheet.wants <= 6),
+    shfCalibration.filter((sheet) => sheet.side > 9 || sheet.par > 6 || sheet.wants > 6)
+      .map((sheet) => sheet.id).join(","));
+  check("game-shadow-fold", "the wide tier holds the shipped paper and maxes the crease and tray ceilings",
+    shfWide.length === 4 &&
+    shfWide.every((sheet) => sheet.side === 9 && sheet.par >= 6 && sheet.wants >= 6) &&
+    shfWide.some((sheet) => sheet.par === 7) &&
+    shfWide.some((sheet) => sheet.wants === 7) &&
+    shfWide.some((sheet) => sheet.par === 7 && sheet.wants === 7),
+    shfWide.map((sheet) => sheet.id + ":p" + sheet.par + "/w" + sheet.wants).join(" "));
+
+  /* Tier three: the deep tier widens the paper itself. Both new sides must
+   * appear, the ladder's largest tray (ten stamps) lives here, and f30 is the
+   * only sheet in the drawer that asks for eight creases. */
+  check("game-shadow-fold", "the deep tier rows all exist and leave nine-cell paper",
+    shfDeep.length === 6 && shfDeep.every((sheet) => sheet.side >= 10),
+    shfDeep.map((sheet) => sheet.id + ":side" + sheet.side).join(" "));
+  check("game-shadow-fold", "the deep tier uses both ten- and eleven-cell paper",
+    shfDeep.some((sheet) => sheet.side === 10) && shfDeep.some((sheet) => sheet.side === 11),
+    shfDeep.map((sheet) => sheet.side).join(","));
+  const shfTrayMax = Math.max.apply(null, shfSheets.map((sheet) => sheet.wants));
+  check("game-shadow-fold", "the ladder's largest tray is ten stamps and it sits in the deep tier",
+    shfTrayMax === 10 && shfDeep.some((sheet) => sheet.wants === 10) &&
+    shfDeep.every((sheet) => sheet.wants >= 7),
+    shfDeep.map((sheet) => sheet.id + ":w" + sheet.wants).join(" "));
+  const shfEight = shfSheets.filter((sheet) => sheet.par >= 8).map((sheet) => sheet.id);
+  check("game-shadow-fold", "f30 is the only sheet in the drawer that asks for eight creases",
+    shfEight.length === 1 && shfEight[0] === "f30",
+    shfEight.join(","));
+
+  /* A keep-clear block has to remove whole orbits, not scattered cells: every
+   * cell in it must mirror only onto other cells in it, so the block is a
+   * real slice of the stamp region, and the pool it leaves still covers the
+   * tray. */
+  const shfOrbitClosed = (sheet) => {
+    const avoid = new Set(sheet.avoid || []);
+    if (!avoid.size) return false;
+    for (const key of avoid) {
+      const parts = key.split(",").map(Number);
+      const orbit = foldForge.shfPositions([{ x: parts[0], y: parts[1] }], sheet.intended, sheet.side);
+      if (!orbit.every((cell) => avoid.has(shfKeyOf(cell)))) return false;
+    }
+    return true;
+  };
+  check("game-shadow-fold", "every deep keep-clear block is orbit-closed",
+    shfDeep.every(shfOrbitClosed),
+    shfDeep.filter((sheet) => !shfOrbitClosed(sheet)).map((sheet) => sheet.id).join(","));
+  const shfPool = (sheet) => {
+    const avoid = new Set(sheet.avoid || []);
+    return foldForge.shfUnit(sheet.intended, sheet.side)
+      .filter((cell) => !avoid.has(shfKeyOf(cell))).length;
+  };
+  check("game-shadow-fold", "every deep sheet still has at least its tray in the stamp pool",
+    shfDeep.every((sheet) => shfPool(sheet) >= sheet.wants),
+    shfDeep.map((sheet) => sheet.id + ":" + shfPool(sheet) + "/" + sheet.wants).join(" "));
 
   /* Band monotonicity in the module's convention: the bands are
    * [par, par + 1, par + 2] against a "low is better" scorer, so the par the
@@ -90,11 +144,14 @@ module.exports = function gate(ctx) {
   /* The module's own deal path, driven live with Math.random stubbed the way
    * the other engine benches stub it: every deal carries the full tray, the
    * tray cannot cover the target flat, the stamps all sit in the orbit
-   * region, and the module's own solvability check signs the deal. */
-  const shfKeyOf = (cell) => cell.x + "," + cell.y;
-  shfTier.forEach((sheet) => {
+   * region, and the module's own solvability check signs the deal. The deal
+   * sizes are recorded, because the deep paper's whole point is that it holds
+   * targets no nine-cell sheet can. */
+  const shfTargetMax = {};
+  shfSheets.forEach((sheet) => {
     const unitKeys = new Set(
       foldForge.shfUnit(sheet.intended, sheet.side).map((cell) => shfKeyOf(cell)));
+    shfTargetMax[sheet.id] = 0;
     for (let seed = 1; seed <= 8; seed += 1) {
       const deal = shfSeeded(seed * 104729 + sheet.wants, () => App.foldDeal(sheet));
       const good = !!deal &&
@@ -103,17 +160,28 @@ module.exports = function gate(ctx) {
         deal.budget === deal.stamps.length + 1 &&
         deal.target.length > deal.budget &&
         App.foldTargetSolvable(deal.target, sheet.intended, sheet.side).ok;
+      if (deal) shfTargetMax[sheet.id] = Math.max(shfTargetMax[sheet.id], deal.target.length);
       check("game-shadow-fold",
         `${sheet.id}: the module's own deal path deals a solvable sheet (seed ${seed})`,
         good, JSON.stringify(deal && { n: deal.stamps.length, t: deal.target.length }));
     }
   });
+  const shfDeepMax = Math.max.apply(null, shfDeep.map((sheet) => shfTargetMax[sheet.id]));
+  const shfLowerMax = Math.max.apply(null, shfCalibration.concat(shfWide)
+    .map((sheet) => shfTargetMax[sheet.id]));
+  check("game-shadow-fold", "the deep paper deals targets beyond any nine-cell sheet",
+    shfDeepMax > shfLowerMax,
+    "deep " + shfDeepMax + " vs nine-cell " + shfLowerMax);
+  check("game-shadow-fold", "f30's deals are the largest on the ladder",
+    shfTargetMax.f30 === Math.max.apply(null, Object.values(shfTargetMax)),
+    "f30 " + shfTargetMax.f30 + " of " +
+      JSON.stringify(shfDeep.map((sheet) => sheet.id + ":" + shfTargetMax[sheet.id])));
 
   /* The summit sheet names travel with the module: both languages hold a
-   * real string for every new sheet (shfS21-shfS24 from the module's own
+   * real string for every summit sheet (shfS21-shfS30 from the module's own
    * addStrings), and t() never falls back to the key. */
   check("game-shadow-fold", "the summit sheet names resolve in both languages",
-    shfTierIds.every((id) => {
+    shfWideIds.concat(shfDeepIds).every((id) => {
       const key = "shfS" + id.slice(1);
       const en = App.I18N && App.I18N.en ? App.I18N.en[key] : null;
       const zh = App.I18N && App.I18N.zh ? App.I18N.zh[key] : null;
@@ -122,7 +190,7 @@ module.exports = function gate(ctx) {
 
   /* The unlock chain is derived, never stored, so it scales with the ladder:
    * clearing each sheet in order must hand the player exactly the next one,
-   * all twenty-four times, with nothing left locked behind the last. */
+   * all thirty times, with nothing left locked behind the last. */
   const shfChain = App.createCampaign({
     key: "shadow-fold-gate-chain",
     levels: shfSheets.map((sheet) => ({ id: sheet.id, labelKey: sheet.labelKey })),
@@ -135,7 +203,7 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < shfSheets.length ? shfSheets[index + 1].id : null;
     if (outcome.unlockedNext !== expected) shfChained = false;
   });
-  check("game-shadow-fold", "the unlock chain walks all twenty-four sheets in order",
-    shfWalked === 24 && shfChained && shfChain.clearedCount() === 24,
+  check("game-shadow-fold", "the unlock chain walks all thirty sheets in order",
+    shfWalked === 30 && shfChained && shfChain.clearedCount() === 30,
     shfWalked + " first clears");
 };

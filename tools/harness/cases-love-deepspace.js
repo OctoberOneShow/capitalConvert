@@ -36,9 +36,15 @@ run("Love and Deepspace turn rules", () => {
   const initial = { energy: 72, trust: 56, resonance: 0, turn: 0, chain: 0, charge: 0, done: false };
   const guard = App.ldsMoves.find(move => move.id === "guard");
   const focus = App.ldsMoves.find(move => move.id === "focus");
+  const heart = App.ldsMoves.find(move => move.id === "heart");
   const recover = App.ldsMoves.find(move => move.id === "recover");
   const route = App.ldsRoutes[3];
   const encounter = { ideal: "guard", pressure: 10 };
+  /* The route sweep answers a real heart-ideal encounter. Guard is the
+   * weakest matched move: its five-turn chain banks only 113, under the
+   * summit's 116 and 120 rungs, while the heart chain banks 128 and clears
+   * every route inside the clock it ships with. */
+  const sweep = App.ldsEvents.find(event => event.ideal === "heart");
   const before = JSON.stringify(initial);
   const matched = App.ldsAdvance(initial, guard, App.ldsPartners[0], encounter, route);
   const missed = App.ldsAdvance(initial, focus, App.ldsPartners[0], encounter, route);
@@ -60,7 +66,7 @@ run("Love and Deepspace turn rules", () => {
     check("Love and Deepspace turn rules", partner.id + " has the correct charged skill", skill.turn === 1 && skill.charge === 0 && skill.gain.resonance === partner.skill.resonance);
     App.ldsRoutes.forEach(level => {
       let state = { ...initial };
-      while (!state.done) { state = App.ldsAdvance(state, guard, partner, encounter, level); }
+      while (!state.done) { state = App.ldsAdvance(state, heart, partner, sweep, level); }
       check("Love and Deepspace turn rules", partner.id + " can clear " + level.id + " with legal counters", state.outcome === "win" && state.energy > 0 && state.turn <= level.turns);
     });
   });

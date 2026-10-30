@@ -63,6 +63,41 @@
     { id: "s22", labelKey: "lvlNum22", rows: [7, 7, 7, 3], misere: false, starTurns: [4, 6, 11] },
     { id: "s23", labelKey: "lvlNum23", rows: [1, 2, 3, 5, 8], misere: true, starTurns: [4, 5, 5] },
     { id: "s24", labelKey: "lvlNum24", rows: [2, 3, 4, 5, 6, 7, 8], misere: false, starTurns: [6, 11, 17] },
+
+    /* Tables 25-30, the endgame study - the felt stops widening and the
+     * dawdle dies. Every rung below is a first-player win proven by the
+     * game's own perfect play, and the three-star line stays pinned where
+     * the whole ladder has kept it: at the engine's own line, so matching
+     * the table's play is still what a three-star win costs. The dial is
+     * the dawdle margin - the room between the engine's own line and the
+     * longest winning line - and it narrows rung over rung, measured by the
+     * game's own solver over every winning line: eleven of your turns on
+     * s24 (line 6, dawdle to 17), then nine, eight, six, five, two and one.
+     * By the last felt a dawdling win costs exactly one turn more than the
+     * line, on the six stair re-dealt under misere rules. The shapes sit
+     * one stone from losing, and the oracle proves those neighbours lose:
+     * make s28's threes match (six of them) and the table is a loss, make
+     * s29's twos eight even rows and it is a loss, stretch s30's stair to
+     * seven steps and the xor reads zero - a loss. All numbers below
+     * were measured through the game's own nimBestMove - the oracle, the
+     * fastest and longest winning lines and the shipped line:
+     *   s25 [2,3,4,6,7,8]    line 6, fastest 4, dawdle 15, margin 9
+     *   s26 [2,3,4,5,6,7]    line 5, fastest 4, dawdle 13, margin 8
+     *   s27 [1,2,3,4,6,8]    line 5, fastest 4, dawdle 11, margin 6
+     *   s28 [3,3,3,3,3,4]    line 4, fastest 3, dawdle 9,  margin 5
+     *   s29 [2,2,2,2,2,2,3]  line 5, fastest 4, dawdle 7,  margin 2
+     *   s30 [2,3,4,5,6,7] m  line 5, fastest 5, dawdle 6,  margin 1
+     * and the twins price the dial: the full staircase s24 grew the margin
+     * s25 misses by one step (11 against 9, same line), seven even twos
+     * dawdle to the same 7 as s29 but from a line one turn shorter (4
+     * against 5), and the six stair's own margin falls from 8 to 1 the
+     * moment the misere rule comes on. */
+    { id: "s25", labelKey: "nimL25", rows: [2, 3, 4, 6, 7, 8], misere: false, starTurns: [6, 10, 15] },
+    { id: "s26", labelKey: "nimL26", rows: [2, 3, 4, 5, 6, 7], misere: false, starTurns: [5, 9, 13] },
+    { id: "s27", labelKey: "nimL27", rows: [1, 2, 3, 4, 6, 8], misere: false, starTurns: [5, 8, 11] },
+    { id: "s28", labelKey: "nimL28", rows: [3, 3, 3, 3, 3, 4], misere: false, starTurns: [4, 6, 9] },
+    { id: "s29", labelKey: "nimL29", rows: [2, 2, 2, 2, 2, 2, 3], misere: false, starTurns: [5, 6, 7] },
+    { id: "s30", labelKey: "nimL30", rows: [2, 3, 4, 5, 6, 7], misere: true, starTurns: [5, 6, 6] },
   ];
 
   function nimTotal(rows) {
@@ -257,7 +292,7 @@
       if (outcome.unlockedNext) {
         message += " " + t("nimNextTable");
       } else if (campaign.clearedCount() === nimLevels.length) {
-        message += " " + t("nimCampaignDone");
+        message += " " + t("nimCampaignDone", { n: nimLevels.length });
       }
       resultEl.textContent = message;
       logAction(t("logNim", { n: turns }));
@@ -318,6 +353,30 @@
     loadLevel(nimLevels[campaign.indexOf(campaign.nextLevelId())]);
   }
 
+
+  /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
+   * does not already own, so the shared dictionary stays authoritative. The
+   * first twelve tables carry the fire names the shared dictionary holds;
+   * the study tables rode the shared numbered shelf - and the endgame
+   * returns to the fire's remains, down to the last stair. */
+  App.addStrings({
+    en: {
+      "nimL25": "Char Steps",
+      "nimL26": "Smoke Ladder",
+      "nimL27": "The Split Stair",
+      "nimL28": "Matched Coals",
+      "nimL29": "Driftwood",
+      "nimL30": "The Last Stair",
+    },
+    zh: {
+      "nimL25": "炭阶",
+      "nimL26": "烟梯",
+      "nimL27": "断阶",
+      "nimL28": "齐炭",
+      "nimL29": "浮柴",
+      "nimL30": "末阶",
+    },
+  });
 
   /* Exported for the other modules. */
   App.nimBestMove = nimBestMove;

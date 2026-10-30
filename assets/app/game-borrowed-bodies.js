@@ -466,9 +466,9 @@
     /* b24 - The long push through water. The finale keeps the crate and makes
      * the cell it must be shoved into water, so the crab can clear the lane but
      * cannot finish the crossing: the push has to be handed to the eel mid-lane
-     * and back to the crab again. Measured par 111 - the longest room in the
-     * campaign by a wide margin (the shipped summit is 59) - and without the
-     * crate the same map is a 25-move walk. */
+     * and back to the crab again. Measured par 111, the longest room of the
+     * first twenty-four (the shipped summit is 59) - and without the crate the
+     * same map is a 25-move walk. */
     {
       id: "b24",
       labelKey: "brbR24",
@@ -478,6 +478,103 @@
         "####.##.C#",
         "#.~BM##~.#",
         "#X_~^___.#",
+        "##########",
+      ],
+      mind: "C",
+    },
+    /* b25-b30 - the summit, and its dial is the road code. The walk to the
+     * flag is rebuilt rung by rung out of terrain only one body can cross,
+     * while the crate stays load-bearing throughout. Every number below is
+     * re-measured by the release gate through the module's own prover, which
+     * is breadth-first over brbApply and deterministic - there are no seeds
+     * to pin. The pars open above b24's 111 and climb strictly (112, 113,
+     * 114, 115, 116, 120), and b30 ends the ladder as its longest room.
+     * Cutting the crates out of any summit map drops it to a quarter of par
+     * or less (24, 25, 10, 11, 10, 10), and cutting any one terrain kind out
+     * shortens the walk (measured cut pars b25-b30: perch 24/53/52/53/90/90,
+     * water 10/73/72/73/42/42, chasm 8/27/26/27/62/64). The moth can never
+     * open a summit room from its own start, and in b29 and b30 the eel
+     * cannot either - only the crab's whole opening sequence fits. b25
+     * doubles the crates, walls the top road and perches the bottom road;
+     * b26 walls the crossing at the flag's door, forcing the finish through
+     * the wet pocket; b27 parks the crate on the wet road itself; b28 adds
+     * the mid-road perch; b29 floods the road's end and hangs the new link
+     * column over chasm; b30 recodes that link perch-only for the longest
+     * dance in the campaign. */
+    {
+      id: "b25",
+      labelKey: "brbR25",
+      map: [
+        "##########",
+        "#_#..~E._#",
+        "#B^#.##C.#",
+        "#.~BM##~^#",
+        "#X_~^^__^#",
+        "##########",
+      ],
+      mind: "C",
+    },
+    {
+      id: "b26",
+      labelKey: "brbR26",
+      map: [
+        "##########",
+        "#__..~E._#",
+        "####.##.C#",
+        "#.~BM##~.#",
+        "#X_#^__^.#",
+        "##########",
+      ],
+      mind: "C",
+    },
+    {
+      id: "b27",
+      labelKey: "brbR27",
+      map: [
+        "##########",
+        "#__..~E._#",
+        "####.##C.#",
+        "#.~BM##~^#",
+        "#X_B^___.#",
+        "##########",
+      ],
+      mind: "C",
+    },
+    {
+      id: "b28",
+      labelKey: "brbR28",
+      map: [
+        "##########",
+        "#__..~E._#",
+        "####.##.C#",
+        "#.~BM##~^#",
+        "#X_B^_^_.#",
+        "##########",
+      ],
+      mind: "C",
+    },
+    {
+      id: "b29",
+      labelKey: "brbR29",
+      map: [
+        "##########",
+        "#__..~E~_#",
+        "####.#_C.#",
+        "#.~BM##~^#",
+        "#X_B^___~#",
+        "##########",
+      ],
+      mind: "C",
+    },
+    {
+      id: "b30",
+      labelKey: "brbR30",
+      map: [
+        "##########",
+        "#__..~E~_#",
+        "####.#^C.#",
+        "#.~BM##~^#",
+        "#X_B^___~#",
         "##########",
       ],
       mind: "C",
@@ -1575,6 +1672,12 @@
       "brbR22": "Water in the Crossing",
       "brbR23": "A Crate on the Perch Lane",
       "brbR24": "The Long Push Through Water",
+      "brbR25": "The Perch Toll",
+      "brbR26": "The Walled Crossing",
+      "brbR27": "A Crate on the Wet Road",
+      "brbR28": "The Mid-Road Perch",
+      "brbR29": "The Crab's Door",
+      "brbR30": "The Last Crossing",
       "brbTerrain.": "floor",
       "brbTerrain#": "wall",
       "brbTerrain_": "chasm",
@@ -1622,7 +1725,7 @@
       "brbWon": "Out in {n} moves (par {par}) - {s} stars.",
       "brbNextRoom": "Next room unlocked.",
       "brbAllRooms": "Every room walked out.",
-      "brbHint": "Bodies stay where you leave them, so park one where you will need it later.",
+      "brbHint": "Bodies stay where you leave them, so park one where you will need it later. Summit: rooms 25-30 recode the road to the flag rung by rung - the moth can never open any of them, and in the last two not even the eel can, so the crab's whole opening dance has to land before anything moves.",
       "logBorrowedBodies": "Walked out of a room in {n} moves",
     },
     zh: {
@@ -1654,6 +1757,12 @@
       "brbR22": "过道里的水",
       "brbR23": "栖木道上的木箱",
       "brbR24": "长推到水里",
+      "brbR25": "高台当道",
+      "brbR26": "砌死的过道",
+      "brbR27": "湿路上的木箱",
+      "brbR28": "路心的高台",
+      "brbR29": "只有蟹能开的门",
+      "brbR30": "最后的渡口",
       "brbTerrain.": "地面",
       "brbTerrain#": "墙",
       "brbTerrain_": "裂口",
@@ -1701,7 +1810,7 @@
       "brbWon": "{n} 步走出去（标准 {par}）——获得 {s} 星。",
       "brbNextRoom": "解锁下一间。",
       "brbAllRooms": "每一间都走完了。",
-      "brbHint": "身体会留在你放下它的地方，所以要提前把它停在以后用得上的位置。",
+      "brbHint": "身体会留在你放下它的地方，所以要提前把它停在以后用得上的位置。巅峰段：第 25-30 关把通往旗标的路逐关换上只有一种身体能过的地形——蛾永远开不了其中任何一关，最后两关连鳗也不行，只能靠蟹把开场的一整套舞步走完，路才通。",
       "logBorrowedBodies": "用 {n} 步走出了房间",
     },
   });

@@ -12,22 +12,39 @@
  * no faster win exists, in about a minute of honest arithmetic. Around it sit
  * the shape checks: every opening distinct, star bands derived from the par,
  * the deep pars past anything the shipped twenty measured, and copy that
- * resolves in both languages. */
+ * resolves in both languages.
+ *
+ * The summit o25-o30 is one geometry played six ways: the guarded-door
+ * economy o21 opened at par thirteen, re-dealt at par seventeen - nine mover
+ * moves, each proved real and minimal by the same exact search at depth
+ * seventeen. The gate re-proves all six pars from scratch on every run, so
+ * a tweaked wall or a re-hung law that opens a faster mate fails the build;
+ * bands are the par plus the standing slack of two and five; and the tier
+ * climbs past the deep tier's eight-move ceiling, crowned by o30, where the
+ * diagonal law is nailed to the banner itself and the fight runs on three
+ * laws. */
 module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const levels = App.ruleLevels;
   const deepIds = ["o21", "o22", "o23", "o24"];
+  const summitIds = ["o25", "o26", "o27", "o28", "o29", "o30"];
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
 
-  check("game-rule-thieves", "the ladder holds twenty-four openings",
-    levels.length === 24, String(levels.length));
+  check("game-rule-thieves", "the ladder holds thirty openings",
+    levels.length === 30, String(levels.length));
   check("game-rule-thieves", "every opening id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
   const missing = deepIds.filter((id) => !byId[id]);
   check("game-rule-thieves", "the deep tier o21-o24 is present",
     missing.length === 0, missing.join(","));
+  const summitMissing = summitIds.filter((id) => !byId[id]);
+  check("game-rule-thieves", "the summit tier o25-o30 is present in order",
+    summitMissing.length === 0 &&
+      summitIds.every((id, index) => levels.findIndex((level) => level.id === id) >
+        (index === 0 ? -1 : levels.findIndex((level) => level.id === summitIds[index - 1]))),
+    summitMissing.join(",") || "ordered");
   check("game-rule-thieves", "every opening is a different board",
     new Set(levels.map((level) => JSON.stringify([
       level.obj, level.walls, level.one, level.two, level.tok,
@@ -116,16 +133,52 @@ module.exports = function gate(ctx) {
     "every deep opening's forced win is real, minimal, and banded from it",
     deepProblems.length === 0, deepProblems.join(" | "));
 
+  /* The summit is mated the same way, nine moves deep: the exact search
+   * re-proves par seventeen and no faster win from scratch on every run. */
+  const summitProblems = [];
+  summitIds.forEach((id) => {
+    const level = byId[id];
+    const measured = exactPar(App.ruleSetup(level), 17);
+    if (measured <= 0) {
+      summitProblems.push(id + ": no forced win (measured " + measured + ")");
+      return;
+    }
+    const moves = Math.ceil(measured / 2);
+    if (measured !== moves * 2 - 1 || moves !== level.starMoves[0] ||
+      level.starMoves[1] !== moves + 2 || level.starMoves[2] !== moves + 5) {
+      summitProblems.push(id + ": par " + measured + " vs band " + level.starMoves.join("/"));
+    }
+  });
+  check("game-rule-thieves",
+    "every summit opening's forced win is real, minimal, and banded from it",
+    summitProblems.length === 0, summitProblems.join(" | "));
+
+  /* The crown hangs a law on the banner itself - o15's trick replayed on the
+   * guarded door - and it is the only summit rung that does. */
+  const crown = byId.o30;
+  const lawOnFlag = (level) => (level.tok || []).includes(level.obj);
+  check("game-rule-thieves",
+    "o30 nails a law to the banner, the only summit rung that does",
+    lawOnFlag(crown) && summitIds.filter((id) => lawOnFlag(byId[id])).length === 1,
+    "law-on-flag rungs: " + summitIds.filter((id) => lawOnFlag(byId[id])).join(","));
+
   /* The tier climbs past everything shipped, and the shipped bands keep the
    * same derived shape they always had. */
-  const shipped = levels.filter((level) => !deepIds.includes(level.id));
+  const shipped = levels.filter((level) =>
+    !deepIds.includes(level.id) && !summitIds.includes(level.id));
   const shippedMoves = shipped.map((level) => level.starMoves[0]);
   const deepMoves = deepIds.map((id) => byId[id].starMoves[0]);
+  const summitMoves = summitIds.map((id) => byId[id].starMoves[0]);
   check("game-rule-thieves",
     "the deep tier asks more moves than any shipped opening",
     Math.min.apply(null, deepMoves) > Math.max.apply(null, shippedMoves),
     "shipped max " + Math.max.apply(null, shippedMoves) + " vs deep " +
       deepIds.map((id) => byId[id].id.slice(1) + ":" + byId[id].starMoves[0]).join("/"));
+  check("game-rule-thieves",
+    "the summit asks more moves than the deep tier's ceiling",
+    Math.min.apply(null, summitMoves) > Math.max.apply(null, deepMoves),
+    "deep max " + Math.max.apply(null, deepMoves) + " vs summit " +
+      summitIds.map((id) => byId[id].id.slice(1) + ":" + byId[id].starMoves[0]).join("/"));
   /* "low" stars need thresholds[0] <= three-star moves <= two-star <= one-star,
    * so a band is a problem when it does not strictly rise (same shape as the
    * glyph-blocks gate). */
@@ -149,11 +202,12 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-rule-thieves", "the unlock chain walks all twenty-four openings in order",
-    walked === 24 && chained && chain.clearedCount() === 24, walked + " first clears");
+  check("game-rule-thieves", "the unlock chain walks all thirty openings in order",
+    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
 
   /* Copy travels with the module. */
-  const copyProblems = deepIds.reduce((acc, id) => {
+  const copyIds = deepIds.concat(summitIds);
+  const copyProblems = copyIds.reduce((acc, id) => {
     ["rltO" + id.slice(1), "rltTwist" + id.slice(1)].forEach((keyName) => {
       if (!(App.I18N && App.I18N.en && App.I18N.en[keyName]) ||
         !(App.I18N && App.I18N.zh && App.I18N.zh[keyName]) ||
@@ -161,6 +215,6 @@ module.exports = function gate(ctx) {
     });
     return acc;
   }, []);
-  check("game-rule-thieves", "the four opening names and twists resolve in both languages",
+  check("game-rule-thieves", "the ten deep and summit names and twists resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 };

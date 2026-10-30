@@ -64,6 +64,22 @@
     { id: "u22", labelKey: "lvlNum22", size: 10, bw: 2, bh: 5, clues: 31, seed: 128, starTimes: [4337, 6740, 10593] },
     { id: "u23", labelKey: "lvlNum23", size: 10, bw: 5, bh: 2, clues: 31, seed: 5, starTimes: [5204, 8088, 12712] },
     { id: "u24", labelKey: "lvlNum24", size: 12, bw: 3, bh: 4, clues: 52, seed: 20, starTimes: [8847, 13747, 21609] },
+    /* Grids 25-30, the deep hall. The vault opened the 12x12 with its boxes
+     * three wide and four tall; these six turn that room every way it
+     * turns - boxes four wide (the hall transposed, then dug two deeper),
+     * boxes six tall, boxes six wide - and each shape is dug as deep as its
+     * geometry allows: the six-wide boxes surrender nothing past fifty
+     * givens, the floor every sweep of that shape bottoms out at. The
+     * capstone returns to the hall's own geometry and digs it four past the
+     * summit's depth. Every rung is sealed to a seed and deals the same
+     * proven grid on every visit, and the clock keeps the shipped 1.2x
+     * ramp, so the hardest room in the game is also the longest. */
+    { id: "u25", labelKey: "lvlNum25", size: 12, bw: 4, bh: 3, clues: 50, seed: 2, starTimes: [10616, 16496, 25931] },
+    { id: "u26", labelKey: "lvlNum26", size: 12, bw: 4, bh: 3, clues: 48, seed: 5, starTimes: [12739, 19795, 31117] },
+    { id: "u27", labelKey: "lvlNum27", size: 12, bw: 2, bh: 6, clues: 50, seed: 5, starTimes: [15287, 23754, 37340] },
+    { id: "u28", labelKey: "lvlNum28", size: 12, bw: 2, bh: 6, clues: 48, seed: 5, starTimes: [18344, 28505, 44808] },
+    { id: "u29", labelKey: "lvlNum29", size: 12, bw: 6, bh: 2, clues: 50, seed: 57, starTimes: [22013, 34206, 53770] },
+    { id: "u30", labelKey: "lvlNum30", size: 12, bw: 3, bh: 4, clues: 48, seed: 5, starTimes: [26416, 41047, 64524] },
   ];
 
   /* Pure generator + checker, exported for the static checks. */

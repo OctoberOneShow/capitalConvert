@@ -169,7 +169,39 @@
     { id: "f23", labelKey: "dfzE23", seed: 2323, start: 0, goal: 11, days: 8, spread: 1,
       cap: 4, food: 8, reach: 2, chill: 3, hazardWeights: [2, 3, 1, 2] },
     { id: "f24", labelKey: "dfzE24", seed: 2424, start: 0, goal: 11, days: 8, spread: 2,
-      cap: 5, food: 9, reach: 1, chill: 3, hazardWeights: [2, 2, 3, 3] }
+      cap: 5, food: 9, reach: 1, chill: 3, hazardWeights: [2, 2, 3, 3] },
+
+    /* ------------------------------------------------------------------
+     * The white-summit winters (f25-f30). The long winters had taken the
+     * dials to their shipped ceilings; the summit opens the dials the
+     * ladder had never turned. f25 deals the first chill-five sky of the
+     * drawer - a cold the words only just name - and asks the party to
+     * walk in it. f26 deals the first spread-three forecast, where the
+     * planner's own measured day-spread pushes the two-star line out to
+     * meet the deadline. f27 is the lean pantry: five rations under a
+     * cold-weighted sky, so the stove is not a comfort but the plan. f28
+     * walks home blind - the homeward leg with one readable card. f29
+     * hands the sledge a three-kilo pack, the smallest the drawer has
+     * ever shipped, into a cold sky the pack cannot answer - no coat
+     * fits in three kilos - so the road itself has to dodge the wind.
+     * f30 closes the range: the deep cold and the shifting sky together,
+     * every hazard on the board, a nine-day deadline over a five-day
+     * proof. Every expedition here, like every one above, ships only
+     * because the planner can walk it: the bands are measured at load
+     * time from the solver's own line, never authored by hand.
+     * ------------------------------------------------------------------ */
+    { id: "f25", labelKey: "dfzE25", seed: 2626, start: 0, goal: 11, days: 6, spread: 1,
+      cap: 5, food: 7, reach: 2, chill: 5, hazardWeights: [1, 4, 1, 1] },
+    { id: "f26", labelKey: "dfzE26", seed: 2727, start: 0, goal: 11, days: 8, spread: 3,
+      cap: 5, food: 5, reach: 2, chill: 3, hazardWeights: [1, 2, 2, 2] },
+    { id: "f27", labelKey: "dfzE27", seed: 2828, start: 0, goal: 11, days: 7, spread: 1,
+      cap: 6, food: 5, reach: 2, chill: 3, hazardWeights: [0, 3, 1, 2] },
+    { id: "f28", labelKey: "dfzE28", seed: 2929, start: 11, goal: 0, days: 7, spread: 1,
+      cap: 6, food: 8, reach: 1, chill: 4, hazardWeights: [2, 2, 1, 2] },
+    { id: "f29", labelKey: "dfzE29", seed: 2525, start: 0, goal: 8, days: 7, spread: 1,
+      cap: 3, food: 5, reach: 2, chill: 2, hazardWeights: [0, 3, 0, 1] },
+    { id: "f30", labelKey: "dfzE30", seed: 909, start: 0, goal: 11, days: 9, spread: 3,
+      cap: 5, food: 9, reach: 2, chill: 5, hazardWeights: [1, 2, 2, 3] }
   ];
 
   function mulberry32(seed) {
@@ -1116,7 +1148,7 @@
       if (outcome.unlockedNext) {
         message += " " + t("dfzNextExp");
       } else if (campaign.clearedCount() === dfzLevels.length) {
-        message += " " + t("dfzAllExps");
+        message += " " + t("dfzAllExps", { n: dfzLevels.length });
       }
       result.textContent = message;
       result.className = "game-result";
@@ -1345,7 +1377,7 @@
       "dfzLostFatigue": "Fatigue stayed maxed three days running, so the party had to halt on day {d}, {place}.",
       "dfzLostDays": "The {n}-day cap ran out on day {d}, {place}. The destination stayed out of reach.",
       "dfzNextExp": "Next expedition unlocked.",
-      "dfzAllExps": "All twenty-four expeditions crossed.",
+      "dfzAllExps": "All {n} expeditions crossed.",
       "dfzPrompt": "{name}: reach {place} within {d} days. Carry limit {cap} kg, {f} rations, warmth 10.",
       "logDeepFreeze": "Reached {place} in {n} days on the ice",
     },
@@ -1473,10 +1505,31 @@
       "dfzLostFatigue": "疲劳连续三天顶在极限，第 {d} 天，{place}，被迫停下。",
       "dfzLostDays": "{n} 天期限已到，第 {d} 天，{place}，目标点始终没露面。",
       "dfzNextExp": "解锁下一段远征。",
-      "dfzAllExps": "二十四段远征全部走完。",
+      "dfzAllExps": "{n} 段远征全部走完。",
       "dfzPrompt": "「{name}」：{d} 天内抵达{place}。限重 {cap} 公斤，起始口粮 {f} 份，体温 10。",
       "logDeepFreeze": "在冰原上走了 {n} 天抵达{place}",
     }
+  });
+
+  /* The summit carries its own names: addStrings only fills keys i18n.js
+   * does not already hold, so the picker never prints a raw key. */
+  App.addStrings({
+    en: {
+      "dfzE25": "The Merciless Sky",
+      "dfzE26": "The Shifting Sky",
+      "dfzE27": "The Lean Pantry",
+      "dfzE28": "The Blind Retreat",
+      "dfzE29": "The Ultralight Dash",
+      "dfzE30": "The White Silence",
+    },
+    zh: {
+      "dfzE25": "\u65e0\u60c5\u5bd2\u7a79",
+      "dfzE26": "\u4e09\u65e5\u53d8\u5929",
+      "dfzE27": "\u8282\u7cae\u8fdc\u5f81",
+      "dfzE28": "\u5f52\u9014\u65e0\u62a5",
+      "dfzE29": "\u8f7b\u88c5\u75be\u884c",
+      "dfzE30": "\u767d\u8272\u5bc2\u9759",
+    },
   });
 
   /* Measure every expedition's band from its own planner run at load time -

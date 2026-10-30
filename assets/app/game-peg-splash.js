@@ -72,6 +72,26 @@
     { id: "b22", labelKey: "lvlNum22", balls: 6, orange: 40, bucketSpeed: 500, wind: -60, starBands: [3, 2, 1], seed: 342 },
     { id: "b23", labelKey: "lvlNum23", balls: 6, orange: 40, bucketSpeed: 500, wind: 80, starBands: [3, 2, 1], seed: 337 },
     { id: "b24", labelKey: "lvlNum24", balls: 6, orange: 40, bucketSpeed: 500, wind: -100, starBands: [3, 2, 1], seed: 314 },
+    /* Boards 25-30, the summit tier: the narrow mouth. Everything the deep
+     * tier held fixed stays fixed - six balls, the 84-peg field, the bucket
+     * at five times its opening speed - and the gust keeps climbing twenty a
+     * rung, switching banks every rung the way b21-24 taught. The new lever
+     * is the one the flight law always named: the bucket's mouth. From b25
+     * every rung carries a bucketHalf, tightening from 22 to 12 - less than
+     * half the mouth the whole ladder learned on - so the refund that funded
+     * every three-star line gets scarce exactly while the drift gets worse:
+     * a catch has to be led twice through a slot a third as wide. b28 asks
+     * the most of the field (forty-four oranges) under the narrowest gust
+     * pair and pays out a two-ball three-star band, the only one on the
+     * ladder; b30 is the summit - the strongest gust of the campaign, the
+     * tightest mouth, and the same six balls. The bench that measured the
+     * rungs and the rim lives in tools/gate-snippets/peg-splash.js. */
+    { id: "b25", labelKey: "lvlNum25", balls: 6, orange: 40, bucketSpeed: 500, wind: 120, bucketHalf: 22, starBands: [3, 2, 1], seed: 331 },
+    { id: "b26", labelKey: "lvlNum26", balls: 6, orange: 42, bucketSpeed: 500, wind: -140, bucketHalf: 20, starBands: [3, 2, 1], seed: 347 },
+    { id: "b27", labelKey: "lvlNum27", balls: 6, orange: 42, bucketSpeed: 500, wind: 160, bucketHalf: 18, starBands: [3, 2, 1], seed: 349 },
+    { id: "b28", labelKey: "lvlNum28", balls: 6, orange: 44, bucketSpeed: 500, wind: -180, bucketHalf: 16, starBands: [2, 1, 0], seed: 353 },
+    { id: "b29", labelKey: "lvlNum29", balls: 6, orange: 42, bucketSpeed: 500, wind: 200, bucketHalf: 14, starBands: [3, 2, 1], seed: 333 },
+    { id: "b30", labelKey: "lvlNum30", balls: 6, orange: 44, bucketSpeed: 500, wind: -220, bucketHalf: 12, starBands: [3, 2, 1], seed: 335 },
   ];
 
   function mulberry32(seed) {
@@ -133,10 +153,11 @@
   }
 
   /* One integration step of the ball: the flight law the panel plays and
-   * the bench replays. Gravity pulls, the rung's crosswind (boards 21-24
-   * only - no shipped rung carries a wind) shoves, walls and pegs bounce,
-   * the first peg touched dies, and the bucket or the floor ends the
-   * flight. Returns what happened this step. */
+   * the bench replays. Gravity pulls, the rung's crosswind (boards 21 up -
+   * no rung before b21 carries a wind) shoves, walls and pegs bounce, the
+   * first peg touched dies, and the bucket or the floor ends the flight.
+   * The bucket's mouth is the rung's bucketHalf (26 until the summit tiers
+   * name something tighter). Returns what happened this step. */
   function pegStepBall(level, field, ball, phase, dt) {
     ball.vy += pegGravity * dt;
     if (level.wind) {
@@ -180,7 +201,7 @@
     if (
       ball.y > pegHeight - 16 &&
       ball.vy > 0 &&
-      Math.abs(ball.x - pegBucketX(phase)) < 26
+      Math.abs(ball.x - pegBucketX(phase)) < (level.bucketHalf || 26)
     ) {
       caught = true;
     } else if (ball.y > pegHeight + 12) {
@@ -440,14 +461,15 @@
         ctx.fill();
       }
       var bx = bucketX();
+      var mouth = level.bucketHalf || 26;
       ctx.fillStyle = caughtFlash > 0
         ? "rgba(163, 230, 53, " + (0.5 + caughtFlash * 0.5).toFixed(2) + ")"
         : "rgba(163, 230, 53, 0.55)";
       ctx.beginPath();
-      ctx.moveTo(bx - 26, pegHeight - 18);
-      ctx.lineTo(bx + 26, pegHeight - 18);
-      ctx.lineTo(bx + 18, pegHeight - 2);
-      ctx.lineTo(bx - 18, pegHeight - 2);
+      ctx.moveTo(bx - mouth, pegHeight - 18);
+      ctx.lineTo(bx + mouth, pegHeight - 18);
+      ctx.lineTo(bx + mouth - 8, pegHeight - 2);
+      ctx.lineTo(bx - mouth + 8, pegHeight - 2);
       ctx.closePath();
       ctx.fill();
       for (var p2 = 0; p2 < particles.length; p2 += 1) {

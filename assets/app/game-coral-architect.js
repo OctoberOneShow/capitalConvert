@@ -477,6 +477,70 @@
       stars: [174, 150, 125],
       offers: ["NNP", "PPP", "PNN", "NPN", "PPP", "NNP", "NPP", "NNP", "PNN", "NNP", "PXP", "SFP", "SPX", "PXP", "FSP", "SFP", "XXX", "SFP", "NNP", "PPP"],
     },
+    /* ------------------------------------------------------------------
+     * The summit tier (c25-c30). The masterwork had closed the shipped
+     * ladder at twenty turns; the summit opens the long reef - twenty-one
+     * to twenty-four turns, the longest runs the drawer ships - and gives
+     * every rung one draft law the earlier tiers never held for a whole
+     * deal: the narrowing tide starts full-spectrum and strips a species
+     * away every third of the run, the frozen bloom deals its nurseries
+     * only in the opening third so the colony is sealed while the run is
+     * still young, the tide
+     * pool pairs a sponge and an urchin in every single offer, the urchin
+     * rampart asks for a compulsory urchin park on every turn of the
+     * longest wall the drawer ships, the keel line swaps fan-led and
+     * pillar-led offers every turn, and the living cathedral puts a fan in
+     * every offer of a twenty-four-turn full-spectrum run. The bands are
+     * cut the shipped way - the three-star line IS the deal's own greedy
+     * line (App.reefGreedy), and the two- and one-star lines keep the
+     * shipped 0.86 / 0.72 ratios - while the draft's random spectrum
+     * (App.reefFair over six hundred orders) stays clear of the top band
+     * on every rung, so the summit cannot be cleared by a careless hand.
+     * Every offer carries a sponge or an urchin, the two tiles that plant
+     * anywhere, so no draft order can strand the player. */
+    /* ------------------------------------------------------------------ */
+    {
+      id: "c25",
+      labelKey: "corZ25",
+      turns: 21,
+      stars: [151, 130, 109],
+      offers: ["FPS", "SPN", "NPS", "SFN", "PNS", "FSP", "NFS", "PPS", "SPP", "PSS", "PPS", "SPS", "PPS", "SSP", "PPX", "PXP", "XPP", "PPS", "PPX", "PXP", "XPP"],
+    },
+    {
+      id: "c26",
+      labelKey: "corZ26",
+      turns: 21,
+      stars: [150, 129, 108],
+      offers: ["NSX", "SXN", "XSN", "NSX", "SXN", "XSN", "PPS", "SPP", "PPS", "SPP", "PPS", "SPX", "XPS", "SPP", "PPS", "XSP", "SPP", "XPS", "PPS", "SPP", "SPX"],
+    },
+    {
+      id: "c27",
+      labelKey: "corZ27",
+      turns: 22,
+      stars: [148, 127, 107],
+      offers: ["FSX", "XSP", "SXN", "XSF", "PSX", "SXF", "NSX", "XSP", "FSX", "SXN", "PSX", "XSF", "SXP", "FXS", "NXS", "XSP", "SXF", "PSX", "FXS", "NXS", "XSP", "SXN"],
+    },
+    {
+      id: "c28",
+      labelKey: "corZ28",
+      turns: 23,
+      stars: [186, 160, 134],
+      offers: ["PPX", "XPP", "PXP", "PPX", "XPP", "PXP", "PPX", "XPP", "PXP", "PPX", "XPP", "PXP", "PPX", "XPP", "PXP", "PPX", "XPP", "PXP", "PPX", "XPP", "PXP", "PPX", "XPP"],
+    },
+    {
+      id: "c29",
+      labelKey: "corZ29",
+      turns: 23,
+      stars: [164, 141, 118],
+      offers: ["FPX", "XPX", "PFX", "XPF", "FPX", "XPX", "PFX", "XPF", "FPX", "XPX", "PFX", "XPF", "FPX", "XPX", "PFX", "XPF", "FPX", "XPX", "PFX", "XPF", "FPX", "XPX", "PFX"],
+    },
+    {
+      id: "c30",
+      labelKey: "corZ30",
+      turns: 24,
+      stars: [156, 134, 112],
+      offers: ["FNX", "PFX", "NXF", "FPX", "FNS", "XPF", "NFS", "PFX", "FNX", "FPS", "FXS", "XFS", "NFX", "PFS", "FNX", "FPS", "FXS", "XPF", "NFX", "PFS", "FNX", "FPS", "FXS", "XPF"],
+    },
   ];
 
   function initCoralArchitectGame(panelEl) {
@@ -1128,6 +1192,27 @@
       "corUnreachable": "{name} 现在到不了 {need} 分——找到的最好一条只拿到 {hit} 分。",
       "corHint": "种下去就不能挪，所以先读每张牌的水深带：海绵要身旁空着，柱珊瑚要挤在一起，育苗床必须贴着育苗床，海胆最好停在角落谁也挨不着。",
       "logCoralArchitect": "造出 {n} 分的珊瑚礁",
+    },
+  });
+
+  /* The summit carries its own names: addStrings only fills keys i18n.js
+   * does not already hold, so the picker never prints a raw key. */
+  App.addStrings({
+    en: {
+      "corZ25": "The Narrowing Tide",
+      "corZ26": "The Frozen Bloom",
+      "corZ27": "The Tide Pool",
+      "corZ28": "The Urchin Rampart",
+      "corZ29": "The Keel Line",
+      "corZ30": "The Living Cathedral",
+    },
+    zh: {
+      "corZ25": "\u6e10\u7a84\u4e4b\u6f6e",
+      "corZ26": "\u51bb\u7ed3\u82b1\u4e1b",
+      "corZ27": "\u6f6e\u6c60",
+      "corZ28": "\u6d77\u80c6\u58c1\u5792",
+      "corZ29": "\u9f99\u9aa8\u7ebf",
+      "corZ30": "\u6d3b\u73ca\u7460\u5723\u6bbf",
     },
   });
 

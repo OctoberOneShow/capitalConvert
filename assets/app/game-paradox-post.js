@@ -300,13 +300,16 @@
   }
 
   /* ------------------------------------------------------------------
-   * Authored content. One small building, twenty-four runs through it,
-   * dealt in the order the search measures. Rungs 1-20 teach the lying
-   * doors; rungs 21-24, the deep tier, teach the courier's own body:
-   * a map with a capacity gives the courier two hands, so the third
-   * parcel waits on the floor until a delivery frees one, and every
-   * one of those four buildings is proved harder than rung twenty by
-   * the same search that measures their pars.
+   * Authored content. One small building, thirty runs through it, dealt
+   * in the order the search measures. Rungs 1-20 teach the lying doors;
+   * rungs 21-24, the deep tier, teach the courier's own body: a map with
+   * a capacity gives the courier two hands, so the third parcel waits on
+   * the floor until a delivery frees one, and every one of those four
+   * buildings is proved harder than rung twenty by the same search that
+   * measures their pars. Rungs 25-30, the overnight tier, walk the last
+   * rounds of the night: wings the day shift left unlocked, deeper every
+   * rung, until the capstone measures twenty-five steps where the old
+   * summit did nineteen - all proved by the same shipped search.
    *
    * Raw door rows are [room, door, wall, from, to, at]: the doorway
    * called door stands in room on wall, and it only gives at all if you
@@ -1213,6 +1216,309 @@
         ["p2", "records", "bay", { en: "A tray of type", zh: "一盘铅字" }],
         ["p3", "cold", "attic", { en: "A sealed tea chest", zh: "封口的茶叶箱" }]
       ]
+    },
+    /* Overnight tier, rung 25 - the wing that answers the side: the day
+     * shift left the press room unlocked, but its door off the back
+     * corridor only gives to whoever came in from the cellar side, and
+     * the round opens at the attic, the far end from every pickup. Two
+     * hands carry two; the third rides the floor while the wing is
+     * walked twice. */
+    {
+      id: "m25",
+      name: { en: "The Press Wing", zh: "印刷翼楼" },
+      brief: { en: "The last day shift left a wing unlocked: the press-room door off the back corridor answers only the cellar side. The round opens at the attic, and two hands are still two hands.", zh: "白班走时忘锁了一间翼楼：后走廊的印刷间门只认从地下室那侧进来的路。这趟从阁楼开场，而手里仍然只拿得下两件。" },
+      hint: { en: "The wing opens from the cellar side only.", zh: "翼楼只认地下室那一侧。" },
+      rooms: ["shop", "hall", "mailroom", "records", "cold", "cellar", "corridor", "bay", "attic", "lift", "print"], start: "attic", at: "south", budget: 24, capacity: 2, order: [],
+      doors: [
+        ["shop", "dBell", "north", "any", "hall", "south"],
+        ["hall", "dBell", "south", "any", "shop", "north"],
+        ["hall", "dLift", "north", "any", "mailroom", "south"],
+        ["mailroom", "dLift", "south", "any", "hall", "north"],
+        ["mailroom", "dChute", "north", "any", "records", "south"],
+        ["records", "dChute", "south", "any", "mailroom", "north"],
+        ["records", "dDesk", "west", "any", "cold", "east"],
+        ["cold", "dDesk", "east", "any", "records", "west"],
+        ["cold", "dRun", "south", "any", "cellar", "north"],
+        ["cellar", "dRun", "north", "any", "cold", "south"],
+        ["cellar", "dHatch", "west", "any", "corridor", "east"],
+        ["corridor", "dHatch", "east", "any", "cellar", "west"],
+        ["corridor", "dStair", "north", "any", "attic", "south"],
+        ["attic", "dStair", "south", "any", "corridor", "north"],
+        ["attic", "dBalcony", "west", "any", "shop", "east"],
+        ["shop", "dBalcony", "east", "any", "attic", "west"],
+        ["shop", "dYard", "south", "any", "bay", "north"],
+        ["bay", "dYard", "north", "any", "shop", "south"],
+        ["bay", "dRamp", "east", "any", "hall", "west"],
+        ["hall", "dRamp", "west", "any", "bay", "east"],
+        ["corridor", "dStair2", "east", "any", "lift", "west"],
+        ["lift", "dStair2", "west", "any", "corridor", "east"],
+        ["hall", "dCross", "east", "south", "corridor", "west"],
+        ["corridor", "dCross", "west", "any", "hall", "east"],
+        ["hall", "dCross", "east", "north", "cold", "west"],
+        ["cold", "dCross", "west", "any", "hall", "east"],
+        ["hall", "dBalcony2", "east", "south", "lift", "east"],
+        ["lift", "dBalcony2", "east", "any", "hall", "south"],
+        ["corridor", "dPress", "north", "east", "print", "south"],
+        ["print", "dPress", "south", "any", "corridor", "north"]
+      ],
+      parcels: [
+        ["p1", "mailroom", "print", { en: "A roll of insurance forms", zh: "一卷保险单据" }],
+        ["p2", "cold", "bay", { en: "A crate of pie fillings", zh: "一箱苹果派馅" }],
+        ["p3", "records", "attic", { en: "A box of ledger paper", zh: "一箱账簿纸" }]
+      ]
+    },
+    {
+      /* Overnight tier, rungs 26-27 - the wing grows a second room: the
+       * stack alley behind the press answers nobody, but the press door
+       * still reads the side you came in on, and every trip to the far
+       * room now runs the wing twice. Rung 26 opens at the lift, rung 27
+       * at the attic, the worst seat in the building for these three. */
+      id: "m26",
+      name: { en: "Two Rooms Deep", zh: "翼楼有两间深" },
+      brief: { en: "The press wing grew a stack alley sometime last year. The far room answers nobody, the near door still reads the side, and the round opens at the lift - the whole building lies east of it.", zh: "印刷翼楼去年多出一间档架房。深处那间谁也不应，近处那扇门仍认边，这趟从电梯厅开场——整栋楼都在它东边。" },
+      hint: { en: "The far room is reached through the near one.", zh: "深处那间要穿过外面那间。" },
+      rooms: ["shop", "hall", "mailroom", "records", "cold", "cellar", "corridor", "bay", "attic", "lift", "print", "dark"], start: "lift", at: "west", budget: 25, capacity: 2, order: [],
+      doors: [
+        ["shop", "dBell", "north", "any", "hall", "south"],
+        ["hall", "dBell", "south", "any", "shop", "north"],
+        ["hall", "dLift", "north", "any", "mailroom", "south"],
+        ["mailroom", "dLift", "south", "any", "hall", "north"],
+        ["mailroom", "dChute", "north", "any", "records", "south"],
+        ["records", "dChute", "south", "any", "mailroom", "north"],
+        ["records", "dDesk", "west", "any", "cold", "east"],
+        ["cold", "dDesk", "east", "any", "records", "west"],
+        ["cold", "dRun", "south", "any", "cellar", "north"],
+        ["cellar", "dRun", "north", "any", "cold", "south"],
+        ["cellar", "dHatch", "west", "any", "corridor", "east"],
+        ["corridor", "dHatch", "east", "any", "cellar", "west"],
+        ["corridor", "dStair", "north", "any", "attic", "south"],
+        ["attic", "dStair", "south", "any", "corridor", "north"],
+        ["attic", "dBalcony", "west", "any", "shop", "east"],
+        ["shop", "dBalcony", "east", "any", "attic", "west"],
+        ["shop", "dYard", "south", "any", "bay", "north"],
+        ["bay", "dYard", "north", "any", "shop", "south"],
+        ["bay", "dRamp", "east", "any", "hall", "west"],
+        ["hall", "dRamp", "west", "any", "bay", "east"],
+        ["corridor", "dStair2", "east", "any", "lift", "west"],
+        ["lift", "dStair2", "west", "any", "corridor", "east"],
+        ["hall", "dCross", "east", "south", "corridor", "west"],
+        ["corridor", "dCross", "west", "any", "hall", "east"],
+        ["hall", "dCross", "east", "north", "cold", "west"],
+        ["cold", "dCross", "west", "any", "hall", "east"],
+        ["hall", "dBalcony2", "east", "south", "lift", "east"],
+        ["lift", "dBalcony2", "east", "any", "hall", "south"],
+        ["corridor", "dPress", "north", "east", "print", "south"],
+        ["print", "dPress", "south", "any", "corridor", "north"],
+        ["print", "dStack", "north", "any", "dark", "south"],
+        ["dark", "dStack", "south", "any", "print", "north"]
+      ],
+      parcels: [
+        ["p1", "mailroom", "dark", { en: "A canister of film", zh: "一筒胶片" }],
+        ["p2", "cellar", "bay", { en: "A bucket of glazier's putty", zh: "一桶玻璃腻子" }],
+        ["p3", "cold", "attic", { en: "A crate of soda", zh: "一箱汽水" }]
+      ]
+    },
+    {
+      id: "m27",
+      name: { en: "Deep Wing, Long Walk", zh: "深翼长路" },
+      brief: { en: "Same building, worse start: the round opens at the attic, the deep wing still only answers the cellar side, and the third parcel learns the whole building twice.", zh: "同一栋楼，更差的起点：这趟从阁楼开场，深翼仍只认地下室那侧，第三件包裹得把整栋楼学两遍。" },
+      hint: { en: "Plan the floor parcel before the first knock.", zh: "敲第一下之前，先想好哪件在地上等。" },
+      rooms: ["shop", "hall", "mailroom", "records", "cold", "cellar", "corridor", "bay", "attic", "lift", "print", "dark"], start: "attic", at: "south", budget: 26, capacity: 2, order: [],
+      doors: [
+        ["shop", "dBell", "north", "any", "hall", "south"],
+        ["hall", "dBell", "south", "any", "shop", "north"],
+        ["hall", "dLift", "north", "any", "mailroom", "south"],
+        ["mailroom", "dLift", "south", "any", "hall", "north"],
+        ["mailroom", "dChute", "north", "any", "records", "south"],
+        ["records", "dChute", "south", "any", "mailroom", "north"],
+        ["records", "dDesk", "west", "any", "cold", "east"],
+        ["cold", "dDesk", "east", "any", "records", "west"],
+        ["cold", "dRun", "south", "any", "cellar", "north"],
+        ["cellar", "dRun", "north", "any", "cold", "south"],
+        ["cellar", "dHatch", "west", "any", "corridor", "east"],
+        ["corridor", "dHatch", "east", "any", "cellar", "west"],
+        ["corridor", "dStair", "north", "any", "attic", "south"],
+        ["attic", "dStair", "south", "any", "corridor", "north"],
+        ["attic", "dBalcony", "west", "any", "shop", "east"],
+        ["shop", "dBalcony", "east", "any", "attic", "west"],
+        ["shop", "dYard", "south", "any", "bay", "north"],
+        ["bay", "dYard", "north", "any", "shop", "south"],
+        ["bay", "dRamp", "east", "any", "hall", "west"],
+        ["hall", "dRamp", "west", "any", "bay", "east"],
+        ["corridor", "dStair2", "east", "any", "lift", "west"],
+        ["lift", "dStair2", "west", "any", "corridor", "east"],
+        ["hall", "dCross", "east", "south", "corridor", "west"],
+        ["corridor", "dCross", "west", "any", "hall", "east"],
+        ["hall", "dCross", "east", "north", "cold", "west"],
+        ["cold", "dCross", "west", "any", "hall", "east"],
+        ["hall", "dBalcony2", "east", "south", "lift", "east"],
+        ["lift", "dBalcony2", "east", "any", "hall", "south"],
+        ["corridor", "dPress", "north", "east", "print", "south"],
+        ["print", "dPress", "south", "any", "corridor", "north"],
+        ["print", "dStack", "north", "any", "dark", "south"],
+        ["dark", "dStack", "south", "any", "print", "north"]
+      ],
+      parcels: [
+        ["p1", "mailroom", "dark", { en: "A canister of film", zh: "一筒胶片" }],
+        ["p2", "cold", "bay", { en: "A crate of pie fillings", zh: "一箱苹果派馅" }],
+        ["p3", "records", "attic", { en: "A box of ledger paper", zh: "一箱账簿纸" }]
+      ]
+    },
+    {
+      /* Overnight tier, rungs 28-30 - the boiler answers: a second wing
+       * opens off the cellar's north side and the far rooms multiply, but
+       * the strand runs out - with two deep wings the courier can always
+       * interleave, so the last three nights are the length exam: the
+       * longest proved rounds the ladder deals, where the old summit did
+       * its nineteen steps and these take twenty-three, twenty-four and
+       * twenty-five. */
+      id: "m28",
+      name: { en: "The Boiler Answers", zh: "锅炉房也应声" },
+      brief: { en: "A second wing joins the night: the boiler room opens only from the cellar's north side, and the last parcel of the evening is addressed to the attic above all of it.", zh: "今夜多出一间翼楼：锅炉房只从地下室北侧开门，而今晚最后一件包裹，收件地址在这一切之上的阁楼。" },
+      hint: { en: "The night has three far rooms now.", zh: "今夜有三间远房。" },
+      rooms: ["shop", "hall", "mailroom", "records", "cold", "cellar", "corridor", "bay", "attic", "lift", "print", "dark", "boiler"], start: "shop", at: "north", budget: 27, capacity: 2, order: [],
+      doors: [
+        ["shop", "dBell", "north", "any", "hall", "south"],
+        ["hall", "dBell", "south", "any", "shop", "north"],
+        ["hall", "dLift", "north", "any", "mailroom", "south"],
+        ["mailroom", "dLift", "south", "any", "hall", "north"],
+        ["mailroom", "dChute", "north", "any", "records", "south"],
+        ["records", "dChute", "south", "any", "mailroom", "north"],
+        ["records", "dDesk", "west", "any", "cold", "east"],
+        ["cold", "dDesk", "east", "any", "records", "west"],
+        ["cold", "dRun", "south", "any", "cellar", "north"],
+        ["cellar", "dRun", "north", "any", "cold", "south"],
+        ["cellar", "dHatch", "west", "any", "corridor", "east"],
+        ["corridor", "dHatch", "east", "any", "cellar", "west"],
+        ["corridor", "dStair", "north", "any", "attic", "south"],
+        ["attic", "dStair", "south", "any", "corridor", "north"],
+        ["attic", "dBalcony", "west", "any", "shop", "east"],
+        ["shop", "dBalcony", "east", "any", "attic", "west"],
+        ["shop", "dYard", "south", "any", "bay", "north"],
+        ["bay", "dYard", "north", "any", "shop", "south"],
+        ["bay", "dRamp", "east", "any", "hall", "west"],
+        ["hall", "dRamp", "west", "any", "bay", "east"],
+        ["corridor", "dStair2", "east", "any", "lift", "west"],
+        ["lift", "dStair2", "west", "any", "corridor", "east"],
+        ["hall", "dCross", "east", "south", "corridor", "west"],
+        ["corridor", "dCross", "west", "any", "hall", "east"],
+        ["hall", "dCross", "east", "north", "cold", "west"],
+        ["cold", "dCross", "west", "any", "hall", "east"],
+        ["hall", "dBalcony2", "east", "south", "lift", "east"],
+        ["lift", "dBalcony2", "east", "any", "hall", "south"],
+        ["corridor", "dPress", "north", "east", "print", "south"],
+        ["print", "dPress", "south", "any", "corridor", "north"],
+        ["print", "dStack", "north", "any", "dark", "south"],
+        ["dark", "dStack", "south", "any", "print", "north"],
+        ["cellar", "dBoiler", "east", "north", "boiler", "west"],
+        ["boiler", "dBoiler", "west", "any", "cellar", "east"]
+      ],
+      parcels: [
+        ["p1", "mailroom", "dark", { en: "A canister of film", zh: "一筒胶片" }],
+        ["p2", "cold", "bay", { en: "A crate of pie fillings", zh: "一箱苹果派馅" }],
+        ["p3", "boiler", "attic", { en: "A sealed case of valves", zh: "一箱封存的阀门" }]
+      ]
+    },
+    {
+      id: "m29",
+      name: { en: "Attic First", zh: "先上阁楼" },
+      brief: { en: "The round opens where it used to end - at the attic - and every far corner of the building wants walking before the night is done. Two hands, three parcels, one long tour.", zh: "这趟从过去收工的地方开场——阁楼——而夜里收工之前，楼里每一处远角都得走到。一双手，三件包裹，一圈长路。" },
+      hint: { en: "You end where you began, if the hands are planned.", zh: "手规划好，终点就是起点。" },
+      rooms: ["shop", "hall", "mailroom", "records", "cold", "cellar", "corridor", "bay", "attic", "lift", "print", "dark", "boiler"], start: "attic", at: "south", budget: 28, capacity: 2, order: [],
+      doors: [
+        ["shop", "dBell", "north", "any", "hall", "south"],
+        ["hall", "dBell", "south", "any", "shop", "north"],
+        ["hall", "dLift", "north", "any", "mailroom", "south"],
+        ["mailroom", "dLift", "south", "any", "hall", "north"],
+        ["mailroom", "dChute", "north", "any", "records", "south"],
+        ["records", "dChute", "south", "any", "mailroom", "north"],
+        ["records", "dDesk", "west", "any", "cold", "east"],
+        ["cold", "dDesk", "east", "any", "records", "west"],
+        ["cold", "dRun", "south", "any", "cellar", "north"],
+        ["cellar", "dRun", "north", "any", "cold", "south"],
+        ["cellar", "dHatch", "west", "any", "corridor", "east"],
+        ["corridor", "dHatch", "east", "any", "cellar", "west"],
+        ["corridor", "dStair", "north", "any", "attic", "south"],
+        ["attic", "dStair", "south", "any", "corridor", "north"],
+        ["attic", "dBalcony", "west", "any", "shop", "east"],
+        ["shop", "dBalcony", "east", "any", "attic", "west"],
+        ["shop", "dYard", "south", "any", "bay", "north"],
+        ["bay", "dYard", "north", "any", "shop", "south"],
+        ["bay", "dRamp", "east", "any", "hall", "west"],
+        ["hall", "dRamp", "west", "any", "bay", "east"],
+        ["corridor", "dStair2", "east", "any", "lift", "west"],
+        ["lift", "dStair2", "west", "any", "corridor", "east"],
+        ["hall", "dCross", "east", "south", "corridor", "west"],
+        ["corridor", "dCross", "west", "any", "hall", "east"],
+        ["hall", "dCross", "east", "north", "cold", "west"],
+        ["cold", "dCross", "west", "any", "hall", "east"],
+        ["hall", "dBalcony2", "east", "south", "lift", "east"],
+        ["lift", "dBalcony2", "east", "any", "hall", "south"],
+        ["corridor", "dPress", "north", "east", "print", "south"],
+        ["print", "dPress", "south", "any", "corridor", "north"],
+        ["print", "dStack", "north", "any", "dark", "south"],
+        ["dark", "dStack", "south", "any", "print", "north"],
+        ["cellar", "dBoiler", "east", "north", "boiler", "west"],
+        ["boiler", "dBoiler", "west", "any", "cellar", "east"]
+      ],
+      parcels: [
+        ["p1", "mailroom", "dark", { en: "A canister of film", zh: "一筒胶片" }],
+        ["p2", "cellar", "bay", { en: "A bucket of glazier's putty", zh: "一桶玻璃腻子" }],
+        ["p3", "boiler", "attic", { en: "A sealed case of valves", zh: "一箱封存的阀门" }]
+      ]
+    },
+    {
+      /* Overnight tier, rung 30, the capstone - the longest night: every
+       * far room wants a parcel, both wings answer conditions, the
+       * crossings still read the side you carried in, and the search
+       * measures twenty-five steps where the old summit did it in
+       * nineteen. The longest proved round the ladder has ever dealt. */
+      id: "m30",
+      name: { en: "The Longest Night", zh: "最长的一夜" },
+      brief: { en: "The capstone of the year: every far room wants a parcel, both wings answer conditions, the crossings still read the side you carried in, and the shift ends whenever the last one lands.", zh: "一年的收官之夜：每间远房都有包裹等着，两间翼楼都认条件，交叉门仍认你进来的那一边，最后一件落地，这一夜才算完。" },
+      hint: { en: "Three far corners, two hands.", zh: "三处远角，一双手。" },
+      rooms: ["shop", "hall", "mailroom", "records", "cold", "cellar", "corridor", "bay", "attic", "lift", "print", "dark", "boiler"], start: "shop", at: "north", budget: 29, capacity: 2, order: [],
+      doors: [
+        ["shop", "dBell", "north", "any", "hall", "south"],
+        ["hall", "dBell", "south", "any", "shop", "north"],
+        ["hall", "dLift", "north", "any", "mailroom", "south"],
+        ["mailroom", "dLift", "south", "any", "hall", "north"],
+        ["mailroom", "dChute", "north", "any", "records", "south"],
+        ["records", "dChute", "south", "any", "mailroom", "north"],
+        ["records", "dDesk", "west", "any", "cold", "east"],
+        ["cold", "dDesk", "east", "any", "records", "west"],
+        ["cold", "dRun", "south", "any", "cellar", "north"],
+        ["cellar", "dRun", "north", "any", "cold", "south"],
+        ["cellar", "dHatch", "west", "any", "corridor", "east"],
+        ["corridor", "dHatch", "east", "any", "cellar", "west"],
+        ["corridor", "dStair", "north", "any", "attic", "south"],
+        ["attic", "dStair", "south", "any", "corridor", "north"],
+        ["attic", "dBalcony", "west", "any", "shop", "east"],
+        ["shop", "dBalcony", "east", "any", "attic", "west"],
+        ["shop", "dYard", "south", "any", "bay", "north"],
+        ["bay", "dYard", "north", "any", "shop", "south"],
+        ["bay", "dRamp", "east", "any", "hall", "west"],
+        ["hall", "dRamp", "west", "any", "bay", "east"],
+        ["corridor", "dStair2", "east", "any", "lift", "west"],
+        ["lift", "dStair2", "west", "any", "corridor", "east"],
+        ["hall", "dCross", "east", "south", "corridor", "west"],
+        ["corridor", "dCross", "west", "any", "hall", "east"],
+        ["hall", "dCross", "east", "north", "cold", "west"],
+        ["cold", "dCross", "west", "any", "hall", "east"],
+        ["hall", "dBalcony2", "east", "south", "lift", "east"],
+        ["lift", "dBalcony2", "east", "any", "hall", "south"],
+        ["corridor", "dPress", "north", "east", "print", "south"],
+        ["print", "dPress", "south", "any", "corridor", "north"],
+        ["print", "dStack", "north", "any", "dark", "south"],
+        ["dark", "dStack", "south", "any", "print", "north"],
+        ["cellar", "dBoiler", "east", "north", "boiler", "west"],
+        ["boiler", "dBoiler", "west", "any", "cellar", "east"]
+      ],
+      parcels: [
+        ["p1", "mailroom", "dark", { en: "A canister of film", zh: "一筒胶片" }],
+        ["p2", "boiler", "shop", { en: "A sealed case of valves", zh: "一箱封存的阀门" }],
+        ["p3", "cold", "attic", { en: "A crate of soda", zh: "一箱汽水" }]
+      ]
     }
   ];
 
@@ -1935,6 +2241,7 @@
         "A wrong side costs one step, never the run; Step back (U) undoes a move three times a map.",
         "All parcels delivered ends the map; stars come from steps and the low band is measured.",
         "New tier: from map 21 the courier has only two hands - a third parcel waits on the floor until a delivery frees one.",
+        "The overnight tier: maps 25-30 are the last rounds of the night - unlocked wings that answer the side, deeper every rung, to the longest proved round of the ladder.",
       ],
       zh: [
         "在这栋楼里送一整轮包裹：一扇门值多少，取决于你敲的是哪一边。",
@@ -1944,6 +2251,7 @@
         "推错边只亏一步，不断送；退一步键每张图可以用三次。",
         "全部送到就算通关；星级看步数，最低那一档是算出来的。",
         "新层级：从第21张图起，邮差只有一双手——第三个包裹先在地上等，送掉一件腾出手再去拿。",
+        "夜班层级：第25到30张图是夜里最后一趟——忘锁的翼楼认边不认人，一张比一张深，直到全程最长的一趟。",
       ],
     },
   });

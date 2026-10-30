@@ -57,6 +57,36 @@
     { id: "c22", labelKey: "echoL22", goal: 31, stepMs: 135 },
     { id: "c23", labelKey: "echoL23", goal: 29, stepMs: 120, reverse: true },
     { id: "c24", labelKey: "echoL24", goal: 25, stepMs: 105, reverse: true, flashMs: 160 },
+    /* c25-c30 are the summit tier, and its identity is the pair: every
+     * summit chime is a backwards chime under a shortened glow, and the
+     * ladder climbs length and tempo together on top of c24's sprint. All
+     * numbers were re-measured through the real panel with the gate's
+     * scripted hands on the stub DOM's clock: a perfect-memory hand rings
+     * three stars on every rung, one and two deliberate slips land two
+     * and one, three end the chime, and a hand that stops one link short
+     * of the goal never clears. Measured effort - links per engaged
+     * second, shows and pauses included - climbs 6.3 -> 6.4 -> 6.9 -> 7.3
+     * -> 7.6 -> 8.0 across the tier against 6.1 for c24, and a winning
+     * echo taps 465 links on c25 and 820 on c30 against the 561 of c21.
+     * The backwards echo is load-bearing: relax `reverse` on the live
+     * chime and the same mirrored hand loses all three lives on the first
+     * non-palindromic chain (seeded deals, first killing seed per rung:
+     * c25 seed 1, c26 seed 1, c27 seed 1, c28 seed 1, c29 seed 1, c30
+     * seed 1). c25 opens with the longest backwards chain ever shipped -
+     * 30 links against c23's 29 - at a 160 ms glow; c26 stretches to 32
+     * and tightens the glow past c24's 160 ms; c27 is the first backwards
+     * chime under the 105 ms pace record at 100 ms a link; c28 and c29
+     * push the mirrored marathon to 36 and 38 links at 95 and 92 ms; and
+     * c30 closes the campaign with 40 links at 88 ms under a 135 ms glow,
+     * every clock on the card a campaign record. The glow never outruns
+     * the step by more than the 55 ms c24 already ships, so a summit
+     * chain still reads as a rolling wave, not a smear. */
+    { id: "c25", labelKey: "echoL25", goal: 30, stepMs: 110, reverse: true, flashMs: 160 },
+    { id: "c26", labelKey: "echoL26", goal: 32, stepMs: 110, reverse: true, flashMs: 155 },
+    { id: "c27", labelKey: "echoL27", goal: 34, stepMs: 100, reverse: true, flashMs: 150 },
+    { id: "c28", labelKey: "echoL28", goal: 36, stepMs: 95, reverse: true, flashMs: 145 },
+    { id: "c29", labelKey: "echoL29", goal: 38, stepMs: 92, reverse: true, flashMs: 140 },
+    { id: "c30", labelKey: "echoL30", goal: 40, stepMs: 88, reverse: true, flashMs: 135 },
   ];
 
   function initGlyphEchoGame() {
@@ -357,19 +387,32 @@
 
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already own, so the shared dictionary stays authoritative. The
-   * hard tier keeps the cosmic register the shared dictionary carries. */
+   * hard tier keeps the cosmic register the shared dictionary carries, and
+   * the summit names the mirrored sky it plays under. */
   App.addStrings({
     en: {
       "echoL21": "The Longest Night",
       "echoL22": "Swift Summit",
       "echoL23": "Mirror Labyrinth",
       "echoL24": "Prestissimo",
+      "echoL25": "The Inverted Sky",
+      "echoL26": "The Mirror Abyss",
+      "echoL27": "Comet Echo",
+      "echoL28": "The Eternal Eclipse",
+      "echoL29": "Starlight Reversed",
+      "echoL30": "The Last Reflection",
     },
     zh: {
       "echoL21": "漫漫长夜",
       "echoL22": "疾峰快板",
       "echoL23": "镜中迷宫",
       "echoL24": "最急板",
+      "echoL25": "倒悬星空",
+      "echoL26": "镜渊",
+      "echoL27": "彗星回声",
+      "echoL28": "永夜之蚀",
+      "echoL29": "星光倒流",
+      "echoL30": "终镜回响",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

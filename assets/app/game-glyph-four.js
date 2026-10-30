@@ -72,6 +72,27 @@
     { id: "f22", labelKey: "c4L22", depth: 16, tempo: 1, noise: 0.03, starMoves: [5, 7, 9] },
     { id: "f23", labelKey: "c4L23", depth: 16, tempo: 1, noise: 0.02, starMoves: [5, 7, 9] },
     { id: "f24", labelKey: "c4L24", depth: 16, tempo: 1, noise: 0, starMoves: [5, 7, 9] },
+    /* Ranks 25-30: the tier past the sovereign. The sight ask turns one
+     * more ply per rank - seventeen through twenty-two - the ladder's own
+     * dial carried to the top of its travel, and the search purse answers
+     * before those plies do, exactly as it does for the sixteen-ply ranks
+     * below, so the tier's teeth are measured where the game measures them:
+     * the star clock. The deep bands priced a five-disc win that no engine
+     * line ever produced; the summit re-prices the clock at the engine's own
+     * line and holds it across all six rungs - [4, 5, 6], tighter than the
+     * sovereign's [5, 7, 9] on every band - and every value was played for
+     * and landed by the rank's own brain seated first against the shipped
+     * two-ply reference hand: two of its six wins land the four-disc line,
+     * two the five-disc band, and the last two land the six-disc clock, so
+     * all three bands are earned rather than decorated. Noise stays at
+     * zero and the tempo concession stays on: the summit never spends a
+     * point of the peak brain it inherited. */
+    { id: "f25", labelKey: "c4L25", depth: 17, tempo: 1, noise: 0, starMoves: [4, 5, 6] },
+    { id: "f26", labelKey: "c4L26", depth: 18, tempo: 1, noise: 0, starMoves: [4, 5, 6] },
+    { id: "f27", labelKey: "c4L27", depth: 19, tempo: 1, noise: 0, starMoves: [4, 5, 6] },
+    { id: "f28", labelKey: "c4L28", depth: 20, tempo: 1, noise: 0, starMoves: [4, 5, 6] },
+    { id: "f29", labelKey: "c4L29", depth: 21, tempo: 1, noise: 0, starMoves: [4, 5, 6] },
+    { id: "f30", labelKey: "c4L30", depth: 22, tempo: 1, noise: 0, starMoves: [4, 5, 6] },
   ];
 
   /* Pure rules, exported for the static checks. */
@@ -372,24 +393,36 @@
       "c4L22": "Grandmaster Trap",
       "c4L23": "Iron Line",
       "c4L24": "The Four-Stone Sovereign",
+      "c4L25": "Seventeen Deep",
+      "c4L26": "The Sleepless Sight",
+      "c4L27": "Nineteen Deep",
+      "c4L28": "The Farther Clock",
+      "c4L29": "The Bottomless Question",
+      "c4L30": "Grandmaster Horizon",
     },
     zh: {
-      "c4L9": "占卜者",
-      "c4L10": "飞升者",
-      "c4L11": "深水者",
-      "c4L12": "高空索",
-      "c4L13": "远望者",
-      "c4L14": "长局者",
-      "c4L15": "登顶者",
-      "c4L16": "广望者",
-      "c4L17": "十五层深",
-      "c4L18": "松手者",
-      "c4L19": "远钟",
-      "c4L20": "四子宗师",
-      "c4L21": "巅峰战术",
-      "c4L22": "大师围猎",
-      "c4L23": "钢铁连线",
-      "c4L24": "四子至尊",
+      "c4L9": "\u5360\u535c\u8005",
+      "c4L10": "\u98de\u5347\u8005",
+      "c4L11": "\u6df1\u6c34\u8005",
+      "c4L12": "\u9ad8\u7a7a\u7d22",
+      "c4L13": "\u8fdc\u671b\u8005",
+      "c4L14": "\u957f\u5c40\u8005",
+      "c4L15": "\u767b\u9876\u8005",
+      "c4L16": "\u5e7f\u671b\u8005",
+      "c4L17": "\u5341\u4e94\u5c42\u6df1",
+      "c4L18": "\u677e\u624b\u8005",
+      "c4L19": "\u8fdc\u949f",
+      "c4L20": "\u56db\u5b50\u5b97\u5e08",
+      "c4L21": "\u5dc5\u5cf0\u6218\u672f",
+      "c4L22": "\u5927\u5e08\u56f4\u730e",
+      "c4L23": "\u94a2\u94c1\u8fde\u7ebf",
+      "c4L24": "\u56db\u5b50\u81f3\u5c0a",
+      "c4L25": "\u5341\u4e03\u5c42\u6df1",
+      "c4L26": "\u4e0d\u5bd0\u4e4b\u671b",
+      "c4L27": "\u5341\u4e5d\u5c42\u6df1",
+      "c4L28": "\u66f4\u8fdc\u949f",
+      "c4L29": "\u65e0\u5e95\u4e4b\u95ee",
+      "c4L30": "\u5b97\u5e08\u5929\u9645",
     },
   });
 

@@ -47,17 +47,17 @@
     { id: "i18", labelKey: "glL18", w: 18, h: 14, stars: 5, minPar: 18, maxPar: 40, trail: true, density: 0.22 },
     { id: "i19", labelKey: "glL19", w: 18, h: 15, stars: 6, minPar: 18, maxPar: 42, trail: true, density: 0.22 },
     { id: "i20", labelKey: "glL20", w: 19, h: 15, stars: 6, minPar: 20, maxPar: 44, trail: true, density: 0.22 },
-    /* The deep tier - the summit. Its one lesson is one no rung 1-20 teaches:
-     * the stopping law breaks. Every earlier rink stops the skate at walls
-     * alone, so the stop map is just the walls; here `drifts` sows snowdrifts
-     * into open ice and a ride that crosses one ends on it mid-floor - the
-     * long glide lines the white rinks are built around break short, and the
-     * stop map has to be re-read on every push-off. The drifts are sown on
-     * the measured trail itself, and no deal ships unless the BFS prices it
-     * strictly above the same board without drifts, so the drifts are the
-     * proven cost, never decoration. The par floor climbs past the shipped
-     * peak's 20 - 22, 24, 26, 28 - and i24 raises seven stars, one more than
-     * any rink before it asked for. */
+    /* The deep tier - the crown beneath the summit. Its one lesson is one no
+     * rung 1-20 teaches: the stopping law breaks. Every earlier rink stops
+     * the skate at walls alone, so the stop map is just the walls; here
+     * `drifts` sows snowdrifts into open ice and a ride that crosses one ends
+     * on it mid-floor - the long glide lines the white rinks are built around
+     * break short, and the stop map has to be re-read on every push-off. The
+     * drifts are sown on the measured trail itself, and no deal ships unless
+     * the BFS prices it strictly above the same board without drifts, so the
+     * drifts are the proven cost, never decoration. The par floor climbs past
+     * the shipped peak's 20 - 22, 24, 26, 28 - and i24 raises seven stars,
+     * one more than any rink before it asked for. */
     /* i21 - three drifts on the measured trail: the ride the deal was laid
      * around already breaks once, and the par floor steps past i20 for the
      * first time. */
@@ -70,10 +70,43 @@
      * one drift at a time, and the driftless line is no longer even a sketch
      * of the answer. */
     { id: "i23", labelKey: "glL23", w: 20, h: 17, stars: 6, minPar: 26, maxPar: 50, trail: true, density: 0.22, drifts: 5 },
-    /* i24 - six drifts and seven stars: the summit breaks the ride and doubles
+    /* i24 - six drifts and seven stars: the crown breaks the ride and doubles
      * the errands, so the proven par floor lands at 28 - the deepest demand
-     * the ladder makes. */
+     * beneath the summit. */
     { id: "i24", labelKey: "glL24", w: 21, h: 17, stars: 7, minPar: 28, maxPar: 54, trail: true, density: 0.22, drifts: 6 },
+    /* Rinks 25-30 are the summit tier, and its one law is the deep tier's own
+     * dial carried all the way up: one more drift per rung, seven through
+     * twelve, every snowpack deeper than the crown's six, while the errands
+     * and the floor grow underneath - seven to ten sockets, 22x18 out to
+     * 23x20, and a par floor that steps 29 - 39 past i24's 28. Every number
+     * was measured through the module's own drift dealer on the gate's pinned
+     * stream, seed 88000 + trial*37 + drifts, eight deals a rung: all
+     * forty-eight deals ship as true drift boards, the mean proven par climbs
+     * strictly 30.9 - 34.6 - 35.5 - 38.0 - 38.8 - 42.3 against i24's 29.5 on
+     * the same stream, and no rung's floor is reachable without its snow -
+     * strip the drifts off the dealt boards and the driftless replay prices
+     * below the printed floor on every rung (means 26.8, 29.3, 29.9, 31.0,
+     * 30.1, 32.5 against floors 29-39), so the summit's demand is bought by
+     * the drifts, never by the bare ice. */
+    /* i25 - the first drift past the crown: seven sown, the first 22-wide
+     * floor, and the par floor steps to 29. */
+    { id: "i25", labelKey: "glL25", w: 22, h: 18, stars: 7, minPar: 29, maxPar: 58, trail: true, density: 0.22, drifts: 7 },
+    /* i26 - eight drifts and the campaign's first eight-socket rink: eight
+     * errands under the deepest snowpack yet. */
+    { id: "i26", labelKey: "glL26", w: 22, h: 18, stars: 8, minPar: 31, maxPar: 60, trail: true, density: 0.22, drifts: 8 },
+    /* i27 - nine drifts on the first 23-wide floor, and the par floor steps
+     * to 33. */
+    { id: "i27", labelKey: "glL27", w: 23, h: 18, stars: 8, minPar: 33, maxPar: 62, trail: true, density: 0.22, drifts: 9 },
+    /* i28 - ten drifts, nine sockets and the deepest floor yet at nineteen
+     * rows. */
+    { id: "i28", labelKey: "glL28", w: 23, h: 19, stars: 9, minPar: 35, maxPar: 64, trail: true, density: 0.22, drifts: 10 },
+    /* i29 - eleven drifts on the same deep floor: nothing new but snow, and
+     * the snow alone pushes the mean proven par past thirty-eight. */
+    { id: "i29", labelKey: "glL29", w: 23, h: 19, stars: 9, minPar: 37, maxPar: 66, trail: true, density: 0.22, drifts: 11 },
+    /* i30 - twelve drifts, ten sockets, the deepest floor the ladder holds,
+     * and the close at 39 - the highest floor and the highest mean par the
+     * campaign asks for. */
+    { id: "i30", labelKey: "glL30", w: 23, h: 20, stars: 10, minPar: 39, maxPar: 68, trail: true, density: 0.22, drifts: 12 },
   ];
 
   /* Pure generator + solver, exported for the static checks. Board walls
@@ -409,8 +442,9 @@
    * campaign derives rather than trusting the picker. */
   App.glyphGlideLevels = glideLevels;
 
-  /* Bilingual copy for the white rinks. The shipped ten names stay in the
-   * shared dictionary; addStrings only fills the keys it does not own. */
+  /* Bilingual copy for the white rinks, the deep tier and the summit. The
+   * shipped ten names stay in the shared dictionary; addStrings only fills
+   * the keys it does not own. */
   App.addStrings({
     en: {
       "glL11": "Rime Run", "glL12": "The Glass Stair", "glL13": "Frost Fingers",
@@ -420,6 +454,9 @@
       "glL20": "The Frozen Crown",
       "glL21": "First Drifts", "glL22": "The Snowbound Corridors",
       "glL23": "The Buried Rink", "glL24": "The White Summit",
+      "glL25": "The Seventh Drift", "glL26": "The Eight-Star Snowfield",
+      "glL27": "The Ninth Drift", "glL28": "The Ten-Drift Vault",
+      "glL29": "Above the Snowline", "glL30": "The Sky Rink",
     },
     zh: {
       "glL11": "\u971c\u75d5\u6ed1\u9053", "glL12": "\u7409\u7483\u9636",
@@ -429,6 +466,9 @@
       "glL19": "\u767d\u76f2\u957f\u5eca", "glL20": "\u51b0\u5c01\u738b\u51a0",
       "glL21": "\u521d\u96ea\u5806", "glL22": "\u96ea\u5c01\u56de\u5eca",
       "glL23": "\u57cb\u96ea\u51b0\u573a", "glL24": "\u767d\u96ea\u4e4b\u5dc5",
+      "glL25": "\u7b2c\u4e03\u91cd\u96ea", "glL26": "\u516b\u661f\u96ea\u539f",
+      "glL27": "\u7b2c\u4e5d\u91cd\u96ea", "glL28": "\u5341\u96ea\u51b0\u7a96",
+      "glL29": "\u96ea\u7ebf\u4e4b\u4e0a", "glL30": "\u5929\u9876\u51b0\u573a",
     },
   });
 

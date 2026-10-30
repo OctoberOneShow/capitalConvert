@@ -66,6 +66,55 @@
     { id: "p22", labelKey: "inkL22", target: 2800, moves: 11, colors: 4 },
     { id: "p23", labelKey: "inkL23", target: 3600, moves: 14, colors: 3 },
     { id: "p24", labelKey: "inkL24", target: 4200, moves: 12, colors: 3 },
+    /* Pools 25-30 are the summit, and the tier's one lever is still the pour:
+     * every card is priced above the Confluence's 350 points a move and the
+     * price climbs strictly through the six (measured 390, 418, 444, 456, 463
+     * and 543). Every number below was measured through the real panel with
+     * the game's own two-ply line over twelve seeded deals per card (seed
+     * k*7919): it cleared twelve of twelve on every card - the finals land
+     * between one and twelve times the target, because the round ends the
+     * instant a cascade crosses - and the ordinary one-ply hand cleared
+     * twelve of twelve as well. The Rapids is the one card where the random
+     * hand mostly runs dry (three clears in twelve); on the triad cards the
+     * pour pays everyone and the separation is the price per move. Cut any
+     * card back to the classic six inks and the same line falls short on
+     * every deal: measured cut finals run 710-2840 against targets of
+     * 3700-7600. The bands stay derived - [1.4t, 1.2t, t] off the target -
+     * with the three-star line inside one generous crossing cascade on the
+     * triad cards (nine to eleven three-star deals in twelve) and every band
+     * a separate landing on the Rapids (two in twelve). */
+    /* The Rapids re-thins the well to four inks and closes the budget to ten:
+     * short chains hand the round back to the move count, and the line is the
+     * heaviest the four-ink pour has been asked to carry (390 a move against
+     * the Straits' 254). The measured hands separate here like nowhere else
+     * in the endgame, which is what makes it the summit's gatekeeper. */
+    { id: "p25", labelKey: "inkL25", target: 3900, moves: 10, colors: 4 },
+    /* The Flood Tide returns the deep pour at a new price: 4600 on eleven
+     * moves is 418 a move - one move fewer than the Confluence gives, for a
+     * line a tenth heavier. A stalled opening has nowhere to hide. */
+    { id: "p26", labelKey: "inkL26", target: 4600, moves: 11, colors: 3 },
+    /* The Waterfall cuts the budget to nine, tighter than the game has ever
+     * dealt (the Straits' eleven was the floor until now): the round has to
+     * end on the opening cascades, at 444 a move, and one wasted read drops
+     * the line out of reach. */
+    { id: "p27", labelKey: "inkL27", target: 4000, moves: 9, colors: 3 },
+    /* The Reservoir is the long climb: sixteen moves - the most the triad
+     * pour has ever been given - against 7300, the biggest line in the game
+     * below the last rung. The crossing lands where the cascades put it, so
+     * the final chain has to carry all three bands inside its overshoot
+     * instead of coasting across. */
+    { id: "p28", labelKey: "inkL28", target: 7300, moves: 16, colors: 3 },
+    /* The Geyser is the shortest budget in the campaign: eight moves, two
+     * fewer than the Rapids, at the heaviest price short of the summit (463
+     * a move). One burst and it is over - the opening cascades clear it
+     * almost alone. */
+    { id: "p29", labelKey: "inkL29", target: 3700, moves: 8, colors: 3 },
+    /* The Watershed closes the ladder at 7600 on fourteen moves: the biggest
+     * target and the highest price per move in the game (543, against the
+     * Confluence's 350). The budget looks generous until it is read - the
+     * two-ply line cleared all twelve deals with moves to spare, and the
+     * price per move is what the card is actually about. */
+    { id: "p30", labelKey: "inkL30", target: 7600, moves: 14, colors: 3 },
   ];
 
   function indexAt(x, y) {
@@ -513,19 +562,34 @@
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already own, so the shared dictionary stays authoritative. The
    * new pools keep the water-body ladder the shared dictionary carries from
-   * the droplet to the source, and name the waters they pour. */
+   * the droplet to the source, and name the waters they pour. The summit
+   * rungs climb past the confluence into the high waters - rapids, flood
+   * tide, falls, reservoir, geyser - and end on the watershed every drop
+   * answers to. */
   App.addStrings({
     en: {
       "inkL21": "Estuary",
       "inkL22": "The Straits",
       "inkL23": "The Triad Deep",
       "inkL24": "The Confluence",
+      "inkL25": "The Rapids",
+      "inkL26": "The Flood Tide",
+      "inkL27": "The Waterfall",
+      "inkL28": "The Reservoir",
+      "inkL29": "The Geyser",
+      "inkL30": "The Watershed",
     },
     zh: {
       "inkL21": "河口",
       "inkL22": "海峡",
       "inkL23": "三色海渊",
       "inkL24": "百川汇流",
+      "inkL25": "险滩",
+      "inkL26": "洪潮",
+      "inkL27": "飞瀑",
+      "inkL28": "蓄水库",
+      "inkL29": "间歇泉",
+      "inkL30": "分水岭",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

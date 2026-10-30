@@ -95,6 +95,30 @@
     { id: "m22", labelKey: "mcbZ22", twistKey: "mcbTwist22", gens: 10, seed: 24222, cap: 20, traitMax: 6, start: 15, base: 4, step: 1, plan: [["heat", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"], ["defence", "speed"], ["heat"]], starBand: [5680, 5380, 4730] },
     { id: "m23", labelKey: "mcbZ23", twistKey: "mcbTwist23", gens: 10, seed: 24072, cap: 21, traitMax: 7, start: 13, base: 3, step: 2, plan: [["heat", "acid"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "defence"], ["acid", "speed"]], starBand: [5580, 5280, 4630] },
     { id: "m24", labelKey: "mcbZ24", twistKey: "mcbTwist24", gens: 10, seed: 24001, cap: 19, traitMax: 6, start: 14, base: 4, step: 1, plan: [["heat", "acid"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "defence"], ["acid", "speed"]], starBand: [5580, 5280, 4630] },
+    /* Dishes 25-30, the long bench. The deep tier bought its difficulty out
+     * of the deck, the pool, the flask and both ceilings at once; these six
+     * hold every lever the summit set and never give one back, tightening
+     * at least one a rung until the capstone tightens all three at once.
+     * The seeding thins first: m25 opens one founder short of the summit
+     * and the greedy line spends the whole trial riding the floor of four
+     * - the sharpest single drop the ladder has made (3982 greedy where
+     * m24 walked 5682). The pool shallows to five on m26, the ceiling
+     * drops to eighteen on m27, the founding colony starves to twelve on
+     * m28, and the last two rungs carry the leanest ceiling the deep game
+     * has printed (seventeen) - m30 with every lever under the summit's
+     * row: cap 17, traitMax 5, start 12. The two base-3 rungs trade a
+     * slower card climb for those tight ceilings; the metric reads higher
+     * there because the cards ask for less, not because the dish is
+     * easier - the levers are the price. Every dish here was walked with
+     * microbeBeatable before its band was written: greedy scores 3982,
+     * 3982, 3980, 5884, 3979 and 5880, and each band sits one hundred and
+     * five under that, inside the window the shipped deep tier anchored. */
+    { id: "m25", labelKey: "mcbZ25", twistKey: "mcbTwist25", gens: 10, seed: 31007, cap: 19, traitMax: 6, start: 13, base: 4, step: 1, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"]], starBand: [3880, 3580, 3230] },
+    { id: "m26", labelKey: "mcbZ26", twistKey: "mcbTwist26", gens: 10, seed: 40002, cap: 19, traitMax: 5, start: 13, base: 4, step: 1, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"]], starBand: [3880, 3580, 3230] },
+    { id: "m27", labelKey: "mcbZ27", twistKey: "mcbTwist27", gens: 10, seed: 40012, cap: 18, traitMax: 5, start: 13, base: 4, step: 1, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"]], starBand: [3880, 3580, 3230] },
+    { id: "m28", labelKey: "mcbZ28", twistKey: "mcbTwist28", gens: 10, seed: 40000, cap: 18, traitMax: 5, start: 12, base: 3, step: 1, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"]], starBand: [5780, 5480, 5130] },
+    { id: "m29", labelKey: "mcbZ29", twistKey: "mcbTwist29", gens: 10, seed: 40329, cap: 17, traitMax: 5, start: 13, base: 4, step: 1, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"]], starBand: [3870, 3570, 3220] },
+    { id: "m30", labelKey: "mcbZ30", twistKey: "mcbTwist30", gens: 10, seed: 40016, cap: 17, traitMax: 5, start: 12, base: 3, step: 1, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"]], starBand: [5780, 5480, 5130] },
   ];
 
   function mcbInt(value) {
@@ -394,9 +418,18 @@
     return total;
   }
 
+  /* The dish's mutation budget: three a generation for the whole shipped
+   * ladder, and only a dish that names its own `points` dials it down -
+   * an untagged dish must never read the missing field as a budget of one. */
+  function mcbPoints(level) {
+    var points = level ? level.points : undefined;
+    return points === undefined ? POINTS : Math.max(1, mcbInt(points));
+  }
+
   /* The floor proof: the greedy line, generation by generation. */
   function microbeBeatable(level) {
     var gens = Math.max(1, mcbInt(level.gens));
+    var budget = mcbPoints(level);
     var list = mcbPopulation(level, level.seed);
     var total = 0;
     var waste = 0;
@@ -404,7 +437,7 @@
     var cleared = 0;
     for (var gen = 0; gen < gens; gen += 1) {
       var card = mcbCard(level, gen);
-      var plan = microbeAllocate(list, card, mcbSequence(level).slice(gen + 1, gen + 4), POINTS, level);
+      var plan = microbeAllocate(list, card, mcbSequence(level).slice(gen + 1, gen + 4), budget, level);
       list = plan.list;
       waste += plan.waste;
       var result = microbeSurvive(list, card, level);
@@ -616,7 +649,7 @@
         level: levelDef,
         gen: 0,
         gens: Math.max(1, mcbInt(levelDef.gens)),
-        points: POINTS,
+        points: mcbPoints(levelDef),
         waste: 0,
         survivors: 0,
         list: mcbPopulation(levelDef, (levelDef.seed + runs() * 131) >>> 0),
@@ -738,7 +771,7 @@
       run.list = outcome.offspring;
       run.pick = mcbClamp(run.pick, 0, run.list.length - 1);
       run.gen += 1;
-      run.points = POINTS;
+      run.points = mcbPoints(run.level);
       run.peeked = false;
       if (run.gen >= run.gens) {
         winRun();
@@ -943,6 +976,12 @@
       "mcbZ22": "Shallow Pool",
       "mcbZ23": "Starving Flask",
       "mcbZ24": "The Last Niche",
+      "mcbZ25": "The Thin Seeding",
+      "mcbZ26": "Five Wide",
+      "mcbZ27": "Lower Roof",
+      "mcbZ28": "Twelve Founders",
+      "mcbZ29": "Seventeen Tall",
+      "mcbZ30": "Everything Tight",
       "mcbTwist1": "heat wave only",
       "mcbTwist2": "acid bloom only",
       "mcbTwist3": "predators, then famine",
@@ -967,6 +1006,12 @@
       "mcbTwist22": "no strain stacks past six",
       "mcbTwist23": "the founding colony starts starving",
       "mcbTwist24": "the tightest budget over the shallow pool",
+      "mcbTwist25": "one founder short of the summit",
+      "mcbTwist26": "no strain stacks past five",
+      "mcbTwist27": "the ceiling drops to eighteen",
+      "mcbTwist28": "twelve founders under the low roof",
+      "mcbTwist29": "the leanest ceiling the lab has printed",
+      "mcbTwist30": "every ceiling at once, nothing to spare",
       "mcbGenLabel": "Generation",
       "mcbPointLabel": "Mutations",
       "mcbPopLabel": "Colony",
@@ -1066,6 +1111,12 @@
       "mcbZ22": "浅池基因",
       "mcbZ23": "荒年接种",
       "mcbZ24": "最后生态位",
+      "mcbZ25": "薄种培养",
+      "mcbZ26": "五宽浅池",
+      "mcbZ27": "低压顶棚",
+      "mcbZ28": "十二先锋",
+      "mcbZ29": "十七极限",
+      "mcbZ30": "处处紧绷",
       "mcbTwist1": "只有热浪",
       "mcbTwist2": "只有酸华",
       "mcbTwist3": "捕食季，随后饥荒",
@@ -1090,6 +1141,12 @@
       "mcbTwist22": "单项性状不过六",
       "mcbTwist23": "起始菌群先天不足",
       "mcbTwist24": "最紧预算压着最浅池",
+      "mcbTwist25": "比峰顶少一份接种",
+      "mcbTwist26": "单项性状不过五",
+      "mcbTwist27": "上限降到十八",
+      "mcbTwist28": "十二先锋顶着低压顶棚",
+      "mcbTwist29": "实验室最紧的上限",
+      "mcbTwist30": "所有上限同时收紧",
       "mcbGenLabel": "世代",
       "mcbPointLabel": "突变点",
       "mcbPopLabel": "菌群",

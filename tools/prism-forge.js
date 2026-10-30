@@ -575,18 +575,33 @@ function forge(seed) {
     { w: 10, h: 10, walls: 7, elements: 8, splitters: 3, locked: 2, targets: 6, turns: 8, cells: 32, spread: 8, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 140, attempts: 60000 },
     { w: 10, h: 10, walls: 7, elements: 9, splitters: 3, locked: 3, targets: 6, turns: 8, cells: 34, spread: 8, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 140, attempts: 60000 },
     { w: 10, h: 10, walls: 8, elements: 10, splitters: 4, locked: 3, targets: 7, turns: 9, cells: 36, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 160, attempts: 60000 },
+    /* The summit tier keeps the wide bench and grows the fan rung over
+     * rung: eight marks on ten elements, the bench rising to eleven and
+     * twelve elements with a fifth splitter riding it, nine marks, then the
+     * closing rung's ten - a third of the panel lit at once - with the
+     * tightest uniqueness bar (one solving orientation) on the last two. */
+    { w: 10, h: 10, walls: 8, elements: 10, splitters: 4, locked: 3, targets: 8, turns: 9, cells: 36, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 60000 },
+    { w: 10, h: 10, walls: 8, elements: 11, splitters: 4, locked: 3, targets: 8, turns: 10, cells: 38, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 60000 },
+    { w: 10, h: 10, walls: 8, elements: 11, splitters: 5, locked: 3, targets: 9, turns: 10, cells: 38, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 60000 },
+    { w: 10, h: 10, walls: 9, elements: 12, splitters: 5, locked: 3, targets: 9, turns: 11, cells: 40, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 60000 },
+    { w: 10, h: 10, walls: 9, elements: 12, splitters: 5, locked: 4, targets: 9, turns: 11, cells: 42, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 160, attempts: 60000 },
+    { w: 10, h: 10, walls: 9, elements: 12, splitters: 5, locked: 4, targets: 10, turns: 12, cells: 44, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 180, attempts: 80000 },
   ];
   var names = [
     ["p11", "prismL11"], ["p12", "prismL12"], ["p13", "prismL13"],
     ["p14", "prismL14"], ["p15", "prismL15"], ["p16", "prismL16"],
     ["p17", "prismL17"], ["p18", "prismL18"], ["p19", "prismL19"],
     ["p20", "prismL20"], ["p21", "prismL21"], ["p22", "prismL22"],
-    ["p23", "prismL23"], ["p24", "prismL24"],
+    ["p23", "prismL23"], ["p24", "prismL24"], ["p25", "prismL25"],
+    ["p26", "prismL26"], ["p27", "prismL27"], ["p28", "prismL28"],
+    ["p29", "prismL29"], ["p30", "prismL30"],
   ];
   var times = [
     [42, 64, 90], [46, 70, 98], [50, 76, 106], [54, 82, 114], [58, 88, 122],
     [62, 94, 130], [66, 100, 138], [70, 106, 146], [78, 118, 162], [88, 132, 180],
     [92, 138, 188], [98, 146, 198], [104, 156, 210], [112, 166, 224],
+    [118, 177, 236], [124, 186, 248], [132, 198, 264], [140, 210, 280],
+    [148, 222, 296], [158, 237, 316],
   ];
   /* `from` lets a search re-run only the deep rungs (board number, default 11)
    * so an already-shipped rung is never re-forged over. */

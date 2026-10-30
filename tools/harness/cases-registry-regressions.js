@@ -248,11 +248,21 @@ run("Every rung its own game can prove is proven", () => {
   (App.auctionLevels || []).forEach((level) => {
     check(caseName, level.id + " survives a best bid line", App.auctionSurvivable(App.auctionRun(level)) === true);
   });
+  /* Rule Thieves ships its hint search as a depth-capped heuristic whose leaf
+   * eval is knowingly mate-shaped (the module's own gate says so): it cannot be
+   * the oracle for whether a rung is winnable, and past its horizon it even
+   * reports the wrong side as winning. The exact par of every rung - including
+   * the deep tier past that horizon - is re-proven from the rule table in
+   * tools/gate-snippets/rule-thieves.js; here the setup and band shape are what
+   * this harness can honestly assert. */
   (App.ruleLevels || []).forEach((level) => {
-    const answer = App.ruleSolve(App.ruleSetup(level), 11);
-    const want = Math.ceil(answer.plies / 2);
-    check(caseName, level.id + " is a proven forced win for the mover at its own band",
-      answer.proven === true && answer.forced === true && answer.winner === 1 && level.starMoves[0] === want,
-      JSON.stringify(answer) + " band " + JSON.stringify(level.starMoves));
+    const state = App.ruleSetup(level);
+    check(caseName, level.id + " sets its puzzle up for the mover",
+      !!state && state.turn === 1, JSON.stringify(state && state.turn));
+    check(caseName, level.id + " bands its stars in ascending order",
+      Array.isArray(level.starMoves) && level.starMoves.length === 3 &&
+        level.starMoves[0] >= 1 &&
+        level.starMoves[0] < level.starMoves[1] && level.starMoves[1] < level.starMoves[2],
+      JSON.stringify(level.starMoves));
   });
 });

@@ -299,6 +299,117 @@
       ],
       starShots: [2, 5, 10],
     },
+
+    /* Courses 25-30: the deep-sky tier. The forge laid these too, past the
+     * first deep sky - eight, nine and then ten wells packed into the same
+     * 320x360 sky while the ring settles at nine pixels, the smallest target
+     * the sky has shipped. The bar does not move for the bigger field: every
+     * course still needs a one-shot that survives the aim space with a basin
+     * a keyboard player can re-find (golf-forge: basin >= 6 of 25), and the
+     * par line rises with the clutter - eleven launches on the first pair of
+     * the tier, thirteen on the last. Measured one-shots, for the record:
+     *   g25 8 wells   -0.562rad / 0.45  basin  6/25
+     *   g26 8 wells    0.218rad / 0.50  basin  9/25
+     *   g27 9 wells   -3.142rad / 0.55  basin 15/25
+     *   g28 9 wells   -2.752rad / 0.15  basin  8/25
+     *   g29 10 wells  -0.322rad / 0.50  basin 15/25
+     *   g30 10 wells  -3.142rad / 0.15  basin 12/25 */
+    {
+      id: "g25", labelKey: "cgfL25",
+      tee: { x: 36, y: 217 }, target: { x: 284, y: 61, r: 10 },
+      wells: [
+        { x: 233, y: 202, m: 1, r: 14 },
+        { x: 177, y: 232, m: 1.3, r: 11 },
+        { x: 176, y: 208, m: 1.7, r: 11 },
+        { x: 181, y: 165, m: 1.8, r: 13 },
+        { x: 206, y: 275, m: 1.3, r: 12 },
+        { x: 121, y: 61, m: 1.4, r: 14 },
+        { x: 229, y: 79, m: 0.7, r: 13 },
+        { x: 68, y: 223, m: 1.5, r: 14 },
+      ],
+      starShots: [2, 5, 11],
+    },
+    {
+      id: "g26", labelKey: "cgfL26",
+      tee: { x: 36, y: 139 }, target: { x: 284, y: 183, r: 10 },
+      wells: [
+        { x: 108, y: 130, m: 1.4, r: 9 },
+        { x: 219, y: 233, m: 1.7, r: 13 },
+        { x: 218, y: 292, m: 1.6, r: 9 },
+        { x: 99, y: 202, m: 1.3, r: 9 },
+        { x: 78, y: 85, m: 1.4, r: 14 },
+        { x: 127, y: 227, m: 0.9, r: 14 },
+        { x: 164, y: 216, m: 0.9, r: 10 },
+        { x: 212, y: 158, m: 1.2, r: 10 },
+      ],
+      starShots: [2, 5, 11],
+    },
+    {
+      id: "g27", labelKey: "cgfL27",
+      tee: { x: 284, y: 266 }, target: { x: 36, y: 269, r: 10 },
+      wells: [
+        { x: 113, y: 51, m: 0.8, r: 13 },
+        { x: 178, y: 154, m: 1.6, r: 14 },
+        { x: 123, y: 155, m: 0.8, r: 10 },
+        { x: 223, y: 239, m: 1.2, r: 12 },
+        { x: 157, y: 236, m: 1.4, r: 13 },
+        { x: 150, y: 287, m: 1, r: 10 },
+        { x: 238, y: 294, m: 1.4, r: 12 },
+        { x: 224, y: 209, m: 1.4, r: 13 },
+        { x: 150, y: 179, m: 1.5, r: 11 },
+      ],
+      starShots: [2, 6, 12],
+    },
+    {
+      id: "g28", labelKey: "cgfL28",
+      tee: { x: 284, y: 136 }, target: { x: 36, y: 73, r: 9 },
+      wells: [
+        { x: 97, y: 234, m: 1.3, r: 12 },
+        { x: 68, y: 124, m: 1.8, r: 12 },
+        { x: 91, y: 95, m: 1.8, r: 10 },
+        { x: 124, y: 276, m: 1.1, r: 10 },
+        { x: 86, y: 211, m: 1.5, r: 14 },
+        { x: 192, y: 159, m: 1.6, r: 10 },
+        { x: 163, y: 226, m: 0.9, r: 10 },
+        { x: 250, y: 288, m: 1.8, r: 13 },
+        { x: 189, y: 161, m: 1.4, r: 9 },
+      ],
+      starShots: [2, 6, 12],
+    },
+    {
+      id: "g29", labelKey: "cgfL29",
+      tee: { x: 36, y: 290 }, target: { x: 284, y: 203, r: 9 },
+      wells: [
+        { x: 192, y: 74, m: 1.6, r: 11 },
+        { x: 208, y: 106, m: 0.8, r: 12 },
+        { x: 152, y: 106, m: 1.3, r: 12 },
+        { x: 223, y: 287, m: 1.3, r: 12 },
+        { x: 65, y: 256, m: 1.8, r: 13 },
+        { x: 137, y: 220, m: 1.4, r: 11 },
+        { x: 233, y: 100, m: 1.1, r: 14 },
+        { x: 95, y: 211, m: 1.7, r: 13 },
+        { x: 78, y: 180, m: 1.6, r: 10 },
+        { x: 203, y: 196, m: 1.7, r: 10 },
+      ],
+      starShots: [2, 6, 13],
+    },
+    {
+      id: "g30", labelKey: "cgfL30",
+      tee: { x: 284, y: 193 }, target: { x: 36, y: 164, r: 9 },
+      wells: [
+        { x: 254, y: 174, m: 0.8, r: 12 },
+        { x: 149, y: 53, m: 1.3, r: 10 },
+        { x: 248, y: 286, m: 1.7, r: 14 },
+        { x: 96, y: 91, m: 1.1, r: 9 },
+        { x: 68, y: 140, m: 1.3, r: 9 },
+        { x: 126, y: 62, m: 1.5, r: 10 },
+        { x: 118, y: 296, m: 1.4, r: 10 },
+        { x: 249, y: 268, m: 1.5, r: 10 },
+        { x: 234, y: 158, m: 1.7, r: 13 },
+        { x: 74, y: 253, m: 1.6, r: 11 },
+      ],
+      starShots: [2, 6, 13],
+    },
   ];
   /* A fixed starfield so the sky does not flicker between frames. */
   var cgfStars = [];
@@ -775,6 +886,12 @@
       "cgfL22": "Tight Orbit",
       "cgfL23": "Seven Stones",
       "cgfL24": "Needle's Eye",
+      "cgfL25": "The Knot",
+      "cgfL26": "Two Shores",
+      "cgfL27": "The Underside",
+      "cgfL28": "Twin Giants",
+      "cgfL29": "Ten Torches",
+      "cgfL30": "The Full Sky",
     },
     zh: {
       "cgfL7": "逆向切",
@@ -795,6 +912,12 @@
       "cgfL22": "窄轨",
       "cgfL23": "七石阵",
       "cgfL24": "针眼",
+      "cgfL25": "死结",
+      "cgfL26": "两岸",
+      "cgfL27": "底廊",
+      "cgfL28": "双巨人",
+      "cgfL29": "十炬",
+      "cgfL30": "满天",
     },
   });
 

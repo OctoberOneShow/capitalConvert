@@ -77,6 +77,38 @@
     { id: "b22", labelKey: "bjT22", decks: 4, start: 209715200, bets: [13107200, 26214400, 52428800], target: 314572800, starHands: [4, 9, 24] },
     { id: "b23", labelKey: "bjT23", decks: 2, start: 419430400, bets: [26214400, 52428800, 104857600], target: 629145600, starHands: [4, 9, 23] },
     { id: "b24", labelKey: "bjT24", decks: 1, start: 838860800, bets: [52428800, 104857600, 209715200], target: 1258291200, starHands: [3, 9, 23] },
+
+    /* Tables 25-30: the rope above the salon. The Last Shoe kept the count's
+     * game; the rope takes it back rule by rule, because at these stakes the
+     * pit no longer needs tricks - it changes the rules. soft17 pushes the
+     * dealer's soft hands (the first felts that ever drew to a soft 17);
+     * pushLose turns every tie into a house win; the naturals shorten to
+     * seven for five - the deepest short pay that still costs the player
+     * hands, because the paired bench measures the buy-back economy giving
+     * the cut back below it (a shorter natural digs the hole deeper, and
+     * every hole the felt buys you out of at the full stack is a gift).
+     * Then the buy-back itself shrinks: restake, the chips a busted
+     * bankroll returns with, walks one and a half top bets, three quarters,
+     * one half - the pit stops buying you back in full, and every bust is
+     * progress the felt keeps. The paired bench (one deep shuffle dealt to
+     * every ruleset, twenty-four thousand trials, no reshuffle to break the
+     * pairing) climbs rung over rung: 18.2 hands to clear on the Last
+     * Shoe's own rules, 18.6, 21.0, 22.1, then 54.4, 57.1, 62.6 across the
+     * buy-back walk, the clear share never below 96.4%. Every step was
+     * cut-tested - remove the rung's own lever and the same deals clear
+     * strictly faster. The three-star line never moves again: three hands,
+     * where the Last Shoe printed it. The deeper bands buy back the clock
+     * the rules take - the two-star and one-star lines calibrate to the
+     * sweep's own 42% and 72% points, so each rung stays winnable at all -
+     * and each felt was swept 160 times on the seeded bench at the
+     * top stake, appended to the shipped ladder in table order, before any
+     * of it shipped. */
+    { id: "b25", labelKey: "bjT25", decks: 1, start: 1677721600, bets: [104857600, 209715200, 419430400], target: 2516582400, starHands: [3, 10, 25], soft17: true },
+    { id: "b26", labelKey: "bjT26", decks: 1, start: 3355443200, bets: [209715200, 419430400, 838860800], target: 5033164800, starHands: [3, 10, 26], soft17: true, pushLose: true },
+    { id: "b27", labelKey: "bjT27", decks: 1, start: 6710886400, bets: [419430400, 838860800, 1677721600], target: 10066329600, starHands: [3, 12, 33], soft17: true, pushLose: true, pays: 1.4 },
+    { id: "b28", labelKey: "bjT28", decks: 1, start: 13421772800, bets: [838860800, 1677721600, 3355443200], target: 20132659200, starHands: [3, 20, 72], soft17: true, pushLose: true, pays: 1.4, restake: 5033164800 },
+    { id: "b29", labelKey: "bjT29", decks: 1, start: 26843545600, bets: [1677721600, 3355443200, 6710886400], target: 40265318400, starHands: [3, 16, 69], soft17: true, pushLose: true, pays: 1.4, restake: 5033164800 },
+    { id: "b30", labelKey: "bjT30", decks: 1, start: 53687091200, bets: [3355443200, 6710886400, 13421772800], target: 80530636800, starHands: [3, 16, 84], soft17: true, pushLose: true, pays: 1.4, restake: 6710886400 },
   ];
 
   /* Presentation beats, in milliseconds: the hole card turns after the deal has
@@ -564,7 +596,7 @@
         won = -bet;
         line = t("bjBust", { n: bet });
       } else if (youNatural && !houseNatural) {
-        won = Math.round(bet * 1.5);
+        won = Math.round(bet * (table.pays || 1.5));
         line = t("bjBlackjack", { n: won });
       } else if (houseNatural && !youNatural) {
         won = -bet;
@@ -578,6 +610,10 @@
       } else if (you < house) {
         won = -bet;
         line = t("bjYouLose", { you: you, house: house, n: bet });
+      } else if (table.pushLose) {
+        /* the rope felts: a tie is not a push here - the house takes the bet */
+        won = -bet;
+        line = t("bjPushLose", { you: you, n: bet });
       } else {
         line = t("bjPush", { you: you });
       }
@@ -590,8 +626,9 @@
       }
       if (chips < table.bets[0]) {
         /* Without a restake the table would sit there with no bet the player is
-         * still allowed to cover. */
-        chips = table.start;
+         * still allowed to cover. The rope felts restake short of the full
+         * stack - the buy-back is the summit's own dial. */
+        chips = table.restake !== undefined ? table.restake : table.start;
         stage = "idle";
         renderBoard();
         resultEl.className = "game-result is-lose";
@@ -666,10 +703,18 @@
     }
 
     /* The house answer keeps its synchronous math; only its entrance is staged,
-     * so nothing can outlive the panel even here (pendingFn covers the gap). */
+     * so nothing can outlive the panel even here (pendingFn covers the gap).
+     * The rope felts draw to a soft 17: the loop below stands on every hard
+     * hand first, then the second loop pushes the soft 17s the rope asks for. */
     function housePlay() {
       while (bjCount(dealer).total < 17) {
         dealer.push(draw());
+      }
+      while (table.soft17 && bjCount(dealer).total === 17 && bjCount(dealer).soft) {
+        dealer.push(draw());
+        while (bjCount(dealer).total < 17) {
+          dealer.push(draw());
+        }
       }
       settle(false);
     }
@@ -896,23 +941,41 @@
   /* Exported for the other modules. */
   App.blackjackCount = bjCount;
   App.blackjackNatural = bjNatural;
+  App.blackjackTables = bjTables;
+  App.blackjackShoe = bjShoe;
   App.initBlackjackGame = initBlackjackGame;
 
   /* The salon's names travel with the game: addStrings only fills keys the
    * shared dictionary does not already hold (see core.js), so the picker
-   * never prints a raw key for the felts above the pit. */
+   * never prints a raw key for the felts above the pit. The rope felts add
+   * their own names plus the tie-that-costs line the shared dictionary has
+   * never needed. */
   App.addStrings({
     en: {
       "bjT21": "The House Shoe",
       "bjT22": "The Half Shoe",
       "bjT23": "Two Decks",
       "bjT24": "The Last Shoe",
+      "bjT25": "Soft Seventeen",
+      "bjT26": "The Push Tax",
+      "bjT27": "Seven to Five",
+      "bjT28": "The Thin Reload",
+      "bjT29": "The Bare Reload",
+      "bjT30": "The Last Chip",
+      "bjPushLose": "Tied at {you} - the rope takes the bet: {n} lost.",
     },
     zh: {
       "bjT21": "庄家靴桌",
       "bjT22": "半靴桌",
       "bjT23": "双副桌",
       "bjT24": "终靴桌",
+      "bjT25": "软十七桌",
+      "bjT26": "平局税桌",
+      "bjT27": "七赔五桌",
+      "bjT28": "薄筹桌",
+      "bjT29": "空筹桌",
+      "bjT30": "末筹桌",
+      "bjPushLose": "和局 {you} 点——绳室规矩：赌注归庄，损失 {n} 枚。",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

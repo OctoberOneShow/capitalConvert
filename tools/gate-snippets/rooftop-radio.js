@@ -29,7 +29,18 @@
  * worst hunt. The gate proves every deep rung findable inside its own bands
  * over 30 seeded deals, the spire's and the restless rungs' records against
  * everything shipped below the tier, the crown's battery load-bearing, the
- * labels bilingual, and the unlock chain walking all twenty-four zones. */
+ * labels bilingual, and the unlock chain walking all twenty-four zones.
+ *
+ * The summit r25-r30 is the ring plateau, and it is measured the same way:
+ * six consecutive restless widths (41-46) whose readings quantize
+ * identically, tails of eight, nine and ten, each battery one ping past its
+ * own worst hunt. The gate re-measures every summit rung over the same
+ * thirty seeded deals, holds each battery one ping past its one-star line,
+ * proves the tier sweeps more floor per ping than any restless rung below
+ * it, and keeps two receipts: the crown's one-star line is load-bearing
+ * (one ping below it, three deals in thirty are lost outright), and past
+ * the plateau the readings re-align - a 49 floor hunts to six and no worse,
+ * so the width escalation sits on measured air, not on a guess. */
 
 const SEEDS = [];
 for (let i = 1; i <= 30; i += 1) {
@@ -177,16 +188,23 @@ module.exports = function gate(ctx) {
   const levels = App.radioLevels;
   const byId = (id) => levels.find((level) => level.id === id);
   const deepIds = ["r21", "r22", "r23", "r24"];
+  const summitIds = ["r25", "r26", "r27", "r28", "r29", "r30"];
   const CASE = "game-rooftop-radio";
 
-  check(CASE, "the ladder holds twenty-four zones",
-    levels.length === 24, String(levels.length));
+  check(CASE, "the ladder holds thirty zones",
+    levels.length === 30, String(levels.length));
   check(CASE, "every zone id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
   const missing = deepIds.filter((id) => !byId(id));
   check(CASE, "the deep tier r21-r24 is present",
     missing.length === 0, missing.join(","));
+  const summitMissing = summitIds.filter((id) => !byId(id));
+  check(CASE, "the summit tier r25-r30 is present in order",
+    summitMissing.length === 0 &&
+      summitIds.every((id, index) => levels.findIndex((level) => level.id === id) >
+        (index === 0 ? -1 : levels.findIndex((level) => level.id === summitIds[index - 1]))),
+    summitMissing.join(",") || "ordered");
 
   /* The cadence the readings cannot carry: no rung ships drift 1. */
   check(CASE, "no rung ships the every-scan shunt",
@@ -217,9 +235,10 @@ module.exports = function gate(ctx) {
       `battery ${level.scans} vs line ${level.starScans[2]}`);
   });
 
-  /* The spire's record: wider than every still floor shipped below the tier,
-   * on the tightest still battery the ladder has ever carried. */
-  const stillBelow = levels.filter((level) => level.drift === 0 && deepIds.indexOf(level.id) < 0);
+  /* The spire's record: wider than every still floor shipped below the deep
+   * tier, on the tightest still battery the ladder below it ever carried. */
+  const stillBelow = levels.filter((level) => level.drift === 0 &&
+    deepIds.indexOf(level.id) < 0 && summitIds.indexOf(level.id) < 0);
   check(CASE, "the spire is the widest still floor ever shipped",
     byId("r21").side > Math.max.apply(null, stillBelow.map((level) => level.side)),
     `r21 ${byId("r21").side} vs still max ${Math.max.apply(null, stillBelow.map((level) => level.side))}`);
@@ -228,8 +247,9 @@ module.exports = function gate(ctx) {
     `r21 ${byId("r21").scans} vs still min ${Math.min.apply(null, stillBelow.map((level) => level.scans))}`);
 
   /* The restless deep rungs sweep more floor per ping than any restless rung
-   * shipped below the tier, and each is wider than all of them. */
-  const restlessBelow = levels.filter((level) => level.drift === 2 && deepIds.indexOf(level.id) < 0);
+   * shipped below the deep tier, and each is wider than all of them. */
+  const restlessBelow = levels.filter((level) => level.drift === 2 &&
+    deepIds.indexOf(level.id) < 0 && summitIds.indexOf(level.id) < 0);
   const restlessRate = Math.min.apply(
     null,
     restlessBelow.map((level) => level.scans / (level.side * level.side)),
@@ -242,10 +262,13 @@ module.exports = function gate(ctx) {
       `rate ${rate.toFixed(4)} vs ${restlessRate.toFixed(4)}`);
   });
 
-  /* The crown's records: the widest floor the game has ever shipped, the
-   * longest one-star hunt ever asked for, and a battery that is load-bearing -
-   * one ping below the shipped battery and seeded deals are lost outright. */
-  const below = levels.filter((level) => deepIds.indexOf(level.id) < 0);
+  /* The deep crown's records, scoped to everything below the summit: the
+   * widest floor below the tier, the longest one-star hunt below it, and a
+   * battery that is load-bearing - one ping below the shipped battery and
+   * seeded deals are lost outright. The summit takes the ladder-wide
+   * records over, and proves them again below. */
+  const below = levels.filter((level) =>
+    deepIds.indexOf(level.id) < 0 && summitIds.indexOf(level.id) < 0);
   check(CASE, "the crown is the widest floor the game has ever shipped",
     byId("r24").side > Math.max.apply(null, below.map((level) => level.side)),
     `r24 ${byId("r24").side} vs max ${Math.max.apply(null, below.map((level) => level.side))}`);
@@ -257,14 +280,82 @@ module.exports = function gate(ctx) {
   check(CASE, "below the crown's proven floor, deals are lost outright",
     tighter.wins < tighter.total, `${tighter.wins}/${tighter.total} findable`);
 
+  /* ---- the summit: the ring plateau, measured over the same thirty deals -- */
+  summitIds.forEach((id) => {
+    const level = byId(id);
+    const m = measure(App, level);
+    check(CASE, `${id} is findable within its battery on every seeded deal`,
+      m.wins === m.total, `${m.wins}/${m.total}`);
+    check(CASE, `${id}'s one-star line holds on every seeded deal`,
+      m.wins === m.total && m.max <= level.starScans[2],
+      `worst hunt ${m.max} vs line ${level.starScans[2]}`);
+    const threeStars = m.atMost(level.starScans[0]);
+    check(CASE, `${id}'s three-star line is reachable on most deals`,
+      threeStars >= Math.ceil((2 * SEEDS.length) / 3),
+      `${threeStars}/${m.total} within ${level.starScans[0]}`);
+    check(CASE, `${id}'s battery sits one ping past its one-star line`,
+      level.scans === level.starScans[2] + 1,
+      `battery ${level.scans} vs line ${level.starScans[2]}`);
+  });
+
+  /* The tier is one restless plateau: six consecutive widths past the deep
+   * crown, every one of them sweeping more floor per ping than any restless
+   * rung below the summit, and no still floor among them. */
+  const summitLevels = summitIds.map((id) => byId(id));
+  const restlessFloor = Math.min.apply(null,
+    restlessBelow.map((level) => level.scans / (level.side * level.side)));
+  const plateauProblems = [];
+  summitLevels.forEach((level, index) => {
+    const rate = level.scans / (level.side * level.side);
+    if (level.drift !== 2) plateauProblems.push(level.id + " leaves the restless shunt");
+    if (level.side !== 41 + index) {
+      plateauProblems.push(level.id + " steps off the plateau (side " + level.side + ")");
+    }
+    if (level.side <= byId("r24").side) {
+      plateauProblems.push(level.id + " does not pass the deep crown's width");
+    }
+    if (!(rate < restlessFloor)) {
+      plateauProblems.push(level.id + " rate " + rate.toFixed(4) +
+        " does not beat the restless floor below (" + restlessFloor.toFixed(4) + ")");
+    }
+  });
+  check(CASE, "the summit is one restless plateau, tighter per ping than everything restless below it",
+    plateauProblems.length === 0, plateauProblems.join(" | "));
+
+  /* The crown of the plateau: the longest tail the plateau measured, on the
+   * widest floor the ladder has ever carried, its one-star line
+   * load-bearing - one ping below it and deals are lost. (The tier's
+   * per-ping squeeze is proved above; within the tier the shallowest
+   * plateau rung is the tightest by rate, so the crown's own record is the
+   * tail, not the rate.) */
+  const summitCrown = byId("r30");
+  const crownTail = measure(App, summitCrown);
+  const crownTighter = measure(App, mutant(summitCrown, { scans: summitCrown.starScans[2] - 1 }));
+  check(CASE, "the plateau's crown carries the longest summit tail on the widest floor ever shipped",
+    summitCrown.starScans[2] === Math.max.apply(null, summitLevels.map((level) => level.starScans[2])) &&
+      summitCrown.side === Math.max.apply(null, levels.map((level) => level.side)),
+    `line ${summitCrown.starScans[2]} vs summit max ` +
+      Math.max.apply(null, summitLevels.map((level) => level.starScans[2])));
+  check(CASE, "one ping below the crown's one-star line, deals are lost outright",
+    crownTighter.wins < crownTighter.total, `${crownTighter.wins}/${crownTighter.total} findable`);
+
+  /* The re-alignment receipt: the width escalation ends where the readings
+   * re-align - past the plateau a 49 floor hunts to six, under the crown's
+   * own tail. Measured, so the tier is standing on air that was checked. */
+  const realign = measure(App, { id: "receipt49", side: 49, drift: 2, scans: 30 });
+  check(CASE, "past the plateau the rings re-align: a 49 floor hunts to six",
+    realign.max < crownTail.max,
+    `49 floor max ${realign.max} vs crown ${crownTail.max}`);
+
   /* Labels travel in both dictionaries and never fall back to keys. */
   ["en", "zh"].forEach((lang) => {
-    const ok = deepIds.every((id) => {
+    const ok = deepIds.concat(summitIds).every((id) => {
       const level = byId(id);
       const dict = App.I18N && App.I18N[lang] ? App.I18N[lang][level.labelKey] : null;
       return typeof dict === "string" && dict && dict !== level.labelKey;
     });
-    check(CASE, `the deep tier labels resolve in ${lang}`, !!ok, deepIds.join(","));
+    check(CASE, `the deep and summit tier labels resolve in ${lang}`, !!ok,
+      deepIds.concat(summitIds).join(","));
   });
 
   /* The unlock chain walks all twenty-four zones in shipped order. */
@@ -283,11 +374,11 @@ module.exports = function gate(ctx) {
     walked.push(id);
     campaign.record(id, { stars: 3, best: 1, better: "low" });
   }
-  check(CASE, "the unlock chain walks all twenty-four zones in order",
+  check(CASE, "the unlock chain walks all thirty zones in order",
     walked.length === levels.length &&
       walked.every((id, i) => id === levels[i].id),
     walked.join(","));
-  check(CASE, "the walked campaign ends at the crown and tops out at its stars",
-    walked[walked.length - 1] === "r24" && campaign.totalStars() === levels.length * 3,
+  check(CASE, "the walked campaign ends at the plateau's crown and tops out at its stars",
+    walked[walked.length - 1] === "r30" && campaign.totalStars() === levels.length * 3,
     `last ${walked[walked.length - 1]}, stars ${campaign.totalStars()}`);
 };

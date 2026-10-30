@@ -71,6 +71,37 @@
     { id: "r22", labelKey: "revL22", noise: 0.03, depth: 4, starMargin: [6, 3, 1] },
     { id: "r23", labelKey: "revL23", noise: 0.02, depth: 4, starMargin: [5, 3, 1] },
     { id: "r24", labelKey: "revL24", noise: 0, depth: 4, starMargin: [5, 3, 1] },
+    /* Ranks 25-30: the ransom tier. The sight steps past the ceiling the
+     * ladder refused to cross - depth five, one ply past the deep brain
+     * every shipped rank answers to - and the clean five-ply brain is
+     * beyond the reference hand entirely: every clean duel ends in the
+     * rival's favour. So the tier pays its ransom out of a reopened tell,
+     * the shipped tier's own noise lever widened rung over rung from a
+     * flicker to a full shaking hand, and the climb is charged on the
+     * score: each rung asks to be beaten by more discs than the last -
+     * six, seven, eight, nine, ten and twelve - with the two-star band a
+     * shade over half the three-star line and the one-star line left at
+     * any win. The capstone trades tell for tempo: the rival takes the
+     * opening move at a narrower tell and the highest price of the tier.
+     * Every rank below was run against the same ten-duel seeded bench that
+     * judged the ranks above - beaten outright and beaten inside its own
+     * three-star band before it shipped:
+     *   r25  6 at 1/10 (wins 2/10, best 8)
+     *   r26  7 at 2/10 (wins 2/10, best 11)
+     *   r27  8 at 2/10 (wins 3/10, best 26)
+     *   r28  9 at 4/10 (wins 5/10, best 36)
+     *   r29 10 at 3/10 (wins 5/10, best 44)
+     *   r30 12 at 3/10 (wins 4/10, best 24, rival-first)
+     * and sight past the fifth ply was benched and rejected: the clean
+     * six-ply brain never drops a duel to the reference hand either, and
+     * its duels run three times the clock of a five-ply rank, so no told
+     * six-ply tier can be judged hard-but-fair at what the bench affords. */
+    { id: "r25", labelKey: "revL25", noise: 0.1, depth: 5, starMargin: [6, 3, 1] },
+    { id: "r26", labelKey: "revL26", noise: 0.12, depth: 5, starMargin: [7, 4, 1] },
+    { id: "r27", labelKey: "revL27", noise: 0.14, depth: 5, starMargin: [8, 4, 1] },
+    { id: "r28", labelKey: "revL28", noise: 0.16, depth: 5, starMargin: [9, 5, 1] },
+    { id: "r29", labelKey: "revL29", noise: 0.18, depth: 5, starMargin: [10, 6, 1] },
+    { id: "r30", labelKey: "revL30", noise: 0.12, depth: 5, aiFirst: true, starMargin: [12, 7, 1] },
   ];
   var REV_WEIGHTS = [
     120, -20, 10, 5, 5, 10, -20, 120,
@@ -341,6 +372,7 @@
   App.glyphReversiApply = revApply;
   App.glyphReversiPick = revPick;
   App.glyphReversiScore = revScore;
+  App.glyphReversiLevels = revLevels;
 
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js does
    * not already own, so the eight shipped rung names stay in the shared
@@ -363,24 +395,36 @@
       "revL22": "The Rival's Gambit",
       "revL23": "Corner Bastion",
       "revL24": "Grandmaster Zenith",
+      "revL25": "One More Ply",
+      "revL26": "The Reopened Tell",
+      "revL27": "The Wilder Hand",
+      "revL28": "The Heavy Ransom",
+      "revL29": "The Widest Hand",
+      "revL30": "The Last First Move",
     },
     zh: {
-      "revL9": "不朽者",
-      "revL10": "登峰者",
-      "revL11": "深井者",
-      "revL12": "长算者",
-      "revL13": "铁盘",
-      "revL14": "镜中主",
-      "revL15": "满盘者",
-      "revL16": "远望者",
-      "revL17": "更深一层",
-      "revL18": "颤之手",
-      "revL19": "先手",
-      "revL20": "深渊之底",
-      "revL21": "侧翼压迫",
-      "revL22": "弃子博弈",
-      "revL23": "角隅要塞",
-      "revL24": "大师黑白顶",
+      "revL9": "\u4e0d\u673d\u8005",
+      "revL10": "\u767b\u5cf0\u8005",
+      "revL11": "\u6df1\u4e95\u8005",
+      "revL12": "\u957f\u7b97\u8005",
+      "revL13": "\u94c1\u76d8",
+      "revL14": "\u955c\u4e2d\u4e3b",
+      "revL15": "\u6ee1\u76d8\u8005",
+      "revL16": "\u8fdc\u671b\u8005",
+      "revL17": "\u66f4\u6df1\u4e00\u5c42",
+      "revL18": "\u98a4\u4e4b\u624b",
+      "revL19": "\u5148\u624b",
+      "revL20": "\u6df1\u6e0a\u4e4b\u5e95",
+      "revL21": "\u4fa7\u7ffc\u538b\u8feb",
+      "revL22": "\u5f03\u5b50\u535a\u5f08",
+      "revL23": "\u89d2\u9685\u8981\u585e",
+      "revL24": "\u5927\u5e08\u9ed1\u767d\u9876",
+      "revL25": "\u66f4\u6df1\u4e00\u5b50",
+      "revL26": "\u91cd\u5f00\u7834\u7efd",
+      "revL27": "\u72c2\u4e4b\u624b",
+      "revL28": "\u91cd\u8d4e\u91d1",
+      "revL29": "\u6781\u98a4\u4e4b\u624b",
+      "revL30": "\u6700\u540e\u7684\u5148\u624b",
     },
   });
 

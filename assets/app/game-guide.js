@@ -536,6 +536,7 @@
         "Controls: click the pads in the same order (or press their keys) to echo the sequence.",
         "Watch out: one wrong pad ends the run; every new round adds one more note.",
         "Scoring: the longest sequence you echo is your score.",
+        "New tier: chimes 25-30 are every dial at once - a backwards chain that climbs to 40 links at 88 ms a link under a glow that never holds longer than 160 ms, so read the rolling wave and echo it mirrored, link for link.",
       ],
       zh: [
         "目标：一字不差地复述音块的“歌声”。",
@@ -543,6 +544,7 @@
         "操作：按相同顺序点击音块（或按对应按键）复述。",
         "小心：点错一个音本局结束；每一轮会多加一个音。",
         "计分：成功复述的最长序列就是成绩。",
+        "新层级：第 25 到 30 关把所有表盘拧到一起——倒放的链条一路加到 40 个音、每音 88 毫秒，而灯光从不超过 160 毫秒；看清这股滚动的声浪，一个音不差地镜像复述。",
       ],
     },
     inkSlash: {
@@ -647,6 +649,7 @@
         "Rules: ribbons cannot cross or share cells, and each ribbon must end exactly on its twin.",
         "Watch out: dragging back onto the previous cell rewinds the ribbon - fix mistakes without restarting.",
         "Keyboard: arrows move the dashed cursor and Enter starts or ends a ribbon. Stars by time.",
+        "New tier: the summit boards (25-30) open the eleventh row - the same sixteen ribbons now weave a bigger panel, and the measured weave climbs past a hundred inked cells, so every ribbon runs longer.",
       ],
       zh: [
         "目标：用发光丝带把每对孪生点都连起来。",
@@ -654,6 +657,7 @@
         "规则：丝带不能相交或共用格子，且必须恰好落在孪生点上。",
         "小心：往回拖会收回丝带——不用重来也能修错。",
         "键盘：方向键移动虚线光标，回车开始/结束丝带。按用时评星。",
+        "新层级：顶层织锦（25-30）开启第十一行——同样的十六条丝带要织更大的面板，实测织线长度突破一百格，每条丝带都更长。",
       ],
     },
     cometGolf: {
@@ -693,6 +697,7 @@
         "Bench boards (11-20) add two optics: a violet splitter reflects the beam AND lets it carry straight on, so one ray becomes two; an amber element is welded down and never rotates - build the route around it.",
         "Keyboard: arrows move the dashed cursor, Enter flips the mirror under it.",
         "Scoring: stars by time - flips are unlimited, so experiment freely.",
+        "New tier: the summit boards (25-30) grow the fan - up to ten targets lit at once off a twelve-element bench with a fifth splitter, and every board solves from a single orientation.",
       ],
       zh: [
         "目标：用激光点亮所有绿色靶心。",
@@ -701,6 +706,7 @@
         "高阶光路（11-20）新增两种元件：紫色分光叉既反射又让光束直穿，一束变两束；琥珀色元件已焊死、无法旋转，请绕开它设计路线。",
         "键盘：方向键移动虚线光标，回车翻转脚下镜面。",
         "计分：按用时评星——翻转不限次数，随便试验。",
+        "新层级：顶层光路（25-30）靶阵持续扩大——最多十枚靶心同刻点亮，十二元件台面配第五把分光叉，且每张图只有一种朝向能全亮。",
       ],
     },
     starfall: {
@@ -761,6 +767,7 @@
         "Road: streaks sweep the three lanes - cross through the gaps, never into a streak.",
         "River: you cannot swim - hop onto a log and ride it; the median strip is a safe rest stop.",
         "Watch out: logs carry you sideways (off-screen means gone), each pad holds one frog, and three frogs are all you get.",
+        "New tier: fords 25-30 mirror every street - rows 5, 6 and 7 each run both ways on ten lanes, so the gap you pick is the intersection of two opposing cycles, and the last quiet street is gone.",
       ],
       zh: [
         "目标：占满顶部河岸的四片荷叶。",
@@ -768,6 +775,7 @@
         "马路：车流横扫三条车道——找空档穿过，别撞上车。",
         "小河：不能游泳——跳上木头随波横渡；中间安全带可以落脚。",
         "小心：木头会把你带偏（出屏即消失），每片荷叶只收一只蛙，一共三只。",
+        "新层级：第 25 到 30 关条条街道双向来车——五、六、七路在十条车道上全部对开，你能抓的空档是两股反向车流的交集，最后的静街不复存在。",
       ],
     },
     glyphPusher: {
@@ -806,6 +814,7 @@
         "Rules: every pipe end must meet a matching pipe end - nothing may point at a wall - and all bulbs must connect to the source.",
         "Feedback: powered pipes and bulbs glow cyan or green; dead pipes stay grey.",
         "Scoring: solve in few rotations for stars; every deal is scrambled from a working network, so it is always solvable.",
+        "New tier: plates 25-30 open the loom's last frames, fifteen and sixteen wide, and storm them - the deal scrambles up to nineteen twentieths of the plate, so almost nothing reads true and the optimum climbs past 380 clicks.",
       ],
       zh: [
         "目标：旋转所有卡牌，让管道连成一张回到橙色源头的完整网络。",
@@ -813,6 +822,7 @@
         "规则：每个管口都必须接到对应管口——不能有朝向墙壁的开口——且所有灯泡都要连到源头。",
         "反馈：通电的管道和灯泡发青光/绿光；死管保持灰色。",
         "计分：旋转次数越少星越多；每局都由可用网络打乱而来，必然可解。",
+        "新层级：第 25 到 30 关张开织机最后的两张盘面——十五与十六宽——并掀起风暴：最多二十分之十九的卡牌被打乱，几乎没有一块读得真，最优步数爬过 380。",
       ],
     },
     glyphSketch: {

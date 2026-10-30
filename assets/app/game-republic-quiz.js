@@ -1226,6 +1226,347 @@
         },
       ],
     },
+    /* Decks 25-30 widen the lens again and tighten the seat: money and
+     * markets, medicine, play, myth, the living planet, and the road off
+     * it. Same seven-card shape as the computing tier, but the bands pull
+     * in - three stars now forgives a single miss - because by the top of
+     * the ladder the knowledge itself is the exam. */
+    {
+      id: "q25",
+      labelKey: "rqD25",
+      stars: [6, 5, 3],
+      cards: [
+        {
+          q: { en: "Around 600 BC, which Anatolian kingdom struck the first true coins from electrum?", zh: "约公元前600年，哪个安纳托利亚王国最早用琥珀金铸造了真正的钱币？" },
+          o: [{ en: "Babylon", zh: "巴比伦" }, { en: "Lydia", zh: "吕底亚" },
+              { en: "Phoenicia", zh: "腓尼基" }, { en: "Egypt", zh: "埃及" }],
+          a: 1,
+          note: { en: "The kings of Lydia minted the first state coinage at Sardis; Croesus later issued pure gold and silver.", zh: "吕底亚诸王在萨尔迪斯铸行了最早的国家货币；克雷兹后来发行了纯金与纯银币。" },
+        },
+        {
+          q: { en: "The world's first government paper money, called jiaozi, circulated under which dynasty?", zh: "世界上最早的政府纸币“交子”流通于哪个朝代？" },
+          o: [{ en: "Tang", zh: "唐朝" }, { en: "Han", zh: "汉朝" },
+              { en: "Song", zh: "宋朝" }, { en: "Ming", zh: "明朝" }],
+          a: 2,
+          note: { en: "Jiaozi grew out of Sichuan's iron-cash economy; the Song took it over as an official issue.", zh: "交子诞生于四川的铁钱经济，后来由宋朝官方正式发行。" },
+        },
+        {
+          q: { en: "Which Florentine family's bank bankrolled popes and princes across Renaissance Europe?", zh: "文艺复兴时期，哪个佛罗伦萨家族的银行为教皇与君主提供资金？" },
+          o: [{ en: "The Medici", zh: "美第奇家族" }, { en: "The Borgia", zh: "博尔基亚家族" },
+              { en: "The Sforza", zh: "斯福尔扎家族" }, { en: "The Gonzaga", zh: "贡扎加家族" }],
+          a: 0,
+          note: { en: "The Medici bank's branches and letters of credit moved money across Europe for two centuries.", zh: "美第奇银行的分行与信用凭证在欧洲流通资金达两个世纪。" },
+        },
+        {
+          q: { en: "In 1602, Amsterdam's new exchange first traded shares of which company - the most valuable the world has seen?", zh: "1602年，阿姆斯特丹的新交易所最早交易哪家公司的股份——它是有史以来市值最高的公司？" },
+          o: [{ en: "The Hudson's Bay Company", zh: "哈德逊湾公司" }, { en: "The Dutch East India Company", zh: "荷兰东印度公司" },
+              { en: "The British East India Company", zh: "英国东印度公司" }, { en: "The Bank of Amsterdam", zh: "阿姆斯特丹银行" }],
+          a: 1,
+          note: { en: "The VOC's shares traded freely, making it the first listed company; peak value estimates reach today's trillions of dollars.", zh: "荷兰东印度公司的股份可自由转让，使它成为第一家上市公司，市值峰值以今日美元计高达数万亿。" },
+        },
+        {
+          q: { en: "Which decimal currency did revolutionary France adopt in 1795?", zh: "1795年法国大革命政府采用了哪种十进制货币？" },
+          o: [{ en: "The euro", zh: "欧元" }, { en: "The sou", zh: "苏" },
+              { en: "The franc", zh: "法郎" }, { en: "The ecu", zh: "埃居" }],
+          a: 2,
+          note: { en: "The franc replaced the livre tournois and anchored French money for the next two centuries.", zh: "法郎取代了图尔里弗尔，此后两百年一直是法国的货币本位。" },
+        },
+        {
+          q: { en: "Which 1944 conference pegged world currencies to the dollar and founded the IMF and World Bank?", zh: "1944年的哪次会议将世界货币与美元挂钩，并创建了国际货币基金组织和世界银行？" },
+          o: [{ en: "Bretton Woods", zh: "布雷顿森林" }, { en: "Yalta", zh: "雅尔塔" },
+              { en: "Potsdam", zh: "波茨坦" }, { en: "Geneva", zh: "日内瓦" }],
+          a: 0,
+          note: { en: "The Bretton Woods system held until 1971, when the dollar's link to gold ended.", zh: "布雷顿森林体系维系到1971年美元与黄金脱钩为止。" },
+        },
+        {
+          q: { en: "In which year did euro notes and coins first reach shoppers' pockets?", zh: "欧元纸币和硬币在哪一年首次进入人们的钱包？" },
+          o: [{ en: "1999", zh: "1999年" }, { en: "2001", zh: "2001年" },
+              { en: "2002", zh: "2002年" }, { en: "2004", zh: "2004年" }],
+          a: 2,
+          note: { en: "The euro became book money in 1999; notes and coins arrived on 1 January 2002.", zh: "欧元1999年成为记账货币，纸币与硬币于2002年1月1日面世。" },
+        },
+      ],
+    },
+    {
+      id: "q26",
+      labelKey: "rqD26",
+      stars: [6, 5, 3],
+      cards: [
+        {
+          q: { en: "Which mild cattle disease did Edward Jenner use in 1796 to protect a boy against smallpox?", zh: "1796年，爱德华·詹纳用哪种牛的轻症保护男孩免患天花？" },
+          o: [{ en: "Cowpox", zh: "牛痘" }, { en: "Chickenpox", zh: "水痘" },
+              { en: "Measles", zh: "麻疹" }, { en: "Milk sickness", zh: "乳毒病" }],
+          a: 0,
+          note: { en: "The cowpox inoculation gave the world vaccination - from vacca, Latin for cow.", zh: "牛痘接种让世界有了“疫苗”一词——源自拉丁语的“牛”。" },
+        },
+        {
+          q: { en: "Which doctor proved in 1847 that hand-washing slashed deaths from childbed fever?", zh: "1847年，哪位医生证明洗手能大幅降低产褥热死亡率？" },
+          o: [{ en: "Joseph Lister", zh: "约瑟夫·李斯特" }, { en: "Louis Pasteur", zh: "路易·巴斯德" },
+              { en: "Ignaz Semmelweis", zh: "伊格纳兹·塞麦尔维斯" }, { en: "Robert Koch", zh: "罗伯特·科赫" }],
+          a: 2,
+          note: { en: "Semmelweis's Vienna clinic washed in chlorinated lime - years before germ theory was accepted.", zh: "塞麦尔维斯的维也纳诊室用含氯石灰洗手——那时细菌学说还未被认可。" },
+        },
+        {
+          q: { en: "Who noticed in 1928 that a mould called Penicillium killed bacteria on his plates?", zh: "1928年，谁注意到青霉菌在他的培养皿上杀死了细菌？" },
+          o: [{ en: "Alexander Fleming", zh: "亚历山大·弗莱明" }, { en: "Howard Florey", zh: "霍华德·弗洛里" },
+              { en: "Gerhard Domagk", zh: "格哈德·多马克" }, { en: "Paul Ehrlich", zh: "保罗·埃尔利希" }],
+          a: 0,
+          note: { en: "Fleming's London lab made the discovery; Florey and Chain turned penicillin into a drug a decade later.", zh: "弗莱明的伦敦实验室带来发现；十年后弗洛里与钱恩把青霉素变成了药物。" },
+        },
+        {
+          q: { en: "Röntgen's 1895 discovery let doctors photograph the skeleton without cutting skin. What did he call the rays?", zh: "伦琴1895年的发现让医生无需开刀就能拍下骨骼。他把这种射线命名为什么？" },
+          o: [{ en: "Ultrasound", zh: "超声波" }, { en: "X-rays", zh: "X射线" },
+              { en: "MRI scanning", zh: "磁共振成像" }, { en: "Radium therapy", zh: "镭疗法" }],
+          a: 1,
+          note: { en: "He called them X-strahlen - the unknown rays - and the first radiograph was his wife's hand.", zh: "他称之为“X射线”——未知之射线；第一张X光片是他妻子的手。" },
+        },
+        {
+          q: { en: "Whose X-ray photograph of DNA, taken in 1952, made the double helix visible?", zh: "1952年，谁的DNA X射线照片让双螺旋显形？" },
+          o: [{ en: "Rosalind Franklin", zh: "罗莎琳德·富兰克林" }, { en: "Barbara McClintock", zh: "芭芭拉·麦克林托克" },
+              { en: "Dorothy Hodgkin", zh: "多萝西·霍奇金" }, { en: "Lise Meitner", zh: "莉泽·迈特纳" }],
+          a: 0,
+          note: { en: "Franklin's Photo 51 was essential to the 1953 Watson-Crick model of DNA.", zh: "富兰克林的51号照片对1953年的沃森-克里克DNA模型至关重要。" },
+        },
+        {
+          q: { en: "Insulin, first isolated in Toronto in 1921, is the life-saving treatment for which disease?", zh: "1921年在多伦多首次提取的胰岛素是哪种疾病的救命疗法？" },
+          o: [{ en: "Diabetes", zh: "糖尿病" }, { en: "Anaemia", zh: "贫血" },
+              { en: "Gout", zh: "痛风" }, { en: "Goitre", zh: "甲状腺肿" }],
+          a: 0,
+          note: { en: "Banting and Best's extract turned a death sentence into a manageable condition.", zh: "班廷与贝斯特的提取物把绝症变成了可控疾病。" },
+        },
+        {
+          q: { en: "In which year did the WHO certify smallpox eradicated from the world?", zh: "世界卫生组织在哪一年认证天花已从世界上根除？" },
+          o: [{ en: "1967", zh: "1967年" }, { en: "1977", zh: "1977年" },
+              { en: "1980", zh: "1980年" }, { en: "1988", zh: "1988年" }],
+          a: 2,
+          note: { en: "The last natural case appeared in Somalia in 1977; eradication was certified in 1980.", zh: "最后一例自然病例1977年出现在索马里，1980年正式认证根除。" },
+        },
+      ],
+    },
+    {
+      id: "q27",
+      labelKey: "rqD27",
+      stars: [6, 5, 3],
+      cards: [
+        {
+          q: { en: "The ancient Olympic Games at Olympia honoured which god?", zh: "奥林匹亚的古代奥运会祭祀哪位神祇？" },
+          o: [{ en: "Apollo", zh: "阿波罗" }, { en: "Zeus", zh: "宙斯" },
+              { en: "Poseidon", zh: "波塞冬" }, { en: "Hermes", zh: "赫尔墨斯" }],
+          a: 1,
+          note: { en: "Held from 776 BC every four years, under a sacred truce across Greece.", zh: "自公元前776年起每四年一届，全希腊在此期间神圣休战。" },
+        },
+        {
+          q: { en: "The marathon commemorates a messenger's run from which battle's plain to Athens?", zh: "马拉松赛纪念了信使从哪场战役的平原跑回雅典？" },
+          o: [{ en: "Thermopylae", zh: "温泉关" }, { en: "Salamis", zh: "萨拉米斯" },
+              { en: "Marathon", zh: "马拉松" }, { en: "Plataea", zh: "普拉提亚" }],
+          a: 2,
+          note: { en: "The legend of Pheidippides fixed the distance near 26 miles - refined to 42.195 km in 1921.", zh: "菲迪皮德斯的传说确立了约26英里的赛程，1921年定为42.195公里。" },
+        },
+        {
+          q: { en: "Where and when were the first modern Olympic Games held?", zh: "第一届现代奥运会于何时何地举行？" },
+          o: [{ en: "1896, Athens", zh: "1896年，雅典" }, { en: "1900, Paris", zh: "1900年，巴黎" },
+              { en: "1892, Rome", zh: "1892年，罗马" }, { en: "1904, St. Louis", zh: "1904年，圣路易斯" }],
+          a: 0,
+          note: { en: "Pierre de Coubertin's revival opened in Athens on 6 April 1896.", zh: "顾拜旦复兴的奥运会于1896年4月6日在雅典开幕。" },
+        },
+        {
+          q: { en: "The ancient game of surrounding territory, go, was born under which civilisation?", zh: "古老的围地棋类“围棋”诞生于哪种文明？" },
+          o: [{ en: "Japan", zh: "日本" }, { en: "China", zh: "中国" },
+              { en: "Korea", zh: "朝鲜半岛" }, { en: "India", zh: "印度" }],
+          a: 1,
+          note: { en: "Weiqi is over 2,500 years old - Confucius mentioned it - and Japan later refined the modern rules.", zh: "围棋已有2500多年历史——孔子曾提及；现代规则后经日本精炼。" },
+        },
+        {
+          q: { en: "Which country hosted and won the first FIFA World Cup in 1930?", zh: "1930年首届世界杯由哪国主办并夺冠？" },
+          o: [{ en: "Brazil", zh: "巴西" }, { en: "Argentina", zh: "阿根廷" },
+              { en: "Uruguay", zh: "乌拉圭" }, { en: "Italy", zh: "意大利" }],
+          a: 2,
+          note: { en: "Thirteen teams travelled to Montevideo; the hosts beat Argentina 4-2 in the final.", zh: "十三支球队远赴蒙得维的亚，东道主决赛4比2胜阿根廷。" },
+        },
+        {
+          q: { en: "Chess evolved from chaturanga, a war game born in which country?", zh: "国际象棋演化自诞生于哪国的战争棋戏“恰图兰卡”？" },
+          o: [{ en: "India", zh: "印度" }, { en: "Persia", zh: "波斯" },
+              { en: "China", zh: "中国" }, { en: "Arabia", zh: "阿拉伯" }],
+          a: 0,
+          note: { en: "It travelled through Persian shatranj to Europe, taking its modern form around 1500.", zh: "它经波斯沙盘棋传入欧洲，约1500年形成现代规则。" },
+        },
+        {
+          q: { en: "The Paralympic movement grew from a 1948 archery contest at which hospital?", zh: "残奥运动起源于1948年在哪家医院举办的射箭比赛？" },
+          o: [{ en: "St Mary's Hospital", zh: "圣玛丽医院" }, { en: "Guy's Hospital", zh: "盖伊医院" },
+              { en: "Stoke Mandeville Hospital", zh: "斯托克曼德维尔医院" }, { en: "Great Ormond Street", zh: "大奥蒙德街医院" }],
+          a: 2,
+          note: { en: "Dr Ludwig Guttmann's contest for spinal-injury veterans became the Stoke Mandeville Games.", zh: "古特曼医生为脊髓损伤退伍军人举办的比赛演变为斯托克曼德维尔运动会。" },
+        },
+      ],
+    },
+    {
+      id: "q28",
+      labelKey: "rqD28",
+      stars: [6, 5, 3],
+      cards: [
+        {
+          q: { en: "In Greek myth, which Titan stole fire for humanity and was chained to a Caucasus peak?", zh: "希腊神话中，哪位泰坦为人类盗火而被锁在高加索山巅？" },
+          o: [{ en: "Atlas", zh: "阿特拉斯" }, { en: "Prometheus", zh: "普罗米修斯" },
+              { en: "Hephaestus", zh: "赫菲斯托斯" }, { en: "Epimetheus", zh: "厄庇墨透斯" }],
+          a: 1,
+          note: { en: "An eagle ate his liver daily until Heracles freed him - fire meant craft, medicine and hope.", zh: "神鹰日日啄食他的肝脏，直到赫拉克勒斯解救他——火意味着技艺、医药与希望。" },
+        },
+        {
+          q: { en: "Odin, Thor and Loki belong to the sagas of which people?", zh: "奥丁、托尔与洛基属于哪个民族的萨迦？" },
+          o: [{ en: "The Celts", zh: "凯尔特人" }, { en: "The Norse", zh: "北欧诺斯人" },
+              { en: "The Slavs", zh: "斯拉夫人" }, { en: "The Finns", zh: "芬兰人" }],
+          a: 1,
+          note: { en: "Iceland's Eddas preserved the Norse myths, from Valhalla to Ragnarök.", zh: "冰岛的《埃达》保存了北欧神话——从瓦尔哈拉到诸神黄昏。" },
+        },
+        {
+          q: { en: "The Epic of Gilgamesh, the oldest surviving great poem, comes from which civilisation?", zh: "现存最古老的伟大史诗《吉尔伽美什》来自哪个文明？" },
+          o: [{ en: "Egypt", zh: "埃及" }, { en: "Sumer", zh: "苏美尔" },
+              { en: "The Hittites", zh: "赫梯" }, { en: "Persia", zh: "波斯" }],
+          a: 1,
+          note: { en: "Its king of Uruk searched for immortality on clay tablets from Mesopotamia.", zh: "这位乌鲁克国王在美索不达米亚的泥板上寻找不朽。" },
+        },
+        {
+          q: { en: "In Egyptian myth, which god murdered Osiris and fought his heir Horus?", zh: "埃及神话中，哪位神杀害了奥西里斯，又与其继承人荷鲁斯争斗？" },
+          o: [{ en: "Set", zh: "塞特" }, { en: "Anubis", zh: "阿努比斯" },
+              { en: "Thoth", zh: "托特" }, { en: "Horus", zh: "荷鲁斯" }],
+          a: 0,
+          note: { en: "Set's defeat restored order - ma'at - and Osiris went to rule the afterlife.", zh: "塞特被击败，秩序“玛阿特”得以恢复，奥西里斯则统治冥世。" },
+        },
+        {
+          q: { en: "The stone-born Monkey King, Sun Wukong, rampages through which Ming novel?", zh: "石头里诞生的美猴王孙悟空大闹于哪部明代小说？" },
+          o: [{ en: "Water Margin", zh: "《水浒传》" }, { en: "Romance of the Three Kingdoms", zh: "《三国演义》" },
+              { en: "Journey to the West", zh: "《西游记》" }, { en: "The Scholars", zh: "《儒林外史》" }],
+          a: 2,
+          note: { en: "Wu Cheng'en's Journey to the West sends the monkey west to guard a monk seeking sutras.", zh: "吴承恩的《西游记》里，猴子护送唐僧西行取经。" },
+        },
+        {
+          q: { en: "Which bull-headed captive lurked at the heart of Daedalus' labyrinth at Knossos?", zh: "克诺索斯迷宫深处囚禁着哪个牛首人身的怪物？" },
+          o: [{ en: "The Centaur", zh: "半人马" }, { en: "The Minotaur", zh: "弥诺陶洛斯" },
+              { en: "The Cyclops", zh: "独眼巨人" }, { en: "The Chimera", zh: "奇美拉" }],
+          a: 1,
+          note: { en: "Ariadne's thread led Theseus out again - and Athens paid tribute no longer.", zh: "阿里阿德涅的线团引忒修斯走出迷宫，雅典人从此不再纳贡。" },
+        },
+        {
+          q: { en: "Which sword did the Lady of the Lake hand to King Arthur?", zh: "湖中仙女把哪柄剑交给亚瑟王？" },
+          o: [{ en: "Durandal", zh: "杜兰达尔" }, { en: "Joyeuse", zh: "乔尤斯" },
+              { en: "Excalibur", zh: "王者之剑" }, { en: "Curtana", zh: "慈悲剑" }],
+          a: 2,
+          note: { en: "Mortally wounded, Arthur ordered Bedivere to return Excalibur to the water.", zh: "身负重伤的亚瑟命贝德维尔将王者之剑归还湖中。" },
+        },
+      ],
+    },
+    {
+      id: "q29",
+      labelKey: "rqD29",
+      stars: [6, 5, 3],
+      cards: [
+        {
+          q: { en: "Reef-building corals are close relatives of which soft creatures?", zh: "造礁珊瑚与哪类软体动物是近亲？" },
+          o: [{ en: "Jellyfish and anemones", zh: "水母与海葵" }, { en: "Clams and snails", zh: "蛤与螺" },
+              { en: "Starfish", zh: "海星" }, { en: "Sponges", zh: "海绵" }],
+          a: 0,
+          note: { en: "Coral polyps are cnidarians - cousins of anemones and jellyfish - building stone cities in partnership with algae.", zh: "珊瑚虫是刺胞动物——海葵和水母的近亲——与藻类合作建造石城。" },
+        },
+        {
+          q: { en: "Roughly sixty percent of the Amazon rainforest lies inside which country?", zh: "亚马逊雨林约有六成位于哪个国家境内？" },
+          o: [{ en: "Peru", zh: "秘鲁" }, { en: "Colombia", zh: "哥伦比亚" },
+              { en: "Venezuela", zh: "委内瑞拉" }, { en: "Brazil", zh: "巴西" }],
+          a: 3,
+          note: { en: "The Amazon basin spans nine nations; Brazil holds most of its five and a half million square kilometres.", zh: "亚马逊流域横跨九国，巴西占有其550万平方公里中的大部分。" },
+        },
+        {
+          q: { en: "What is the largest animal known to have ever lived?", zh: "已知存在过的最大动物是什么？" },
+          o: [{ en: "The African elephant", zh: "非洲象" }, { en: "Argentinosaurus", zh: "阿根廷龙" },
+              { en: "The blue whale", zh: "蓝鲸" }, { en: "The sperm whale", zh: "抹香鲸" }],
+          a: 2,
+          note: { en: "A blue whale can top 30 metres and 180 tonnes - heavier than any dinosaur yet found.", zh: "蓝鲸可超过30米、重达180吨——比迄今发现的任何恐龙都重。" },
+        },
+        {
+          q: { en: "Darwin announced natural selection in 1858 alongside a letter from which fellow naturalist?", zh: "1858年达尔文宣布自然选择学说，同时宣读了哪位博物学家的信件？" },
+          o: [{ en: "Charles Lyell", zh: "查尔斯·莱尔" }, { en: "Alfred Russel Wallace", zh: "阿尔弗雷德·罗素·华莱士" },
+              { en: "Gregor Mendel", zh: "格里戈·孟德尔" }, { en: "Robert Hooke", zh: "罗伯特·胡克" }],
+          a: 1,
+          note: { en: "Wallace's Ternate letter reached Darwin from the Malay Archipelago - the idea arrived twice.", zh: "华莱士的特尔纳特信件从马来群岛寄来——同一个想法抵达了两次。" },
+        },
+        {
+          q: { en: "Which bird makes the longest known migration, flying pole to pole each year?", zh: "哪种鸟完成已知最长的迁徙，每年往返于两极之间？" },
+          o: [{ en: "The albatross", zh: "信天翁" }, { en: "The swift", zh: "雨燕" },
+              { en: "The Arctic tern", zh: "北极燕鸥" }, { en: "The godwit", zh: "塍鹬" }],
+          a: 2,
+          note: { en: "The Arctic tern's round trip can top 70,000 kilometres - a lifetime of flying reaches the Moon and back three times.", zh: "北极燕鸥的往返路程可超过7万公里——一生的飞行里程相当于三次往返月球。" },
+        },
+        {
+          q: { en: "Monarch butterflies from Canada and the United States overwinter in the oyamel forests of which country?", zh: "来自加拿大和美国的帝王蝶在哪个国家的冷杉林越冬？" },
+          o: [{ en: "Mexico", zh: "墨西哥" }, { en: "The United States", zh: "美国" },
+              { en: "Canada", zh: "加拿大" }, { en: "Guatemala", zh: "危地马拉" }],
+          a: 0,
+          note: { en: "A few hundred million monarchs crowd a dozen mountain sites in Michoacán each winter.", zh: "每年冬天，数亿只帝王蝶挤在米却肯州的十几个山头。" },
+        },
+        {
+          q: { en: "The 2016 Paris Agreement pledges to hold global warming well below which limit?", zh: "2016年《巴黎协定》承诺将全球变暖控制在哪个限度以内？" },
+          o: [{ en: "1°C", zh: "1°C" }, { en: "1.5°C", zh: "1.5°C" },
+              { en: "2°C", zh: "2°C" }, { en: "3°C", zh: "3°C" }],
+          a: 2,
+          note: { en: "Well below 2°C above pre-industrial times, while pursuing efforts towards 1.5°C.", zh: "较工业化前水平远低于2°C，并力争1.5°C。" },
+        },
+      ],
+    },
+    {
+      id: "q30",
+      labelKey: "rqD30",
+      stars: [6, 5, 3],
+      cards: [
+        {
+          q: { en: "Which country launched Sputnik 1, the first artificial satellite, in October 1957?", zh: "1957年10月，哪个国家发射了第一颗人造卫星“斯普特尼克1号”？" },
+          o: [{ en: "The United States", zh: "美国" }, { en: "The Soviet Union", zh: "苏联" },
+              { en: "China", zh: "中国" }, { en: "France", zh: "法国" }],
+          a: 1,
+          note: { en: "An R-7 rocket put a polished metal sphere into orbit; its radio beeping startled the world.", zh: "R-7火箭把一颗抛光金属球送入轨道，它的无线电哔哔声震惊了世界。" },
+        },
+        {
+          q: { en: "Who became the first human in space on 12 April 1961?", zh: "1961年4月12日，谁成为进入太空的第一人？" },
+          o: [{ en: "Alan Shepard", zh: "艾伦·谢泼德" }, { en: "John Glenn", zh: "约翰·格伦" },
+              { en: "Yuri Gagarin", zh: "尤里·加加林" }, { en: "Valentina Tereshkova", zh: "瓦莲京娜·捷列什科娃" }],
+          a: 2,
+          note: { en: "Gagarin's Vostok 1 flight lasted 108 minutes - one orbit changed everything.", zh: "加加林的东方一号飞行历时108分钟——一圈轨道改变了一切。" },
+        },
+        {
+          q: { en: "Apollo 11 touched down in which lunar region on 20 July 1969?", zh: "1969年7月20日，阿波罗11号降落在月球哪个区域？" },
+          o: [{ en: "The Ocean of Storms", zh: "风暴洋" }, { en: "The Sea of Serenity", zh: "澄海" },
+              { en: "The Sea of Tranquility", zh: "静海" }, { en: "Crater Tycho", zh: "第谷环形山" }],
+          a: 2,
+          note: { en: "The Sea of Tranquility - Armstrong and Aldrin spent 21 hours on the surface.", zh: "静海——阿姆斯特朗与奥尔德林在月面停留了21小时。" },
+        },
+        {
+          q: { en: "Which reusable winged spacecraft made its first flight in April 1981?", zh: "哪种可重复使用的带翼航天器于1981年4月首飞？" },
+          o: [{ en: "Buran", zh: "“暴风雪”号" }, { en: "The Space Shuttle", zh: "航天飞机" },
+              { en: "Dragon", zh: "“龙”飞船" }, { en: "Dyna-Soar", zh: "“动力翱翔”" }],
+          a: 1,
+          note: { en: "Columbia's STS-1 began the shuttle era - 135 missions across thirty years.", zh: "哥伦比亚号STS-1开启了航天飞机时代——三十年间共135次任务。" },
+        },
+        {
+          q: { en: "Which 1990 space telescope is named for the astronomer who proved galaxies exist beyond ours?", zh: "1990年发射的哪台空间望远镜以证明银河系之外还有星系的天文学家命名？" },
+          o: [{ en: "Kepler", zh: "开普勒" }, { en: "Spitzer", zh: "斯皮策" },
+              { en: "Hubble", zh: "哈勃" }, { en: "Webb", zh: "韦布" }],
+          a: 2,
+          note: { en: "Edwin Hubble measured Andromeda's distance; the telescope bearing his name took deep field after deep field.", zh: "埃德温·哈勃测出了仙女座的距离；以他命名的望远镜一次次拍下深空场。" },
+        },
+        {
+          q: { en: "The Voyager probes' golden records carry Earth's sounds for whom?", zh: "旅行者号探测器的金唱片为谁携带地球的声音？" },
+          o: [{ en: "Mission controllers", zh: "任务控制中心" }, { en: "Schoolchildren", zh: "学童" },
+              { en: "Future colonists", zh: "未来的移民者" }, { en: "Any life that might find them", zh: "任何可能找到它们的生命" }],
+          a: 3,
+          note: { en: "A Sagan committee chose greetings, music and brainwaves for any finder, however far in the future.", zh: "萨根委员会挑选了问候语、音乐与脑电波，交给无论多远的未来发现者。" },
+        },
+        {
+          q: { en: "The James Webb Space Telescope studies the universe mainly in which light?", zh: "詹姆斯·韦布空间望远镜主要以哪种光观测宇宙？" },
+          o: [{ en: "Ultraviolet", zh: "紫外线" }, { en: "Infrared", zh: "红外线" },
+              { en: "X-ray", zh: "X射线" }, { en: "Radio", zh: "无线电波" }],
+          a: 1,
+          note: { en: "Its gold-coated 6.5-metre mirror gathers infrared - the stretched light of the first galaxies.", zh: "它6.5米的镀金镜面收集红外线——最早星系被拉伸的光。" },
+        },
+      ],
+    },
   ];
 
   function rqText(pair) {
@@ -1440,8 +1781,8 @@
   }
 
 
-  /* The ten-deck ladder: rungs one to seven are named in i18n.js, the three new
-   * ones travel with this file. addStrings only fills keys the shared dictionary
+  /* The thirty-deck ladder: rungs one to seven are named in i18n.js, the rest
+   * travel with this file. addStrings only fills keys the shared dictionary
    * does not already hold, and card copy (question, options, note) is carried
    * bilingually inside each deck row, so nothing here shadows i18n.js. */
   App.addStrings({
@@ -1453,6 +1794,8 @@
       "rqD14": "Inventions", "rqD15": "World Letters", "rqD16": "The Human Machine",
       "rqD17": "The Deep Blue", "rqD18": "Art and Music", "rqD19": "Harvest and Table", "rqD20": "The Industrial Age",
       "rqD21": "Modern Thought", "rqD22": "Engineering Marvels", "rqD23": "Age of Discovery", "rqD24": "The Computing Age",
+      "rqD25": "Money & Markets", "rqD26": "Medicine & Molecules", "rqD27": "Sport & Play",
+      "rqD28": "Myth & Legend", "rqD29": "The Living Planet", "rqD30": "The Space Age",
     },
     zh: {
       "rqD8": "信俗篇",
@@ -1462,6 +1805,8 @@
       "rqD14": "发明故事", "rqD15": "世界文学", "rqD16": "人体机器",
       "rqD17": "深蓝海洋", "rqD18": "艺术与音乐", "rqD19": "物产餐桌", "rqD20": "工业时代",
       "rqD21": "近现代思想", "rqD22": "工程奇迹", "rqD23": "大航海时代", "rqD24": "计算时代",
+      "rqD25": "货币与市场", "rqD26": "医药与分子", "rqD27": "竞技与博弈",
+      "rqD28": "神话与传说", "rqD29": "生灵地球", "rqD30": "太空时代",
     },
   });
 

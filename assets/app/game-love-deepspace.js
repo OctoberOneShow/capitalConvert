@@ -53,6 +53,35 @@
     { id: "lds22", labelKey: "ldsRoute22", turns: 6, target: 94, stars: [3, 4, 5] },
     { id: "lds23", labelKey: "ldsRoute23", turns: 6, target: 88, stars: [3, 4, 5] },
     { id: "lds24", labelKey: "ldsRoute24", turns: 6, target: 82, stars: [3, 4, 5] },
+    /* Routes 25-30, the summit: the five-turn mission. Every shipped route,
+     * down through the six-turn runs at 22-24, kept a sixth turn in reserve,
+     * and every one priced its bands three, two and one turns under the
+     * budget. The summit spends both reserves at once: the clock drops below
+     * six turns for the first time, and with no slack turn left the bands
+     * leave those offsets - the three-star line rides the three-turn chain
+     * while it still pays (three matched turns bank at most 105, Xavier's
+     * 33 + 35 + 37, so 84, 88 and 96 sit under it), and once the target
+     * passes 105 the line walks to the fourth turn, because no three-turn
+     * line can pay 112. The targets climb back up the marks 22-24 sold off -
+     * 84 past 82, 88 level with route 23, 96 past 94 - and the last rung asks
+     * the full 120 gauge of five turns, which no earlier route asked of fewer
+     * than ten. Each row was driven 400 times per partner per policy in
+     * tools/lds-forge.js at the mission's own starting strength (72 energy,
+     * 56 trust): the expert bench clears every rung (wins 100/100/100/94/89/78
+     * percent - the first routes in the ladder whose win share ever moves),
+     * the best three-star lines the bench finds measure 27.3/24.5/2.3/23.8/
+     * 18.8/9.8 percent, every one reachable and every one rarer than route
+     * 24's 35, and a rest-heavy policy that clears these rungs' six-turn
+     * twins 100/99/87/49/36/21 percent of the time manages 97/93/73/5/0/0 on
+     * five turns - the forge's cut test restores the sixth turn on every rung
+     * and the nervous hand does strictly better each time, which is the proof
+     * that the clock, not the target, is the lever. */
+    { id: "lds25", labelKey: "ldsRoute25", turns: 5, target: 84, stars: [3, 4, 5] },
+    { id: "lds26", labelKey: "ldsRoute26", turns: 5, target: 88, stars: [3, 4, 5] },
+    { id: "lds27", labelKey: "ldsRoute27", turns: 5, target: 96, stars: [3, 4, 5] },
+    { id: "lds28", labelKey: "ldsRoute28", turns: 5, target: 112, stars: [4, 5, 6] },
+    { id: "lds29", labelKey: "ldsRoute29", turns: 5, target: 116, stars: [4, 5, 6] },
+    { id: "lds30", labelKey: "ldsRoute30", turns: 5, target: 120, stars: [4, 5, 6] },
   ];
 
   var ldsPartners = [
@@ -887,6 +916,16 @@
       "ldsMemory18": "A softer target, a shorter night. {name} takes the slow route home just to keep the stars in view.",
       "ldsMemory19": "Seven turns burning bright. {name} spends every spark beside you and saves none for the dark.",
       "ldsMemory20": "At the Heartstar Finale, the gauge fills with the last turn to spare. {name} is already looking at the next horizon.",
+      "ldsMemory21": "Seven turns against the ceiling of the sky. {name} keeps the gauge climbing past the point where it used to stall.",
+      "ldsMemory22": "Six turns to dawn, with no spark to spare. {name} calls the last move before you feel it coming.",
+      "ldsMemory23": "Deep space answers on a frequency two people can hold. {name} finds it without a word.",
+      "ldsMemory24": "Infinite starlight, six turns to spend it. {name} takes your hand, and the gauge settles exactly where it should.",
+      "ldsMemory25": "The gate opens at five turns exactly. {name} takes your hand and steps through without looking back.",
+      "ldsMemory26": "The gauge climbs back mark by mark. {name} reads each one aloud as it returns, like an old letter found again.",
+      "ldsMemory27": "Three turns is all the sky will give. {name} spends none of them doubting.",
+      "ldsMemory28": "Where the third turn fell silent, the fourth answers. {name}'s hand was already reaching for it.",
+      "ldsMemory29": "No slack left anywhere. {name} holds the rhythm so steady you forget to be afraid.",
+      "ldsMemory30": "The full gauge, five turns to fill it. {name} watches the last point settle with you, and not one of them was spare.",
       "ldsMoveRecover": "Catch Your Breath",
       "ldsMoveRecoverDetail": "Restore energy; spends one turn",
       "ldsGainPreview": "Energy {e} · Trust {t} · Resonance {r}",
@@ -969,6 +1008,12 @@
       "ldsRoute22": "Six Turns to Dawn",
       "ldsRoute23": "Deep Space Resonance",
       "ldsRoute24": "Infinite Starlight",
+      "ldsRoute25": "The Five-Turn Gate",
+      "ldsRoute26": "The Gauge Reclaimed",
+      "ldsRoute27": "Three Turns, Just Enough",
+      "ldsRoute28": "Four Turns Answer",
+      "ldsRoute29": "The Last Slack",
+      "ldsRoute30": "Five Turns to Full",
       "ldsPartnerXavier": "Xavier",
       "ldsPartnerZayne": "Zayne",
       "ldsPartnerRafayel": "Rafayel",
@@ -1004,7 +1049,7 @@
       "ldsLogEmpty": "No actions yet.",
       "ldsLogStart": "Route {route} launched with {name}.",
       "ldsLogTurn": "Turn {n}: {move} | Resonance {r}, Energy {e}, Trust {t}.",
-      "ldsHint": "Match the highlighted counter to build a streak and charge Evol. Recover costs a turn. Reach the target with energy above 0 and trust at least 24. Switching partners restarts the mission.",
+      "ldsHint": "Match the highlighted counter to build a streak and charge Evol. Recover costs a turn. Reach the target with energy above 0 and trust at least 24. Switching partners restarts the mission. Summit: routes 25-30 cut the mission to five turns - the clock no earlier route spent - while the target climbs back to the full 120 gauge; past 105 the three-star line moves to the fourth turn, since three matched turns top out at 105.",
       "ldsPartnerSwap": "Switched lead partner to {name}.",
       "logLoveDeepspace": "Cleared Love and Deepspace route with {name} in {n} turns",
     },
@@ -1104,6 +1149,16 @@
       "ldsMemory18": "目标放软，夜也变短。{name} 特意绕了慢路回家，只为多看一眼星光。",
       "ldsMemory19": "七个回合烧得通亮。{name} 与你并肩花掉每一簇火花，一点也没留给黑暗。",
       "ldsMemory20": "心星终章，共鸣槽在最后一个回合之前就已满格。{name} 已经在望向下一个地平线。",
+      "ldsMemory21": "七轮极境，七个回合抵着天际的尽头。{name} 让共鸣槽越过曾经停滞的刻度，一路向上。",
+      "ldsMemory22": "破晓六转，容不下一次浪费的火花。{name} 在你察觉之前，已经喊出了最后一步。",
+      "ldsMemory23": "深空的回应落在一段只有两个人守得住的频率上。{name} 一言不发，就与它合上了拍。",
+      "ldsMemory24": "永恒星芒，只有六个回合可以花。{name} 握住你的手，共鸣槽恰好停在它该停的地方。",
+      "ldsMemory25": "五回合，门开的那一刻。{name} 握住你的手，头也不回地走了进去。",
+      "ldsMemory26": "共鸣槽一格一格涨了回来。{name} 像重读一封旧信，把每道刻度念给你听。",
+      "ldsMemory27": "天空只肯给三个回合。{name} 没有一个用来犹豫。",
+      "ldsMemory28": "第三回合沉默之处，第四回合给出了回答。{name} 的手早已伸向那里。",
+      "ldsMemory29": "再也没有一丝余量。{name} 把节奏稳得让你忘了害怕。",
+      "ldsMemory30": "满格的共鸣槽，只用五个回合填满。{name} 陪你看着最后一点刻度落定，没有一格是多余的。",
       "ldsMoveRecover": "稍作休整",
       "ldsMoveRecoverDetail": "恢复能量，消耗一个回合",
       "ldsGainPreview": "能量 {e} · 默契 {t} · 共鸣 {r}",
@@ -1186,6 +1241,12 @@
       "ldsRoute22": "破晓六转",
       "ldsRoute23": "深空共振",
       "ldsRoute24": "永恒星芒",
+      "ldsRoute25": "五回合之门",
+      "ldsRoute26": "夺回的共鸣槽",
+      "ldsRoute27": "三回合，刚好够",
+      "ldsRoute28": "四回合作答",
+      "ldsRoute29": "最后的余量",
+      "ldsRoute30": "五回合满槽",
       "ldsPartnerXavier": "沈星回",
       "ldsPartnerZayne": "黎深",
       "ldsPartnerRafayel": "祁煜",
@@ -1221,7 +1282,7 @@
       "ldsLogEmpty": "还没有行动记录。",
       "ldsLogStart": "航线 {route} 已启动，搭档 {name}。",
       "ldsLogTurn": "第 {n} 回合：{move}｜共鸣 {r}、能量 {e}、默契 {t}。",
-      "ldsHint": "匹配高亮的应对行动可累积连击并为 Evol 充能。休整消耗一回合。能量须大于 0、默契至少 24 才能通关。切换搭档会重开任务。",
+      "ldsHint": "匹配高亮的应对行动可累积连击并为 Evol 充能。休整消耗一回合。能量须大于 0、默契至少 24 才能通关。切换搭档会重开任务。巅峰段：25-30 号航线把任务压进五个回合——此前所有航线都留着第六回合——同时共鸣目标一路涨回满槽 120；超过 105 后，三星线移到第四回合，因为三个匹配回合最多攒到 105。",
       "ldsPartnerSwap": "已切换主导搭档为 {name}。",
       "logLoveDeepspace": "与 {name} 在 {n} 回合内完成了恋与深空任务",
     },
@@ -1258,6 +1319,7 @@
         "Three matching counters charge Evol. Its partner-specific skill uses one turn; recovery restores energy but also uses a turn. A quiet moment grants trust once per mission.",
         "Win with fewer turns to earn more stars and unlock harder routes. Each partner can collect a saved memory for every route; find them in Memories.",
         "Animate character plays an optional muted official video online. Local portraits work offline; motion settings and closing the drawer pause the video.",
+        "New tier: the summit routes (25-30) hold every mission to five turns - the clock no earlier route spent - while the target climbs from 84 back to the full 120 gauge; past 105 the three-star line walks from the third turn to the fourth, and the last rung fills the whole gauge with none of the five turns to spare.",
       ],
       zh: [
         "陪伴：每位搭档都有九张本地画面，可切换缩略图，或前往高清画廊查看完整原图、放大与收藏。拍照馆会保存所选画面，打招呼可播放静音官方视频。",
@@ -1277,6 +1339,7 @@
         "匹配三次遭遇即可为 Evol 充满能量；专属技能与恢复能量的休整均消耗一回合。片刻陪伴每次任务可增加一次默契。",
         "用更少回合获胜可拿更多星并解锁新航线。每位搭档在每条航线都可收藏一段回忆，在回忆收藏中查看。",
         "角色动画为可选的联网静音官方视频。本地肖像可离线查看；关闭动态效果或游戏面板会暂停视频。",
+        "新层级：巅峰航线（25-30）把每个任务都压进五个回合——此前所有航线都留着第六回合——同时共鸣目标从 84 涨回满槽 120；超过 105 后三星线从第三回合移到第四回合，终点航线要用五回合填满整条共鸣槽，一回合都省不下。",
       ],
     },
   });
@@ -1289,4 +1352,5 @@
   App.ldsPartners = ldsPartners;
   App.ldsRoutes = ldsRoutes;
   App.ldsMoves = ldsMoves;
+  App.ldsEvents = ldsEvents;
 })(window.CapitalConvert = window.CapitalConvert || {});

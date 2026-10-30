@@ -2976,8 +2976,8 @@ check(
     if (!block) return false;
     const maps = Array.from(block[1].matchAll(/map:\s*\[([\s\S]*?)\]/g));
     const roomIds = Array.from(block[1].matchAll(/id:\s*"([a-z0-9]+)"/g)).map((m) => m[1]);
-    /* The ladder is pinned at twenty-four rooms and the ids must stay distinct. */
-    if (roomIds.length !== 24 || maps.length !== roomIds.length) return false;
+    /* The ladder is pinned at thirty rooms and the ids must stay distinct. */
+    if (roomIds.length !== 30 || maps.length !== roomIds.length) return false;
     if (new Set(roomIds).size !== roomIds.length) return false;
     const thresholds = Array.from(block[1].matchAll(/starMoves:\s*\[(\d+),\s*(\d+),\s*(\d+)\]/g)).map(
       (m) => [Number(m[1]), Number(m[2]), Number(m[3])],
@@ -3213,6 +3213,7 @@ check(
   "logGlyphPusher",
   "lvlNum17", "lvlNum18", "lvlNum19", "lvlNum20",
   "lvlNum21", "lvlNum22", "lvlNum23", "lvlNum24",
+  "lvlNum25", "lvlNum26", "lvlNum27", "lvlNum28", "lvlNum29", "lvlNum30",
   "tabGlyphNet", "netLevelSelectLabel", "netL1", "netL6",
   "netFieldLabel", "netPrompt", "netReady", "netPaused", "netCleared",
   "netNextGrid", "netCampaignDone", "netHint", "logGlyphNet",
@@ -3995,9 +3996,9 @@ check(
     /* One object per row: deal lists use only square brackets, so a lazy
      * brace match isolates each row cleanly. */
     const rows = Array.from(block[1].matchAll(/\{[^{}]*\}/g)).map((m) => m[0]);
-    if (rows.length !== 24) return false;
+    if (rows.length !== 30) return false;
     const ids = rows.map((row) => (/id:\s*"([a-z0-9]+)"/.exec(row) || [])[1]);
-    if (ids.some((id) => !id) || new Set(ids).size !== 24) return false;
+    if (ids.some((id) => !id) || new Set(ids).size !== 30) return false;
     const discs = rows.map((row) => Number((/discs:\s*(\d+)/.exec(row) || [])[1]));
     const opts = rows.map((row) => (/opt:\s*(\d+)/.exec(row) || [])[1]);
     const thresholds = rows.map((row) => {
@@ -4915,7 +4916,12 @@ check(
           table.target === Math.round(table.start * 1.5) &&
           table.starHands[0] < table.starHands[1] &&
           table.starHands[1] < table.starHands[2] &&
-          table.decks >= 1,
+          table.decks >= 1 &&
+          /* a table that dials its own buy-back must still leave the player
+           * able to cover the cheapest bet, and never richer than a full
+           * stack - the rope felt buys back short, not ahead */
+          (table.restake === undefined ||
+            (table.restake >= table.bets[0] && table.restake <= table.start)),
       );
     } catch (error) {
       return false;
@@ -4928,7 +4934,9 @@ check(
     read("assets/app/game-blackjack.js"),
   ) &&
     /if \(chips < table\.bets\[0\]\) \{/.test(read("assets/app/game-blackjack.js")) &&
-    /if \(chips < table\.bets\[0\]\) \{[\s\S]{0,240}?chips = table\.start;/.test(
+    /* the restake is the summit's own dial now: a table may buy back short
+     * of the full stack, defaulting to a full restake when it does not */
+    /if \(chips < table\.bets\[0\]\) \{[\s\S]{0,240}?chips = table\.restake !== undefined \? table\.restake : table\.start;/.test(
       read("assets/app/game-blackjack.js"),
     ) &&
     /table\.bets\.forEach/.test(read("assets/app/game-blackjack.js")) &&
@@ -5210,19 +5218,33 @@ console.log("\n== 6. registry games: injected, linked, bilingual, scoped ==");
       new RegExp(`^      "${tabKey}":`, "m").test(source),
     );
 
-    const pack = /App\.addStrings\(\{([\s\S]*?)\n  \}\);/.exec(source);
-    if (!check(`${name}: ships a bilingual pack`, !!pack)) {
-      return;
-    }
-    const enBlock = /\ben:\s*\{([\s\S]*?)\n\s{4}\}/.exec(pack[1]);
-    const zhBlock = /\bzh:\s*\{([\s\S]*?)\n\s{4}\}/.exec(pack[1]);
-    if (!check(`${name}: pack has both en and zh bodies`, !!enBlock && !!zhBlock)) {
+    /* A module may call addStrings more than once (a summit tier often ships
+     * its own pack), so every block is read - scanning only the first left
+     * second-pack keys looking unwritten. */
+    const packs = Array.from(
+      source.matchAll(/App\.addStrings\(\{([\s\S]*?)\n  \}\);/g),
+    ).map((match) => match[1]);
+    if (!check(`${name}: ships a bilingual pack`, packs.length > 0)) {
       return;
     }
     const grab = (body) =>
       Array.from(body.matchAll(/"([A-Za-z0-9]+)":/g)).map((match) => match[1]);
-    const enKeys = grab(enBlock[1]);
-    const zhKeys = grab(zhBlock[1]);
+    const enKeys = [];
+    const zhKeys = [];
+    let packShapeOk = true;
+    packs.forEach((body) => {
+      const enBlock = /\ben:\s*\{([\s\S]*?)\n[ \t]*\}/.exec(body);
+      const zhBlock = /\bzh:\s*\{([\s\S]*?)\n[ \t]*\}/.exec(body);
+      if (!enBlock || !zhBlock) {
+        packShapeOk = false;
+        return;
+      }
+      enKeys.push(...grab(enBlock[1]));
+      zhKeys.push(...grab(zhBlock[1]));
+    });
+    if (!check(`${name}: pack has both en and zh bodies`, packShapeOk)) {
+      return;
+    }
     check(
       `${name}: en and zh packs are 1:1 (${enKeys.length} keys)`,
       enKeys.length === zhKeys.length &&
@@ -5268,10 +5290,12 @@ console.log("\n== 6. registry games: injected, linked, bilingual, scoped ==");
       rowMissing.join(","),
     );
 
-    const bare = Array.from(
-      pack[1].matchAll(/^\s{6}([A-Za-z][A-Za-z0-9]*):/gm),
-    )
-      .map((match) => match[1])
+    const bare = packs
+      .flatMap((body) =>
+        Array.from(body.matchAll(/^\s{6}([A-Za-z][A-Za-z0-9]*):/gm)).map(
+          (match) => match[1],
+        ),
+      )
       .filter((key) => key !== "en" && key !== "zh");
     check(
       `${name}: pack keys are quoted for the six-space key audit`,
@@ -5423,8 +5447,8 @@ console.log("\n== 5oa. Lost Language's drowned archive ==");
       "\nreturn { lngLevels, lngGenerate, lngAnalyses, lngPrefixCost, lngGlossOnlyFails };",
   )();
   check(
-    "Lost Language now ships twenty-four chambers",
-    api.lngLevels.length === 24,
+    "Lost Language now ships thirty chambers",
+    api.lngLevels.length === 30,
     String(api.lngLevels.length),
   );
   const deep = api.lngLevels.slice(10);
@@ -5446,7 +5470,8 @@ console.log("\n== 5oa. Lost Language's drowned archive ==");
   ["lngChamber11", "lngChamber12", "lngChamber13", "lngChamber14",
     "lngChamber15", "lngChamber16", "lngChamber17", "lngChamber18",
     "lngChamber19", "lngChamber20", "lngChamber21", "lngChamber22",
-    "lngChamber23", "lngChamber24"].forEach((key) => {
+    "lngChamber23", "lngChamber24", "lngChamber25", "lngChamber26",
+    "lngChamber27", "lngChamber28", "lngChamber29", "lngChamber30"].forEach((key) => {
     check(
       `the "${key}" key exists in both languages`,
       countOccurrences(appJs, `"${key}":`) === 2,

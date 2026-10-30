@@ -23,23 +23,43 @@
  * load falls below the shipped summit (the rung stops being the hard tier),
  * and the win condition is shown to require the rung's defining resource
  * (three stars demands 253 of the 274 notes - more hits than any shipped
- * track asks for). */
+ * track asks for).
+ *
+ * The summit tier t25-t30 gets the same three hands, and its curve is
+ * measured off the engine's own builder: the wall's density climbs strictly
+ * through the six and opens past the hard tier's peak, with per-rung records
+ * the gate re-measures on every run (t25's no-rest lane, t27's
+ * bars/notes/demand, t29's plain speed, t30's tempo+swing+nps peak). The
+ * summit's cuts are honest alternatives, and the header says why: a summit
+ * plan is denser than any chart the ladder ships, so the plan's taps blanket
+ * every sparse replacement and no density cut can fail the replay (the
+ * shipped taper leaves zero cut notes outside a hit window of a tap). So
+ * t27's length and the walls are proved by load the way t23 is: cut the
+ * lever and the rung's measured load falls under the bar it climbed (t27's
+ * burn drops under the summit walls around it; a wall cut to the shipped
+ * taper falls under the hard tier's peak), t27's three-star line demands
+ * more hits than any earlier track holds notes, and quieting one lane to
+ * the shipped floor takes the no-rest record down with the wall. */
 module.exports = function gate(ctx) {
   const { App, env, check } = ctx;
   const levels = App.beatLevels;
   const tierIds = ["t21", "t22", "t23", "t24"];
+  const summitIds = ["t25", "t26", "t27", "t28", "t29", "t30"];
   const byId = (id) => levels.find((level) => level.id === id);
   const KEYS = ["d", "f", "j", "k"];
 
   /* ---- ladder shape ---- */
-  check("game-ink-beat", "the ladder holds at least twenty-four tracks",
-    levels.length >= 24, String(levels.length));
+  check("game-ink-beat", "the ladder holds all thirty tracks",
+    levels.length >= 30, String(levels.length));
   check("game-ink-beat", "every track id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
   const missing = tierIds.filter((id) => !byId(id));
   check("game-ink-beat", "the hard tier t21-t24 is present",
     missing.length === 0, missing.join(","));
+  const missingSummit = summitIds.filter((id) => !byId(id));
+  check("game-ink-beat", "the summit tier t25-t30 is present",
+    missingSummit.length === 0, missingSummit.join(","));
 
   /* ---- measured load, straight off the engine's chart builder ---- */
   const stats = (def) => {
@@ -264,12 +284,164 @@ module.exports = function gate(ctx) {
       JSON.stringify(readSave().cleared[id] || null));
   }
 
+  /* ---- the summit tier: the four-lane wall, measured and played ---- */
+  const summitStats = {};
+  summitIds.forEach((id) => {
+    summitStats[id] = stats(byId(id));
+    fullChart[id] = App.beatChart(byId(id));
+  });
+  const summitNps = summitIds.map((id) => summitStats[id].nps);
+  const allNps = levels.map((level) => stats(level).nps);
+  check("game-ink-beat", "the summit's measured density climbs: " +
+      summitNps.map((n) => n.toFixed(2)).join(" -> ") + " notes a second",
+    climbs(summitNps), summitNps.map((n) => n.toFixed(3)).join(","));
+  check("game-ink-beat", "the summit opens past the hard tier's peak (" +
+      summitNps[0].toFixed(2) + " vs t24 " + tierStats.t24.nps.toFixed(2) +
+      ") and t30 ends the ladder as its densest track",
+    summitNps[0] > tierStats.t24.nps &&
+      summitNps[summitNps.length - 1] === Math.max.apply(null, allNps),
+    "summit " + summitNps.map((n) => n.toFixed(2)).join("/") + ", ladder peak " +
+      Math.max.apply(null, allNps).toFixed(2));
+  check("game-ink-beat", "t25 is the first no-rest wall past the shipped peak: its quietest lane lands " +
+      summitStats.t25.minLane + " notes",
+    summitStats.t25.nps > tierStats.t24.nps && summitStats.t25.minLane > shippedMaxMinLane,
+    "minLane " + summitStats.t25.minLane + " vs shipped " + shippedMaxMinLane);
+  check("game-ink-beat", "t26 hangs the shipped swing on a faster wall than the hard tier's",
+    byId("t26").swing === 0.34 && byId("t26").bpm > byId("t24").bpm &&
+      summitStats.t26.nps > tierStats.t24.nps,
+    "bpm " + byId("t26").bpm + ", swing " + byId("t26").swing);
+  check("game-ink-beat", "t27 is the burn record: " + byId("t27").bars + " bars and " +
+      summitStats.t27.total + " notes",
+    byId("t27").bars > Math.max(shippedMaxBars, byId("t23").bars) &&
+      summitStats.t27.total > Math.max(tierStats.t24.total, shippedMaxTotal),
+    "bars " + byId("t27").bars + ", notes " + summitStats.t27.total);
+  const t27Demand = Math.ceil(summitStats.t27.total * 0.92);
+  check("game-ink-beat", "t27's win requires its length: three stars demands " + t27Demand +
+      " hits, more than any earlier track holds notes",
+    t27Demand > tierStats.t24.total && t27Demand > shippedMaxTotal,
+    "demands " + t27Demand + " vs t24 " + tierStats.t24.total + " vs shipped " + shippedMaxTotal);
+  check("game-ink-beat", "t28 swings deeper than anything shipped without trading the wall away",
+    byId("t28").swing > shippedMaxSwing && byId("t28").swing < byId("t24").swing &&
+      summitStats.t28.nps > tierStats.t24.nps,
+    "swing " + byId("t28").swing + ", nps " + summitStats.t28.nps.toFixed(2));
+  check("game-ink-beat", "t29 is the fastest plain wall: no swing, " +
+      summitStats.t29.nps.toFixed(2) + " notes a second at " + byId("t29").bpm + " BPM",
+    !byId("t29").swing && byId("t29").bpm > byId("t24").bpm &&
+      summitStats.t29.nps > tierStats.t24.nps,
+    "bpm " + byId("t29").bpm + ", nps " + summitStats.t29.nps.toFixed(2));
+  check("game-ink-beat", "t30 closes at the top tempo and the deepest swing together",
+    byId("t30").bpm === Math.max.apply(null, levels.map((level) => level.bpm)) &&
+      byId("t30").swing === Math.max.apply(null, levels.map((level) => level.swing || 0)) &&
+      summitStats.t30.nps > tierStats.t24.nps,
+    "bpm " + byId("t30").bpm + ", swing " + byId("t30").swing +
+      ", nps " + summitStats.t30.nps.toFixed(2));
+
+  /* The save walks into this section holding t21-t24 at three stars from the
+   * hard tier above, so the picker sells t25 immediately; each summit clear
+   * then unlocks the next rung the same way. */
+  summitIds.forEach((id) => {
+    const level = byId(id);
+
+    /* A rung that plays itself is not a rung. */
+    const idle = playTrack(id, fullChart[id], { play: () => false, deltaMs: 0 });
+    check("game-ink-beat", id + ": doing nothing reads 0/3 stars and records nothing",
+      idle.selected && idle.stars === 0 && !readSave().cleared[id],
+      JSON.stringify({ selected: idle.selected, stars: idle.stars, text: idle.text.slice(0, 40) }));
+
+    /* The star bands from both directions. */
+    const perfect = playTrack(id, fullChart[id], { play: () => true, deltaMs: -20 });
+    check("game-ink-beat", id + ": frame-perfect play reads 100% and three stars",
+      perfect.selected && perfect.stars === 3 && perfect.acc === 100,
+      JSON.stringify(perfect));
+    const steady = playTrack(id, fullChart[id], { play: (i) => i % 7 !== 3, deltaMs: -20 });
+    check("game-ink-beat", id + ": dropping one note in seven lands two stars, not three",
+      steady.stars === 2 && steady.acc >= 78 && steady.acc < 92,
+      JSON.stringify(steady));
+    const casual = playTrack(id, fullChart[id], { play: () => true, deltaMs: 100 });
+    check("game-ink-beat", id + ": a beat-late hand still clears at one star",
+      casual.stars === 1 && casual.acc === 60, JSON.stringify(casual));
+
+    /* The next rung unlocks only through the clear this rung just recorded. */
+    const index = summitIds.indexOf(id);
+    if (index + 1 < summitIds.length) {
+      const nextId = summitIds[index + 1];
+      sel.value = nextId;
+      env.dispatch(sel, "change");
+      check("game-ink-beat", nextId + " unlocks once " + id + " is cleared",
+        sel.value === nextId, sel.value);
+    }
+
+    /* Mechanic proof. t27 keeps the honest alternative for its length lever,
+     * the way t23 does above. The wall rungs keep it too, for a measured
+     * reason: a summit plan is denser than any chart the ladder ships, so
+     * the plan's taps blanket every sparse cut and a density replacement
+     * cannot fail the replay (probed: the shipped taper leaves zero cut
+     * notes more than a hit-window from a tap). The wall is therefore proved
+     * by load, again the t23 way: cut it back to the shipped taper and the
+     * rung's measured density falls under the hard tier's peak - the rung
+     * stops being the summit - and quieting any one lane to the shipped
+     * floor takes the no-rest record down with it, so the wall itself, not
+     * the seed, is what keeps every lane busy. */
+    const saved = JSON.parse(JSON.stringify(level));
+    let cut = null;
+    let cutTotal = null;
+    if (id === "t27") {
+      level.bars = 30;
+      cut = playTrack(id, fullChart[id], { play: () => true, deltaMs: -20 });
+      Object.assign(level, saved);
+      sel.value = id;
+      env.dispatch(sel, "change");
+      cutTotal = App.beatChart(Object.assign({}, level, { bars: 30 })).total;
+      check("game-ink-beat", "t27: shortening alone cannot fail the plan (the replay " +
+          "still reads 100%), so length is proved by load and demand",
+        cut.acc === 100 && cut.stars === 3,
+        "cut replay " + cut.acc + "%/" + cut.stars + " stars");
+      check("game-ink-beat", "t27's 40 bars are the lesson: cut to the shipped 30, the " +
+          "burn falls under the summit walls around it (" + cutTotal + " notes vs " +
+          summitStats.t29.total + " and " + summitStats.t30.total + ")",
+        cutTotal < summitStats.t29.total && cutTotal < summitStats.t30.total,
+        "cut " + cutTotal + " vs t29 " + summitStats.t29.total + ", t30 " + summitStats.t30.total);
+    } else {
+      const cutShape = Object.assign({}, level, { density: [0.14, 0.105, 0.155, 0.08] });
+      const cutChart = App.beatChart(cutShape);
+      const cutNps = cutChart.total / cutChart.end;
+      check("game-ink-beat", id + " (wall cut to the shipped taper): the measured load falls " +
+          "under the hard tier's peak - the rung stops being the summit",
+        cutNps < tierStats.t24.nps,
+        "cut " + cutNps.toFixed(2) + " nps vs t24 " + tierStats.t24.nps.toFixed(2));
+      /* Lane 0 is the builder's forced downbeat (it fires every bar's first
+       * step whatever its density), so the lane that can actually rest is
+       * lane 1: quiet it to the shipped floor and the chart's quietest lane
+       * falls under the shipped no-rest record. */
+      const quietShape = level.density.slice();
+      quietShape[1] = 0.03;
+      const quietChart = App.beatChart(Object.assign({}, level, { density: quietShape }));
+      check("game-ink-beat", id + " (the hats lane quieted to the shipped floor): the " +
+          "no-rest record goes with the wall",
+        Math.min.apply(null, quietChart.lanes.map((lane) => lane.length)) < shippedMaxMinLane,
+        "quieted minLane " + Math.min.apply(null, quietChart.lanes.map((lane) => lane.length)) +
+          " vs shipped " + shippedMaxMinLane);
+      cut = null;
+      cutTotal = null;
+    }
+
+    /* The clear survived the cut and idle attempts: best stars are kept. */
+    check("game-ink-beat", id + " stays cleared at three stars in the campaign save",
+      readSave().cleared[id] && readSave().cleared[id].stars === 3,
+      JSON.stringify(readSave().cleared[id] || null));
+  });
+  const saveAfter = readSave().cleared || {};
+  const clearedCount = Object.keys(saveAfter).filter((id) => saveAfter[id] && saveAfter[id].stars >= 1).length;
+  check("game-ink-beat", "the summit ends the campaign: all thirty tracks sit cleared in the save",
+    clearedCount === 30, String(clearedCount));
+
   /* Copy travels with the module. */
-  const copyKeys = ["beatL21", "beatL22", "beatL23", "beatL24"];
+  const copyKeys = ["beatL21", "beatL22", "beatL23", "beatL24",
+    "beatL25", "beatL26", "beatL27", "beatL28", "beatL29", "beatL30"];
   const copyProblems = copyKeys.filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-ink-beat", "the four track names resolve in both languages",
+  check("game-ink-beat", "the ten deep track names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 };

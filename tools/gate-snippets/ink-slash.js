@@ -20,22 +20,35 @@
  * flood pour, s22 its long clock, s23 the bomb ceiling its target is priced
  * against, s24 its rush. Star bands are derived, never authored: the engine
  * scores starsFor(score, [1.4t, 1.2t, t], "high") and no new round carries
- * band fields of its own. */
+ * band fields of its own.
+ *
+ * The summit s25-s30 runs the same hands against paired dials: every card
+ * hangs its target on two extremes at once, so the cut takes the paired
+ * dial away (s25's long clock, s26 and s28's flood pour, s27 and s29's
+ * sprint, s30's sprint) and the same threading stroke lands under the
+ * target on every seeded round. The curve is the clock's own currency: the
+ * demand per second climbs strictly through the six and opens past the
+ * hard tier's peak, each rung leads the ladder on the dial it is named
+ * for, and the save leaves the summit holding all thirty rounds cleared. */
 module.exports = function gate(ctx) {
   const { App, env, check } = ctx;
   const levels = App.slashLevels;
   const tierIds = ["s21", "s22", "s23", "s24"];
+  const summitIds = ["s25", "s26", "s27", "s28", "s29", "s30"];
   const byId = (id) => levels.find((level) => level.id === id);
 
   /* ---- ladder shape ---- */
-  check("game-ink-slash", "the ladder holds at least twenty-four rounds",
-    levels.length >= 24, String(levels.length));
+  check("game-ink-slash", "the ladder holds all thirty rounds",
+    levels.length >= 30, String(levels.length));
   check("game-ink-slash", "every round id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
   const missing = tierIds.filter((id) => !byId(id));
   check("game-ink-slash", "the hard tier s21-s24 is present",
     missing.length === 0, missing.join(","));
+  const missingSummit = summitIds.filter((id) => !byId(id));
+  check("game-ink-slash", "the summit tier s25-s30 is present",
+    missingSummit.length === 0, missingSummit.join(","));
 
   /* ---- stage the real panel in the stub DOM ---- */
   const doc = env.document;
@@ -291,12 +304,112 @@ module.exports = function gate(ctx) {
   check("game-ink-slash", "every cut left the tier unbeatable in its advertised shape",
     tierProofs.every((p) => p.endsWith(":ok")), tierProofs.join(" "));
 
+  /* ---- the summit: paired dials, the same hands, the same cut ---- */
+  const summitProofs = [];
+  for (const id of summitIds) {
+    const level = byId(id);
+    const thread = [];
+    for (let k = 1; k <= 4; k += 1) {
+      thread.push(playRound(id, k * 104729, { slice: true }));
+    }
+    const threeStars = thread.filter((r) => r.stars === 3).length;
+    check("game-ink-slash", id + ": the committed stroke clears with three stars and survives",
+      thread.every((r) => r.selected && r.cleared && r.survived) && threeStars >= 1,
+      JSON.stringify(thread.map((r) => [r.score, r.target, r.stars, r.survived ? 1 : 0])));
+
+    const idle = playRound(id, 97, { slice: false });
+    const lazy = [];
+    for (let k = 1; k <= 3; k += 1) {
+      lazy.push(playRound(id, k * 104729, { slice: true, strokeMs: 700 }));
+    }
+    check("game-ink-slash", id + ": doing nothing never scores and short swipes never clear",
+      idle.score === 0 && !idle.cleared && lazy.every((r) => !r.cleared),
+      "idle " + idle.score + " lazy " + JSON.stringify(lazy.map((r) => [r.score, r.target])));
+
+    /* The paired dial is load-bearing: cut it on the live def, re-select so
+     * the engine re-deals under the cut, and the same threading stroke
+     * cannot reach the target on any seeded round. */
+    const saved = JSON.parse(JSON.stringify(level));
+    const cut = id === "s25" ? { timeS: 30 }
+      : id === "s27" || id === "s29" || id === "s30" ? { rush: 0 }
+        : { spawnMs: 355 };
+    const cutHow = id === "s25" ? "clock cut back to a shipped-length 30s"
+      : id === "s27" || id === "s29" || id === "s30" ? "sprint flag removed"
+        : "pour cut back to the shipped summit's 355ms";
+    Object.assign(level, cut);
+    const cutDeals = [];
+    for (let k = 1; k <= 4; k += 1) {
+      cutDeals.push(playRound(id, k * 104729, { slice: true }));
+    }
+    Object.assign(level, saved);
+    sel.value = id;
+    env.dispatch(sel, "change");
+    const cutClears = cutDeals.filter((d) => d.cleared).length;
+    summitProofs.push(id + (cutClears === 0 ? ":ok" : ":" + cutClears + "/4"));
+    check("game-ink-slash", id + " (" + cutHow + "): the same stroke cannot reach the target",
+      cutClears === 0 && cutDeals.every((d) => d.selected),
+      "cut clears " + cutClears + "/4 " + JSON.stringify(cutDeals.map((d) => [d.score, d.target])));
+
+    /* The bands are the engine's own derivation, not authored fields. */
+    check("game-ink-slash", id + " carries no authored star band",
+      level.starBands === undefined && level.bands === undefined && level.stars === undefined,
+      JSON.stringify(Object.keys(level)));
+
+    /* The clear survived the cut, the idle pen and the short swipes. */
+    check("game-ink-slash", id + " stays cleared in the campaign save",
+      readSave().cleared[id] && readSave().cleared[id].stars >= 1,
+      JSON.stringify(readSave().cleared[id] || null));
+
+    /* The next round unlocks only through the clear this round just recorded. */
+    const index = summitIds.indexOf(id);
+    if (index + 1 < summitIds.length) {
+      sel.value = summitIds[index + 1];
+      env.dispatch(sel, "change");
+      check("game-ink-slash", summitIds[index + 1] + " unlocks once " + id + " is cleared",
+        sel.value === summitIds[index + 1], sel.value);
+    }
+  }
+  const saveFinal = readSave().cleared || {};
+  const clearedAll = Object.keys(saveFinal).filter((id) =>
+    saveFinal[id] && saveFinal[id].stars >= 1).length;
+  check("game-ink-slash", "the summit ends the campaign: all thirty rounds sit cleared in the save",
+    clearedAll === 30, String(clearedAll));
+
+  /* The summit is the hard tier on the clock's own currency, squared: the
+   * demand per second climbs strictly through the six, opens past the hard
+   * tier's peak, and the closer ends the ladder as its highest demand. */
+  const summitDemands = summitIds.map((id) => byId(id).target / byId(id).timeS);
+  const tierPeak = Math.max.apply(null, tierIds.map((id) => byId(id).target / byId(id).timeS));
+  check("game-ink-slash", "the summit's demand per second climbs strictly (" +
+      summitDemands.map((n) => n.toFixed(0)).join(" -> ") + ") and opens past the hard tier's " +
+      tierPeak.toFixed(0),
+    summitDemands.every((v, i) => i === 0 || v > summitDemands[i - 1]) &&
+      summitDemands[0] > tierPeak,
+    summitDemands.join("/") + " vs tier " + tierPeak.toFixed(1));
+  check("game-ink-slash", "s30 ends the ladder as its highest demand per second",
+    summitDemands[summitDemands.length - 1] ===
+      Math.max.apply(null, levels.map((l) => l.target / l.timeS)),
+    "s30 " + summitDemands[summitDemands.length - 1].toFixed(1));
+  check("game-ink-slash", "each summit round leads the ladder on the dial it is named for",
+    byId("s25").timeS > Math.max.apply(null, levels.slice(0, 24).map((l) => l.timeS)) &&
+      byId("s26").spawnMs < Math.min.apply(null, levels.slice(0, 24).map((l) => l.spawnMs)) &&
+      byId("s27").rush > Math.max.apply(null, levels.slice(0, 24).map((l) => l.rush || 0)) &&
+      byId("s28").spawnMs < Math.min.apply(null, levels.slice(0, 24).concat([byId("s26")])
+        .filter((l) => !l.rush).map((l) => l.spawnMs)) &&
+      byId("s29").target > Math.max.apply(null, levels.slice(0, 24).map((l) => l.target)) &&
+      byId("s30").target > Math.max.apply(null, levels.slice(0, 24).map((l) => l.target)),
+    "timeS " + byId("s25").timeS + ", spawnMs " + byId("s26").spawnMs + "/" + byId("s28").spawnMs +
+      ", rush " + byId("s27").rush + ", target " + byId("s29").target + "/" + byId("s30").target);
+  check("game-ink-slash", "every cut left the summit unbeatable in its advertised shape",
+    summitProofs.every((p) => p.endsWith(":ok")), summitProofs.join(" "));
+
   /* Copy travels with the module. */
-  const copyKeys = ["slashL21", "slashL22", "slashL23", "slashL24"];
+  const copyKeys = ["slashL21", "slashL22", "slashL23", "slashL24",
+    "slashL25", "slashL26", "slashL27", "slashL28", "slashL29", "slashL30"];
   const copyProblems = copyKeys.filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-ink-slash", "the four round names resolve in both languages",
+  check("game-ink-slash", "the ten deep round names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 };

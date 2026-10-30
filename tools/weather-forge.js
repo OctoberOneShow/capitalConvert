@@ -128,7 +128,7 @@ const NEW_SEASONS = [
     cfg: { source: 9, lakeSource: 4, rainAt: 52, dump: 0.6, floodLimit: 80, floodWeight: 2 },
     ridge: [spot(2, 3), spot(2, 4), spot(8, 3)],
     lake: [spot(5, 4)],
-    villages: [village(6, 1), village(6, 2), village(5, 3), village(6, 5), village(4, 6), village(2, 7)],
+    villages: [village(6, 1), village(6, 2), village(5, 3), village(6, 5), village(4, 6), village(1, 6)],
   },
   /* w24: seven parishes - the most settlements the loom has ever held, behind
    * ridge stubs and twin lakes, with the tightest windows on the ladder. */
@@ -138,6 +138,53 @@ const NEW_SEASONS = [
     ridge: [spot(3, 3), spot(3, 4), spot(6, 2), spot(6, 5)],
     lake: [spot(8, 1), spot(4, 7)],
     villages: [village(1, 1), village(1, 6), village(2, 2), village(5, 1), village(5, 6), village(8, 4), village(9, 6)],
+  },
+  /* The far-ridge seasons (w25-w30). The deep tier ended on seven parishes at
+   * thirty loom points; these six keep filling the country in - eight, then
+   * nine settlements, two needle gates at once, a march with no lake to
+   * refill from, a flood ledger that bills every overpour triple - while the
+   * windows tighten from a 20-wide slack to 16, the tightest the loom has
+   * shipped. Each season is woven by the forge and re-windowed off its own
+   * weave, so what ships is what wins. */
+  {
+    id: "w25", points: 34, ticks: 20, width: 20,
+    cfg: { source: 8, lakeSource: 4 },
+    ridge: [spot(5, 5)],
+    lake: [spot(8, 1), spot(2, 6)],
+    villages: [village(2, 0), village(3, 1), village(5, 2), village(2, 3), village(4, 4), village(1, 5), village(3, 6), village(5, 7)],
+  },
+  {
+    id: "w26", points: 44, ticks: 20, width: 16,
+    cfg: { source: 9, lakeSource: 4, rainAt: 54, dump: 0.5, floodLimit: 70, floodWeight: 3 },
+    ridge: [spot(2, 3), spot(2, 4), spot(8, 3)],
+    lake: [spot(5, 4)],
+    villages: [village(6, 1), village(6, 2), village(5, 3), village(6, 5), village(4, 6), village(1, 6)],
+  },
+  {
+    id: "w27", points: 40, ticks: 20, width: 16,
+    cfg: { source: 8, lakeSource: 4, ambient: 54, lift: 0.42, wind: 0.55 },
+    ridge: [spot(4, 3), spot(4, 4), spot(7, 0), spot(7, 7)],
+    lake: [spot(7, 1), spot(7, 6)],
+    villages: [village(2, 1), village(2, 6), village(3, 3), village(6, 2), village(6, 5), village(9, 3), village(9, 0)],
+  },
+  {
+    id: "w28", points: 45, ticks: 20, width: 18,
+    cfg: { source: 8 },
+    ridge: [spot(2, 3), spot(5, 1), spot(5, 6)],
+    villages: [village(1, 1), village(4, 0), village(3, 4), village(1, 5), village(4, 7), village(6, 5), village(8, 3)],
+  },
+  {
+    id: "w29", points: 53, ticks: 20, width: 18,
+    cfg: { source: 8, drain: 0.8 },
+    ridge: [spot(5, 0), spot(5, 1), spot(5, 2), spot(5, 4), spot(5, 5), spot(5, 6)],
+    villages: [village(2, 1), village(2, 5), village(7, 0), village(6, 3), village(7, 6), village(9, 7)],
+  },
+  {
+    id: "w30", points: 53, ticks: 20, width: 16,
+    cfg: { source: 8, lakeSource: 4, ambient: 54, lift: 0.42, wind: 0.55 },
+    ridge: [spot(3, 3), spot(3, 4), spot(6, 2), spot(6, 5)],
+    lake: [spot(8, 1), spot(4, 7)],
+    villages: [village(1, 0), village(4, 1), village(7, 1), village(1, 4), village(5, 3), village(8, 4), village(1, 7), village(5, 6), village(8, 7)],
   },
 ];
 
@@ -379,8 +426,14 @@ function window(level, half) {
   return Object.assign({}, level, { villages: villages });
 }
 
-if (process.argv.includes("--forge")) {
-  NEW_SEASONS.forEach((season) => {
+if (process.argv.includes("--forge") || process.argv.includes("--summit")) {
+  /* --summit weaves only the far-ridge seasons (w25-w30), so the new tier can
+   * be iterated without re-running the eleven shipped briefs ahead of it. */
+  const wlkSummitIds = ["w25", "w26", "w27", "w28", "w29", "w30"];
+  const wlkBriefs = process.argv.includes("--summit")
+    ? NEW_SEASONS.filter((season) => wlkSummitIds.includes(season.id))
+    : NEW_SEASONS;
+  wlkBriefs.forEach((season) => {
     /* Weave and re-window until the two agree: the windows say what counts as
      * a harvest, the weave is aimed at them, and each pass re-aims both at the
      * season the other one just produced. A season that ships an authored
@@ -401,6 +454,24 @@ if (process.argv.includes("--forge")) {
     const final = Object.assign({}, season, { villages: villages });
     delete final.width;
     const proof = App.loomRun(final, plan);
+    /* The dry line is a hard gate, not a penalty the weave may leave on the
+     * table: a village whose window was cut around a dry settlement ships a
+     * season that tolerates zero, which is exactly what the forge exists to
+     * prevent. Refuse to print such a season instead of shipping it. */
+    const wlkThirsty = villages.filter((v) => {
+      const got = proof.state.rain[v.y * COLS + v.x] || 0;
+      return got < 22;
+    });
+    if (proof.stars !== 3 || proof.score.fed !== villages.length ||
+      proof.score.flooded !== 0 || wlkThirsty.length) {
+      throw new Error(
+        season.id + " did not weave clean: stars " + proof.stars +
+        ", fed " + proof.score.fed + "/" + villages.length +
+        ", flooded " + proof.score.flooded +
+        (wlkThirsty.length ? ", dry: " + wlkThirsty.map((v) => v.x + "," + v.y).join(" ") : "") +
+        " - raise the budget or ease the geography",
+      );
+    }
     console.log(
       `\n/* ${season.id}: tools ${plan.length}, ` +
         `cost ${spent(plan)}/${season.points}, stars ${proof.stars}, ` +

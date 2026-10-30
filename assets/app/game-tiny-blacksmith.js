@@ -33,7 +33,7 @@
    * as the needle, so a hidden panel costs the forge nothing. */
   var tbsCoolTime = 0.24;
 
-  /* Levels, one per blade pattern. Grown from six to twelve and then to twenty
+  /* Levels, one per blade pattern. Grown from six to twelve and then to thirty
    * through the same construction path - every row is still plain data the
    * panel reads:
    *   "targets"  the pattern each position has to come down to from the same
@@ -89,6 +89,22 @@
     {"id":"f22","labelKey":"tbsL22","start":15,"targets":[2,3,5,7,13],"band":[76,98],"core":[0.46,0.9],"quench":[42,52],"speed":94,"drift":13,"driftEvery":1,"slack":2,"stars":[92,20,0],"line":[{"w":55,"s":0},{"w":20,"s":0},{"w":92,"s":0},{"w":53,"s":0},{"w":58,"s":0},{"w":86,"s":0},{"w":15,"s":0},{"w":21,"s":1},{"w":81,"s":1},{"w":63,"s":1},{"w":48,"s":1},{"w":96,"s":1},{"w":17,"s":1},{"w":108,"s":2},{"w":37,"s":2},{"w":74,"s":2},{"w":70,"s":2},{"w":41,"s":2},{"w":101,"s":3},{"w":29,"s":3},{"w":82,"s":3},{"w":63,"s":3},{"w":48,"s":4},{"w":14,"q":1}]},
     {"id":"f23","labelKey":"tbsL23","start":15,"targets":[1,3,6,8,14],"band":[76,98],"core":[0.46,0.9],"quench":[42,52],"speed":94,"drift":13,"driftEvery":1,"slack":2,"stars":[92,20,0],"line":[{"w":55,"s":0},{"w":20,"s":0},{"w":92,"s":0},{"w":53,"s":0},{"w":58,"s":0},{"w":86,"s":0},{"w":27,"s":0},{"w":98,"s":1},{"w":46,"s":1},{"w":65,"s":1},{"w":80,"s":1},{"w":31,"s":1},{"w":110,"s":1},{"w":20,"s":2},{"w":91,"s":2},{"w":54,"s":2},{"w":58,"s":2},{"w":92,"s":2},{"w":21,"s":3},{"w":98,"s":3},{"w":46,"s":3},{"w":71,"s":3},{"w":67,"s":4},{"w":60,"q":1}]},
     {"id":"f24","labelKey":"tbsL24","start":15,"targets":[2,4,6,8,14],"band":[76,98],"core":[0.46,0.9],"quench":[42,52],"speed":94,"drift":13,"driftEvery":1,"slack":2,"stars":[92,20,0],"line":[{"w":55,"s":0},{"w":20,"s":0},{"w":92,"s":0},{"w":53,"s":0},{"w":58,"s":0},{"w":86,"s":0},{"w":15,"s":0},{"w":21,"s":1},{"w":81,"s":1},{"w":63,"s":1},{"w":48,"s":1},{"w":96,"s":1},{"w":23,"s":1},{"w":102,"s":2},{"w":37,"s":2},{"w":74,"s":2},{"w":70,"s":2},{"w":15,"s":2},{"w":21,"s":3},{"w":97,"s":3},{"w":47,"s":3},{"w":70,"s":3},{"w":68,"s":4},{"w":60,"q":1}]},
+    /* f25-f30: The Legend Summit. The grand-anvil rungs had taken the shared
+     * dials to their ceiling - same band, same drift, the ten-wide quench
+     * window - so the legends open the dials the ladder had never turned:
+     * deeper stock out of the fire (start 16, then 17), the lean hammer
+     * (slack 1), a band that walks farther every blow (drift 14, then 15,
+     * then 16), and a quench window tighter than any earlier pattern, down
+     * to two units at the capstone. The measured cost climbs with them: the
+     * proven lines land 24, 26, 27, 28, 29 and 30 blows against the
+     * grand-anvil peak of 23, and every rung still proves through the same
+     * replay the panel trusts. */
+    {"id":"f25","labelKey":"tbsL25","start":15,"targets":[1,3,5,7,13],"band":[76,98],"core":[0.46,0.9],"quench":[42,52],"speed":94,"drift":13,"driftEvery":1,"slack":2,"stars":[92,20,0],"line":[{"w":55,"s":0},{"w":20,"s":0},{"w":92,"s":0},{"w":53,"s":0},{"w":58,"s":0},{"w":86,"s":0},{"w":27,"s":0},{"w":98,"s":1},{"w":46,"s":1},{"w":65,"s":1},{"w":80,"s":1},{"w":31,"s":1},{"w":110,"s":1},{"w":20,"s":2},{"w":91,"s":2},{"w":54,"s":2},{"w":58,"s":2},{"w":86,"s":2},{"w":27,"s":3},{"w":98,"s":3},{"w":46,"s":3},{"w":65,"s":3},{"w":73,"s":4},{"w":44,"s":4},{"w":16,"q":1}]},
+    {"id":"f26","labelKey":"tbsL26","start":16,"targets":[1,3,5,8,14],"band":[76,98],"core":[0.46,0.9],"quench":[44,52],"speed":94,"drift":14,"driftEvery":1,"slack":2,"stars":[92,14,0],"line":[{"w":49,"s":0},{"w":27,"s":0},{"w":89,"s":0},{"w":56,"s":0},{"w":15,"s":0},{"w":30,"s":0},{"w":104,"s":0},{"w":30,"s":0},{"w":86,"s":1},{"w":60,"s":1},{"w":43,"s":1},{"w":102,"s":1},{"w":15,"s":1},{"w":106,"s":1},{"w":39,"s":1},{"w":15,"s":2},{"w":47,"s":2},{"w":92,"s":2},{"w":25,"s":2},{"w":97,"s":2},{"w":48,"s":2},{"w":61,"s":3},{"w":85,"s":3},{"w":25,"s":3},{"w":114,"s":3},{"w":20,"s":4},{"w":19,"q":1}]},
+    {"id":"f27","labelKey":"tbsL27","start":16,"targets":[1,2,5,8,14],"band":[76,98],"core":[0.46,0.9],"quench":[45,52],"speed":94,"drift":14,"driftEvery":1,"slack":2,"stars":[92,14,0],"line":[{"w":49,"s":0},{"w":27,"s":0},{"w":89,"s":0},{"w":56,"s":0},{"w":15,"s":0},{"w":30,"s":0},{"w":104,"s":0},{"w":30,"s":0},{"w":79,"s":1},{"w":67,"s":1},{"w":43,"s":1},{"w":102,"s":1},{"w":15,"s":1},{"w":106,"s":1},{"w":39,"s":1},{"w":15,"s":2},{"w":47,"s":2},{"w":92,"s":2},{"w":25,"s":2},{"w":97,"s":2},{"w":48,"s":2},{"w":61,"s":3},{"w":85,"s":3},{"w":25,"s":3},{"w":114,"s":3},{"w":26,"s":4},{"w":15,"s":4},{"w":60,"q":1}]},
+    {"id":"f28","labelKey":"tbsL28","start":16,"targets":[1,2,4,8,14],"band":[76,98],"core":[0.46,0.9],"quench":[45,51],"speed":94,"drift":15,"driftEvery":1,"slack":1,"stars":[92,14,0],"line":[{"w":49,"s":0},{"w":28,"s":0},{"w":87,"s":0},{"w":59,"s":0},{"w":15,"s":0},{"w":26,"s":0},{"w":96,"s":0},{"w":50,"s":0},{"w":15,"s":1},{"w":34,"s":1},{"w":107,"s":1},{"w":21,"s":1},{"w":15,"s":1},{"w":63,"s":1},{"w":79,"s":1},{"w":30,"s":2},{"w":15,"s":2},{"w":72,"s":2},{"w":70,"s":2},{"w":39,"s":2},{"w":107,"s":2},{"w":27,"s":3},{"w":15,"s":3},{"w":57,"s":3},{"w":78,"s":3},{"w":31,"s":3},{"w":102,"s":4},{"w":38,"s":4},{"w":8,"q":1}]},
+    {"id":"f29","labelKey":"tbsL29","start":17,"targets":[2,3,5,8,14],"band":[76,98],"core":[0.46,0.9],"quench":[46,51],"speed":94,"drift":15,"driftEvery":1,"slack":1,"stars":[92,8,0],"line":[{"w":49,"s":0},{"w":28,"s":0},{"w":87,"s":0},{"w":59,"s":0},{"w":15,"s":0},{"w":26,"s":0},{"w":96,"s":0},{"w":50,"s":0},{"w":15,"s":1},{"w":34,"s":1},{"w":107,"s":1},{"w":21,"s":1},{"w":15,"s":1},{"w":63,"s":1},{"w":79,"s":1},{"w":30,"s":2},{"w":15,"s":2},{"w":72,"s":2},{"w":70,"s":2},{"w":39,"s":2},{"w":107,"s":2},{"w":27,"s":3},{"w":81,"s":3},{"w":60,"s":3},{"w":49,"s":3},{"w":97,"s":3},{"w":25,"s":4},{"w":15,"s":4},{"w":65,"s":4},{"w":6,"q":1}]},
+    {"id":"f30","labelKey":"tbsL30","start":17,"targets":[1,2,5,8,14],"band":[76,98],"core":[0.46,0.9],"quench":[46,48],"speed":94,"drift":16,"driftEvery":1,"slack":1,"stars":[92,8,0],"line":[{"w":55,"s":0},{"w":22,"s":0},{"w":15,"s":0},{"w":60,"s":0},{"w":84,"s":0},{"w":28,"s":0},{"w":15,"s":0},{"w":70,"s":0},{"w":66,"s":1},{"w":17,"s":1},{"w":18,"s":1},{"w":15,"s":1},{"w":81,"s":1},{"w":62,"s":1},{"w":15,"s":1},{"w":24,"s":1},{"w":15,"s":2},{"w":70,"s":2},{"w":73,"s":2},{"w":15,"s":2},{"w":15,"s":2},{"w":104,"s":2},{"w":48,"s":3},{"w":59,"s":3},{"w":83,"s":3},{"w":28,"s":3},{"w":15,"s":3},{"w":77,"s":4},{"w":60,"s":4},{"w":15,"s":4},{"w":50,"q":1}]},
   ];
 
   /* Keys 1..5 point the hammer, exactly like the five cards on the anvil. */
@@ -1046,7 +1062,7 @@
       "tbsMsgLive": "Back at the anvil: {n} blows left, {b} units still to shape.",
       "tbsNextPattern": "Next pattern unlocked.",
       "tbsCampaignDone": "Every pattern on the bench is forged.",
-      "tbsHint": "Point at a position, then swing while the needle is inside the amber band - the bright core takes two units off, and the hammer needs a beat to come back up between blows. Each card shows its thickness over the mark it must reach, and the last swing has to land in the dashed quench window. All twenty patterns are forged as one hot bar: a section that has to stay put, or come down by a single unit, is struck on the dull shoulder of the band while its neighbour waits for the core, and one greedy blow ruins the shape for good. The line under the rail prints all three windows as numbers, so a band is never only a colour.",
+      "tbsHint": "Point at a position, then swing while the needle is inside the amber band - the bright core takes two units off, and the hammer needs a beat to come back up between blows. Each card shows its thickness over the mark it must reach, and the last swing has to land in the dashed quench window. All thirty patterns are forged as one hot bar: a section that has to stay put, or come down by a single unit, is struck on the dull shoulder of the band while its neighbour waits for the core, and one greedy blow ruins the shape for good. The line under the rail prints all three windows as numbers, so a band is never only a colour.",
       "logTinyBlacksmith": "Forged a {name} at quality {q}",
     },
     zh: {
@@ -1122,6 +1138,28 @@
     },
   });
 
+  /* The legend summit carries its own names: addStrings only fills keys
+   * i18n.js does not already hold, so the shared dictionary stays
+   * authoritative. */
+  App.addStrings({
+    en: {
+      "tbsL25": "Kris",
+      "tbsL26": "Joyeuse",
+      "tbsL27": "Durandal",
+      "tbsL28": "Tizona",
+      "tbsL29": "Muramasa",
+      "tbsL30": "Excalibur",
+    },
+    zh: {
+      "tbsL25": "\u514b\u529b\u58eb\u5251",
+      "tbsL26": "\u6b22\u60a6\u4e4b\u5251",
+      "tbsL27": "\u675c\u5170\u5fb7\u5c14",
+      "tbsL28": "\u63d0\u6cfd\u7eb3\u5251",
+      "tbsL29": "\u6751\u6b63",
+      "tbsL30": "\u8a93\u7ea6\u80dc\u5229\u4e4b\u5251",
+    },
+  });
+
   App.registerGame({
     name: "tinyBlacksmith",
     tabKey: "tabTinyBlacksmith",
@@ -1186,4 +1224,5 @@
   App.forgeMeasure = forgeMeasure;
   App.forgeSolvable = forgeSolvable;
   App.forgeBands = forgeBands;
+  App.forgePar = forgePar;
 })(window.CapitalConvert = window.CapitalConvert || {});
