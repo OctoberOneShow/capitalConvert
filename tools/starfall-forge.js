@@ -398,6 +398,23 @@ function main() {
         need: 8,
       };
     }
+    /* The chasm tier (s31-s40) ships hand-laid the same way - hairline,
+     * comb, sink, tower, sliver, saw, brink, thread, chasm, pinpoint -
+     * and its brief carries the resumed gravity walk (177-186) and the
+     * shallow tank drain (57 down to 52) the tier comment commits to; the
+     * pull's own burn bill is why the walk flattens, not a guessed one. */
+    const lantChasmTank = [57, 57, 57, 56, 56, 55, 54, 54, 53, 52];
+    for (let i = 31; i <= 40; i += 1) {
+      brief["s" + i] = {
+        id: "s" + i,
+        labelKey: "lantL" + i,
+        gravity: 176 + (i - 30),
+        fuel: lantChasmTank[i - 31],
+        points: 12,
+        bump: (i - 10) * 37,
+        need: 8,
+      };
+    }
     (ids.length ? ids : Object.keys(brief)).forEach(function (id) {
       const spec = brief[id];
       let level = null;
@@ -431,7 +448,7 @@ function main() {
   }
 }
 
-module.exports = { loadLevels, checkLevel, flySector, forgeSector, bestLanding, PILOTS };
+module.exports = { loadLevels, checkLevel, flySector, forgeSector, bestLanding, terrainY, PILOTS };
 
 if (require.main === module) {
   main();

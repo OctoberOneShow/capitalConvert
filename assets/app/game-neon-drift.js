@@ -34,7 +34,7 @@
   var nirBoostTime = 1.2;
   var nirPadRadius = 22;
 
-  /* Ten authored centre lines. `limit` is only a safety net: the real bands
+  /* Forty authored centre lines. `limit` is only a safety net: the real bands
    * come from nirPar() measuring the scripted line on the same stepper, and the
    * timeout a run actually meets is nirLimit() = max(limit, ceil(par * 1.9)).
    * Each authored limit is therefore written to agree with that derived value.
@@ -259,6 +259,125 @@
       id: "n30", labelKey: "nirZ30", width: 22, limit: 113, basePar: 59,
       points: [{ x: 44, y: 75 }, { x: 100, y: 45 }, { x: 156, y: 75 }, { x: 212, y: 45 }, { x: 268, y: 75 }, { x: 324, y: 45 }, { x: 380, y: 75 }, { x: 404, y: 110 }, { x: 380, y: 175 }, { x: 324, y: 145 }, { x: 268, y: 175 }, { x: 212, y: 145 }, { x: 156, y: 175 }, { x: 100, y: 145 }, { x: 44, y: 175 }, { x: 20, y: 210 }, { x: 44, y: 275 }, { x: 100, y: 245 }, { x: 156, y: 275 }, { x: 212, y: 245 }, { x: 268, y: 275 }, { x: 324, y: 245 }, { x: 380, y: 275 }, { x: 404, y: 310 }, { x: 380, y: 375 }, { x: 324, y: 345 }, { x: 268, y: 375 }, { x: 212, y: 345 }, { x: 156, y: 375 }, { x: 100, y: 345 }, { x: 44, y: 375 }],
       pads: [{ x: 100, y: 45 }, { x: 324, y: 145 }],
+    },
+    /* ------------------------------------------------------------------
+     * The widest tier (n31-n40). The summit stopped at thirty gates on a
+     * 22px tape; this tier widens the book, not the corridor - every
+     * ceiling the shipped ladder had falls somewhere in the ten: the gate
+     * count climbs 31, 33, 34, 35, 40, 42, the tape grows to a 502px
+     * drag and a 2846px lap, the boost pad count doubles to four, and
+     * n39 steers 3191 degrees where n30 asked 1667. Each rung takes one
+     * record against every course before it: n31 the longest ride along
+     * its own wake, n32 the gate count pushed to 33, n33 the 20px floor
+     * held past twenty-six gates, n34 the first four-pad course, n35 the
+     * first past eight switchback reversals, n36 the densest gate field,
+     * n37 the gate record again at 38, n38 the longest single straight,
+     * n39 the deepest total steering and n40 the capstone - most gates
+     * and the longest tape together. The measured
+     * par dips once, at the very door: n31's boulevard hands the
+     * reference two full-throttle straights the summit never had, so it
+     * opens 8.5s under n30 - and the par line never falls after it.
+     * Every course below was checked by tools/drift-forge.js the way
+     * the header demands - the scripted reference line finishes at 60 Hz
+     * and a keyboard lap (steering re-issued every 3-6 frames, across
+     * 729 line variants and three phase offsets) clears the three-star
+     * band with the forge's ship margin. */
+    {
+      id: "n31", labelKey: "nirZ31", width: 21, limit: 97, basePar: 51,
+      /* The Divide: a two-way boulevard - 312px ridden a second time 34px
+       * above the first pass, the longest wake ride the engine has ever
+       * measured (n11 held 240). The ride costs par: the boulevard hands
+       * the scripted line two full-throttle straights, so the tier opens
+       * at 50.8, 8.5s under n30 - measured, and the par line never falls
+       * again. Three comb banks fence the boulevard at each end. */
+      points: [{ x: 24, y: 352 }, { x: 78, y: 322 }, { x: 133, y: 352 }, { x: 187, y: 322 }, { x: 242, y: 352 }, { x: 296, y: 322 }, { x: 340, y: 314 }, { x: 352, y: 264 }, { x: 40, y: 264 }, { x: 22, y: 268 }, { x: 14, y: 281 }, { x: 22, y: 294 }, { x: 40, y: 298 }, { x: 352, y: 298 }, { x: 384, y: 272 }, { x: 360, y: 232 }, { x: 352, y: 224 }, { x: 308, y: 194 }, { x: 264, y: 224 }, { x: 220, y: 194 }, { x: 176, y: 224 }, { x: 132, y: 194 }, { x: 96, y: 196 }, { x: 96, y: 148 }, { x: 147, y: 118 }, { x: 198, y: 148 }, { x: 250, y: 118 }, { x: 301, y: 148 }, { x: 352, y: 118 }, { x: 384, y: 116 }, { x: 352, y: 72 }, { x: 76, y: 44 }],
+      pads: [],
+    },
+    {
+      id: "n32", labelKey: "nirZ32", width: 22, limit: 118, basePar: 62,
+      /* The Rake: the summit comb rebuilt two ranks tighter - 33 gates,
+       * one past the Divide's 31 and three past the thirty-gate ceiling
+       * the shipped ladder shared with n22. Two pads ride the racing
+       * line; the teeth drop 22px where n30's dropped 28, so the lap is
+       * won on gate cadence, not amplitude. */
+      points: [{ x: 48, y: 64 }, { x: 112, y: 42 }, { x: 176, y: 64 }, { x: 240, y: 42 }, { x: 304, y: 64 }, { x: 368, y: 42 }, { x: 404, y: 93 }, { x: 368, y: 144 }, { x: 304, y: 122 }, { x: 240, y: 144 }, { x: 176, y: 122 }, { x: 112, y: 144 }, { x: 48, y: 122 }, { x: 20, y: 163 }, { x: 48, y: 224 }, { x: 112, y: 202 }, { x: 176, y: 224 }, { x: 240, y: 202 }, { x: 304, y: 224 }, { x: 368, y: 202 }, { x: 404, y: 253 }, { x: 368, y: 304 }, { x: 304, y: 282 }, { x: 240, y: 304 }, { x: 176, y: 282 }, { x: 112, y: 304 }, { x: 48, y: 282 }, { x: 20, y: 323 }, { x: 48, y: 384 }, { x: 112, y: 362 }, { x: 176, y: 384 }, { x: 240, y: 362 }, { x: 304, y: 384 }, { x: 368, y: 362 }],
+      pads: [{ x: 176, y: 64 }, { x: 240, y: 202 }],
+    },
+    {
+      id: "n33", labelKey: "nirZ33", width: 20, limit: 128, basePar: 67,
+      /* The Rack: the 20px floor held past twenty-six gates - n26 was
+       * the widest gate count the floor had carried. Nine top teeth drop
+       * 46px over a 44px pitch, then four wiggle bands walk the width;
+       * the floor is the lesson, the tooth count the record. */
+      points: [{ x: 32, y: 86 }, { x: 76, y: 40 }, { x: 120, y: 86 }, { x: 164, y: 40 }, { x: 208, y: 86 }, { x: 252, y: 40 }, { x: 296, y: 86 }, { x: 340, y: 40 }, { x: 384, y: 86 }, { x: 398, y: 114 }, { x: 384, y: 138 }, { x: 299, y: 112 }, { x: 214, y: 138 }, { x: 129, y: 112 }, { x: 44, y: 138 }, { x: 18, y: 180 }, { x: 44, y: 212 }, { x: 129, y: 186 }, { x: 214, y: 212 }, { x: 299, y: 186 }, { x: 384, y: 212 }, { x: 402, y: 250 }, { x: 384, y: 282 }, { x: 299, y: 256 }, { x: 214, y: 282 }, { x: 129, y: 256 }, { x: 44, y: 282 }, { x: 18, y: 320 }, { x: 44, y: 350 }, { x: 112, y: 324 }, { x: 180, y: 350 }, { x: 248, y: 324 }, { x: 316, y: 350 }, { x: 384, y: 324 }, { x: 402, y: 386 }],
+      pads: [],
+    },
+    {
+      id: "n34", labelKey: "nirZ34", width: 22, limit: 132, basePar: 69,
+      /* The Relay: four boost pads, one per strip - the first four-pad
+       * course the ladder has carried (n8 held three). Each strip is a
+       * 40px sawtooth and the strips hand off at wall hairpins, so the
+       * pads pay on the exit of every hand-off. */
+      points: [{ x: 24, y: 384 }, { x: 80, y: 340 }, { x: 136, y: 384 }, { x: 192, y: 340 }, { x: 248, y: 384 }, { x: 304, y: 340 }, { x: 360, y: 384 }, { x: 400, y: 340 }, { x: 410, y: 316 }, { x: 400, y: 292 }, { x: 360, y: 248 }, { x: 304, y: 292 }, { x: 248, y: 248 }, { x: 192, y: 292 }, { x: 136, y: 248 }, { x: 80, y: 292 }, { x: 24, y: 248 }, { x: 14, y: 224 }, { x: 24, y: 200 }, { x: 80, y: 156 }, { x: 136, y: 200 }, { x: 192, y: 156 }, { x: 248, y: 200 }, { x: 304, y: 156 }, { x: 360, y: 200 }, { x: 400, y: 156 }, { x: 410, y: 132 }, { x: 400, y: 108 }, { x: 360, y: 64 }, { x: 304, y: 108 }, { x: 248, y: 64 }, { x: 192, y: 108 }, { x: 136, y: 64 }, { x: 80, y: 108 }, { x: 24, y: 64 }, { x: 16, y: 36 }],
+      pads: [{ x: 136, y: 384 }, { x: 248, y: 248 }, { x: 136, y: 200 }, { x: 304, y: 108 }],
+    },
+    {
+      id: "n35", labelKey: "nirZ35", width: 21, limit: 139, basePar: 73,
+      /* The Pendulum: eleven swings down the field, ten of them past
+       * 135 degrees - n17 held eight. Each swing end is a near-stop
+       * reversal; the collinear mid gates only mark the swing, the
+       * reversals are the lesson. */
+      points: [{ x: 56, y: 384 }, { x: 344, y: 357 }, { x: 259, y: 348 }, { x: 173, y: 339 }, { x: 88, y: 330 }, { x: 168, y: 321 }, { x: 248, y: 312 }, { x: 328, y: 303 }, { x: 255, y: 294 }, { x: 181, y: 285 }, { x: 108, y: 276 }, { x: 176, y: 267 }, { x: 244, y: 258 }, { x: 312, y: 249 }, { x: 251, y: 240 }, { x: 189, y: 231 }, { x: 128, y: 222 }, { x: 184, y: 213 }, { x: 240, y: 204 }, { x: 296, y: 195 }, { x: 247, y: 186 }, { x: 197, y: 177 }, { x: 148, y: 168 }, { x: 192, y: 159 }, { x: 236, y: 150 }, { x: 280, y: 141 }, { x: 243, y: 132 }, { x: 205, y: 123 }, { x: 168, y: 114 }, { x: 200, y: 105 }, { x: 232, y: 96 }, { x: 264, y: 87 }, { x: 216, y: 43 }],
+      pads: [],
+    },
+    {
+      id: "n36", labelKey: "nirZ36", width: 20, limit: 148, basePar: 78,
+      /* The Apiary: five loose ranks of near-vertical teeth on a 38px
+       * pitch - 37 gates on 1998px of tape, the densest gate field the
+       * engine has ever threaded (n30 held 1.61 gates per 100px; this
+       * runs 1.85). The connectors bulge clear of the next rank's first
+       * tooth, which is what keeps the scripted line alive here. */
+      points: [{ x: 58, y: 74 }, { x: 96, y: 34 }, { x: 134, y: 74 }, { x: 172, y: 34 }, { x: 210, y: 74 }, { x: 248, y: 34 }, { x: 286, y: 74 }, { x: 336, y: 100 }, { x: 286, y: 136 }, { x: 248, y: 96 }, { x: 210, y: 136 }, { x: 172, y: 96 }, { x: 134, y: 136 }, { x: 96, y: 96 }, { x: 58, y: 136 }, { x: 32, y: 162 }, { x: 58, y: 198 }, { x: 96, y: 158 }, { x: 134, y: 198 }, { x: 172, y: 158 }, { x: 210, y: 198 }, { x: 248, y: 158 }, { x: 286, y: 198 }, { x: 336, y: 224 }, { x: 286, y: 260 }, { x: 248, y: 220 }, { x: 210, y: 260 }, { x: 172, y: 220 }, { x: 134, y: 260 }, { x: 96, y: 220 }, { x: 58, y: 260 }, { x: 32, y: 286 }, { x: 58, y: 322 }, { x: 96, y: 282 }, { x: 134, y: 322 }, { x: 172, y: 282 }, { x: 210, y: 322 }, { x: 248, y: 282 }],
+      pads: [],
+    },
+    {
+      id: "n37", labelKey: "nirZ37", width: 22, limit: 156, basePar: 82,
+      /* The Gridlock: five deep strips on a 68px pitch, 38 gates - the
+       * gate record again, one past the Apiary. The strips hand off at
+       * four wall hairpins and every tooth drops 40px over a 62px
+       * pitch, so the lap is five cycles of brake, flick, hand-off. */
+      points: [{ x: 24, y: 384 }, { x: 86, y: 344 }, { x: 148, y: 384 }, { x: 210, y: 344 }, { x: 272, y: 384 }, { x: 334, y: 344 }, { x: 396, y: 384 }, { x: 410, y: 350 }, { x: 396, y: 316 }, { x: 334, y: 276 }, { x: 272, y: 316 }, { x: 210, y: 276 }, { x: 148, y: 316 }, { x: 86, y: 276 }, { x: 24, y: 316 }, { x: 14, y: 282 }, { x: 24, y: 248 }, { x: 86, y: 208 }, { x: 148, y: 248 }, { x: 210, y: 208 }, { x: 272, y: 248 }, { x: 334, y: 208 }, { x: 396, y: 248 }, { x: 410, y: 214 }, { x: 396, y: 180 }, { x: 334, y: 140 }, { x: 272, y: 180 }, { x: 210, y: 140 }, { x: 148, y: 180 }, { x: 86, y: 140 }, { x: 24, y: 180 }, { x: 14, y: 146 }, { x: 24, y: 112 }, { x: 86, y: 72 }, { x: 148, y: 112 }, { x: 210, y: 72 }, { x: 272, y: 112 }, { x: 334, y: 72 }, { x: 380, y: 96 }],
+      pads: [],
+    },
+    {
+      id: "n38", labelKey: "nirZ38", width: 21, limit: 164, basePar: 86,
+      /* The Runway: a 502px opening drag - n29's straight was 402 - into
+       * five comb rows on symmetric wall hairpins, the teeth two px
+       * deeper a side than any comb before them. The drag is free
+       * speed; the five rows are where the lap is lost. */
+      points: [{ x: 20, y: 384 }, { x: 404, y: 60 }, { x: 378, y: 118 }, { x: 322, y: 86 }, { x: 266, y: 118 }, { x: 210, y: 86 }, { x: 154, y: 118 }, { x: 98, y: 86 }, { x: 42, y: 118 }, { x: 16, y: 147 }, { x: 42, y: 176 }, { x: 98, y: 144 }, { x: 154, y: 176 }, { x: 210, y: 144 }, { x: 266, y: 176 }, { x: 322, y: 144 }, { x: 378, y: 176 }, { x: 404, y: 205 }, { x: 378, y: 234 }, { x: 322, y: 202 }, { x: 266, y: 234 }, { x: 210, y: 202 }, { x: 154, y: 234 }, { x: 98, y: 202 }, { x: 42, y: 234 }, { x: 16, y: 263 }, { x: 42, y: 292 }, { x: 98, y: 260 }, { x: 154, y: 292 }, { x: 210, y: 260 }, { x: 266, y: 292 }, { x: 322, y: 260 }, { x: 378, y: 292 }, { x: 404, y: 321 }, { x: 378, y: 350 }, { x: 314, y: 322 }, { x: 251, y: 350 }, { x: 187, y: 322 }, { x: 124, y: 350 }, { x: 60, y: 322 }, { x: 24, y: 368 }],
+      pads: [],
+    },
+    {
+      id: "n39", labelKey: "nirZ39", width: 20, limit: 175, basePar: 92,
+      /* The Stack: the Apiary's teeth compressed to a 38px pitch - 3191
+       * degrees of total steering where n30 asked 1667 and the Apiary
+       * 3032, the deepest total heading change the engine has measured.
+       * The connectors bulge out of the teeth's reach; the tape is 20px
+       * and the ranks sit 62px apart, so the wall band between ranks is
+       * six pixels wide. */
+      points: [{ x: 58, y: 74 }, { x: 96, y: 32 }, { x: 134, y: 74 }, { x: 172, y: 32 }, { x: 210, y: 74 }, { x: 248, y: 32 }, { x: 286, y: 74 }, { x: 336, y: 102 }, { x: 286, y: 130 }, { x: 248, y: 88 }, { x: 210, y: 130 }, { x: 172, y: 88 }, { x: 134, y: 130 }, { x: 96, y: 88 }, { x: 58, y: 130 }, { x: 32, y: 158 }, { x: 58, y: 186 }, { x: 96, y: 144 }, { x: 134, y: 186 }, { x: 172, y: 144 }, { x: 210, y: 186 }, { x: 248, y: 144 }, { x: 286, y: 186 }, { x: 336, y: 214 }, { x: 286, y: 242 }, { x: 248, y: 200 }, { x: 210, y: 242 }, { x: 172, y: 200 }, { x: 134, y: 242 }, { x: 96, y: 200 }, { x: 58, y: 242 }, { x: 32, y: 270 }, { x: 58, y: 298 }, { x: 96, y: 256 }, { x: 134, y: 298 }, { x: 172, y: 256 }, { x: 210, y: 298 }, { x: 248, y: 256 }, { x: 286, y: 298 }],
+      pads: [],
+    },
+    {
+      id: "n40", labelKey: "nirZ40", width: 22, limit: 177, basePar: 93,
+      /* The Full Measure: the capstone pairs the records - 42 gates,
+       * the most the ladder has carried, and 2846px of centre line, the
+       * longest tape (the Runway's drag was 2786 with the tape counted).
+       * Five ranks on the Rake's own 56px pitch, the last stretched to
+       * twelve teeth, two pads on the racing line. */
+      points: [{ x: 44, y: 64 }, { x: 100, y: 26 }, { x: 156, y: 64 }, { x: 212, y: 26 }, { x: 268, y: 64 }, { x: 324, y: 26 }, { x: 380, y: 64 }, { x: 404, y: 110 }, { x: 380, y: 144 }, { x: 324, y: 106 }, { x: 268, y: 144 }, { x: 212, y: 106 }, { x: 156, y: 144 }, { x: 100, y: 106 }, { x: 44, y: 144 }, { x: 20, y: 192 }, { x: 44, y: 224 }, { x: 100, y: 186 }, { x: 156, y: 224 }, { x: 212, y: 186 }, { x: 268, y: 224 }, { x: 324, y: 186 }, { x: 380, y: 224 }, { x: 404, y: 274 }, { x: 380, y: 304 }, { x: 324, y: 266 }, { x: 268, y: 304 }, { x: 212, y: 266 }, { x: 156, y: 304 }, { x: 100, y: 266 }, { x: 44, y: 304 }, { x: 20, y: 354 }, { x: 44, y: 384 }, { x: 81, y: 346 }, { x: 119, y: 384 }, { x: 156, y: 346 }, { x: 193, y: 384 }, { x: 231, y: 346 }, { x: 268, y: 384 }, { x: 305, y: 346 }, { x: 343, y: 384 }, { x: 380, y: 346 }, { x: 16, y: 396 }],
+      pads: [{ x: 156, y: 64 }, { x: 268, y: 144 }],
     },
   ];
 
@@ -668,7 +787,13 @@
    * summit was held to the same bar:
    *   n25 14.2 vs 35.0   n26 28.3 vs 41.2   n27 18.8 vs 45.0
    *   n28 22.6 vs 48.2   n29 26.4 vs 56.1   n30 16.8 vs 59.3
-   * All six clear, and no band was lifted to get there. Rule for later
+   * All six clear, and no band was lifted to get there. The 31-40 tier
+   * was held to the same bar through the forge replay:
+   *   n31 27.9 vs 50.8   n32 20.7 vs 61.8   n33 32.9 vs 66.9
+   *   n34 21.6 vs 69.3   n35 50.5 vs 73.1   n36 24.2 vs 77.8
+   *   n37 29.1 vs 81.7   n38 43.1 vs 85.8   n39 45.6 vs 91.6
+   *   n40 57.0 vs 92.9
+   * All ten clear, and no band was lifted to get there. Rule for later
    * passes: only ever lift a band a keyboard lap cannot reach - and re-run this
    * replay after any change to points, width, pads or the stepper. */
   function nirBands(course) {
@@ -1243,6 +1368,16 @@
       "nirZ28": "Redline",
       "nirZ29": "The Knot",
       "nirZ30": "The Crucible",
+      "nirZ31": "The Divide",
+      "nirZ32": "The Rake",
+      "nirZ33": "The Rack",
+      "nirZ34": "The Relay",
+      "nirZ35": "The Pendulum",
+      "nirZ36": "The Apiary",
+      "nirZ37": "The Gridlock",
+      "nirZ38": "The Runway",
+      "nirZ39": "The Stack",
+      "nirZ40": "The Full Measure",
       "nirClockLabel": "Clock",
       "nirGateLabel": "Gates",
       "nirScrapLabel": "Scrapes",
@@ -1299,6 +1434,16 @@
       "nirZ28": "红线",
       "nirZ29": "回环结",
       "nirZ30": "终局熔炉",
+      "nirZ31": "双向大道",
+      "nirZ32": "五排长耙",
+      "nirZ33": "薄架九齿",
+      "nirZ34": "四棒接力",
+      "nirZ35": "钟摆道",
+      "nirZ36": "蜂窝密阵",
+      "nirZ37": "五段连环",
+      "nirZ38": "长直跑道",
+      "nirZ39": "密叠齿阵",
+      "nirZ40": "终极满量",
       "nirClockLabel": "计时",
       "nirGateLabel": "门",
       "nirScrapLabel": "撞墙",

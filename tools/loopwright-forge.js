@@ -301,6 +301,95 @@ if (require.main === module) {
     });
   }
 
+  if (process.argv.includes("--overhaul")) {
+    /* Overhaul-tier probes (f31-f40). The dials are the crew (six runs,
+     * then seven, then the full eight) and the press count (eight plates
+     * up to twelve), and each rung also takes one record against every
+     * floor before it. Each probe prices those claims:
+     * - min: no final run of par-1 ops or fewer over the movement chips
+     *   and Push wins, given the authored ghosts.
+     * - arithmetic: the yard strands the rungs below the crew they ship
+     *   with - each ghost presses at most two plates (body plus one
+     *   crate) and the closer's body is owed to G, so (runs-2) ghosts
+     *   must press measurably fewer plates than the yard holds.
+     * - ram: the straight no-wait walk or park dies on a phased cell
+     *   whose down-tick the authored run waits out.
+     * - closer-press: on f39/f40 the winning frame holds a crate that
+     *   moved during the final run - the closer's own shoulder. */
+    const overhaul = floors.filter((floor) => {
+      const n = Number(floor.id.slice(1));
+      return n >= 31 && n <= 40;
+    });
+    if (overhaul.length !== 10) {
+      console.log(`  overhaul: expected ten floors f31-f40, found ${overhaul.length}`);
+      bad += 1;
+    }
+    const probeById = {
+      f31: { ram: null, note: "six-run crew" },
+      f32: { ram: { who: "closer", walk: ["F", "F", "F", "F", "F", "F"] }, note: "three rams" },
+      f33: { ram: { who: "closer", walk: ["F", "F", "F", "F", "F"] }, note: "four-door stack" },
+      f34: { ram: null, note: "three pads" },
+      f35: { ram: null, note: "nine plates" },
+      f36: { ram: null, note: "ten plates, seven runs" },
+      f37: { ram: null, note: "five crates", ceiling: 9 },
+      f38: { ram: { who: "parker", walk: ["R", "F", "L", "F", "F", "F", "F"] }, note: "ram corridor" },
+      f39: { ram: null, note: "eleven plates, closer press" },
+      f40: { ram: null, note: "twelve plates, crew of eight" },
+    };
+    overhaul.forEach((floor) => {
+      const probe = probeById[floor.id];
+      const ghosts = prefixGhosts(floor);
+      const base = App.loopParse(floor);
+      const shorter = searchMinimum(floor, {
+        ghosts,
+        alphabet: ["F", "B", "L", "R", "W", "P"],
+        maxLen: floor.parOps - 1,
+      });
+      const shorterOk = shorter === null;
+      /* the arithmetic bound: (runs-2) ghosts, each pressing at most its
+       * body plus one of the yard's crates, versus the plate count. f37
+       * overrides: its fourth column's pusher has no plate for its own
+       * body, so five ghosts press nine, not the generic ten. */
+      const crateCap = Math.min(base.crates.length, floor.parRuns - 2);
+      const ghostCeiling = probe.ceiling !== undefined
+        ? probe.ceiling
+        : 2 * crateCap + (floor.parRuns - 2 - crateCap);
+      const boundOk = ghostCeiling < base.plates.length;
+      let ramOk = true;
+      let ramNote = "-";
+      if (probe.ram) {
+        const sim = App.loopSim(gridWith(base, ghosts), probe.ram.walk, 64);
+        ramOk = sim.reason === "wall" && !sim.win;
+        ramNote = `${probe.ram.who} no-wait walk=${sim.reason}${ramOk ? "" : " <-- WALKED STRAIGHT THROUGH"}`;
+      }
+      /* the closer's own press: a crate in the winning frame that no
+       * authored prefix ghost carried there and that did not start there */
+      const closerRun = floor.programs[floor.programs.length - 1];
+      const live = App.loopSim(gridWith(base, ghosts), closerRun, 64);
+      const fin = live.frames[live.frames.length - 1];
+      const closerCrate = (fin.crates || []).some((c) =>
+        !base.crates.some((b) => b.x === c.x && b.y === c.y) &&
+        !ghosts.some((frames) => {
+          const last = frames[frames.length - 1];
+          return (last.crates || []).some((g) => g.x === c.x && g.y === c.y);
+        }));
+      const pressWanted = floor.id === "f39" || floor.id === "f40";
+      const pressOk = closerCrate === pressWanted;
+      if (!shorterOk || !boundOk || !ramOk || !pressOk) {
+        bad += 1;
+      }
+      console.log(
+        `  ${floor.id}: plates=${base.plates.length} crates=${base.crates.length}` +
+          ` pads=${base.pads.length} pistons=${base.pistons.length} doors=${base.doors.length}` +
+          ` runs=${floor.parRuns} ticks=${floor.programs.reduce((s, p) => s + p.length, 0)}` +
+          ` waits=${floor.programs.reduce((s, p) => s + p.filter((op) => op === "W").length, 0)}` +
+          ` min>${floor.parOps - 1}=${shorterOk ? "proven" : "BROKEN " + JSON.stringify(shorter)}` +
+          ` crew-bound(=${ghostCeiling}<${base.plates.length})=${boundOk ? "holds" : "FAILS"}` +
+          ` ${ramNote} closer-press=${closerCrate ? "yes" : "no"} (${probe.note})`,
+      );
+    });
+  }
+
   console.log(bad === 0 ? "forge audit: all clean" : `forge audit: ${bad} problem(s)`);
   process.exitCode = bad === 0 ? 0 : 1;
 }

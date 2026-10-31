@@ -39,7 +39,7 @@
   var arcItemArt = { key: "key", card: "card", lamp: "lantern", rope: "chain", chit: "stamp", tea: "flask", ledger: "book" };
   var arcClueArt = { c1: "card", c2: "map", c3: "scroll", c4: "magnifier", c5: "wave" };
 
-  /* Same map, thirty escalating nights. The first eight are graded purely off the
+  /* Same map, forty escalating nights. The first eight are graded purely off the
    * solved minimum turn count for each goal; the two chute nights are graded off
    * their stored solution line, whose hop count is band0, so replaying the line
    * as written earns exactly three stars. `solution` is the node path, joined on
@@ -113,6 +113,25 @@
     { id: "a28", labelKey: "arcZ28", goal: "yardCageManifestDryFull" },
     { id: "a29", labelKey: "arcZ29", goal: "roofWetManifestFull" },
     { id: "a30", labelKey: "arcZ30", goal: "secretCageManifestPressFull" },
+    /* Nights thirty-one to forty: the sealed wing. Behind the secret ending a
+     * false back in the strongbox opens on a ten-room descent through the
+     * archive's own muniment rooms, and three dead-end charter rooms at the
+     * bottom grant the tier's flags: sealed, chartered and sworn. Each rung
+     * asks for a different combination of those three with the flags the
+     * earlier nights already knew, and every case still carries the full
+     * satchel and clue set. The wing is a long way down: the first rung prices
+     * above a30, and the capstone carries the whole wing back up to the roof.
+     * Bands hang off the measured minimum. */
+    { id: "a31", labelKey: "arcZ31", goal: "sealedFlueFull" },
+    { id: "a32", labelKey: "arcZ32", goal: "charteredPlantFull" },
+    { id: "a33", labelKey: "arcZ33", goal: "swornCageFull" },
+    { id: "a34", labelKey: "arcZ34", goal: "sealedCageFull" },
+    { id: "a35", labelKey: "arcZ35", goal: "swornWaterFull" },
+    { id: "a36", labelKey: "arcZ36", goal: "charteredWaterFull" },
+    { id: "a37", labelKey: "arcZ37", goal: "sealedWetFlueFull" },
+    { id: "a38", labelKey: "arcZ38", goal: "wetCharterFull" },
+    { id: "a39", labelKey: "arcZ39", goal: "deepWingFull" },
+    { id: "a40", labelKey: "arcZ40", goal: "roofSwornWingFull" },
   ];
 
   /* The additive case-file layer. A goal named here is met only at its named
@@ -213,6 +232,72 @@
       items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
       clues: ["c1", "c2", "c3", "c4", "c5"],
       flags: ["caged", "manifest", "pressed"],
+    },
+    /* The sealed wing's ten cases. Each still carries every item and every
+     * clue, and each names a different combination of the wing's three new
+     * flags with the flags the earlier tiers taught: the flue, the breaker,
+     * the survey cage, the drowned stacks and the weigh-house manifest. The
+     * first nine end back at the secret strongbox; the capstone hauls the
+     * whole wing up to the roof. */
+    sealedFlueFull: {
+      ending: "secret",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["sealed", "flue"],
+    },
+    charteredPlantFull: {
+      ending: "secret",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["chartered", "power", "flue"],
+    },
+    swornCageFull: {
+      ending: "secret",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["sworn", "caged"],
+    },
+    sealedCageFull: {
+      ending: "secret",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["sealed", "power", "caged"],
+    },
+    swornWaterFull: {
+      ending: "secret",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["sworn", "wet"],
+    },
+    charteredWaterFull: {
+      ending: "secret",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["chartered", "power", "wet"],
+    },
+    sealedWetFlueFull: {
+      ending: "secret",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["sealed", "flue", "wet"],
+    },
+    wetCharterFull: {
+      ending: "secret",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["sealed", "chartered", "flue", "wet"],
+    },
+    deepWingFull: {
+      ending: "secret",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["sealed", "chartered", "power", "wet", "caged"],
+    },
+    roofSwornWingFull: {
+      ending: "roof",
+      items: ["key", "card", "lamp", "rope", "chit", "tea", "ledger"],
+      clues: ["c1", "c2", "c3", "c4", "c5"],
+      flags: ["sealed", "sworn", "power", "wet", "caged", "manifest"],
     },
   };
 
@@ -501,6 +586,7 @@
       zh: "五块牌片，五个凹口，一条真正的巷道。柜子里印出一个没人输过的名字：档案馆自己，以及它本该烧掉的那天。你从错误的一年走出来，手里还拿着写下来的原因。",
       choices: [
         { to: "lobby", en: "Begin again and check your work", zh: "从头再来，检查一下自己" },
+        { to: "sealDoor", en: "Step through the strongbox's false back", zh: "从保险柜的假背板穿过去" },
       ],
     },
     {
@@ -591,6 +677,126 @@
       zh: "复印机吃进白纸，迟疑了一下，吐回一页楼里根本不存在的纸：同样的保险柜转盘，同样的五个槽，页边还多用与煤场清单相同的竖笔迹添了第五个名字。原件留在玻璃里。你拿走副本。",
       choices: [
         { to: "copyRoom", en: "Take the copy and step out", zh: "拿着副本退出去" },
+      ],
+    },
+    /* The sealed wing: ten passage rooms behind the secret strongbox, then a
+     * round room with three charter doors. Only the three charter rooms set a
+     * flag; each is a one-way dead end whose single choice is the way back to
+     * the round room. The ten passages are the wing's length, not branches. */
+    {
+      id: "sealDoor", room: "ledger",
+      en: "Behind the strongbox the back panel is not a panel. It swings on a hinge that has waited a century for a hand, and a brick stair goes down between deed boxes stamped with years that never happened.",
+      zh: "保险柜后面那块背板其实不是背板。它挂在一副等了一个世纪的铰链上，一转就开；砖砌的楼梯往下，两侧是盖着从未发生过的年份的档案箱。",
+      choices: [
+        { to: "deedStair", en: "Follow the stair down", zh: "顺楼梯下去" },
+        { to: "endSecret", en: "Back through the strongbox", zh: "从保险柜退回去" },
+      ],
+    },
+    {
+      id: "deedStair", room: "ledger",
+      en: "The stair turns twice and comes out under the ledger room, in a passage whose ceiling is lower than the shelves above it. The air is cold wax and wet stone.",
+      zh: "楼梯转了两折，从台账室底下钻出来；这条通道的顶比上面的书架还低。空气里是冷蜡和湿石头的味道。",
+      choices: [
+        { to: "deedPassage", en: "Go down into the wing", zh: "往翼廊深处走" },
+        { to: "sealDoor", en: "Back up toward the strongbox", zh: "退回保险柜方向" },
+      ],
+    },
+    {
+      id: "deedPassage", room: "ledger",
+      en: "Deed boxes line both walls, labels reversed so that a reader has to stand on their head to file anything. Every tenth slot is empty, and the dust in those slots has been disturbed.",
+      zh: "两侧全是档案箱，标签全反着贴，想归档得倒着看。每隔十个格子就空一个，空处积的灰都被动过。",
+      choices: [
+        { to: "deedVault", en: "Keep going down the passage", zh: "继续往通道深处走" },
+        { to: "deedStair", en: "Back toward the stair", zh: "退回楼梯方向" },
+      ],
+    },
+    {
+      id: "deedVault", room: "ledger",
+      en: "A barrel-vaulted strongroom opens off the passage. The floor is a grid of numbered stone plugs, and three of the numbers are missing from the grid and from the wall register alike.",
+      zh: "通道旁开着一间筒拱顶的坚固库房。地面是一格一号的石塞，有三个号码既不在格子里，也不在墙上登记表上。",
+      choices: [
+        { to: "plumbAlcove", en: "Cross the strongroom", zh: "穿过库房" },
+        { to: "deedPassage", en: "Back into the passage", zh: "退回通道" },
+      ],
+    },
+    {
+      id: "plumbAlcove", room: "ledger",
+      en: "A surveyor's alcove has been cut into the vault wall: plumb lines, a cracked level, and a fan of elevations pinned to the plaster. Every line leans the same way, and the wing is leaning with them.",
+      zh: "库房墙上凿出一间测绘龛：铅垂线、一台裂了的水准仪，还有一扇形钉在灰泥上的立面图。每条线都朝同一边歪，整条翼廊也跟着它们歪。",
+      choices: [
+        { to: "sealGallery", en: "Follow the plumb lines onward", zh: "顺着铅垂线往前" },
+        { to: "deedVault", en: "Back into the strongroom", zh: "退回库房" },
+      ],
+    },
+    {
+      id: "sealGallery", room: "ledger",
+      en: "The gallery beyond is a cabinet of wax seals under dusty glass. Each seal has a broken twin beside it, as if every promise in the building was made twice and kept once.",
+      zh: "再往前是一间火漆封印陈列廊，尘封的玻璃下摆着一枚枚蜡印。每枚旁边都有一枚碎掉的孪生印，仿佛这楼里的每个承诺都立了两遍，只守了一遍。",
+      choices: [
+        { to: "charterCloset", en: "Walk the gallery to its end", zh: "走到陈列廊尽头" },
+        { to: "plumbAlcove", en: "Back to the surveyor's alcove", zh: "回测绘龛" },
+      ],
+    },
+    {
+      id: "charterCloset", room: "ledger",
+      en: "Tin tubes of charters stand in a closet no wider than a coat. One tube is warm to the touch, and the charter inside is dated tomorrow.",
+      zh: "一间只有衣柜宽的储藏室里立着一筒筒章程。其中一筒摸上去是温的，里面的章程落款是明天。",
+      choices: [
+        { to: "oathLanding", en: "Take the closet's far door", zh: "走储藏室另一头的门" },
+        { to: "sealGallery", en: "Back through the gallery", zh: "退回陈列廊" },
+      ],
+    },
+    {
+      id: "oathLanding", room: "ledger",
+      en: "Oath rolls are stacked like cordwood on the landing, each tied with the same grey cord. The top roll has been cut and retied, and the knot is a single vertical pull.",
+      zh: "楼梯平台上，誓词卷像柴火一样码着，每一卷都捆着同样的灰绳。最上面那卷被割开又重新系过，结只打了一道竖扣。",
+      choices: [
+        { to: "munimentRoom", en: "Climb to the muniment room", zh: "上到契据室" },
+        { to: "charterCloset", en: "Back down to the closet", zh: "退回储藏室" },
+      ],
+    },
+    {
+      id: "munimentRoom", room: "ledger",
+      en: "The muniment room keeps the archive's own title deeds: the land, the roof, the coal yard, and a sealed wing that appears on no floor plan the public was ever shown.",
+      zh: "契据室保存着档案馆自己的地契：这块地、屋顶、煤场，还有一条从未出现在任何公开平面图上的封存翼廊。",
+      choices: [
+        { to: "wingHub", en: "Go through to the round room", zh: "穿过去到圆厅" },
+        { to: "oathLanding", en: "Back to the landing", zh: "退回平台" },
+      ],
+    },
+    {
+      id: "wingHub", room: "ledger",
+      en: "The passage ends in a round room with three doors: one in wax, one in paper, one in cord. The stair back is the fourth wall, and the whole room tilts a finger's width toward the yard.",
+      zh: "通道尽头是一间圆厅，三扇门：一扇封着蜡，一扇糊着纸，一扇缠着绳。回去的楼梯是第四面墙；整间厅朝煤场方向歪了一指宽。",
+      choices: [
+        { to: "sealRoom", en: "Open the wax door", zh: "推开蜡门" },
+        { to: "charterRoom", en: "Open the paper door", zh: "推开纸门" },
+        { to: "oathRoom", en: "Open the cord door", zh: "推开绳门" },
+        { to: "munimentRoom", en: "Back up the wing", zh: "沿翼廊上去" },
+      ],
+    },
+    {
+      id: "sealRoom", room: "ledger", set: "sealed",
+      en: "The wax door opens on a room of seals. The largest is the size of a dinner plate and still soft at the centre; you press your thumb into it and carry the impression away.",
+      zh: "蜡门后是一屋子的封印。最大的一枚有盘子那么大，中心还是软的；你把拇指按进去，带走这个印。",
+      choices: [
+        { to: "wingHub", en: "Carry the seal back to the round room", zh: "带着封印回圆厅" },
+      ],
+    },
+    {
+      id: "charterRoom", room: "ledger", set: "chartered",
+      en: "The paper door opens on a shelf of charters. The filed copy is stamped with tomorrow's date and the archive's own seal; you fold it flat and put it in the satchel.",
+      zh: "纸门后是一架章程。存档的那一份盖着明天的日期和档案馆自己的印章；你把它折平，收进口袋。",
+      choices: [
+        { to: "wingHub", en: "Carry the charter back to the round room", zh: "带着章程回圆厅" },
+      ],
+    },
+    {
+      id: "oathRoom", room: "ledger", set: "sworn",
+      en: "The cord door opens on a single oath roll on a reading stand. It is signed in the same vertical stroke as the yard manifests, and the cord has been tied ready for a hand.",
+      zh: "绳门后只有一卷誓词，立在读经台上。落款是和煤场清单相同的竖笔迹，绳子已经系成方便提走的样子。",
+      choices: [
+        { to: "wingHub", en: "Carry the oath back to the round room", zh: "带着誓词回圆厅" },
       ],
     },
   ];
@@ -838,6 +1044,9 @@
       "yardNoPowerFull", "yardCageDryFull", "roofWetCageFull",
       "yardCageManifestDryFull", "roofWetManifestFull",
       "secretCageManifestPressFull",
+      "sealedFlueFull", "charteredPlantFull", "swornCageFull", "sealedCageFull",
+      "swornWaterFull", "charteredWaterFull", "sealedWetFlueFull", "wetCharterFull",
+      "deepWingFull", "roofSwornWingFull",
     ];
     var turns = {};
     var i;
@@ -1692,6 +1901,16 @@
       "arcZ28": "The Weigh-House Night",
       "arcZ29": "The Wet Manifest",
       "arcZ30": "The Press Copy",
+      "arcZ31": "The Wax Seal",
+      "arcZ32": "The Filed Charter",
+      "arcZ33": "The Sworn Roll",
+      "arcZ34": "The Double Seal",
+      "arcZ35": "The Sworn Water",
+      "arcZ36": "The Chartered Water",
+      "arcZ37": "The Wet Seal",
+      "arcZ38": "The Chartered Wing",
+      "arcZ39": "The Deep Wing",
+      "arcZ40": "The Wing's Roof",
       "arcTurnLabel": "Turns",
       "arcClueLabel": "Clues",
       "arcRoomLabel": "Room",
@@ -1718,7 +1937,7 @@
       "arcEndingOff": "You reached {g} in {n} turns, but tonight asked for {want}. Walk it again.",
       "arcFiled": "{g}, filed in {n} turns - {s} stars.",
       "arcNextNight": "Next night unlocked.",
-      "arcAllNights": "Thirty nights, thirty ways out of it.",
+      "arcAllNights": "Forty nights, forty ways out of it.",
       "arcPaused": "Paused at turn {n}. The archive keeps your place.",
       "arcGraphBroken": "The story map failed its own solvability proof. Report it.",
       "arcObjective": "{name}: {want}. The route is known to take {p} turns, so shorter is better.",
@@ -1743,6 +1962,9 @@
       "arcFlagCaged": "the open survey cage",
       "arcFlagManifest": "the weigh-house manifest",
       "arcFlagPressed": "the pressed copy",
+      "arcFlagSealed": "the wax seal",
+      "arcFlagChartered": "the filed charter",
+      "arcFlagSworn": "the sworn roll",
       "arcClue1": "\u2500 tram ticket",
       "arcClue2": "\u2502 true aisle",
       "arcClue3": "\u250c coolant log",
@@ -1778,6 +2000,16 @@
       "arcGoalYardCageManifestDryFull": "get out through the coal yard dry-handed with all five clues, the survey cage and the weigh-house manifest",
       "arcGoalRoofWetManifestFull": "reach the roof ending with every item, all five clues, the drowned stacks and the weigh-house manifest",
       "arcGoalSecretCageManifestPressFull": "reach the secret ending with every item, all five clues, the survey cage, the weigh-house manifest and the copy press",
+      "arcGoalSealedFlueFull": "reach the secret ending with every item, all five clues, the wax seal and the open flue",
+      "arcGoalCharteredPlantFull": "reach the secret ending with every item, all five clues, the filed charter, the backup power and the open flue",
+      "arcGoalSwornCageFull": "reach the secret ending with every item, all five clues, the sworn roll and the open survey cage",
+      "arcGoalSealedCageFull": "reach the secret ending with every item, all five clues, the wax seal, the backup power and the open survey cage",
+      "arcGoalSwornWaterFull": "reach the secret ending with every item, all five clues, the sworn roll and the drowned floor plan",
+      "arcGoalCharteredWaterFull": "reach the secret ending with every item, all five clues, the filed charter, the backup power and the drowned floor plan",
+      "arcGoalSealedWetFlueFull": "reach the secret ending with every item, all five clues, the wax seal, the open flue and the drowned floor plan",
+      "arcGoalWetCharterFull": "reach the secret ending with every item, all five clues, the wax seal, the filed charter, the open flue and the drowned floor plan",
+      "arcGoalDeepWingFull": "reach the secret ending with every item, all five clues, the wax seal, the filed charter, the backup power, the drowned floor plan and the open survey cage",
+      "arcGoalRoofSwornWingFull": "reach the roof ending with every item, all five clues, the wax seal, the sworn roll, the backup power, the drowned floor plan, the survey cage and the weigh-house manifest",
       "arcEndLedger": "Ledger ending",
       "arcEndRoof": "Roof ending",
       "arcEndSecret": "Secret ending",
@@ -1815,6 +2047,16 @@
       "arcZ28": "地磅房之夜",
       "arcZ29": "湿清单",
       "arcZ30": "压印副本",
+      "arcZ31": "火漆封印",
+      "arcZ32": "存档章程",
+      "arcZ33": "誓词卷",
+      "arcZ34": "双重封印",
+      "arcZ35": "誓词涉水",
+      "arcZ36": "章程涉水",
+      "arcZ37": "湿火漆",
+      "arcZ38": "章程翼廊",
+      "arcZ39": "翼廊深处",
+      "arcZ40": "翼廊上顶",
       "arcTurnLabel": "步数",
       "arcClueLabel": "线索",
       "arcRoomLabel": "房间",
@@ -1841,7 +2083,7 @@
       "arcEndingOff": "你用了 {n} 步走到{g}，可今夜要的是{want}。再走一遍。",
       "arcFiled": "{g}，用了 {n} 步 - 获得 {s} 星。",
       "arcNextNight": "解锁下一夜。",
-      "arcAllNights": "三十个夜晚，三十种出来的法子。",
+      "arcAllNights": "四十个夜晚，四十种出来的法子。",
       "arcPaused": "停在第 {n} 步。档案楼替你看住位置。",
       "arcGraphBroken": "故事图没通过它自己的可解性校验，请报告。",
       "arcObjective": "{name}：{want}。已测出这条路最短要 {p} 步，越少越好。",
@@ -1866,6 +2108,9 @@
       "arcFlagCaged": "敞开的测绘笼",
       "arcFlagManifest": "地磅房清单",
       "arcFlagPressed": "压印副本",
+      "arcFlagSealed": "火漆封印",
+      "arcFlagChartered": "存档章程",
+      "arcFlagSworn": "誓词卷",
       "arcClue1": "\u2500 电车月票",
       "arcClue2": "\u2502 真正的巷道",
       "arcClue3": "\u250c 冷却液记录",
@@ -1901,6 +2146,16 @@
       "arcGoalYardCageManifestDryFull": "不带保温壶、带着五条线索、测绘笼和地磅房清单，从堆煤场走出去",
       "arcGoalRoofWetManifestFull": "带着所有物件、五条线索、淹水书库和地磅房清单走到屋顶结局",
       "arcGoalSecretCageManifestPressFull": "带着所有物件、五条线索、测绘笼、地磅房清单和压印副本走到隐藏结局",
+      "arcGoalSealedFlueFull": "带着所有物件、五条线索、火漆封印和敞开的烟道走到隐藏结局",
+      "arcGoalCharteredPlantFull": "带着所有物件、五条线索、存档章程、备用电源和敞开的烟道走到隐藏结局",
+      "arcGoalSwornCageFull": "带着所有物件、五条线索、誓词卷和敞开的测绘笼走到隐藏结局",
+      "arcGoalSealedCageFull": "带着所有物件、五条线索、火漆封印、备用电源和敞开的测绘笼走到隐藏结局",
+      "arcGoalSwornWaterFull": "带着所有物件、五条线索、誓词卷和泡水的平面图走到隐藏结局",
+      "arcGoalCharteredWaterFull": "带着所有物件、五条线索、存档章程、备用电源和泡水的平面图走到隐藏结局",
+      "arcGoalSealedWetFlueFull": "带着所有物件、五条线索、火漆封印、敞开的烟道和泡水的平面图走到隐藏结局",
+      "arcGoalWetCharterFull": "带着所有物件、五条线索、火漆封印、存档章程、敞开的烟道和泡水的平面图走到隐藏结局",
+      "arcGoalDeepWingFull": "带着所有物件、五条线索、火漆封印、存档章程、备用电源、泡水的平面图和敞开的测绘笼走到隐藏结局",
+      "arcGoalRoofSwornWingFull": "带着所有物件、五条线索、火漆封印、誓词卷、备用电源、泡水的平面图、测绘笼和地磅房清单走到屋顶结局",
       "arcEndLedger": "台账结局",
       "arcEndRoof": "屋顶结局",
       "arcEndSecret": "隐藏结局",
@@ -1923,7 +2178,8 @@
         '<text x="93" y="40" font-size="10" fill="#ffd166" text-anchor="middle">5?</text>' +
         '<text x="30" y="68" font-size="8" fill="#b9c1cc">1 desk  2 stair  3 lift</text></svg>',
       en: [
-        "Goal: get out of the closed archive - the thirty nights each ask for a different way out.",
+        "Goal: get out of the closed archive - the forty nights each ask for a different way out.",
+        "New tier: nights 31-40 descend the sealed wing behind the secret strongbox - ten passage rooms to three one-way charter rooms - and each night carries the wax seal, filed charter or sworn roll back out beside a different set of the flue, breaker, survey cage, drowned stacks and manifest, climbing from 47 turns to a 76-turn roof capstone.",
         "Action: click a choice or press its number 1-4; Backspace retraces one passage and L reads your clue log aloud.",
         "Rule: a greyed choice is not a dead end, it names the item, flag or clue it still wants; the mapped rooms, satchel and clues stay on screen so you never have to remember.",
         "Turns: a shorter route scores better, so a run that walks the whole map will finish - it just will not shine.",
@@ -1931,7 +2187,8 @@
         "Before the night is dealt the story graph is checked by machine: every passage reachable, all three standard endings reachable, no passage without a way onward.",
       ],
       zh: [
-        "目标：从夜里关门的档案楼里出去——三十个夜晚，各要你走一种不同的出去法。",
+        "目标：从夜里关门的档案楼里出去——四十个夜晚，各要你走一种不同的出去法。",
+        "新层级：第 31-40 夜深入隐藏保险柜后的封存翼廊——十间通道的尽头是三间单向契据房——每夜要把火漆封印、存档章程或誓词卷，与烟道、总闸、测绘笼、淹水书库、地磅清单中不同的几样一起带出；难度从 47 步爬到第 40 夜的 76 步屋顶登顶。",
         "操作：点选项，或按它前面的数字 1-4；退格键退回一段，L 键把线索日志念出来。",
         "规则：灰掉的选项不是死路，它会写明还缺哪件东西、哪个状态或哪条线索；已探明的房间、口袋和线索一直摆在屏上，不用你记。",
         "步数：路线越短分越高，所以把整栋楼走完也能通关——只是不会太亮眼。",

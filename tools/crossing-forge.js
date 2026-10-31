@@ -135,8 +135,12 @@ function rideOn(props, row, x, time) {
 }
 
 /* Breadth-first search over (padsMask, row, x, tick). Returns a proof path:
- * the list of hops, and the tick the ford was cleared on. */
-function proveFord(level) {
+ * the list of hops, and the tick the ford was cleared on. `tickCap` bounds
+ * the horizon - the shipped 3000 ticks when omitted, or a tighter one for
+ * the seed searches, where an unprovable board must fail fast instead of
+ * sweeping its whole 150-second sky. */
+function proveFord(level, tickCap) {
+  const cap = Math.min(tickCap || MAX_TICKS, MAX_TICKS);
   const props = spawnProps(level);
   const START_ROW = 8;
   const START_X = CRO_CELL * 3 + CRO_CELL / 2;
@@ -145,11 +149,11 @@ function proveFord(level) {
    * this resolution. */
   const XQ = 2;
   const xBuckets = Math.ceil(CRO_WIDTH / XQ) + 2;
-  const stride = (MAX_TICKS + 1) * xBuckets;
+  const stride = (cap + 1) * xBuckets;
   const size = 16 * 9 * stride;
   const seen = new Uint8Array(size);
   const key = function (mask, row, xb, tick) {
-    return ((mask * 9 + row) * xBuckets + xb) * (MAX_TICKS + 1) + tick;
+    return ((mask * 9 + row) * xBuckets + xb) * (cap + 1) + tick;
   };
 
   const startKey = key(0, START_ROW, Math.round(START_X / XQ), 0);
@@ -159,8 +163,8 @@ function proveFord(level) {
   let clearedAt = -1;
 
   function decode(k) {
-    const tick = k % (MAX_TICKS + 1);
-    k = (k - tick) / (MAX_TICKS + 1);
+    const tick = k % (cap + 1);
+    k = (k - tick) / (cap + 1);
     const xb = k % xBuckets;
     k = (k - xb) / xBuckets;
     const row = k % 9;
@@ -193,7 +197,7 @@ function proveFord(level) {
     }
 
     const nextTick = state.tick + 1;
-    if (nextTick > MAX_TICKS) continue;
+    if (nextTick > cap) continue;
     const nextTime = nextTick * TICK;
 
     /* Wait a tick: on a river row the log carries the frog. */
@@ -234,8 +238,8 @@ function proveFord(level) {
   return { cleared: clearedAt >= 0, ticks: clearedAt, states: queue.length };
 }
 
-function checkFord(level) {
-  const proof = proveFord(level);
+function checkFord(level, tickCap) {
+  const proof = proveFord(level, tickCap);
   if (!proof.cleared) return { ok: false, proof: proof };
   return { ok: true, proof: proof };
 }
@@ -362,6 +366,28 @@ function main() {
     };
     Object.keys(deepBriefs).forEach(function (id) {
       brief[id] = deepBriefs[id];
+    });
+    /* The deluge tier keeps the summit's own +6/-2 band step and grows the
+     * cross list again - row 1 joins at c31 (eleven lanes, the pad-side
+     * river lane mirrored for the first time), row 3 at c34 (twelve lanes,
+     * the first board whose every row runs both ways). Its seeds were
+     * searched against the whole ladder, not just the brief: each pinned
+     * seed holds its rung's measured record, keeps the tier's difficulty
+     * lines from falling, and leaves the ablation margin the gate quotes. */
+    const delugeBriefs = {
+      c31: { id: "c31", labelKey: "croL31", band: [172, 214, 70, 84], cross: [6, 2, 7, 5, 1], seed: 12 },
+      c32: { id: "c32", labelKey: "croL32", band: [178, 220, 68, 82], cross: [6, 2, 7, 5, 1], seed: 54 },
+      c33: { id: "c33", labelKey: "croL33", band: [184, 226, 66, 80], cross: [6, 2, 7, 5, 1], seed: 26 },
+      c34: { id: "c34", labelKey: "croL34", band: [190, 232, 64, 78], cross: [6, 2, 7, 5, 1, 3], seed: 17 },
+      c35: { id: "c35", labelKey: "croL35", band: [196, 238, 62, 76], cross: [6, 2, 7, 5, 1, 3], seed: 84 },
+      c36: { id: "c36", labelKey: "croL36", band: [202, 244, 60, 74], cross: [6, 2, 7, 5, 1, 3], seed: 85 },
+      c37: { id: "c37", labelKey: "croL37", band: [208, 250, 58, 72], cross: [6, 2, 7, 5, 1, 3], seed: 65 },
+      c38: { id: "c38", labelKey: "croL38", band: [214, 256, 56, 70], cross: [6, 2, 7, 5, 1, 3], seed: 40 },
+      c39: { id: "c39", labelKey: "croL39", band: [220, 262, 54, 68], cross: [6, 2, 7, 5, 1, 3], seed: 20 },
+      c40: { id: "c40", labelKey: "croL40", band: [226, 268, 52, 66], cross: [6, 2, 7, 5, 1, 3], seed: 54 },
+    };
+    Object.keys(delugeBriefs).forEach(function (id) {
+      brief[id] = delugeBriefs[id];
     });
     (ids.length ? ids : Object.keys(brief)).forEach(function (id) {
       const spec = brief[id];

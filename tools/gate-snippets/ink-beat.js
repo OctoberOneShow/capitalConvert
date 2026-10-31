@@ -46,6 +46,7 @@ module.exports = function gate(ctx) {
   const tierIds = ["t21", "t22", "t23", "t24"];
   const summitIds = ["t25", "t26", "t27", "t28", "t29", "t30"];
   const byId = (id) => levels.find((level) => level.id === id);
+  const posOf = (id) => levels.findIndex((level) => level.id === id);
   const KEYS = ["d", "f", "j", "k"];
 
   /* ---- ladder shape ---- */
@@ -82,6 +83,7 @@ module.exports = function gate(ctx) {
   const shippedMaxBars = Math.max.apply(null, levels.slice(0, 20).map((level) => level.bars));
   const shippedMaxBpm = Math.max.apply(null, levels.slice(0, 20).map((level) => level.bpm));
   const shippedMaxSwing = Math.max.apply(null, levels.slice(0, 20).map((level) => level.swing || 0));
+  const allStats = levels.map((level) => stats(level));
 
   const tierStats = {};
   tierIds.forEach((id) => { tierStats[id] = stats(byId(id)); });
@@ -297,11 +299,12 @@ module.exports = function gate(ctx) {
     climbs(summitNps), summitNps.map((n) => n.toFixed(3)).join(","));
   check("game-ink-beat", "the summit opens past the hard tier's peak (" +
       summitNps[0].toFixed(2) + " vs t24 " + tierStats.t24.nps.toFixed(2) +
-      ") and t30 ends the ladder as its densest track",
+      ") and t30 ends the summit as its densest track",
     summitNps[0] > tierStats.t24.nps &&
-      summitNps[summitNps.length - 1] === Math.max.apply(null, allNps),
-    "summit " + summitNps.map((n) => n.toFixed(2)).join("/") + ", ladder peak " +
-      Math.max.apply(null, allNps).toFixed(2));
+      summitNps[summitNps.length - 1] ===
+        Math.max.apply(null, allStats.slice(0, posOf("t31")).map((s) => s.nps)),
+    "summit " + summitNps.map((n) => n.toFixed(2)).join("/") + ", pre-encore peak " +
+      Math.max.apply(null, allStats.slice(0, posOf("t31")).map((s) => s.nps)).toFixed(2));
   check("game-ink-beat", "t25 is the first no-rest wall past the shipped peak: its quietest lane lands " +
       summitStats.t25.minLane + " notes",
     summitStats.t25.nps > tierStats.t24.nps && summitStats.t25.minLane > shippedMaxMinLane,
@@ -329,9 +332,9 @@ module.exports = function gate(ctx) {
     !byId("t29").swing && byId("t29").bpm > byId("t24").bpm &&
       summitStats.t29.nps > tierStats.t24.nps,
     "bpm " + byId("t29").bpm + ", nps " + summitStats.t29.nps.toFixed(2));
-  check("game-ink-beat", "t30 closes at the top tempo and the deepest swing together",
-    byId("t30").bpm === Math.max.apply(null, levels.map((level) => level.bpm)) &&
-      byId("t30").swing === Math.max.apply(null, levels.map((level) => level.swing || 0)) &&
+  check("game-ink-beat", "t30 closes the summit at the top tempo and the deepest swing together",
+    byId("t30").bpm === Math.max.apply(null, levels.slice(0, posOf("t31")).map((level) => level.bpm)) &&
+      byId("t30").swing === Math.max.apply(null, levels.slice(0, posOf("t31")).map((level) => level.swing || 0)) &&
       summitStats.t30.nps > tierStats.t24.nps,
     "bpm " + byId("t30").bpm + ", swing " + byId("t30").swing +
       ", nps " + summitStats.t30.nps.toFixed(2));
@@ -435,9 +438,162 @@ module.exports = function gate(ctx) {
   check("game-ink-beat", "the summit ends the campaign: all thirty tracks sit cleared in the save",
     clearedCount === 30, String(clearedCount));
 
+  /* ---- the encore tier t31-t40: measured records, played three ways ----
+   * Every rung takes one measured record away from the ladder behind it,
+   * each held against every rung shipped before it, and each is then played
+   * through the real panel the same three ways the other tiers are. */
+  const encoreIds = ["t31", "t32", "t33", "t34", "t35", "t36", "t37", "t38", "t39", "t40"];
+  const beforePeak = (id, pick) => Math.max.apply(null,
+    allStats.slice(0, posOf(id)).map(pick));
+  const beforeBpm = (id, keep) => Math.max.apply(null,
+    levels.slice(0, posOf(id)).filter(keep).map((level) => level.bpm));
+  const encoreStats = {};
+  encoreIds.forEach((id) => {
+    encoreStats[id] = allStats[posOf(id)];
+    fullChart[id] = App.beatChart(byId(id));
+  });
+
+  const encoreProblems = [];
+  const ePush = (ok, message) => { if (!ok) encoreProblems.push(message); };
+  ePush(encoreStats.t31.nps > beforePeak("t31", (s) => s.nps),
+    "t31 is not the densest chart (" + encoreStats.t31.nps.toFixed(2) + " vs earlier " +
+      beforePeak("t31", (s) => s.nps).toFixed(2) + ")");
+  ePush(byId("t32").bars > Math.max.apply(null, levels.slice(0, posOf("t32")).map((level) => level.bars)) &&
+    encoreStats.t32.total > beforePeak("t32", (s) => s.total),
+    "t32 is not the length record");
+  ePush(!byId("t33").swing &&
+    byId("t33").bpm > beforeBpm("t33", (level) => !level.swing),
+    "t33 is not the fastest plain wall");
+  ePush(encoreStats.t34.topPair > beforePeak("t34", (s) => s.topPair),
+    "t34 is not the solo record (" + (encoreStats.t34.topPair * 100).toFixed(1) + "% vs earlier " +
+      (beforePeak("t34", (s) => s.topPair) * 100).toFixed(1) + "%)");
+  ePush(byId("t35").swing > Math.max.apply(null, levels.slice(0, posOf("t35")).map((level) => level.swing || 0)),
+    "t35 is not the deepest swing");
+  ePush(encoreStats.t36.total > beforePeak("t36", (s) => s.total) &&
+    byId("t36").bars > Math.max.apply(null, levels.slice(0, posOf("t36")).map((level) => level.bars)),
+    "t36 is not the marathon");
+  ePush(byId("t37").swing === 0.34 &&
+    byId("t37").bpm > beforeBpm("t37", (level) => (level.swing || 0) > 0),
+    "t37 is not the fastest swung wall");
+  ePush(encoreStats.t38.minLane > beforePeak("t38", (s) => s.minLane),
+    "t38 is not the no-rest record (quietest lane " + encoreStats.t38.minLane + " vs earlier " +
+      beforePeak("t38", (s) => s.minLane) + ")");
+  ePush(byId("t39").swing === 0.5 &&
+    byId("t39").bpm > beforeBpm("t39", (level) => (level.swing || 0) >= 0.5),
+    "t39 does not take the top tempo past the closer in the deep groove");
+  ePush(encoreStats.t40.nps === Math.max.apply(null, allStats.map((s) => s.nps)) &&
+    byId("t40").bpm === Math.max.apply(null, levels.map((level) => level.bpm)) &&
+    byId("t40").swing === Math.max.apply(null, levels.map((level) => level.swing || 0)),
+    "t40 does not close at the ladder's absolute peak");
+  check("game-ink-beat",
+    "every encore record beats every rung shipped before it",
+    encoreProblems.length === 0, encoreProblems.slice(0, 4).join(" | "));
+
+  /* The save walks in holding t21-t30 at three stars, so the picker sells
+   * t31; each encore clear then unlocks the next rung the same way. */
+  encoreIds.forEach((id) => {
+    const level = byId(id);
+
+    const idle = playTrack(id, fullChart[id], { play: () => false, deltaMs: 0 });
+    check("game-ink-beat", id + ": doing nothing reads 0/3 stars and records nothing",
+      idle.selected && idle.stars === 0 && !readSave().cleared[id],
+      JSON.stringify({ selected: idle.selected, stars: idle.stars, text: idle.text.slice(0, 40) }));
+
+    const perfect = playTrack(id, fullChart[id], { play: () => true, deltaMs: -20 });
+    check("game-ink-beat", id + ": frame-perfect play reads 100% and three stars",
+      perfect.selected && perfect.stars === 3 && perfect.acc === 100,
+      JSON.stringify(perfect));
+    const steady = playTrack(id, fullChart[id], { play: (i) => i % 7 !== 3, deltaMs: -20 });
+    check("game-ink-beat", id + ": dropping one note in seven lands two stars, not three",
+      steady.stars === 2 && steady.acc >= 78 && steady.acc < 92,
+      JSON.stringify(steady));
+    const casual = playTrack(id, fullChart[id], { play: () => true, deltaMs: 100 });
+    check("game-ink-beat", id + ": a beat-late hand still clears at one star",
+      casual.stars === 1 && casual.acc === 60, JSON.stringify(casual));
+
+    const index = encoreIds.indexOf(id);
+    if (index + 1 < encoreIds.length) {
+      const nextId = encoreIds[index + 1];
+      sel.value = nextId;
+      env.dispatch(sel, "change");
+      check("game-ink-beat", nextId + " unlocks once " + id + " is cleared",
+        sel.value === nextId, sel.value);
+    }
+
+    /* Mechanic proofs. Wall rungs keep the summit's load cut (a wall plan
+     * blankets every sparse replacement, so density cuts cannot fail the
+     * replay - the honest proof is the rung's measured load falling under
+     * the hard tier's peak). Length keeps the t27 honest alternative. The
+     * solo flare and the deep swing get true replacements: their charts are
+     * SPARSER than the plan's own in the lanes or steps that matter, so the
+     * perfect hand genuinely misses and the grade collapses. */
+    const saved = JSON.parse(JSON.stringify(level));
+    if (id === "t32" || id === "t36") {
+      const fullTotal = encoreStats[id].total;
+      level.bars = 30;
+      const cut = playTrack(id, fullChart[id], { play: () => true, deltaMs: -20 });
+      Object.assign(level, saved);
+      sel.value = id;
+      env.dispatch(sel, "change");
+      const cutTotal = App.beatChart(Object.assign({}, level, { bars: 30 })).total;
+      check("game-ink-beat", id + ": shortening alone cannot fail the plan, so length is " +
+          "proved by load and demand",
+        cut.acc === 100 && cut.stars === 3,
+        "cut replay " + cut.acc + "%/" + cut.stars + " stars");
+      check("game-ink-beat", id + "'s length is the lesson: cut to the shipped 30 bars, " +
+          "the chart falls under its own full load and three stars demands more hits " +
+          "than any shipped track holds",
+        cutTotal < fullTotal && Math.ceil(fullTotal * 0.92) > 404,
+        "cut " + cutTotal + " vs full " + fullTotal + ", demands " + Math.ceil(fullTotal * 0.92));
+    } else if (id === "t34") {
+      level.density = [0.16, 0.16, 0.16, 0.16];
+      const cut = playTrack(id, fullChart[id], { play: () => true, deltaMs: -20 });
+      Object.assign(level, saved);
+      sel.value = id;
+      env.dispatch(sel, "change");
+      check("game-ink-beat", "t34 (rebalanced to the even wall): the perfect hand misses the " +
+          "lanes the solo took away and the grade collapses",
+        cut.stars <= 1 && cut.acc < 78,
+        "cut acc " + cut.acc + "%, stars " + cut.stars);
+    } else if (id === "t35") {
+      /* The groove cannot be cut by replacement in this engine: the deepest
+       * shipped offset is 28.6 ms against a 60 ms perfect window, so every
+       * eased swing still lands inside the plan's taps. The honest proof is
+       * t23's: the mechanic is measured, and the win condition needs it -
+       * t35's odd sixteenths sit 39.4 ms off the grid, the biggest offset
+       * the ladder has shipped, and no earlier rung comes within 10 ms. */
+      const offsetMs = (def) => (def.swing || 0) * (60 / def.bpm / 4) * 1000;
+      const own = offsetMs(byId("t35"));
+      const earlierMax = Math.max.apply(null, levels.slice(0, posOf("t35")).map(offsetMs));
+      check("game-ink-beat", "t35's groove is the lesson: its odd sixteenths sit " +
+          own.toFixed(1) + " ms off the grid - the biggest offset the ladder has shipped",
+        own > earlierMax,
+        "t35 " + own.toFixed(1) + " ms vs earlier peak " + earlierMax.toFixed(1) + " ms");
+    } else {
+      const cutShape = Object.assign({}, level, { density: [0.14, 0.105, 0.155, 0.08] });
+      const cutChart = App.beatChart(cutShape);
+      const cutNps = cutChart.total / cutChart.end;
+      check("game-ink-beat", id + " (wall cut to the shipped taper): the measured load falls " +
+          "under the hard tier's peak - the rung stops being the encore",
+        cutNps < tierStats.t24.nps,
+        "cut " + cutNps.toFixed(2) + " nps vs t24 " + tierStats.t24.nps.toFixed(2));
+    }
+
+    check("game-ink-beat", id + " stays cleared at three stars in the campaign save",
+      readSave().cleared[id] && readSave().cleared[id].stars === 3,
+      JSON.stringify(readSave().cleared[id] || null));
+  });
+
+  const saveFinal = readSave().cleared || {};
+  const clearedFinal = Object.keys(saveFinal).filter((id) => saveFinal[id] && saveFinal[id].stars >= 1).length;
+  check("game-ink-beat", "the encore ends the campaign: all forty tracks sit cleared in the save",
+    clearedFinal === 40, String(clearedFinal));
+
   /* Copy travels with the module. */
   const copyKeys = ["beatL21", "beatL22", "beatL23", "beatL24",
-    "beatL25", "beatL26", "beatL27", "beatL28", "beatL29", "beatL30"];
+    "beatL25", "beatL26", "beatL27", "beatL28", "beatL29", "beatL30",
+    "beatL31", "beatL32", "beatL33", "beatL34", "beatL35",
+    "beatL36", "beatL37", "beatL38", "beatL39", "beatL40"];
   const copyProblems = copyKeys.filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||

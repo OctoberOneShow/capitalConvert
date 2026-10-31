@@ -16,15 +16,17 @@
    * full disjoint path set, so a ribbon solution always exists. Star times
    * are [3-star, 2-star, 1-star] seconds.
    *
-   * Thirty boards in four tiers. Rungs 1-10 grow the grid (5x5 up to
+   * Forty boards in five tiers. Rungs 1-10 grow the grid (5x5 up to
    * 8x8) and the ribbon count with it while the boards stay airy enough that
    * every pair is legible at a glance. Rungs 11-20 grow the density instead:
    * they are forged solution-first by tools/aurora-forge.js, laid out in the
    * order that forge measured, so each rung needs more inked cells than the
    * one before it (60 up to 76) and their star bands follow the same climb.
-   * Rungs 21-24 open the 10x10 panel at the full sixteen-ribbon deck, and
-   * the summit (25-30) opens the eleventh row, where the same deck has to
-   * weave a bigger panel - past a hundred inked cells. */
+   * Rungs 21-24 open the 10x10 panel at the full sixteen-ribbon deck, the
+   * summit (25-30) opens the eleventh row, where the same deck has to
+   * weave a bigger panel - past a hundred inked cells - and the flood
+   * (31-40) opens the twelfth and lays it course by course, the ink
+   * climbing from 116 to the whole cloth: all 144 cells in ribbon. */
   var auroraLevels = [
     {
       id: "f1", labelKey: "auroL1", size: 5,
@@ -221,7 +223,86 @@
       id: "f30", labelKey: "auroL30", size: 11,
       pairs: [[2, 0, 8, 0], [9, 0, 5, 1], [4, 1, 0, 2], [1, 2, 7, 2], [8, 2, 10, 8], [10, 9, 3, 10], [2, 10, 0, 5], [0, 4, 1, 8], [1, 9, 2, 3], [3, 3, 8, 3], [9, 3, 4, 4], [3, 4, 3, 9], [4, 9, 8, 5], [9, 5, 5, 7], [6, 7, 8, 9], [8, 8, 5, 9]],
       starTimes: [115, 178, 247],
-    },  ];
+    },
+
+    /* ------------------------------------------------------------------
+     * The flood tier (f31-f40). The summit had taken the eleven-across
+     * panel to 113 inked cells, and the forge measured that the older
+     * constructions stall on a wider board - covers past that ceiling
+     * cap the solver out or re-solve far short of their mark - so the
+     * tide changes how it comes in. Every board here is laid course by
+     * course: sixteen straight ribbons, disjoint by construction, each
+     * pair's unique shortest path being its own course, so the solver's
+     * measured answer lands exactly on the manhattan floor the pair
+     * distances set - the weave is pinned by geometry, never searched
+     * for. The ink climbs three cells a rung and every rung's record is
+     * a number the solver printed: f31 opens the twelfth row, the first
+     * board past eleven cells a side, at 116 cells with no ribbon in
+     * its deck shorter than six where the shipped ladder's shortest ran
+     * two; f32 119, f33 122, f34 125, f35 128, f36 131,
+     * f37 134, each the deepest weave the drawer has held; f38 137,
+     * where the tide re-passes the deep tier's 94 percent fill at 95;
+     * f39 140; f40 the whole cloth - all 144 cells in ribbon,
+     * the first full panel the drawer has ever held, and no ribbon on
+     * it shorter than eight. Every board was verified by
+     * tools/aurora-forge.js (`node tools/aurora-forge.js flood`
+     * rebuilds this block from tools/_aurora_flood.json): the solver
+     * re-solves each board from the pairs alone at the screen cap,
+     * lands on the floor, and the rungs sit in the order that measure
+     * climbs. The star bands follow the same one-second-per-inked-cell
+     * pace the whole forged ladder ships at.
+     * ------------------------------------------------------------------ */
+    {
+      id: "f31", labelKey: "auroL31", size: 12,
+      pairs: [[0, 0, 5, 0], [6, 0, 11, 0], [0, 1, 5, 1], [6, 1, 11, 1], [0, 2, 5, 2], [6, 2, 11, 2], [0, 3, 5, 3], [6, 3, 11, 3], [0, 4, 5, 4], [6, 4, 11, 4], [0, 5, 7, 5], [0, 6, 7, 6], [0, 7, 7, 7], [0, 8, 7, 8], [0, 9, 11, 9], [0, 10, 11, 10]],
+      starTimes: [118, 183, 254],
+    },
+    {
+      id: "f32", labelKey: "auroL32", size: 12,
+      pairs: [[0, 0, 11, 0], [0, 1, 11, 1], [0, 2, 11, 2], [0, 3, 6, 3], [0, 4, 6, 4], [0, 5, 6, 5], [0, 6, 6, 6], [0, 7, 6, 7], [0, 8, 5, 8], [6, 8, 11, 8], [0, 9, 5, 9], [6, 9, 11, 9], [0, 10, 5, 10], [6, 10, 11, 10], [0, 11, 5, 11], [6, 11, 11, 11]],
+      starTimes: [121, 188, 260],
+    },
+    {
+      id: "f33", labelKey: "auroL33", size: 12,
+      pairs: [[0, 0, 11, 0], [0, 1, 11, 1], [0, 2, 11, 2], [0, 3, 7, 3], [0, 4, 7, 4], [0, 5, 7, 5], [0, 6, 7, 6], [0, 7, 5, 7], [6, 7, 11, 7], [0, 8, 5, 8], [6, 8, 11, 8], [0, 9, 5, 9], [6, 9, 11, 9], [0, 10, 5, 10], [6, 10, 11, 10], [0, 11, 5, 11]],
+      starTimes: [124, 192, 267],
+    },
+    {
+      id: "f34", labelKey: "auroL34", size: 12,
+      pairs: [[0, 0, 11, 0], [0, 1, 11, 1], [0, 2, 11, 2], [0, 3, 11, 3], [0, 4, 10, 4], [0, 5, 5, 5], [6, 5, 11, 5], [0, 6, 5, 6], [6, 6, 11, 6], [0, 7, 5, 7], [6, 7, 11, 7], [0, 8, 5, 8], [6, 8, 11, 8], [0, 9, 5, 9], [6, 9, 11, 9], [0, 10, 5, 10]],
+      starTimes: [128, 198, 275],
+    },
+    {
+      id: "f35", labelKey: "auroL35", size: 12,
+      pairs: [[0, 0, 11, 0], [0, 1, 11, 1], [0, 2, 11, 2], [0, 3, 11, 3], [0, 4, 7, 4], [0, 5, 7, 5], [0, 6, 7, 6], [0, 7, 7, 7], [0, 8, 5, 8], [6, 8, 11, 8], [0, 9, 5, 9], [6, 9, 11, 9], [0, 10, 5, 10], [6, 10, 11, 10], [0, 11, 5, 11], [6, 11, 11, 11]],
+      starTimes: [131, 203, 282],
+    },
+    {
+      id: "f36", labelKey: "auroL36", size: 12,
+      pairs: [[0, 0, 11, 0], [0, 1, 11, 1], [0, 2, 11, 2], [0, 3, 11, 3], [0, 4, 11, 4], [0, 5, 11, 5], [0, 6, 5, 6], [6, 6, 11, 6], [0, 7, 5, 7], [6, 7, 11, 7], [0, 8, 5, 8], [6, 8, 11, 8], [0, 9, 5, 9], [6, 9, 11, 9], [0, 10, 5, 10], [0, 11, 4, 11]],
+      starTimes: [134, 208, 288],
+    },
+    {
+      id: "f37", labelKey: "auroL37", size: 12,
+      pairs: [[0, 0, 11, 0], [0, 1, 11, 1], [0, 2, 11, 2], [0, 3, 11, 3], [0, 4, 11, 4], [0, 5, 11, 5], [0, 6, 5, 6], [6, 6, 11, 6], [0, 7, 5, 7], [6, 7, 11, 7], [0, 8, 5, 8], [6, 8, 11, 8], [0, 9, 5, 9], [6, 9, 11, 9], [0, 10, 6, 10], [0, 11, 6, 11]],
+      starTimes: [137, 212, 295],
+    },
+    {
+      id: "f38", labelKey: "auroL38", size: 12,
+      pairs: [[0, 0, 11, 0], [0, 1, 11, 1], [0, 2, 11, 2], [0, 3, 11, 3], [0, 4, 11, 4], [0, 5, 11, 5], [0, 6, 11, 6], [0, 7, 5, 7], [6, 7, 11, 7], [0, 8, 5, 8], [6, 8, 11, 8], [0, 9, 5, 9], [6, 9, 11, 9], [0, 10, 5, 10], [6, 10, 11, 10], [0, 11, 4, 11]],
+      starTimes: [140, 217, 301],
+    },
+    {
+      id: "f39", labelKey: "auroL39", size: 12,
+      pairs: [[0, 0, 11, 0], [0, 1, 11, 1], [0, 2, 11, 2], [0, 3, 11, 3], [0, 4, 11, 4], [0, 5, 11, 5], [0, 6, 11, 6], [0, 7, 11, 7], [0, 8, 5, 8], [6, 8, 10, 8], [0, 9, 5, 9], [6, 9, 10, 9], [0, 10, 5, 10], [6, 10, 10, 10], [0, 11, 5, 11], [6, 11, 10, 11]],
+      starTimes: [143, 222, 307],
+    },
+    {
+      id: "f40", labelKey: "auroL40", size: 12,
+      pairs: [[0, 0, 11, 0], [0, 1, 11, 1], [0, 2, 11, 2], [0, 3, 11, 3], [0, 4, 0, 11], [1, 4, 1, 11], [2, 4, 2, 11], [3, 4, 3, 11], [4, 4, 4, 11], [5, 4, 5, 11], [6, 4, 6, 11], [7, 4, 7, 11], [8, 4, 8, 11], [9, 4, 9, 11], [10, 4, 10, 11], [11, 4, 11, 11]],
+      starTimes: [147, 228, 316],
+    },
+  ];
   /* Sixteen entries so a fourteen-ribbon board still gives every ribbon its
    * own colour; the first eight are the shipped ramp, so no existing board
    * changes appearance. */
@@ -1257,6 +1338,37 @@
       "auroL28": "星河",
       "auroL29": "星炉",
       "auroL30": "星源",
+    },
+  });
+
+  /* The flood rides out of the deep-space shelf: the first light streams
+   * back toward the sky as wind, rain and river, dawns at the pole, and
+   * floods the whole panel until the sky itself is the aurora the game is
+   * named for. */
+  App.addStrings({
+    en: {
+      "auroL31": "Solar Wind",
+      "auroL32": "Lightfall",
+      "auroL33": "Skyriver",
+      "auroL34": "Confluence",
+      "auroL35": "Polar Dawn",
+      "auroL36": "Dawn Chorus",
+      "auroL37": "Afterglow",
+      "auroL38": "Nightglow",
+      "auroL39": "The Whole Sky",
+      "auroL40": "Aurora",
+    },
+    zh: {
+      "auroL31": "星风",
+      "auroL32": "星雨",
+      "auroL33": "天川",
+      "auroL34": "汇流",
+      "auroL35": "极晓",
+      "auroL36": "晓歌",
+      "auroL37": "余晖",
+      "auroL38": "夜光",
+      "auroL39": "漫天",
+      "auroL40": "极光",
     },
   });
 

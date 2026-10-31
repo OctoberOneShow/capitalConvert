@@ -17,6 +17,7 @@
  *   node tools/aurora-forge.js board '<json>'   # verify one board literal
  *   node tools/aurora-forge.js forge --only=f13 --seeds=12
  *   node tools/aurora-forge.js emit             # print verified JSON for 11-20
+ *   node tools/aurora-forge.js flood            # rebuild the flood tier f31-f40
  */
 "use strict";
 
@@ -325,7 +326,13 @@ function checkBoard(level, stepCap) {
   const solved = solve(size, pairs, { stepCap: stepCap || 2000000 });
   if (solved.capped) problems.push(`solver hit its step cap (${solved.steps})`);
   else if (solved.unsolvable) problems.push("no disjoint path solution exists");
-  return { problems: problems, measure: solved.capped || solved.unsolvable ? {} : { steps: solved.steps, cells: solved.paths.reduce(function (sum, p) { return sum + p.length; }, 0) } };
+  const measure = solved.capped || solved.unsolvable ? {} : {
+    steps: solved.steps,
+    cells: solved.paths.reduce(function (sum, p) { return sum + p.length; }, 0),
+    longest: Math.max.apply(null, solved.paths.map(function (p) { return p.length; })),
+    shortest: Math.min.apply(null, solved.paths.map(function (p) { return p.length; })),
+  };
+  return { problems: problems, measure: measure };
 }
 
 function boardStats(level) {
@@ -345,7 +352,12 @@ function measure(level) {
   const solved = solve(level.size, level.pairs);
   if (solved.capped || solved.unsolvable) return { steps: solved.steps };
   const cells = solved.paths.reduce((sum, p) => sum + p.length, 0);
-  return { steps: solved.steps, cells: cells };
+  return {
+    steps: solved.steps,
+    cells: cells,
+    longest: Math.max.apply(null, solved.paths.map((p) => p.length)),
+    shortest: Math.min.apply(null, solved.paths.map((p) => p.length)),
+  };
 }
 
 /* ---------------------------------------------------------------- emit -- */
@@ -420,6 +432,11 @@ function main() {
 
   if (mode === "summit") {
     summitEmit();
+    return;
+  }
+
+  if (mode === "flood") {
+    floodEmit();
     return;
   }
 
@@ -679,7 +696,128 @@ function summitEmit() {
   return out;
 }
 
-module.exports = { solve, loadLevels, checkBoard, generateBoard, boardStats, measure, emit, summitEmit, summitCandidates, summitSnake, summitCut };
+/* ------------------------------------------------------------- flood -- */
+/* The flood tier f31-f40 opens the twelfth row. The older constructions
+ * stall on the wider panel - the forge's probe runs measured covers past
+ * the summit's 113-cell ceiling capping the solver out or re-solving far
+ * short of their mark - so the tier changes how the tide comes in: every
+ * board is laid course by course, sixteen straight ribbons disjoint by
+ * construction, each pair's unique shortest path being its own course.
+ * The solver's measured answer therefore lands exactly on the manhattan
+ * floor the pair distances set (distances plus one cell per pair), the
+ * weave is pinned by geometry rather than searched for, and the proofs
+ * come home in a few hundred steps. The ink climbs three cells a rung
+ * from just past the summit's ceiling; the capstone floods all 144 cells,
+ * the first full panel the ladder has ever held. The courses are fixed
+ * exact-composition briefs, so the tier rebuilds byte for byte. */
+
+const FLOOD_SCREEN_CAP = 500000;
+const FLOOD_SIZE = 12;
+const FLOOD_PAIRS = 16;
+/* The summit tier's ceiling: the flood's first rung has to pass it. */
+const FLOOD_SUMMIT_INK = 113;
+
+function floodBoard(brief) {
+  const pairs = [];
+  (brief.rows || []).forEach(function (rowSegs, y) {
+    let x = 0;
+    rowSegs.forEach(function (len) {
+      pairs.push([x, y, x + len - 1, y]);
+      x += len;
+    });
+  });
+  (brief.cols || []).forEach(function (colSegs, x) {
+    let y = brief.colTop || 0;
+    colSegs.forEach(function (len) {
+      pairs.push([x, y, x, y + len - 1]);
+      y += len;
+    });
+  });
+  return { id: brief.id, labelKey: brief.labelKey, size: brief.size || FLOOD_SIZE, pairs: pairs };
+}
+
+function floodFloor(pairs) {
+  return pairs.reduce(function (sum, p) {
+    return sum + Math.abs(p[0] - p[2]) + Math.abs(p[1] - p[3]);
+  }, 0) + pairs.length;
+}
+
+/* The ten course plans: sixteen straight bars summing to the rung's ink,
+ * packed into twelve lanes of twelve (an empty lane leaves a free row).
+ * Row orders vary so the boards read apart; the capstone stands its last
+ * twelve courses on end to finish the cloth. */
+const FLOOD_BRIEFS = [
+  { id: "f31", labelKey: "auroL31", ink: 116, rows: [[6, 6], [6, 6], [6, 6], [6, 6], [6, 6], [8], [8], [8], [8], [12], [12], []] },
+  { id: "f32", labelKey: "auroL32", ink: 119, rows: [[12], [12], [12], [7], [7], [7], [7], [7], [6, 6], [6, 6], [6, 6], [6, 6]] },
+  { id: "f33", labelKey: "auroL33", ink: 122, rows: [[12], [12], [12], [8], [8], [8], [8], [6, 6], [6, 6], [6, 6], [6, 6], [6]] },
+  { id: "f34", labelKey: "auroL34", ink: 125, rows: [[12], [12], [12], [12], [11], [6, 6], [6, 6], [6, 6], [6, 6], [6, 6], [6], []] },
+  { id: "f35", labelKey: "auroL35", ink: 128, rows: [[12], [12], [12], [12], [8], [8], [8], [8], [6, 6], [6, 6], [6, 6], [6, 6]] },
+  { id: "f36", labelKey: "auroL36", ink: 131, rows: [[12], [12], [12], [12], [12], [12], [6, 6], [6, 6], [6, 6], [6, 6], [6], [5]] },
+  { id: "f37", labelKey: "auroL37", ink: 134, rows: [[12], [12], [12], [12], [12], [12], [6, 6], [6, 6], [6, 6], [6, 6], [7], [7]] },
+  { id: "f38", labelKey: "auroL38", ink: 137, rows: [[12], [12], [12], [12], [12], [12], [12], [6, 6], [6, 6], [6, 6], [6, 6], [5]] },
+  { id: "f39", labelKey: "auroL39", ink: 140, rows: [[12], [12], [12], [12], [12], [12], [12], [12], [6, 5], [6, 5], [6, 5], [6, 5]] },
+  { id: "f40", labelKey: "auroL40", ink: 144, rows: [[12], [12], [12], [12]], cols: [[8], [8], [8], [8], [8], [8], [8], [8], [8], [8], [8], [8]], colTop: 4 },
+];
+
+function floodEmit() {
+  const out = [];
+  const problems = [];
+  let lastInk = FLOOD_SUMMIT_INK;
+  FLOOD_BRIEFS.forEach(function (brief) {
+    const board = floodBoard(brief);
+    if (board.pairs.length !== FLOOD_PAIRS) {
+      problems.push(`${board.id}: ${board.pairs.length} pairs, the deck is ${FLOOD_PAIRS}`);
+      return;
+    }
+    const report = checkBoard(board, FLOOD_SCREEN_CAP);
+    if (report.problems.length) {
+      problems.push(`${board.id}: ${report.problems.join("; ")}`);
+      return;
+    }
+    const floor = floodFloor(board.pairs);
+    if (report.measure.cells !== floor || report.measure.cells !== brief.ink) {
+      problems.push(`${board.id}: ink ${report.measure.cells} against floor ${floor} and brief ${brief.ink}`);
+      return;
+    }
+    if (report.measure.cells <= lastInk) {
+      problems.push(`${board.id}: ink ${report.measure.cells} does not pass the rung before it (${lastInk})`);
+      return;
+    }
+    lastInk = report.measure.cells;
+    const three = Math.round(report.measure.cells * 1.02);
+    out.push({
+      id: board.id,
+      labelKey: board.labelKey,
+      size: board.size,
+      pairs: board.pairs,
+      ink: report.measure.cells,
+      longest: report.measure.longest,
+      shortest: report.measure.shortest,
+      steps: report.measure.steps,
+      fill: report.measure.cells / (board.size * board.size),
+      starTimes: [three, Math.round(three * 1.55), Math.round(three * 2.15)],
+    });
+  });
+  if (problems.length) {
+    console.log(problems.join("\n"));
+    return out;
+  }
+  fs.writeFileSync(
+    path.join(__dirname, "_aurora_flood.json"),
+    JSON.stringify(out, null, 2) + "\n",
+  );
+  console.log(`wrote ${out.length} flood boards to _aurora_flood.json`);
+  out.forEach(function (board) {
+    console.log(
+      `${board.id}: size ${board.size} pairs ${board.pairs.length} ink ${board.ink} ` +
+        `fill ${(board.fill * 100).toFixed(0)}% steps ${board.steps} ` +
+        `ribbon ${board.shortest}-${board.longest} stars ${board.starTimes.join("/")}`,
+    );
+  });
+  return out;
+}
+
+module.exports = { solve, loadLevels, checkBoard, generateBoard, boardStats, measure, emit, summitEmit, summitCandidates, summitSnake, summitCut, floodBoard, floodFloor, floodEmit, FLOOD_BRIEFS };
 
 if (require.main === module) {
   main();

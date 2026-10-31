@@ -386,8 +386,155 @@ function spread(board, cells) {
   return Math.max(maxX - minX, maxY - minY);
 }
 
+/* The observatory tier's benches are too dense for uniform scatter: on an
+ * eleven-across board with twelve elements, not one layout in three thousand
+ * had a single orientation whose beam touched every element, so the scatter
+ * search starves before it ever reaches the deal. `chain` specs are laid
+ * along a simulated beam walk instead: each element is seated on the ray the
+ * walk is travelling, its slope chosen by looking down both outgoing legs,
+ * and an old element caught in the path is a free re-hit bend. The
+ * all-element run the release bar demands therefore exists by construction,
+ * the walk records the corridor it crosses, and walls are cut only outside
+ * that corridor so no breaker can amputate the chain. Everything downstream
+ * - the orientation sweep, the deal, the audit - still judges the finished
+ * board the same way as a scatter board. */
+function chainedLayout(rand, spec) {
+  var w = spec.w;
+  var h = spec.h;
+  var side = Math.floor(rand() * 4);
+  var emitter;
+  if (side === 0) {
+    emitter = { x: 0, y: 1 + Math.floor(rand() * (h - 2)), dir: 0 };
+  } else if (side === 1) {
+    emitter = { x: 1 + Math.floor(rand() * (w - 2)), y: 0, dir: 1 };
+  } else if (side === 2) {
+    emitter = { x: w - 1, y: 1 + Math.floor(rand() * (h - 2)), dir: 2 };
+  } else {
+    emitter = { x: 1 + Math.floor(rand() * (w - 2)), y: h - 1, dir: 3 };
+  }
+  var taken = {};
+  var corridor = {};
+  taken[cellKey(emitter.x, emitter.y)] = "emitter";
+  var gapMin = spec.gapMin || 1;
+  var gapMax = spec.gapMax || 3;
+  var elements = [];
+  function elementAt(x, y) {
+    for (var i = 0; i < elements.length; i += 1) {
+      if (elements[i].x === x && elements[i].y === y) {
+        return elements[i];
+      }
+    }
+    return null;
+  }
+  /* How far the beam travels from a cell before the edge, the housing or an
+   * element stops it, and which of the three stopped it. */
+  function probe(x, y, dir) {
+    for (var step = 1; step <= 24; step += 1) {
+      var nx = x + STEP_X[dir] * step;
+      var ny = y + STEP_Y[dir] * step;
+      if (nx < 0 || ny < 0 || nx >= w || ny >= h) {
+        return { room: step - 1, kind: "edge" };
+      }
+      if (taken[cellKey(nx, ny)]) {
+        return { room: step, kind: taken[cellKey(nx, ny)] };
+      }
+    }
+    return { room: 24, kind: "edge" };
+  }
+  var x = emitter.x;
+  var y = emitter.y;
+  var dir = emitter.dir;
+  var guard = 0;
+  while (elements.length < spec.elements && guard < 400) {
+    guard += 1;
+    var ahead = probe(x, y, dir);
+    var gap = 0;
+    if (ahead.kind === "element" && ahead.room <= 9 && rand() < 0.5) {
+      gap = ahead.room;
+    } else {
+      var top = Math.min(gapMax, ahead.room - 1);
+      if (top < gapMin) {
+        return null;
+      }
+      gap = gapMin + Math.floor(rand() * (top - gapMin + 1));
+    }
+    var sx = x;
+    var sy = y;
+    for (var step = 0; step < gap; step += 1) {
+      sx += STEP_X[dir];
+      sy += STEP_Y[dir];
+      corridor[cellKey(sx, sy)] = true;
+    }
+    if (taken[cellKey(sx, sy)]) {
+      if (taken[cellKey(sx, sy)] === "emitter") {
+        return null;
+      }
+      /* Re-hit: the beam bounces off the old element and the walk goes on
+       * without spending the budget - an extra bend in the shipped route. */
+      var old = elementAt(sx, sy);
+      x = sx;
+      y = sy;
+      dir = REFLECT[dir][old.slope];
+      continue;
+    }
+    taken[cellKey(sx, sy)] = "element";
+    /* Both slopes are legal at the new seat; look down each outgoing leg and
+     * prefer the one that re-hits an old element or simply has room. */
+    var legA = REFLECT[dir][1];
+    var legB = REFLECT[dir][0];
+    var rayA = probe(sx, sy, legA);
+    var rayB = probe(sx, sy, legB);
+    var okA = rayA.room >= gapMin + 1 || (rayA.kind === "element" && rayA.room <= 9);
+    var okB = rayB.room >= gapMin + 1 || (rayB.kind === "element" && rayB.room <= 9);
+    var slope;
+    if (!okA && !okB) {
+      return null;
+    } else if (!okB) {
+      slope = 1;
+    } else if (!okA) {
+      slope = 0;
+    } else {
+      var hitA = rayA.kind === "element" && rayA.room <= 9;
+      var hitB = rayB.kind === "element" && rayB.room <= 9;
+      if ((hitA || hitB) && rand() < 0.75) {
+        slope = hitA && (!hitB || rand() < 0.5) ? 1 : 0;
+      } else {
+        var roomy = rayA.room === rayB.room ? (rand() < 0.5 ? 1 : 0)
+          : rayA.room > rayB.room ? 1 : 0;
+        slope = rand() < 0.85 ? roomy : 1 - roomy;
+      }
+    }
+    elements.push({ x: sx, y: sy, slope: slope, split: false, locked: false });
+    x = sx;
+    y = sy;
+    dir = REFLECT[dir][slope];
+  }
+  if (elements.length < spec.elements) {
+    return null;
+  }
+  var walls = [];
+  for (var i = 0; i < spec.walls; i += 1) {
+    var wall = null;
+    for (var tryWall = 0; tryWall < 200 && !wall; tryWall += 1) {
+      var wx = Math.floor(rand() * w);
+      var wy = Math.floor(rand() * h);
+      if (!taken[cellKey(wx, wy)] && !corridor[cellKey(wx, wy)]) {
+        taken[cellKey(wx, wy)] = "wall";
+        wall = [wx, wy];
+      }
+    }
+    if (wall) {
+      walls.push(wall);
+    }
+  }
+  return { w: w, h: h, emitter: emitter, walls: walls, mirrors: elements, targets: [] };
+}
+
 function forgeOne(rand, spec) {
-  var layout = randomLayout(rand, spec);
+  var layout = spec.chain ? chainedLayout(rand, spec) : randomLayout(rand, spec);
+  if (!layout) {
+    return null;
+  }
   /* Splitters and welded elements are chosen before the board is normalised:
    * the enumeration below has to know which slopes can actually move, or it
    * would propose solutions the finished board cannot reach. */
@@ -586,6 +733,28 @@ function forge(seed) {
     { w: 10, h: 10, walls: 9, elements: 12, splitters: 5, locked: 3, targets: 9, turns: 11, cells: 40, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 60000 },
     { w: 10, h: 10, walls: 9, elements: 12, splitters: 5, locked: 4, targets: 9, turns: 11, cells: 42, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 160, attempts: 60000 },
     { w: 10, h: 10, walls: 9, elements: 12, splitters: 5, locked: 4, targets: 10, turns: 12, cells: 44, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 180, attempts: 80000 },
+    /* The observatory tier keeps the summit's bar - deals four to five flips
+     * out, the beam touching every element - and takes one structural record
+     * per rung against every board before it: the first eleven-across bench,
+     * a sweep past Supernova's fifty-seven cells, the first six-fork bench,
+     * the first five-weld board, the first eleven-mark fan, the
+     * thirteen-element bench, the bendiest route, the first twelve-across
+     * bench, the heaviest sweep, and the closer's twelve marks. The record
+     * rungs solve from exactly one orientation so the measured beam is the
+     * beam, not one solution among several. The dense benches starve the
+     * scatter search - no random eleven-across layout in three thousand had
+     * an orientation touching all twelve elements - so the five rungs the
+     * scatter could not feed are laid out by chainedLayout's beam walk. */
+    { w: 11, h: 11, walls: 8, elements: 12, splitters: 5, locked: 4, targets: 10, turns: 10, cells: 34, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 60000, chain: true, gapMin: 1, gapMax: 3 },
+    { w: 11, h: 11, walls: 7, elements: 12, splitters: 5, locked: 4, targets: 10, turns: 11, cells: 58, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 160, attempts: 80000, chain: true, gapMin: 3, gapMax: 5 },
+    { w: 11, h: 11, walls: 8, elements: 12, splitters: 6, locked: 4, targets: 10, turns: 11, cells: 40, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 60000 },
+    { w: 11, h: 11, walls: 8, elements: 12, splitters: 6, locked: 5, targets: 10, turns: 11, cells: 40, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 60000 },
+    { w: 11, h: 11, walls: 8, elements: 12, splitters: 6, locked: 5, targets: 11, turns: 11, cells: 44, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 80000 },
+    { w: 11, h: 11, walls: 8, elements: 13, splitters: 6, locked: 5, targets: 11, turns: 12, cells: 44, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 80000 },
+    { w: 11, h: 11, walls: 8, elements: 13, splitters: 6, locked: 5, targets: 11, turns: 16, cells: 44, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 180, attempts: 80000, chain: true, gapMin: 1, gapMax: 3 },
+    { w: 12, h: 12, walls: 9, elements: 13, splitters: 6, locked: 5, targets: 11, turns: 12, cells: 46, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 80000 },
+    { w: 12, h: 12, walls: 8, elements: 13, splitters: 6, locked: 5, targets: 11, turns: 12, cells: 68, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 180, attempts: 80000, chain: true, gapMin: 3, gapMax: 6 },
+    { w: 12, h: 12, walls: 8, elements: 13, splitters: 6, locked: 5, targets: 12, turns: 13, cells: 60, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 200, attempts: 100000, chain: true, gapMin: 2, gapMax: 5 },
   ];
   var names = [
     ["p11", "prismL11"], ["p12", "prismL12"], ["p13", "prismL13"],
@@ -595,6 +764,10 @@ function forge(seed) {
     ["p23", "prismL23"], ["p24", "prismL24"], ["p25", "prismL25"],
     ["p26", "prismL26"], ["p27", "prismL27"], ["p28", "prismL28"],
     ["p29", "prismL29"], ["p30", "prismL30"],
+    ["p31", "prismL31"], ["p32", "prismL32"], ["p33", "prismL33"],
+    ["p34", "prismL34"], ["p35", "prismL35"], ["p36", "prismL36"],
+    ["p37", "prismL37"], ["p38", "prismL38"], ["p39", "prismL39"],
+    ["p40", "prismL40"],
   ];
   var times = [
     [42, 64, 90], [46, 70, 98], [50, 76, 106], [54, 82, 114], [58, 88, 122],
@@ -602,6 +775,9 @@ function forge(seed) {
     [92, 138, 188], [98, 146, 198], [104, 156, 210], [112, 166, 224],
     [118, 177, 236], [124, 186, 248], [132, 198, 264], [140, 210, 280],
     [148, 222, 296], [158, 237, 316],
+    [168, 252, 336], [178, 267, 356], [188, 282, 376], [198, 297, 396],
+    [210, 315, 420], [220, 330, 440], [232, 348, 464], [244, 366, 488],
+    [256, 384, 512], [272, 408, 544],
   ];
   /* `from` lets a search re-run only the deep rungs (board number, default 11)
    * so an already-shipped rung is never re-forged over. */

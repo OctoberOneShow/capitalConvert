@@ -101,6 +101,33 @@
      * at once - 262 BPM, 0.5, 12.37 notes a second. Every lever the summit
      * built sits on one chart, which is what makes it the last one. */
     { id: "t30", labelKey: "beatL30", bpm: 262, bars: 32, seed: 373, density: [0.21, 0.21, 0.21, 0.21], swing: 0.5 },
+    /* Tracks 31-40 are the encore, and each rung takes one measured record
+     * away from the ladder behind it (all numbers measured on the seed's own
+     * chart through the engine's builder). t31 is the densest chart the
+     * ladder has shipped - 13.20 notes a second against t30's 12.37. t32 is
+     * the long walk: 44 bars against the burn rung's 40, 466 notes. t33 is
+     * the fastest plain wall at 272 BPM. t34 is the solo flare: 83% of the
+     * chart sits on the J/K pair against the hard tier's 72%, the quietest
+     * lanes nearly resting. t35 swings deeper than the engine has ever
+     * swung (0.62 against the shipped 0.5). t36 is the marathon: 48 bars
+     * and 540 notes, both campaign records. t37 hangs the shipped 0.34
+     * swing on the ladder's fastest swung wall, 270 BPM. t38 is the
+     * no-rest record: its quietest lane lands 96 notes against the shipped
+     * 84. t39 takes the top tempo past the closer - 264 BPM in the 0.5
+     * groove - and t40 closes the encore at the ladder's absolute peak:
+     * 272 BPM, 0.62 swing, 13.80 notes a second, 449 notes. t38's
+     * no-rest wall runs 42 bars so its quietest lane lands 120 notes
+     * against the marathon's 118. */
+    { id: "t31", labelKey: "beatL31", bpm: 266, bars: 30, seed: 383, density: [0.215, 0.215, 0.215, 0.215] },
+    { id: "t32", labelKey: "beatL32", bpm: 248, bars: 44, seed: 389, density: [0.18, 0.18, 0.18, 0.18] },
+    { id: "t33", labelKey: "beatL33", bpm: 272, bars: 30, seed: 397, density: [0.21, 0.21, 0.21, 0.21] },
+    { id: "t34", labelKey: "beatL34", bpm: 200, bars: 30, seed: 401, density: [0.02, 0.02, 0.3, 0.28] },
+    { id: "t35", labelKey: "beatL35", bpm: 236, bars: 30, seed: 409, density: [0.19, 0.19, 0.19, 0.19], swing: 0.62 },
+    { id: "t36", labelKey: "beatL36", bpm: 250, bars: 48, seed: 419, density: [0.19, 0.19, 0.19, 0.19] },
+    { id: "t37", labelKey: "beatL37", bpm: 270, bars: 30, seed: 421, density: [0.18, 0.18, 0.18, 0.18], swing: 0.34 },
+    { id: "t38", labelKey: "beatL38", bpm: 244, bars: 42, seed: 431, density: [0.21, 0.21, 0.21, 0.21] },
+    { id: "t39", labelKey: "beatL39", bpm: 264, bars: 32, seed: 433, density: [0.2, 0.2, 0.2, 0.2], swing: 0.5 },
+    { id: "t40", labelKey: "beatL40", bpm: 272, bars: 36, seed: 439, density: [0.215, 0.215, 0.215, 0.215], swing: 0.62 },
   ];
 
   function mulberry32(seed) {
@@ -660,6 +687,16 @@
       "beatL28": "Gravity Well",
       "beatL29": "Escape Velocity",
       "beatL30": "Singularity",
+      "beatL31": "Neutron Wall",
+      "beatL32": "Event Horizon",
+      "beatL33": "Light Speed",
+      "beatL34": "Solo Flare",
+      "beatL35": "Wormhole",
+      "beatL36": "Red Giant",
+      "beatL37": "Solar Wind",
+      "beatL38": "Magnetosphere",
+      "beatL39": "Supernova",
+      "beatL40": "The Big Bang",
     },
     zh: {
       "beatL21": "双星焰",
@@ -672,6 +709,16 @@
       "beatL28": "引力深井",
       "beatL29": "逃逸速度",
       "beatL30": "奇点",
+      "beatL31": "中子星墙",
+      "beatL32": "视界之外",
+      "beatL33": "光速平墙",
+      "beatL34": "孤星耀斑",
+      "beatL35": "虫洞摇摆",
+      "beatL36": "红巨马拉松",
+      "beatL37": "太阳风行",
+      "beatL38": "磁层壁垒",
+      "beatL39": "超新星爆",
+      "beatL40": "宇宙大爆炸",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

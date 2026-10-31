@@ -119,6 +119,46 @@
     { id: "m28", labelKey: "mcbZ28", twistKey: "mcbTwist28", gens: 10, seed: 40000, cap: 18, traitMax: 5, start: 12, base: 3, step: 1, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"]], starBand: [5780, 5480, 5130] },
     { id: "m29", labelKey: "mcbZ29", twistKey: "mcbTwist29", gens: 10, seed: 40329, cap: 17, traitMax: 5, start: 13, base: 4, step: 1, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"]], starBand: [3870, 3570, 3220] },
     { id: "m30", labelKey: "mcbZ30", twistKey: "mcbTwist30", gens: 10, seed: 40016, cap: 17, traitMax: 5, start: 12, base: 3, step: 1, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"]], starBand: [5780, 5480, 5130] },
+    /* Dishes 31-40, the summit bench. The long bench priced its difficulty
+     * into the deck, the pool, the flask and both ceilings; these ten bring
+     * a fifth lever the first thirty dishes never shipped - the player's own
+     * hand - and then walk every lever the bench set to its floor without
+     * giving one back: the budget, the pool and the flask never rise, the
+     * hand never grows, and the trial never shortens. The hands are bought,
+     * not given: every dish here opens at base 2, the first cards in the lab
+     * that demand five instead of six, and that softer opening is the price
+     * the lean hands pay - measured, not assumed. m31 deals two mutation
+     * points a generation where every earlier dish handed over three. m32
+     * runs the trial an eleventh generation, m33 drops the budget to
+     * sixteen, m34 shallows the pool to four traits wide - and the clamp
+     * that shallows the pool also caps what a card may demand, so the
+     * ceiling dips from eight to seven and the walk reads higher from here
+     * on: the cards ask for less, not the dish for less - seven of a
+     * maximum eight still means both members of a pair sit at or beside the
+     * ceiling. m35 starves the flask to eleven founders, m36 narrows the
+     * deck to the two newest pressures alone - flare and venom, nothing
+     * older, a deck the lab has never printed - m37 turns the whole deck,
+     * all ten cards in one rotation, m38 runs the longest trial the lab has
+     * shipped, m39 cuts the budget to fifteen, and the capstone m40 deals
+     * the leanest hand the lab has ever printed - one mutation a
+     * generation - with every floor lever at once at its tier minimum: cap
+     * 15, traitMax 4, start 11, twelve generations. That hand holds on 281
+     * of a thousand seedings, the narrowest window the summit bench ships;
+     * the shipped seed walks it at the floor. Every dish here was walked with
+     * microbeBeatable before its band was written (tools/microbe-forge.js,
+     * the summit table): greedy scores 4588, 4986, 4986, 6585, 4586, 4586,
+     * 4586, 4984, 4982 and 5091, and each band sits one hundred (and a few)
+     * under that, inside the window the shipped deep tier anchored. */
+    { id: "m31", labelKey: "mcbZ31", twistKey: "mcbTwist31", gens: 10, seed: 50024, cap: 17, traitMax: 5, start: 12, base: 2, step: 1, points: 2, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"]], starBand: [4480, 4180, 3830] },
+    { id: "m32", labelKey: "mcbZ32", twistKey: "mcbTwist32", gens: 11, seed: 50024, cap: 17, traitMax: 5, start: 12, base: 2, step: 1, points: 2, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"]], starBand: [4880, 4580, 4230] },
+    { id: "m33", labelKey: "mcbZ33", twistKey: "mcbTwist33", gens: 11, seed: 50003, cap: 16, traitMax: 5, start: 12, base: 2, step: 1, points: 2, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"]], starBand: [4880, 4580, 4230] },
+    { id: "m34", labelKey: "mcbZ34", twistKey: "mcbTwist34", gens: 11, seed: 50004, cap: 16, traitMax: 4, start: 12, base: 2, step: 1, points: 2, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"]], starBand: [6480, 6180, 5830] },
+    { id: "m35", labelKey: "mcbZ35", twistKey: "mcbTwist35", gens: 11, seed: 50000, cap: 16, traitMax: 4, start: 11, base: 2, step: 1, points: 2, plan: [["heat", "defence"], ["heat", "speed"], ["defence", "speed"], ["acid", "defence"], ["heat", "acid"], ["acid", "speed"]], starBand: [4480, 4180, 3830] },
+    { id: "m36", labelKey: "mcbZ36", twistKey: "mcbTwist36", gens: 11, seed: 50002, cap: 16, traitMax: 4, start: 11, base: 2, step: 1, points: 2, plan: [["heat", "speed"], ["acid", "defence"]], starBand: [4480, 4180, 3830] },
+    { id: "m37", labelKey: "mcbZ37", twistKey: "mcbTwist37", gens: 11, seed: 50002, cap: 16, traitMax: 4, start: 11, base: 2, step: 1, points: 2, plan: [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]], starBand: [4480, 4180, 3830] },
+    { id: "m38", labelKey: "mcbZ38", twistKey: "mcbTwist38", gens: 12, seed: 50002, cap: 16, traitMax: 4, start: 11, base: 2, step: 1, points: 2, plan: [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]], starBand: [4880, 4580, 4230] },
+    { id: "m39", labelKey: "mcbZ39", twistKey: "mcbTwist39", gens: 12, seed: 50002, cap: 15, traitMax: 4, start: 11, base: 2, step: 1, points: 2, plan: [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]], starBand: [4880, 4580, 4230] },
+    { id: "m40", labelKey: "mcbZ40", twistKey: "mcbTwist40", gens: 12, seed: 50005, cap: 15, traitMax: 4, start: 11, base: 2, step: 1, points: 1, plan: [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]], starBand: [4990, 4690, 4340] },
   ];
 
   function mcbInt(value) {
@@ -418,9 +458,10 @@
     return total;
   }
 
-  /* The dish's mutation budget: three a generation for the whole shipped
-   * ladder, and only a dish that names its own `points` dials it down -
-   * an untagged dish must never read the missing field as a budget of one. */
+  /* The dish's mutation budget: three a generation for the first thirty
+   * dishes, and only a dish that names its own `points` dials it down (the
+   * summit bench deals two, then one) - an untagged dish must never read
+   * the missing field as a budget of one. */
   function mcbPoints(level) {
     var points = level ? level.points : undefined;
     return points === undefined ? POINTS : Math.max(1, mcbInt(points));
@@ -982,6 +1023,16 @@
       "mcbZ28": "Twelve Founders",
       "mcbZ29": "Seventeen Tall",
       "mcbZ30": "Everything Tight",
+      "mcbZ31": "The Short Hand",
+      "mcbZ32": "The Long Trial",
+      "mcbZ33": "Sixteen Tall",
+      "mcbZ34": "Four Wide",
+      "mcbZ35": "Eleven Founders",
+      "mcbZ36": "Two Throats",
+      "mcbZ37": "The Whole Deck",
+      "mcbZ38": "Twelve Deep",
+      "mcbZ39": "Fifteen Tall",
+      "mcbZ40": "The Last Point",
       "mcbTwist1": "heat wave only",
       "mcbTwist2": "acid bloom only",
       "mcbTwist3": "predators, then famine",
@@ -1012,6 +1063,16 @@
       "mcbTwist28": "twelve founders under the low roof",
       "mcbTwist29": "the leanest ceiling the lab has printed",
       "mcbTwist30": "every ceiling at once, nothing to spare",
+      "mcbTwist31": "only two mutations a generation",
+      "mcbTwist32": "the storm runs an eleventh generation",
+      "mcbTwist33": "the budget drops to sixteen",
+      "mcbTwist34": "no strain stacks past four",
+      "mcbTwist35": "eleven founders in the flask",
+      "mcbTwist36": "nothing prints but flare and venom",
+      "mcbTwist37": "all ten cards, one rotation",
+      "mcbTwist38": "the longest trial the lab has run",
+      "mcbTwist39": "the budget falls to fifteen",
+      "mcbTwist40": "one mutation a generation, every lever at its floor",
       "mcbGenLabel": "Generation",
       "mcbPointLabel": "Mutations",
       "mcbPopLabel": "Colony",
@@ -1117,6 +1178,16 @@
       "mcbZ28": "十二先锋",
       "mcbZ29": "十七极限",
       "mcbZ30": "处处紧绷",
+      "mcbZ31": "短手窄牌",
+      "mcbZ32": "漫长试炼",
+      "mcbZ33": "十六极限",
+      "mcbZ34": "四宽浅池",
+      "mcbZ35": "十一先锋",
+      "mcbZ36": "双线天",
+      "mcbZ37": "十卡俱全",
+      "mcbZ38": "十二代深",
+      "mcbZ39": "十五极限",
+      "mcbZ40": "最后一点",
       "mcbTwist1": "只有热浪",
       "mcbTwist2": "只有酸华",
       "mcbTwist3": "捕食季，随后饥荒",
@@ -1147,6 +1218,16 @@
       "mcbTwist28": "十二先锋顶着低压顶棚",
       "mcbTwist29": "实验室最紧的上限",
       "mcbTwist30": "所有上限同时收紧",
+      "mcbTwist31": "每代只有两个突变点",
+      "mcbTwist32": "风暴多刮一代",
+      "mcbTwist33": "预算降到十六",
+      "mcbTwist34": "单项性状不过四",
+      "mcbTwist35": "皿里只有十一份接种",
+      "mcbTwist36": "只剩灼饥和獠牙",
+      "mcbTwist37": "十张卡轮一遍",
+      "mcbTwist38": "实验室至今最长的试炼",
+      "mcbTwist39": "预算掉到十五",
+      "mcbTwist40": "每代一个突变点，所有杠杆都到底",
       "mcbGenLabel": "世代",
       "mcbPointLabel": "突变点",
       "mcbPopLabel": "菌群",
@@ -1242,7 +1323,7 @@
         "Aim: keep at least 4 of the 6 strains dividing for all 10 generations. Drop to 3 and the culture collapses.",
         "Card: every generation an environment hits - heat wave, acid bloom, predator season, famine, and later two at once. The card prints the numbers it needs.",
         "Rule: every card names a PAIR of traits and a total - the strain lives when those two traits add up to the printed demand, which is the card number plus three.",
-        "Spend: 3 mutation points per generation, on any strain. Arrow Up raises the focused trait, Arrow Down gives the point back, 1 to 6 switch strain, Left and Right move the trait cursor, Enter advances, Space scouts the next card.",
+        "Spend: a fixed hand of mutation points each generation, on any strain - three on the first thirty dishes, fewer up the summit bench. Arrow Up raises the focused trait, Arrow Down gives the point back, 1 to 6 switch strain, Left and Right move the trait cursor, Enter advances, Space scouts the next card.",
         "Squeeze: each strain has a trait budget and a per-trait ceiling, so a raise that would break either is refused, and any point you leave unbanked when the card resolves is counted as waste. That is the whole trade-off.",
         "Scoring: metric = divisions x 100 - wasted points, so more survivors first and less waste as the documented tie-break. Selection itself never rolls a die: survivors and their single auto mutation are a pure function of the dish and the card.",
       ],
@@ -1250,7 +1331,7 @@
         "目标：10 代里始终让 6 个菌株中的至少 4 个继续分裂。只剩 3 个，培养就崩溃。",
         "环境卡：每一代换一张——热浪、酸华、捕食季、饥荒，越到后面越是两张叠着来。卡片会把要求的数字写在脸上。",
         "规则：每张卡点名一对性状和一个合计值——这两项加起来达到印出来的需求（卡面数字再加 3），菌株才能活。",
-        "花费：每代 3 个突变点，可投给任意菌株。上方向键给当前性状加一点，下方向键把点退回，数字 1 到 6 换菌株，左右移动性状光标，回车推进世代，空格侦察下一张卡。",
+        "花费：每代有定量的突变点，可投给任意菌株——前三十皿是三点，巅峰长凳更少。上方向键给当前性状加一点，下方向键把点退回，数字 1 到 6 换菌株，左右移动性状光标，回车推进世代，空格侦察下一张卡。",
         "张力：每个菌株都有性状预算，会顶破上限的加点会被拒绝并记为浪费——没花完的点同样算浪费。这正是本局的取舍所在。",
         "计分：得分 = 分裂数 x 100 - 浪费点数，所以先看存活数，再用浪费点数作明文规定的平手判定。筛选过程完全不靠骰子：存活者与它们那一次自动突变，只是培养盘与环境卡的函数。",
       ],

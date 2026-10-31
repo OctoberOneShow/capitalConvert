@@ -15,7 +15,7 @@
   var starsFor = App.starsFor;
   var isMotionOff = App.isMotionOff;
 
-  /* The table holds only the characters the thirty missions deal, so the legend
+  /* The table holds only the characters the forty missions deal, so the legend
    * fits without scrolling and nobody needs prior Morse knowledge. */
   var mrsTable = {
     "E": ".", "T": "-", "I": "..", "A": ".-", "N": "-.", "M": "--",
@@ -51,7 +51,11 @@
    * band above a 2% floor.
    * The ladder is ordered by that same measurement: par, the worst cost the
    * static can force, and the ceiling never falls as the list goes down, while
-   * the window seconds per group only shrink. */
+   * the window seconds per group only shrink. The m31-40 tier is ordered by
+   * record instead - each rung takes one structural first - so its bill dips
+   * once at m35, where the two-deduction rule forces the dealer to discard
+   * every deal that does not pin two groups; the measured lines and that dip
+   * are documented at the rows. */
   var mrsLevels = [
     { id: "m1", labelKey: "mrsL1", vocab: ["E", "T", "I", "A", "N", "M"], groups: 3, noise: 0, deducible: 0,
       battery: 1, attempts: 3, window: 75, drain: 0, unit: 1.25, seed: 101, starCost: [1, 2, 3] },
@@ -158,6 +162,45 @@
       battery: 10, attempts: 2, window: 60, drain: 6, unit: 1.4, seed: 1171, starCost: [19, 22, 31] },
     { id: "m30", labelKey: "mrsL30", vocab: ["E", "T", "I", "A", "N", "M", "S", "U", "R", "W"], groups: 13, noise: 11, deducible: 0,
       battery: 11, attempts: 2, window: 66, drain: 6, unit: 1.5, seed: 2269, starCost: [22, 25, 34] },
+    /* m31-40: a fourth pass over the same 250-broadcast bench, not a bigger
+     * number. Each rung takes one structural record away from the tier above:
+     * m31 the first fourteen-group tape, m32 the first fifteen, m33 the first
+     * twelve-noisy tape, m34 the first thirteen-noisy tape, m35 the ladder's
+     * first two-deduction deck, m36 a single send over fourteen groups (m26
+     * held the old single send at eleven), m37 the first sixteen-group tape,
+     * m38 the first fourteen-noisy tape, m39 the first tape where every group
+     * is noisy and the first cheapest line at 31, m40 the capstone: seventeen
+     * groups, sixteen of them noisy, at unit 1.7 in a 64-second window that
+     * pays the whole sixteen-cell bank at four seconds a replay.
+     * Every band below is read off the module's own deal stream: the top band
+     * is the cheapest winning line, the middle exactly one replay above
+     * (mrsBatteryWeight + 1), the one-star band the worst line the rules
+     * allow. battery == noise on every rung, so static is always payable;
+     * window is exactly noise * drain. The measured cheapest lines run
+     * 22/22/25/25/22/25/28/28/31/34 - the bill dips once at m35 because the
+     * dealer's 96-probe filter must discard deals without two pinned groups,
+     * which also caps that deck at noise - 2 bought groups and a worst line of
+     * 31. Every other row spends the whole bank on its worst deal. */
+    { id: "m31", labelKey: "mrsL31", vocab: ["E", "T", "I", "A", "N", "M", "S", "U", "R", "W"], groups: 14, noise: 11, deducible: 0,
+      battery: 11, attempts: 2, window: 66, drain: 6, unit: 1.6, seed: 19017, starCost: [22, 25, 34] },
+    { id: "m32", labelKey: "mrsL32", vocab: ["E", "T", "I", "A", "N", "M", "S", "U", "R", "W"], groups: 15, noise: 11, deducible: 0,
+      battery: 11, attempts: 2, window: 66, drain: 6, unit: 1.6, seed: 33200, starCost: [22, 25, 34] },
+    { id: "m33", labelKey: "mrsL33", vocab: ["E", "T", "I", "A", "N", "M", "S", "U", "R", "W"], groups: 13, noise: 12, deducible: 0,
+      battery: 12, attempts: 2, window: 72, drain: 6, unit: 1.6, seed: 17908, starCost: [25, 28, 37] },
+    { id: "m34", labelKey: "mrsL34", vocab: ["E", "T", "I", "A", "N", "M", "S", "U", "R", "W"], groups: 14, noise: 13, deducible: 0,
+      battery: 13, attempts: 2, window: 78, drain: 6, unit: 1.6, seed: 31436, starCost: [25, 28, 40] },
+    { id: "m35", labelKey: "mrsL35", vocab: ["E", "T", "I", "A", "N", "M", "S", "U", "R", "W"], groups: 14, noise: 12, deducible: 2,
+      battery: 12, attempts: 2, window: 72, drain: 6, unit: 1.6, seed: 17882, starCost: [22, 25, 31] },
+    { id: "m36", labelKey: "mrsL36", vocab: ["E", "T", "I", "A", "N", "M", "S", "U", "R", "W"], groups: 14, noise: 13, deducible: 0,
+      battery: 13, attempts: 1, window: 78, drain: 6, unit: 1.6, seed: 56195, starCost: [25, 28, 40] },
+    { id: "m37", labelKey: "mrsL37", vocab: ["E", "T", "I", "A", "N", "M", "S", "U", "R", "W"], groups: 16, noise: 13, deducible: 0,
+      battery: 13, attempts: 2, window: 78, drain: 6, unit: 1.7, seed: 54728, starCost: [28, 31, 40] },
+    { id: "m38", labelKey: "mrsL38", vocab: ["E", "T", "I", "A", "N", "M", "S", "U", "R", "W"], groups: 15, noise: 14, deducible: 0,
+      battery: 14, attempts: 2, window: 84, drain: 6, unit: 1.7, seed: 51619, starCost: [28, 31, 43] },
+    { id: "m39", labelKey: "mrsL39", vocab: ["E", "T", "I", "A", "N", "M", "S", "U", "R", "W"], groups: 15, noise: 15, deducible: 0,
+      battery: 15, attempts: 2, window: 90, drain: 6, unit: 1.7, seed: 30825, starCost: [31, 34, 46] },
+    { id: "m40", labelKey: "mrsL40", vocab: ["E", "T", "I", "A", "N", "M", "S", "U", "R", "W"], groups: 17, noise: 16, deducible: 0,
+      battery: 16, attempts: 2, window: 64, drain: 4, unit: 1.7, seed: 97801, starCost: [34, 37, 49] },
   ];
 
   /* --- pure core, exported for the harness ---------------------------------
@@ -1177,6 +1220,16 @@
       "mrsL28": "The Long Static",
       "mrsL29": "Ten Replays",
       "mrsL30": "The Silent Relay",
+      "mrsL31": "The Fourteen-Group Tape",
+      "mrsL32": "The Fifteen-Group Tape",
+      "mrsL33": "Twelve Noisy Groups",
+      "mrsL34": "Thirteen Noisy Groups",
+      "mrsL35": "Two Deductions",
+      "mrsL36": "One Send At Fourteen",
+      "mrsL37": "The Sixteen-Group Tape",
+      "mrsL38": "Fourteen Noisy Groups",
+      "mrsL39": "Every Group Noisy",
+      "mrsL40": "The Last Window",
       "mrsWindowLabel": "Window",
       "mrsBatteryLabel": "Battery",
       "mrsTryLabel": "Sends",
@@ -1268,6 +1321,16 @@
       "mrsL28": "长杂音带",
       "mrsL29": "十次重播",
       "mrsL30": "沉默中继",
+      "mrsL31": "十四组长带",
+      "mrsL32": "十五组长带",
+      "mrsL33": "十二组杂音",
+      "mrsL34": "十三组杂音",
+      "mrsL35": "两处推理",
+      "mrsL36": "十四组一发",
+      "mrsL37": "十六组长带",
+      "mrsL38": "十四组杂音",
+      "mrsL39": "满带杂音",
+      "mrsL40": "最后的窗口",
       "mrsWindowLabel": "窗口",
       "mrsBatteryLabel": "电量",
       "mrsTryLabel": "发送",
@@ -1356,7 +1419,8 @@
         "Scoring: battery spent then tries used set your stars, and the slot flags spell out exactly why a coordinate was accepted or rejected.",
         "Tip: the game never needs sound - every flash the lamp sends is printed as dot, dash or static.",
         "Deep tier: the deep missions dry the bank - a nine-group tape whose window pays for five replays, two sends for the whole coordinate, one battery cell against a noisy tape, and a capstone that leaves everything scarce.",
-        "Final tier: six more broadcasts where the bank exactly covers the static - ten to thirteen groups a tape, five to eleven of them noisy, and the cheapest winning line climbs from two replays to seven; one of them allows a single send."
+        "Final tier: six more broadcasts where the bank exactly covers the static - ten to thirteen groups a tape, five to eleven of them noisy, and the cheapest winning line climbs from two replays to seven; one of them allows a single send.",
+        "New tier: ten more broadcasts stretch every record - fourteen to seventeen groups a tape, up to sixteen of them noisy, a two-deduction deck, a single send over fourteen groups, and a cheapest winning line that climbs from 22 to 34; the capstone pairs the longest tape with the noisiest static in a 64-second window."
       ],
       zh: [
         "目标：在播发窗口关闭之前，把船员发出的点与划抄成救援坐标。",
@@ -1366,7 +1430,8 @@
         "计分：按剩余电量优先、发送次数其次评星，每一格的对错标记会说明坐标为何被接受或被拒收。",
         "提示：完全不需要声音——信号灯闪的每一下都会写成点、划或杂音。",
         "新层级：深层任务把家底耗干——九组长带的窗口只付得起五次重播，两次发送定生死，一格电要硬扛杂音带，收官任务样样稀缺。",
-        "终局层级：再添六段广播，电库刚好买下全部杂音——每段十到十三组，其中五到十一组被吃掉，最省电的线路从两次重播一路涨到七次；其中一段只允许发送一次。"
+        "终局层级：再添六段广播，电库刚好买下全部杂音——每段十到十三组，其中五到十一组被吃掉，最省电的线路从两次重播一路涨到七次；其中一段只允许发送一次。",
+        "新层级：再添十段广播，把每一项纪录都拉长——每段十四到十七组，最多十六组被杂音吃掉，还有两处必须推理的牌组、十四组只许发送一次，最省电的线路从 22 一路涨到 34；收官任务把最长的信号带、最重的杂音压进 64 秒窗口。"
       ],
     },
   });

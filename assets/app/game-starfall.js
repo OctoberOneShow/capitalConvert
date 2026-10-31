@@ -281,6 +281,154 @@
       pad: { x0: 0.225, x1: 0.3, y: 316 },
       starFuel: [7, 5, 2],
     },
+
+    /* ------------------------------------------------------------------
+     * The chasm tier (s31-s40). The last ridge ended on a 24-pixel
+     * window at 176; these ten drop the range into a chasm, one idea
+     * per sector. Gravity's walk resumes its climb - 177 to 186, still
+     * 49 inside the engine's 235 of thrust - and every window in the
+     * tier is tighter than the Last Inch's, the first stretch of
+     * ground where that holds across the board. The tank drains from
+     * 57 to 52, the shallowest walk since the summit tier, and that is
+     * the pull's own bill: the swarm's numbers put a landing's burn
+     * near 47 at 177 on a deep shelf and near 54 by 186, so the deep
+     * floors ship early where the gauge is fat - s33's 322 floor rides
+     * the tier's 57 - and the shelves climb to 240 by the capstone,
+     * because a ridge-tier floor at 186 empties the gauge before the
+     * flare.
+     *
+     * s31 cuts the first window under the Last Inch: twenty-two
+     * pixels, two tighter than anything the first thirty dealt. s32
+     * draws the busiest ground the ladder has carried - twelve control
+     * points, one past the eleven-point ceiling the Wedge, the Stitch
+     * and the Causeway shared. s33 sinks the deepest window yet, a
+     * floor at 322 under the Wedge's 320. s34 raises the tallest rock
+     * yet - a tower standing 88 units over the window's floor just
+     * past the right lip, so the safe line is the only line (Iron
+     * Vale's 86 was the old ceiling). s35 cuts the first twenty-pixel
+     * window. s36 out-saws the Comb with thirteen control points. s37
+     * hangs the deepest trap yet just past the right lip - a chasm
+     * sunk 92 units below the window, two past the Needles' 90 - so
+     * an overshoot ends in the pit, not on a slope. s38 threads the
+     * first eighteen-pixel window. s39 sinks that chasm to 102. s40
+     * closes the game with the capstone: a sixteen-pixel window on the
+     * deepest tank and the steepest pull the game has ever filled and
+     * charged.
+     *
+     * Every sector here was flown before it shipped, exactly the way
+     * the tiers above were: tools/starfall-forge.js re-implements this
+     * module's flight and lands its swarm of scripted pilots on each
+     * candidate; the rung ships only when one of them touches down
+     * inside the pad window with fuel still on the gauge, and the star
+     * bands are that measured landing's own line - 62/42/22 percent of
+     * the best fuel it leaves. Measured landings, for the record:
+     *   s31  hairline   10% left
+     *   s32  comb        9% left
+     *   s33  sink        9% left
+     *   s34  tower       9% left
+     *   s35  sliver      8% left
+     *   s36  saw         8% left
+     *   s37  brink      22% left
+     *   s38  thread     12% left
+     *   s39  chasm      14% left
+     *   s40  pinpoint   10% left */
+    {
+      id: "s31", labelKey: "lantL31", gravity: 177, fuel: 57,
+      terrain: [[0, 270], [0.09, 246], [0.17, 294], [0.22, 314], [0.36, 314], [0.44, 326], [0.56, 326], [0.68, 258], [0.83, 276], [1, 294]],
+      pad: { x0: 0.235, x1: 0.304, y: 314 },
+      starFuel: [6, 4, 2],
+      /* The Hairline: the first window under the Last Inch, twenty-two
+       * pixels (22.08 measured) on a ridge shelf with a clean downhill
+       * from the spawn. The basin past the right lip is twelve deep -
+       * an overshoot ends in the pit. */
+    },
+    {
+      id: "s32", labelKey: "lantL32", gravity: 178, fuel: 57,
+      terrain: [[0, 272], [0.06, 248], [0.11, 290], [0.16, 254], [0.2, 304], [0.31, 304], [0.39, 262], [0.47, 298], [0.56, 256], [0.66, 294], [0.81, 266], [1, 282]],
+      pad: { x0: 0.215, x1: 0.284, y: 304 },
+      starFuel: [6, 4, 2],
+      /* The Comb: the busiest ground the ladder has carried - twelve
+       * control points, one past the eleven-point ceiling - and every
+       * tooth between the shoulders stands over the shelf, so the
+       * descent threads a haircut field to a twenty-two-pixel window. */
+    },
+    {
+      id: "s33", labelKey: "lantL33", gravity: 179, fuel: 57,
+      terrain: [[0, 272], [0.09, 248], [0.11, 300], [0.175, 322], [0.315, 322], [0.4, 330], [0.53, 330], [0.64, 262], [0.79, 280], [1, 296]],
+      pad: { x0: 0.19, x1: 0.259, y: 322 },
+      starFuel: [6, 4, 2],
+      /* The Sink: the deepest window yet - a floor at 322, two under
+       * the Wedge's 320 - and it ships here because the burn it
+       * charges rides the tier's fattest gauge; the same floor at the
+       * capstone's 186 would empty the tank before the flare. */
+    },
+    {
+      id: "s34", labelKey: "lantL34", gravity: 180, fuel: 56,
+      terrain: [[0, 258], [0.07, 234], [0.13, 278], [0.17, 296], [0.2, 300], [0.31, 300], [0.36, 212], [0.41, 212], [0.48, 258], [0.62, 276], [0.8, 240], [1, 264]],
+      pad: { x0: 0.215, x1: 0.284, y: 300 },
+      starFuel: [6, 4, 2],
+      /* The Tower: the tallest rock yet - 88 units of spire over the
+       * window's floor (Iron Vale's 86 was the ceiling) - standing
+       * just past the right lip, so an overshoot meets a cliff face
+       * and the safe line is the only line. */
+    },
+    {
+      id: "s35", labelKey: "lantL35", gravity: 181, fuel: 56,
+      terrain: [[0, 260], [0.07, 236], [0.13, 280], [0.18, 300], [0.32, 300], [0.4, 312], [0.52, 312], [0.63, 248], [0.78, 266], [1, 284]],
+      pad: { x0: 0.2, x1: 0.263, y: 300 },
+      starFuel: [6, 4, 2],
+      /* The Sliver: the first twenty-pixel window (20.16 measured),
+       * cut into the same shelf the Tower guards - the two-pixel cut
+       * is the whole rung. */
+    },
+    {
+      id: "s36", labelKey: "lantL36", gravity: 182, fuel: 55,
+      terrain: [[0, 248], [0.05, 226], [0.1, 266], [0.14, 232], [0.18, 268], [0.2, 276], [0.31, 276], [0.38, 240], [0.46, 274], [0.54, 236], [0.63, 274], [0.75, 242], [1, 262]],
+      pad: { x0: 0.215, x1: 0.278, y: 276 },
+      starFuel: [6, 4, 2],
+      /* The Saw: thirteen control points, one past the Comb's twelve,
+       * and every tooth stands over the shelf - the busiest ground any
+       * window has sat in. */
+    },
+    {
+      id: "s37", labelKey: "lantL37", gravity: 183, fuel: 54,
+      terrain: [[0, 256], [0.06, 232], [0.12, 276], [0.17, 312], [0.2, 248], [0.3, 248], [0.34, 340], [0.41, 340], [0.5, 290], [0.64, 300], [0.8, 262], [1, 288]],
+      pad: { x0: 0.2, x1: 0.263, y: 248 },
+      starFuel: [14, 9, 5],
+      /* The Brink: the deepest trap yet - a chasm sunk 92 units below
+       * the window (the Needles' 90 was the ceiling), thirteen pixels
+       * past the right lip, so the overshoot ends in the pit instead
+       * of on a slope. The high shelf makes the descent short; the
+       * measured landing leaves 22%. */
+    },
+    {
+      id: "s38", labelKey: "lantL38", gravity: 184, fuel: 54,
+      terrain: [[0, 250], [0.06, 226], [0.12, 268], [0.17, 300], [0.2, 258], [0.32, 258], [0.4, 270], [0.52, 270], [0.63, 242], [0.78, 260], [1, 278]],
+      pad: { x0: 0.215, x1: 0.271, y: 258 },
+      starFuel: [7, 5, 3],
+      /* The Thread: the first eighteen-pixel window (17.92 measured),
+       * two pixels under the Sliver, with a pit sunk before the shelf
+       * to keep the approach honest. */
+    },
+    {
+      id: "s39", labelKey: "lantL39", gravity: 185, fuel: 53,
+      terrain: [[0, 252], [0.06, 228], [0.15, 306], [0.19, 234], [0.29, 234], [0.33, 336], [0.4, 336], [0.48, 282], [0.6, 296], [0.74, 250], [0.88, 272], [1, 288]],
+      pad: { x0: 0.2, x1: 0.256, y: 234 },
+      starFuel: [9, 6, 3],
+      /* The Chasm: the Brink's trap deepens to 102 under the window,
+       * ten past the Brink's 92 - the deepest ground any field in the
+       * game hangs below its pad. */
+    },
+    {
+      id: "s40", labelKey: "lantL40", gravity: 186, fuel: 52,
+      terrain: [[0, 246], [0.06, 222], [0.12, 270], [0.16, 298], [0.19, 240], [0.3, 240], [0.34, 340], [0.41, 340], [0.49, 288], [0.62, 298], [0.78, 252], [1, 280]],
+      pad: { x0: 0.2, x1: 0.25, y: 240 },
+      starFuel: [6, 4, 2],
+      /* The Pinpoint, the capstone: a sixteen-pixel window - exactly
+       * 16.0, the tightest the game has ever dealt - on the deepest
+       * tank (52) and the steepest pull (186) the ladder has carried,
+       * over a chasm 100 deep past the right lip. */
+    },
   ];
 
   function initStarfallGame() {
@@ -788,6 +936,16 @@
       "lantL28": "Under the Eave",
       "lantL29": "The Causeway",
       "lantL30": "The Last Inch",
+      "lantL31": "The Hairline",
+      "lantL32": "The Comb",
+      "lantL33": "The Sink",
+      "lantL34": "The Tower",
+      "lantL35": "The Sliver",
+      "lantL36": "The Saw",
+      "lantL37": "The Brink",
+      "lantL38": "The Thread",
+      "lantL39": "The Chasm",
+      "lantL40": "The Pinpoint",
     },
     zh: {
       "lantL21": "幻谷",
@@ -800,6 +958,16 @@
       "lantL28": "檐下",
       "lantL29": "栈道",
       "lantL30": "最后一寸",
+      "lantL31": "细缝",
+      "lantL32": "齿脊",
+      "lantL33": "沉渊",
+      "lantL34": "孤塔",
+      "lantL35": "薄刃",
+      "lantL36": "锯脊",
+      "lantL37": "临渊",
+      "lantL38": "丝线",
+      "lantL39": "深壑",
+      "lantL40": "毫厘",
     },
   });
 

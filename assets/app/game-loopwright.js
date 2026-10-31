@@ -598,6 +598,301 @@
         ["W", "W", "W", "F", "F", "F", "F", "F"],
       ],
     },
+    /* Floors 31-40 are the overhaul, and its dials are the crew and the
+     * press count. The summit ended at five runs on the full eight plates;
+     * the overhaul opens a six-run crew on that same eight-plate yard and
+     * never gives either line back: the crew climbs to seven runs at f36
+     * and to the full eight at f40, while the press line runs 8, 8, 8, 8,
+     * 9, 10, 10, 10, 11, 12 - past the full house at f35 and up to a
+     * twelve-plate yard at the capstone. Every rung also takes one record
+     * against every floor before it: f31 the first six-run crew, f32 the
+     * first three-ram floor, f33 the first four-door stack, f34 the first
+     * three-pad shift, f35 the first nine-plate yard, f36 the first
+     * ten-plate floor and the first seven-run crew, f37 the first
+     * five-crate fleet, f38 the longest shift and the deepest wait line
+     * the panel has dealt, f39 the first eleven-plate yard and the first
+     * seven-run relay whose closer delivers a press of its own, f40 the
+     * capstone - twelve plates, a crew of eight, and the longest shift
+     * of the first forty.
+     * The crews are arithmetic, not decoration: a ghost presses at most
+     * two plates (its body plus one crate) and the closer's own body is
+     * owed to G, so each yard strands the crew below the one it ships
+     * with - four ghosts press seven of f31-f33's eight plates, eight of
+     * f35's nine, nine of f36's ten (and nine of f37's, once the fourth
+     * column's pusher has no plate for its own body), ten of f39's eleven
+     * and of f40's twelve before the closer's shove. Every floor was
+     * walked by its own shipped runs in tools/loopwright-forge.js and came
+     * back solved, and the forge's searches came back empty: no final run
+     * of seven ops or fewer over the movement chips and Push wins any
+     * closer in the tier given the authored ghosts, the straight no-wait
+     * walks die on the mouth ram (f32) and on the shut stack (f33), and
+     * the closers of f39 and f40 are Manhattan-exact at eight ops - six
+     * moves and two forced turns with no slack for a wait. */
+    /* The first six-run crew. Three crate-and-body ghosts feed three of
+     * the yard's four columns while two body ghosts walk the bare sixth
+     * column and park on its plates - five ghosts press all eight, one
+     * more than a four-ghost crew can hold with three crates (seven). The
+     * closer waits out the settles exactly three beats, the door timing
+     * the summit taught. */
+    {
+      id: "f31", labelKey: "lpwF31",
+      map: ["########",
+            "#..G...#",
+            "#..D...#",
+            "#PP..PP#",
+            "#PP..PP#",
+            "#CC..C.#",
+            "#..W...#",
+            "########"],
+      doorPlates: [0], pistonOffsets: [],
+      programs: [
+        ["L", "F", "F", "R", "P", "P"],
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "F", "L", "P", "P"],
+        ["R", "F", "F", "F", "L", "F", "F"],
+        ["R", "F", "F", "F", "L", "F", "F", "F"],
+        ["W", "W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
+    /* Three rams, one more than the press floor ever ran. The whole center
+     * column is phased - offsets 1, 2, 0 top to bottom, down-ticks at
+     * t=3, t=2 and t=0 - and the closer's three waits sit on the beat
+     * that threads all three: the straight walk dies on the mouth ram at
+     * t=0, and any wait interleaved into the walk lands a down tick on a
+     * ram. The yard and the crew are f31's. */
+    {
+      id: "f32", labelKey: "lpwF32",
+      map: ["########",
+            "#..G...#",
+            "#..D...#",
+            "#PP.TPP#",
+            "#PP.TPP#",
+            "#CCT.C.#",
+            "#..W...#",
+            "########"],
+      doorPlates: [0], pistonOffsets: [1, 2, 0],
+      programs: [
+        ["L", "F", "F", "R", "P", "P"],
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "F", "L", "P", "P"],
+        ["R", "F", "F", "F", "L", "F", "F"],
+        ["R", "F", "F", "F", "L", "F", "F", "F"],
+        ["W", "W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
+    /* Four doors in one stack, one more than the citadel ever held, wired
+     * [0, 1, 7, 6]: the top two eat the crate columns' landings (t=5 and
+     * t=6), the bottom two hang off the fast plates beside the start,
+     * parked at t=2 by a pair of two-op ghosts. A seven-op closer reaches
+     * the third gate one beat before its crate lands, so the three waits
+     * are load-bearing all the way up. The shift is short - 28 ticks -
+     * because the stack does the work a wider yard would. */
+    {
+      id: "f33", labelKey: "lpwF33",
+      map: ["########",
+            "#..G...#",
+            "#..D...#",
+            "#PPDP..#",
+            "#PPDP..#",
+            "#CCDC..#",
+            "#.PWP..#",
+            "########"],
+      doorPlates: [0, 1, 7, 6], pistonOffsets: [],
+      programs: [
+        ["L", "F", "F", "R", "P", "P"],
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "L", "P", "P"],
+        ["L", "F"],
+        ["R", "F"],
+        ["W", "W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
+    /* Three pads ship where two was the ceiling, and all three sit on
+     * plates at the winning frame - the pad bench goes two (f12) to
+     * three. The start row hands each carrier its pad inside the first
+     * two beats: one rides the fourth column up and parks its body on
+     * the plate above its drop, one drops beside the yard on five, and
+     * one walks the whole row to the far corner plate. */
+    {
+      id: "f34", labelKey: "lpwF34",
+      map: ["########",
+            "#..G...#",
+            "#..D...#",
+            "#PP.P..#",
+            "#PP.PP.#",
+            "#CC...P#",
+            "#..WSSS#",
+            "########"],
+      doorPlates: [0], pistonOffsets: [],
+      programs: [
+        ["L", "F", "F", "R", "P", "P"],
+        ["L", "F", "R", "P", "P"],
+        ["R", "G", "F", "L", "F", "F", "D", "F"],
+        ["R", "F", "G", "F", "L", "F", "F", "D"],
+        ["R", "G", "F", "F", "F", "L", "F", "D"],
+        ["W", "W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
+    /* The first yard past the summit's full house: nine plates, one more
+     * than f30 ever held. Four crate-and-body ghosts feed the outer
+     * columns and a fifth body ghost takes the new lone plate in the
+     * fourth column - four ghosts press eight of nine, so the fifth body
+     * is arithmetic. */
+    {
+      id: "f35", labelKey: "lpwF35",
+      map: ["########",
+            "#..G...#",
+            "#..D...#",
+            "#PP.PPP#",
+            "#PP..PP#",
+            "#CC..CC#",
+            "#..W...#",
+            "########"],
+      doorPlates: [0], pistonOffsets: [],
+      programs: [
+        ["L", "F", "F", "R", "P", "P"],
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "F", "L", "P", "P"],
+        ["R", "F", "F", "F", "L", "P", "P"],
+        ["R", "F", "L", "F", "F", "F"],
+        ["W", "W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
+    /* Ten plates and the first seven-run crew, one more plate and one
+     * more ghost than f35. The new plate sits beside the door and the
+     * sixth ghost walks the fourth column to it - five ghosts press nine
+     * of ten, so the sixth is arithmetic. */
+    {
+      id: "f36", labelKey: "lpwF36",
+      map: ["########",
+            "#..G...#",
+            "#..DP..#",
+            "#PP.PPP#",
+            "#PP..PP#",
+            "#CC..CC#",
+            "#..W...#",
+            "########"],
+      doorPlates: [1], pistonOffsets: [],
+      programs: [
+        ["L", "F", "F", "R", "P", "P"],
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "F", "L", "P", "P"],
+        ["R", "F", "F", "F", "L", "P", "P"],
+        ["R", "F", "L", "F", "F", "F"],
+        ["R", "F", "L", "F", "F", "F", "F"],
+        ["W", "W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
+    /* Five crates, one more than the full house ran. The fourth column
+     * joins the fleet, but its pusher has no plate for its own body - the
+     * crate lands between the yard's halves and the body stops below it -
+     * so five ghosts press nine of ten and a sixth walks the center lane
+     * to the plate above the west pair. */
+    {
+      id: "f37", labelKey: "lpwF37",
+      map: ["########",
+            "#..G...#",
+            "#.PD...#",
+            "#PP.PPP#",
+            "#PP..PP#",
+            "#CC.CCC#",
+            "#..W...#",
+            "########"],
+      doorPlates: [1], pistonOffsets: [],
+      programs: [
+        ["L", "F", "F", "R", "P", "P"],
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "F", "L", "P", "P"],
+        ["R", "F", "F", "F", "L", "P", "P"],
+        ["R", "F", "L", "P", "P"],
+        ["F", "F", "L", "F", "R", "F", "F"],
+        ["W", "W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
+    /* The longest shift the panel has dealt - forty-eight ticks across
+     * seven runs - and the deepest wait line, six where five was the
+     * old ceiling. The rams move into the crew's own corridor: the two
+     * parker ghosts each pay the phase toll on the fourth column (down-
+     * ticks at t=3 and t=2), waits and all, and the no-wait walk dies on
+     * the mouth ram. */
+    {
+      id: "f38", labelKey: "lpwF38",
+      map: ["########",
+            "#..G...#",
+            "#..DP..#",
+            "#PP.PPP#",
+            "#PP.TPP#",
+            "#CC.TCC#",
+            "#..W.T.#",
+            "########"],
+      doorPlates: [1], pistonOffsets: [2, 1, 0],
+      programs: [
+        ["L", "F", "F", "R", "P", "P"],
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "F", "L", "P", "P"],
+        ["R", "F", "F", "F", "L", "P", "P"],
+        ["R", "F", "L", "W", "F", "F", "W", "F"],
+        ["R", "F", "L", "W", "F", "F", "F", "F"],
+        ["W", "W", "W", "F", "F", "F", "F", "F"],
+      ],
+    },
+    /* The first eleven-plate yard, and the first seven-run relay whose
+     * closer delivers a press of its own: the wall in the center lane turns every approach
+     * into one Manhattan-exact eight-op line - six moves and two turns -
+     * whose sideways shove lands the live crate on the fifth column's
+     * plate. Six ghosts press ten of eleven; the eleventh press is the
+     * closer's own shoulder. */
+    {
+      id: "f39", labelKey: "lpwF39",
+      map: ["########",
+            "#...G..#",
+            "#..#PP.#",
+            "#PP.PPP#",
+            "#PP.CPP#",
+            "#CC..CC#",
+            "#..W...#",
+            "########"],
+      doorPlates: [], pistonOffsets: [],
+      programs: [
+        ["L", "F", "F", "R", "P", "P"],
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "F", "L", "P", "P", "P"],
+        ["R", "F", "F", "F", "L", "P", "P"],
+        ["F", "F", "F", "R", "F"],
+        ["F", "F", "F", "R", "F", "L", "F"],
+        ["F", "F", "R", "P", "L", "F", "F", "F"],
+      ],
+    },
+    /* The capstone: twelve plates - the widest yard the game has held -
+     * under the first eight-run crew, with the longest shift of the first
+     * forty at fifty-two ticks. The closer never waits: its eight ops are
+     * the same Manhattan-exact shove line as f39's, and the crew of seven
+     * settles inside it - the last crate lands on the very tick the
+     * closer arrives. Six ghosts press ten of twelve and the closer's
+     * shove lifts it to eleven; the twelfth press takes the seventh
+     * body. */
+    {
+      id: "f40", labelKey: "lpwF40",
+      map: ["########",
+            "#...G..#",
+            "#.P#PP.#",
+            "#PP.PPP#",
+            "#PP.CPP#",
+            "#CC..CC#",
+            "#..W...#",
+            "########"],
+      doorPlates: [], pistonOffsets: [],
+      programs: [
+        ["L", "F", "F", "R", "P", "P"],
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "F", "L", "P", "P", "P"],
+        ["R", "F", "F", "F", "L", "P", "P"],
+        ["F", "F", "F", "R", "F"],
+        ["F", "F", "F", "R", "F", "L", "F"],
+        ["F", "F", "F", "L", "F", "R", "F"],
+        ["F", "F", "R", "P", "L", "F", "F", "F"],
+      ],
+    },
   ];
 
   function mulberry32(seed) {
@@ -1475,6 +1770,16 @@
       "lpwF28": "The Long Shift",
       "lpwF29": "The Union",
       "lpwF30": "The Last Shift",
+      "lpwF31": "Six on the Floor",
+      "lpwF32": "Three Rams",
+      "lpwF33": "The Four-Gate Stack",
+      "lpwF34": "Pad Carriers",
+      "lpwF35": "Past the Full House",
+      "lpwF36": "Ten Plates",
+      "lpwF37": "The Fifth Crate",
+      "lpwF38": "The Ram Corridor",
+      "lpwF39": "The Closer's Crate",
+      "lpwF40": "The Whole Crew",
       "lpwOpF": "Forward",
       "lpwOpB": "Back",
       "lpwOpL": "Turn left",
@@ -1506,7 +1811,7 @@
       "lpwFailShort": "The queue ran out short of the goal. Rewound - and that ghost is now your crew.",
       "lpwNextFloor": "Next floor unlocked.",
       "lpwAllFloors": "Every floor is running.",
-      "lpwHint": "Keys 1-9 insert (9 is the loop marker; re-click it to change its target), arrows move the queue cursor, Enter inserts the armed chip, Backspace clears a slot, R runs, X rewinds. Empty slots act as waits. 3 stars: par runs AND no more than par instructions. The summit floors (25-30) only clear when every plate is still pressed on the winning frame.",
+      "lpwHint": "Keys 1-9 insert (9 is the loop marker; re-click it to change its target), arrows move the queue cursor, Enter inserts the armed chip, Backspace clears a slot, R runs, X rewinds. Empty slots act as waits. 3 stars: par runs AND no more than par instructions. The summit floors (25-30) and the overhaul floors (31-40) only clear when every plate is still pressed on the winning frame.",
       "logLoopwright": "Cleared {name} in {n} runs",
     },
     zh: {
@@ -1541,6 +1846,16 @@
       "lpwF28": "长班",
       "lpwF29": "工会",
       "lpwF30": "最后一班",
+      "lpwF31": "六人同班",
+      "lpwF32": "三座冲压",
+      "lpwF33": "四重闸门",
+      "lpwF34": "运垫工",
+      "lpwF35": "满员之后",
+      "lpwF36": "十块压板",
+      "lpwF37": "第五只货箱",
+      "lpwF38": "冲压长廊",
+      "lpwF39": "收班人的货箱",
+      "lpwF40": "全员到齐",
       "lpwOpF": "前进",
       "lpwOpB": "后退",
       "lpwOpL": "左转",
@@ -1572,7 +1887,7 @@
       "lpwFailShort": "指令跑完时还没达成目标。已倒带——这个分身现在是你的一名工友。",
       "lpwNextFloor": "解锁下一层。",
       "lpwAllFloors": "全部楼层都运转起来了。",
-      "lpwHint": "数字键 1-9 直接插入（9 是回环标记，再点一次可切换跳回的目标），方向键移动队列光标，回车插入选中的指令，退格清空槽位，R 运行，X 倒带。空槽按等待处理。三星条件：恰好标准运行数且指令数不超过标准。顶层楼层（25-30）要求通关瞬间所有压板仍被按住。",
+      "lpwHint": "数字键 1-9 直接插入（9 是回环标记，再点一次可切换跳回的目标），方向键移动队列光标，回车插入选中的指令，退格清空槽位，R 运行，X 倒带。空槽按等待处理。三星条件：恰好标准运行数且指令数不超过标准。顶层楼层（25-30）与改造楼层（31-40）要求通关瞬间所有压板仍被按住。",
       "logLoopwright": "用 {n} 次运行通关{name}",
     },
   });
@@ -1619,6 +1934,7 @@
         "Watch out: bumping a wall, wedging a crate into a corner, or an endless loop rewinds all actors and costs one run; dropped pads and crates rewind too, only the ghost stays.",
         "Scoring: fewer runs earn more stars - three stars means par runs and no more than par instructions.",
         "New tier: the summit floors (25-30) only clear when every plate in the room is still pressed on the winning frame - the rooms climb from three plates to the full eight, so every ghost must deliver a crate and then park its own body.",
+        "The overhaul (31-40): the crew climbs from six runs to the full eight while the yards grow to twelve plates - rams return in threes, a four-door stack rises, three pads ride one shift, and the last two closers shoulder a crate of their own.",
       ],
       zh: [
         "目标：让所有压板保持按下，并让工人 W 在程序结束时站在 G 上。",
@@ -1628,6 +1944,7 @@
         "小心：撞墙、把货箱推进死角、或无限循环都会把所有角色倒回起点并消耗一次运行；压垫与货箱也会倒回，只有分身留下。",
         "计分：运行次数越少星越多——三星要求恰好标准运行数，且指令数不超过标准。",
         "新层级：顶层楼层（25-30）要求通关瞬间房间里的每一块压板都仍被按住——压板从三块一路加到满员八块，每个分身都要先推箱到位、再驻守压板。",
+        "改造期（31-40）：运行数从六班一路加到满员八班，压板加到十二块——冲压机三台一组回归，四重闸门叠起，三块压垫随一班同行，最后两层的收班人还要亲手推上一只货箱。",
       ],
     },
   });

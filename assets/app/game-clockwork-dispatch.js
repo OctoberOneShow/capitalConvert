@@ -429,6 +429,156 @@
       stations: [{ edge: "r", pos: 1, colour: 1 }, { edge: "r", pos: 3, colour: 0 }, { edge: "l", pos: 5, colour: 0 }, { edge: "b", pos: 5, colour: 2 }],
       trains: [{ c: 1, row: 1, tick: 0 }, { c: 0, row: 3, tick: 3 }, { c: 2, row: 1, tick: 6 }, { c: 0, row: 1, tick: 9 }, { c: 2, row: 3, tick: 12 }, { c: 0, row: 1, tick: 15 }, { c: 1, row: 1, tick: 18 }, { c: 0, row: 3, tick: 21 }, { c: 2, row: 1, tick: 24 }, { c: 0, row: 1, tick: 27 }, { c: 0, row: 3, tick: 30 }, { c: 0, row: 1, tick: 33 }, { c: 1, row: 1, tick: 36 }, { c: 0, row: 3, tick: 39 }, { c: 2, row: 1, tick: 42 }, { c: 0, row: 1, tick: 45 }, { c: 2, row: 3, tick: 48 }, { c: 0, row: 1, tick: 51 }, { c: 1, row: 1, tick: 54 }, { c: 0, row: 3, tick: 57 }, { c: 0, row: 1, tick: 60 }, { c: 2, row: 1, tick: 63 }, { c: 0, row: 3, tick: 66 }, { c: 0, row: 1, tick: 69 }, { c: 1, row: 1, tick: 72 }, { c: 0, row: 3, tick: 75 }, { c: 2, row: 1, tick: 78 }, { c: 0, row: 1, tick: 81 }, { c: 0, row: 3, tick: 84 }, { c: 0, row: 1, tick: 87 }, { c: 1, row: 1, tick: 90 }, { c: 0, row: 3, tick: 93 }, { c: 2, row: 1, tick: 96 }, { c: 0, row: 1, tick: 99 }, { c: 0, row: 3, tick: 102 }, { c: 0, row: 1, tick: 105 }, { c: 2, row: 1, tick: 108 }, { c: 0, row: 3, tick: 111 }],
     },
+    {
+      /* The long main: forty-two trains chase one split point every two ticks,
+       * and each colour wants the opposite arm, so nearly every arrival is a
+       * throw of the same point.
+       */
+      id: "d31",
+      labelKey: "cwkZ31",
+      limit: 134,
+      hold: 2,
+      tickMs: 300,
+      rows: ["####.####", "####.####", "####.####", ".........", "#########", "#########", "#########"],
+      cells: [{ x: 4, y: 3, kind: "p", a: 0, b: 1, init: 0 }],
+      stations: [{ edge: "r", pos: 3, colour: 0 }, { edge: "t", pos: 4, colour: 1 }],
+      trains: [{ c: 1, row: 3, tick: 0 }, { c: 0, row: 3, tick: 2 }, { c: 1, row: 3, tick: 4 }, { c: 0, row: 3, tick: 6 }, { c: 1, row: 3, tick: 8 }, { c: 0, row: 3, tick: 10 }, { c: 1, row: 3, tick: 12 }, { c: 0, row: 3, tick: 14 }, { c: 1, row: 3, tick: 16 }, { c: 0, row: 3, tick: 18 }, { c: 1, row: 3, tick: 20 }, { c: 0, row: 3, tick: 22 }, { c: 1, row: 3, tick: 24 }, { c: 0, row: 3, tick: 26 }, { c: 1, row: 3, tick: 28 }, { c: 0, row: 3, tick: 30 }, { c: 1, row: 3, tick: 32 }, { c: 0, row: 3, tick: 34 }, { c: 1, row: 3, tick: 36 }, { c: 0, row: 3, tick: 38 }, { c: 1, row: 3, tick: 40 }, { c: 0, row: 3, tick: 42 }, { c: 1, row: 3, tick: 44 }, { c: 0, row: 3, tick: 46 }, { c: 1, row: 3, tick: 48 }, { c: 0, row: 3, tick: 50 }, { c: 1, row: 3, tick: 52 }, { c: 0, row: 3, tick: 54 }, { c: 1, row: 3, tick: 56 }, { c: 0, row: 3, tick: 58 }, { c: 1, row: 3, tick: 60 }, { c: 0, row: 3, tick: 62 }, { c: 1, row: 3, tick: 64 }, { c: 0, row: 3, tick: 66 }, { c: 1, row: 3, tick: 68 }, { c: 0, row: 3, tick: 70 }, { c: 1, row: 3, tick: 72 }, { c: 0, row: 3, tick: 74 }, { c: 1, row: 3, tick: 76 }, { c: 0, row: 3, tick: 78 }, { c: 1, row: 3, tick: 80 }, { c: 0, row: 3, tick: 82 }],
+    },
+    {
+      /* The far berth: two sidings sit in series on the approach. Throwing the
+       * far one first arms the full hold; throw the near one alone and the
+       * bay train is released two ticks early into the junction.
+       */
+      id: "d32",
+      labelKey: "cwkZ32",
+      limit: 228,
+      hold: 2,
+      tickMs: 300,
+      rows: ["#########", ".........", "#####.###", ".........", "#####.###", ".........", "#####.###"],
+      cells: [{ x: 5, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 3, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 5, kind: "p", a: 2, b: 3, init: 0 }, { x: 2, y: 1, kind: "s", init: 0 }, { x: 3, y: 1, kind: "s", init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 1 }, { edge: "r", pos: 3, colour: 0 }, { edge: "b", pos: 5, colour: 2 }],
+      trains: [{ c: 2, row: 1, tick: 0 }, { c: 0, row: 3, tick: 2 }, { c: 0, row: 3, tick: 4 }, { c: 1, row: 1, tick: 8 }, { c: 0, row: 1, tick: 11 }, { c: 2, row: 1, tick: 14 }, { c: 0, row: 3, tick: 17 }, { c: 1, row: 1, tick: 20 }, { c: 2, row: 3, tick: 23 }, { c: 0, row: 1, tick: 26 }, { c: 0, row: 3, tick: 29 }, { c: 1, row: 1, tick: 32 }, { c: 2, row: 1, tick: 35 }, { c: 0, row: 3, tick: 38 }, { c: 0, row: 1, tick: 41 }, { c: 1, row: 1, tick: 44 }, { c: 2, row: 3, tick: 47 }, { c: 0, row: 3, tick: 50 }, { c: 0, row: 1, tick: 53 }, { c: 2, row: 1, tick: 56 }, { c: 1, row: 1, tick: 59 }, { c: 0, row: 3, tick: 62 }, { c: 0, row: 1, tick: 65 }, { c: 2, row: 3, tick: 68 }, { c: 0, row: 3, tick: 71 }, { c: 0, row: 1, tick: 74 }, { c: 1, row: 1, tick: 77 }, { c: 2, row: 1, tick: 80 }, { c: 0, row: 3, tick: 83 }, { c: 0, row: 1, tick: 86 }, { c: 2, row: 1, tick: 106 }, { c: 0, row: 3, tick: 108 }, { c: 0, row: 3, tick: 110 }, { c: 1, row: 1, tick: 114 }, { c: 0, row: 1, tick: 117 }, { c: 2, row: 1, tick: 120 }, { c: 0, row: 3, tick: 123 }, { c: 1, row: 1, tick: 126 }, { c: 2, row: 3, tick: 129 }, { c: 0, row: 1, tick: 132 }, { c: 0, row: 3, tick: 135 }, { c: 1, row: 1, tick: 138 }],
+    },
+    {
+      /* The westbound and the bay: the high platform sits on the right, the low
+       * one on the left edge and the bay below the column. Every low arrival
+       * must be drained west, and the bay cleared before the next drop.
+       */
+      id: "d33",
+      labelKey: "cwkZ33",
+      limit: 218,
+      hold: 2,
+      tickMs: 300,
+      rows: ["#########", ".........", "#####.###", ".........", "#####.###", ".........", "#####.###"],
+      cells: [{ x: 5, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 3, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 5, kind: "p", a: 2, b: 3, init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 1 }, { edge: "l", pos: 5, colour: 2 }, { edge: "b", pos: 5, colour: 0 }],
+      trains: [{ c: 1, row: 1, tick: 0 }, { c: 0, row: 1, tick: 3 }, { c: 2, row: 1, tick: 6 }, { c: 0, row: 1, tick: 9 }, { c: 2, row: 1, tick: 12 }, { c: 0, row: 1, tick: 15 }, { c: 1, row: 1, tick: 18 }, { c: 0, row: 1, tick: 21 }, { c: 2, row: 1, tick: 24 }, { c: 0, row: 1, tick: 27 }, { c: 2, row: 1, tick: 30 }, { c: 0, row: 1, tick: 33 }, { c: 1, row: 1, tick: 36 }, { c: 0, row: 1, tick: 39 }, { c: 2, row: 1, tick: 42 }, { c: 0, row: 1, tick: 45 }, { c: 2, row: 1, tick: 48 }, { c: 0, row: 1, tick: 51 }, { c: 1, row: 1, tick: 54 }, { c: 0, row: 1, tick: 57 }, { c: 2, row: 1, tick: 60 }, { c: 0, row: 1, tick: 63 }, { c: 2, row: 1, tick: 66 }, { c: 0, row: 1, tick: 69 }, { c: 1, row: 1, tick: 72 }, { c: 0, row: 1, tick: 75 }, { c: 2, row: 1, tick: 78 }, { c: 0, row: 1, tick: 81 }, { c: 2, row: 1, tick: 84 }, { c: 0, row: 1, tick: 87 }, { c: 1, row: 1, tick: 90 }, { c: 0, row: 1, tick: 93 }, { c: 2, row: 1, tick: 96 }, { c: 0, row: 1, tick: 99 }, { c: 2, row: 1, tick: 102 }, { c: 0, row: 1, tick: 105 }, { c: 1, row: 1, tick: 108 }, { c: 0, row: 1, tick: 111 }, { c: 2, row: 1, tick: 114 }, { c: 0, row: 1, tick: 117 }, { c: 2, row: 1, tick: 120 }, { c: 0, row: 1, tick: 123 }, { c: 1, row: 1, tick: 126 }, { c: 0, row: 1, tick: 129 }, { c: 2, row: 1, tick: 132 }, { c: 0, row: 1, tick: 135 }],
+    },
+    {
+      /* The two-bank column: eastbound traffic climbs from the low bank while
+       * westbound traffic drops from the high bank, and each bank owns a
+       * berth, so the single column is held twice per exchange.
+       */
+      id: "d34",
+      labelKey: "cwkZ34",
+      limit: 224,
+      hold: 3,
+      tickMs: 440,
+      rows: ["####.####", ".........", "####.####", "####.####", "####.####", ".........", "####.####"],
+      cells: [{ x: 4, y: 1, kind: "p", a: 3, b: 1, init: 0 }, { x: 4, y: 5, kind: "p", a: 1, b: 3, init: 0 }, { x: 2, y: 1, kind: "s", init: 0 }, { x: 2, y: 5, kind: "s", init: 0 }],
+      stations: [{ edge: "b", pos: 4, colour: 0 }, { edge: "t", pos: 4, colour: 1 }],
+      trains: [{ c: 0, row: 1, tick: 0 }, { c: 1, row: 5, tick: 2 }, { c: 1, row: 1, tick: 5 }, { c: 0, row: 5, tick: 8 }, { c: 0, row: 1, tick: 11 }, { c: 1, row: 5, tick: 14 }, { c: 1, row: 1, tick: 17 }, { c: 0, row: 5, tick: 20 }, { c: 0, row: 1, tick: 23 }, { c: 1, row: 5, tick: 26 }, { c: 0, row: 1, tick: 36 }, { c: 1, row: 5, tick: 38 }, { c: 1, row: 1, tick: 41 }, { c: 0, row: 5, tick: 44 }, { c: 0, row: 1, tick: 47 }, { c: 1, row: 5, tick: 50 }, { c: 1, row: 1, tick: 53 }, { c: 0, row: 5, tick: 56 }, { c: 0, row: 1, tick: 59 }, { c: 1, row: 5, tick: 62 }, { c: 0, row: 1, tick: 72 }, { c: 1, row: 5, tick: 74 }, { c: 1, row: 1, tick: 77 }, { c: 0, row: 5, tick: 80 }, { c: 0, row: 1, tick: 83 }, { c: 1, row: 5, tick: 86 }, { c: 1, row: 1, tick: 89 }, { c: 0, row: 5, tick: 92 }, { c: 0, row: 1, tick: 95 }, { c: 1, row: 5, tick: 98 }, { c: 0, row: 1, tick: 108 }, { c: 1, row: 5, tick: 110 }, { c: 1, row: 1, tick: 113 }, { c: 0, row: 5, tick: 116 }, { c: 0, row: 1, tick: 119 }, { c: 1, row: 5, tick: 122 }, { c: 1, row: 1, tick: 125 }, { c: 0, row: 5, tick: 128 }, { c: 0, row: 1, tick: 131 }, { c: 1, row: 5, tick: 134 }],
+    },
+    {
+      /* The colour cascade: three colours fall down one column to three
+       * platforms, and the order of the colours in the timetable binds every
+       * throw of the middle point.
+       */
+      id: "d35",
+      labelKey: "cwkZ35",
+      limit: 230,
+      hold: 2,
+      tickMs: 300,
+      rows: ["#########", ".........", "#####.###", ".........", "#####.###", ".........", "#####.###"],
+      cells: [{ x: 5, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 3, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 5, kind: "p", a: 2, b: 3, init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 1 }, { edge: "r", pos: 3, colour: 0 }, { edge: "b", pos: 5, colour: 2 }],
+      trains: [{ c: 1, row: 1, tick: 0 }, { c: 0, row: 1, tick: 3 }, { c: 2, row: 1, tick: 6 }, { c: 0, row: 1, tick: 9 }, { c: 2, row: 1, tick: 12 }, { c: 0, row: 1, tick: 15 }, { c: 1, row: 1, tick: 18 }, { c: 0, row: 1, tick: 21 }, { c: 2, row: 1, tick: 24 }, { c: 0, row: 1, tick: 27 }, { c: 2, row: 1, tick: 30 }, { c: 0, row: 1, tick: 33 }, { c: 1, row: 1, tick: 36 }, { c: 0, row: 1, tick: 39 }, { c: 2, row: 1, tick: 42 }, { c: 0, row: 1, tick: 45 }, { c: 2, row: 1, tick: 48 }, { c: 0, row: 1, tick: 51 }, { c: 1, row: 1, tick: 54 }, { c: 0, row: 1, tick: 57 }, { c: 2, row: 1, tick: 60 }, { c: 0, row: 1, tick: 63 }, { c: 2, row: 1, tick: 66 }, { c: 0, row: 1, tick: 69 }, { c: 1, row: 1, tick: 72 }, { c: 0, row: 1, tick: 75 }, { c: 2, row: 1, tick: 78 }, { c: 0, row: 1, tick: 81 }, { c: 2, row: 1, tick: 84 }, { c: 0, row: 1, tick: 87 }, { c: 1, row: 1, tick: 90 }, { c: 0, row: 1, tick: 93 }, { c: 2, row: 1, tick: 96 }, { c: 0, row: 1, tick: 99 }, { c: 2, row: 1, tick: 102 }, { c: 0, row: 1, tick: 105 }, { c: 1, row: 1, tick: 108 }, { c: 0, row: 1, tick: 111 }, { c: 2, row: 1, tick: 114 }, { c: 0, row: 1, tick: 117 }, { c: 2, row: 1, tick: 120 }, { c: 0, row: 1, tick: 123 }, { c: 1, row: 1, tick: 126 }, { c: 0, row: 1, tick: 129 }, { c: 2, row: 1, tick: 132 }, { c: 0, row: 1, tick: 135 }, { c: 2, row: 1, tick: 138 }, { c: 0, row: 1, tick: 141 }, { c: 1, row: 1, tick: 144 }, { c: 0, row: 1, tick: 147 }],
+    },
+    {
+      /* The hold-three queue: the far berth is set to hold for three ticks so
+       * a burst of arrivals is spaced into the gaps on the main; shorten the
+       * hold and the queue runs into the junction.
+       */
+      id: "d36",
+      labelKey: "cwkZ36",
+      limit: 252,
+      hold: 3,
+      tickMs: 300,
+      rows: ["#########", ".........", "#####.###", ".........", "#####.###", ".........", "#####.###"],
+      cells: [{ x: 5, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 3, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 5, kind: "p", a: 2, b: 3, init: 0 }, { x: 2, y: 1, kind: "s", init: 0 }, { x: 3, y: 1, kind: "s", init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 1 }, { edge: "r", pos: 3, colour: 0 }, { edge: "b", pos: 5, colour: 2 }],
+      trains: [{ c: 2, row: 1, tick: 0 }, { c: 0, row: 3, tick: 2 }, { c: 0, row: 3, tick: 4 }, { c: 1, row: 1, tick: 8 }, { c: 0, row: 1, tick: 11 }, { c: 2, row: 1, tick: 14 }, { c: 0, row: 3, tick: 17 }, { c: 1, row: 1, tick: 20 }, { c: 2, row: 3, tick: 23 }, { c: 0, row: 1, tick: 26 }, { c: 0, row: 3, tick: 29 }, { c: 1, row: 1, tick: 32 }, { c: 2, row: 1, tick: 35 }, { c: 0, row: 3, tick: 38 }, { c: 0, row: 1, tick: 41 }, { c: 1, row: 1, tick: 44 }, { c: 2, row: 3, tick: 47 }, { c: 0, row: 3, tick: 50 }, { c: 0, row: 1, tick: 53 }, { c: 2, row: 1, tick: 56 }, { c: 1, row: 1, tick: 59 }, { c: 0, row: 3, tick: 62 }, { c: 0, row: 1, tick: 65 }, { c: 2, row: 3, tick: 68 }, { c: 0, row: 3, tick: 71 }, { c: 0, row: 1, tick: 74 }, { c: 1, row: 1, tick: 77 }, { c: 2, row: 1, tick: 80 }, { c: 0, row: 3, tick: 83 }, { c: 0, row: 1, tick: 86 }, { c: 2, row: 1, tick: 106 }, { c: 0, row: 3, tick: 108 }, { c: 0, row: 3, tick: 110 }, { c: 1, row: 1, tick: 114 }, { c: 0, row: 1, tick: 117 }, { c: 2, row: 1, tick: 120 }, { c: 0, row: 3, tick: 123 }, { c: 1, row: 1, tick: 126 }, { c: 2, row: 3, tick: 129 }, { c: 0, row: 1, tick: 132 }, { c: 0, row: 3, tick: 135 }, { c: 1, row: 1, tick: 138 }, { c: 2, row: 1, tick: 141 }, { c: 0, row: 3, tick: 144 }, { c: 0, row: 1, tick: 147 }, { c: 1, row: 1, tick: 150 }, { c: 2, row: 3, tick: 153 }, { c: 0, row: 3, tick: 156 }, { c: 0, row: 1, tick: 159 }, { c: 2, row: 1, tick: 162 }],
+    },
+    {
+      /* The same siding twice: one berth on the upper approach is thrown for
+       * two different trains in the same exchange, once for each side of the
+       * junction.
+       */
+      id: "d37",
+      labelKey: "cwkZ37",
+      limit: 268,
+      hold: 2,
+      tickMs: 330,
+      rows: ["#########", ".........", "#####.###", ".........", "#########", "#########", "#########"],
+      cells: [{ x: 3, y: 1, kind: "s", init: 0 }, { x: 5, y: 1, kind: "p", a: 0, b: 3, init: 0 }, { x: 5, y: 3, kind: "p", a: 0, b: 1, init: 0 }],
+      stations: [{ edge: "r", pos: 1, colour: 1 }, { edge: "r", pos: 3, colour: 0 }],
+      trains: [{ c: 0, row: 1, tick: 0 }, { c: 0, row: 3, tick: 2 }, { c: 1, row: 3, tick: 6 }, { c: 1, row: 1, tick: 10 }, { c: 0, row: 3, tick: 14 }, { c: 0, row: 1, tick: 18 }, { c: 1, row: 1, tick: 22 }, { c: 1, row: 3, tick: 26 }, { c: 0, row: 1, tick: 30 }, { c: 0, row: 3, tick: 32 }, { c: 1, row: 3, tick: 36 }, { c: 1, row: 1, tick: 40 }, { c: 0, row: 3, tick: 44 }, { c: 0, row: 1, tick: 48 }, { c: 1, row: 1, tick: 52 }, { c: 1, row: 3, tick: 56 }, { c: 0, row: 1, tick: 60 }, { c: 0, row: 3, tick: 62 }, { c: 1, row: 3, tick: 66 }, { c: 1, row: 1, tick: 70 }, { c: 0, row: 3, tick: 74 }, { c: 0, row: 1, tick: 78 }, { c: 1, row: 1, tick: 82 }, { c: 1, row: 3, tick: 86 }, { c: 0, row: 1, tick: 90 }, { c: 0, row: 3, tick: 92 }, { c: 1, row: 3, tick: 96 }, { c: 1, row: 1, tick: 100 }, { c: 0, row: 3, tick: 104 }, { c: 0, row: 1, tick: 108 }, { c: 1, row: 1, tick: 112 }, { c: 1, row: 3, tick: 116 }, { c: 0, row: 1, tick: 120 }, { c: 0, row: 3, tick: 122 }, { c: 1, row: 3, tick: 126 }, { c: 1, row: 1, tick: 130 }, { c: 0, row: 3, tick: 134 }, { c: 0, row: 1, tick: 138 }, { c: 1, row: 1, tick: 142 }, { c: 1, row: 3, tick: 146 }, { c: 0, row: 1, tick: 150 }, { c: 0, row: 3, tick: 152 }, { c: 1, row: 3, tick: 156 }, { c: 1, row: 1, tick: 160 }, { c: 0, row: 3, tick: 164 }, { c: 0, row: 1, tick: 168 }, { c: 1, row: 1, tick: 172 }, { c: 1, row: 3, tick: 176 }, { c: 0, row: 1, tick: 180 }, { c: 0, row: 3, tick: 182 }, { c: 1, row: 3, tick: 186 }, { c: 1, row: 1, tick: 190 }],
+    },
+    {
+      /* The twin lifts: two columns share one approach, and colour order binds
+       * which lift is thrown first; closing either column strands its
+       * platform.
+       */
+      id: "d38",
+      labelKey: "cwkZ38",
+      limit: 228,
+      hold: 2,
+      tickMs: 300,
+      rows: ["###.##.##", "###.##.##", "###.##.##", ".........", "#########", "#########", "#########"],
+      cells: [{ x: 3, y: 3, kind: "p", a: 0, b: 1, init: 0 }, { x: 6, y: 3, kind: "p", a: 0, b: 1, init: 0 }],
+      stations: [{ edge: "t", pos: 3, colour: 0 }, { edge: "t", pos: 6, colour: 1 }],
+      trains: [{ c: 0, row: 3, tick: 0 }, { c: 1, row: 3, tick: 3 }, { c: 0, row: 3, tick: 6 }, { c: 1, row: 3, tick: 9 }, { c: 0, row: 3, tick: 12 }, { c: 1, row: 3, tick: 15 }, { c: 0, row: 3, tick: 18 }, { c: 1, row: 3, tick: 21 }, { c: 0, row: 3, tick: 24 }, { c: 1, row: 3, tick: 27 }, { c: 0, row: 3, tick: 30 }, { c: 1, row: 3, tick: 33 }, { c: 0, row: 3, tick: 36 }, { c: 1, row: 3, tick: 39 }, { c: 0, row: 3, tick: 42 }, { c: 1, row: 3, tick: 45 }, { c: 0, row: 3, tick: 48 }, { c: 1, row: 3, tick: 51 }, { c: 0, row: 3, tick: 54 }, { c: 1, row: 3, tick: 57 }, { c: 0, row: 3, tick: 60 }, { c: 1, row: 3, tick: 63 }, { c: 0, row: 3, tick: 66 }, { c: 1, row: 3, tick: 69 }, { c: 0, row: 3, tick: 72 }, { c: 1, row: 3, tick: 75 }, { c: 0, row: 3, tick: 78 }, { c: 1, row: 3, tick: 81 }, { c: 0, row: 3, tick: 84 }, { c: 1, row: 3, tick: 87 }, { c: 0, row: 3, tick: 90 }, { c: 1, row: 3, tick: 93 }, { c: 0, row: 3, tick: 96 }, { c: 1, row: 3, tick: 99 }, { c: 0, row: 3, tick: 102 }, { c: 1, row: 3, tick: 105 }, { c: 0, row: 3, tick: 108 }, { c: 1, row: 3, tick: 111 }, { c: 0, row: 3, tick: 114 }, { c: 1, row: 3, tick: 117 }, { c: 0, row: 3, tick: 120 }, { c: 1, row: 3, tick: 123 }, { c: 0, row: 3, tick: 126 }, { c: 1, row: 3, tick: 129 }, { c: 0, row: 3, tick: 132 }, { c: 1, row: 3, tick: 135 }, { c: 0, row: 3, tick: 138 }, { c: 1, row: 3, tick: 141 }, { c: 0, row: 3, tick: 144 }, { c: 1, row: 3, tick: 147 }, { c: 0, row: 3, tick: 150 }, { c: 1, row: 3, tick: 153 }, { c: 0, row: 3, tick: 156 }, { c: 1, row: 3, tick: 159 }, { c: 0, row: 3, tick: 162 }, { c: 1, row: 3, tick: 165 }],
+    },
+    {
+      /* The late alarm: the board is quiet for two ticks, then the trap train
+       * reaches its point. Left alone it wrecks the line; one throw sets it
+       * right before the main timetable follows.
+       */
+      id: "d39",
+      labelKey: "cwkZ39",
+      limit: 176,
+      hold: 2,
+      tickMs: 300,
+      rows: ["####.####", "####.####", "####.####", ".........", "#########", ".........", "#########"],
+      cells: [{ x: 4, y: 3, kind: "p", a: 0, b: 1, init: 0 }, { x: 2, y: 5, kind: "p", a: 1, b: 0, init: 0 }],
+      stations: [{ edge: "r", pos: 3, colour: 0 }, { edge: "t", pos: 4, colour: 1 }, { edge: "r", pos: 5, colour: 2 }],
+      trains: [{ c: 2, row: 5, tick: 0 }, { c: 1, row: 3, tick: 0 }, { c: 0, row: 3, tick: 2 }, { c: 1, row: 3, tick: 4 }, { c: 0, row: 3, tick: 6 }, { c: 1, row: 3, tick: 8 }, { c: 0, row: 3, tick: 10 }, { c: 1, row: 3, tick: 12 }, { c: 0, row: 3, tick: 14 }, { c: 1, row: 3, tick: 16 }, { c: 0, row: 3, tick: 18 }, { c: 1, row: 3, tick: 20 }, { c: 0, row: 3, tick: 22 }, { c: 1, row: 3, tick: 24 }, { c: 0, row: 3, tick: 26 }, { c: 1, row: 3, tick: 28 }, { c: 0, row: 3, tick: 30 }, { c: 1, row: 3, tick: 32 }, { c: 0, row: 3, tick: 34 }, { c: 1, row: 3, tick: 36 }, { c: 0, row: 3, tick: 38 }, { c: 1, row: 3, tick: 40 }, { c: 0, row: 3, tick: 42 }, { c: 1, row: 3, tick: 44 }, { c: 0, row: 3, tick: 46 }, { c: 1, row: 3, tick: 48 }, { c: 0, row: 3, tick: 50 }, { c: 1, row: 3, tick: 52 }, { c: 0, row: 3, tick: 54 }, { c: 1, row: 3, tick: 56 }, { c: 0, row: 3, tick: 58 }, { c: 1, row: 3, tick: 60 }, { c: 0, row: 3, tick: 62 }, { c: 1, row: 3, tick: 64 }, { c: 0, row: 3, tick: 66 }, { c: 1, row: 3, tick: 68 }, { c: 0, row: 3, tick: 70 }, { c: 1, row: 3, tick: 72 }, { c: 0, row: 3, tick: 74 }, { c: 1, row: 3, tick: 76 }, { c: 0, row: 3, tick: 78 }, { c: 1, row: 3, tick: 80 }, { c: 0, row: 3, tick: 82 }, { c: 1, row: 3, tick: 84 }, { c: 0, row: 3, tick: 86 }, { c: 1, row: 3, tick: 88 }, { c: 0, row: 3, tick: 90 }, { c: 1, row: 3, tick: 92 }, { c: 0, row: 3, tick: 94 }, { c: 1, row: 3, tick: 96 }, { c: 0, row: 3, tick: 98 }, { c: 1, row: 3, tick: 100 }, { c: 0, row: 3, tick: 102 }, { c: 1, row: 3, tick: 104 }, { c: 0, row: 3, tick: 106 }, { c: 1, row: 3, tick: 108 }, { c: 0, row: 3, tick: 110 }, { c: 1, row: 3, tick: 112 }],
+    },
+    {
+      /* The grand exchange: two banks feed one column, both berths are live,
+       * and the shared throat carries climbs, drops and the whole colour
+       * sequence at once.
+       */
+      id: "d40",
+      labelKey: "cwkZ40",
+      limit: 260,
+      hold: 3,
+      tickMs: 440,
+      rows: ["####.####", ".........", "####.####", "####.####", "####.####", ".........", "####.####"],
+      cells: [{ x: 4, y: 1, kind: "p", a: 3, b: 1, init: 0 }, { x: 4, y: 5, kind: "p", a: 1, b: 3, init: 0 }, { x: 2, y: 1, kind: "s", init: 0 }, { x: 2, y: 5, kind: "s", init: 0 }],
+      stations: [{ edge: "b", pos: 4, colour: 0 }, { edge: "t", pos: 4, colour: 1 }],
+      trains: [{ c: 0, row: 1, tick: 0 }, { c: 1, row: 5, tick: 2 }, { c: 1, row: 1, tick: 5 }, { c: 0, row: 5, tick: 8 }, { c: 0, row: 1, tick: 11 }, { c: 1, row: 5, tick: 14 }, { c: 1, row: 1, tick: 17 }, { c: 0, row: 5, tick: 20 }, { c: 0, row: 1, tick: 23 }, { c: 1, row: 5, tick: 26 }, { c: 0, row: 1, tick: 36 }, { c: 1, row: 5, tick: 38 }, { c: 1, row: 1, tick: 41 }, { c: 0, row: 5, tick: 44 }, { c: 0, row: 1, tick: 47 }, { c: 1, row: 5, tick: 50 }, { c: 1, row: 1, tick: 53 }, { c: 0, row: 5, tick: 56 }, { c: 0, row: 1, tick: 59 }, { c: 1, row: 5, tick: 62 }, { c: 0, row: 1, tick: 72 }, { c: 1, row: 5, tick: 74 }, { c: 1, row: 1, tick: 77 }, { c: 0, row: 5, tick: 80 }, { c: 0, row: 1, tick: 83 }, { c: 1, row: 5, tick: 86 }, { c: 1, row: 1, tick: 89 }, { c: 0, row: 5, tick: 92 }, { c: 0, row: 1, tick: 95 }, { c: 1, row: 5, tick: 98 }, { c: 0, row: 1, tick: 108 }, { c: 1, row: 5, tick: 110 }, { c: 1, row: 1, tick: 113 }, { c: 0, row: 5, tick: 116 }, { c: 0, row: 1, tick: 119 }, { c: 1, row: 5, tick: 122 }, { c: 1, row: 1, tick: 125 }, { c: 0, row: 5, tick: 128 }, { c: 0, row: 1, tick: 131 }, { c: 1, row: 5, tick: 134 }, { c: 0, row: 1, tick: 144 }, { c: 1, row: 5, tick: 146 }, { c: 1, row: 1, tick: 149 }, { c: 0, row: 5, tick: 152 }, { c: 0, row: 1, tick: 155 }, { c: 1, row: 5, tick: 158 }, { c: 1, row: 1, tick: 161 }, { c: 0, row: 5, tick: 164 }, { c: 0, row: 1, tick: 167 }, { c: 1, row: 5, tick: 170 }],
+    },
   ];
 
   function cwkBoard(level) {
@@ -1466,6 +1616,16 @@
       "cwkZ28": "The Second Berth",
       "cwkZ29": "The Turnback Yard",
       "cwkZ30": "The Summit Timetable",
+      "cwkZ31": "Forty-Two on the Main",
+      "cwkZ32": "The Far Berth First",
+      "cwkZ33": "The Westbound and the Bay",
+      "cwkZ34": "The Two-Bank Column",
+      "cwkZ35": "Three Colours, One Column",
+      "cwkZ36": "The Hold-Three Queue",
+      "cwkZ37": "The Same Siding Twice",
+      "cwkZ38": "The Twin Lifts",
+      "cwkZ39": "The Late Alarm",
+      "cwkZ40": "The Grand Exchange",
       "cwkClockLabel": "Clock",
       "cwkCrashLabel": "Wrecks",
       "cwkHaulLabel": "Haul",
@@ -1531,6 +1691,16 @@
       "cwkZ28": "二重候车",
       "cwkZ29": "折返站场",
       "cwkZ30": "巅峰时刻表",
+      "cwkZ31": "四十二趟正线",
+      "cwkZ32": "远侧候车先行",
+      "cwkZ33": "西行站与港湾",
+      "cwkZ34": "两岸单柱",
+      "cwkZ35": "三色一柱",
+      "cwkZ36": "三拍候车队列",
+      "cwkZ37": "同一侧线两用",
+      "cwkZ38": "双梯共用咽喉",
+      "cwkZ39": "迟来的警报",
+      "cwkZ40": "总汇时刻表",
       "cwkClockLabel": "时钟",
       "cwkCrashLabel": "事故",
       "cwkHaulLabel": "运量",
@@ -1592,6 +1762,7 @@
         "Scoring: the solver proves how few flips are enough, and that number is par; a wreck costs dearer than an extra flip.",
         "New tier: a loop berth can hold a train so a later one goes first, a westbound platform is only reached by running out to the buffer and back, and a queue of berths spaces a burst of arrivals into the gaps on the main road.",
         "Summit: a ladder of two berths buys four ticks of hold, a one-way climb shares its top point with the eastbound road, and the last boards hand traffic to a bay below or back west along the return road.",
+        "Final tier: the last ten boards stack the whole box - forty-two trains through one split point, two sidings in series, a westbound platform and a bay below the column, two banks working four berths, a hold-three queue, one siding thrown twice, twin lifts, and a late alarm that has to be set before the main timetable follows.",
       ],
       zh: [
         "目标：让时刻表上的每一趟列车都进自己的车站，全程不出第三次事故。",
@@ -1602,6 +1773,7 @@
         "计分：求解器算出最少需要扳几次，那就是标准次数；一次事故的代价比多扳几下更高。",
         "新层级：环线上的候车侧线可扣住一趟车，让后车先行；西行站台要跑到尽头折返才进得去；一串侧线能把密集到车排进正线的空档。",
         "巅峰段：两道串联侧线能扣住四拍，单向上坡共用顶端的道岔，最后的线路把车分别送进下方的港湾站和西行回程线。",
+        "终局段：最后十张运行图把整个道岔箱叠起来——四十二趟车共用一个分岔点、两条串联侧线、西行站台与立柱下的港湾、两座站场共用四条侧线、扣车三拍的队列、同一条侧线扳两次、双升降台，还有一趟必须赶在正线时刻表之前扳回的迟到警报。",
       ],
     },
   });

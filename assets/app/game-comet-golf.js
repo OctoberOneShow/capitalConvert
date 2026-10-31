@@ -410,6 +410,271 @@
       ],
       starShots: [2, 6, 13],
     },
+
+    /* Courses 31-40: the deep-field tier. The deep-sky tier stopped at ten
+     * wells under a nine-pixel ring; this tier packs the same 320x360 sky
+     * past both. Eleven, twelve and then thirteen wells share the field,
+     * the ring drops to eight pixels for the last five, and the par line
+     * climbs from fourteen to eighteen launches. Every ceiling the first
+     * thirty knew falls somewhere in the ten: g31 is the first course past
+     * ten wells, g32 heaves the heaviest sky to date (15.1 total mass
+     * against g29's 14.3), g33 the first twelve-well field, g34 breaks the
+     * 1.8 guardian cap every earlier sky stopped at, g35 the first
+     * thirteen-well field, g36 the first ring under nine, g37 the mass
+     * record again (17.4), g38 hangs a guardian twenty-eight pixels off the
+     * ring where g19's thirty-seven was the old floor, g39 parks a 1.9
+     * giant on the ring's approach, and the capstone g40 pairs the records -
+     * the heaviest sky the drawer has ever dealt (18.6) under the deepest
+     * launch budget (eighteen) on the tier's thirteen-well field and
+     * eight-pixel ring. The well, par and ring lines never fall within the
+     * tier, and every hole refuses the lazy straight line at every power.
+     * Each hole was flown before it shipped - tools/golf-forge.js lays the
+     * course from its own recorded seed (noted per hole), flies the aim
+     * space the panel flies, and ships only when a one-shot survives it
+     * with a basin >= 6 of 25; the gate re-generates every course from its
+     * seed and re-flies the recorded shot. Measured one-shots, for the
+     * record:
+     *   g31 11 wells  -0.472rad / 0.30  basin  9/25  ride 1.83s
+     *   g32 11 wells   3.038rad / 0.20  basin 10/25  ride 2.47s
+     *   g33 12 wells  -2.752rad / 0.15  basin  6/25  ride 3.22s
+     *   g34 12 wells  -0.562rad / 0.15  basin  9/25  ride 3.55s
+     *   g35 13 wells   2.948rad / 0.50  basin  9/25  ride 1.02s
+     *   g36 13 wells   0.278rad / 0.15  basin  6/25  ride 3.22s
+     *   g37 13 wells  -3.142rad / 0.40  basin  6/25  ride 1.25s
+     *   g38 13 wells   3.128rad / 0.30  basin  6/25  ride 1.67s
+     *   g39 13 wells   0.218rad / 0.25  basin 11/25  ride 2.00s
+     *   g40 13 wells   0.608rad / 0.15  basin  7/25  ride 3.68s */
+    {
+      /* Eleven wells - the first field the sky has packed past the deep-sky
+       * tier's ten (seed 15). The proven one-shot leaves at three-tenths
+       * power and skims the pack's upper edge (basin 9/25). */
+      id: "g31", labelKey: "cgfL31",
+      tee: { x: 36, y: 235 }, target: { x: 284, y: 122, r: 9 },
+      wells: [
+        { x: 128, y: 303, m: 1.6, r: 11 },
+        { x: 251, y: 155, m: 1.5, r: 12 },
+        { x: 227, y: 292, m: 0.7, r: 10 },
+        { x: 258, y: 62, m: 1.2, r: 11 },
+        { x: 239, y: 181, m: 1.8, r: 12 },
+        { x: 171, y: 286, m: 1.2, r: 14 },
+        { x: 165, y: 87, m: 1.2, r: 13 },
+        { x: 116, y: 270, m: 1.1, r: 13 },
+        { x: 204, y: 222, m: 1.3, r: 12 },
+        { x: 194, y: 190, m: 0.9, r: 13 },
+        { x: 91, y: 167, m: 0.8, r: 13 },
+      ],
+      starShots: [2, 6, 14],
+    },
+    {
+      /* The heaviest sky to date: eleven wells massing 15.1 against g29's
+       * 14.3 (seed 110). The proven one-shot is a near-level reverse shot
+       * at a fifth power (basin 10/25). */
+      id: "g32", labelKey: "cgfL32",
+      tee: { x: 284, y: 166 }, target: { x: 36, y: 204, r: 9 },
+      wells: [
+        { x: 140, y: 235, m: 1.7, r: 13 },
+        { x: 217, y: 125, m: 1.6, r: 9 },
+        { x: 68, y: 261, m: 1, r: 12 },
+        { x: 252, y: 200, m: 1.5, r: 13 },
+        { x: 225, y: 149, m: 1.5, r: 10 },
+        { x: 213, y: 206, m: 0.8, r: 10 },
+        { x: 227, y: 227, m: 1.4, r: 13 },
+        { x: 143, y: 241, m: 1.1, r: 10 },
+        { x: 129, y: 152, m: 1.8, r: 9 },
+        { x: 201, y: 257, m: 1, r: 12 },
+        { x: 203, y: 196, m: 1.7, r: 13 },
+      ],
+      starShots: [2, 6, 14],
+    },
+    {
+      /* Twelve wells, the first field that thick (seed 16). The pack stacks
+       * the middle of the field and the proven answer runs the low road at
+       * idle power the whole way across (basin 6/25). */
+      id: "g33", labelKey: "cgfL33",
+      tee: { x: 284, y: 275 }, target: { x: 36, y: 208, r: 9 },
+      wells: [
+        { x: 188, y: 54, m: 1.1, r: 13 },
+        { x: 62, y: 260, m: 1.5, r: 10 },
+        { x: 137, y: 246, m: 1.3, r: 12 },
+        { x: 113, y: 272, m: 1.1, r: 10 },
+        { x: 101, y: 291, m: 1.2, r: 13 },
+        { x: 177, y: 130, m: 1.8, r: 10 },
+        { x: 178, y: 134, m: 1.2, r: 12 },
+        { x: 214, y: 147, m: 1, r: 14 },
+        { x: 66, y: 54, m: 1.2, r: 11 },
+        { x: 222, y: 270, m: 1.1, r: 9 },
+        { x: 93, y: 307, m: 1, r: 10 },
+        { x: 116, y: 195, m: 1.3, r: 12 },
+      ],
+      starShots: [2, 7, 15],
+    },
+    {
+      /* The first guardian past the mass cap: one well masses 1.9 where
+       * every earlier sky stopped at 1.8, and two more 1.8 giants flank it
+       * (seed 2). The proven one-shot is a slow idle-power climb across the
+       * whole field (basin 9/25). */
+      id: "g34", labelKey: "cgfL34",
+      tee: { x: 36, y: 183 }, target: { x: 284, y: 67, r: 9 },
+      wells: [
+        { x: 95, y: 203, m: 1.3, r: 13 },
+        { x: 136, y: 283, m: 0.8, r: 10 },
+        { x: 184, y: 272, m: 1.3, r: 9 },
+        { x: 215, y: 207, m: 1.9, r: 14 },
+        { x: 174, y: 189, m: 1.8, r: 12 },
+        { x: 207, y: 167, m: 1, r: 13 },
+        { x: 260, y: 307, m: 1.6, r: 11 },
+        { x: 226, y: 207, m: 0.9, r: 9 },
+        { x: 170, y: 136, m: 1.8, r: 14 },
+        { x: 121, y: 69, m: 1.1, r: 11 },
+        { x: 120, y: 92, m: 1.5, r: 13 },
+        { x: 98, y: 276, m: 1.1, r: 13 },
+      ],
+      starShots: [2, 7, 15],
+    },
+    {
+      /* Thirteen wells, the widest field the sky has ever dealt (seed 2).
+       * The proven one-shot is a half-power sling that lands in just over
+       * a second (basin 9/25). */
+      id: "g35", labelKey: "cgfL35",
+      tee: { x: 284, y: 217 }, target: { x: 36, y: 253, r: 9 },
+      wells: [
+        { x: 66, y: 149, m: 1.4, r: 12 },
+        { x: 126, y: 223, m: 1.5, r: 14 },
+        { x: 203, y: 139, m: 1.2, r: 11 },
+        { x: 136, y: 171, m: 0.8, r: 13 },
+        { x: 215, y: 202, m: 1.1, r: 11 },
+        { x: 131, y: 220, m: 1.6, r: 11 },
+        { x: 70, y: 276, m: 1.3, r: 9 },
+        { x: 149, y: 264, m: 0.7, r: 13 },
+        { x: 234, y: 134, m: 1, r: 9 },
+        { x: 212, y: 203, m: 0.7, r: 11 },
+        { x: 245, y: 116, m: 1.7, r: 12 },
+        { x: 128, y: 139, m: 0.7, r: 9 },
+        { x: 97, y: 89, m: 1.6, r: 12 },
+      ],
+      starShots: [2, 7, 16],
+    },
+    {
+      /* The first ring under nine: eight pixels, one tighter than the floor
+       * g28, g29 and g30 held, under the full thirteen-well field (seed 2).
+       * The proven one-shot still clears a six-cell window in the aim grid
+       * (basin 6/25). */
+      id: "g36", labelKey: "cgfL36",
+      tee: { x: 36, y: 109 }, target: { x: 284, y: 171, r: 8 },
+      wells: [
+        { x: 169, y: 87, m: 0.9, r: 13 },
+        { x: 242, y: 238, m: 1, r: 9 },
+        { x: 239, y: 217, m: 1.8, r: 12 },
+        { x: 69, y: 289, m: 1.7, r: 12 },
+        { x: 235, y: 200, m: 1.5, r: 13 },
+        { x: 159, y: 238, m: 1.6, r: 11 },
+        { x: 248, y: 251, m: 1, r: 9 },
+        { x: 184, y: 243, m: 1, r: 11 },
+        { x: 174, y: 131, m: 1, r: 9 },
+        { x: 230, y: 59, m: 1.3, r: 11 },
+        { x: 238, y: 309, m: 0.9, r: 12 },
+        { x: 163, y: 199, m: 0.7, r: 9 },
+        { x: 208, y: 81, m: 1.6, r: 12 },
+      ],
+      starShots: [2, 7, 16],
+    },
+    {
+      /* The mass record again: thirteen wells massing 17.4, past g34's 16.1
+       * and g32's 15.1 alike (seed 19). A guard sits thirty-three pixels off
+       * the eight-pixel ring and the proven one-shot skims under it at
+       * two-fifths power (basin 6/25). */
+      id: "g37", labelKey: "cgfL37",
+      tee: { x: 284, y: 120 }, target: { x: 36, y: 113, r: 8 },
+      wells: [
+        { x: 168, y: 50, m: 0.8, r: 11 },
+        { x: 80, y: 193, m: 1.8, r: 13 },
+        { x: 78, y: 297, m: 1.3, r: 9 },
+        { x: 65, y: 98, m: 1.7, r: 14 },
+        { x: 95, y: 179, m: 1.6, r: 11 },
+        { x: 174, y: 275, m: 1.6, r: 11 },
+        { x: 61, y: 202, m: 1.1, r: 13 },
+        { x: 215, y: 191, m: 1.2, r: 12 },
+        { x: 186, y: 203, m: 0.9, r: 13 },
+        { x: 219, y: 208, m: 1.3, r: 11 },
+        { x: 205, y: 68, m: 1.2, r: 9 },
+        { x: 107, y: 67, m: 1.3, r: 9 },
+        { x: 259, y: 96, m: 1.6, r: 13 },
+      ],
+      starShots: [2, 8, 17],
+    },
+    {
+      /* The tightest ring guard the sky has shipped: a well hangs
+       * twenty-eight pixels off the ring where g19's thirty-seven was the
+       * old floor (seed 1116). The proven one-shot runs dead level and
+       * shaves that guard at three-tenths power (basin 6/25). */
+      id: "g38", labelKey: "cgfL38",
+      tee: { x: 284, y: 195 }, target: { x: 36, y: 190, r: 8 },
+      wells: [
+        { x: 232, y: 144, m: 1.1, r: 14 },
+        { x: 223, y: 141, m: 1.3, r: 13 },
+        { x: 205, y: 154, m: 1.1, r: 12 },
+        { x: 235, y: 138, m: 1, r: 11 },
+        { x: 114, y: 244, m: 0.9, r: 13 },
+        { x: 142, y: 51, m: 1, r: 10 },
+        { x: 163, y: 233, m: 1.7, r: 12 },
+        { x: 252, y: 245, m: 0.9, r: 10 },
+        { x: 62, y: 179, m: 1.5, r: 11 },
+        { x: 90, y: 242, m: 1, r: 10 },
+        { x: 175, y: 310, m: 0.7, r: 11 },
+        { x: 123, y: 299, m: 1.3, r: 12 },
+        { x: 150, y: 103, m: 1.5, r: 11 },
+      ],
+      starShots: [2, 8, 17],
+    },
+    {
+      /* The giant at the gate: the guard that owns the ring's approach
+       * masses 1.9, the first ring guard past the 1.8 cap g9 and g28 parked
+       * at (seed 353). Eleven of the twenty-five aim cells land - the widest
+       * window any deep-field hole proves (basin 11/25). */
+      id: "g39", labelKey: "cgfL39",
+      tee: { x: 36, y: 84 }, target: { x: 284, y: 123, r: 8 },
+      wells: [
+        { x: 61, y: 277, m: 1.3, r: 10 },
+        { x: 221, y: 251, m: 1.8, r: 11 },
+        { x: 147, y: 55, m: 0.8, r: 13 },
+        { x: 131, y: 58, m: 1.8, r: 12 },
+        { x: 198, y: 67, m: 1.2, r: 10 },
+        { x: 73, y: 239, m: 1.4, r: 14 },
+        { x: 167, y: 155, m: 0.8, r: 13 },
+        { x: 188, y: 164, m: 1.1, r: 12 },
+        { x: 123, y: 50, m: 0.9, r: 11 },
+        { x: 241, y: 223, m: 0.7, r: 12 },
+        { x: 83, y: 74, m: 1.8, r: 13 },
+        { x: 96, y: 176, m: 1.3, r: 13 },
+        { x: 230, y: 174, m: 1.9, r: 12 },
+      ],
+      starShots: [2, 8, 17],
+    },
+    {
+      /* The capstone pairs the records: the heaviest sky the drawer has ever
+       * dealt - thirteen wells massing 18.6, past g37's 17.4 - on the tier's
+       * eight-pixel ring under an eighteen-launch budget, the deepest the
+       * sky has ever asked for (seed 25). The proven one-shot rides the low
+       * corridor the pack leaves open (basin 7/25). */
+      id: "g40", labelKey: "cgfL40",
+      tee: { x: 36, y: 182 }, target: { x: 284, y: 283, r: 8 },
+      wells: [
+        { x: 102, y: 290, m: 1.5, r: 12 },
+        { x: 205, y: 282, m: 1.5, r: 10 },
+        { x: 87, y: 84, m: 0.8, r: 13 },
+        { x: 94, y: 124, m: 1.7, r: 14 },
+        { x: 225, y: 77, m: 1.4, r: 9 },
+        { x: 210, y: 163, m: 1.5, r: 9 },
+        { x: 249, y: 93, m: 1.2, r: 14 },
+        { x: 233, y: 98, m: 1.6, r: 9 },
+        { x: 63, y: 147, m: 1.7, r: 11 },
+        { x: 191, y: 104, m: 1.1, r: 13 },
+        { x: 246, y: 84, m: 1.2, r: 12 },
+        { x: 81, y: 190, m: 1.6, r: 10 },
+        { x: 200, y: 309, m: 1.8, r: 9 },
+      ],
+      starShots: [2, 8, 18],
+    },
   ];
   /* A fixed starfield so the sky does not flicker between frames. */
   var cgfStars = [];
@@ -892,6 +1157,16 @@
       "cgfL28": "Twin Giants",
       "cgfL29": "Ten Torches",
       "cgfL30": "The Full Sky",
+      "cgfL31": "Eleven Wells",
+      "cgfL32": "The Heavy Sky",
+      "cgfL33": "Twelve Wells",
+      "cgfL34": "The Titan",
+      "cgfL35": "Thirteen Wells",
+      "cgfL36": "The Pinprick",
+      "cgfL37": "The Mountain",
+      "cgfL38": "The Picket",
+      "cgfL39": "The Gatekeeper",
+      "cgfL40": "The Sky's Edge",
     },
     zh: {
       "cgfL7": "逆向切",
@@ -918,6 +1193,16 @@
       "cgfL28": "双巨人",
       "cgfL29": "十炬",
       "cgfL30": "满天",
+      "cgfL31": "十一井",
+      "cgfL32": "重天",
+      "cgfL33": "十二井",
+      "cgfL34": "泰坦",
+      "cgfL35": "十三井",
+      "cgfL36": "针尖",
+      "cgfL37": "山岳",
+      "cgfL38": "哨桩",
+      "cgfL39": "守门人",
+      "cgfL40": "天涯",
     },
   });
 

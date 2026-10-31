@@ -533,6 +533,265 @@
       ],
       starTimes: [252, 378, 517],
     },
+
+    /* ------------------------------------------------------------------
+     * The deluge tier (c31-c40). The summit had mirrored every street -
+     * rows 5, 6 and 7 both ways on top of row 2's river train - but two
+     * river lanes had run one-way since the first ford, and this tier
+     * closes both: row 1, the pad-side lane, runs both ways from c31,
+     * row 3 joins at c34, and from there every lane on the board is a
+     * mirrored street. Eleven lanes a rung, then twelve - the first
+     * twelve-lane ford - while the brief bands keep the summit's own
+     * step (172/214/70/84 opens, 226/268/52/66 closes) and every rung's
+     * fastest lane outruns the summit's 234 while its tightest gap dips
+     * under the summit's 72. As ever a ford ships only because
+     * tools/crossing-forge.js proves it: each rung was laid against its
+     * own brief at the seed the brief pins, and ships because the
+     * prover's breadth-first search over (pads, row, position, time)
+     * found a route that stands on all four pads. The rungs sit in the
+     * order that proof measured - the cleanest route lengthens 5.45s ->
+     * 5.65s -> 5.65s -> 5.7s -> 7.75s -> 7.95s -> 8s -> 8.15s -> 8.45s ->
+     * 8.5s, every one past c30's 5.25s - and the star bands are quoted
+     * from each ford's own measured route at the deep tier's own margin
+     * (48x the prover's route), widened by the same 1.5x / 2.05x steps.
+     * Each rung takes one record against every sheet before it: c31 the
+     * first eleven-lane ford and the first mirrored pad-side lane, c32
+     * the fastest lane yet fielded (238), c33 the narrowest window yet
+     * (64), c34 the first twelve-lane ford and the first all-both-ways
+     * river, c35 the busiest board the forge has ever spawned (sixty
+     * props, still the ladder's peak), c36 the first ford with no lane
+     * under 200 - its slowest lane runs 204 - c37 the narrowest window
+     * again (58), c38 the longest clean route yet (163t), c39 the pace
+     * record again (286), and c40 the capstone, which holds all three
+     * lines at once: 292, 48 and 170t. The board's own prop count dips
+     * after c35 - sixty logs and streaks is what the brief's windows
+     * spawn, and the count follows the rolled spans, not the difficulty
+     * lines - and the tier's river traffic is load-bearing where the
+     * summit's streets were, by the river's own law: on a river row a
+     * counter-train is platform as well as hazard, so pulling the row-1
+     * train back off the board never shortens the cleanest route; what
+     * it hands back is measured with the prover's own propAt arithmetic
+     * - row 1's sweep moments, the log-stands that flush the frog off
+     * the board inside a second and a half, fall by 16,039 to 22,317 on
+     * every rung when the mirror goes. Every number was measured through
+     * the forge; nothing here is hand-tuned.
+     * ------------------------------------------------------------------ */
+    /* The Waking Shore: row 1 - the pad-side river lane, one-way since the
+     * first ford - runs both ways. Eleven lanes, a first: ten was the
+     * shipped ceiling and the summit's own fords fielded ten. The
+     * counter-train rides the pad approach at 230 and the 236 on row 7
+     * noses past the summit's 234; the cleanest route opens past c30's
+     * own at 5.45s. */
+    {
+      id: "c31", labelKey: "croL31",
+      lanes: [
+        { row: 1, dir: -1, speed: 210, len: 84, gap: 82 },
+        { row: 2, dir: -1, speed: 212, len: 88, gap: 72 },
+        { row: 3, dir: -1, speed: 182, len: 84, gap: 82 },
+        { row: 5, dir: 1, speed: 208, len: 90, gap: 76 },
+        { row: 6, dir: 1, speed: 186, len: 86, gap: 70 },
+        { row: 7, dir: 1, speed: 210, len: 82, gap: 84 },
+        { row: 6, dir: -1, speed: 232, len: 60, gap: 80 },
+        { row: 2, dir: 1, speed: 214, len: 66, gap: 74 },
+        { row: 7, dir: -1, speed: 236, len: 68, gap: 68 },
+        { row: 5, dir: -1, speed: 212, len: 60, gap: 84 },
+        { row: 1, dir: 1, speed: 230, len: 76, gap: 72 },
+      ],
+      starTimes: [262, 392, 536],
+    },
+    /* The Breakneck: the fastest lane the campaign has fielded - row 2's
+     * counter-train at 238, two clicks past c31's 236 and four past the
+     * summit's 234. The eleven-lane shape holds at the same 68 window and
+     * the cleanest route lengthens to 5.65s. */
+    {
+      id: "c32", labelKey: "croL32",
+      lanes: [
+        { row: 1, dir: 1, speed: 204, len: 84, gap: 80 },
+        { row: 2, dir: -1, speed: 196, len: 74, gap: 70 },
+        { row: 3, dir: -1, speed: 190, len: 84, gap: 72 },
+        { row: 5, dir: 1, speed: 204, len: 92, gap: 80 },
+        { row: 6, dir: -1, speed: 206, len: 84, gap: 80 },
+        { row: 7, dir: 1, speed: 192, len: 96, gap: 70 },
+        { row: 6, dir: 1, speed: 194, len: 62, gap: 76 },
+        { row: 2, dir: 1, speed: 238, len: 60, gap: 80 },
+        { row: 7, dir: -1, speed: 196, len: 66, gap: 76 },
+        { row: 5, dir: -1, speed: 198, len: 68, gap: 70 },
+        { row: 1, dir: -1, speed: 216, len: 66, gap: 68 },
+      ],
+      starTimes: [271, 407, 556],
+    },
+    /* The Needle's Eye: the narrowest window the ladder has asked for -
+     * row 7's counter-train closes to 64, four under c31 and c32's 68 and
+     * eight under the summit's 72. */
+    {
+      id: "c33", labelKey: "croL33",
+      lanes: [
+        { row: 1, dir: 1, speed: 202, len: 76, gap: 78 },
+        { row: 2, dir: -1, speed: 202, len: 86, gap: 74 },
+        { row: 3, dir: -1, speed: 202, len: 80, gap: 74 },
+        { row: 5, dir: 1, speed: 188, len: 78, gap: 72 },
+        { row: 6, dir: -1, speed: 206, len: 96, gap: 70 },
+        { row: 7, dir: -1, speed: 204, len: 98, gap: 76 },
+        { row: 6, dir: 1, speed: 220, len: 66, gap: 76 },
+        { row: 2, dir: 1, speed: 218, len: 76, gap: 72 },
+        { row: 7, dir: 1, speed: 202, len: 66, gap: 64 },
+        { row: 5, dir: -1, speed: 214, len: 60, gap: 80 },
+        { row: 1, dir: -1, speed: 240, len: 76, gap: 68 },
+      ],
+      starTimes: [271, 407, 556],
+    },
+    /* The Twin River: the first twelve-lane ford. Row 3 - one-way since
+     * the first ford - takes its counter-train, and the river becomes the
+     * first all-both-ways water in the campaign: rows 1, 2 and 3 each run
+     * two ways, six river lanes, with the 256 on row 3's counter-train
+     * the fastest lane yet fielded. */
+    {
+      id: "c34", labelKey: "croL34",
+      lanes: [
+        { row: 1, dir: -1, speed: 220, len: 82, gap: 70 },
+        { row: 2, dir: 1, speed: 218, len: 88, gap: 64 },
+        { row: 3, dir: 1, speed: 226, len: 76, gap: 78 },
+        { row: 5, dir: -1, speed: 212, len: 88, gap: 68 },
+        { row: 6, dir: -1, speed: 204, len: 92, gap: 72 },
+        { row: 7, dir: 1, speed: 196, len: 86, gap: 70 },
+        { row: 6, dir: 1, speed: 240, len: 64, gap: 64 },
+        { row: 2, dir: -1, speed: 218, len: 76, gap: 76 },
+        { row: 7, dir: -1, speed: 214, len: 64, gap: 66 },
+        { row: 5, dir: 1, speed: 206, len: 70, gap: 80 },
+        { row: 1, dir: 1, speed: 214, len: 60, gap: 66 },
+        { row: 3, dir: -1, speed: 256, len: 66, gap: 74 },
+      ],
+      starTimes: [274, 410, 561],
+    },
+    /* The Logjam: the busiest board the forge has ever spawned - sixty
+     * props off the panel's own spawner, one past c34's fifty-nine and
+     * fourteen past the summit's forty-six, and still the ladder's peak
+     * when the deluge closes. */
+    {
+      id: "c35", labelKey: "croL35",
+      lanes: [
+        { row: 1, dir: 1, speed: 234, len: 84, gap: 64 },
+        { row: 2, dir: 1, speed: 234, len: 88, gap: 68 },
+        { row: 3, dir: 1, speed: 198, len: 82, gap: 76 },
+        { row: 5, dir: -1, speed: 216, len: 78, gap: 72 },
+        { row: 6, dir: -1, speed: 216, len: 84, gap: 72 },
+        { row: 7, dir: -1, speed: 212, len: 74, gap: 72 },
+        { row: 6, dir: 1, speed: 252, len: 68, gap: 66 },
+        { row: 2, dir: -1, speed: 212, len: 60, gap: 64 },
+        { row: 7, dir: 1, speed: 216, len: 74, gap: 72 },
+        { row: 5, dir: 1, speed: 250, len: 60, gap: 68 },
+        { row: 1, dir: -1, speed: 216, len: 72, gap: 62 },
+        { row: 3, dir: -1, speed: 260, len: 76, gap: 72 },
+      ],
+      starTimes: [372, 558, 763],
+    },
+    /* The Full Sprint: the sleepiest lane wakes. Every lane on the board
+     * holds 204 or better - the slowest lane on c35 still ran 198, and no
+     * ford before this tier ran its slowest past 190 - the first time the
+     * whole river and both streets clear 200 at once. */
+    {
+      id: "c36", labelKey: "croL36",
+      lanes: [
+        { row: 1, dir: 1, speed: 234, len: 80, gap: 74 },
+        { row: 2, dir: 1, speed: 218, len: 94, gap: 62 },
+        { row: 3, dir: 1, speed: 242, len: 96, gap: 72 },
+        { row: 5, dir: 1, speed: 204, len: 100, gap: 70 },
+        { row: 6, dir: -1, speed: 242, len: 84, gap: 72 },
+        { row: 7, dir: 1, speed: 206, len: 96, gap: 72 },
+        { row: 6, dir: 1, speed: 246, len: 70, gap: 68 },
+        { row: 2, dir: -1, speed: 238, len: 74, gap: 68 },
+        { row: 7, dir: -1, speed: 216, len: 66, gap: 60 },
+        { row: 5, dir: -1, speed: 270, len: 64, gap: 74 },
+        { row: 1, dir: -1, speed: 222, len: 62, gap: 78 },
+        { row: 3, dir: -1, speed: 214, len: 66, gap: 62 },
+      ],
+      starTimes: [382, 572, 782],
+    },
+    /* The Sluice: the narrowest window dips again - row 6's base lane
+     * closes to 58, six under c36's and four under c33's 64. */
+    {
+      id: "c37", labelKey: "croL37",
+      lanes: [
+        { row: 1, dir: -1, speed: 246, len: 92, gap: 68 },
+        { row: 2, dir: -1, speed: 222, len: 84, gap: 68 },
+        { row: 3, dir: -1, speed: 244, len: 92, gap: 68 },
+        { row: 5, dir: -1, speed: 224, len: 76, gap: 68 },
+        { row: 6, dir: -1, speed: 230, len: 82, gap: 58 },
+        { row: 7, dir: 1, speed: 236, len: 80, gap: 58 },
+        { row: 6, dir: 1, speed: 272, len: 62, gap: 74 },
+        { row: 2, dir: 1, speed: 250, len: 70, gap: 68 },
+        { row: 7, dir: -1, speed: 234, len: 66, gap: 62 },
+        { row: 5, dir: 1, speed: 226, len: 76, gap: 62 },
+        { row: 1, dir: 1, speed: 220, len: 74, gap: 62 },
+        { row: 3, dir: 1, speed: 268, len: 70, gap: 64 },
+      ],
+      starTimes: [384, 576, 787],
+    },
+    /* The Long Spate: the longest clean route the prover has measured -
+     * 163 ticks, 8.15s, past c37's 8s and the summit's 5.25s - with the
+     * 282 on row 1's counter-train two clicks off the pace record. */
+    {
+      id: "c38", labelKey: "croL38",
+      lanes: [
+        { row: 1, dir: 1, speed: 242, len: 88, gap: 68 },
+        { row: 2, dir: 1, speed: 254, len: 98, gap: 64 },
+        { row: 3, dir: 1, speed: 252, len: 96, gap: 68 },
+        { row: 5, dir: -1, speed: 220, len: 88, gap: 64 },
+        { row: 6, dir: -1, speed: 222, len: 74, gap: 60 },
+        { row: 7, dir: -1, speed: 238, len: 76, gap: 60 },
+        { row: 6, dir: 1, speed: 228, len: 60, gap: 66 },
+        { row: 2, dir: -1, speed: 244, len: 70, gap: 70 },
+        { row: 7, dir: 1, speed: 278, len: 76, gap: 58 },
+        { row: 5, dir: 1, speed: 254, len: 64, gap: 74 },
+        { row: 1, dir: -1, speed: 282, len: 66, gap: 70 },
+        { row: 3, dir: -1, speed: 258, len: 68, gap: 60 },
+      ],
+      starTimes: [391, 587, 802],
+    },
+    /* The Torrent: the pace record falls again - row 1's counter-train at
+     * 286, past c38's 282 - and row 5's 52 window dips under c37's 58,
+     * the tightest since The Needle's Eye. */
+    {
+      id: "c39", labelKey: "croL39",
+      lanes: [
+        { row: 1, dir: 1, speed: 258, len: 100, gap: 68 },
+        { row: 2, dir: 1, speed: 228, len: 80, gap: 66 },
+        { row: 3, dir: -1, speed: 222, len: 84, gap: 60 },
+        { row: 5, dir: 1, speed: 234, len: 78, gap: 66 },
+        { row: 6, dir: -1, speed: 238, len: 100, gap: 60 },
+        { row: 7, dir: 1, speed: 238, len: 86, gap: 64 },
+        { row: 6, dir: 1, speed: 232, len: 64, gap: 62 },
+        { row: 2, dir: -1, speed: 274, len: 74, gap: 56 },
+        { row: 7, dir: -1, speed: 280, len: 62, gap: 62 },
+        { row: 5, dir: -1, speed: 254, len: 62, gap: 52 },
+        { row: 1, dir: -1, speed: 286, len: 60, gap: 68 },
+        { row: 3, dir: 1, speed: 278, len: 64, gap: 64 },
+      ],
+      starTimes: [406, 608, 831],
+    },
+    /* The Cataract: the capstone. Twelve lanes, and every line the tier
+     * has been climbing lands here at once: 292 on row 6's counter-train,
+     * the fastest lane the game has ever fielded; a 48 window on row 5,
+     * the tightest; and a 170-tick cleanest route, 8.5s, the longest the
+     * prover has measured. */
+    {
+      id: "c40", labelKey: "croL40",
+      lanes: [
+        { row: 1, dir: -1, speed: 250, len: 86, gap: 64 },
+        { row: 2, dir: -1, speed: 240, len: 98, gap: 64 },
+        { row: 3, dir: -1, speed: 228, len: 84, gap: 66 },
+        { row: 5, dir: 1, speed: 240, len: 80, gap: 66 },
+        { row: 6, dir: -1, speed: 240, len: 72, gap: 64 },
+        { row: 7, dir: -1, speed: 262, len: 72, gap: 58 },
+        { row: 6, dir: 1, speed: 292, len: 72, gap: 70 },
+        { row: 2, dir: 1, speed: 238, len: 74, gap: 66 },
+        { row: 7, dir: 1, speed: 276, len: 74, gap: 72 },
+        { row: 5, dir: -1, speed: 278, len: 66, gap: 48 },
+        { row: 1, dir: 1, speed: 284, len: 62, gap: 68 },
+        { row: 3, dir: 1, speed: 238, len: 76, gap: 62 },
+      ],
+      starTimes: [408, 612, 836],
+    },
   ];
   var STREAK_COLORS = ["#f472b6", "#fb7185", "#fbbf24", "#a78bfa"];
 
@@ -1022,9 +1281,9 @@
 
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already hold, so the shared dictionary stays the authority for
-   * the drawer chrome and the first twenty rung names. The deep tier's four
-   * names and the summit's six are new here - the shared dictionary stops at
-   * croL20 - so they travel with the module. */
+   * the drawer chrome and the first twenty rung names. The deep tier's four,
+   * the summit's six and the deluge's ten are new here - the shared
+   * dictionary stops at croL20 - so they travel with the module. */
   App.addStrings({
     en: {
       "croL10": "Two-Way Street",
@@ -1038,6 +1297,16 @@
       "croL28": "The Double Tide",
       "croL29": "The Riptide",
       "croL30": "The Flood",
+      "croL31": "The Waking Shore",
+      "croL32": "The Breakneck",
+      "croL33": "The Needle's Eye",
+      "croL34": "The Twin River",
+      "croL35": "The Logjam",
+      "croL36": "The Full Sprint",
+      "croL37": "The Sluice",
+      "croL38": "The Long Spate",
+      "croL39": "The Torrent",
+      "croL40": "The Cataract",
     },
     zh: {
       "croL10": "双向街",
@@ -1051,6 +1320,16 @@
       "croL28": "双潮",
       "croL29": "裂流",
       "croL30": "大洪水",
+      "croL31": "醒岸",
+      "croL32": "疾流",
+      "croL33": "针眼",
+      "croL34": "双生江",
+      "croL35": "木排拥塞",
+      "croL36": "全速",
+      "croL37": "水闸",
+      "croL38": "长汛",
+      "croL39": "激流",
+      "croL40": "大瀑布",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

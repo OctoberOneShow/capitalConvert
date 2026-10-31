@@ -506,6 +506,91 @@ function checkCourse(course) {
   return { problems: problems, par: par, bands: bands, keyboard: key };
 }
 
+/* ---- structural metrics -------------------------------------------------------- */
+/* The numbers the fourth tier's records hang off, read off the same polyline
+ * the stepper drives: gate count, tape (centre-line length), longest single
+ * straight, total heading change, switchback reversals (>135 degrees),
+ * hairpins (>90 degrees), self-crossings (the module's own nirIntersect over
+ * non-adjacent segments), the longest ride along its own wake (two
+ * near-parallel non-crossing passes within one drawn tape of each other),
+ * gate density per 100px, pad count and tape width. Pure geometry - the same
+ * course always measures the same. */
+function courseMetrics(course) {
+  const pts = course.points;
+  const gates = pts.length - 1;
+  let tape = 0;
+  let maxStraight = 0;
+  const dirs = [];
+  for (let i = 0; i < pts.length - 1; i += 1) {
+    const dx = pts[i + 1].x - pts[i].x;
+    const dy = pts[i + 1].y - pts[i].y;
+    const len = Math.sqrt(dx * dx + dy * dy);
+    tape += len;
+    if (len > maxStraight) maxStraight = len;
+    dirs.push(Math.atan2(dy, dx));
+  }
+  let turns = 0;
+  let reversals = 0;
+  let hairpins = 0;
+  for (let i = 1; i < dirs.length; i += 1) {
+    let delta = dirs[i] - dirs[i - 1];
+    while (delta > Math.PI) delta -= Math.PI * 2;
+    while (delta < -Math.PI) delta += Math.PI * 2;
+    turns += Math.abs(delta);
+    if (Math.abs(delta) > Math.PI * 0.75) reversals += 1;
+    if (Math.abs(delta) > Math.PI * 0.5) hairpins += 1;
+  }
+  let crossings = 0;
+  let wake = 0;
+  for (let i = 0; i < pts.length - 1; i += 1) {
+    for (let j = i + 2; j < pts.length - 1; j += 1) {
+      if (nirIntersect(pts[i], pts[i + 1], pts[j], pts[j + 1])) {
+        crossings += 1;
+        continue;
+      }
+      const w = wakeRide(pts[i], pts[i + 1], pts[j], pts[j + 1], course.width);
+      if (w > wake) wake = w;
+    }
+  }
+  return {
+    gates: gates,
+    tape: Math.round(tape),
+    maxStraight: Math.round(maxStraight),
+    turns: Math.round((turns * 180) / Math.PI),
+    reversals: reversals,
+    hairpins: hairpins,
+    crossings: crossings,
+    wake: Math.round(wake),
+    density: gates / tape * 100,
+    pads: course.pads.length,
+    width: course.width,
+  };
+}
+
+function wakeRide(a1, a2, b1, b2, width) {
+  const d1x = a2.x - a1.x;
+  const d1y = a2.y - a1.y;
+  const d2x = b2.x - b1.x;
+  const d2y = b2.y - b1.y;
+  const l1 = Math.sqrt(d1x * d1x + d1y * d1y);
+  const l2 = Math.sqrt(d2x * d2x + d2y * d2y);
+  if (l1 < 1 || l2 < 1) return 0;
+  const cross = (d1x * d2y - d1y * d2x) / (l1 * l2);
+  if (Math.abs(cross) > 0.15) return 0;
+  const nx = -d1y / l1;
+  const ny = d1x / l1;
+  const off = Math.abs((b1.x - a1.x) * nx + (b1.y - a1.y) * ny);
+  if (off > width + 13) return 0;
+  const along = function (p) {
+    return (p.x - a1.x) * (d1x / l1) + (p.y - a1.y) * (d1y / l1);
+  };
+  const b1s = along(b1);
+  const b2s = along(b2);
+  const lo = Math.max(0, Math.min(b1s, b2s));
+  const hi = Math.min(l1, Math.max(b1s, b2s));
+  return hi > lo ? hi - lo : 0;
+}
+
 /* ---- generator ---------------------------------------------------------------- */
 function mulberry(seed) {
   let a = seed >>> 0;
@@ -613,6 +698,42 @@ function main() {
     return;
   }
 
+  if (mode === "records") {
+    /* The structural metric table the fourth tier's record assertions
+     * mirror, plus the peaks the first thirty courses held. */
+    const rows = courses.map(function (course) {
+      return { id: course.id, m: courseMetrics(course) };
+    });
+    console.log(
+      "id   gates tape  straight turns rev hair cross wake dens pads wid");
+    rows.forEach(function (row) {
+      const m = row.m;
+      console.log(
+        row.id.padEnd(4) +
+          String(m.gates).padStart(5) +
+          String(m.tape).padStart(6) +
+          String(m.maxStraight).padStart(9) +
+          String(m.turns).padStart(6) +
+          String(m.reversals).padStart(4) +
+          String(m.hairpins).padStart(5) +
+          String(m.crossings).padStart(6) +
+          String(m.wake).padStart(5) +
+          "  " + m.density.toFixed(2).padStart(5) +
+          String(m.pads).padStart(5) +
+          String(m.width).padStart(4),
+      );
+    });
+    const first30 = rows.slice(0, 30);
+    ["gates", "tape", "maxStraight", "turns", "reversals", "hairpins", "crossings", "wake", "density", "pads"]
+      .forEach(function (key) {
+        const peak = first30.reduce(function (best, row) {
+          return row.m[key] > best.v ? { id: row.id, v: row.m[key] } : best;
+        }, { id: "-", v: -Infinity });
+        console.log("first-30 peak " + key + ": " + peak.v + " (" + peak.id + ")");
+      });
+    return;
+  }
+
   if (mode === "forge") {
     const ids = process.argv.slice(3);
     const brief = {};
@@ -626,6 +747,23 @@ function main() {
         pads: 2,
         spread: 200 - step * 4,
         basePar: 10 + step,
+      };
+    }
+    /* The fourth tier's briefs: the widest book the generator can search
+     * under - widths inside the shipped 20-22 envelope, gate counts from
+     * 31 up, pads only where the tape gives them room. The shipped rungs'
+     * record shapes are hand-authored; these briefs let the forge search
+     * the tier's envelopes from scratch. */
+    for (let i = 31; i <= 40; i += 1) {
+      const step = i - 31;
+      brief["n" + i] = {
+        id: "n" + i,
+        labelKey: "nirZ" + i,
+        width: step % 3 === 1 ? 22 : 21,
+        points: 31 + (step % 4) + (step > 5 ? 4 : 0),
+        pads: step === 3 ? 4 : 0,
+        spread: 200 - step * 2,
+        basePar: 52 + step * 4,
       };
     }
     (ids.length ? ids : Object.keys(brief)).forEach(function (id) {
@@ -661,7 +799,16 @@ function main() {
   }
 }
 
-module.exports = { loadCourses, checkCourse, forgeCourse, nirPar, keyboardLap, replayLap, nirStep };
+module.exports = {
+  loadCourses,
+  checkCourse,
+  courseMetrics,
+  forgeCourse,
+  nirPar,
+  keyboardLap,
+  replayLap,
+  nirStep,
+};
 
 if (require.main === module) {
   main();

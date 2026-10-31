@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 /* Writes the forged boards from tools/_aurora_boards.json over the second tier
- * of game-aurora-flow.js, or - with the argument `summit` - the summit boards
- * from tools/_aurora_summit.json over the f25-f30 tier. Each ladder is ordered
- * by the solver's measured ribbon length, ids are re-assigned to follow that
- * order, and the star bands are derived from the same measurement - so the
- * file can always be rebuilt from the forge instead of being hand-edited.
+ * of game-aurora-flow.js, with the argument `summit` the summit boards from
+ * tools/_aurora_summit.json over the f25-f30 tier, or with `flood` the flood
+ * boards from tools/_aurora_flood.json over the f31-f40 tier. Each ladder is
+ * ordered by the solver's measured ribbon length, ids are re-assigned to
+ * follow that order, and the star bands are derived from the same
+ * measurement - so the file can always be rebuilt from the forge instead of
+ * being hand-edited.
  *
  *   node tools/apply-aurora-levels.js          # second tier f11-f20
  *   node tools/apply-aurora-levels.js summit   # summit tier f25-f30
+ *   node tools/apply-aurora-levels.js flood    # flood tier f31-f40
  */
 "use strict";
 
@@ -18,8 +21,11 @@ const root = path.join(__dirname, "..");
 const gameFile = path.join(root, "assets", "app", "game-aurora-flow.js");
 const dataFile = path.join(__dirname, "_aurora_boards.json");
 const summitFile = path.join(__dirname, "_aurora_summit.json");
+const floodFile = path.join(__dirname, "_aurora_flood.json");
 
-const mode = process.argv[2] === "summit" ? "summit" : "second";
+const mode = process.argv[2] === "summit"
+  ? "summit"
+  : process.argv[2] === "flood" ? "flood" : "second";
 
 if (mode === "summit") {
   if (!fs.existsSync(summitFile)) {
@@ -92,6 +98,107 @@ if (mode === "summit") {
   source = source.slice(0, blockStart) + block + source.slice(end + 1);
   fs.writeFileSync(gameFile, source);
   console.log(`wrote ${boards.length} summit boards into assets/app/game-aurora-flow.js`);
+  boards.forEach((board) => {
+    console.log(`  ${board.id}: size ${board.size}, ${board.pairs.length} pairs, ${board.ink} inked cells`);
+  });
+  process.exit(0);
+}
+
+if (mode === "flood") {
+  if (!fs.existsSync(floodFile)) {
+    console.error("run: node tools/aurora-forge.js flood");
+    process.exit(2);
+  }
+  const boards = JSON.parse(fs.readFileSync(floodFile, "utf8"));
+  if (boards.length !== 10) {
+    console.error(`expected 10 flood boards, got ${boards.length}`);
+    process.exit(2);
+  }
+  boards.forEach((board, index) => {
+    board.id = "f" + (31 + index);
+    board.labelKey = "auroL" + (31 + index);
+    const three = Math.round(board.ink * 1.02);
+    board.starTimes = [three, Math.round(three * 1.55), Math.round(three * 2.15)];
+  });
+
+  function fmtPairs(pairs) {
+    return pairs.map((p) => `[${p.join(", ")}]`).join(", ");
+  }
+
+  const lines = [];
+  lines.push("    /* ------------------------------------------------------------------");
+  lines.push("     * The flood tier (f31-f40). The summit had taken the eleven-across");
+  lines.push("     * panel to 113 inked cells, and the forge measured that the older");
+  lines.push("     * constructions stall on a wider board - covers past that ceiling");
+  lines.push("     * cap the solver out or re-solve far short of their mark - so the");
+  lines.push("     * tide changes how it comes in. Every board here is laid course by");
+  lines.push("     * course: sixteen straight ribbons, disjoint by construction, each");
+  lines.push("     * pair's unique shortest path being its own course, so the solver's");
+  lines.push("     * measured answer lands exactly on the manhattan floor the pair");
+  lines.push("     * distances set - the weave is pinned by geometry, never searched");
+  lines.push("     * for. The ink climbs three cells a rung and every rung's record is");
+  lines.push("     * a number the solver printed: f31 opens the twelfth row, the first");
+  lines.push("     * board past eleven cells a side, at 116 cells with no ribbon in");
+  lines.push("     * its deck shorter than six where the shipped ladder's shortest ran");
+  lines.push(`     * two; f32 ${boards[1].ink}, f33 ${boards[2].ink}, f34 ${boards[3].ink}, f35 ${boards[4].ink}, f36 ${boards[5].ink},`);
+  lines.push(`     * f37 ${boards[6].ink}, each the deepest weave the drawer has held; f38 ${boards[7].ink},`);
+  lines.push("     * where the tide re-passes the deep tier's 94 percent fill at 95;");
+  lines.push(`     * f39 ${boards[8].ink}; f40 the whole cloth - all 144 cells in ribbon,`);
+  lines.push("     * the first full panel the drawer has ever held, and no ribbon on");
+  lines.push("     * it shorter than eight. Every board was verified by");
+  lines.push("     * tools/aurora-forge.js (`node tools/aurora-forge.js flood`");
+  lines.push("     * rebuilds this block from tools/_aurora_flood.json): the solver");
+  lines.push("     * re-solves each board from the pairs alone at the screen cap,");
+  lines.push("     * lands on the floor, and the rungs sit in the order that measure");
+  lines.push("     * climbs. The star bands follow the same one-second-per-inked-cell");
+  lines.push("     * pace the whole forged ladder ships at.");
+  lines.push("     * ------------------------------------------------------------------ */");
+  boards.forEach((board) => {
+    lines.push("    {");
+    lines.push(`      id: "${board.id}", labelKey: "${board.labelKey}", size: ${board.size},`);
+    lines.push("      pairs: [" + fmtPairs(board.pairs) + "],");
+    lines.push("      starTimes: [" + board.starTimes.join(", ") + "],");
+    lines.push("    },");
+  });
+  const block = lines.join("\n");
+
+  let source = fs.readFileSync(gameFile, "utf8");
+  /* The flood is the ladder's tail: rebuild it in place once shipped, or
+   * splice it in after the summit block, which is the tail until then. */
+  const floodMarker = "The flood tier (f31-f40)";
+  const summitMarker = "The summit tier (f25-f30)";
+  const marker = source.indexOf(floodMarker) >= 0 ? floodMarker : summitMarker;
+  const start = source.indexOf(marker);
+  if (start < 0) {
+    console.error("flood-tier splice point not found");
+    process.exit(2);
+  }
+  const end = source.indexOf("];", start);
+  if (end < 0) {
+    console.error("flood-tier block boundaries not found");
+    process.exit(2);
+  }
+  let blockStart;
+  if (marker === floodMarker) {
+    /* Rebuild: the whole flood block, comment through last rung, is replaced. */
+    blockStart = source.lastIndexOf("    /* ---", start);
+    if (blockStart < 0) {
+      console.error("flood-tier block start not found");
+      process.exit(2);
+    }
+    source = source.slice(0, blockStart) + block + "\n  " + source.slice(end);
+  } else {
+    /* First splice: the summit rungs stay; the flood block joins them at the
+     * tail, after the last rung's closing brace and before the array's own. */
+    const lastBrace = source.lastIndexOf("    },", end);
+    if (lastBrace < 0) {
+      console.error("summit tail not found");
+      process.exit(2);
+    }
+    source = source.slice(0, lastBrace + 6) + "\n\n" + block + "\n  " + source.slice(end);
+  }
+  fs.writeFileSync(gameFile, source);
+  console.log(`wrote ${boards.length} flood boards into assets/app/game-aurora-flow.js`);
   boards.forEach((board) => {
     console.log(`  ${board.id}: size ${board.size}, ${board.pairs.length} pairs, ${board.ink} inked cells`);
   });

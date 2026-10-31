@@ -141,6 +141,75 @@
     { id: "t28", labelKey: "diceTable28", ruleKey: "diceRule28", target: 280, burn: [2, 6], tax: -63, pairs: true },
     { id: "t29", labelKey: "diceTable29", ruleKey: "diceRule29", target: 150, burn: [2, 6], tax: -25, pairs: false },
     { id: "t30", labelKey: "diceTable30", ruleKey: "diceRule30", target: 120, burn: [2, 3, 6], tax: -25, pairs: false },
+
+    /* Tables 31-40, the fourth tier - the tier the felt built. The first
+     * thirty lit every ember the room had (1, 2, 3 and 6, on one die and on
+     * two) and moved the dial from the target to the felt; this tier burns
+     * the faces the room never burned and charges the economy it never
+     * charged. Every number below was measured through the game's own solver
+     * in tools/dice-forge.js - exact value iteration over (turns, bank,
+     * stake) under the best stopping policy, no dice rolled - and every rung
+     * sits on its measured starvation edge: the smallest bounty, or the
+     * deepest tax, the solver still holds inside the shipped bands (a best
+     * policy clears inside ten turns at least 45% of the time, the
+     * three-star line between 15% and 50%), with one step stingier falling
+     * out on every rung - 31's clear to 37.7%, 32's to 41.9, 33's to 41.9,
+     * 34's to 41.2, 35's to 40.6 with its line at 10.5, 36's line to 11.1,
+     * 37's clear to 37.5, 38's line to 12.4, 39's to 12.8, 40's to 11.7.
+     * One convention note, pinned: the solver prices round zero flat, so a
+     * clearing bank on the very last turn is left out of every line it
+     * prints - each measured share is a floor on the engine's true rate, and
+     * the whole ladder, first through fortieth, is measured under that one
+     * convention, so every edge and ordering here reproduces from the forge
+     * as shipped.
+     *
+     * The records, one per rung against every table before it. 31 lights the
+     * first four-ember felt - half the die burns, only the 4 and the 5 pay,
+     * a wider burn set than any of the three-face felts the last two tiers
+     * topped out at. 32 brings the house's tax back for the first time since
+     * the calibration tier and at double the Tax Table's rate - 10 against
+     * 5 - on a target no taxed table has carried; a bank of the tax or less
+     * collects nothing, so the best line holds the stake past the tithe
+     * before its first bank. 33 pairs the low embers for the first time, the
+     * first three-ember pairs felt that never lights the 6. 34 burns the
+     * first 4 anywhere in the room and pays the deepest bounty the ladder
+     * has ever printed, 132 against the 111 of the Last Ember and the Quiet
+     * One. 35 takes the twin-ember pairs to 340, the deepest target past
+     * Pyre Summit's 320, and the forge pins the felt's own invariance: at
+     * the starvation edge 340 measures 54.4% clear and a 19.6% line - the
+     * same two numbers, to the decimal, that Pyre Summit prints at 320 - so
+     * the target is still not the dial. 36 burns the first 5 the room has
+     * ever lit, on a felt whose embers hold neither the 1 nor the 6, another
+     * first. 37 is the thinnest bounty past the calibration tier: the rich
+     * double felt holds its bands on a 5-ember bounty, where every earlier
+     * bounty rung asked at least 12. 38 burns every odd face on the die, the
+     * first felt split down parity, only the evens paying. 39 burns the low
+     * half and pays the high half - on the small felt, the first three-ember
+     * felt where every face that pays outrolls every face that burns. 40
+     * mirrors 38 on the small felt, the first one-die felt that burns every
+     * even face with only the odds paying, and lands the tier's last line
+     * 0.7 over the floor.
+     *
+     * The tier's own difficulty line is the descent: 32.0, 27.5, 25.1, 24.3,
+     * 19.6, 19.4, 17.4, 17.3, 16.9, 15.7, strictly rung over rung. It cannot
+     * continue the summit tier's fall - The Ash Vault shipped at 15.0, the
+     * deepest three-star line in the ladder, and the bands have no room
+     * under their own floor - so the tier opens at the top of its own
+     * descent instead, on the widest felt it has. The four-ember pairs felt
+     * was measured too and cannot ship at any bounty: a target one bank
+     * clears three-stars 50.7% of the time (over the ceiling) and a target
+     * needing two banks clears 26.9% (under the floor), so the fourth ember
+     * lives on the small felt alone. */
+    { id: "t31", labelKey: "diceTable31", ruleKey: "diceRule31", target: 90, burn: [1, 2, 3, 6], tax: -26, pairs: false },
+    { id: "t32", labelKey: "diceTable32", ruleKey: "diceRule32", target: 60, burn: [1], tax: 10, pairs: false },
+    { id: "t33", labelKey: "diceTable33", ruleKey: "diceRule33", target: 280, burn: [1, 2, 3], tax: -129, pairs: true },
+    { id: "t34", labelKey: "diceTable34", ruleKey: "diceRule34", target: 280, burn: [2, 4, 6], tax: -132, pairs: true },
+    { id: "t35", labelKey: "diceTable35", ruleKey: "diceRule35", target: 340, burn: [1, 6], tax: -78, pairs: true },
+    { id: "t36", labelKey: "diceTable36", ruleKey: "diceRule36", target: 110, burn: [2, 5], tax: -17, pairs: false },
+    { id: "t37", labelKey: "diceTable37", ruleKey: "diceRule37", target: 110, burn: [1], tax: -5, pairs: true },
+    { id: "t38", labelKey: "diceTable38", ruleKey: "diceRule38", target: 110, burn: [1, 3, 5], tax: -22, pairs: false },
+    { id: "t39", labelKey: "diceTable39", ruleKey: "diceRule39", target: 110, burn: [1, 2, 3], tax: -21, pairs: false },
+    { id: "t40", labelKey: "diceTable40", ruleKey: "diceRule40", target: 110, burn: [2, 4, 6], tax: -23, pairs: false },
   ];
 
   function initEmberDiceGame() {
@@ -404,6 +473,26 @@
       "diceRule28": "Furnace Twins: two dice add together, a 2 or a 6 on either die burns the stake, and every bank pays you an extra 63. Target {t}.",
       "diceRule29": "The Hearth: one die, a 2 or a 6 burns the stake, and every bank pays you an extra 25. Target {t}.",
       "diceRule30": "The Ash Vault: one die, a 2, a 3 or a 6 burns the stake, and every bank pays you an extra 25. Target {t}.",
+      "diceTable31": "The Fourth Ember",
+      "diceTable32": "The Tithe",
+      "diceTable33": "The Gilded Gate",
+      "diceTable34": "Evenfall Twins",
+      "diceTable35": "The Far Gate",
+      "diceTable36": "Five Ember",
+      "diceTable37": "The Fair Felt",
+      "diceTable38": "The Odd Embers",
+      "diceTable39": "The Low Embers",
+      "diceTable40": "The Even Embers",
+      "diceRule31": "The Fourth Ember: one die, a 1, a 2, a 3 or a 6 burns the stake, and every bank pays you an extra 26. Target {t}.",
+      "diceRule32": "The Tithe: one die, a 1 burns the stake, and every bank pays the house 10. Target {t}.",
+      "diceRule33": "The Gilded Gate: two dice add together, a 1, a 2 or a 3 on either die burns the stake, and every bank pays you an extra 129. Target {t}.",
+      "diceRule34": "Evenfall Twins: two dice add together, a 2, a 4 or a 6 on either die burns the stake, and every bank pays you an extra 132. Target {t}.",
+      "diceRule35": "The Far Gate: two dice add together, a 1 or a 6 on either die burns the stake, and every bank pays you an extra 78. Target {t}.",
+      "diceRule36": "Five Ember: one die, a 2 or a 5 burns the stake, and every bank pays you an extra 17. Target {t}.",
+      "diceRule37": "The Fair Felt: two dice add together, any 1 burns them both, and every bank pays you an extra 5. Target {t}.",
+      "diceRule38": "The Odd Embers: one die, a 1, a 3 or a 5 burns the stake, and every bank pays you an extra 22. Target {t}.",
+      "diceRule39": "The Low Embers: one die, a 1, a 2 or a 3 burns the stake, and every bank pays you an extra 21. Target {t}.",
+      "diceRule40": "The Even Embers: one die, a 2, a 4 or a 6 burns the stake, and every bank pays you an extra 23. Target {t}.",
       "diceBurns": "A {f}! The stake burns to ash.",
       "diceAllTables": " All {n} tables are yours!",
     },
@@ -458,6 +547,26 @@
       "diceRule28": "炉火双骰：两颗骰子相加，任何一颗掷出 2 或 6 就烧光赌注，每次「收下」额外给 63。目标 {t}。",
       "diceRule29": "灶火桌：一颗骰子，掷出 2 或 6 就烧光赌注，每次「收下」额外给 25。目标 {t}。",
       "diceRule30": "灰窖桌：一颗骰子，掷出 2、3 或 6 就烧光赌注，每次「收下」额外给 25。目标 {t}。",
+      "diceTable31": "第四烬桌",
+      "diceTable32": "重税桌",
+      "diceTable33": "镀金门桌",
+      "diceTable34": "偶烬双骰",
+      "diceTable35": "远门桌",
+      "diceTable36": "五烬桌",
+      "diceTable37": "公道桌",
+      "diceTable38": "奇烬桌",
+      "diceTable39": "低烬桌",
+      "diceTable40": "偶烬桌",
+      "diceRule31": "第四烬桌：一颗骰子，1、2、3、6 任何一点都会烧光赌注，每次「收下」额外给 26。目标 {t}。",
+      "diceRule32": "重税桌：一颗骰子，掷出 1 就烧光赌注，每次「收下」交给庄家 10。目标 {t}。",
+      "diceRule33": "镀金门桌：两颗骰子相加，任何一颗掷出 1、2 或 3 就烧光赌注，每次「收下」额外给 129。目标 {t}。",
+      "diceRule34": "偶烬双骰：两颗骰子相加，任何一颗掷出 2、4 或 6 就烧光赌注，每次「收下」额外给 132。目标 {t}。",
+      "diceRule35": "远门桌：两颗骰子相加，任何一颗掷出 1 或 6 就烧光赌注，每次「收下」额外给 78。目标 {t}。",
+      "diceRule36": "五烬桌：一颗骰子，掷出 2 或 5 就烧光赌注，每次「收下」额外给 17。目标 {t}。",
+      "diceRule37": "公道桌：两颗骰子，任何 1 点全烧，每次收下赏 5。目标 {t}。",
+      "diceRule38": "奇烬桌：一颗骰子，1、3、5 任何一点都会烧光赌注，每次「收下」额外给 22。目标 {t}。",
+      "diceRule39": "低烬桌：一颗骰子，1、2、3 任何一点都会烧光赌注，每次「收下」额外给 21。目标 {t}。",
+      "diceRule40": "偶烬桌：一颗骰子，2、4、6 任何一点都会烧光赌注，每次「收下」额外给 23。目标 {t}。",
       "diceBurns": "掷出 {f}！赌注化为灰烬。",
       "diceAllTables": " {n} 张牌桌都是你的了！",
     },

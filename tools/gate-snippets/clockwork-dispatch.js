@@ -15,7 +15,9 @@
  * without, and the bay platform d24 cannot deliver to otherwise. The summit
  * tier gets the same treatment: d25's westbound return, d26's held column,
  * d27's one-way climb, d28's second berth, d29's reversal point and d30's
- * low west exit are each taken away from a clone and the rung must break. */
+ * low west exit are each taken away from a clone and the rung must break. The
+ * appended d31-d40 tier is cut the same way, and its two lower bands are shown
+ * reachable by replaying padded winning plans at par + 2 and par + 5. */
 module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const levels = App.dispatchLevels;
@@ -30,6 +32,7 @@ module.exports = function gate(ctx) {
   };
   const priorIds = ["d21", "d22", "d23", "d24"];
   const deepIds = ["d25", "d26", "d27", "d28", "d29", "d30"];
+  const summitIds = ["d31", "d32", "d33", "d34", "d35", "d36", "d37", "d38", "d39", "d40"];
 
   check("game-clockwork-dispatch", "the ladder holds at least thirty timetables",
     levels.length >= 30, String(levels.length));
@@ -42,6 +45,12 @@ module.exports = function gate(ctx) {
     missingPrior.length === 0, missingPrior.join(","));
   check("game-clockwork-dispatch", "the summit tier d25-d30 is present",
     missingDeep.length === 0, missingDeep.join(","));
+  /* A floor, never an exact count: other tiers may append later. */
+  check("game-clockwork-dispatch", "the ladder holds at least forty timetables",
+    levels.length >= 40, String(levels.length));
+  const missingSummit = summitIds.filter((id) => !byId(id));
+  check("game-clockwork-dispatch", "the d31-d40 tier is present",
+    missingSummit.length === 0, missingSummit.join(","));
 
   /* Bands must stay derived: a row that grows a starMoves field would quietly
    * replace the solver's number with an authored one. */
@@ -51,12 +60,14 @@ module.exports = function gate(ctx) {
 
   const proofProblems = [];
   const pars = {};
+  const plans = {};
   levels.forEach((level) => {
     /* dispatchSolvable is the module's own bundle: the search, the plain-board
      * simulation that says whether the rung plays itself, and a replay of the
      * plan it found. */
     const proof = App.dispatchSolvable(level);
     pars[level.id] = proof.par;
+    plans[level.id] = proof.plan;
     if (!proof.solvable) {
       proofProblems.push(level.id + ":unsolvable");
       return;
@@ -96,6 +107,14 @@ module.exports = function gate(ctx) {
   check("game-clockwork-dispatch", "the summit tier d25-d30 climbs and every rung opens above d24",
     deepPars.every((par, index) => (index === 0 || par > deepPars[index - 1]) && par > fittedMax),
     deepPars.join("/") + " vs d01-d24 " + fittedMax);
+
+  /* The appended tier has to keep climbing on the prover's own number and has
+   * to open above the shipped summit, so a later tier cannot be a step down. */
+  const priorMax = Math.max.apply(null, levels.slice(0, 30).map((level) => pars[level.id]));
+  const summitPars = summitIds.map((id) => pars[id]);
+  check("game-clockwork-dispatch", "the d31-d40 tier climbs and every rung opens above d30",
+    summitPars.every((par, index) => (index === 0 || par > summitPars[index - 1]) && par > priorMax),
+    summitPars.join("/") + " vs d01-d30 " + priorMax);
 
   /* Mechanic proofs. A cut here moves a cell out of the layout rather than
    * deleting it from the array, because the engine indexes its arm state by
@@ -271,4 +290,211 @@ module.exports = function gate(ctx) {
     !App.t(key) || App.t(key) === key);
   check("game-clockwork-dispatch", "the deep-tier names cwkZ21-cwkZ30 resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
+
+  /* The appended tier gets the same treatment. Each cut removes exactly the
+   * mechanic that rung's name advertises, on a clone that drops the cached
+   * board first, and the rung must stop solving. */
+  const d31 = byId("d31");
+  const d31Fixed = copy(d31);
+  d31Fixed.cells[0].a = 0;
+  d31Fixed.cells[0].b = 0;
+  const cut31 = App.dispatchSolve(d31Fixed).solvable;
+  check("game-clockwork-dispatch", "d31 is forty-two trains on one split point: fixed east, the top platform is stranded",
+    d31.cells.length === 1 && d31.cells[0].kind === "p" && !cut31,
+    "cells " + d31.cells.length + ", fixed east solvable=" + cut31);
+
+  const d32 = byId("d32");
+  const d32Far = d32.cells.findIndex((cell) => cell.kind === "s" && cell.x === 3);
+  const d32Cut = copy(d32);
+  if (d32Far !== -1) {
+    d32Cut.cells[d32Far].x = 0;
+    d32Cut.cells[d32Far].y = 0;
+  }
+  const cut32Far = d32Far === -1 ? true : App.dispatchSolve(d32Cut).solvable;
+  check("game-clockwork-dispatch", "d32 is far-berth-first: without the far berth the near one alone cannot pace the bay train",
+    d32Far !== -1 && !cut32Far, "far berth " + d32Far + ", cut solvable=" + cut32Far);
+
+  const d33 = byId("d33");
+  const d33West = d33.stations.findIndex((station) => station.edge === "l" && station.pos === 5);
+  const d33East = copy(d33);
+  if (d33West !== -1) {
+    d33East.stations[d33West].edge = "r";
+  }
+  const cut33West = d33West === -1 ? true : App.dispatchSolve(d33East).solvable;
+  check("game-clockwork-dispatch", "d33 pairs a westbound platform with a bay: moving the low stop east breaks the timetable",
+    d33West !== -1 && !cut33West, "west platform " + d33West + ", east solvable=" + cut33West);
+
+  const d34 = byId("d34");
+  const d34High = copy(d34);
+  d34High.cells[0].a = 0;
+  d34High.cells[0].b = 0;
+  const cut34High = App.dispatchSolve(d34High).solvable;
+  check("game-clockwork-dispatch", "d34 is a two-bank column: fixing the high-bank point east cuts one half of the exchange",
+    d34.cells.length === 4 && !cut34High, "fixed east solvable=" + cut34High);
+
+  const d35 = byId("d35");
+  const d35Mid = d35.cells.findIndex((cell) => cell.kind === "p" && cell.x === 5 && cell.y === 3);
+  const d35Cut = copy(d35);
+  if (d35Mid !== -1) {
+    d35Cut.cells[d35Mid].b = 2;
+  }
+  const cut35Mid = d35Mid === -1 ? true : App.dispatchSolve(d35Cut).solvable;
+  check("game-clockwork-dispatch", "d35's three colours share one column: turning the middle point west strands its platforms",
+    d35Mid !== -1 && !cut35Mid, "middle point " + d35Mid + ", west solvable=" + cut35Mid);
+
+  const d36 = byId("d36");
+  const d36Short = copy(d36);
+  d36Short.hold = 1;
+  const cut36Hold = App.dispatchSolve(d36Short).solvable;
+  check("game-clockwork-dispatch", "d36 is the hold-three queue: shortening the hold to one tick stops the board solving",
+    d36.hold === 3 && !cut36Hold, "hold " + d36.hold + " -> 1 solvable=" + cut36Hold);
+
+  const d37 = byId("d37");
+  const d37Berth = d37.cells.findIndex((cell) => cell.kind === "s");
+  const d37Cut = copy(d37);
+  if (d37Berth !== -1) {
+    d37Cut.cells[d37Berth].x = 0;
+    d37Cut.cells[d37Berth].y = 0;
+  }
+  const cut37Berth = d37Berth === -1 ? true : App.dispatchSolve(d37Cut).solvable;
+  check("game-clockwork-dispatch", "d37 throws one siding for two trains: with the berth gone the exchange stops solving",
+    d37Berth !== -1 && !cut37Berth, "berth " + d37Berth + ", cut solvable=" + cut37Berth);
+
+  const d38 = byId("d38");
+  const d38Near = d38.cells.findIndex((cell) => cell.kind === "p" && cell.x === 3 && cell.y === 3);
+  const d38Cut = copy(d38);
+  if (d38Near !== -1) {
+    d38Cut.cells[d38Near].a = 0;
+    d38Cut.cells[d38Near].b = 0;
+  }
+  const cut38Near = d38Near === -1 ? true : App.dispatchSolve(d38Cut).solvable;
+  check("game-clockwork-dispatch", "d38's twin lifts share a throat: fixing the near lift east strands its top platform",
+    d38Near !== -1 && !cut38Near, "near lift " + d38Near + ", fixed east solvable=" + cut38Near);
+
+  const d39 = byId("d39");
+  const d39Trap = d39.cells.findIndex((cell) => cell.kind === "p" && cell.x === 2 && cell.y === 5);
+  const d39Cut = copy(d39);
+  if (d39Trap !== -1) {
+    d39Cut.cells[d39Trap].b = 1;
+  }
+  const cut39Trap = d39Trap === -1 ? true : App.dispatchSolve(d39Cut).solvable;
+  check("game-clockwork-dispatch", "d39's trap point must be thrown before the main timetable: both arms up wrecks the line",
+    d39Trap !== -1 && !cut39Trap, "trap point " + d39Trap + ", both-up solvable=" + cut39Trap);
+
+  const d40 = byId("d40");
+  const d40Cut = copy(d40);
+  d40Cut.cells[0].a = 0;
+  d40Cut.cells[0].b = 0;
+  const cut40 = App.dispatchSolve(d40Cut).solvable;
+  check("game-clockwork-dispatch", "d40 is the grand exchange: fixing a bank point east collapses the shared throat",
+    d40.cells.length === 4 && !cut40, "fixed east solvable=" + cut40);
+
+  /* Bands are derived, never authored, so the lower bands exist only if some
+   * winning line spends par + 2 and par + 5 flips. Each candidate adds paired
+   * flips on a point in a quiet step (net zero) plus, for the five-flip line,
+   * three flips late enough that no train is on that point any more. The
+   * public runner decides: the padded plan must win with every flip scheduled. */
+  const bandProblems = [];
+  const bandValues = [];
+  summitIds.forEach((id) => {
+    const level = byId(id);
+    const base = plans[id] || [];
+    const baseRun = App.dispatchRun(level, base, level.limit);
+    if (baseRun.over !== "win") {
+      bandProblems.push(id + ":base " + baseRun.over);
+      return;
+    }
+    const frames = baseRun.frames;
+    const lastTick = frames.length - 1;
+    const pointCells = [];
+    level.cells.forEach((cell, index) => {
+      if (cell.kind === "p") {
+        pointCells.push(index);
+      }
+    });
+    const occupied = (x, y, tick) => {
+      const frame = frames[tick];
+      return !!frame && frame.trains.some((train) => train.x === x && train.y === y);
+    };
+    const quiet = (x, y, tick) => tick >= 1 && !occupied(x, y, tick) && !occupied(x, y, tick - 1);
+    const valueAt = (index, tick) => {
+      let value = level.cells[index].init ? 1 : 0;
+      base.forEach((flip) => {
+        if (flip.cell === index && flip.tick <= tick) {
+          value = flip.value ? 1 : 0;
+        }
+      });
+      return value;
+    };
+    const wins = (plan) => {
+      const run = App.dispatchRun(level, plan, level.limit);
+      return run.over === "win" && run.crashes === 0 &&
+        run.delivered === level.trains.length && run.unscheduled === 0;
+    };
+    let plus2 = null;
+    let plus5 = null;
+    pointCells.forEach((index) => {
+      if (plus2 && plus5) {
+        return;
+      }
+      const cell = level.cells[index];
+      const pairAt = (tick) => {
+        const value = valueAt(index, tick);
+        return [
+          { cell: index, value: value ? 0 : 1, tick: tick },
+          { cell: index, value: value, tick: tick },
+        ];
+      };
+      if (!plus2) {
+        for (let tick = 1; tick <= lastTick; tick += 1) {
+          if (!quiet(cell.x, cell.y, tick)) {
+            continue;
+          }
+          const candidate = base.concat(pairAt(tick));
+          if (wins(candidate)) {
+            plus2 = candidate;
+            break;
+          }
+        }
+      }
+      if (plus2 && !plus5) {
+        for (let tick = lastTick; tick >= 1; tick -= 1) {
+          if (!quiet(cell.x, cell.y, tick)) {
+            continue;
+          }
+          const value = valueAt(index, tick);
+          const triple = pairAt(1).concat([
+            { cell: index, value: value ? 0 : 1, tick: tick },
+            { cell: index, value: value, tick: tick },
+            { cell: index, value: value ? 0 : 1, tick: tick },
+          ]);
+          const candidate = base.concat(triple);
+          if (wins(candidate)) {
+            plus5 = candidate;
+            break;
+          }
+        }
+      }
+    });
+    if (!plus2) {
+      bandProblems.push(id + ":no-par+2");
+    }
+    if (!plus5) {
+      bandProblems.push(id + ":no-par+5");
+    }
+    if (plus2 && plus5) {
+      bandValues.push(id + " " + pars[id] + "+2/+5");
+    }
+  });
+  check("game-clockwork-dispatch", "every d31-d40 rung also wins at par + 2 and par + 5, so both lower star bands are reachable",
+    bandProblems.length === 0, bandProblems.length ? bandProblems.join(" | ") : bandValues.join(" "));
+
+  const summitCopyKeys = ["cwkZ31", "cwkZ32", "cwkZ33", "cwkZ34", "cwkZ35",
+    "cwkZ36", "cwkZ37", "cwkZ38", "cwkZ39", "cwkZ40"];
+  const summitCopyProblems = summitCopyKeys.filter((key) =>
+    !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
+    !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
+    !App.t(key) || App.t(key) === key);
+  check("game-clockwork-dispatch", "the d31-d40 names cwkZ31-cwkZ40 resolve in both languages",
+    summitCopyProblems.length === 0, summitCopyProblems.join(","));
 };

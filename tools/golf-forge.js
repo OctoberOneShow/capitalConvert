@@ -192,7 +192,9 @@ function forgeCourse(spec, seed) {
     wells.push({
       x: Math.round(60 + rng() * (CGF_WIDTH - 120)),
       y: Math.round(50 + rng() * (CGF_HEIGHT - 100)),
-      m: Math.round((0.7 + rng() * 1.1) * 10) / 10,
+      /* spec.maxM lifts the mass cap - the deep-field tier breaks the 1.8
+       * guardian every earlier tier stopped at. */
+      m: Math.round((0.7 + rng() * (spec.maxM ? spec.maxM - 0.7 : 1.1)) * 10) / 10,
       r: Math.round(9 + rng() * 5),
     });
   }
@@ -222,6 +224,68 @@ function fmtCourse(course, stars) {
   ].join("\n");
 }
 
+/* The per-hole forge brief: well count, ring radius, the tier bump that
+ * separates the seed streams, and the record predicates a hole's candidate
+ * has to carry. The gate reads it back to re-generate every deep-field
+ * course from the seed recorded in its comment. */
+const brief = {
+  /* g9/g10 shipped under the old basin>=3 bar; they re-forge here so the
+   * whole sky meets the same keyboard bar the deep tier is held to. */
+  g9: { bump: 3, wells: 3, r: 14 },
+  g10: { bump: 0, wells: 3, r: 13 },
+  g11: { bump: 1, wells: 3, r: 14 },
+  g12: { bump: 2, wells: 3, r: 14 },
+  g13: { bump: 3, wells: 4, r: 14 },
+  g14: { bump: 4, wells: 4, r: 13 },
+  g15: { bump: 5, wells: 4, r: 13 },
+  g16: { bump: 6, wells: 4, r: 13 },
+  g17: { bump: 7, wells: 5, r: 13 },
+  g18: { bump: 8, wells: 5, r: 12 },
+  g19: { bump: 9, wells: 5, r: 12 },
+  g20: { bump: 10, wells: 5, r: 12 },
+  /* The deep tier: more wells in the same sky and a ring that keeps
+   * shrinking - the forge still has to prove a repeatable one-shot. */
+  g21: { bump: 11, wells: 6, r: 12 },
+  g22: { bump: 12, wells: 6, r: 11 },
+  g23: { bump: 13, wells: 7, r: 11 },
+  g24: { bump: 14, wells: 7, r: 10 },
+  /* The deep-sky tier past g24: the wells climb to eight, nine, then
+   * ten in the same 320x360 sky while the ring settles at nine - the
+   * forge's bar does not move, so every one of these still needs a
+   * repeatable one-shot (basin >= 6 of 25) to ship. */
+  g25: { bump: 15, wells: 8, r: 10 },
+  g26: { bump: 16, wells: 8, r: 10 },
+  g27: { bump: 17, wells: 9, r: 10 },
+  g28: { bump: 18, wells: 9, r: 9 },
+  g29: { bump: 19, wells: 10, r: 9 },
+  g30: { bump: 20, wells: 10, r: 9 },
+  /* The deep-field tier past g30: eleven to thirteen wells in the same
+   * sky, the ring past the nine-pixel floor, and the same keyboard bar.
+   * Each spec carries the record its hole claims, checked against the
+   * peaks the first thirty measured: g32 the heaviest sky (past g29's
+   * 14.3 total mass), g34 the first guardian past the 1.8 cap, g36 the
+   * first ring under nine, g37 the mass record again, g38 a guardian
+   * hovering twenty-eight pixels off the ring (past g19's 37), g39 the
+   * ring's own guard masses 1.9 - the first giant parked at the ring,
+   * where g9 and g28's guards stopped at 1.8 - and g40 the capstone -
+   * the heaviest sky, the thirteen-well field, the eight-pixel ring and
+   * the deepest launch budget in one course. Every new hole also has to
+   * refuse the lazy straight line at every power. */
+  g31: { bump: 21, wells: 11, r: 9, noStraight: true },
+  g32: { bump: 22, wells: 11, r: 9, noStraight: true, minMass: 15 },
+  g33: { bump: 23, wells: 12, r: 9, noStraight: true },
+  g34: { bump: 24, wells: 12, r: 9, noStraight: true, maxM: 1.9, wantHeavy: true },
+  g35: { bump: 25, wells: 13, r: 9, noStraight: true },
+  g36: { bump: 26, wells: 13, r: 8, noStraight: true },
+  g37: { bump: 27, wells: 13, r: 8, noStraight: true, minMass: 16.5 },
+  /* The guardian-hugging records are rare finds: they get a wider seed
+   * sweep than the layout-driven holes. g39's giant at the gate also
+   * needs the lifted mass cap, or no 1.9 guardian could ever be dealt. */
+  g38: { bump: 28, wells: 13, r: 8, noStraight: true, ringGuard: 30, seeds: 1200 },
+  g39: { bump: 29, wells: 13, r: 8, noStraight: true, maxM: 1.9, ringGuardMass: 1.9, seeds: 1200 },
+  g40: { bump: 30, wells: 13, r: 8, noStraight: true, minMass: 18 },
+};
+
 function main() {
   const mode = process.argv[2] || "list";
   const courses = loadCourses();
@@ -246,38 +310,6 @@ function main() {
 
   if (mode === "forge") {
     const ids = process.argv.slice(3);
-    const brief = {
-      /* g9/g10 shipped under the old basin>=3 bar; they re-forge here so the
-       * whole sky meets the same keyboard bar the deep tier is held to. */
-      g9: { bump: 3, wells: 3, r: 14 },
-      g10: { bump: 0, wells: 3, r: 13 },
-      g11: { bump: 1, wells: 3, r: 14 },
-      g12: { bump: 2, wells: 3, r: 14 },
-      g13: { bump: 3, wells: 4, r: 14 },
-      g14: { bump: 4, wells: 4, r: 13 },
-      g15: { bump: 5, wells: 4, r: 13 },
-      g16: { bump: 6, wells: 4, r: 13 },
-      g17: { bump: 7, wells: 5, r: 13 },
-      g18: { bump: 8, wells: 5, r: 12 },
-      g19: { bump: 9, wells: 5, r: 12 },
-      g20: { bump: 10, wells: 5, r: 12 },
-      /* The deep tier: more wells in the same sky and a ring that keeps
-       * shrinking - the forge still has to prove a repeatable one-shot. */
-      g21: { bump: 11, wells: 6, r: 12 },
-      g22: { bump: 12, wells: 6, r: 11 },
-      g23: { bump: 13, wells: 7, r: 11 },
-      g24: { bump: 14, wells: 7, r: 10 },
-      /* The deep-sky tier past g24: the wells climb to eight, nine, then
-       * ten in the same 320x360 sky while the ring settles at nine - the
-       * forge's bar does not move, so every one of these still needs a
-       * repeatable one-shot (basin >= 6 of 25) to ship. */
-      g25: { bump: 15, wells: 8, r: 10 },
-      g26: { bump: 16, wells: 8, r: 10 },
-      g27: { bump: 17, wells: 9, r: 10 },
-      g28: { bump: 18, wells: 9, r: 9 },
-      g29: { bump: 19, wells: 10, r: 9 },
-      g30: { bump: 20, wells: 10, r: 9 },
-    };
     const stars = {
       g9: [2, 4, 6], g10: [2, 4, 7],
       g11: [1, 2, 3], g12: [1, 2, 3], g13: [1, 2, 4], g14: [2, 3, 4],
@@ -286,17 +318,62 @@ function main() {
       g21: [2, 4, 8], g22: [2, 5, 8], g23: [2, 5, 9], g24: [2, 5, 10],
       g25: [2, 5, 11], g26: [2, 5, 11], g27: [2, 6, 12],
       g28: [2, 6, 12], g29: [2, 6, 13], g30: [2, 6, 13],
+      g31: [2, 6, 14], g32: [2, 6, 14], g33: [2, 7, 15],
+      g34: [2, 7, 15], g35: [2, 7, 16], g36: [2, 7, 16],
+      g37: [2, 8, 17], g38: [2, 8, 17], g39: [2, 8, 17],
+      g40: [2, 8, 18],
     };
+    /* The deep-field tier's record predicates, measured through the same
+     * flight the panel flies: a hole ships only when the candidate actually
+     * carries the record its brief claims, not just a clean one-shot. */
+    const cgfMass = function (course) {
+      return Math.round(course.wells.reduce(function (sum, well) {
+        return sum + well.m;
+      }, 0) * 10) / 10;
+    };
+    const cgfStraightHits = function (course) {
+      const angle = Math.atan2(course.target.y - course.tee.y, course.target.x - course.tee.x);
+      let hits = 0;
+      for (let p = 0.15; p <= 1.001; p += 0.05) {
+        if (fly(course, angle, p).hit) hits += 1;
+      }
+      return hits;
+    };
+    const cgfRingGuard = function (course) {
+      return Math.min.apply(null, course.wells.map(function (well) {
+        return Math.hypot(well.x - course.target.x, well.y - course.target.y);
+      }));
+    };
+    /* The mass of the guardian that owns the ring's approach. */
+    const cgfRingGuardMass = function (course) {
+      let mass = 0;
+      let bestD = Infinity;
+      course.wells.forEach(function (well) {
+        const d = Math.hypot(well.x - course.target.x, well.y - course.target.y);
+        if (d < bestD) {
+          bestD = d;
+          mass = well.m;
+        }
+      });
+      return mass;
+    };
+
     (ids.length ? ids : Object.keys(brief)).forEach(function (id) {
       const spec = brief[id];
       if (!spec) return;
       let course = null;
       let report = null;
-      for (let seed = 1; seed <= 220 && !course; seed += 1) {
+      let usedSeed = 0;
+      for (let seed = 1; seed <= (spec.seeds || 220) && !course; seed += 1) {
         const candidate = forgeCourse(
-          { id: id, labelKey: "cgfL" + id.slice(1), wells: spec.wells, r: spec.r },
+          { id: id, labelKey: "cgfL" + id.slice(1), wells: spec.wells, r: spec.r, maxM: spec.maxM },
           seed * 7919 + spec.wells * 131 + spec.r + spec.bump * 104729,
         );
+        if (spec.minMass && cgfMass(candidate) < spec.minMass) continue;
+        if (spec.wantHeavy && !candidate.wells.some(function (well) { return well.m >= 1.9; })) continue;
+        if (spec.ringGuard && cgfRingGuard(candidate) > spec.ringGuard) continue;
+        if (spec.ringGuardMass && cgfRingGuardMass(candidate) < spec.ringGuardMass) continue;
+        if (spec.noStraight && cgfStraightHits(candidate) > 0) continue;
         const attempt = checkCourse(candidate);
         if (attempt.problems.length) continue;
         /* Ask for a wide basin: a keyboard player re-issues the shot in 0.05
@@ -304,18 +381,24 @@ function main() {
         if (attempt.shot.basin < 6) continue;
         course = candidate;
         report = attempt;
+        usedSeed = seed;
       }
       if (!course) {
         console.log(id + ": NO VERIFIED COURSE");
         return;
       }
-      console.log(id + ": " + course.wells.length + " wells, basin " + report.shot.basin + "/25, one-shot at " + report.shot.angle.toFixed(3) + " / " + report.shot.power.toFixed(2));
+      const ride = fly(course, report.shot.angle, report.shot.power);
+      console.log(id + ": " + course.wells.length + " wells, mass " + cgfMass(course) +
+        ", basin " + report.shot.basin + "/25, one-shot at " + report.shot.angle.toFixed(3) + " / " + report.shot.power.toFixed(2) +
+        ", ride " + ride.age.toFixed(2) + "s, ring guard " + Math.round(cgfRingGuard(course)) +
+        " at mass " + cgfRingGuardMass(course) +
+        ", straight hits " + cgfStraightHits(course) + " (seed " + usedSeed + ")");
       console.log(fmtCourse(course, stars[id]));
     });
   }
 }
 
-module.exports = { loadCourses, checkCourse, fly, forgeCourse };
+module.exports = { loadCourses, checkCourse, fly, forgeCourse, brief };
 
 if (require.main === module) {
   main();

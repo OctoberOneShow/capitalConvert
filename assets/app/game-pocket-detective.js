@@ -75,6 +75,30 @@
     { id: "c28", labelKey: "pdkC28", n: 4, clues: 49, starTimes: [440, 625, 840] },
     { id: "c29", labelKey: "pdkC29", n: 5, clues: 50, starTimes: [500, 710, 950] },
     { id: "c30", labelKey: "pdkC30", n: 5, clues: 56, starTimes: [560, 795, 1065] },
+    /* Volume five is the long-file volume: the grid stops widening and the
+     * brief does the work. c31 opens at sixty lines, four past the old docket.
+     * c32 and c33 take the narrow board to 65 and 66 lines - the brief
+     * outruns the 48-box grid by a third, then sets the narrow board's densest
+     * line-per-box load - and c34 brings the wide board back one line short of
+     * the narrow pair, so the same brief now runs across 27 more boxes. From
+     * c36 the brief is longer than the wide grid's 75 boxes and climbs six
+     * lines a step to c39; c40 takes the last eleven to deal the whole pool:
+     * fifteen plain statements, sixty eliminations, fifteen same-name links
+     * and sixteen hour gaps, every true line the dealer can write. Bands keep
+     * the shipped rate - ten seconds a line wide, nine narrow rounded to five,
+     * with the outer lines at 1.42x and 1.91x - except the summit, priced at
+     * nine seconds a line. The dealer clamps any rung past 106 to its pool,
+     * so the summit is the ceiling as well as the longest brief. */
+    { id: "c31", labelKey: "pdkC31", n: 5, clues: 60, starTimes: [600, 850, 1145] },
+    { id: "c32", labelKey: "pdkC32", n: 4, clues: 65, starTimes: [585, 830, 1115] },
+    { id: "c33", labelKey: "pdkC33", n: 4, clues: 66, starTimes: [595, 845, 1135] },
+    { id: "c34", labelKey: "pdkC34", n: 5, clues: 65, starTimes: [650, 925, 1240] },
+    { id: "c35", labelKey: "pdkC35", n: 5, clues: 71, starTimes: [710, 1010, 1355] },
+    { id: "c36", labelKey: "pdkC36", n: 5, clues: 77, starTimes: [770, 1095, 1470] },
+    { id: "c37", labelKey: "pdkC37", n: 5, clues: 83, starTimes: [830, 1180, 1585] },
+    { id: "c38", labelKey: "pdkC38", n: 5, clues: 89, starTimes: [890, 1265, 1700] },
+    { id: "c39", labelKey: "pdkC39", n: 5, clues: 95, starTimes: [950, 1350, 1815] },
+    { id: "c40", labelKey: "pdkC40", n: 5, clues: 106, starTimes: [954, 1355, 1820] },
   ];
   /* Removal order for the carve: the plainest clues go first so the mixed
    * negative / same-owner / hour-gap lines stay in the brief. */
@@ -1069,6 +1093,16 @@
       "pdkC28": "Saturated Grid",
       "pdkC29": "Night Ledger",
       "pdkC30": "The Closing Word",
+      "pdkC31": "Sixty on the Brief",
+      "pdkC32": "Narrow Overrun",
+      "pdkC33": "Margin Saturation",
+      "pdkC34": "Wide Relief",
+      "pdkC35": "Long Docket",
+      "pdkC36": "Past the Grid",
+      "pdkC37": "Cross-Check Wall",
+      "pdkC38": "Thin Floor",
+      "pdkC39": "Last Short Docket",
+      "pdkC40": "The Complete Dossier",
       "pdkTimeLabel": "Elapsed",
       "pdkBriefLabel": "Brief",
       "pdkRungSelectLabel": "Pick a rung",
@@ -1105,7 +1139,7 @@
       "pdkBestTime": "best {n}s",
       "pdkAlready": "{name} is already closed - pick a rung or take a new case.",
       "pdkNextRung": "Next rung open.",
-      "pdkCampaignDone": "All thirty rungs worked. You keep the notebook.",
+      "pdkCampaignDone": "All forty rungs worked. You keep the notebook.",
       "pdkLocked": "{name} is sealed until the rung before it closes.",
       "pdkHint": "Tick a box and its row and column fill with crosses in your head - a tick is only safe once nothing else can reach that row.",
       "logPocketDetective": "Closed a {n}-line case",
@@ -1142,6 +1176,16 @@
       "pdkC28": "满格密卷",
       "pdkC29": "彻夜长卷",
       "pdkC30": "终卷定谳",
+      "pdkC31": "卷满六十",
+      "pdkC32": "窄板超卷",
+      "pdkC33": "页边饱和",
+      "pdkC34": "宽板回气",
+      "pdkC35": "长卷开庭",
+      "pdkC36": "卷溢棋格",
+      "pdkC37": "交叉之墙",
+      "pdkC38": "薄底长卷",
+      "pdkC39": "未满全卷",
+      "pdkC40": "全卷告成",
       "pdkTimeLabel": "用时",
       "pdkBriefLabel": "卷宗",
       "pdkRungSelectLabel": "选择难度",
@@ -1178,7 +1222,7 @@
       "pdkBestTime": "最佳 {n} 秒",
       "pdkAlready": "「{name}」已经结案——换个难度或重开一件。",
       "pdkNextRung": "解锁下一档。",
-      "pdkCampaignDone": "三十档全部办结，笔记本归你了。",
+      "pdkCampaignDone": "四十档全部办结，笔记本归你了。",
       "pdkLocked": "「{name}」还封存着——先办结前面那一档。",
       "pdkHint": "打一个勾，同行同列就都该是叉；只有当这一行再无别处可去时，勾才算稳。",
       "logPocketDetective": "办结了 {n} 条线索的案子",
@@ -1200,6 +1244,7 @@
         '<text x="24" y="44" font-size="8" fill="#94a3b8" text-anchor="middle">clue</text></svg>',
       en: [
         "Aim: work out which place, object and hour belongs to each suspect.",
+        "New tier: cases 31-40 are the long-file volume - the first sixty-line brief opens the tier, the four-name board packs 65 and 66 lines over its 48 boxes, the wide board returns at 65 and climbs past its 75 boxes to the complete 106-line pool, and the summit pays nine seconds a line.",
         "Read: the brief below the grid is plain text - turn its pages with Q and W, or the page button.",
         "Mark: click a box, or move the cursor with arrows and press Enter, to cycle tick, cross, maybe.",
         "Rule: every case is carved down while its answer stays unique, so a contradiction means a mark is wrong, not that the deal is broken.",
@@ -1208,6 +1253,7 @@
       ],
       zh: [
         "目标：推出每个嫌疑人到过何处、带了什么、何时离开。",
+        "新层级：第 31 到 40 关进入长卷卷宗——首案就有六十条线索，四名嫌疑人的窄板把 65、66 条压进 48 格，宽板以 65 条回归、越过自己的 75 格一路加到完整的 106 条线索池，终卷按每条九秒计价。",
         "读题：表格下方就是线索原文——用 Q 和 W 或翻页按钮翻看卷宗。",
         "标记：点击格子，或用方向键移动光标后按回车，在勾、叉、待定之间循环。",
         "规则：每桩案子都是在保证答案唯一的前提下削减线索得来的，出现矛盾说明你标错了，不是题出错。",

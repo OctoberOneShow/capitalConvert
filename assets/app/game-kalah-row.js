@@ -132,6 +132,95 @@
     { id: "m28", labelKey: "malR28", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 6, tempo: 5, count: 28, nodes: 3000, slip: 0.03, flub: 0.04, margin: [17, 10, 1] },
     { id: "m29", labelKey: "malR29", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 6, tempo: 5, count: 28, nodes: 3000, slip: 0.12, flub: 0.04, margin: [19, 12, 1] },
     { id: "m30", labelKey: "malR30", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 6, tempo: 5, count: 28, nodes: 3000, slip: 0.12, flub: 0.04, margin: [25, 15, 1] },
+
+    /* Ranks 31-40: the audit tier. The row re-benches every lever it has
+     * left and finds most of them dead. A wider count and a deeper budget
+     * measure game for game with the seamless ring's - past twenty-four
+     * stones a board and three thousand nodes there is no more ring to
+     * read. A wider guard, a dearer star price and a dearer spare turn
+     * never move a hand in clean play: zero of forty seeded games change
+     * under each, so the ring's sixteen, four-and-a-half and five stand.
+     * The prepared book still gets punished. What bites is the refusal,
+     * the blind sow, the tell and the toll, and the climb rides exactly
+     * those four. Thirty-one prices the refusal at seven stones - benched
+     * twice before and shipped here knowingly, its flip provable on a
+     * live board and its cost visible in the cut bench; thirty-two halves
+     * the blind sow; thirty-three stops erring outright. From thirty-four
+     * on the toll climbs past the gilded ring -
+     * twenty-seven, twenty-nine, thirty-one, thirty-three, thirty-five,
+     * thirty-seven, thirty-nine - each step paid for by a wider tell,
+     * because the ring's own twelve-in-a-hundred tell is already out of
+     * the band by twenty-nine stones (a game in eight) and pays the
+     * thirty-ninth toll in not one game of forty. Two tells were benched
+     * for the tier and measured
+     * dead: fifteen in a hundred pays less than the steps either side of
+     * it at every toll it could carry, and thirty reads a step behind
+     * thirty-three from thirty-five stones up - so the tell jumps. The
+     * toll, tell and two-star lines never fall within the tier, and the
+     * capstone pairs the largest toll the row has ever asked with the
+     * dearest two-star band any rank has carried. Where the measured
+     * shares rise mid-tier the cause is pinned in the rung's own comment:
+     * the refusal gives games away, and a tell eases the band the step it
+     * lands on. Every rank below was run against the same seeded bench
+     * that judged the thirty above - beaten outright in at least one game
+     * in twenty and by its own three-star band in at least three games in
+     * twenty - before it shipped: band 25 at 25% (wins 45%), 25 at 32.5%
+     * (47.5%), 25 at 17.5% (30%), 27 at 32.5% (52.5%), 29 at 27.5%
+     * (52.5%), 31 at 20% (52.5%), 33 at 17.5% (50%), 35 at 20% (52.5%),
+     * 37 at 20% (52.5%) and 39 at 15% (52.5%). And every record below was
+     * proved load-bearing by cutting it out of a copy of its own rank and
+     * re-benching the cut: the refusal cut back to six gives the band
+     * back (25% to 20%), the half sow and the zero sow each give back the
+     * rank below's own bench, the ring's tell pays the summit tolls in
+     * 15%, 10%, 5% and 2.5% of games and not at all at thirty-nine, and
+     * the toll steps measure out to the rank below's bench wherever the
+     * tell is held. */
+    /* The Locked Purse: the first seven-stone refusal, one stone past the
+     * seventeenth stool's six. The flip is provable on a live board - at
+     * six the hand sows and leaves the rival a star pit, at seven it
+     * refuses - and the cut bench shows the price is load-bearing in both
+     * directions: the band lands a quarter of the time where the seamless
+     * ring took a fifth, cut back to six and it gives the games back. */
+    { id: "m31", labelKey: "malR31", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.12, flub: 0.04, margin: [25, 15, 1] },
+    /* The blind sow halves: one game in fifty now, where every rank since
+     * the fourth stool learned the habit it erred a game in twenty-five or
+     * worse. The band eases the step the halving lands on - the surviving
+     * flubs reshape the stream - and cutting it back to .04 gives back the
+     * Locked Purse's own bench exactly. */
+    { id: "m32", labelKey: "malR32", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.12, flub: 0.02, margin: [25, 15, 1] },
+    /* The first erring rank of the forty to stop blundering outright -
+     * the three teaching stools never erred because they never learned the
+     * ring, and every rank since the fourth did until now. Cut the zero
+     * back to the half sow and the band share nearly doubles - the blind
+     * sow was the last softness the ring had, and it is gone. */
+    { id: "m33", labelKey: "malR33", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.12, flub: 0, margin: [25, 15, 1] },
+    /* The toll steps past the gilded ring - twenty-seven - and the tell
+     * widens past the ransom tier's twelve to pay it: eighteen in a
+     * hundred. The ring's own tell at this toll rides the fairness floor,
+     * the new tell eases the band to a third of games, and cutting it
+     * back drops the toll to that floor. */
+    { id: "m34", labelKey: "malR34", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.18, flub: 0, margin: [27, 16, 1] },
+    { id: "m35", labelKey: "malR35", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.18, flub: 0, margin: [29, 17, 1] },
+    /* Twenty-nine and thirty-one on the same eighteen tell; cutting the
+     * toll back a step measures out to the rung below's own bench. */
+    { id: "m36", labelKey: "malR36", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.18, flub: 0, margin: [31, 19, 1] },
+    /* The tell reaches twenty-four in a hundred to carry thirty-three -
+     * the toll the ring's tell cannot pay at all; cut back to twelve the
+     * band lands in a game in ten. */
+    { id: "m37", labelKey: "malR37", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.24, flub: 0, margin: [33, 20, 1] },
+    /* Thirty-five and thirty-seven on the widest tell the row has dealt:
+     * a third of its hands play the runner-up sow. Thirty in a hundred
+     * was benched between and measured a step behind thirty-three at
+     * every toll from thirty-five up - the tell jumps the dead step -
+     * and the ring's own tell pays these tolls in one game in twenty and
+     * one in forty. */
+    { id: "m38", labelKey: "malR38", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.33, flub: 0, margin: [35, 21, 1] },
+    { id: "m39", labelKey: "malR39", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.33, flub: 0, margin: [37, 22, 1] },
+    /* The Final Audit: the largest toll the row has ever asked - the ring's
+     * own tell pays it in not one game of forty - and the dearest two-star
+     * band any rank has carried: a win by twenty-five for the second star,
+     * where the tolls below it stopped at twenty-two. */
+    { id: "m40", labelKey: "malR40", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.33, flub: 0, margin: [39, 25, 1] },
   ];
 
   function malFresh() {
@@ -681,6 +770,16 @@
       "malR28": "The Ledger Keeper",
       "malR29": "The King's Ransom",
       "malR30": "The Gilded Ring",
+      "malR31": "The Locked Purse",
+      "malR32": "The Steadier Hand",
+      "malR33": "The Clear Eye",
+      "malR34": "The Tollgate",
+      "malR35": "The Counting House",
+      "malR36": "The Salt Tax",
+      "malR37": "The Land Rent",
+      "malR38": "The War Levy",
+      "malR39": "The Tithe",
+      "malR40": "The Final Audit",
     },
     zh: {
       "malR5": "石墙凳",
@@ -709,6 +808,16 @@
       "malR28": "记账翁",
       "malR29": "王者赎金",
       "malR30": "鎏金之环",
+      "malR31": "锁袋翁",
+      "malR32": "稳手客",
+      "malR33": "明眼手",
+      "malR34": "大关卡",
+      "malR35": "账房",
+      "malR36": "盐税",
+      "malR37": "田租",
+      "malR38": "战捐",
+      "malR39": "什一税",
+      "malR40": "终局清账",
     },
   });
 

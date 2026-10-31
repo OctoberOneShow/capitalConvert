@@ -17,7 +17,7 @@
  * Usage:
  *   node tools/dice-forge.js list          # measure the shipped tables
  *   node tools/dice-forge.js probe '<json>'
- *   node tools/dice-forge.js forge         # the summit brief, measured
+ *   node tools/dice-forge.js forge         # the fourth-tier brief, measured
  */
 "use strict";
 
@@ -75,7 +75,12 @@ function solveTable(table, turns, cap) {
   const safe = rolls.filter((roll) => !roll.burned);
   const burnP = rolls.reduce((sum, roll) => (roll.burned ? sum + roll.weight : sum), 0);
   /* f[r][bank][stake] = best probability of clearing.
-   * Banks are indexed 0..target; stakes 0..limit. */
+   * Banks are indexed 0..target; stakes 0..limit. Round zero is priced flat:
+   * a clearing bank on the very last turn reads the zero table, so every
+   * line the forge prints leaves out the runs that clear exactly on turn
+   * ten - the measured clear share is a floor on the engine's true rate, and
+   * the shipped bands are claimed on that conservative side. The whole
+   * ladder, first through fortieth, is measured under this one convention. */
   const size = (table.target + 1) * (limit + 1);
   let prev = new Float64Array(size);
   let curr = new Float64Array(size);
@@ -170,31 +175,52 @@ function main() {
   }
 
   if (mode === "forge") {
-    /* The summit: tables 17-20. Seventeen takes the twin-ember pairs one
-     * step higher, eighteen walks the twin embers back down to the small
-     * felt, nineteen lights a third burn face on that felt - half the faces
-     * burn, so only the bounty keeps it playable - and the last gate pairs
-     * the cold family's burn with the deepest stakes of the room. Each
-     * bounty sits one step under the cliff where the next bank would come
-     * free, which is where the three-star line lands around a quarter of
-     * best-policy runs. */
-    const brief = [
-      { id: "t17", target: 240, burn: [1, 6], tax: -54, pairs: true },
-      { id: "t18", target: 90, burn: [1, 6], tax: -14, pairs: false },
-      { id: "t19", target: 105, burn: [1, 2, 6], tax: -22, pairs: false },
-      { id: "t20", target: 255, burn: [1, 2], tax: -59, pairs: true },
-    ];
-    brief.forEach(function (spec) {
-      const m = measure(spec);
+    /* The fourth tier: tables 31-40, the tier the felt built. The first
+     * thirty lit every ember the room had (1, 2, 3 and 6, on one die and on
+     * two); this tier burns the faces the room never burned - the 4, the 5,
+     * the parity splits, and the first four-ember felt - and charges the
+     * economy it never charged, the house's tax at double the Tax Table's
+     * rate. Every rung below sits on its measured starvation edge, and the
+     * tier's difficulty line is the descent: the three-star share falls
+     * strictly rung over rung, from the four-ember felt's 32.0 down to a
+     * point over the band floor the summit tier already reached. The brief
+     * also prints the two pins: the twin-ember pairs felt's target
+     * invariance (340 measures Pyre Summit's own two lines) and the
+     * four-ember pairs felt, which cannot ship at any bounty. */
+    const tier = tables.filter((table) =>
+      ["t31", "t32", "t33", "t34", "t35", "t36", "t37", "t38", "t39", "t40"]
+        .includes(table.id));
+    tier.forEach(function (table) {
+      const m = measure(table);
+      const starved = measure(Object.assign({}, table, { tax: table.tax + 2 }));
       console.log(
-        spec.id +
-          ": target " + spec.target +
-          ", burn [" + spec.burn.join(",") + "], tax " + spec.tax +
-          ", dice " + (spec.pairs ? 2 : 1) +
+        table.id +
+          ": target " + table.target +
+          ", burn [" + table.burn.join(",") + "], tax " + table.tax +
+          ", dice " + (table.pairs ? 2 : 1) +
           "  clears " + (m.clear * 100).toFixed(1) + "%" +
-          "  three-star " + (m.three * 100).toFixed(1) + "%",
+          "  three-star " + (m.three * 100).toFixed(1) + "%" +
+          "  | one stingier: " + (starved.clear * 100).toFixed(1) + "/" +
+          (starved.three * 100).toFixed(1),
       );
     });
+    const byId = {};
+    tables.forEach((table) => { byId[table.id] = table; });
+    const far = measure(byId.t35);
+    const pyre = measure(byId.t27);
+    console.log(
+      "invariance: t35 at 340 measures " + (far.clear * 100).toFixed(1) + "/" +
+        (far.three * 100).toFixed(1) + " against t27's " +
+        (pyre.clear * 100).toFixed(1) + "/" + (pyre.three * 100).toFixed(1) + " at 320",
+    );
+    const oneBank = measure({ id: "probe", target: 40, burn: [1, 2, 3, 6], tax: -35, pairs: true });
+    const twoBanks = measure({ id: "probe", target: 60, burn: [1, 2, 3, 6], tax: -45, pairs: true });
+    console.log(
+      "four-ember pairs: one bank " + (oneBank.clear * 100).toFixed(1) + "/" +
+        (oneBank.three * 100).toFixed(1) + ", two banks " +
+        (twoBanks.clear * 100).toFixed(1) + "/" + (twoBanks.three * 100).toFixed(1) +
+        " - no bounty lands it in the bands",
+    );
   }
 }
 

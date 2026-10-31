@@ -8,6 +8,7 @@ Thumbs.db
 # Dev/test runtime artifacts (not source)
 tmp/
 dist/
+sites/
 *.qoder.site
 tools/_*
 tools/_*.json

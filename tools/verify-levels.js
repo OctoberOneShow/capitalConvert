@@ -519,8 +519,8 @@ if (App.glyphSudokuGenerate) {
   const row = require("./kalah-forge");
   const kalah = row.loadApi();
   const ranks = kalah.malRanks;
-  check("game-kalah-row", "the bench ladder holds thirty ranks",
-    ranks.length === 30, String(ranks.length));
+  check("game-kalah-row", "the bench ladder holds forty ranks",
+    ranks.length === 40, String(ranks.length));
   check("game-kalah-row", "every rank id is distinct",
     new Set(ranks.map((rank) => rank.id)).size === ranks.length);
   check("game-kalah-row", "the summit 21-24 ranks all exist",
@@ -1286,115 +1286,6 @@ if (App.glyphSudokuGenerate) {
     "the unlock chain carries the tier: the bench cleared its way up to the summit",
     brkNewIds.every((id) => brkStrong[id].some((run) => run.cleared)),
     JSON.stringify(brkNewIds.map((id) => [id, brkStrong[id].filter((run) => run.cleared).length])));
-}
-/* ---- GATE: game-glyph-bastion ---- */
-/* ---- game-glyph-bastion: every authored plan proves through the prover ---
- *
- * bastionSolvable is the shipped resolver: it buys the plan wave by wave on
- * the same purse the buttons use and replays the fight through bastionStep.
- * The gate runs it for the whole ladder - the shipped fifteen included - so
- * a rung only ships when its written solution really holds the court. */
-if (App.bastionSolvable && App.bastionLevels) {
-  const bstLevels = App.bastionLevels;
-  check("game-glyph-bastion", "the ladder holds thirty boards",
-    bstLevels.length === 30, String(bstLevels.length));
-  const bstTier = bstLevels.filter((l) =>
-    ["g16", "g17", "g18", "g19", "g20"].includes(l.id));
-  check("game-glyph-bastion", "the tier 16-20 rows all exist", bstTier.length === 5,
-    bstTier.map((l) => l.id).join(","));
-  const bstSummit = bstLevels.filter((l) =>
-    ["g21", "g22", "g23", "g24"].includes(l.id));
-  check("game-glyph-bastion", "the summit 21-24 rows all exist", bstSummit.length === 4,
-    bstSummit.map((l) => l.id).join(","));
-  const bstDeep = bstLevels.filter((l) =>
-    ["g25", "g26", "g27", "g28", "g29", "g30"].includes(l.id));
-  check("game-glyph-bastion", "the deep 25-30 rows all exist", bstDeep.length === 6,
-    bstDeep.map((l) => l.id).join(","));
-  bstLevels.forEach((level) => {
-    const out = App.bastionSolvable(level);
-    check("game-glyph-bastion",
-      `${level.id}: the authored plan wins the court inside the purse`,
-      out.insideBudget && out.bought >= out.planned && out.leaks < level.leaks,
-      JSON.stringify(out));
-    check("game-glyph-bastion",
-      `${level.id}: the glyph bands rise (a dearer stand still stars)`,
-      level.starGlyphs[0] < level.starGlyphs[1] && level.starGlyphs[1] < level.starGlyphs[2],
-      level.starGlyphs.join("/"));
-    check("game-glyph-bastion",
-      `${level.id}: the plan fits the tower cap`,
-      (level.solution || []).length <= level.maxTowers,
-      `${(level.solution || []).length} of ${level.maxTowers}`);
-    check("game-glyph-bastion",
-      `${level.id}: the plan stands off the road`,
-      (level.solution || []).every((tower) => (level.paths || []).every((path) =>
-        path.every((cell) => cell[0] !== tower.x || cell[1] !== tower.y))),
-      JSON.stringify(level.solution));
-  });
-  /* The new tiers hold the higher bar: their authored lines three-star their
-   * own bands, so a player copying the written plan sees the top band. */
-  bstTier.concat(bstSummit, bstDeep).forEach((level) => {
-    const out = App.bastionSolvable(level);
-    check("game-glyph-bastion",
-      `${level.id}: the authored plan three-stars its own band`,
-      out.leaks === 0 && out.cost === level.starGlyphs[0],
-      JSON.stringify(out));
-  });
-  check("game-glyph-bastion", "the deep rank names are bilingual",
-    ["gstZ16", "gstZ17", "gstZ18", "gstZ19", "gstZ20", "gstZ21", "gstZ22",
-      "gstZ23", "gstZ24", "gstZ25", "gstZ26", "gstZ27", "gstZ28", "gstZ29",
-      "gstZ30"].every((key) => {
-      const text = App.t(key);
-      return text && text !== key;
-    }), "a tier label fell back to its key");
-
-  /* The deep tier's shape is measured, not asserted: the purse slack falls
-   * 3,3,2,2,1,0 while the tower cap climbs 7-11, one more road joins at
-   * g26/g28 and the wave count grows 7-10, and every authored plan spends
-   * the full cap inside its own three-star band. */
-  const bstSlack = [3, 3, 2, 2, 1, 0];
-  const bstCaps = [7, 8, 8, 9, 10, 11];
-  const bstRoads = [2, 3, 3, 4, 4, 4];
-  const bstWaves = [7, 8, 8, 9, 9, 10];
-  const bstShapeProblems = bstDeep.map((level, index) => {
-    const slack = level.budget - App.bastionCost(level.solution);
-    const towers = (level.solution || []).length;
-    const problems = [];
-    if (slack !== bstSlack[index]) problems.push("slack " + slack);
-    if (level.maxTowers !== bstCaps[index] || towers !== level.maxTowers) {
-      problems.push("cap " + towers + "/" + level.maxTowers);
-    }
-    if ((level.paths || []).length !== bstRoads[index]) {
-      problems.push("roads " + (level.paths || []).length);
-    }
-    if ((level.waves || []).length !== bstWaves[index]) {
-      problems.push("waves " + (level.waves || []).length);
-    }
-    if (level.starGlyphs[1] !== level.starGlyphs[0] + 2 ||
-        level.starGlyphs[2] !== level.starGlyphs[0] + 4) {
-      problems.push("bands " + level.starGlyphs.join("/"));
-    }
-    return problems.length ? level.id + ": " + problems.join(", ") : null;
-  }).filter(Boolean);
-  check("game-glyph-bastion",
-    "the deep tier spends its slack down to zero, adds roads and waves, and fills every cap",
-    bstShapeProblems.length === 0, bstShapeProblems.join(" | "));
-
-  /* The guide announces the deep tier in both languages. */
-  const bstGuide = (App.getRegistryGuides ? App.getRegistryGuides() : [])
-    .filter((entry) => entry.id === "glyphBastion")[0];
-  const bstGuideProblems = [];
-  if (!bstGuide) {
-    bstGuideProblems.push("the game ships no guide");
-  } else {
-    if (!(bstGuide.en || []).some((line) => line.indexOf("New tier:") === 0)) {
-      bstGuideProblems.push("the English guide has no New tier line");
-    }
-    if (!(bstGuide.zh || []).some((line) => line.indexOf("新层级：") === 0)) {
-      bstGuideProblems.push("the Chinese guide has no 新层级 line");
-    }
-  }
-  check("game-glyph-bastion", "the guide announces the deep tier in both languages",
-    bstGuideProblems.length === 0, bstGuideProblems.join(" | "));
 }
 /* ---- game-glyph-four: the deep tier is conquest, and it is monotone -------
  *
@@ -4406,8 +4297,8 @@ if (App.ldsRoutes) {
 {
   const golf = require("./golf-forge");
   const cgfCourses = golf.loadCourses();
-  check("game-comet-golf", "the sky holds thirty courses",
-    cgfCourses.length === 30, String(cgfCourses.length));
+  check("game-comet-golf", "the sky holds forty courses",
+    cgfCourses.length === 40, String(cgfCourses.length));
   check("game-comet-golf", "every course id is distinct",
     new Set(cgfCourses.map((c) => c.id)).size === cgfCourses.length);
   const cgfDeep = cgfCourses.filter((c) => ["g21", "g22", "g23", "g24"].includes(c.id));
@@ -4417,7 +4308,7 @@ if (App.ldsRoutes) {
   check("game-comet-golf", "the deep tier ring shrinks below the shipped floor",
     cgfDeep.every((c) => c.target.r <= 12) &&
     cgfDeep[3].target.r === 10 &&
-    cgfCourses.filter((c) => !["g21", "g22", "g23", "g24", "g25", "g26", "g27", "g28", "g29", "g30"].includes(c.id)).every((c) => c.target.r >= 12),
+    cgfCourses.filter((c) => !["g21", "g22", "g23", "g24", "g25", "g26", "g27", "g28", "g29", "g30", "g31", "g32", "g33", "g34", "g35", "g36", "g37", "g38", "g39", "g40"].includes(c.id)).every((c) => c.target.r >= 12),
     cgfDeep.map((c) => c.target.r).join("/"));
   const cgfDeepSky = cgfCourses.filter((c) => ["g25", "g26", "g27", "g28", "g29", "g30"].includes(c.id));
   check("game-comet-golf", "the deep-sky tier is the harder tier: eight wells or more",
@@ -4746,16 +4637,16 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
   const crossing = require("./crossing-forge");
   const croLevels = crossing.loadFords();
 
-  check("game-glyph-crossing", "the ladder holds thirty fords",
-    croLevels.length === 30, String(croLevels.length));
+  check("game-glyph-crossing", "the ladder holds forty fords",
+    croLevels.length === 40, String(croLevels.length));
   check("game-glyph-crossing", "every ford id is distinct",
     new Set(croLevels.map((l) => l.id)).size === croLevels.length);
-  check("game-glyph-crossing", "the ids run c1 through c30 in order",
+  check("game-glyph-crossing", "the ids run c1 through c40 in order",
     croLevels.every((l, index) => l.id === "c" + (index + 1)),
     croLevels.map((l) => l.id).join(","));
 
-  /* The prover's own answer, re-run here for all thirty rungs - the
-   * twenty shipped included, so an edit that strands any of them fails the
+  /* The prover's own answer, re-run here for all forty rungs - the
+   * thirty shipped included, so an edit that strands any of them fails the
    * bar. The search only ever walks non-lethal states, so a certificate is
    * also the lives margin: the ford clears inside the three lives the
    * panel grants without a single splash or squash. */
@@ -4914,14 +4805,18 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
   if (!(croTop(croF24) === 198 && croTight(croF24) === 86)) {
     summitProblems.push("c24 is not the deep summit the tier is priced against");
   }
-  if (!(croTop(croSummit[5]) === Math.max.apply(null, croLevels.map(croTop)))) {
-    summitProblems.push("c30 does not hold the ladder's fastest lane");
+  /* The records are scoped by position: the first thirty's fastest lane and
+   * tightest window land on c30 - the deluge tier legitimately overtakes
+   * both. */
+  const croFirst30 = croLevels.slice(0, 30);
+  if (!(croTop(croSummit[5]) === Math.max.apply(null, croFirst30.map(croTop)))) {
+    summitProblems.push("c30 does not hold the first thirty's fastest lane");
   }
-  if (!(croTight(croSummit[5]) === Math.min.apply(null, croLevels.map(croTight)))) {
-    summitProblems.push("c30 does not hold the ladder's tightest window");
+  if (!(croTight(croSummit[5]) === Math.min.apply(null, croFirst30.map(croTight)))) {
+    summitProblems.push("c30 does not hold the first thirty's tightest window");
   }
   check("game-glyph-crossing",
-    "the summit mirrors all three streets on ten lanes a rung, tightens the brief rung over rung, and lands the records on c30 (" +
+    "the summit mirrors all three streets on ten lanes a rung, tightens the brief rung over rung, and lands the first thirty's records on c30 (" +
       croSummit.map((l) => l.id + " top " + croTop(l) + "/gap " + croTight(l)).join(", ") +
       " vs c24 " + croTop(croF24) + "/" + croTight(croF24) + ")",
     summitProblems.length === 0, summitProblems.join(" | "));
@@ -5051,8 +4946,8 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
     const expected = index + 1 < croLevels.length ? croLevels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) croChained = false;
   });
-  check("game-glyph-crossing", "the unlock chain walks all thirty fords in order",
-    croWalked === 30 && croChained && croChain.clearedCount() === 30,
+  check("game-glyph-crossing", "the unlock chain walks all forty fords in order",
+    croWalked === 40 && croChained && croChain.clearedCount() === 40,
     croWalked + " first clears");
 }
 
@@ -5224,14 +5119,13 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
 {
   const mcbForge = require("./microbe-forge");
   const mcbLevels = App.microbeLevels;
-  check("game-microbe-lab", "the ladder holds thirty dishes",
-    mcbLevels.length === 30, String(mcbLevels.length));
+  check("game-microbe-lab", "the ladder holds forty dishes",
+    mcbLevels.length === 40, String(mcbLevels.length));
   check("game-microbe-lab", "every dish id is distinct",
     new Set(mcbLevels.map((l) => l.id)).size === mcbLevels.length,
     mcbLevels.map((l) => l.id).join(","));
 
   const MCB_TIER = ["m21", "m22", "m23", "m24"];
-  const MCB_BENCH = ["m25", "m26", "m27", "m28", "m29", "m30"];
   const mcbTier = mcbLevels.filter((l) => MCB_TIER.includes(l.id));
   const mcbBudget = mcbLevels.filter((l) =>
     ["m14", "m15", "m16", "m17", "m18", "m19", "m20"].includes(l.id));
@@ -5316,8 +5210,7 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
     });
     return ids;
   };
-  const mcbShippedCards = mcbCardIds(mcbLevels.filter((l) =>
-    !MCB_TIER.includes(l.id) && !MCB_BENCH.includes(l.id)));
+  const mcbShippedCards = mcbCardIds(mcbLevels.slice(0, 20));
   const mcbTierCards = mcbCardIds(mcbTier);
   check("game-microbe-lab",
     "the two new pressures appear in the tier and nowhere before it",
@@ -5380,8 +5273,8 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
  * App.t in both languages. */
 {
   const wlkLevels = App.loomLevels;
-  check("game-weather-loom", "the ladder holds thirty seasons",
-    wlkLevels.length === 30, String(wlkLevels.length));
+  check("game-weather-loom", "the ladder holds forty seasons",
+    wlkLevels.length === 40, String(wlkLevels.length));
   check("game-weather-loom", "every season id is distinct",
     new Set(wlkLevels.map((level) => level.id)).size === wlkLevels.length);
   const wlkTier = wlkLevels.filter((level) =>
@@ -5458,14 +5351,14 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
  * inside the pad window with fuel on the gauge and a controlled descent,
  * and the star bands are that measured landing's own line - 62/42/22
  * percent of the best fuel it leaves, the shipped calibration. This gate
- * re-judges all thirty sectors through that same flight, then holds the
- * summit tier (s21-s24) and the last ridge tier (s25-s30) to their design
- * briefs and their bilingual labels. */
+ * re-judges all forty sectors through that same flight, then holds the
+ * summit tier (s21-s24), the last ridge tier (s25-s30) and the chasm tier
+ * (s31-s40) to their design briefs and their bilingual labels. */
 {
   const forge = require("./starfall-forge");
   const lantLevels = forge.loadLevels();
-  check("game-starfall", "the sky holds thirty sectors",
-    lantLevels.length === 30, String(lantLevels.length));
+  check("game-starfall", "the sky holds forty sectors",
+    lantLevels.length === 40, String(lantLevels.length));
   check("game-starfall", "every sector id is distinct",
     new Set(lantLevels.map((l) => l.id)).size === lantLevels.length,
     lantLevels.map((l) => l.id).join(" "));
@@ -5509,7 +5402,10 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
       index === 0 || l.fuel < lantRidge[index - 1].fuel) &&
     lantRidge[0].fuel < lantSummit[lantSummit.length - 1].fuel,
     lantRidge.map((l) => "f" + l.fuel).join(" "));
-  const lantCalibrated = ["s21", "s22", "s23", "s24", "s25", "s26", "s27", "s28", "s29", "s30"];
+  const lantCalibrated = [
+    "s21", "s22", "s23", "s24", "s25", "s26", "s27", "s28", "s29", "s30",
+    "s31", "s32", "s33", "s34", "s35", "s36", "s37", "s38", "s39", "s40",
+  ];
   lantLevels.forEach((level) => {
     const report = forge.checkLevel(level);
     check("game-starfall", `${level.id}: the forge's own checker clears it`,
@@ -5704,7 +5600,7 @@ if (App.prismLevels && App.I18N) {
  * cuts the new tier's advertised mechanic out of a copy of its own row, so
  * a rung whose lesson is decorative fails the build. */
 ["glyph-echo", "clockwork-dispatch", "courtroom-of-animals", "pinball-courier",
-  "neon-drift", "shadow-fold",
+  "neon-drift", "shadow-fold", "kalah-row",
   "borrowed-bodies", "pocket-detective", "shadow-puppeteer", "switchboard-duo",
   "counterfeit-museum", "circuit-scribe", "lost-language", "glyph-fifteen", "glyph-blocks",
   "glyph-dots", "bubble-ink", "ink-cascade", "ink-slash",
@@ -5720,7 +5616,7 @@ if (App.prismLevels && App.I18N) {
   "republic-quiz", "microbe-lab", "weather-loom",
   "glyph-sudoku", "glyph-tower", "glyph-pusher",
   "breakout", "coral-architect", "crosswind-kites", "deep-freeze",
-  "glyph-four", "glyph-reversi", "gomoku", "roof-garden",
+  "glyph-bastion", "glyph-four", "glyph-reversi", "gomoku", "roof-garden",
   "tiny-blacksmith", "tiny-wrestlers", "pocket-photographer", "love-deepspace"].forEach((slug) => {
   const snippetEnv = createEnvironment({});
   snippetEnv.load(appSource);

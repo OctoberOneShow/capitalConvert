@@ -358,8 +358,8 @@
      * eleven cells give every crease a longer walk, so the same seven
      * creases reach targets the nine-cell sheets cannot hold, and a
      * keep-clear block now removes whole orbits from the stamp pool rather
-     * than single cells. f30 is the only sheet in the drawer that asks for
-     * eight creases. Every sheet here is clean under the forge's three
+     * than single cells. f30 is the only sheet of the first thirty that
+     * asks for eight creases. Every sheet here is clean under the forge's three
      * questions: every seeded deal stays solvable, every intended crease is
      * needed for the deals it dealt, and the authored reserve is itself
      * solvable as written. */
@@ -478,11 +478,281 @@
         { axis: "v", line: 17 },
         { axis: "v", line: 19 },
       ],
-      /* The Eight-Fold: the only sheet in the drawer that asks for eight
-       * creases. Four creases on each axis, an orbit that covers thirty-two
+      /* The Eight-Fold: the only sheet of the first thirty that asks for
+       * eight creases. Four creases on each axis, an orbit that covers thirty-two
        * cells, and two keep-clear pockets that every stamp must fold around. */
       avoid: ["2,2", "2,3", "0,6", "1,6"],
       authored: [{ x: 3, y: 0 }, { x: 3, y: 7 }, { x: 3, y: 2 }, { x: 0, y: 0 }, { x: 3, y: 6 }, { x: 0, y: 7 }, { x: 2, y: 0 }, { x: 0, y: 2 }],
+    },
+    /* ------------------------------------------------------------------
+     * The widest tier (f31-f40). The deep tier widened the paper to
+     * eleven cells and stopped; this tier widens it again and then
+     * fills it. Twelve-, thirteen- and fourteen-cell paper stretch
+     * every crease's walk, and every ceiling the drawer had falls
+     * somewhere in the ten: the tray climbs to eleven and then twelve
+     * stamps, f36 is the first sheet past eight creases, f34 pulls
+     * five creases on one axis, the heaviest single print grows from
+     * thirty-two cells to forty-eight, sixty-four and finally eighty,
+     * and the stamp pool widens past anything the first thirty dealt.
+     * Each rung takes one record against every sheet before it: f31
+     * the first twelve-cell paper, f32 a forty-eight-cell print past
+     * the deep tier's ceiling, f33 the first eleven-stamp tray, f34
+     * the first five-crease axis, f35 the first thirteen-cell paper,
+     * f36 the first nine-crease sheet, f37 the widest stamp pool any
+     * sheet deals from, f38 the first twelve-stamp tray, f39 a
+     * sixty-four-cell print, f40 the capstone - fourteen-cell paper,
+     * an eighty-cell print, and a deal that floods 192 of the 196
+     * cells every single time. The dealt targets dip twice on the
+     * way up, both times by the record's own cost: f33 sits under f32
+     * because the eleven-stamp tray spends orbits on a keep-clear
+     * pair, and f37 sits under f36 because three orbits leave the
+     * pool - while the par and tray lines never fall. f34 and f40
+     * leave the stamp pool exactly the size of the tray, so every
+     * deal inks all but the keep-clears, 140 of 144 and 192 of 196.
+     * Every sheet below was checked by tools/fold-forge.js the way
+     * the panel deals it - twelve seeded deals all solvable, no deal
+     * falling through to the authored reserve, every intended crease
+     * provably needed - and the deals were read off the module's own
+     * dealer over a hundred seeded runs per sheet. */
+    {
+      id: "f31", labelKey: "shfS31",
+      side: 12,
+      wants: 8,
+      par: 8,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 7 },
+        { axis: "v", line: 21 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 7 },
+        { axis: "h", line: 19 },
+        { axis: "h", line: 21 },
+      ],
+      /* The first sheet past eleven cells. One comb of creases chains
+       * eight of the twelve columns into a single run while two lone
+       * columns and a far pair wait at the edge; the widest stamps
+       * flood thirty-two cells, the deep tier's own ceiling, and a
+       * lone column's four-cell orbit sits out the pool as the
+       * keep-clear. */
+      avoid: ["8,0", "8,3", "8,4", "8,7"],
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 8 }, { x: 10, y: 0 }, { x: 10, y: 1 }, { x: 10, y: 8 }, { x: 9, y: 0 }, { x: 8, y: 1 }],
+    },
+    {
+      id: "f32", labelKey: "shfS32",
+      side: 12,
+      wants: 9,
+      par: 8,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 17 },
+        { axis: "v", line: 19 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 13 },
+        { axis: "h", line: 19 },
+        { axis: "h", line: 21 },
+      ],
+      /* The first print past the deep tier's ceiling: one stamp on the
+       * wide orbit floods forty-eight cells, six columns by eight
+       * rows, where thirty-two was the record. Two lone columns split
+       * the paper, and the pair orbit hanging off the first of them
+       * is the keep-clear - out of the pool, so the print has to be
+       * paid for in nine stamps, not one. */
+      avoid: ["4,0", "4,1"],
+      authored: [{ x: 6, y: 2 }, { x: 0, y: 2 }, { x: 6, y: 0 }, { x: 6, y: 6 }, { x: 0, y: 0 }, { x: 4, y: 2 }, { x: 5, y: 2 }, { x: 0, y: 6 }, { x: 5, y: 0 }],
+    },
+    {
+      id: "f33", labelKey: "shfS33",
+      side: 12,
+      wants: 11,
+      par: 8,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 17 },
+        { axis: "v", line: 21 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 7 },
+        { axis: "h", line: 19 },
+      ],
+      /* Eleven stamps, the first eleven-stamp tray the panel has
+       * dealt - the deal asks for eleven of the fourteen orbits the
+       * keep-clear pair leaves. The pair is one orbit, two cells
+       * hanging in the field, and the dealt targets dip just under
+       * f32's because those two cells never reach the ink. */
+      avoid: ["4,8", "4,11"],
+      authored: [{ x: 0, y: 0 }, { x: 6, y: 0 }, { x: 8, y: 0 }, { x: 4, y: 0 }, { x: 5, y: 0 }, { x: 0, y: 8 }, { x: 6, y: 8 }, { x: 0, y: 9 }, { x: 6, y: 9 }, { x: 8, y: 8 }, { x: 8, y: 9 }],
+    },
+    {
+      id: "f34", labelKey: "shfS34",
+      side: 12,
+      wants: 11,
+      par: 8,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 7 },
+        { axis: "v", line: 19 },
+        { axis: "v", line: 21 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 17 },
+      ],
+      /* Five creases on one axis, the first sheet to pull that many
+       * verticals. The stamp pool comes out exactly the size of the
+       * tray - eleven orbits for eleven stamps - so every deal inks
+       * all but the keep-clear strip along the right edge: 140 of the
+       * 144 cells, the same sheet every time, and the puzzle lives
+       * entirely in the creases. */
+      avoid: ["8,4", "9,4", "10,4", "11,4"],
+      authored: [{ x: 0, y: 0 }, { x: 8, y: 0 }, { x: 0, y: 6 }, { x: 0, y: 7 }, { x: 0, y: 8 }, { x: 0, y: 4 }, { x: 0, y: 5 }, { x: 8, y: 6 }, { x: 8, y: 7 }, { x: 8, y: 8 }, { x: 8, y: 5 }],
+    },
+    {
+      id: "f35", labelKey: "shfS35",
+      side: 13,
+      wants: 11,
+      par: 8,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 15 },
+        { axis: "v", line: 19 },
+        { axis: "v", line: 21 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 17 },
+        { axis: "h", line: 23 },
+      ],
+      /* Thirteen cells, one wider than any sheet before it. One crease
+       * hugs the left edge and three reach for the right, so eleven
+       * of the thirteen columns fold as one run and the widest stamps
+       * flood forty cells, ten columns by four rows. A single
+       * keep-clear cell - the thinnest orbit on the sheet - floats
+       * mid-field. */
+      avoid: ["2,4"],
+      authored: [{ x: 3, y: 0 }, { x: 3, y: 5 }, { x: 3, y: 7 }, { x: 3, y: 8 }, { x: 3, y: 4 }, { x: 0, y: 0 }, { x: 0, y: 5 }, { x: 2, y: 0 }, { x: 2, y: 5 }, { x: 0, y: 7 }, { x: 0, y: 8 }],
+    },
+    {
+      id: "f36", labelKey: "shfS36",
+      side: 13,
+      wants: 11,
+      par: 9,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 17 },
+        { axis: "v", line: 21 },
+        { axis: "v", line: 23 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 19 },
+        { axis: "h", line: 21 },
+      ],
+      /* The Nine-Fold: the first sheet that asks for nine creases. Five
+       * verticals and four horizontals leave one lone column and three
+       * lone rows, and their crossing is the keep-clear cell - a stamp
+       * there would sit in an orbit of its own, the thinnest on the
+       * sheet. The widest print floods forty-eight cells. */
+      avoid: ["4,4"],
+      authored: [{ x: 5, y: 7 }, { x: 5, y: 0 }, { x: 0, y: 7 }, { x: 0, y: 0 }, { x: 5, y: 4 }, { x: 5, y: 5 }, { x: 5, y: 6 }, { x: 4, y: 7 }, { x: 4, y: 0 }, { x: 0, y: 4 }, { x: 0, y: 5 }],
+    },
+    {
+      id: "f37", labelKey: "shfS37",
+      side: 13,
+      wants: 11,
+      par: 9,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 17 },
+        { axis: "v", line: 21 },
+        { axis: "v", line: 23 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 5 },
+        { axis: "h", line: 21 },
+        { axis: "h", line: 23 },
+      ],
+      /* Eighteen ways to stamp eleven - the widest pool any sheet
+       * deals from - and its three bare cells stack down one lone
+       * column, each an orbit of its own, out of the pool. The dealt
+       * targets dip under f36's because those three cells never reach
+       * the ink. */
+      avoid: ["4,6", "4,7", "4,8"],
+      authored: [{ x: 5, y: 0 }, { x: 5, y: 9 }, { x: 0, y: 0 }, { x: 5, y: 2 }, { x: 0, y: 9 }, { x: 0, y: 2 }, { x: 5, y: 6 }, { x: 5, y: 7 }, { x: 5, y: 8 }, { x: 4, y: 0 }, { x: 0, y: 6 }],
+    },
+    {
+      id: "f38", labelKey: "shfS38",
+      side: 13,
+      wants: 12,
+      par: 9,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 17 },
+        { axis: "v", line: 21 },
+        { axis: "v", line: 23 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 7 },
+        { axis: "h", line: 21 },
+        { axis: "h", line: 23 },
+      ],
+      /* Twelve stamps - the tray the deep tier never reached. The
+       * sheet keeps the Nine-Fold's lone column, the deals run past a
+       * hundred inked cells, and the lone keep-clear cell is the
+       * thinnest orbit, out of the pool. */
+      avoid: ["4,8"],
+      authored: [{ x: 5, y: 0 }, { x: 5, y: 9 }, { x: 0, y: 0 }, { x: 5, y: 2 }, { x: 5, y: 3 }, { x: 0, y: 9 }, { x: 0, y: 2 }, { x: 0, y: 3 }, { x: 5, y: 8 }, { x: 4, y: 0 }, { x: 0, y: 8 }, { x: 4, y: 9 }],
+    },
+    {
+      id: "f39", labelKey: "shfS39",
+      side: 13,
+      wants: 12,
+      par: 9,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 7 },
+        { axis: "v", line: 21 },
+        { axis: "v", line: 23 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 7 },
+        { axis: "h", line: 23 },
+      ],
+      /* One stamp floods sixty-four cells here - eight columns by
+       * eight rows, a square of ink no earlier sheet could hold. Two
+       * single-cell keep-cleares sit just past its far corner, each
+       * the lone crossing of a lone column and a lone row. */
+      avoid: ["8,8", "8,9"],
+      authored: [{ x: 0, y: 0 }, { x: 9, y: 0 }, { x: 0, y: 11 }, { x: 8, y: 0 }, { x: 0, y: 8 }, { x: 0, y: 9 }, { x: 0, y: 10 }, { x: 9, y: 11 }, { x: 9, y: 8 }, { x: 9, y: 9 }, { x: 9, y: 10 }, { x: 8, y: 11 }],
+    },
+    {
+      id: "f40", labelKey: "shfS40",
+      side: 14,
+      wants: 12,
+      par: 9,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 7 },
+        { axis: "v", line: 23 },
+        { axis: "v", line: 25 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 17 },
+        { axis: "h", line: 21 },
+        { axis: "h", line: 23 },
+      ],
+      /* The capstone: fourteen-cell paper, the widest the drawer has
+       * ever dealt, under a nine-crease walk, with the heaviest print
+       * the game has ever stamped - eighty cells, eight columns by
+       * ten rows. Two lone columns cross two lone rows mid-field, and
+       * their four crossings are the keep-clear block, four whole
+       * orbits out of the pool. What is left is exactly the
+       * twelve-stamp tray, so every deal inks all but that block:
+       * 192 of the 196 cells, the same sheet every time. */
+      avoid: ["8,2", "9,2", "8,3", "9,3"],
+      authored: [{ x: 0, y: 4 }, { x: 10, y: 4 }, { x: 0, y: 0 }, { x: 8, y: 4 }, { x: 9, y: 4 }, { x: 10, y: 0 }, { x: 0, y: 2 }, { x: 0, y: 3 }, { x: 10, y: 2 }, { x: 10, y: 3 }, { x: 8, y: 0 }, { x: 9, y: 0 }],
     },
   ];
 
@@ -1182,6 +1452,16 @@
       "shfS28": "Eleven Cells",
       "shfS29": "Ten Stamps",
       "shfS30": "The Eight-Fold",
+      "shfS31": "Twelve Cells",
+      "shfS32": "The Wide Print",
+      "shfS33": "Eleven Stamps",
+      "shfS34": "Five Verticals",
+      "shfS35": "Thirteen Cells",
+      "shfS36": "The Nine-Fold",
+      "shfS37": "Three Bare Cells",
+      "shfS38": "Twelve Stamps",
+      "shfS39": "The Heavy Print",
+      "shfS40": "The Whole Cloth",
       "shfInkLabel": "Ink",
       "shfFoldLabel": "Creases",
       "shfSheetSelectLabel": "Pick a sheet",
@@ -1209,7 +1489,7 @@
       "shfAlready": "{name} is already pressed - take a new sheet.",
       "shfBestFolds": "best {n} creases",
       "shfNextSheet": "Next sheet unlocked.",
-      "shfCampaignDone": "All thirty sheets pressed clean.",
+      "shfCampaignDone": "All forty sheets pressed clean.",
       "shfLocked": "{name} is still folded away behind the sheet before it.",
       "shfHint": "Extra ink is a failure, so a crease you do not need is a trap - and the crossing cell of two creases often has to stay bare.",
       "logShadowFold": "Pressed a sheet on {n} creases",
@@ -1246,6 +1526,16 @@
       "shfS28": "十一格",
       "shfS29": "十枚印章",
       "shfS30": "八折",
+      "shfS31": "十二格",
+      "shfS32": "宽印",
+      "shfS33": "十一枚印章",
+      "shfS34": "五道竖线",
+      "shfS35": "十三格",
+      "shfS36": "九折",
+      "shfS37": "三格留白",
+      "shfS38": "十二枚印章",
+      "shfS39": "重墨",
+      "shfS40": "满纸",
       "shfInkLabel": "墨点",
       "shfFoldLabel": "折痕",
       "shfSheetSelectLabel": "选择纸张",
@@ -1273,7 +1563,7 @@
       "shfAlready": "「{name}」已经拓好了——换一张纸再来。",
       "shfBestFolds": "最佳 {n} 道折痕",
       "shfNextSheet": "解锁下一张纸。",
-      "shfCampaignDone": "三十张纸都拓干净了。",
+      "shfCampaignDone": "四十张纸都拓干净了。",
       "shfLocked": "「{name}」还压在上一张纸后面。",
       "shfHint": "多出图案之外的墨就算失败，所以用不上的折痕是个陷阱；两条折线的交叉格常常必须留空。",
       "logShadowFold": "用 {n} 道折痕拓好了一张纸",
@@ -1301,6 +1591,7 @@
         "Budget: the ink tray holds only a few stamps, so the creases are what let a small pattern cover a big sheet.",
         "Watch out: ink outside the target is a failure, so an unneeded crease - or a stamp on the crossing cell - ruins the print.",
         "Scoring: folds used against par decides the stars, and New Sheet deals a fresh target built from a known answer.",
+        "New tier: ten more sheets widen the paper again - twelve, thirteen and finally fourteen cells a side - and pass every deep-tier ceiling: eleven and twelve stamps in the tray, the first nine-crease sheet, five creases on one axis, three keep-clear orbits, single prints of up to eighty cells, and two sheets that ink all but a keep-clear handful of the paper; the capstone floods 192 of its 196 cells on every deal.",
       ],
       zh: [
         "目标：把纸展开后的墨迹，正好落在图案上。",
@@ -1309,6 +1600,7 @@
         "墨量：印盘里只有几枚印章，所以要靠折线让小小的图案铺满整张纸。",
         "小心：图案之外多出墨就算失败，所以多余的折线——或者压在对齐格上的章——都会毁掉这张拓片。",
         "计分：用的折痕数与标准用量对比决定星级；换一张纸会发一张由已知答案生成的新图案。",
+        "新层级：再添十张纸，把纸幅再次拉宽——十二格、十三格，直至十四格见方，并越过深层的一切上限：印盘十一枚、十二枚，第一张九折纸，同轴五道折痕，三处留白，单枚印章最多铺出八十格墨；其中两张纸除了留白几乎要铺满整幅，收官任务每次开局都漫过 196 格中的 192 格。",
       ],
     },
   });

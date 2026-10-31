@@ -569,6 +569,301 @@
       ],
       starTimes: [158, 237, 316],
     },
+    /* ------------------------------------------------------------------
+     * The observatory tier (p31-p40) widens the bench past the summit and
+     * takes one structural record per rung against every board before it.
+     * Eleven- and twelve-across paper stretch every walk the summit set,
+     * and every ceiling the game had falls somewhere in the ten: the bench
+     * climbs to eleven across and then twelve, a sixth splitter joins the
+     * rail, a fifth element comes welded, the fan reaches eleven marks and
+     * then the closer's twelve, the heaviest single sweep grows from
+     * Supernova's fifty-seven cells to fifty-nine and then seventy-one,
+     * and the bendiest route runs twenty-one bends against the summit's
+     * fifteen. The ten, in order:
+     * p31 the first eleven-across bench, p32 the first sweep past
+     * fifty-seven cells, p33 the first six-fork bench, p34 the first
+     * five-weld board, p35 the first eleven-mark fan, p36 the first
+     * thirteen-element bench, p37 the bendiest route the game has carried,
+     * p38 the first twelve-across bench, p39 the heaviest sweep, and p40
+     * the capstone - twelve marks lit by exactly one orientation out of
+     * two hundred and fifty-six. The dial lines never fall: targets,
+     * elements, forks, welds and the paper itself only climb, and the
+     * deals sit five flips out across the whole tier. Three of the deals
+     * start in the dark. Every board was forged, not guessed - `node
+     * tools/prism-forge.js verify` re-reads the shipped table and replays
+     * every reachable orientation of every board through the same beam
+     * tracer the page runs, and each record rung solves from exactly one
+     * orientation so the measured beam is the beam. The dense benches
+     * starved the forge's scatter search - no random eleven-across layout
+     * in three thousand had a single orientation touching all twelve
+     * elements - so five of the ten were laid out along a simulated beam
+     * walk that seats each element on the ray the walk is travelling and
+     * cuts walls only outside the corridor; the search then judged the
+     * finished boards by the same release bar as the rest of the ladder.
+     * ------------------------------------------------------------------ */
+    /* Wide Aperture: the bench widens past the summit - eleven across, the
+     * first board the game has dealt on a hundred and twenty-one cells. The
+     * emitter fires straight into a fork, so the route forks in the shadow
+     * of the housing, and ten marks hang off twelve elements, five of them
+     * forks, the solution sweeping forty-four cells on fourteen bends. */
+    {
+      id: "p31", labelKey: "prismL31", w: 11, h: 11,
+      emitter: { x: 2, y: 10, dir: 3 },
+      targets: [[6, 5], [9, 8], [6, 3], [1, 8], [4, 3], [4, 5], [5, 7], [4, 0], [0, 8], [4, 2]],
+      walls: [[8, 2], [6, 0], [1, 10], [4, 8], [8, 9], [3, 2], [8, 6], [5, 9]],
+      mirrors: [
+        { x: 2, y: 9, slope: 1, split: true },
+        { x: 1, y: 9, slope: 0, locked: true },
+        { x: 1, y: 6, slope: 1 },
+        { x: 2, y: 6, slope: 1 },
+        { x: 2, y: 8, slope: 1, locked: true },
+        { x: 3, y: 8, slope: 0, split: true },
+        { x: 3, y: 5, slope: 0, locked: true },
+        { x: 5, y: 5, slope: 1 },
+        { x: 5, y: 8, slope: 1, locked: true },
+        { x: 6, y: 8, slope: 1, split: true },
+        { x: 6, y: 6, slope: 0, split: true },
+        { x: 4, y: 6, slope: 0, split: true },
+      ],
+      starTimes: [168, 252, 336],
+    },
+    /* Long Baseline: the first sweep past Supernova's fifty-seven cells -
+     * fifty-nine on the way to ten marks, fifteen bends in the route, and
+     * one crossing of its own earlier leg on the way home. The deal lights
+     * two of the ten and sits five flips off the only orientation that
+     * lights them all. */
+    {
+      id: "p32", labelKey: "prismL32", w: 11, h: 11,
+      emitter: { x: 10, y: 5, dir: 2 },
+      targets: [[2, 0], [6, 1], [1, 7], [7, 8], [2, 1], [5, 5], [2, 6], [3, 9], [8, 5], [5, 6]],
+      walls: [[8, 10], [5, 10], [0, 1], [10, 4], [3, 0], [8, 7], [10, 2]],
+      mirrors: [
+        { x: 7, y: 5, slope: 1, locked: true },
+        { x: 7, y: 9, slope: 1, split: true },
+        { x: 2, y: 9, slope: 1 },
+        { x: 2, y: 5, slope: 0, locked: true },
+        { x: 7, y: 1, slope: 1, locked: true },
+        { x: 3, y: 1, slope: 1, split: true },
+        { x: 3, y: 5, slope: 1, split: true },
+        { x: 6, y: 5, slope: 1, split: true },
+        { x: 6, y: 8, slope: 0, split: true },
+        { x: 1, y: 8, slope: 1 },
+        { x: 1, y: 4, slope: 0 },
+        { x: 5, y: 4, slope: 0, locked: true },
+      ],
+      starTimes: [178, 267, 356],
+    },
+    /* The Six-Fork: the first six-splitter bench - one more fork than any
+     * board before it - and the handed deal lights nothing at all, the
+     * second dark deal in the campaign. The one solving orientation sweeps
+     * fifty-nine cells through all twelve elements and crosses its own leg
+     * once before the last mark glows. */
+    {
+      id: "p33", labelKey: "prismL33", w: 11, h: 11,
+      emitter: { x: 10, y: 2, dir: 2 },
+      targets: [[5, 8], [7, 4], [9, 10], [1, 4], [5, 9], [4, 10], [9, 9], [0, 6], [7, 0], [3, 5]],
+      walls: [[6, 0], [6, 3], [0, 7], [3, 2], [5, 1], [4, 0], [8, 0], [7, 3]],
+      mirrors: [
+        { x: 5, y: 7, slope: 1, locked: true },
+        { x: 6, y: 5, slope: 0, split: true },
+        { x: 10, y: 4, slope: 1, locked: true },
+        { x: 3, y: 10, slope: 1, split: true },
+        { x: 9, y: 7, slope: 1, split: true },
+        { x: 5, y: 10, slope: 0 },
+        { x: 6, y: 7, slope: 1, split: true },
+        { x: 5, y: 2, slope: 1, locked: true },
+        { x: 10, y: 5, slope: 0 },
+        { x: 7, y: 2, slope: 1, split: true },
+        { x: 0, y: 4, slope: 1, locked: true },
+        { x: 9, y: 4, slope: 0, split: true },
+      ],
+      starTimes: [188, 282, 376],
+    },
+    /* Bedrock: five welded elements, one more bolted hardware than any board
+     * before it. The solving beam comes home: after sixty swept cells and
+     * fourteen bends the last leg runs into the emitter housing, which
+     * absorbs the beam that lit the panel. */
+    {
+      id: "p34", labelKey: "prismL34", w: 11, h: 11,
+      emitter: { x: 10, y: 9, dir: 2 },
+      targets: [[1, 8], [9, 10], [7, 5], [3, 10], [5, 7], [0, 2], [5, 4], [7, 7], [4, 6], [2, 4]],
+      walls: [[0, 4], [7, 1], [7, 2], [3, 0], [3, 2], [6, 0], [10, 10], [3, 8]],
+      mirrors: [
+        { x: 5, y: 10, slope: 1 },
+        { x: 4, y: 2, slope: 0, locked: true },
+        { x: 2, y: 9, slope: 1, split: true },
+        { x: 4, y: 10, slope: 1, split: true },
+        { x: 9, y: 9, slope: 0, split: true },
+        { x: 7, y: 8, slope: 1, split: true },
+        { x: 2, y: 2, slope: 1, locked: true },
+        { x: 9, y: 8, slope: 1, locked: true },
+        { x: 1, y: 3, slope: 0, split: true },
+        { x: 7, y: 3, slope: 1, locked: true },
+        { x: 5, y: 2, slope: 0, locked: true },
+        { x: 5, y: 9, slope: 1, split: true },
+      ],
+      starTimes: [198, 297, 396],
+    },
+    /* Deep Field: eleven targets - the widest fan the bench has carried, one
+     * mark past the summit's own ten - lit by exactly one of the hundred and
+     * twenty-eight arrangements the free slopes can form, sweeping
+     * sixty-three cells on the way. */
+    {
+      id: "p35", labelKey: "prismL35", w: 11, h: 11,
+      emitter: { x: 2, y: 10, dir: 3 },
+      targets: [[3, 3], [10, 10], [4, 1], [0, 2], [4, 2], [6, 3], [5, 1], [1, 2], [2, 4], [8, 3], [4, 6]],
+      walls: [[4, 8], [4, 0], [5, 8], [7, 4], [1, 3], [4, 9], [3, 10], [0, 9]],
+      mirrors: [
+        { x: 2, y: 7, slope: 0, split: true },
+        { x: 2, y: 3, slope: 1, split: true },
+        { x: 5, y: 2, slope: 1, locked: true },
+        { x: 4, y: 4, slope: 0 },
+        { x: 10, y: 1, slope: 1, split: true },
+        { x: 10, y: 0, slope: 0, locked: true },
+        { x: 8, y: 0, slope: 1, split: true },
+        { x: 5, y: 5, slope: 0, split: true },
+        { x: 5, y: 7, slope: 0, split: true },
+        { x: 3, y: 4, slope: 0, locked: true },
+        { x: 8, y: 7, slope: 1, locked: true },
+        { x: 3, y: 5, slope: 0, locked: true },
+      ],
+      starTimes: [210, 315, 420],
+    },
+    /* Thirteen Optics: the first thirteen-element bench, one more optic than
+     * the summit ever fielded, every one of them on the fattest solution
+     * beam. Two orientations light the eleven marks - the tier's loosest
+     * board - and the fatter of the two sweeps sixty cells, bending fifteen
+     * times. */
+    {
+      id: "p36", labelKey: "prismL36", w: 11, h: 11,
+      emitter: { x: 0, y: 9, dir: 0 },
+      targets: [[10, 3], [4, 4], [6, 8], [4, 6], [8, 5], [2, 10], [4, 9], [2, 7], [8, 1], [7, 5], [10, 5]],
+      walls: [[7, 10], [10, 8], [1, 8], [9, 6], [7, 6], [4, 8], [9, 8], [3, 3]],
+      mirrors: [
+        { x: 4, y: 0, slope: 1, locked: true },
+        { x: 10, y: 1, slope: 1 },
+        { x: 9, y: 5, slope: 1, split: true },
+        { x: 10, y: 4, slope: 0, locked: true },
+        { x: 6, y: 9, slope: 1, locked: true },
+        { x: 2, y: 4, slope: 1, split: true },
+        { x: 5, y: 5, slope: 1, split: true },
+        { x: 9, y: 4, slope: 0 },
+        { x: 8, y: 3, slope: 1, locked: true },
+        { x: 8, y: 4, slope: 0, split: true },
+        { x: 6, y: 0, slope: 0, split: true },
+        { x: 5, y: 1, slope: 0, locked: true },
+        { x: 5, y: 9, slope: 0, split: true },
+      ],
+      starTimes: [220, 330, 440],
+    },
+    /* Gyre: the bendiest route the game has carried - twenty-one bends
+     * against the summit's fifteen, the beam knotting through a cluster of
+     * optics mid-board and crossing its own earlier legs twice on the way to
+     * eleven marks. Exactly one orientation out of two hundred and
+     * fifty-six unties it. */
+    {
+      id: "p37", labelKey: "prismL37", w: 11, h: 11,
+      emitter: { x: 3, y: 0, dir: 1 },
+      targets: [[8, 2], [8, 4], [4, 2], [5, 0], [1, 7], [6, 5], [5, 3], [4, 9], [9, 2], [5, 8], [4, 10]],
+      walls: [[7, 6], [2, 6], [8, 6], [9, 4], [7, 1], [8, 1], [10, 2], [10, 7]],
+      mirrors: [
+        { x: 3, y: 2, slope: 0, split: true },
+        { x: 6, y: 2, slope: 1, split: true },
+        { x: 6, y: 4, slope: 1, split: true },
+        { x: 3, y: 4, slope: 1, locked: true },
+        { x: 3, y: 7, slope: 0 },
+        { x: 6, y: 7, slope: 0, locked: true },
+        { x: 6, y: 9, slope: 0, locked: true },
+        { x: 5, y: 9, slope: 0, locked: true },
+        { x: 5, y: 7, slope: 1, split: true },
+        { x: 6, y: 8, slope: 0, locked: true },
+        { x: 4, y: 8, slope: 0 },
+        { x: 4, y: 6, slope: 1, split: true },
+        { x: 6, y: 6, slope: 0, split: true },
+      ],
+      starTimes: [232, 348, 464],
+    },
+    /* Twelve Across: the first board on twelve-by-twelve paper - forty-four
+     * more cells than anything the summit dealt - under the tier's standing
+     * bar: eleven marks, six forks, five welds, one solving orientation,
+     * sixty-six swept cells. */
+    {
+      id: "p38", labelKey: "prismL38", w: 12, h: 12,
+      emitter: { x: 8, y: 11, dir: 3 },
+      targets: [[3, 2], [3, 6], [9, 8], [7, 7], [7, 6], [7, 4], [0, 0], [0, 9], [10, 1], [6, 9], [7, 1]],
+      walls: [[11, 10], [0, 2], [4, 1], [2, 7], [0, 4], [0, 1], [9, 6], [11, 3], [0, 3]],
+      mirrors: [
+        { x: 2, y: 6, slope: 1, split: true },
+        { x: 3, y: 4, slope: 1, split: true },
+        { x: 8, y: 5, slope: 0, split: true },
+        { x: 9, y: 7, slope: 0 },
+        { x: 5, y: 1, slope: 0, locked: true },
+        { x: 5, y: 5, slope: 0, locked: true },
+        { x: 8, y: 0, slope: 1, locked: true },
+        { x: 6, y: 7, slope: 0 },
+        { x: 3, y: 1, slope: 0, locked: true },
+        { x: 2, y: 4, slope: 1, split: true },
+        { x: 9, y: 9, slope: 0, locked: true },
+        { x: 6, y: 1, slope: 1, split: true },
+        { x: 8, y: 4, slope: 0, split: true },
+      ],
+      starTimes: [244, 366, 488],
+    },
+    /* Floodlight: the heaviest sweep the game has ever carried - seventy-one
+     * of the hundred and forty-four cells glow with stray beam on the way to
+     * eleven marks, past the sixty-six Twelve Across swept. The deal starts
+     * dark - the third dark deal of the campaign - and the one solving
+     * orientation bends fourteen times across six forks. */
+    {
+      id: "p39", labelKey: "prismL39", w: 12, h: 12,
+      emitter: { x: 5, y: 0, dir: 1 },
+      targets: [[7, 6], [8, 0], [11, 7], [10, 9], [5, 6], [6, 8], [4, 3], [5, 9], [7, 8], [7, 11], [5, 4]],
+      walls: [[10, 0], [6, 7], [1, 2], [0, 1], [4, 7], [7, 0], [10, 3], [4, 11]],
+      mirrors: [
+        { x: 5, y: 3, slope: 1, locked: true },
+        { x: 9, y: 3, slope: 0, locked: true },
+        { x: 9, y: 8, slope: 1, split: true },
+        { x: 5, y: 8, slope: 0 },
+        { x: 2, y: 3, slope: 1, locked: true },
+        { x: 2, y: 9, slope: 1, split: true },
+        { x: 8, y: 9, slope: 0 },
+        { x: 8, y: 6, slope: 1, split: true },
+        { x: 3, y: 6, slope: 0, locked: true },
+        { x: 3, y: 2, slope: 0, locked: true },
+        { x: 7, y: 2, slope: 1, split: true },
+        { x: 7, y: 7, slope: 0, split: true },
+        { x: 10, y: 7, slope: 1, split: true },
+      ],
+      starTimes: [256, 384, 512],
+    },
+    /* Infinity: the capstone. Twelve of the panel's hundred and forty-four
+     * cells glow at once - a mark more than any board before it - off
+     * thirteen elements and six forks, the route bending eighteen times, and
+     * exactly one orientation out of two hundred and fifty-six lights them
+     * all. The deal starts in the dark, and the beam still sweeps sixty-eight
+     * cells on its way round. */
+    {
+      id: "p40", labelKey: "prismL40", w: 12, h: 12,
+      emitter: { x: 11, y: 3, dir: 2 },
+      targets: [[5, 4], [8, 1], [11, 9], [3, 6], [6, 10], [5, 3], [7, 9], [7, 3], [9, 5], [3, 10], [9, 8], [8, 7]],
+      walls: [[2, 4], [3, 2], [5, 1], [2, 3], [1, 1], [2, 1], [9, 0], [6, 11]],
+      mirrors: [
+        { x: 6, y: 3, slope: 1, locked: true },
+        { x: 6, y: 7, slope: 1, split: true },
+        { x: 1, y: 7, slope: 1, locked: true },
+        { x: 1, y: 9, slope: 1, split: true },
+        { x: 5, y: 9, slope: 0, split: true },
+        { x: 5, y: 5, slope: 1, split: true },
+        { x: 10, y: 5, slope: 1, locked: true },
+        { x: 10, y: 1, slope: 1, locked: true },
+        { x: 6, y: 1, slope: 1, split: true },
+        { x: 9, y: 3, slope: 0 },
+        { x: 9, y: 7, slope: 1 },
+        { x: 3, y: 3, slope: 1, locked: true },
+        { x: 3, y: 7, slope: 1, split: true },
+      ],
+      starTimes: [272, 408, 544],
+    },
   ];
   /* "/" is slope 1, "\" is slope 0. */
   var SLOPE_SLASH = 1;
@@ -1103,6 +1398,16 @@
       "prismL28": "Pulsar",
       "prismL29": "Supernova",
       "prismL30": "First Light",
+      "prismL31": "Wide Aperture",
+      "prismL32": "Long Baseline",
+      "prismL33": "The Six-Fork",
+      "prismL34": "Bedrock",
+      "prismL35": "Deep Field",
+      "prismL36": "Thirteen Optics",
+      "prismL37": "Gyre",
+      "prismL38": "Twelve Across",
+      "prismL39": "Floodlight",
+      "prismL40": "Infinity",
       "prismSplitHint": "Violet forks split the beam: one ray turns, one carries straight on.",
       "prismLockedHint": "Amber elements are welded down and never rotate.",
       "prismWelded": "That element is welded to the bench - build the route around it.",
@@ -1130,6 +1435,16 @@
       "prismL28": "脉冲星",
       "prismL29": "超新星",
       "prismL30": "原初之光",
+      "prismL31": "宽口径",
+      "prismL32": "长基线",
+      "prismL33": "六分光",
+      "prismL34": "基岩",
+      "prismL35": "深场",
+      "prismL36": "十三镜",
+      "prismL37": "回旋",
+      "prismL38": "十二路",
+      "prismL39": "泛光",
+      "prismL40": "无穷",
       "prismSplitHint": "紫色分光叉会把光束劈成两路：一路转向，一路直穿。",
       "prismLockedHint": "琥珀色元件已被焊死，永远不会转动。",
       "prismWelded": "这个元件焊死在台面上——请绕开它设计光路。",

@@ -541,6 +541,88 @@
       stars: [156, 134, 112],
       offers: ["FNX", "PFX", "NXF", "FPX", "FNS", "XPF", "NFS", "PFX", "FNX", "FPS", "FXS", "XFS", "NFX", "PFS", "FNX", "FPS", "FXS", "XPF", "NFX", "PFS", "FNX", "FPS", "FXS", "XPF"],
     },
+    /* Reefs 31-40 are the midnight reef, and each rung takes one measured
+     * record away from the ladder behind it (all bands cut the shipped way:
+     * the three-star line is the deal's own greedy line at the 0.86 / 0.72
+     * ratios, every deal fair at the shipped seed and over the six-hundred
+     * order sweep, and the sweep's random spectrum stays clear of the top
+     * band). c31 opens the length ladder past the summit's 24 turns; c32
+     * is the first draft where half the offered tiles are fans; c33 is the
+     * first draft where every offer carries a fan pair; c34 keeps the reef
+     * growing at 26 turns; c35 reaches 27; c36 pairs a fan with an urchin
+     * in every offer - the two hardest tiles, together, all game long;
+     * c37-c39 stretch the reef to 28, 29 and 30 turns, and the capstone
+     * closes at 31 - the longest reef the drawer ships. */
+    {
+      id: "c31",
+      labelKey: "corZ31",
+      turns: 25,
+      stars: [164, 141, 118],
+      offers: ["FPS", "SPF", "FPS", "PSF", "SFP", "PFS", "FPS", "SPF", "FPS", "PSF", "SFP", "PFS", "FPS", "SPF", "FPS", "PSF", "SFP", "PFS", "FPS", "SPF", "FPS", "PSF", "SFP", "PFS", "FPS"],
+    },
+    {
+      id: "c32",
+      labelKey: "corZ32",
+      turns: 25,
+      stars: [146, 126, 105],
+      offers: ["FFS", "FSF", "SFF", "FPS", "FSX", "SFF", "FFS", "FSP", "FFS", "FSF", "SFF", "FPS", "FSX", "SFF", "FFS", "FSP", "FFS", "FSF", "SFF", "FPS", "FSX", "SFF", "FFS", "FSP", "FFS"],
+    },
+    {
+      id: "c33",
+      labelKey: "corZ33",
+      turns: 25,
+      stars: [133, 114, 96],
+      offers: ["FFS", "FSF", "SFF", "FXF", "XFF", "FFS", "FFX", "SFF", "FFS", "FSF", "SFF", "FXF", "XFF", "FFS", "FFX", "SFF", "FFS", "FSF", "SFF", "FXF", "XFF", "FFS", "FFX", "SFF", "FFS"],
+    },
+    {
+      id: "c34",
+      labelKey: "corZ34",
+      turns: 26,
+      stars: [168, 144, 121],
+      offers: ["FPS", "SPF", "PSF", "SFP", "PFS", "FPS", "SPF", "FPS", "SPF", "PSF", "SFP", "PFS", "FPS", "SPF", "FPS", "SPF", "PSF", "SFP", "PFS", "FPS", "SPF", "FPS", "SPF", "PSF", "SFP", "PFS"],
+    },
+    {
+      id: "c35",
+      labelKey: "corZ35",
+      turns: 27,
+      stars: [172, 148, 124],
+      offers: ["FPS", "SPF", "PSF", "SFP", "PFS", "FPS", "SPF", "FSP", "FPS", "SPF", "PSF", "SFP", "PFS", "FPS", "SPF", "FSP", "FPS", "SPF", "PSF", "SFP", "PFS", "FPS", "SPF", "FSP", "FPS", "SPF", "PSF"],
+    },
+    {
+      id: "c36",
+      labelKey: "corZ36",
+      turns: 27,
+      stars: [171, 147, 123],
+      offers: ["FPX", "XFP", "PFX", "FSX", "XSF", "FXP", "SFX", "XFS", "FPX", "XFP", "PFX", "FSX", "XSF", "FXP", "SFX", "XFS", "FPX", "XFP", "PFX", "FSX", "XSF", "FXP", "SFX", "XFS", "FPX", "XFP", "PFX"],
+    },
+    {
+      id: "c37",
+      labelKey: "corZ37",
+      turns: 28,
+      stars: [166, 143, 120],
+      offers: ["FPS", "SPF", "PSF", "SFP", "PFS", "FPS", "SPF", "FSP", "XSF", "FPS", "SPF", "PSF", "SFP", "PFS", "FPS", "SPF", "FSP", "XSF", "FPS", "SPF", "PSF", "SFP", "PFS", "FPS", "SPF", "FSP", "XSF", "FPS"],
+    },
+    {
+      id: "c38",
+      labelKey: "corZ38",
+      turns: 29,
+      stars: [162, 139, 117],
+      offers: ["FPS", "SPX", "PSF", "XSF", "PFS", "FPS", "SPF", "XSF", "FSP", "XFP", "FPS", "SPX", "PSF", "XSF", "PFS", "FPS", "SPF", "XSF", "FSP", "XFP", "FPS", "SPX", "PSF", "XSF", "PFS", "FPS", "SPF", "XSF", "FSP"],
+    },
+    {
+      id: "c39",
+      labelKey: "corZ39",
+      turns: 30,
+      stars: [161, 138, 116],
+      offers: ["FPS", "SPX", "PSF", "XSF", "PFS", "FPS", "SPF", "XSF", "FSP", "XFP", "SFX", "FPS", "SPX", "PSF", "XSF", "PFS", "FPS", "SPF", "XSF", "FSP", "XFP", "SFX", "FPS", "SPX", "PSF", "XSF", "PFS", "FPS", "SPF", "XSF"],
+    },
+    {
+      id: "c40",
+      labelKey: "corZ40",
+      turns: 31,
+      stars: [160, 138, 115],
+      offers: ["FPS", "SPX", "PSF", "XSF", "PFS", "FPS", "SPF", "XSF", "FSP", "XFP", "SFX", "FPS", "FPS", "SPX", "PSF", "XSF", "PFS", "FPS", "SPF", "XSF", "FSP", "XFP", "SFX", "FPS", "FPS", "SPX", "PSF", "XSF", "PFS", "FPS", "SPF"],
+    },
   ];
 
   function initCoralArchitectGame(panelEl) {
@@ -1205,6 +1287,16 @@
       "corZ28": "The Urchin Rampart",
       "corZ29": "The Keel Line",
       "corZ30": "The Living Cathedral",
+      "corZ31": "The Long Shelf",
+      "corZ32": "Fan Market",
+      "corZ33": "Twin Fans",
+      "corZ34": "The Wide Reef",
+      "corZ35": "Cathedral Steps",
+      "corZ36": "Urchin Fanfare",
+      "corZ37": "The Deep Meadow",
+      "corZ38": "Coral Spire",
+      "corZ39": "The Midnight Reef",
+      "corZ40": "The Second Sea",
     },
     zh: {
       "corZ25": "\u6e10\u7a84\u4e4b\u6f6e",
@@ -1213,6 +1305,16 @@
       "corZ28": "\u6d77\u80c6\u58c1\u5792",
       "corZ29": "\u9f99\u9aa8\u7ebf",
       "corZ30": "\u6d3b\u73ca\u7460\u5723\u6bbf",
+      "corZ31": "长礁架",
+      "corZ32": "扇市",
+      "corZ33": "双扇湾",
+      "corZ34": "宽礁",
+      "corZ35": "教堂石阶",
+      "corZ36": "海胆号角",
+      "corZ37": "深海草场",
+      "corZ38": "珊瑚尖塔",
+      "corZ39": "午夜珊瑚礁",
+      "corZ40": "第二海洋",
     },
   });
 

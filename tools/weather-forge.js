@@ -42,6 +42,7 @@ const spot = (x, y) => ({ x: x, y: y });
 const village = (x, y, min, max) => ({ x: x, y: y, min: min, max: max });
 const wind = (x, y, dir) => ({ x: x, y: y, kind: "w", dir: dir === undefined ? 0 : dir });
 const pump = (x, y) => ({ x: x, y: y, kind: "h", dir: 0 });
+const shade = (x, y) => ({ x: x, y: y, kind: "s", dir: 0 });
 
 /* The new seasons. Each one names its own weather, its own terrain and
  * its own settlements; the forge only has to find the weave. `width` is how
@@ -185,6 +186,175 @@ const NEW_SEASONS = [
     ridge: [spot(3, 3), spot(3, 4), spot(6, 2), spot(6, 5)],
     lake: [spot(8, 1), spot(4, 7)],
     villages: [village(1, 0), village(4, 1), village(7, 1), village(1, 4), village(5, 3), village(8, 4), village(1, 7), village(5, 6), village(8, 7)],
+  },
+];
+
+/* The crowded decade (w31-w40). The far ridge ended on nine parishes at
+ * fifty-three points; these ten keep crowding the country - a first
+ * ten-parish season, the longest canal the loom has ever run (eleven
+ * arrows, measured from the sea), the earliest rain call and the lowest
+ * flood line at a triple bill, a frost year that fills the map, the
+ * ladder's first scorched fen, the leanest source the canals have ever
+ * carried, a wet front that walks under a storm ledger, the biggest
+ * weave the loom has ever spent, windows cut to the tightest fourteen
+ * points the loom has shipped, and the capstone's eleven parishes with
+ * no lake under a triple bill. Each brief carries the weave that was
+ * proven for it, so the forge re-proves and re-prunes instead of
+ * re-searching, and the shipped points sit within two of the weave's
+ * own spend. */
+const DEEP_SEASONS = [
+  {
+    id: "w31", points: 42, ticks: 20, width: 16,
+      cfg: { source: 8, lakeSource: 4 },
+      lake: [spot(2, 6), spot(7, 3), spot(7, 6)],
+    villages: [village(5, 0), village(9, 1), village(6, 2), village(3, 3), village(8, 3), village(5, 4), village(5, 5), village(4, 6), village(3, 7), village(8, 7)],
+    plan: [
+      wind(0, 0), wind(1, 0), wind(2, 0), wind(3, 0), wind(4, 0), wind(0, 1),
+      wind(1, 1), wind(2, 1), wind(3, 1), wind(4, 1), wind(5, 1), wind(6, 1),
+      wind(7, 1), wind(8, 1), wind(1, 2), wind(2, 2), wind(3, 2), wind(4, 2),
+      wind(5, 2), wind(0, 3), wind(1, 3), wind(2, 3), wind(7, 3), wind(0, 4),
+      wind(1, 4), wind(2, 4), wind(3, 4), wind(4, 4), wind(0, 5), wind(1, 5),
+      wind(2, 5), wind(3, 5), wind(4, 5), wind(2, 6), wind(3, 6), wind(7, 6),
+      wind(8, 6, 1), wind(0, 7), wind(1, 7), wind(2, 7),
+    ],
+  },
+  {
+    id: "w32", points: 33, ticks: 20, width: 16,
+    cfg: { source: 8 },
+    villages: [village(7, 0), village(4, 1), village(5, 2), village(9, 5), village(5, 6), village(8, 7)],
+    /* The far country: the first season where no parish sits within four
+     * cells of the open sea, so every drop crosses at least four arrows of
+     * canal before a village drinks. */
+    plan: [
+      wind(0, 0), wind(1, 0), wind(2, 0), wind(3, 0), wind(4, 0), wind(5, 0),
+      wind(6, 0), wind(0, 1), wind(1, 1), wind(2, 1), wind(3, 1), wind(0, 2),
+      wind(1, 2), wind(2, 2), wind(3, 2), wind(4, 2), wind(0, 3), wind(1, 3),
+      wind(2, 3), wind(3, 3), wind(4, 3), wind(5, 3), wind(6, 3), wind(7, 3),
+      wind(8, 3), wind(9, 3, 1), wind(9, 4, 1), wind(0, 6), wind(1, 6),
+      wind(2, 6), wind(3, 6), wind(4, 6), wind(0, 7), wind(1, 7), wind(2, 7),
+      wind(3, 7), wind(4, 7), wind(5, 7), wind(6, 7), wind(7, 7),
+    ],
+  },
+  {
+    id: "w33", points: 35, ticks: 20, width: 16,
+      cfg: { source: 8, lakeSource: 4, rainAt: 48, dump: 0.5, floodLimit: 66, floodWeight: 3 },
+      ridge: [spot(2, 3), spot(2, 4)],
+      lake: [spot(5, 4)],
+    villages: [village(6, 1), village(7, 2), village(5, 3), village(6, 5), village(4, 6), village(4, 7)],
+    plan: [
+      wind(0, 1), wind(1, 1), wind(2, 1), wind(3, 1), wind(4, 1), wind(5, 1),
+      wind(2, 2), wind(3, 2), wind(4, 2), wind(5, 2), wind(6, 2), wind(4, 3),
+      wind(1, 5), wind(2, 5), wind(3, 5), wind(4, 5), wind(5, 5), wind(0, 6),
+      wind(1, 6), wind(2, 6), wind(3, 6), wind(0, 7), wind(1, 7), wind(2, 7),
+      wind(3, 7), pump(5, 4), wind(4, 4, 3), wind(6, 4, 1), pump(6, 3), pump(7, 3),
+    ],
+  },
+  {
+    id: "w34", points: 42, ticks: 20, width: 16,
+      cfg: { ambient: 44, source: 9, wet: 1.2, wetHeat: 38, dryHeat: 50, drain: 1, rainAt: 58 },
+      ridge: [spot(8, 0), spot(8, 1)],
+    villages: [village(4, 0), village(5, 1), village(2, 2), village(6, 3), village(6, 4), village(5, 5), village(2, 6), village(4, 7)],
+    plan: [
+      wind(0, 0), wind(1, 0), wind(2, 0), wind(3, 0), wind(0, 1), wind(1, 1),
+      wind(2, 1), wind(3, 1), wind(4, 1), wind(0, 2), wind(1, 2), wind(0, 3),
+      wind(1, 3), wind(2, 3), wind(3, 3), wind(4, 3), wind(5, 3), wind(0, 4),
+      wind(1, 4), wind(2, 4), wind(3, 4), wind(4, 4), wind(5, 4), wind(0, 5),
+      wind(1, 5), wind(2, 5), wind(3, 5), wind(4, 5), wind(0, 6), wind(1, 6),
+      wind(0, 7), wind(1, 7), wind(2, 7), wind(3, 7), wind(7, 3, 2), wind(7, 4, 2),
+      pump(5, 6), pump(5, 2),
+    ],
+  },
+  {
+    id: "w35", points: 37, ticks: 20, width: 16,
+      cfg: { source: 8, lakeSource: 4 },
+      lake: [spot(8, 4)],
+      hot: [spot(5, 2), spot(5, 3)],
+    villages: [village(8, 0), village(2, 1), village(8, 3), village(3, 4), village(6, 5), village(1, 6), village(8, 6), village(4, 7)],
+    plan: [
+      wind(0, 0), wind(1, 0), wind(2, 0), wind(3, 0), wind(4, 0), wind(5, 0),
+      wind(6, 0), wind(7, 0), wind(0, 1), wind(1, 1), wind(6, 3), wind(7, 3),
+      wind(0, 4), wind(1, 4), wind(2, 4), wind(0, 5), wind(1, 5), wind(2, 5),
+      wind(3, 5), wind(4, 5), wind(5, 5), wind(0, 6), wind(4, 6), wind(5, 6),
+      wind(6, 6), wind(7, 6), wind(0, 7), wind(1, 7), wind(2, 7), wind(3, 7),
+      pump(8, 4), wind(3, 1, 3), shade(8, 6), wind(4, 4, 1),
+    ],
+  },
+  {
+    id: "w36", points: 37, ticks: 20, width: 16,
+      cfg: { source: 4 },
+    villages: [village(4, 1), village(6, 2), village(6, 3), village(5, 5), village(6, 6), village(8, 7)],
+    plan: [
+      wind(0, 1), wind(1, 1), wind(2, 1), wind(3, 1), wind(0, 2), wind(1, 2, 1),
+      wind(5, 2), wind(0, 3), wind(1, 3), wind(2, 3), wind(3, 3), wind(4, 3),
+      wind(5, 3), wind(1, 5), wind(2, 5), wind(3, 5), wind(4, 5), wind(0, 6),
+      wind(1, 6), wind(2, 6), wind(3, 6), wind(4, 6), wind(5, 6), wind(0, 7),
+      wind(1, 7, 3), wind(5, 7), wind(6, 7), wind(7, 7), shade(4, 1), shade(5, 5),
+      shade(6, 2), shade(8, 7), wind(8, 6, 1), wind(7, 2, 2), wind(7, 1, 1),
+    ],
+  },
+  {
+    id: "w37", points: 40, ticks: 24, width: 16,
+      cfg: { source: 6, creep: 0.09, wind: 0.62, rainAt: 52, dump: 0.55, floodLimit: 80, floodWeight: 3 },
+      ridge: [spot(5, 1), spot(5, 6)],
+      wet: [spot(1, 2), spot(2, 2), spot(3, 2)],
+    villages: [village(4, 0), village(6, 2), village(4, 3), village(8, 4), village(4, 5), village(3, 6), village(5, 7)],
+    plan: [
+      wind(0, 0), wind(1, 0), wind(2, 0), wind(3, 0), wind(0, 2, 1), wind(2, 2),
+      wind(3, 2), wind(4, 2), wind(5, 2), wind(0, 3), wind(1, 3), wind(2, 3),
+      wind(3, 3), wind(1, 4), wind(2, 4, 1), wind(3, 4, 2), wind(6, 4), wind(7, 4),
+      wind(0, 5), wind(1, 5), wind(2, 5), wind(3, 5), wind(0, 6), wind(1, 6),
+      wind(2, 6), wind(0, 7), wind(1, 7), wind(2, 7), wind(3, 7), wind(4, 7),
+      wind(4, 6, 2), wind(0, 1, 3), shade(8, 4), shade(5, 7), wind(4, 1, 1), wind(7, 5, 3),
+      wind(6, 3, 1), wind(6, 5, 3),
+    ],
+  },
+  {
+    id: "w38", points: 50, ticks: 20, width: 16,
+      cfg: { source: 8, lakeSource: 4, ambient: 54, lift: 0.42, wind: 0.55 },
+      ridge: [spot(6, 4)],
+      lake: [spot(8, 2), spot(4, 6)],
+    villages: [village(9, 0), village(3, 1), village(7, 2), village(8, 3), village(5, 4), village(9, 5), village(2, 6), village(6, 6), village(5, 7)],
+    plan: [
+      wind(3, 0), wind(4, 0), wind(5, 0), wind(6, 0), wind(7, 0), wind(8, 0),
+      wind(0, 1), wind(1, 1), wind(2, 1), wind(0, 2), wind(1, 2), wind(2, 2),
+      wind(3, 2), wind(4, 2), wind(5, 2), wind(6, 2), wind(0, 3), wind(1, 3),
+      wind(2, 3), wind(3, 3), wind(4, 3), wind(5, 3), wind(6, 3), wind(7, 3),
+      wind(0, 4), wind(1, 4), wind(2, 4), wind(3, 4), wind(4, 4), wind(7, 5),
+      wind(8, 5), wind(0, 6), wind(1, 6), wind(3, 6, 1), wind(4, 6), wind(5, 6),
+      wind(0, 7), wind(1, 7), wind(2, 7), wind(3, 7), wind(4, 7), wind(5, 1, 1),
+      wind(8, 4, 3), wind(6, 1, 3), wind(8, 6, 3), wind(7, 4, 1), wind(9, 4, 1), wind(7, 6, 3),
+    ],
+  },
+  {
+    id: "w39", points: 42, ticks: 20, width: 14,
+      cfg: { source: 8, lakeSource: 4 },
+      ridge: [spot(7, 4)],
+      lake: [spot(8, 1), spot(2, 6)],
+    villages: [village(4, 0), village(5, 1), village(9, 1), village(6, 2), village(3, 3), village(5, 4), village(5, 5), village(4, 6), village(3, 7)],
+    plan: [
+      wind(0, 0), wind(1, 0), wind(2, 0), wind(3, 0), wind(0, 1), wind(1, 1),
+      wind(2, 1), wind(3, 1), wind(4, 1), wind(6, 1, 2), wind(8, 1), wind(0, 2),
+      wind(1, 2), wind(2, 2), wind(3, 2), wind(4, 2), wind(5, 2), wind(0, 3),
+      wind(1, 3), wind(2, 3), wind(0, 4), wind(1, 4), wind(2, 4), wind(3, 4),
+      wind(4, 4), wind(0, 5), wind(1, 5), wind(2, 5), wind(3, 5), wind(4, 5),
+      wind(1, 6, 3), wind(2, 6), wind(3, 6), wind(0, 7), wind(1, 7), wind(2, 7),
+      wind(9, 1, 3), wind(4, 3, 1), wind(7, 2, 2), wind(9, 0, 1),
+    ],
+  },
+  {
+    id: "w40", points: 42, ticks: 20, width: 14,
+      cfg: { source: 8, lakeSource: 2.5, rainAt: 54, dump: 0.5, floodLimit: 70, floodWeight: 3 },
+      lake: [spot(2, 6), spot(7, 3), spot(7, 6), spot(6, 4)],
+    villages: [village(5, 0), village(9, 1), village(6, 2), village(3, 3), village(8, 3), village(5, 4), village(8, 5), village(5, 5), village(4, 6), village(3, 7), village(8, 7)],
+    plan: [
+      wind(0, 0), wind(1, 0), wind(2, 0), wind(3, 0), wind(4, 0), wind(2, 1),
+      wind(3, 1), wind(4, 1), wind(5, 1), wind(6, 1), wind(7, 1), wind(8, 1),
+      wind(2, 2), wind(3, 2), wind(4, 2), wind(5, 2), wind(0, 3), wind(1, 3),
+      wind(2, 3), wind(7, 3), wind(0, 4), wind(1, 4), wind(2, 4), wind(3, 4),
+      wind(4, 4), wind(6, 4, 1), wind(6, 5), wind(7, 5), wind(0, 5), wind(1, 5),
+      wind(2, 5), wind(3, 5), wind(4, 5), wind(2, 6), wind(3, 6), wind(7, 6),
+      wind(8, 6, 1), wind(0, 7), wind(1, 7), wind(2, 7),
+    ],
   },
 ];
 
@@ -419,20 +589,54 @@ function source(act) {
 function window(level, half) {
   delete level.cfgCache;
   const run = App.loomRun(level, level.plan || []);
+  const pins = (level.pinned || []).map((c) => c.x + "," + c.y);
   const villages = level.villages.map((v) => {
+    if (pins.includes(v.x + "," + v.y) && v.min !== undefined) {
+      return village(v.x, v.y, v.min, v.max);
+    }
     const got = run.state.rain[v.y * COLS + v.x] || 0;
     return village(v.x, v.y, Math.max(0, Math.round(got - half)), Math.round(got + half));
   });
   return Object.assign({}, level, { villages: villages });
 }
 
-if (process.argv.includes("--forge") || process.argv.includes("--summit")) {
-  /* --summit weaves only the far-ridge seasons (w25-w30), so the new tier can
-   * be iterated without re-running the eleven shipped briefs ahead of it. */
+/* A shipped weave has no spare tools: dropping any one tool has to take a
+ * parish's harvest with it. The pruner walks the plan and removes every tool
+ * whose loss still clears the season, so what ships is load-bearing down to
+ * the last arrow. */
+function prune(level, plan) {
+  let current = plan.slice();
+  let dropped = true;
+  while (dropped) {
+    dropped = false;
+    for (let i = 0; i < current.length; i += 1) {
+      const shorter = current.filter((_, j) => j !== i);
+      /* A clean season's deficit sits just under zero (the carried-moisture
+       * tie-breaker), so the test is the sign, not an exact zero. */
+      if (deficit(level, shorter) <= 0) {
+        current = shorter;
+        dropped = true;
+        break;
+      }
+    }
+  }
+  return current;
+}
+
+if (process.argv.includes("--forge") || process.argv.includes("--summit") || process.argv.includes("--deep")) {
+  /* --summit weaves only the far-ridge seasons (w25-w30), and --deep the
+   * crowded decade (w31-w40), so a tier can be iterated without re-running
+   * the shipped briefs ahead of it. An optional id after --deep weaves one
+   * season on its own: node tools/weather-forge.js --deep w35. */
   const wlkSummitIds = ["w25", "w26", "w27", "w28", "w29", "w30"];
-  const wlkBriefs = process.argv.includes("--summit")
-    ? NEW_SEASONS.filter((season) => wlkSummitIds.includes(season.id))
-    : NEW_SEASONS;
+  const wlkDeepArg = process.argv[process.argv.indexOf("--deep") + 1];
+  const wlkBriefs = process.argv.includes("--deep")
+    ? (wlkDeepArg && !wlkDeepArg.startsWith("--")
+      ? DEEP_SEASONS.filter((season) => season.id === wlkDeepArg)
+      : DEEP_SEASONS)
+    : process.argv.includes("--summit")
+      ? NEW_SEASONS.filter((season) => wlkSummitIds.includes(season.id))
+      : NEW_SEASONS;
   wlkBriefs.forEach((season) => {
     /* Weave and re-window until the two agree: the windows say what counts as
      * a harvest, the weave is aimed at them, and each pass re-aims both at the
@@ -447,6 +651,21 @@ if (process.argv.includes("--forge") || process.argv.includes("--summit")) {
       season.width / 2,
     );
     plan = weave(level, plan).plan;
+    /* The crowded decade ships pruned weaves: re-window off the current plan,
+     * drop every tool the season clears without, and repeat until the windows
+     * and the weave stop moving - the plan that ships is load-bearing down to
+     * its last arrow against the windows that ship beside it. */
+    if (process.argv.includes("--deep")) {
+      for (let pass = 0; pass < 6; pass += 1) {
+        const wlkRe = window(Object.assign({}, season, { plan: plan }), season.width / 2);
+        const wlkPruned = prune(
+          Object.assign({}, season, { villages: wlkRe.villages }),
+          plan,
+        );
+        if (wlkPruned.length === plan.length) break;
+        plan = wlkPruned;
+      }
+    }
     /* The last weave moves the rain, so the windows that ship are measured off
      * it - by construction every village sits inside its own window, which is
      * what makes the season winnable by the plan that ships with it. */
@@ -464,10 +683,21 @@ if (process.argv.includes("--forge") || process.argv.includes("--summit")) {
     });
     if (proof.stars !== 3 || proof.score.fed !== villages.length ||
       proof.score.flooded !== 0 || wlkThirsty.length) {
+      const wlkWet = [];
+      for (let i = 0; i < proof.state.rain.length; i += 1) {
+        const wlkOpen = i % COLS === 0 ||
+          (season.lake || []).some((c) => c.y * COLS + c.x === i);
+        const wlkHome = villages.some((v) => v.y * COLS + v.x === i);
+        if (!wlkOpen && !wlkHome && proof.state.rain[i] > (season.cfg.floodLimit || 92)) {
+          wlkWet.push((i % COLS) + "," + Math.floor(i / COLS) + " " +
+            proof.state.rain[i].toFixed(0));
+        }
+      }
       throw new Error(
         season.id + " did not weave clean: stars " + proof.stars +
         ", fed " + proof.score.fed + "/" + villages.length +
         ", flooded " + proof.score.flooded +
+        (wlkWet.length ? ", wet: " + wlkWet.join(" ") : "") +
         (wlkThirsty.length ? ", dry: " + wlkThirsty.map((v) => v.x + "," + v.y).join(" ") : "") +
         " - raise the budget or ease the geography",
       );

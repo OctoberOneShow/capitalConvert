@@ -40,19 +40,22 @@
     plate: { station: "pass", word: "kchPlateWord", held: 0, idle: 0, ok: [1, 1], perfect: [1, 1] },
   };
 
-  /* Five recipes. The first four are one-pass dishes; `pot` is the one that
+  /* Six recipes. The first four are one-pass dishes; `pot` is the one that
    * makes the hands leave the pan and come back: its sear has to be carried to
    * the rack, the cut finished in between, and the second window opened on the
-   * same pan afterwards. */
+   * same pan afterwards. `roast` is the late shift's four-step dish: chop,
+   * sear, simmer and a second sear, so it crosses the pan three times and
+   * needs the rack twice before it can plate. */
   var kchRecipes = {
     garden: { id: "garden", nameKey: "kchRGarden", price: 9, steps: [{ kind: "chop", count: 5 }] },
     fillet: { id: "fillet", nameKey: "kchRFillet", price: 12, steps: [{ kind: "sear" }] },
     duck: { id: "duck", nameKey: "kchRDuck", price: 17, steps: [{ kind: "chop", count: 4 }, { kind: "sear" }, { kind: "simmer" }] },
     sauce: { id: "sauce", nameKey: "kchRSauce", price: 15, steps: [{ kind: "sear" }, { kind: "simmer", idle: 0.1 }] },
     pot: { id: "pot", nameKey: "kchRPot", price: 18, steps: [{ kind: "sear", held: 0.6, idle: 0.05 }, { kind: "chop", count: 3 }, { kind: "simmer", held: 0.4, idle: 0.09 }] },
+    roast: { id: "roast", nameKey: "kchRRoast", price: 24, steps: [{ kind: "chop", count: 5 }, { kind: "sear" }, { kind: "simmer", idle: 0.1 }, { kind: "sear", held: 0.5, idle: 0.07 }] },
   };
 
-  /* Thirty services: window, seeded queue, walking cost, rack size and the jam
+  /* Forty services: window, seeded queue, walking cost, rack size and the jam
    * script. The starCovers band is filled in by kchBands from the scripted line,
    * and the chain runs in the order that line measures - 8, 10, 11, 11, 13, 14,
    * 15, 16, 17, 18 covers for the first ten, so svc3 sits ahead of svc2 because
@@ -148,6 +151,54 @@
     { id: "svc28", labelKey: "kchS28", window: 106, seed: 2828, count: 26, every: 4.2, jitter: 1, lead: 26, recipes: ["fillet", "garden", "duck", "garden"], rack: 2, moveTime: 0.3, holdWin: 6, jams: [], creep: 1.5 },
     { id: "svc29", labelKey: "kchS29", window: 104, seed: 2929, count: 28, every: 4.1, jitter: 1, lead: 28, recipes: ["garden", "garden", "fillet", "sauce"], rack: 2, moveTime: 0.45, holdWin: 16, jams: [{ at: 36, station: "board", need: 1.5 }, { at: 36, station: "pass", need: 1.4 }], creep: 1.6 },
     { id: "svc30", labelKey: "kchS30", window: 100, seed: 3030, count: 30, every: 4, jitter: 1, lead: 25, recipes: ["garden", "fillet", "duck", "sauce"], rack: 3, moveTime: 0.35, holdWin: 12, jams: [{ at: 30, station: "pan", need: 1.6 }, { at: 30, station: "board", need: 1.5 }, { at: 30, station: "pass", need: 1.4 }, { at: 70, station: "pass", need: 1.6 }], creep: 1.75 },
+    /* svc31-40: the late shift. The summit taught the pass that the pan itself
+     * has a dial; the late shift seats the second wave, adds the kitchen's
+     * first new dish since the two-heat pot (svc12), and takes one record a
+     * night away from every rung shipped before it - scoped by position, so a
+     * later rung may legitimately overtake an earlier tier's peak:
+     *   svc31 the shortest window - 96 seconds against the shipped 100 floor,
+     *     with a three-slot rack and a 30 ticket list, so the clock, not the
+     *     three hearts, is what closes the service;
+     *   svc32 the longest list - 32 tickets, two more than the summit closed
+     *     on, under a 1.5x pan behind two jams;
+     *   svc33 the four-step dish - the slow roast debuts: a chop, a sear, a
+     *     simmer and a second sear, so one dish crosses the pan three times
+     *     and needs the rack twice, and it rides only this rung;
+     *   svc34 the busiest repair bill - six jams at three bells, each bell a
+     *     two-station pile-up, 14.2 seconds of repair against the shipped
+     *     worst of 7.6 (svc24) and five entries (svc24);
+     *   svc35 the hottest pan - creep 1.8 past the summit's 1.75, so the
+     *     tightest burn clock a pan face can show falls under the summit's;
+     *   svc36 the thinnest hold - four seconds before a parked dish goes
+     *     cold, against the shipped floor of six (svc14, svc28), under a
+     *     1.5x pan behind a pass jam and a pan jam;
+     *   svc37 the shortest lead - 22 seconds of deadline against svc10's 24;
+     *   svc38 the fastest kitchen - arrivals every 3.7s against svc27's 3.9,
+     *     so the board is never less than three tickets deep;
+     *   svc39 the longest walk - 0.5s of dead hands per station change
+     *     against the shipped 0.45 ceiling (svc15, svc29);
+     *   svc40 the capstone - 34 tickets (the longest list the pass has
+     *     seen) under the hottest pan (1.85x) behind a triple pile-up and a
+     *     late pass jam, in 98 seconds.
+     * Bands are measured off the plan the way every shipped rung was, never
+     * guessed: on each rung's own seed the game's own chef covers 18 of 30,
+     * 13 of 32, 11 of 28, 11 of 28, 11 of 28, 11 of 30, 10 of 28, 8 of 28,
+     * 8 of 28 and 9 of 34 - each rung's own three-star line - so the share
+     * of the house the best line serves falls rung over rung from 60% to
+     * 26.5% and never rises. The one-star band survives four probe seeds on
+     * every rung, and cutting each rung's record dial back inside the
+     * shipped envelope frees covers (points on the hold rung) the rung
+     * would not pay. */
+    { id: "svc31", labelKey: "kchS31", window: 96, seed: 3333, count: 30, every: 4.5, jitter: 1, lead: 30, recipes: ["garden", "fillet", "duck", "sauce"], rack: 3, moveTime: 0.35, holdWin: 12, jams: [] },
+    { id: "svc32", labelKey: "kchS32", window: 108, seed: 3232, count: 32, every: 4.2, jitter: 1, lead: 27, recipes: ["garden", "fillet", "duck", "sauce"], rack: 2, moveTime: 0.35, holdWin: 12, jams: [{ at: 40, station: "pan", need: 1.5 }, { at: 70, station: "board", need: 1.4 }], creep: 1.5 },
+    { id: "svc33", labelKey: "kchS33", window: 106, seed: 3131, count: 28, every: 4.3, jitter: 1, lead: 27, recipes: ["roast", "duck", "sauce", "fillet"], rack: 2, moveTime: 0.35, holdWin: 12, jams: [{ at: 56, station: "pan", need: 1.5 }] },
+    { id: "svc34", labelKey: "kchS34", window: 106, seed: 3535, count: 28, every: 4.3, jitter: 1, lead: 27, recipes: ["garden", "fillet", "duck", "sauce"], rack: 2, moveTime: 0.35, holdWin: 12, jams: [{ at: 34, station: "pass", need: 2.6 }, { at: 34, station: "pan", need: 2.4 }, { at: 56, station: "board", need: 2.4 }, { at: 56, station: "pass", need: 2.2 }, { at: 80, station: "pan", need: 2.4 }, { at: 80, station: "board", need: 2.2 }] },
+    { id: "svc35", labelKey: "kchS35", window: 106, seed: 3838, count: 28, every: 4.3, jitter: 1, lead: 27, recipes: ["garden", "fillet", "duck", "sauce"], rack: 2, moveTime: 0.35, holdWin: 12, jams: [{ at: 44, station: "pan", need: 1.5 }], creep: 1.8 },
+    { id: "svc36", labelKey: "kchS36", window: 106, seed: 3737, count: 30, every: 4.2, jitter: 1, lead: 27, recipes: ["garden", "fillet", "duck", "sauce"], rack: 2, moveTime: 0.35, holdWin: 4, jams: [{ at: 46, station: "pass", need: 1.6 }, { at: 74, station: "pan", need: 1.5 }], creep: 1.5 },
+    { id: "svc37", labelKey: "kchS37", window: 106, seed: 3939, count: 28, every: 4.4, jitter: 1, lead: 22, recipes: ["garden", "fillet", "duck", "sauce"], rack: 2, moveTime: 0.35, holdWin: 12, jams: [] },
+    { id: "svc38", labelKey: "kchS38", window: 106, seed: 3434, count: 28, every: 3.7, jitter: 1, lead: 27, recipes: ["garden", "fillet", "duck", "sauce"], rack: 2, moveTime: 0.35, holdWin: 12, jams: [] },
+    { id: "svc39", labelKey: "kchS39", window: 106, seed: 38383, count: 28, every: 4.3, jitter: 1, lead: 27, recipes: ["garden", "fillet", "duck", "sauce"], rack: 2, moveTime: 0.5, holdWin: 12, jams: [] },
+    { id: "svc40", labelKey: "kchS40", window: 98, seed: 4040, count: 34, every: 4.3, jitter: 1, lead: 28, recipes: ["garden", "fillet", "duck", "sauce"], rack: 3, moveTime: 0.35, holdWin: 10, jams: [{ at: 40, station: "pan", need: 1.7 }, { at: 40, station: "board", need: 1.6 }, { at: 40, station: "pass", need: 1.5 }, { at: 68, station: "pass", need: 1.6 }], creep: 1.85 },
   ];
 
   var kchQuiet = null;
@@ -1292,11 +1343,17 @@
       "kchS23": "The Long Pile-Up", "kchS24": "Blackout Night",
       "kchS25": "The Fast Pan", "kchS26": "The Stolen Second", "kchS27": "Nowhere to Rest",
       "kchS28": "Burnt or Cold", "kchS29": "The Long Walk Back", "kchS30": "The Last Order",
+      "kchS31": "Ninety-Six Seconds", "kchS32": "The Long List",
+      "kchS33": "Three Heat Roasts", "kchS34": "Six Alarms",
+      "kchS35": "The Roaring Pan", "kchS36": "Four Seconds Flat",
+      "kchS37": "Rush Orders", "kchS38": "The Rush Hour",
+      "kchS39": "The Long Corridor", "kchS40": "The Last Seating",
       "kchRGarden": "garden salad",
       "kchRFillet": "seared fillet",
       "kchRDuck": "duck with orange",
       "kchRSauce": "sauce pot",
       "kchRPot": "two-heat pot",
+      "kchRRoast": "slow roast",
       "kchClockLabel": "Clock",
       "kchCoversLabel": "Covers",
       "kchPointsLabel": "Paid",
@@ -1396,11 +1453,17 @@
       "kchS23": "连环堵灶", "kchS24": "大堵塞之夜",
       "kchS25": "急火灶台", "kchS26": "堵灶急火", "kchS27": "无处落架",
       "kchS28": "不凉就糊", "kchS29": "折返路长", "kchS30": "收官之夜",
+      "kchS31": "九十六秒", "kchS32": "长单之夜",
+      "kchS33": "三火慢烤", "kchS34": "六次堵灶",
+      "kchS35": "烈火灶台", "kchS36": "四秒保温",
+      "kchS37": "加急订单", "kchS38": "高峰时段",
+      "kchS39": "长廊传菜", "kchS40": "最后加座",
       "kchRGarden": "田园沙拉",
       "kchRFillet": "香煎鱼排",
       "kchRDuck": "橙香鸭胸",
       "kchRSauce": "酱汁锅",
       "kchRPot": "两火煲",
+      "kchRRoast": "慢烤牛肉",
       "kchClockLabel": "时间",
       "kchCoversLabel": "出单",
       "kchPointsLabel": "收入",
@@ -1505,6 +1568,7 @@
         "Rescue: a sear that is in its band but not yet dinner comes off the heat onto the rack - the rack is small, its capacity changes service to service, and resting food still goes cold.",
         "Scoring: paid tickets are covers, a step stopped inside its perfect band pays tips, and a burnt or walked ticket costs points plus one of your three chances.",
         "Summit: services 25-30 turn up the pan itself - a level's creep dial multiplies how fast everything left on the heat keeps cooking unattended, so the slack a dish had in its band shrinks rung by rung, and the last service turns it all the way up behind the tightest window, the fastest arrivals and a triple jam.",
+        "Encore: the late shift, services 31-40 - every rung takes one record off every rung shipped before it: the shortest window (96 seconds), the longest list (32 tickets), the first four-step dish (a slow roast that crosses the pan three times and needs the rack twice), the busiest repair bill (six jams at three bells), the hottest pan (1.8x), the thinnest hold (4 seconds), the shortest lead (22 seconds), the fastest arrivals (every 3.7s), the longest walk (0.5s a station change), and a capstone seating 34 tickets under a 1.85x pan behind a triple pile-up.",
       ],
       zh: [
         "目标：在两分钟的服务结束前尽可能多出单，同时别连丢三张单。",
@@ -1513,6 +1577,7 @@
         "抢救：已经到位但整道菜还没做完的，要离火放上保温架 - 架子很小，每场服务能放几份都写在保温架那一行，放着不管一样会凉。",
         "计分：结账的单据数就是出单数，步骤停在完美区间里给小费，煎糊或超时要扣分并吃掉三次机会里的一次。",
         "巅峰段：第 25-30 场把灶火本身调快——每场的 creep 系数会乘大离手后锅上继续自熟的速度，步骤在合格区间里的余量一关比一关窄，最后一场在最紧的时间、最快的来单和三灶齐堵之下把它开到最大。",
+        "加演段：夜班接力，第 31-40 场——每一场都从它之前的所有场次手里拿走一项纪录：最短的窗口（96 秒）、最长的单据（32 张）、第一道四步菜（要三次上灶、两次落架的慢烤牛肉）、最重的维修单（三次钟响六处堵灶）、最烈的火（1.8 倍）、最薄的保温（4 秒）、最短的时限（22 秒）、最快的来单（3.7 秒一张）、最长的路（每次换台 0.5 秒），收官场在三灶齐堵、1.85 倍灶火之下一次加座 34 张单。",
       ],
     },
   });
