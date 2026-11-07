@@ -115,6 +115,33 @@
      * two-ply line cleared all twelve deals with moves to spare, and the
      * price per move is what the card is actually about. */
     { id: "p30", labelKey: "inkL30", target: 7600, moves: 14, colors: 3 },
+    /* Pools 31-40 are the sprint tier, and its dial is the budget: every
+     * card gives fewer moves than the Geyser's eight, the shortest
+     * budgets the ladder has ever dealt, and the price per move climbs
+     * to more than three times the summit's heaviest. All numbers were
+     * measured through the real panel with the game's own two-ply line
+     * over six seeded deals per card (seed k*7919): the greedy line
+     * cleared every deal it was dealt on the seven-, six- and five-move
+     * cards and five of six on the four-move cards, the ordinary one-ply
+     * hand cleared at the same rate, three stars landed on three or more
+     * deals of every card, and the round still ends the instant a
+     * cascade crosses, so the final score lands where the crossing puts
+     * it. The price per move climbs strictly through the ten: 1000 ->
+     * 1114 -> 1350 -> 1367 -> 1380 -> 1440 -> 1500 -> 1650 -> 1700 ->
+     * 1750, against the Watershed's 543. Cut any card back to the
+     * classic six inks and the same line cannot reach the target on a
+     * single seeded deal: measured cut finals run 180-1620 against
+     * targets of 6600-8200. */
+    { id: "p31", labelKey: "inkL31", target: 7000, moves: 7, colors: 3 },
+    { id: "p32", labelKey: "inkL32", target: 7800, moves: 7, colors: 3 },
+    { id: "p33", labelKey: "inkL33", target: 8100, moves: 6, colors: 3 },
+    { id: "p34", labelKey: "inkL34", target: 8200, moves: 6, colors: 3 },
+    { id: "p35", labelKey: "inkL35", target: 6900, moves: 5, colors: 3 },
+    { id: "p36", labelKey: "inkL36", target: 7200, moves: 5, colors: 3 },
+    { id: "p37", labelKey: "inkL37", target: 7500, moves: 5, colors: 3 },
+    { id: "p38", labelKey: "inkL38", target: 6600, moves: 4, colors: 3 },
+    { id: "p39", labelKey: "inkL39", target: 6800, moves: 4, colors: 3 },
+    { id: "p40", labelKey: "inkL40", target: 7000, moves: 4, colors: 3 },
   ];
 
   function indexAt(x, y) {
@@ -565,7 +592,8 @@
    * the droplet to the source, and name the waters they pour. The summit
    * rungs climb past the confluence into the high waters - rapids, flood
    * tide, falls, reservoir, geyser - and end on the watershed every drop
-   * answers to. */
+   * answers to; the sprint tier is the flash water below it, the floods
+   * that arrive in a handful of swaps and are gone. */
   App.addStrings({
     en: {
       "inkL21": "Estuary",
@@ -578,6 +606,16 @@
       "inkL28": "The Reservoir",
       "inkL29": "The Geyser",
       "inkL30": "The Watershed",
+      "inkL31": "The Flash Flood",
+      "inkL32": "The White Water",
+      "inkL33": "The Steep Drop",
+      "inkL34": "The Narrow Gorge",
+      "inkL35": "The Roaring Falls",
+      "inkL36": "The Rushing Pass",
+      "inkL37": "The Dam Break",
+      "inkL38": "The Four-Swap Surge",
+      "inkL39": "The Final Surge",
+      "inkL40": "The Great Falls",
     },
     zh: {
       "inkL21": "河口",
@@ -590,6 +628,16 @@
       "inkL28": "蓄水库",
       "inkL29": "间歇泉",
       "inkL30": "分水岭",
+      "inkL31": "山洪骤发",
+      "inkL32": "白浪奔涌",
+      "inkL33": "骤落千尺",
+      "inkL34": "峡谷激流",
+      "inkL35": "轰鸣飞瀑",
+      "inkL36": "急湍隘口",
+      "inkL37": "决堤之势",
+      "inkL38": "四手狂澜",
+      "inkL39": "末路狂澜",
+      "inkL40": "大瀑布",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

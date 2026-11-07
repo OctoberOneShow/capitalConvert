@@ -22,9 +22,20 @@
  * and pay exactly three stars for the measured count, while a detour of the
  * optimum plus two wasted pushes must fall past the three-star line and
  * inside the two-star band, so the second star is bought, not given. The
- * far shed's shared stage names resolve in both languages. */
+ * far shed's shared stage names resolve in both languages.
+ *
+ * The deep yard k31-k39 walks the same method past the shed's stop: every
+ * room is again a mutation of the shipped summit skeleton - k23's
+ * eleven-wide felt, at most two teeth of its own, crates and diamonds
+ * still three - kept only when the exact solver measured its price, and
+ * the optima climb strictly above the shed's capstone, thirty-three to
+ * thirty-nine and the yard's two long rooms at forty and forty-two. The
+ * same pricing, replay and slack proofs run over the whole ladder, and
+ * the yard's stage names - the shared numbering scheme continued past
+ * the shared shelf's end - resolve in both languages. */
 
 const SHED = ["k25", "k26", "k27", "k28", "k29", "k30"];
+const YARD = ["k31", "k32", "k33", "k34", "k35", "k36", "k37", "k38", "k39", "k40"];
 
 /* Exact push-optimal solver over (box set, player region), freeze-pruned;
  * the same search the shipped gate runs over k17-k24. Returns the push plan
@@ -199,9 +210,9 @@ module.exports = function gate(ctx) {
     rows: Array.from(text.matchAll(/"([^"]*)"/g)).map((x) => x[1]),
   }));
 
-  check("game-glyph-pusher", "the ladder holds thirty rooms",
-    rooms.length === 30, String(rooms.length));
-  check("game-glyph-pusher", "every room id is distinct and the ladder runs k1-k30 in order",
+  check("game-glyph-pusher", "the ladder holds forty rooms",
+    rooms.length === 40, String(rooms.length));
+  check("game-glyph-pusher", "every room id is distinct and the ladder runs k1-k40 in order",
     rooms.every((room, index) => room.id === "k" + (index + 1)),
     rooms.map((r) => r.id).join(","));
   check("game-glyph-pusher", "every room carries its labelKey and its star bands",
@@ -214,7 +225,7 @@ module.exports = function gate(ctx) {
   const exported = App.pushLevels;
   const exportProblems = [];
   if (!Array.isArray(exported) || exported.length !== rooms.length) {
-    exportProblems.push("App.pushLevels is not the thirty-room table");
+    exportProblems.push("App.pushLevels is not the forty-room table");
   } else {
     rooms.forEach((room, index) => {
       const level = exported[index];
@@ -237,6 +248,12 @@ module.exports = function gate(ctx) {
       SHED.every((id, index) => rooms.findIndex((r) => r.id === id) >
         (index === 0 ? rooms.findIndex((r) => r.id === "k24") : rooms.findIndex((r) => r.id === SHED[index - 1]))),
     shedMissing.join(","));
+  const yardMissing = YARD.filter((id) => !byId[id]);
+  check("game-glyph-pusher", "the deep yard k31-k40 is present, after the far shed",
+    yardMissing.length === 0 &&
+      YARD.every((id, index) => rooms.findIndex((r) => r.id === id) >
+        (index === 0 ? rooms.findIndex((r) => r.id === "k30") : rooms.findIndex((r) => r.id === YARD[index - 1]))),
+    yardMissing.join(","));
 
   /* ---- the structural escalation: same stages, cut tighter ------------- */
   const wallsOf = (room) => {
@@ -255,7 +272,7 @@ module.exports = function gate(ctx) {
   const skel23 = wallsOf(byId.k23);
   const skel24 = wallsOf(byId.k24);
   const skeletonProblems = [];
-  SHED.forEach((id) => {
+  SHED.concat(YARD).forEach((id) => {
     const room = byId[id];
     const shed = wallsOf(room);
     const boxes = charCount(room, "$*");
@@ -276,14 +293,14 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-glyph-pusher",
-    "every far-shed room rides a shipped summit skeleton pinched by at most two teeth, crates and diamonds still three",
+    "every far-shed and deep-yard room rides a shipped summit skeleton pinched by at most two teeth, crates and diamonds still three",
     skeletonProblems.length === 0, skeletonProblems.join(" | "));
 
   /* ---- the re-pricing: measured optima hang the bands ------------------- */
   const priced = {};
   const plans = {};
   const priceProblems = [];
-  SHED.forEach((id) => {
+  SHED.concat(YARD).forEach((id) => {
     const room = byId[id];
     const solved = sokSolve(room.rows);
     if (!solved || solved.timeout) {
@@ -310,26 +327,32 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-glyph-pusher",
-    "every far-shed room is solvable and its bands hang on the measured optimum",
+    "every far-shed and deep-yard room is solvable and its bands hang on the measured optimum",
     priceProblems.length === 0, priceProblems.join(" | "));
 
-  /* The climb: strictly above the shipped summit, rung over rung. */
+  /* The climb: strictly above the shipped summit, rung over rung, through
+   * the shed and on into the yard. */
   const k24 = sokSolve(byId.k24.rows);
+  const climbLadder = SHED.concat(YARD);
   const climbProblems = [];
-  SHED.forEach((id, index) => {
-    const prev = index === 0 ? (k24 ? k24.pushes : -Infinity) : priced[SHED[index - 1]];
+  climbLadder.forEach((id, index) => {
+    const prev = index === 0 ? (k24 ? k24.pushes : -Infinity) : priced[climbLadder[index - 1]];
     if (priced[id] === undefined || !(priced[id] > prev)) {
       climbProblems.push(id + ": " + priced[id] + " vs " + prev);
     }
   });
   check("game-glyph-pusher",
-    "the far-shed optima climb rung over rung past the shipped summit (" +
+    "the shed and yard optima climb rung over rung past the shipped summit (" +
       (k24 ? k24.pushes : "?") + " pushes)",
     climbProblems.length === 0, climbProblems.join(","));
   check("game-glyph-pusher",
-    "the capstone asks strictly more pushes than any earlier far-shed room",
+    "the shed's capstone asks strictly more pushes than any earlier far-shed room",
     priced.k30 !== undefined && priced.k30 === Math.max(...SHED.map((id) => priced[id])),
     SHED.map((id) => id + "=" + priced[id]).join(","));
+  check("game-glyph-pusher",
+    "the yard's capstone asks strictly more pushes than any earlier shed or yard room",
+    priced.k40 !== undefined && priced.k40 === Math.max(...climbLadder.map((id) => priced[id])),
+    climbLadder.map((id) => id + "=" + priced[id]).join(","));
 
   /* ---- the unlock chain is derived, never stored ------------------------ */
   const chain = App.createCampaign({
@@ -344,8 +367,8 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < rooms.length ? rooms[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-glyph-pusher", "the unlock chain walks all thirty rooms in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-glyph-pusher", "the unlock chain walks all forty rooms in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 
   /* ---- the boot and the replay: the proof, on the real floor ------------ */
   env.setMotion("off");
@@ -383,7 +406,7 @@ module.exports = function gate(ctx) {
   check("game-glyph-pusher",
     "the panel boots through the real init path with no errors and opens the first shed room",
     !bootError && typeof App.quietResetGlyphPusher === "function" &&
-      sokSelect.children.length === 30 && sokSelect.value === "k25" &&
+      sokSelect.children.length === 40 && sokSelect.value === "k25" &&
       sokMoves.textContent === "0" &&
       !!env.byId("sokBest").textContent &&
       env.byId("sokBest").textContent !== "campaignStars",
@@ -430,31 +453,31 @@ module.exports = function gate(ctx) {
   };
 
   const replayProblems = [];
-  SHED.forEach((id) => {
+  SHED.concat(YARD).forEach((id) => {
     const played = plans[id] ? sokPlay(id, byId[id], plans[id]) : -1;
     if (played !== 3) {
       replayProblems.push(id + ": the optimal plan does not clear for three stars");
     }
   });
   check("game-glyph-pusher",
-    "every far-shed optimal plan replays through the engine for exactly three stars",
+    "every far-shed and deep-yard optimal plan replays through the engine for exactly three stars",
     replayProblems.length === 0, replayProblems.join(" | "));
 
   /* End state: the engine's own save holds the whole ladder cleared, and the
-   * six shed entries were written by the replays above - each one unlocked
-   * only by the clear before it. */
+   * shed and yard entries were written by the replays above - each one
+   * unlocked only by the clear before it. */
   const finalSave = JSON.parse(env.store.get("glyph-pusher-campaign"));
-  const shedCleared = SHED.filter((id) =>
+  const shedCleared = SHED.concat(YARD).filter((id) =>
     (finalSave.cleared[id] || { stars: 0 }).stars === 3).length;
   check("game-glyph-pusher",
-    "the engine's own save ends with all thirty rooms cleared at three stars",
-    Object.keys(finalSave.cleared).length === 30 && shedCleared === 6,
-    Object.keys(finalSave.cleared).length + " cleared, " + shedCleared + " shed rooms at three stars");
+    "the engine's own save ends with all forty rooms cleared at three stars",
+    Object.keys(finalSave.cleared).length === 40 && shedCleared === 16,
+    Object.keys(finalSave.cleared).length + " cleared, " + shedCleared + " shed and yard rooms at three stars");
 
   /* The slack line: a detour of the optimum plus two wasted pushes lands
    * past the three-star line and inside the two-star band. */
   const slackProblems = [];
-  SHED.forEach((id) => {
+  SHED.concat(YARD).forEach((id) => {
     const room = byId[id];
     const opt = priced[id];
     if (opt === undefined) return;
@@ -463,11 +486,11 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-glyph-pusher",
-    "the optimum plus the wasted pair lands exactly two stars in every far-shed room",
+    "the optimum plus the wasted pair lands exactly two stars in every far-shed and deep-yard room",
     slackProblems.length === 0, slackProblems.join(" | "));
 
   /* ---- the names travel in both packs ----------------------------------- */
-  const labelProblems = SHED.map((id, index) => {
+  const labelProblems = SHED.concat(YARD).map((id, index) => {
     const key = byId[id].labelKey;
     if (key !== "lvlNum" + (25 + index)) {
       return key + " is off the ladder's naming scheme";
@@ -481,6 +504,6 @@ module.exports = function gate(ctx) {
     if (!shown || shown === key) return key + " falls back to the raw key";
     return null;
   }).filter(Boolean);
-  check("game-glyph-pusher", "the six far-shed stage names resolve in both languages as real strings",
+  check("game-glyph-pusher", "the sixteen shed and yard stage names resolve in both languages as real strings",
     labelProblems.length === 0, labelProblems.join(","));
 };

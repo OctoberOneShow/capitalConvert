@@ -110,6 +110,35 @@
     { id: "d28", labelKey: "edlZ28", twistKey: "edlTwist28", seed: 20270905, kinds: ["husk", "adder", "imp"], count: 4, armor: 6, regen: 0, vitals: 14, starTurns: [29, 36, 57] },
     { id: "d29", labelKey: "edlZ29", twistKey: "edlTwist29", seed: 20270921, kinds: ["husk", "adder", "imp"], count: 4, armor: 5, regen: 2, vitals: 12, starTurns: [29, 36, 57] },
     { id: "d30", labelKey: "edlZ30", twistKey: "edlTwist30", seed: 20271007, kinds: ["husk", "adder", "imp"], count: 4, armor: 6, regen: 1, vitals: 12, starTurns: [30, 35, 57] },
+    /* The cold-camp tier, rungs 31-40: the last dial the delve had never
+     * turned is the camp fire itself. Every rung carries `heal: 3` - a rest
+     * mends three vitals, where every shipped floor in the ladder mends the
+     * module's five - and the pool sinks past the summit's drained floor:
+     * 14, 14, 13, 13, 12, 12, 11, 11, 10 and finally 9 vitals at the
+     * capstone, two below where the summit bottomed out, behind the summit's
+     * own peak plate (six) and its mending pack (one a round). Measured on
+     * the gate's bench - the strong turtle hand replayed through the
+     * exported engine over the six seeds the panel deals first - every rung
+     * clears 6/6, and the winning lines (best/worst 28/34, 30/33, 26/35,
+     * 29/36, 27/36, 33/35, 25/36, 28/34, 29/35, 27/34) are what the star
+     * bands are cut from: three stars one turn over the best line, two stars
+     * one turn over the worst. The mid hand takes four seeds of twelve off
+     * the tier's opening and none off the closing pair, and the naive hand
+     * falls on every first floor of every seed. The camp is load-bearing:
+     * cut it back to five mends on a copy and the mid hand never loses a
+     * seed and takes four more across the tier; cut the pool back to
+     * eighteen and it takes seventeen more. Every number here was measured,
+     * never guessed. */
+    { id: "d31", labelKey: "edlZ31", twistKey: "edlTwist31", seed: 20271101, kinds: ["husk", "adder", "imp"], count: 4, armor: 6, regen: 1, vitals: 14, heal: 3, starTurns: [29, 35, 57] },
+    { id: "d32", labelKey: "edlZ32", twistKey: "edlTwist32", seed: 20271111, kinds: ["husk", "adder", "imp"], count: 4, armor: 6, regen: 1, vitals: 14, heal: 3, starTurns: [31, 34, 57] },
+    { id: "d33", labelKey: "edlZ33", twistKey: "edlTwist33", seed: 20271165, kinds: ["husk", "adder", "imp"], count: 4, armor: 6, regen: 1, vitals: 13, heal: 3, starTurns: [27, 36, 57] },
+    { id: "d34", labelKey: "edlZ34", twistKey: "edlTwist34", seed: 20271109, kinds: ["husk", "adder", "imp"], count: 4, armor: 6, regen: 1, vitals: 13, heal: 3, starTurns: [30, 37, 57] },
+    { id: "d35", labelKey: "edlZ35", twistKey: "edlTwist35", seed: 20271167, kinds: ["husk", "adder", "imp"], count: 4, armor: 6, regen: 1, vitals: 12, heal: 3, starTurns: [28, 37, 57] },
+    { id: "d36", labelKey: "edlZ36", twistKey: "edlTwist36", seed: 20271163, kinds: ["husk", "adder", "imp"], count: 4, armor: 6, regen: 1, vitals: 12, heal: 3, starTurns: [34, 36, 57] },
+    { id: "d37", labelKey: "edlZ37", twistKey: "edlTwist37", seed: 20271171, kinds: ["husk", "adder", "imp"], count: 4, armor: 6, regen: 1, vitals: 11, heal: 3, starTurns: [26, 37, 57] },
+    { id: "d38", labelKey: "edlZ38", twistKey: "edlTwist38", seed: 20271113, kinds: ["husk", "adder", "imp"], count: 4, armor: 6, regen: 1, vitals: 11, heal: 3, starTurns: [29, 35, 57] },
+    { id: "d39", labelKey: "edlZ39", twistKey: "edlTwist39", seed: 20271199, kinds: ["husk", "adder", "imp"], count: 4, armor: 6, regen: 1, vitals: 10, heal: 3, starTurns: [30, 36, 57] },
+    { id: "d40", labelKey: "edlZ40", twistKey: "edlTwist40", seed: 20271187, kinds: ["husk", "adder", "imp"], count: 4, armor: 6, regen: 1, vitals: 9, heal: 3, starTurns: [28, 35, 57] },
   ];
 
   function edlInt(value) {
@@ -731,7 +760,9 @@
       if (!run || run.over || run.mode === "fight") {
         return;
       }
-      run.hero.hp = Math.min(run.hero.maxHp, run.hero.hp + REST_HEAL);
+      /* The camp fire's own heat: every shipped floor mends the module's
+       * five; the cold-camp tier deals fires that mend less. */
+      run.hero.hp = Math.min(run.hero.maxHp, run.hero.hp + (levelDef.heal || REST_HEAL));
       var rooms = run.floor.rooms;
       var warden = !!REST_TWISTS[run.level.twistKey];
       var curse = run.level.twistKey === "edlTwist4" || run.level.twistKey === "edlTwist5";
@@ -1379,6 +1410,7 @@
         "Scoring: fewer turns earn more stars. A run ends at depth 8, at 0 vitals, or at the 60 turn cap.",
         "New tier: the deep floors drain you before the first step - the deep tier opens at 18 to 24 vitals instead of 30, so rest stops being optional. Clear rooms to catch your breath, walk the shortest stair, and spend a turn resting only when the drain truly demands it.",
         "Summit: from the twenty-fifth rung the plate passes everything shipped - strikes die on five- and six-point plate, so the two-charge heavy blow is the only answer - while the drain sinks to 12 vitals and on the cursed floors the wake is right beside you.",
+        "Cold camp: past the thirtieth rung the camp fire itself burns low - a rest mends 3, not 5 - while the pool sinks to 9 vitals behind the peak plate. Every rest must earn its turn twice over.",
       ],
       zh: [
         "目标：60 回合内打到第 8 层。移动、歇息、下潜各占一个回合，战斗轮次不计回合。",
@@ -1389,6 +1421,7 @@
         "计分：回合越少星越高。抵达第 8 层、体力归零或打满 60 回合，本局都会结束。",
         "新梯队：深层在下第一步之前就抽干了你——深层的每次探险都以 18 到 24 点体力开场，而非满额 30 点，歇息从此不再是可选项。清房喘息、直走阶梯，只在真正被逼到墙角时才花一回合歇息。",
         "巅峰段：从第二十五层起，护甲越过了此前的一切——劈砍打不动五点、六点厚甲，攒满两层凝火的重击是唯一的答案——而体力一路沉到 12 点，诅咒之层的惊醒就在你脚边。",
+        "冷营火：第三十层之后，营火本身也弱了——歇息只回 3 点而非 5 点——而体力在巅峰厚甲之后沉到 9 点。每一次歇息都得值回两倍代价。",
       ],
     },
   });
@@ -1402,4 +1435,54 @@
   App.delveRouteBound = delveRouteBound;
   App.delveStairSpan = edlMaxStairDistance;
   App.delveIntent = edlIntent;
+
+  /* The cold-camp floors carry their own names and twists: addStrings only
+   * fills keys i18n.js does not already hold, so the picker never prints a
+   * raw key and the shipped floors keep the names above. */
+  App.addStrings({
+    en: {
+      "edlZ31": "The Low Fire",
+      "edlZ32": "The Thin Broth",
+      "edlZ33": "The Sputtering Torch",
+      "edlZ34": "The Ashen Camp",
+      "edlZ35": "The Cold Hearth",
+      "edlZ36": "The Guttering Flame",
+      "edlZ37": "The Dying Ember",
+      "edlZ38": "The Frozen Bedroll",
+      "edlZ39": "The Last Warm Coal",
+      "edlZ40": "The Dark Below",
+      "edlTwist31": "the camp mends 3, and you arrive drained to 14 vitals",
+      "edlTwist32": "the camp mends 3, and you arrive drained to 14 vitals",
+      "edlTwist33": "the camp mends 3, and you arrive drained to 13 vitals",
+      "edlTwist34": "the camp mends 3, and you arrive drained to 13 vitals",
+      "edlTwist35": "the camp mends 3, and you arrive drained to 12 vitals",
+      "edlTwist36": "the camp mends 3, and you arrive drained to 12 vitals",
+      "edlTwist37": "the camp mends 3, and you arrive drained to 11 vitals",
+      "edlTwist38": "the camp mends 3, and you arrive drained to 11 vitals",
+      "edlTwist39": "the camp mends 3, and you arrive drained to 10 vitals",
+      "edlTwist40": "the camp mends 3, and you arrive drained to 9 vitals",
+    },
+    zh: {
+      "edlZ31": "\u5f31\u706b\u4e4b\u7a9f",
+      "edlZ32": "\u7a00\u6c64\u4e4b\u7a9f",
+      "edlZ33": "\u6bd5\u5254\u706b\u628a",
+      "edlZ34": "\u7070\u71e5\u8425\u5730",
+      "edlZ35": "\u51b7\u7089\u51b7\u7076",
+      "edlZ36": "\u6b8b\u70db\u4e4b\u7a9f",
+      "edlZ37": "\u5c06\u706d\u4f59\u70ec",
+      "edlZ38": "\u51b0\u5377\u5bd2\u94fa",
+      "edlZ39": "\u6700\u540e\u4e00\u7c92\u6696\u70ad",
+      "edlZ40": "\u6697\u4e0b\u4e4b\u5e95",
+      "edlTwist31": "\u8425\u706b\u53ea\u56de 3 \u70b9\uff0c\u62b5\u8fbe\u65f6\u4ec5\u4f59 14 \u70b9\u4f53\u529b",
+      "edlTwist32": "\u8425\u706b\u53ea\u56de 3 \u70b9\uff0c\u62b5\u8fbe\u65f6\u4ec5\u4f59 14 \u70b9\u4f53\u529b",
+      "edlTwist33": "\u8425\u706b\u53ea\u56de 3 \u70b9\uff0c\u62b5\u8fbe\u65f6\u4ec5\u4f59 13 \u70b9\u4f53\u529b",
+      "edlTwist34": "\u8425\u706b\u53ea\u56de 3 \u70b9\uff0c\u62b5\u8fbe\u65f6\u4ec5\u4f59 13 \u70b9\u4f53\u529b",
+      "edlTwist35": "\u8425\u706b\u53ea\u56de 3 \u70b9\uff0c\u62b5\u8fbe\u65f6\u4ec5\u4f59 12 \u70b9\u4f53\u529b",
+      "edlTwist36": "\u8425\u706b\u53ea\u56de 3 \u70b9\uff0c\u62b5\u8fbe\u65f6\u4ec5\u4f59 12 \u70b9\u4f53\u529b",
+      "edlTwist37": "\u8425\u706b\u53ea\u56de 3 \u70b9\uff0c\u62b5\u8fbe\u65f6\u4ec5\u4f59 11 \u70b9\u4f53\u529b",
+      "edlTwist38": "\u8425\u706b\u53ea\u56de 3 \u70b9\uff0c\u62b5\u8fbe\u65f6\u4ec5\u4f59 11 \u70b9\u4f53\u529b",
+      "edlTwist39": "\u8425\u706b\u53ea\u56de 3 \u70b9\uff0c\u62b5\u8fbe\u65f6\u4ec5\u4f59 10 \u70b9\u4f53\u529b",
+      "edlTwist40": "\u8425\u706b\u53ea\u56de 3 \u70b9\uff0c\u62b5\u8fbe\u65f6\u4ec5\u4f59 9 \u70b9\u4f53\u529b",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

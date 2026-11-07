@@ -39,11 +39,12 @@ module.exports = function gate(ctx) {
   const levels = App.marketLevels;
   const deepIds = ["m21", "m22", "m23", "m24"];
   const summitIds = ["m25", "m26", "m27", "m28", "m29", "m30"];
+  const breathIds = ["m31", "m32", "m33", "m34", "m35", "m36", "m37", "m38", "m39", "m40"];
   const probeSeeds = [11, 101, 1009, 4243];
   const mktDays = 7;
 
-  check("game-moon-market", "the ladder holds thirty seats",
-    Array.isArray(levels) && levels.length === 30, String(levels && levels.length));
+  check("game-moon-market", "the ladder holds forty seats",
+    Array.isArray(levels) && levels.length === 40, String(levels && levels.length));
   check("game-moon-market", "every seat id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -53,9 +54,12 @@ module.exports = function gate(ctx) {
   const missingSummit = summitIds.filter((id) => !levels.some((level) => level.id === id));
   check("game-moon-market", "the summit tier m25-m30 is present",
     missingSummit.length === 0, missingSummit.join(","));
-  check("game-moon-market", "the deep and summit tiers sit at the tail in order",
+  const missingBreath = breathIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-moon-market", "the breathing tier m31-m40 is present",
+    missingBreath.length === 0, missingBreath.join(","));
+  check("game-moon-market", "the deep, summit and breathing tiers sit at the tail in order",
     levels.slice(20).map((level) => level.id).join(",") ===
-      deepIds.concat(summitIds).join(","),
+      deepIds.concat(summitIds).concat(breathIds).join(","),
     levels.slice(20).map((level) => level.id).join(","));
 
   const byId = {};
@@ -269,6 +273,65 @@ module.exports = function gate(ctx) {
     return actions;
   };
 
+  /* The breathing tier's shelf-aware line: the shipped greedy's shape with
+   * the day's real shelf in the buy sizing - the same cargo, read off the
+   * shelf that is actually there tonight. No feeRamp and no toll are read:
+   * the tier carries neither, so the sell tests are the shipped flat-fee
+   * ones. */
+  const breathAware = (level, sched, state) => {
+    const ev = sched.events[state.day];
+    const blocked = ev && ev.kind === "storm" ? ev.goods : -1;
+    const p = sched.prices[state.day];
+    const n = sched.prices[state.day + 1] || sched.prices[mktDays];
+    const shelf = App.marketCap(level, state.day);
+    const actions = [0, 0, 0, 0];
+    let held = 0;
+    for (let i = 0; i < 4; i += 1) {
+      held += state.holds[i];
+    }
+    for (let i = 0; i < 4; i += 1) {
+      if (state.holds[i] > 0 && i !== blocked && (n[i] <= p[i] || state.day === mktDays - 1)) {
+        actions[i] = -state.holds[i];
+        held -= state.holds[i];
+      }
+    }
+    let dumped = 0;
+    while (state.cash < level.fee * (held + 1) * 2 + 1 && dumped < 4) {
+      dumped += 1;
+      let dump = -1;
+      let big = 0;
+      for (let i = 0; i < 4; i += 1) {
+        if (state.holds[i] > 0 && i !== blocked && actions[i] === 0 &&
+            state.holds[i] > big) {
+          big = state.holds[i];
+          dump = i;
+        }
+      }
+      if (dump < 0) break;
+      actions[dump] = -state.holds[dump];
+      held -= state.holds[dump];
+    }
+    let bestGain = 0;
+    let bestI = -1;
+    for (let i = 0; i < 4; i += 1) {
+      if (i === blocked || actions[i] < 0) continue;
+      const gain = n[i] - p[i] - level.fee;
+      if (gain > bestGain) {
+        bestGain = gain;
+        bestI = i;
+      }
+    }
+    if (bestI >= 0 && state.day < mktDays - 1 && p[bestI] > 0) {
+      for (let qty = shelf - held; qty >= 1; qty -= 1) {
+        if (qty * p[bestI] <= state.cash - level.fee * (held + qty) * 2) {
+          actions[bestI] = qty;
+          break;
+        }
+      }
+    }
+    return actions;
+  };
+
   /* One full week of a policy through the module's own engine, on an explicit
    * seed so the prover can also walk weeks the row does not ship. */
   const playLine = (level, policy, seed) => {
@@ -477,6 +540,96 @@ module.exports = function gate(ctx) {
     "the line that three-stars m24 falls to zero stars on every summit rung, and the summit line replays it where no toll is charged",
     contrastProblems.length === 0, contrastProblems.join(" | "));
 
+  /* ---- seats 31-40, the breathing warehouse ------------------------------ *
+   *
+   * The last lever moves the shelf itself: day d trades under
+   * cap + capRamp*d, outward on m31-m35 (+2, +2, +3, +3, +4) and inward on
+   * m36-m40 (-2, -2, -2, -3, -4). The cap-aware line - the shipped greedy's
+   * shape reading the day's real shelf - banks the three-star band; the
+   * seat's own blind greedy banks exactly its one-star band, because on the
+   * inward seats the gate refuses the holds its own assumption built, and on
+   * the outward seats it never learns the extra shelf was there. The
+   * ratchet is structural: only these ten seats carry the field, and
+   * cutting it out of a seat's copy moves the lines the lever names - the
+   * blind greedy is freed on an inward seat's flat copy and the cap-aware
+   * line loses the shelf it was reading on an outward one. */
+  const breath = breathIds.map((id) => byId[id]).filter(Boolean);
+  const carriers = levels.filter((level) =>
+    !breathIds.includes(level.id) &&
+    Object.prototype.hasOwnProperty.call(level, "capRamp"));
+  check("game-moon-market", "no rung outside the breathing tier carries the shelf ramp",
+    carriers.length === 0, carriers.map((level) => level.id).join(","));
+  const ramps = breath.map((level) => level.capRamp);
+  check("game-moon-market",
+    "the shelf ratchet runs outward then inward, widening rung over rung",
+    ramps.join(",") === "2,3,3,4,4,-2,-2,-2,-3,-4" &&
+      breath.every((level) => typeof level.capRamp === "number" && level.capRamp !== 0),
+    ramps.join(","));
+  const breathBandProblems = [];
+  const breathProofProblems = [];
+  const breathCutProblems = [];
+  breath.forEach((level) => {
+    const band = level.starCredits;
+    const name = `${level.id} cap=${level.cap} ramp=${level.capRamp}`;
+    if (!Array.isArray(band) || band.length !== 3 ||
+        !(band[0] > band[1] && band[1] > band[2])) {
+      breathBandProblems.push(name + " bands do not descend " + String(band));
+      return;
+    }
+    const ceiling = App.marketCeiling(level);
+    if (!(band[0] > ceiling)) {
+      breathBandProblems.push(`${name} top band ${band[0]} <= greedy ceiling ${ceiling}`);
+    }
+    seeded(9127, () => {
+      [level.seed].concat(probeSeeds).forEach((seed) => {
+        const greedy = playLine(level, App.marketGreedy, seed);
+        const aware = playLine(level, breathAware, seed);
+        const flip = playLine(level, flipper, seed);
+        const hold = carrierLine(level, seed);
+        const hands = [greedy, aware, flip, hold];
+        if (!hands.every((v) => typeof v === "number" && isFinite(v))) {
+          breathProofProblems.push(`${level.id} seed ${seed} a replay did not settle to a number`);
+          return;
+        }
+        if (seed !== level.seed) return;
+        const stars = (value) => App.starsFor(value, band, "high");
+        if (stars(aware) !== 3 || aware < band[0]) {
+          breathProofProblems.push(`${level.id} the shelf-aware line does not bank the` +
+            ` top band (${aware} vs ${band.join("/")})`);
+        }
+        if (stars(greedy) !== 1) {
+          breathProofProblems.push(`${level.id} the blind greedy line does not bank its` +
+            ` one-star band (${greedy} in ${band.join("/")})`);
+        }
+        if (stars(flip) > 2) {
+          breathProofProblems.push(`${level.id} the flipper reaches the top band (${flip})`);
+        }
+        if (stars(hold) !== 0) {
+          breathProofProblems.push(`${level.id} the carrier is not held under the target (${hold})`);
+        }
+        const flatGreedy = playLine(withoutField(level, "capRamp"), App.marketGreedy, seed);
+        const flatAware = playLine(withoutField(level, "capRamp"), breathAware, seed);
+        if (level.capRamp < 0 && !(flatGreedy > greedy)) {
+          breathCutProblems.push(`${level.id} cutting the ramp does not free the blind line` +
+            ` (${greedy} breathing vs ${flatGreedy} flat)`);
+        }
+        if (level.capRamp > 0 && !(flatAware < aware)) {
+          breathCutProblems.push(`${level.id} cutting the ramp does not take the shelf back` +
+            ` (${aware} breathing vs ${flatAware} flat)`);
+        }
+      });
+    });
+  });
+  check("game-moon-market",
+    "every breathing band descends and tops the seat's own greedy ceiling",
+    breathBandProblems.length === 0, breathBandProblems.join(" | "));
+  check("game-moon-market",
+    "on every breathing week the shelf-aware line banks three stars and the blind greedy exactly one",
+    breathProofProblems.length === 0, breathProofProblems.join(" | "));
+  check("game-moon-market",
+    "cutting the ramp moves the lines the lever names - freeing the blind on inward seats, taking the shelf back on outward ones",
+    breathCutProblems.length === 0, breathCutProblems.join(" | "));
+
   /* The hook is inert where the field never shipped: every shallow week
    * replayed through a toll:0 clone walks day for day identically - same
    * cash, cargo and flags each day, same settlement. */
@@ -501,10 +654,15 @@ module.exports = function gate(ctx) {
           weekPrint(withoutField(level, "toll", 0), seed)) {
         inertProblems.push(`${level.id} seed ${seed} moved under a fake toll:0`);
       }
+      if (!breathIds.includes(level.id) &&
+          weekPrint(level, seed) !==
+          weekPrint(withoutField(level, "capRamp", 0), seed)) {
+        inertProblems.push(`${level.id} seed ${seed} moved under a fake capRamp:0`);
+      }
     });
   });
   check("game-moon-market",
-    "every pre-summit week replays byte-identically with a fake toll:0 on its copy",
+    "every pre-summit week replays byte-identically with a fake toll:0 on its copy, and every pre-breathing week with a fake capRamp:0",
     inertProblems.length === 0, inertProblems.join(" | "));
 
   /* The tier's names travel with the page: both languages hold a real string
@@ -552,6 +710,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-moon-market", "the unlock chain walks all thirty seats in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-moon-market", "the unlock chain walks all forty seats in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 };

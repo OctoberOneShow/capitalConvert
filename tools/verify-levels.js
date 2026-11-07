@@ -139,8 +139,8 @@ if (App.glyphSudokuGenerate) {
     sudSrc.indexOf("/* Pure generator"),
   );
   const sudTable = new Function(sudSlice + "\nreturn sudLevels;")();
-  check("game-glyph-sudoku", "the ladder holds thirty grids",
-    sudTable.length === 30, String(sudTable.length));
+  check("game-glyph-sudoku", "the ladder holds forty grids",
+    sudTable.length === 40, String(sudTable.length));
   check("game-glyph-sudoku", "every grid id is distinct",
     new Set(sudTable.map((level) => level.id)).size === sudTable.length);
   const sudSummit = sudTable.filter((level) =>
@@ -196,8 +196,8 @@ if (App.glyphSudokuGenerate) {
   const parlor = require("./parlor-forge");
   const bj = parlor.loadApi();
   const tables = bj.bjTables;
-  check("game-blackjack", "the parlor ladder holds thirty tables",
-    tables.length === 30, String(tables.length));
+  check("game-blackjack", "the parlor ladder holds forty-four tables",
+    tables.length === 44, String(tables.length));
   check("game-blackjack", "every table id is distinct",
     new Set(tables.map((table) => table.id)).size === tables.length);
   check("game-blackjack", "the summit 21-24 tables all exist",
@@ -519,8 +519,8 @@ if (App.glyphSudokuGenerate) {
   const row = require("./kalah-forge");
   const kalah = row.loadApi();
   const ranks = kalah.malRanks;
-  check("game-kalah-row", "the bench ladder holds forty ranks",
-    ranks.length === 40, String(ranks.length));
+  check("game-kalah-row", "the bench ladder holds fifty ranks",
+    ranks.length === 50, String(ranks.length));
   check("game-kalah-row", "every rank id is distinct",
     new Set(ranks.map((rank) => rank.id)).size === ranks.length);
   check("game-kalah-row", "the summit 21-24 ranks all exist",
@@ -528,6 +528,9 @@ if (App.glyphSudokuGenerate) {
     ranks.map((rank) => rank.id).join(","));
   check("game-kalah-row", "the ransom 25-30 ranks all exist",
     ["m25", "m26", "m27", "m28", "m29", "m30"].every((id) => ranks.some((rank) => rank.id === id)),
+    ranks.map((rank) => rank.id).join(","));
+  check("game-kalah-row", "the breach 41-44 ranks all exist",
+    ["m41", "m42", "m43", "m44"].every((id) => ranks.some((rank) => rank.id === id)),
     ranks.map((rank) => rank.id).join(","));
   check("game-kalah-row", "the ranks climb without stepping back and margins fall",
     ranks.every((rank, index) => index === 0 || rank.depth >= ranks[index - 1].depth) &&
@@ -574,13 +577,15 @@ if (App.glyphSudokuGenerate) {
   );
   const snkTable = new Function(snakeSlice + "\nreturn snkLevels;")();
   const snkNewIds = ["h17", "h18", "h19", "h20", "h21", "h22", "h23", "h24",
-    "h25", "h26", "h27", "h28", "h29", "h30"];
-  check("game-snake", "the walled-house ladder holds thirty houses",
-    snkTable.length === 30, String(snkTable.length));
+    "h25", "h26", "h27", "h28", "h29", "h30",
+    "h31", "h32", "h33", "h34", "h35", "h36", "h37", "h38", "h39", "h40",
+    "h41", "h42", "h43", "h44"];
+  check("game-snake", "the walled-house ladder holds forty-four houses",
+    snkTable.length === 44, String(snkTable.length));
   check("game-snake", "every house id is distinct",
     new Set(snkTable.map((house) => house.id)).size === snkTable.length);
   const snkNew = snkTable.filter((house) => snkNewIds.includes(house.id));
-  check("game-snake", "the tier 17-30 rows all exist", snkNew.length === 14,
+  check("game-snake", "the tier 17-44 rows all exist", snkNew.length === 28,
     String(snkNew.length));
 
   const SNK_COLS = 16;
@@ -791,10 +796,13 @@ if (App.glyphSudokuGenerate) {
         if (house.wrap) {
           nx = (nx + SNK_COLS) % SNK_COLS;
           ny = (ny + SNK_ROWS) % SNK_ROWS;
+        } else if (nx < 0 || nx >= SNK_COLS || ny < 0 || ny >= SNK_ROWS) {
+          return { x: -99, y: -99 };
         }
         return { x: nx, y: ny };
       })
-      .filter((cell) => !walls[cell.x + "," + cell.y] && !blocked[cell.x + "," + cell.y]);
+      .filter((cell) => !walls[cell.x + "," + cell.y] && !blocked[cell.x + "," + cell.y] &&
+        !(cell.x === body[1].x && cell.y === body[1].y));
     if (!legal.length) return null;
     const route = snkStepToward(house, walls, blocked, head, probe.food);
     /* Distance to the berry through walls only - the route the body will have
@@ -1028,7 +1036,7 @@ if (App.glyphSudokuGenerate) {
     strongWitness[house.id] || { id: house.id, cleared: false, seconds: 0, stars: 0 });
   const noviceTier = snkTier(snkNovice, strongWitness);
 
-  check("game-snake", "the routing hand clears all thirty houses at three stars, each on its own seeded stream",
+  check("game-snake", "the routing hand clears all forty-four houses at three stars, each on its own seeded stream",
     strongLadder.every((row) => row.cleared && row.stars === 3),
     JSON.stringify(strongLadder.filter((row) => !row.cleared || row.stars !== 3)));
   check("game-snake", "the engine unlocks and pays the new tier at three stars",
@@ -1049,7 +1057,7 @@ if (App.glyphSudokuGenerate) {
     JSON.stringify(noviceTier));
   /* The greedy hand can tie the router on a single open house (the third-star
    * band keeps a three-times-slower hand paid there), so the tier bar is
-   * dominance everywhere plus an outright margin across the fourteen. */
+   * dominance everywhere plus an outright margin across the twenty-eight. */
   const strongStars = strongTier.reduce((sum, row) => sum + row.stars, 0);
   const noviceStars = noviceTier.reduce((sum, row) => sum + row.stars, 0);
   check("game-snake", "the routing hand never trails the greedy hand and outscores it across the tier",
@@ -1061,9 +1069,9 @@ if (App.glyphSudokuGenerate) {
     snkNew.every((house, index) => strongTier[index].seconds * 3 <= house.starTimes[2]),
     JSON.stringify(snkNew.map((house, index) => [Math.round(strongTier[index].seconds * 3), house.starTimes[2]])));
 }
-/* ---- game-breakout: the tier and summit walls are cleared by a scripted
- * paddle on a seeded bench, calibrated against the shipped peak, with a slower
- * reacting hand proving the pearls are at stake ----------------------------- */
+/* ---- game-breakout: the tier, summit and sealed walls are cleared by a
+ * scripted paddle on a seeded bench, calibrated against the shipped peak,
+ * with a slower reacting hand proving the pearls are at stake --------------- */
 {
   const brkSource = fs
     .readFileSync(path.join(root, "assets", "app", "game-breakout.js"), "utf8")
@@ -1074,13 +1082,21 @@ if (App.glyphSudokuGenerate) {
   );
   const brkTable = new Function(brkSlice + "\nreturn brkLevels;")();
   const brkNewIds = ["x8", "x9", "x10", "x21", "x22", "x23", "x24"];
-  check("game-breakout", "the inkball ladder holds thirty walls",
-    brkTable.length === 30, String(brkTable.length));
+  const brkSealIds = ["x31", "x32", "x33", "x34", "x35", "x36", "x37", "x38", "x39", "x40"];
+  const brkObsidianIds = ["x41", "x42", "x43", "x44"];
+  check("game-breakout", "the inkball ladder holds forty-four walls",
+    brkTable.length === 44, String(brkTable.length));
   check("game-breakout", "every wall id is distinct",
     new Set(brkTable.map((wall) => wall.id)).size === brkTable.length);
   const brkNew = brkTable.filter((wall) => brkNewIds.includes(wall.id));
   check("game-breakout", "the tier 18-20 and summit 21-24 rows all exist", brkNew.length === 7,
     String(brkNew.length));
+  const brkSeal = brkTable.filter((wall) => brkSealIds.includes(wall.id));
+  check("game-breakout", "the sealed tier x31-x40 rows all exist", brkSeal.length === 10,
+    String(brkSeal.length));
+  const brkObsidian = brkTable.filter((wall) => brkObsidianIds.includes(wall.id));
+  check("game-breakout", "the obsidian tier x41-x44 rows all exist", brkObsidian.length === 4,
+    String(brkObsidian.length));
   brkNew.forEach((wall) => {
     const rows = wall.rows;
     check("game-breakout",
@@ -1094,6 +1110,37 @@ if (App.glyphSudokuGenerate) {
     check("game-breakout",
       `${wall.id}: the ball runs faster than the wall before it`,
       wall.speed > brkTable[brkTable.indexOf(wall) - 1].speed, String(wall.speed));
+  });
+  brkSeal.forEach((wall) => {
+    const rows = wall.rows;
+    check("game-breakout",
+      `${wall.id}: the wall is authored on the 8x5 plate`,
+      rows.length === 5 && rows.every((row) => row.length === 8),
+      JSON.stringify(rows));
+    check("game-breakout",
+      `${wall.id}: every tile is a kind the engine knows`,
+      rows.every((row) => row.split("").every((ch) => ".ntdsgx".includes(ch))),
+      JSON.stringify(rows));
+    check("game-breakout",
+      `${wall.id}: the ball runs faster than the wall before it`,
+      wall.speed > brkTable[brkTable.indexOf(wall) - 1].speed, String(wall.speed));
+  });
+  brkObsidian.forEach((wall) => {
+    const rows = wall.rows;
+    check("game-breakout",
+      `${wall.id}: the wall is authored on the 8x5 plate`,
+      rows.length === 5 && rows.every((row) => row.length === 8),
+      JSON.stringify(rows));
+    check("game-breakout",
+      `${wall.id}: every tile is a kind the engine knows`,
+      rows.every((row) => row.split("").every((ch) => ".ntdsgx".includes(ch))),
+      JSON.stringify(rows));
+    check("game-breakout",
+      `${wall.id}: the ball runs faster than the wall before it`,
+      wall.speed > brkTable[brkTable.indexOf(wall) - 1].speed, String(wall.speed));
+    check("game-breakout",
+      `${wall.id}: the rung stays inside the tracking hand's cap`,
+      wall.speed < 4.4, String(wall.speed));
   });
   check("game-breakout",
     "x8 and x10 are mirrored walls, every row reading the same from both rails",
@@ -1110,6 +1157,20 @@ if (App.glyphSudokuGenerate) {
     }),
     JSON.stringify(brkNew.filter((wall) => wall.id >= "x21").map((wall) => wall.rows)));
   check("game-breakout",
+    "the sealed walls carry the mirror law onto a plate with no open ground",
+    brkSealIds.every((id) => {
+      const wall = brkTable.find((entry) => entry.id === id);
+      return wall.rows.every((row) => row === row.split("").reverse().join(""));
+    }),
+    JSON.stringify(brkSeal.map((wall) => wall.rows)));
+  check("game-breakout",
+    "the obsidian walls carry the mirror law onto the census plate",
+    brkObsidianIds.every((id) => {
+      const wall = brkTable.find((entry) => entry.id === id);
+      return wall.rows.every((row) => row === row.split("").reverse().join(""));
+    }),
+    JSON.stringify(brkObsidian.map((wall) => wall.rows)));
+  check("game-breakout",
     "x10 is the capstone: ghost, seed, tough, normal and exploder on one plate",
     (() => {
       const wall = brkTable.find((entry) => entry.id === "x10");
@@ -1123,6 +1184,105 @@ if (App.glyphSudokuGenerate) {
       const kinds = new Set(wall.rows.join("").replace(/\./g, "").split(""));
       return ["n", "t", "d", "s", "g", "x"].every((kind) => kinds.has(kind));
     })(), JSON.stringify(brkTable.find((entry) => entry.id === "x24").rows));
+  check("game-breakout",
+    "every sealed wall runs eight tiles on all five courses and keeps a pod in each",
+    brkSealIds.every((id) => {
+      const wall = brkTable.find((entry) => entry.id === id);
+      return wall.rows.every((row) => row.length === 8 && !row.includes(".") && row.includes("s"));
+    }),
+    JSON.stringify(brkSeal.map((wall) => wall.rows)));
+  check("game-breakout",
+    "no wall before the seal ever filled all five courses",
+    !brkTable.filter((wall) => !brkSealIds.includes(wall.id) && !brkObsidianIds.includes(wall.id))
+      .some((wall) =>
+        wall.rows.every((row) => row.length === 8 && !row.includes(".") && row.includes("s"))),
+    brkTable.filter((wall) => !brkSealIds.includes(wall.id) && !brkObsidianIds.includes(wall.id))
+      .filter((wall) => wall.rows.every((row) => row.length === 8 && !row.includes(".") && row.includes("s")))
+      .map((wall) => wall.id).join(","));
+  check("game-breakout",
+    "every obsidian wall runs eight tiles on all five courses and keeps a pod in each",
+    brkObsidianIds.every((id) => {
+      const wall = brkTable.find((entry) => entry.id === id);
+      return wall.rows.every((row) => row.length === 8 && !row.includes(".") && row.includes("s"));
+    }),
+    JSON.stringify(brkObsidian.map((wall) => wall.rows)));
+  const brkPrice = (wall) =>
+    wall.rows.join("").replace(/\./g, "").length +
+    (wall.rows.join("").match(/t/g) || []).length +
+    2 * (wall.rows.join("").match(/s/g) || []).length;
+  const brkSealPrices = brkSeal.map((wall) => brkPrice(wall));
+  check("game-breakout",
+    "the seal's price climbs rung over rung " + brkSealPrices.join(" -> "),
+    brkSealPrices.every((value, index) => index === 0 || value > brkSealPrices[index - 1]),
+    JSON.stringify(brkSealPrices));
+  check("game-breakout",
+    "x37-x40 close the alphabet on a sealed plate: every tile kind the engine knows",
+    ["x37", "x38", "x39", "x40"].every((id) => {
+      const wall = brkTable.find((entry) => entry.id === id);
+      const kinds = new Set(wall.rows.join("").replace(/\./g, "").split(""));
+      return ["n", "t", "d", "s", "g", "x"].every((kind) => kinds.has(kind));
+    }),
+    JSON.stringify(["x37", "x38", "x39", "x40"].map((id) =>
+      brkTable.find((entry) => entry.id === id).rows)));
+  /* ---- the obsidian laws: the exact pair census, the inverted gradient,
+   * the price and the ball both past the seal's capstone ---- */
+  const brkCensus = (wall) => {
+    const joined = wall.rows.join("");
+    const count = (kind) => (joined.match(new RegExp(kind, "g")) || []).length;
+    return { n: count("n"), t: count("t"), d: count("d"), s: count("s"),
+      g: count("g"), x: count("x") };
+  };
+  const brkObsidianCensus = (wall) => {
+    const counted = brkCensus(wall);
+    return counted.n === 2 && counted.d === 2 && counted.g === 2 &&
+      counted.x === 2;
+  };
+  check("game-breakout",
+    "every obsidian wall runs the full alphabet on the exact pair census" +
+      " - two of each lesser kind on a sealed plate",
+    brkObsidianIds.every((id) => {
+      const wall = brkTable.find((entry) => entry.id === id);
+      const counted = brkCensus(wall);
+      return brkObsidianCensus(wall) &&
+        ["n", "t", "d", "s", "g", "x"].every((kind) => counted[kind] >= 2) &&
+        wall.rows.every((row) => row.length === 8 && !row.includes(".") && row.includes("s"));
+    }),
+    JSON.stringify(brkObsidian.map((wall) => wall.rows)));
+  {
+    const censusOwners = brkTable.filter((wall) => brkObsidianCensus(wall))
+      .map((wall) => wall.id);
+    check("game-breakout",
+      "the exact pair census belongs to the obsidian tier alone",
+      censusOwners.length === 4 && brkObsidianIds.every((id) => censusOwners.includes(id)),
+      censusOwners.join(","));
+  }
+  const brkObsidianPods = brkObsidian.map((wall) => brkCensus(wall).s);
+  check("game-breakout",
+    "the obsidian pods climb rung over rung " + brkObsidianPods.join(" -> "),
+    brkObsidianPods.every((value, index) => index === 0 || value > brkObsidianPods[index - 1]),
+    JSON.stringify(brkObsidianPods));
+  const brkObsidianTough = brkObsidian.map((wall) => brkCensus(wall).t);
+  check("game-breakout",
+    "the obsidian armor yields rung over rung " + brkObsidianTough.join(" -> "),
+    brkObsidianTough.every((value, index) => index === 0 || value < brkObsidianTough[index - 1]),
+    JSON.stringify(brkObsidianTough));
+  const brkObsidianPrices = brkObsidian.map((wall) => brkPrice(wall));
+  check("game-breakout",
+    "the obsidian price tops the seal's capstone and climbs rung over rung " +
+      brkObsidianPrices.join(" -> "),
+    brkObsidianPrices[0] > brkSealPrices[brkSealPrices.length - 1] &&
+      brkObsidianPrices.every((value, index) =>
+        index === 0 || value > brkObsidianPrices[index - 1]),
+    JSON.stringify(brkObsidianPrices));
+  const brkObsidianSpeeds = brkObsidian.map((wall) => wall.speed);
+  check("game-breakout",
+    "the obsidian ball runs past the seal's capstone and under the hand's cap " +
+      brkObsidianSpeeds.join(" -> "),
+    brkObsidianSpeeds[0] > brkTable.find((entry) => entry.id === "x40").speed &&
+      brkObsidianSpeeds.every((value, index) =>
+        index === 0 || value > brkObsidianSpeeds[index - 1]) &&
+      brkObsidianSpeeds.every((value) => value < 4.4),
+    JSON.stringify(brkObsidianSpeeds));
 
   /* Boot the panel against a save that has cleared the shipped seventeen,
    * exactly the save a player brings into the new tier. The boot-time init
@@ -1286,6 +1446,156 @@ if (App.glyphSudokuGenerate) {
     "the unlock chain carries the tier: the bench cleared its way up to the summit",
     brkNewIds.every((id) => brkStrong[id].some((run) => run.cleared)),
     JSON.stringify(brkNewIds.map((id) => [id, brkStrong[id].filter((run) => run.cleared).length])));
+
+  /* the sealed tier benches the same way, calibrated on the shipped summit:
+   * the hand proves x30 with the save a player brings into it, and the first
+   * clear is what unlocks x31 for the walk up the seal. The seal's hands run
+   * the release bench's per-run discipline: every run squares the bar to
+   * centre and lets the deal finish before serving, so a walk up ten walls
+   * never inherits the wall before it's leftover bar position - at 4.1 a
+   * cold bar loses the rung before the ball is even served. */
+  const brkSealPlay = (levelId, cap, seed, reactMs) =>
+    brkSeeded(seed, () => {
+      const sel = env.byId("brkLevelSel");
+      sel.value = levelId;
+      env.dispatch(sel, "change");
+      if (App.brkProbe().levelId !== levelId) {
+        throw new Error("breakout gate: the picker refused " + levelId);
+      }
+      let sawLive = false;
+      let plan = null;
+      for (let guard = 0; guard < 30000; guard += 1) {
+        const probe = App.brkProbe();
+        if (probe.levelId !== levelId) {
+          return { cleared: true, lives: probe.lives, ticks: guard };
+        }
+        if (!probe.running) {
+          return { cleared: false, lives: probe.lives, ticks: guard };
+        }
+        if (probe.state === "ready") {
+          if (sawLive && probe.lives === 3) {
+            return { cleared: true, lives: probe.lives, ticks: guard };
+          }
+          plan = null;
+          if (!sawLive) {
+            env.dispatch(brkCanvas, "pointermove", { clientX: BRK_W / 2 });
+            for (let warm = 0; warm < 48; warm += 1) {
+              env.timers.advance(16);
+            }
+          }
+          env.dispatch(brkCanvas, "keydown", { key: " " });
+        } else if (probe.state === "live") {
+          sawLive = true;
+          if (!plan || env.clock.now >= plan.until) {
+            let x = probe.ball.x;
+            let y = probe.ball.y;
+            let vx = probe.ball.vx;
+            const vy = probe.ball.vy;
+            if (vy > 0) {
+              let hops = 0;
+              while (y < BRK_PADDLE_Y && hops < 600) {
+                x += vx;
+                y += vy;
+                hops += 1;
+                if (x - 3 <= 0) {
+                  x = 3;
+                  vx = Math.abs(vx);
+                } else if (x + 3 >= BRK_W) {
+                  x = BRK_W - 3;
+                  vx = -Math.abs(vx);
+                }
+              }
+            }
+            const bias = Math.floor(guard / 600) % 2 === 0 ? 9 : -9;
+            const want = (vy > 0 ? x : BRK_W / 2) + bias - BRK_PADDLE_W / 2;
+            const target = Math.max(0, Math.min(BRK_W - BRK_PADDLE_W, want));
+            plan = { until: env.clock.now + (reactMs || 16), target };
+          }
+          const next = probe.paddleX +
+            Math.max(-cap, Math.min(cap, plan.target - probe.paddleX));
+          env.dispatch(brkCanvas, "pointermove", { clientX: next + BRK_PADDLE_W / 2 });
+        }
+        env.timers.advance(16);
+      }
+      throw new Error("breakout gate: " + levelId + " never settled in 30000 ticks");
+    });
+  const brkSealBench = (levelId, cap, seeds, reactMs) =>
+    seeds.map((seed) => {
+      const played = brkSealPlay(levelId, cap, seed, reactMs);
+      played.seed = seed;
+      return played;
+    });
+  const brkSealCalibration = brkSealBench("x30", 4.4, allSeeds.slice(0, 2));
+  check("game-breakout",
+    "the bench calibrates on the evergreen summit before it walks the seal",
+    brkSealCalibration.every((run) => run.cleared),
+    JSON.stringify(brkSealCalibration));
+  const brkSealStrong = {};
+  brkSealIds.forEach((id) => { brkSealStrong[id] = brkSealBench(id, 4.4, allSeeds); });
+  const brkSealAmateur = brkSealBench("x31", 4.4, allSeeds.slice(0, 3), 950);
+  brkSealIds.forEach((id) => {
+    const runs = brkSealStrong[id];
+    const clears = runs.filter((run) => run.cleared);
+    const perfect = clears.filter((run) => run.lives === 3);
+    check("game-breakout",
+      `${id}: the tracking hand clears the sealed wall in a realistic share of seeded runs`,
+      clears.length >= 4,
+      `${clears.length}/5 ${JSON.stringify(runs)}`);
+    check("game-breakout",
+      `${id}: the three-star line is reachable - a full pearl row lands among the clears`,
+      clears.length > 0 && perfect.length >= 1,
+      `perfect ${perfect.length}/${clears.length}`);
+    check("game-breakout",
+      `${id}: every payout lands on the lives ladder the engine scores`,
+      clears.every((run) => run.lives >= 1 && run.lives <= 3),
+      JSON.stringify(clears.map((run) => run.lives)));
+  });
+  check("game-breakout",
+    "an amateur reaction time cannot clear the sealed opener",
+    !brkSealAmateur.some((run) => run.cleared),
+    JSON.stringify(brkSealAmateur));
+  check("game-breakout",
+    "the unlock chain carries the seal: the bench cleared its way up the closed plate",
+    brkSealIds.every((id) => brkSealStrong[id].some((run) => run.cleared)),
+    JSON.stringify(brkSealIds.map((id) => [id, brkSealStrong[id].filter((run) => run.cleared).length])));
+
+  /* the obsidian tier benches the same way, calibrated on the sealed grove:
+   * the hand proves x40 with the save a player brings into it, and that
+   * clear is what unlocks x41 for the walk up the census plate. */
+  const brkObsidianCalibration = brkSealBench("x40", 4.4, allSeeds.slice(0, 2));
+  check("game-breakout",
+    "the bench calibrates on the sealed grove before it walks the obsidian tier",
+    brkObsidianCalibration.every((run) => run.cleared),
+    JSON.stringify(brkObsidianCalibration));
+  const brkObsidianStrong = {};
+  brkObsidianIds.forEach((id) => { brkObsidianStrong[id] = brkSealBench(id, 4.4, allSeeds); });
+  const brkObsidianAmateur = brkSealBench("x41", 4.4, allSeeds.slice(0, 3), 950);
+  brkObsidianIds.forEach((id) => {
+    const runs = brkObsidianStrong[id];
+    const clears = runs.filter((run) => run.cleared);
+    const perfect = clears.filter((run) => run.lives === 3);
+    check("game-breakout",
+      `${id}: the tracking hand clears the obsidian wall in a realistic share of seeded runs`,
+      clears.length >= 4,
+      `${clears.length}/5 ${JSON.stringify(runs)}`);
+    check("game-breakout",
+      `${id}: the three-star line is reachable - a full pearl row lands among the clears`,
+      clears.length > 0 && perfect.length >= 1,
+      `perfect ${perfect.length}/${clears.length}`);
+    check("game-breakout",
+      `${id}: every payout lands on the lives ladder the engine scores`,
+      clears.every((run) => run.lives >= 1 && run.lives <= 3),
+      JSON.stringify(clears.map((run) => run.lives)));
+  });
+  check("game-breakout",
+    "an amateur reaction time cannot clear the obsidian opener",
+    !brkObsidianAmateur.some((run) => run.cleared),
+    JSON.stringify(brkObsidianAmateur));
+  check("game-breakout",
+    "the unlock chain carries the obsidian tier: the bench cleared its way up the census plate",
+    brkObsidianIds.every((id) => brkObsidianStrong[id].some((run) => run.cleared)),
+    JSON.stringify(brkObsidianIds.map((id) =>
+      [id, brkObsidianStrong[id].filter((run) => run.cleared).length])));
 }
 /* ---- game-glyph-four: the deep tier is conquest, and it is monotone -------
  *
@@ -1393,8 +1703,8 @@ if (App.glyphFourPick && App.glyphFourLevels) {
       return { moves: playerMoves, ms: think / Math.max(1, thinks) };
     });
 
-  check("game-glyph-four", "the ladder holds thirty boards",
-    c4.c4Levels.length === 30, String(c4.c4Levels.length));
+  check("game-glyph-four", "the ladder holds forty boards",
+    c4.c4Levels.length === 40, String(c4.c4Levels.length));
   const c4Tier = c4.c4Levels.filter((l) =>
     ["f16", "f17", "f18", "f19", "f20", "f21", "f22", "f23", "f24"].includes(l.id));
   check("game-glyph-four", "the tier 16-24 rows all exist and carry the concession",
@@ -1593,8 +1903,8 @@ if (App.glyphReversiPick && App.glyphReversiMoves) {
   };
 
   const revRanks = rev.revLevels;
-  check("game-glyph-reversi", "the ladder holds thirty ranks",
-    revRanks.length === 30, String(revRanks.length));
+  check("game-glyph-reversi", "the ladder holds forty ranks",
+    revRanks.length === 40, String(revRanks.length));
   const revTier = ["r16", "r17", "r18", "r19", "r20"].map((id) =>
     revRanks.find((r) => r.id === id));
   check("game-glyph-reversi", "the tier 17-20 rows all exist",
@@ -1824,8 +2134,8 @@ if (App.glyphFleetPlace && App.glyphFleetAiPick) {
     }
     return { three: three / deals, two: two / deals, one: one / deals };
   };
-  check("game-glyph-fleet", "the ladder holds thirty ranks",
-    flt.fltLevels.length === 30, String(flt.fltLevels.length));
+  check("game-glyph-fleet", "the ladder holds forty ranks",
+    flt.fltLevels.length === 40, String(flt.fltLevels.length));
   const fltTier = flt.fltLevels.filter((r) =>
     ["bf16", "bf17", "bf18", "bf19", "bf20"].includes(r.id));
   check("game-glyph-fleet", "the tier 17-20 rows all exist", fltTier.length === 5,
@@ -2010,9 +2320,18 @@ if (App.glyphFleetPlace && App.glyphFleetAiPick) {
   );
   check("game-glyph-dots", "the tier 16-20 rows all exist", dotsNew.length === 5,
     String(dotsNew.length));
-  for (const rank of dotsNew) {
+  /* The far tier d31-d40 rides the same bench: no far rank shakes, so the
+   * deals are deterministic and one seeded run per rank carries the same
+   * beat-ability and band checks the earlier tier's two carry. */
+  const dotsFar = dotsApi.dotRanks.filter((rank) =>
+    ["d31", "d32", "d33", "d34", "d35", "d36", "d37", "d38", "d39", "d40"].includes(rank.id),
+  );
+  check("game-glyph-dots", "the tier 31-40 rows all exist", dotsFar.length === 10,
+    String(dotsFar.length));
+  for (const rank of dotsNew.concat(dotsFar)) {
     const shaky = rank.blunder > 0;
-    const seeds = shaky ? 15 : 2;
+    const far = !shaky && rank.id >= "d31";
+    const seeds = shaky ? 15 : far ? 1 : 2;
     const mid = [];
     const sharp = [];
     const plain = [];
@@ -2328,7 +2647,7 @@ if (App.initGlyphEchoGame) {
     (o) => o.value,
   );
   check("game-glyph-echo", "the picker lists the whole ladder",
-    echoIds.length === 30, String(echoIds.length));
+    echoIds.length === 40, String(echoIds.length));
 
   for (const levelId of ["c17", "c18", "c19", "c20"]) {
     const perfect = echoRun(levelId, 0);
@@ -2564,8 +2883,8 @@ if (App.glyphNetGenerate && App.glyphNetWin && App.netLevels) {
   const towTier = Object.keys(towRows).filter((id) =>
     ["tw17", "tw18", "tw19", "tw20", "tw21", "tw22", "tw23", "tw24"].includes(id),
   );
-  check("game-glyph-tower", "the ladder holds thirty rungs with both tiers present",
-    Object.keys(towRows).length === 30 && towTier.length === 8,
+  check("game-glyph-tower", "the ladder holds fifty rungs with both tiers present",
+    Object.keys(towRows).length === 50 && towTier.length === 8,
     `${Object.keys(towRows).length}/${towTier.length}`);
   check("game-glyph-tower", "every rung carries a rising band",
     Object.values(towRows).every(
@@ -2652,8 +2971,8 @@ if (App.glyphNetGenerate && App.glyphNetWin && App.netLevels) {
     bands: sokMeta[i] ? sokMeta[i].bands : null,
     rows: Array.from(text.matchAll(/"([^"]*)"/g)).map((x) => x[1]),
   }));
-  check("game-glyph-pusher", "the ladder holds thirty rooms and both tiers carry bands",
-    sokRooms.length === 30 &&
+  check("game-glyph-pusher", "the ladder holds forty rooms and both tiers carry bands",
+    sokRooms.length === 40 &&
       sokRooms.slice(16).every((room, i) => room.id === "k" + (17 + i) && room.bands),
     sokRooms.slice(16).map((r) => r.id).join(","));
 
@@ -3014,8 +3333,8 @@ if (App.glyphNetGenerate && App.glyphNetWin && App.netLevels) {
   const ftTier = Object.keys(ftRows).filter((id) =>
     ["t17", "t18", "t19", "t20"].includes(id),
   );
-  check("game-glyph-fifteen", "the ladder holds thirty boards with the tier present",
-    Object.keys(ftRows).length === 30 && ftTier.length === 4,
+  check("game-glyph-fifteen", "the ladder holds fifty boards with the tier present",
+    Object.keys(ftRows).length === 50 && ftTier.length === 4,
     `${Object.keys(ftRows).length}/${ftTier.length}`);
 
   /* Deterministic PRNG swapped over Math.random; the app sandbox shares the
@@ -3084,7 +3403,7 @@ if (App.glyphNetGenerate && App.glyphNetWin && App.netLevels) {
 
   /* A* over blank moves. Weight 1 is the exact optimum; larger weights trade
    * optimality for speed and still return a complete, replayable line. */
-  function ftSearch(n, boardIn, weight, budgetMs) {
+  function ftSearch(n, boardIn, weight, maxExpansions) {
     const total = n * n;
     const goal = new Uint8Array(total);
     for (let i = 0; i < total; i += 1) goal[i] = (i + 1) % total;
@@ -3143,13 +3462,14 @@ if (App.glyphNetGenerate && App.glyphNetWin && App.netLevels) {
     const startKey = keyOf(board);
     open.set(startKey, { g: 0, bd: board, blank: board.indexOf(0), parent: null });
     hpush(startKey, weight * heuristic(board), 0);
-    const t0 = Date.now();
+    let expansions = 0;
     while (heap.length) {
       const cur = hpop();
       const node = open.get(cur.key);
       if (!node || node.g !== cur.g) continue;
       open.delete(cur.key);
       closed.set(cur.key, node.g);
+      expansions += 1;
       if (isGoal(node.bd)) {
         const line = [];
         for (let nd = node; nd.parent; nd = nd.parent) line.unshift(nd.blank);
@@ -3174,8 +3494,8 @@ if (App.glyphNetGenerate && App.glyphNetWin && App.netLevels) {
         open.set(k, { g: g2, bd, blank: t, parent: node });
         hpush(k, g2 + weight * heuristic(bd), g2);
       }
-      if (Date.now() - t0 > budgetMs) {
-        throw new Error("ft solver budget exceeded on " + total + " tiles");
+      if (expansions > maxExpansions) {
+        throw new Error("ft solver expansion cap exceeded on " + total + " tiles");
       }
     }
     return null;
@@ -3206,6 +3526,11 @@ if (App.glyphNetGenerate && App.glyphNetWin && App.netLevels) {
 
   const FT_SEEDS = { t17: 17001, t18: 22001, t19: 27001, t20: 32001 };
   const FT_WEIGHTS = { t17: 2.5, t18: 1, t19: 1, t20: 2.5 };
+  /* Effort cap in A* expansions, not wall-clock: expansion counts are
+   * deterministic for a given deal, so the cap cannot flake when the suite
+   * shares a CPU. The deepest shipped deal (t31 at weight 2.5) measures
+   * 332,390 expansions; the cap keeps headroom above it. */
+  const FT_EXPANSION_CAP = 600000;
   for (const id of ftTier) {
     const row = ftRows[id];
     const n = row.grid;
@@ -3216,7 +3541,7 @@ if (App.glyphNetGenerate && App.glyphNetWin && App.netLevels) {
     if (!deal) continue;
     let search = null;
     try {
-      search = ftSearch(n, deal.board, FT_WEIGHTS[id], 40000);
+      search = ftSearch(n, deal.board, FT_WEIGHTS[id], FT_EXPANSION_CAP);
     } catch (error) {
       check("game-glyph-fifteen", `${id}: the gate solver finds a line`, false, error.message);
       continue;
@@ -4191,8 +4516,8 @@ if (App.freezePlan && App.freezeBand && App.dfzLevels) {
 
 /* tether-salvage: the pilot must prove every new scene solvable. */
 if (App.tetherSceneSolvable && App.tetherLevels) {
-  check("tether-salvage", "the recovery ladder holds thirty scenes",
-    App.tetherLevels.length === 30, String(App.tetherLevels.length));
+  check("tether-salvage", "the recovery ladder holds forty scenes",
+    App.tetherLevels.length === 40, String(App.tetherLevels.length));
   const ttsTier = App.tetherLevels.filter((l) =>
     ["s16", "s17", "s18", "s19", "s20", "s21", "s22", "s23", "s24"].includes(l.id));
   check("tether-salvage", "the tier 16-24 scenes all exist", ttsTier.length === 9, String(ttsTier.length));
@@ -4251,7 +4576,7 @@ if (App.bridgeCheck && App.bridgeNodes && App.bridgeSpan && App.bridgeLevels) {
 /* gomoku: the deep ranks keep the ladder shape and a concession to climb. */
 if (App.gomokuPick && App.gomokuRanks) {
   const gmRanks = App.gomokuRanks;
-  check("gomoku", "the ladder holds thirty ranks", gmRanks.length === 30, String(gmRanks.length));
+  check("gomoku", "the ladder holds forty ranks", gmRanks.length === 40, String(gmRanks.length));
   const gmTier = gmRanks.filter((r) => ["r16", "r17", "r18", "r19", "r20", "r21", "r22", "r23", "r24"].includes(r.id));
   check("gomoku", "the tier 16-24 rows all exist and carry the concession",
     gmTier.length === 9 && gmTier.every((r) => r.tempo >= 2 && r.depth >= 10),
@@ -4297,8 +4622,8 @@ if (App.ldsRoutes) {
 {
   const golf = require("./golf-forge");
   const cgfCourses = golf.loadCourses();
-  check("game-comet-golf", "the sky holds forty courses",
-    cgfCourses.length === 40, String(cgfCourses.length));
+  check("game-comet-golf", "the sky holds fifty courses",
+    cgfCourses.length === 50, String(cgfCourses.length));
   check("game-comet-golf", "every course id is distinct",
     new Set(cgfCourses.map((c) => c.id)).size === cgfCourses.length);
   const cgfDeep = cgfCourses.filter((c) => ["g21", "g22", "g23", "g24"].includes(c.id));
@@ -4308,7 +4633,7 @@ if (App.ldsRoutes) {
   check("game-comet-golf", "the deep tier ring shrinks below the shipped floor",
     cgfDeep.every((c) => c.target.r <= 12) &&
     cgfDeep[3].target.r === 10 &&
-    cgfCourses.filter((c) => !["g21", "g22", "g23", "g24", "g25", "g26", "g27", "g28", "g29", "g30", "g31", "g32", "g33", "g34", "g35", "g36", "g37", "g38", "g39", "g40"].includes(c.id)).every((c) => c.target.r >= 12),
+    cgfCourses.filter((c) => Number(c.id.slice(1)) <= 20).every((c) => c.target.r >= 12),
     cgfDeep.map((c) => c.target.r).join("/"));
   const cgfDeepSky = cgfCourses.filter((c) => ["g25", "g26", "g27", "g28", "g29", "g30"].includes(c.id));
   check("game-comet-golf", "the deep-sky tier is the harder tier: eight wells or more",
@@ -4363,8 +4688,8 @@ if (App.ldsRoutes) {
  * last of the noise drains away, and no band drops below the rung before. */
 if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
   const twrRanks = App.wrestlerRanks;
-  check("game-tiny-wrestlers", "the ladder holds thirty ranks",
-    twrRanks.length === 30, String(twrRanks.length));
+  check("game-tiny-wrestlers", "the ladder holds forty ranks",
+    twrRanks.length === 40, String(twrRanks.length));
   check("game-tiny-wrestlers", "every rank id is distinct",
     new Set(twrRanks.map((r) => r.id)).size === twrRanks.length);
   check("game-tiny-wrestlers", "the window only tightens and lands on the engine's floor",
@@ -4637,11 +4962,11 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
   const crossing = require("./crossing-forge");
   const croLevels = crossing.loadFords();
 
-  check("game-glyph-crossing", "the ladder holds forty fords",
-    croLevels.length === 40, String(croLevels.length));
+  check("game-glyph-crossing", "the ladder holds fifty-four fords",
+    croLevels.length === 54, String(croLevels.length));
   check("game-glyph-crossing", "every ford id is distinct",
     new Set(croLevels.map((l) => l.id)).size === croLevels.length);
-  check("game-glyph-crossing", "the ids run c1 through c40 in order",
+  check("game-glyph-crossing", "the ids run c1 through c54 in order",
     croLevels.every((l, index) => l.id === "c" + (index + 1)),
     croLevels.map((l) => l.id).join(","));
 
@@ -4946,8 +5271,8 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
     const expected = index + 1 < croLevels.length ? croLevels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) croChained = false;
   });
-  check("game-glyph-crossing", "the unlock chain walks all forty fords in order",
-    croWalked === 40 && croChained && croChain.clearedCount() === 40,
+  check("game-glyph-crossing", "the unlock chain walks all fifty-four fords in order",
+    croWalked === croLevels.length && croChained && croChain.clearedCount() === croLevels.length,
     croWalked + " first clears");
 }
 
@@ -5119,8 +5444,8 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
 {
   const mcbForge = require("./microbe-forge");
   const mcbLevels = App.microbeLevels;
-  check("game-microbe-lab", "the ladder holds forty dishes",
-    mcbLevels.length === 40, String(mcbLevels.length));
+  check("game-microbe-lab", "the ladder holds forty-four dishes",
+    mcbLevels.length === 44, String(mcbLevels.length));
   check("game-microbe-lab", "every dish id is distinct",
     new Set(mcbLevels.map((l) => l.id)).size === mcbLevels.length,
     mcbLevels.map((l) => l.id).join(","));
@@ -5273,8 +5598,8 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
  * App.t in both languages. */
 {
   const wlkLevels = App.loomLevels;
-  check("game-weather-loom", "the ladder holds forty seasons",
-    wlkLevels.length === 40, String(wlkLevels.length));
+  check("game-weather-loom", "the ladder holds forty-four seasons",
+    wlkLevels.length === 44, String(wlkLevels.length));
   check("game-weather-loom", "every season id is distinct",
     new Set(wlkLevels.map((level) => level.id)).size === wlkLevels.length);
   const wlkTier = wlkLevels.filter((level) =>
@@ -5357,8 +5682,8 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
 {
   const forge = require("./starfall-forge");
   const lantLevels = forge.loadLevels();
-  check("game-starfall", "the sky holds forty sectors",
-    lantLevels.length === 40, String(lantLevels.length));
+  check("game-starfall", "the sky holds forty-four sectors",
+    lantLevels.length === 44, String(lantLevels.length));
   check("game-starfall", "every sector id is distinct",
     new Set(lantLevels.map((l) => l.id)).size === lantLevels.length,
     lantLevels.map((l) => l.id).join(" "));
@@ -5405,6 +5730,7 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
   const lantCalibrated = [
     "s21", "s22", "s23", "s24", "s25", "s26", "s27", "s28", "s29", "s30",
     "s31", "s32", "s33", "s34", "s35", "s36", "s37", "s38", "s39", "s40",
+    "s41", "s42", "s43", "s44",
   ];
   lantLevels.forEach((level) => {
     const report = forge.checkLevel(level);
@@ -5479,7 +5805,7 @@ if (App.wrestlerExchange && App.wrestlerAiPick && App.wrestlerRanks) {
  * only ships when some orientation lights every target, the handed deal
  * does not, 2-5 flips separate the two, few orientations solve it, the
  * solution beam touches every element and bends at least three times. The
- * gate re-judges the whole twenty-four board ladder that way, then holds
+ * gate re-judges the whole fifty-board ladder that way, then holds
  * the deep tier p21-p24 to Aurora Engine's measured calibration - its
  * target count, its bend count, its flip band, its uniqueness - and proves
  * the new names resolve in both dictionaries through App.t. */
@@ -5584,6 +5910,96 @@ if (App.prismLevels && App.I18N) {
    * runs zh, and a text that still equals the key means the pack never
    * carried the name at all. */
   ["prismL21", "prismL22", "prismL23", "prismL24"].forEach((key) => {
+    const en = App.t(key);
+    const zh = App.I18N.zh[key];
+    check("game-prism-path", `${key} resolves to a name in both languages`,
+      !!en && en !== key && !!zh && zh !== key && en !== zh,
+      `en ${JSON.stringify(en)}, zh ${JSON.stringify(zh)}`);
+  });
+
+  /* The apex tier p47-p50 against the closer it extends (p46), the same
+   * records the gate snippet pins: one record per rung - the first
+   * fourteen-across bench, the first eight-fork bench, the first
+   * fifteen-element bench, and the closer's fourteen marks lit by exactly
+   * one orientation out of five hundred and twelve - with the dials never
+   * falling, every deal five flips out and the star bands still climbing. */
+  const p46 = ppBoards.find((board) => board.id === "p46");
+  const p46Report = prismForge.audit(p46, true);
+  const ppApex = ["p47", "p48", "p49", "p50"].map((id) =>
+    ppBoards.find((board) => board.id === id));
+  check("game-prism-path", "the apex tier rows all exist",
+    ppApex.length === 4 && ppApex.every(Boolean), ppApex.map((b) => b && b.id).join(","));
+  if (ppApex.every(Boolean)) {
+    const apexReports = {};
+    let prevApex = {
+      targets: p46Report.targets,
+      elements: p46Report.elements,
+      splitters: p46Report.splitters,
+      locked: p46Report.locked,
+      w: p46.w,
+      h: p46.h,
+    };
+    ppApex.forEach((board) => {
+      const report = prismForge.audit(board, true);
+      apexReports[board.id] = report;
+      check("game-prism-path", `${board.id}: never lowers a zenith dial`,
+        report.targets >= prevApex.targets &&
+        report.elements >= prevApex.elements &&
+        report.splitters >= prevApex.splitters &&
+        report.locked >= prevApex.locked &&
+        board.w >= prevApex.w && board.h >= prevApex.h,
+        JSON.stringify({ targets: report.targets, elements: report.elements,
+          splitters: report.splitters, locked: report.locked, w: board.w, h: board.h }) +
+        " vs " + JSON.stringify(prevApex));
+      check("game-prism-path", `${board.id}: the deal sits at the top of the flip band`,
+        report.flips >= 4, `${report.flips} flips out`);
+      check("game-prism-path", `${board.id}: at most two orientations solve it`,
+        report.solutions <= 2, `${report.solutions} solving orientations`);
+      check("game-prism-path", `${board.id}: no smaller search space than the shipped summit`,
+        ppFree(board) >= ppFree(ppSummit),
+        `${ppFree(board)} free elements vs ${ppFree(ppSummit)}`);
+      prevApex = {
+        targets: report.targets,
+        elements: report.elements,
+        splitters: report.splitters,
+        locked: report.locked,
+        w: board.w,
+        h: board.h,
+      };
+    });
+    const ppPeak = (pick, id) => Math.max.apply(null,
+      ppBoards.slice(0, ppBoards.findIndex((board) => board.id === id)).map(pick));
+    const ppForks = (board) => board.mirrors.filter((m) => m.split).length;
+    check("game-prism-path", "p47 opens the first fourteen-across bench",
+      ppApex[0].w === 14 && ppApex[0].h === 14 &&
+        ppPeak((board) => board.w, "p47") < 14,
+      "previous peak " + ppPeak((board) => board.w, "p47"));
+    check("game-prism-path", "p48 rides the first eight-fork bench",
+      ppForks(ppApex[1]) === 8 && ppPeak(ppForks, "p48") < 8,
+      "previous peak " + ppPeak(ppForks, "p48"));
+    check("game-prism-path", "p49 fields the first fifteen-element bench",
+      ppApex[2].mirrors.length === 15 &&
+        ppPeak((board) => board.mirrors.length, "p49") < 15,
+      "previous peak " + ppPeak((board) => board.mirrors.length, "p49"));
+    check("game-prism-path",
+      "p50 is the closer: fourteen marks lit by one orientation out of five hundred and twelve",
+      apexReports.p50.targets === 14 &&
+        ppPeak((board) => board.targets.length, "p50") < 14 &&
+        apexReports.p50.solutions === 1 &&
+        prismForge.orientations(prismForge.normalise(ppApex[3])).length === 512,
+      "previous fan peak " + ppPeak((board) => board.targets.length, "p50") +
+        ", orientations " + prismForge.orientations(prismForge.normalise(ppApex[3])).length);
+    check("game-prism-path",
+      "the apex star bands only widen inside a board and climb above p46's, rung over rung",
+      ppApex.every((board, index) =>
+        board.starTimes.length === 3 &&
+        board.starTimes[0] < board.starTimes[1] && board.starTimes[1] < board.starTimes[2] &&
+        board.starTimes.every((line, lineIndex) => line > p46.starTimes[lineIndex]) &&
+        (index === 0 || [0, 1, 2].every((lineIndex) =>
+          board.starTimes[lineIndex] > ppApex[index - 1].starTimes[lineIndex]))),
+      `${p46.id} ${p46.starTimes.join("/")} vs ${ppApex.map((b) => b.starTimes.join("/")).join(" | ")}`);
+  }
+  ["lvlNum47", "lvlNum48", "lvlNum49", "lvlNum50"].forEach((key) => {
     const en = App.t(key);
     const zh = App.I18N.zh[key];
     check("game-prism-path", `${key} resolves to a name in both languages`,

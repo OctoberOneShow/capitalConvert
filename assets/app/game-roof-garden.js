@@ -135,6 +135,24 @@
     { id: "g28", labelKey: "gdnB28", cost: 1150, crop: 6000, start: 2300, growMs: 58000, goal: 168000, starTimes: [662, 867, 1172] },
     { id: "g29", labelKey: "gdnB29", cost: 1250, crop: 3000, start: 5000, growMs: 26000, goal: 189000, starTimes: [801, 1049, 1418] },
     { id: "g30", labelKey: "gdnB30", cost: 1400, crop: 6000, start: 1400, growMs: 96000, goal: 210000, starTimes: [1424, 1865, 2520] },
+    /* ------------------------------------------------------------------
+     * The celestial terrace tier (g31-g40). Costs and targets climb
+     * past g30's 1400/210,000, while continuing the harmonic ledger law:
+     * every target is an exact integer multiple of harvests (goal = k * crop),
+     * every return ratio remains fractional, and each rung tests a distinct
+     * tempo across 1 to 4 starting plots and 18s to 105s growth cycles.
+     * All rungs are certified by the greedy floor (App.gardenSecondsToGoal).
+     * ------------------------------------------------------------------ */
+    { id: "g31", labelKey: "gdnB31", cost: 1550, crop: 4030, start: 6200, growMs: 22000, goal: 241800, starTimes: [579, 722, 976] },
+    { id: "g32", labelKey: "gdnB32", cost: 1700, crop: 12750, start: 1700, growMs: 90000, goal: 280500, starTimes: [758, 945, 1277] },
+    { id: "g33", labelKey: "gdnB33", cost: 1880, crop: 6110, start: 5640, growMs: 34000, goal: 323830, starTimes: [716, 893, 1206] },
+    { id: "g34", labelKey: "gdnB34", cost: 2080, crop: 4680, start: 4160, growMs: 18000, goal: 374400, starTimes: [701, 874, 1181] },
+    { id: "g35", labelKey: "gdnB35", cost: 2300, crop: 8050, start: 9200, growMs: 45000, goal: 434700, starTimes: [899, 1122, 1516] },
+    { id: "g36", labelKey: "gdnB36", cost: 2550, crop: 13260, start: 2550, growMs: 75000, goal: 503880, starTimes: [1025, 1279, 1728] },
+    { id: "g37", labelKey: "gdnB37", cost: 2820, crop: 7755, start: 8460, growMs: 25000, goal: 581625, starTimes: [789, 984, 1330] },
+    { id: "g38", labelKey: "gdnB38", cost: 3120, crop: 14976, start: 6240, growMs: 85000, goal: 673920, starTimes: [1340, 1672, 2259] },
+    { id: "g39", labelKey: "gdnB39", cost: 3450, crop: 10695, start: 13800, growMs: 36000, goal: 780735, starTimes: [1022, 1275, 1723] },
+    { id: "g40", labelKey: "gdnB40", cost: 3800, crop: 23750, start: 3800, growMs: 105000, goal: 902500, starTimes: [1435, 1790, 2418] },
   ];
 
   function gdnRipe(plots, index, now, bed) {
@@ -420,6 +438,16 @@
       "gdnB28": "Peony Terrace",
       "gdnB29": "Starlight Nursery",
       "gdnB30": "Celestial Orchard",
+      "gdnB31": "Cloud Terrace",
+      "gdnB32": "Ancient Ginkgo",
+      "gdnB33": "Orchid Pavilion",
+      "gdnB34": "Brisk Pergola",
+      "gdnB35": "Imperial Lotus",
+      "gdnB36": "Moonlight Nursery",
+      "gdnB37": "Solar Glasshouse",
+      "gdnB38": "Dragon Cedar",
+      "gdnB39": "Highland Vineyard",
+      "gdnB40": "The Hanging Gardens",
     },
     zh: {
       "gdnB25": "\u8d26\u7c3f\u7530\u5784",
@@ -428,6 +456,16 @@
       "gdnB28": "\u7261\u4e39\u82b1\u575b",
       "gdnB29": "\u661f\u5149\u82d7\u5703",
       "gdnB30": "\u5929\u5883\u679c\u56ed",
+      "gdnB31": "云间露台",
+      "gdnB32": "千年银杏",
+      "gdnB33": "幽兰雅亭",
+      "gdnB34": "清风藤廊",
+      "gdnB35": "皇家锦鲤池",
+      "gdnB36": "月影苗圃",
+      "gdnB37": "极光温室",
+      "gdnB38": "龙血古杉",
+      "gdnB39": "云顶葡萄庄园",
+      "gdnB40": "天空垂钓之园",
     },
   });
 

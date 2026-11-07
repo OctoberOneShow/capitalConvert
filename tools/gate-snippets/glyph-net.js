@@ -33,17 +33,19 @@ module.exports = function gate(ctx) {
   const levels = App.netLevels;
   const deepIds = ["n21", "n22", "n23", "n24"];
   const summitIds = ["n25", "n26", "n27", "n28", "n29", "n30"];
+  const horizonIds = ["n31", "n32", "n33", "n34", "n35", "n36", "n37", "n38", "n39", "n40"];
+  const extendedIds = summitIds.concat(horizonIds);
 
   /* ---- ladder shape ---- */
-  check("game-glyph-net", "the ladder holds thirty plates",
-    levels.length === 30, String(levels.length));
+  check("game-glyph-net", "the ladder holds forty plates",
+    levels.length === 40, String(levels.length));
   check("game-glyph-net", "every plate id is distinct and in ladder order",
     new Set(levels.map((level) => level.id)).size === levels.length &&
       levels.every((level, index) => level.id === "n" + (index + 1)),
     levels.map((level) => level.id).join(","));
-  const missing = deepIds.concat(summitIds).filter((id) =>
+  const missing = deepIds.concat(extendedIds).filter((id) =>
     !levels.some((level) => level.id === id));
-  check("game-glyph-net", "the deep tier n21-n24 and the summit n25-n30 are present",
+  check("game-glyph-net", "the deep tier n21-n24, summit n25-n30 and horizon n31-n40 are present",
     missing.length === 0, missing.join(","));
 
   /* ---- the checker's own harness: seeded deals, honest optimum line ---- */
@@ -143,16 +145,16 @@ module.exports = function gate(ctx) {
   });
   check("game-glyph-net",
     "every deal on every rung is a real tangle, solved exactly by the honest optimum line and never by the blind sweep (" +
-      summitIds.map((id) => byId[id].id + " mean " + measured[id].mean.toFixed(1)).join(", ") +
+      extendedIds.map((id) => byId[id].id + " mean " + measured[id].mean.toFixed(1)).join(", ") +
       " against n24 " + measured.n24.mean.toFixed(1) + ")",
-    problems.length === 0, problems.join(" | ") || "all 720 deals replayed clean");
+    problems.length === 0, problems.join(" | ") || "all 960 deals replayed clean");
 
-  /* ---- the summit's pads are quoted, not guessed ---- */
+  /* ---- the summit and horizon pads are quoted, not guessed ---- */
   /* n24's own ratios: pad 4 over a mean of 233.1 is 1.7%, pad 9 is 3.9%.
-   * Every summit rung prices its own measured mean at the same ratios; the
+   * Every summit and horizon rung prices its own measured mean at the same ratios; the
    * first pad stays 0 - three stars ask for the optimum itself. */
   const padProblems = [];
-  summitIds.forEach((id) => {
+  extendedIds.forEach((id) => {
     const level = byId[id];
     const mean = measured[id].mean;
     const wantTwo = Math.max(4, Math.round(mean * 0.017));
@@ -166,38 +168,38 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-glyph-net",
-    "the summit pads quote the deep summit's own ratios off each rung's measured optimum: " +
-      summitIds.map((id) => id + " " + byId[id].starPad.join("/")).join(", "),
+    "the summit and horizon pads quote the deep summit's own ratios off each rung's measured optimum: " +
+      extendedIds.map((id) => id + " " + byId[id].starPad.join("/")).join(", "),
     padProblems.length === 0, padProblems.join(" | "));
-  check("game-glyph-net", "the summit pads rise inside every rung and never dip below the rung before",
-    summitIds.every((id) => {
+  check("game-glyph-net", "the summit and horizon pads rise inside every rung and never dip below the rung before",
+    extendedIds.every((id) => {
       const pads = byId[id].starPad;
       return pads[0] <= pads[1] && pads[1] <= pads[2];
-    }) && summitIds.every((id, index) => index === 0 ||
-      (byId[id].starPad[1] >= byId[summitIds[index - 1]].starPad[1] &&
-        byId[id].starPad[2] >= byId[summitIds[index - 1]].starPad[2])),
-    summitIds.map((id) => byId[id].starPad.join("/")).join(" "));
+    }) && extendedIds.every((id, index) => index === 0 ||
+      (byId[id].starPad[1] >= byId[extendedIds[index - 1]].starPad[1] &&
+        byId[id].starPad[2] >= byId[extendedIds[index - 1]].starPad[2])),
+    extendedIds.map((id) => byId[id].starPad.join("/")).join(" "));
 
   /* ---- the tier climbs in the engine's own currency ---- */
   const climbProblems = [];
-  summitIds.forEach((id, index) => {
-    const prev = index === 0 ? measured.n24 : measured[summitIds[index - 1]];
+  extendedIds.forEach((id, index) => {
+    const prev = index === 0 ? measured.n24 : measured[extendedIds[index - 1]];
     if (!(measured[id].mean > prev.mean)) {
       climbProblems.push(id + " mean " + measured[id].mean.toFixed(1) +
         " vs prev " + prev.mean.toFixed(1));
     }
   });
   check("game-glyph-net",
-    "the mean dealt optimum climbs strictly from the deep summit into and across the summit tier: " +
-      ["n24"].concat(summitIds).map((id) => id + " " + measured[id].mean.toFixed(1)).join(" -> "),
+    "the mean dealt optimum climbs strictly from the deep summit into and across the summit and horizon tiers: " +
+      ["n24"].concat(extendedIds).map((id) => id + " " + measured[id].mean.toFixed(1)).join(" -> "),
     climbProblems.length === 0, climbProblems.join(" | "));
 
   /* ---- the storm is the load-bearing dial, by twins ---- */
   /* The same rung at the shipped three-fifths storm - same frame, same
-   * seeds - measures a strictly cheaper optimum on every summit rung. */
+   * seeds - measures a strictly cheaper optimum on every summit and horizon rung. */
   const twinProblems = [];
   const twinLines = [];
-  summitIds.forEach((id) => {
+  extendedIds.forEach((id) => {
     const level = byId[id];
     const twin = measure({ size: level.size, tangle: 0.6 }, CHECKER_SEEDS);
     twinLines.push(id + " " + measured[id].mean.toFixed(1) + " vs calm " + twin.mean.toFixed(1));
@@ -207,13 +209,13 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-glyph-net",
-    "relaxing the tangle to the shipped three-fifths storm cuts the measured optimum on every summit rung: " +
+    "relaxing the tangle to the shipped three-fifths storm cuts the measured optimum on every summit and horizon rung: " +
       twinLines.join(", "),
     twinProblems.length === 0, twinProblems.join(" | "));
 
   /* ---- fresh deals, full bar: the loom never falls back ---- */
   const freshProblems = [];
-  summitIds.forEach((id) => {
+  extendedIds.forEach((id) => {
     const out = measure(byId[id], FRESH_SEEDS);
     if (out.shallow || out.badLine || out.blindWins) {
       freshProblems.push(id + ": " + out.shallow + " shallow, " + out.badLine +
@@ -221,7 +223,7 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-glyph-net",
-    "forty fresh deals on every summit rung replay the full bar - no fallback, no blind win, no line miss",
+    "forty fresh deals on every summit and horizon rung replay the full bar - no fallback, no blind win, no line miss",
     freshProblems.length === 0, freshProblems.join(" | "));
 
   /* ---- the unlock chain is derived, never stored ---- */
@@ -237,14 +239,14 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-glyph-net", "the unlock chain walks all thirty plates in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-glyph-net", "the unlock chain walks all forty plates in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 
-  /* ---- the summit's names travel with the module ---- */
-  const copyProblems = summitIds.map((id) => byId[id].labelKey).filter((key) =>
+  /* ---- the summit and horizon names travel with the module ---- */
+  const copyProblems = extendedIds.map((id) => byId[id].labelKey).filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-glyph-net", "the six summit plate names resolve in both languages",
+  check("game-glyph-net", "the sixteen summit and horizon plate names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 };

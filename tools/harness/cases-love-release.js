@@ -1,7 +1,7 @@
 "use strict";
 const fs = require("fs"), path = require("path");
 const { createEnvironment, check, run } = require("./lib");
-const names = ["i18n", "core", "game-campaign", "game-registry", "love-deepspace-combat", "love-deepspace-home", "love-deepspace-release", "love-deepspace-starpath", "love-deepspace-mosaic", "love-deepspace-bouquet", "love-deepspace-expedition", "love-deepspace-dates", "game-love-deepspace"];
+const names = ["i18n", "core", "game-campaign", "game-registry", "love-deepspace-combat", "love-deepspace-home", "love-deepspace-release", "love-deepspace-starpath", "love-deepspace-mosaic", "love-deepspace-bouquet", "love-deepspace-expedition", "love-deepspace-duet", "love-deepspace-dates", "game-love-deepspace"];
 const source = names.map(name => fs.readFileSync(path.join(__dirname, "../../assets/app", name + ".js"), "utf8")).join("\n");
 function boot(options) {
   const env = createEnvironment(options); env.load("window.CapitalConvert={petNotifyGame:function(){},addStrings:function(){}};"); env.load(source);
@@ -33,8 +33,11 @@ run("Love release authentic journey progress", () => {
   check("Love release authentic journey progress", "another partner's collections do not complete this journey", App.ldsJourneyGoals(partner,album,dates,{},{}).every(goal=>!goal.done));
   check("Love release authentic journey progress", "an empty room save is harmless", !App.ldsJourneyGoals(partner,album,dates,{homes:{xavier:{}}},{}).find(goal=>goal.id==="cook").done);
   album.memories["xavier:lds1"]=1; dates.snapshots.xavier=true; dates.stories.xavier=["quiet"]; dates.badges.xavier=true;
-  const completed = App.ldsJourneyGoals(partner,album,dates,{homes:{xavier:{records:{soup:2}}}},{cleared:1});
-  check("Love release authentic journey progress", "all six goals derive from existing collections", completed.length === 6 && completed.every(goal=>goal.done));
+  const original = App.ldsJourneyGoals(partner,album,dates,{homes:{xavier:{records:{soup:2}}}},{cleared:1});
+  check("Love release authentic journey progress", "the original six completions survive the two new goals", original.length === 8 && original.slice(0,6).every(goal=>goal.done) && original.slice(6).every(goal=>!goal.done));
+  dates.stories.xavier = App.ldsStoryEndings.slice();
+  const completed = App.ldsJourneyGoals(partner,album,dates,{homes:{xavier:{records:{soup:2}}}},{cleared:1},{partners:{xavier:[{accuracy:70,stars:1}]}});
+  check("Love release authentic journey progress", "all eight goals derive from actual saved collections", completed.length === 8 && completed.every(goal=>goal.done));
   const env = boot(); env.panel.querySelector(".ldr-journey-continue").click();
   check("Love release authentic journey progress", "recommendation opens and focuses the first unfinished activity", !env.panel.querySelector(".lds-date-photo").hidden && env.panel.querySelector(".lds-date-photo").contains(env.document.activeElement));
 });

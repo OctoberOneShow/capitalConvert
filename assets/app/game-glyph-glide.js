@@ -107,6 +107,88 @@
      * and the close at 39 - the highest floor and the highest mean par the
      * campaign asks for. */
     { id: "i30", labelKey: "glL30", w: 23, h: 20, stars: 10, minPar: 39, maxPar: 68, trail: true, density: 0.22, drifts: 12 },
+    /* Rinks 31-40 are the homecoming tier, and its one law is one no rung
+     * 1-30 teaches: the finish is the front door. Every earlier rink hangs
+     * its goal at the far end of the measured trail; here the goal is the
+     * start cell, so the priced line is a closed loop and the last errand is
+     * always the ride home. The start is only dealt where at least two
+     * directions can land a ride back on the gate, and a deal ships only
+     * when the loop's BFS price lands in the rung's window AND costs at
+     * least six slides more than the same board with the goal re-hung at the
+     * trail's far stop - the gate the old dealer would have picked - so the
+     * homecoming is the proven cost, never a free relabel. The snowpack
+     * stays at the Sky Rink's twelve drifts and the sockets climb to eleven,
+     * one more than any rung before them asked for, while the floors widen
+     * past the summit's 23x20 to 24 columns and then deepen to 21 rows. The
+     * par floor steps 41 - 44 past i30's 39 and holds there, because that is
+     * where the closed loop's price actually lives: measured through the
+     * module's own homecoming dealer on the gate's pinned stream, seed
+     * 87000 + trial*37 + drifts, eight deals a rung, the loop's price is set
+     * by the errand count and not by any other dial - board, density, trail
+     * and snowpack barely move it - so the tier's climb is printed where the
+     * BFS can prove it, on every deal, and the mean proven par runs 44.5 -
+     * 49.1 against i30's 40.9 on the same stream. */
+    /* i31 - the first closed loop: eleven sockets, the widest floor the
+     * ladder has held, and the par floor steps past the Sky Rink's 39. */
+    { id: "i31", labelKey: "glL31", w: 24, h: 20, stars: 11, minPar: 41, maxPar: 71, trail: true, density: 0.22, drifts: 12, home: true },
+    /* i32 - the same idea one slide dearer: the floor steps to 42. */
+    { id: "i32", labelKey: "glL32", w: 24, h: 20, stars: 11, minPar: 42, maxPar: 72, trail: true, density: 0.22, drifts: 12, home: true },
+    /* i33 - floor 43, still on the wide board. */
+    { id: "i33", labelKey: "glL33", w: 24, h: 20, stars: 11, minPar: 43, maxPar: 73, trail: true, density: 0.22, drifts: 12, home: true },
+    /* i34 - floor 44, the last of the twenty-row homecomings. */
+    { id: "i34", labelKey: "glL34", w: 24, h: 20, stars: 11, minPar: 44, maxPar: 74, trail: true, density: 0.22, drifts: 12, home: true },
+    /* i35 - the floor deepens to 21 rows, the tallest rink the ladder has
+     * held, and the par floor crests at 44. */
+    { id: "i35", labelKey: "glL35", w: 24, h: 21, stars: 11, minPar: 44, maxPar: 75, trail: true, density: 0.22, drifts: 12, home: true },
+    /* i36-i40 hold the crest while the window's ceiling keeps climbing, and
+     * the trail the deal is laid around walks a little farther every rung -
+     * the errands march out from the gate, the ride home lengthens with
+     * them, and the loop keeps pricing in the band the floor asks for. */
+    { id: "i36", labelKey: "glL36", w: 24, h: 21, stars: 11, minPar: 44, maxPar: 76, trail: true, density: 0.22, drifts: 12, home: true },
+    { id: "i37", labelKey: "glL37", w: 24, h: 21, stars: 11, minPar: 44, maxPar: 77, trail: true, density: 0.22, drifts: 12, home: true },
+    { id: "i38", labelKey: "glL38", w: 24, h: 21, stars: 11, minPar: 44, maxPar: 78, trail: true, density: 0.22, drifts: 12, home: true },
+    { id: "i39", labelKey: "glL39", w: 24, h: 21, stars: 11, minPar: 44, maxPar: 79, trail: true, density: 0.22, drifts: 12, home: true },
+    { id: "i40", labelKey: "glL40", w: 24, h: 21, stars: 11, minPar: 44, maxPar: 80, trail: true, density: 0.22, drifts: 12, home: true },
+    /* The detour tier (i41-i43). Every homecoming before it left `toll`
+     * unset, so the loop only had to beat the one-way line by the
+     * dealer's default six; this tier prices the ride home for the
+     * first time and raises the price as it goes - eight slides at the
+     * opening, ten from i42 on - on floors that widen past the
+     * homecoming's twenty-four columns. The deal only ships when the
+     * closed loop lands in the rung's window AND beats the one-way line
+     * by at least the rung's toll, so every board here was dealt and
+     * proven on the same pinned stream the gate re-rides: eight deals
+     * a rung, every one a true loop inside its window with the toll
+     * paid, measured before it shipped. */
+    { id: "i41", labelKey: "lvlNum41", w: 24, h: 22, stars: 11, minPar: 44, maxPar: 82, trail: true, density: 0.22, drifts: 12, home: true, toll: 8 },
+    { id: "i42", labelKey: "lvlNum42", w: 25, h: 22, stars: 11, minPar: 44, maxPar: 83, trail: true, density: 0.22, drifts: 12, home: true, toll: 10 },
+    { id: "i43", labelKey: "lvlNum43", w: 26, h: 22, stars: 11, minPar: 44, maxPar: 85, trail: true, density: 0.22, drifts: 12, home: true, toll: 10 },
+    /* The close (i44-i46). The detour priced the ride home; the close
+     * adds the errands: twelve sockets a rink, one more than any
+     * homecoming asked for and the most the engine's own prover can
+     * hold - the solver's star mask tops out at twelve - still under the
+     * crown's twelve-drift snowpack, with the ride home priced at twelve
+     * slides, the detour's ten raised and held across the tier. The par
+     * floor steps 46 - 50 past the detour's crest at 44 because that is
+     * where the twelve-errand loop's price actually lives: measured
+     * through the module's own homecoming dealer on the gate's pinned
+     * stream, seed 87000 + trial*37 + drifts, eight deals a rung, every
+     * deal ships only when the closed loop lands in the rung's window
+     * AND beats the one-way line by at least the rung's toll, and the
+     * mean proven par climbs 49.3 - 53.3 - 54.4 against the detour's
+     * 47.8 on the same stream, while the floors never shrink and widen a
+     * column a rung to twenty-eight - the widest the ladder has held. */
+    /* i44 - twelve sockets for the first time, on the deepest floor yet
+     * at twenty-three rows, with the par floor stepping past the
+     * detour's crest. */
+    { id: "i44", labelKey: "lvlNum44", w: 26, h: 23, stars: 12, minPar: 46, maxPar: 88, trail: true, density: 0.22, drifts: 12, home: true, toll: 12 },
+    /* i45 - the floor widens past the detour's twenty-six columns and
+     * the par floor steps to 48. */
+    { id: "i45", labelKey: "lvlNum45", w: 27, h: 23, stars: 12, minPar: 48, maxPar: 90, trail: true, density: 0.22, drifts: 12, home: true, toll: 12 },
+    /* i46 - the widest floor the ladder has held under all twelve
+     * errands, and the close at 50 - the highest floor the campaign
+     * asks for. */
+    { id: "i46", labelKey: "lvlNum46", w: 28, h: 23, stars: 12, minPar: 50, maxPar: 92, trail: true, density: 0.22, drifts: 12, home: true, toll: 12 },
   ];
 
   /* Pure generator + solver, exported for the static checks. Board walls
@@ -119,6 +201,11 @@
    * solver that has always priced the rinks. */
   function glideSolve(wall, w, h, start, goal, stars, drift) {
     var dirs = GLIDE_DIRS;
+    var starBit = new Int32Array(w * h);
+    for (var s = 0; s < stars.length; s += 1) {
+      starBit[stars[s]] = 1 << s;
+    }
+    var targetMask = (1 << stars.length) - 1;
     function slide(pos, d) {
       var x = pos % w;
       var y = Math.floor(pos / w);
@@ -142,16 +229,10 @@
     var startMask = 0;
     seen[start * 4096 + startMask] = true;
     var queue = [{ p: start, m: startMask, d: 0 }];
-    while (queue.length) {
-      var st = queue.shift();
-      var hasAll = true;
-      for (var s = 0; s < stars.length; s += 1) {
-        if (!((st.m >> s) & 1)) {
-          hasAll = false;
-          break;
-        }
-      }
-      if (st.p === goal && hasAll) {
+    var head = 0;
+    while (head < queue.length) {
+      var st = queue[head++];
+      if (st.p === goal && st.m === targetMask) {
         return st.d;
       }
       for (var d = 0; d < 4; d += 1) {
@@ -159,12 +240,7 @@
         if (!res.steps) {
           continue;
         }
-        var m = st.m;
-        for (var s2 = 0; s2 < stars.length; s2 += 1) {
-          if (res.pos === stars[s2]) {
-            m |= 1 << s2;
-          }
-        }
+        var m = st.m | starBit[res.pos];
         var k = res.pos * 4096 + m;
         if (seen[k]) {
           continue;
@@ -434,9 +510,229 @@
     return glideTrailGenerate(w, h, starCount, minPar, maxPar, density);
   }
 
+  /* The homecoming rinks need a front door a ride can land back on. A slide
+   * only ends where ice meets a wall, so the start counts landable
+   * directions: a wall just past the gate with open ice behind it. Two or
+   * more keep the return honest - a single approach can force the ride home
+   * to shuttle through the very gate it is approaching, and the BFS prices
+   * that board unsolvable. */
+  function glideHomeDirections(wall, w, h, start) {
+    var count = 0;
+    for (var d = 0; d < 4; d += 1) {
+      var fx = start % w + GLIDE_DIRS[d][0];
+      var fy = Math.floor(start / w) + GLIDE_DIRS[d][1];
+      var bx = start % w - GLIDE_DIRS[d][0];
+      var by = Math.floor(start / w) - GLIDE_DIRS[d][1];
+      var pastWall = fx < 0 || fy < 0 || fx >= w || fy >= h || wall[fy * w + fx];
+      var backOpen = bx >= 0 && by >= 0 && bx < w && by < h && !wall[by * w + bx];
+      if (pastWall && backOpen) {
+        count += 1;
+      }
+    }
+    return count;
+  }
+
+  /* A maskless prune for the homecoming dealer: the closed loop is only
+   * possible if every socket is reachable from the gate and some reachable
+   * cell can still land a ride back on it - a drift-free corridor behind a
+   * wall-stopped side of the start. Pricing that on the full state space is
+   * the dealest way to waste a retry, so this walks the stop graph cell by
+   * cell first and throws away the boards the BFS would only price -1. */
+  function glideHomePlausible(wall, drift, w, h, start, stars) {
+    var seen = {};
+    seen[start] = true;
+    var queue = [start];
+    var got = 0;
+    while (queue.length) {
+      var p = queue.pop();
+      if (stars.indexOf(p) >= 0) {
+        got += 1;
+      }
+      for (var d = 0; d < 4; d += 1) {
+        var x = p % w;
+        var y = Math.floor(p / w);
+        var steps = 0;
+        for (;;) {
+          var nx = x + GLIDE_DIRS[d][0];
+          var ny = y + GLIDE_DIRS[d][1];
+          if (ny < 0 || ny >= h || nx < 0 || nx >= w || wall[ny * w + nx]) {
+            break;
+          }
+          x = nx;
+          y = ny;
+          steps += 1;
+          if (drift[y * w + x]) {
+            break;
+          }
+        }
+        if (steps && !seen[y * w + x]) {
+          seen[y * w + x] = true;
+          queue.push(y * w + x);
+        }
+      }
+    }
+    if (got < stars.length) {
+      return false;
+    }
+    for (var d2 = 0; d2 < 4; d2 += 1) {
+      var fx = start % w + GLIDE_DIRS[d2][0];
+      var fy = Math.floor(start / w) + GLIDE_DIRS[d2][1];
+      if (fy < 0 || fy >= h || fx < 0 || fx >= w || wall[fy * w + fx]) {
+        var bx = start % w - GLIDE_DIRS[d2][0];
+        var by = Math.floor(start / w) - GLIDE_DIRS[d2][1];
+        while (bx >= 0 && by >= 0 && bx < w && by < h && !wall[by * w + bx] && !drift[by * w + bx]) {
+          if (seen[by * w + bx]) {
+            return true;
+          }
+          bx -= GLIDE_DIRS[d2][0];
+          by -= GLIDE_DIRS[d2][1];
+        }
+      }
+    }
+    return false;
+  }
+
+  /* The homecoming tier's dealer: the drift dealer with the goal hung back
+   * at the front door. The board, the measured trail and the snow are laid
+   * exactly as glideDriftTrailGenerate lays them, but the last stop never
+   * becomes the goal - the start cell keeps that job, so the priced line is
+   * a closed loop and the last errand is always the ride home. The start is
+   * only dealt where at least two directions can land a ride back on the
+   * gate, and the BFS prices the board twice: once as the closed loop, and
+   * once with the goal re-hung at the trail's far stop, the gate the old
+   * dealer would have picked. The deal only ships when the loop lands in
+   * the rung's window AND beats the one-way line by at least the rung's
+   * toll, so the homecoming is the proven cost, never a free relabel. If
+   * the rink refuses, the untouched drift dealer takes over and the rung
+   * stays playable. */
+  function glideHomecomingGenerate(w, h, starCount, minPar, maxPar, density, driftCount, toll) {
+    toll = toll || 6;
+    for (var attempt = 0; attempt < 1500; attempt += 1) {
+      var wall = [];
+      for (var i = 0; i < w * h; i += 1) {
+        var x = i % w;
+        var y = Math.floor(i / w);
+        wall.push(
+          x === 0 || y === 0 || x === w - 1 || y === h - 1 || Math.random() < density ? 1 : 0,
+        );
+      }
+      var cells = [];
+      for (var c = 0; c < w * h; c += 1) {
+        if (!wall[c]) {
+          cells.push(c);
+        }
+      }
+      if (cells.length < 20) {
+        continue;
+      }
+      var start = cells[Math.floor(Math.random() * cells.length)];
+      if (glideHomeDirections(wall, w, h, start) < 2) {
+        continue;
+      }
+      var target = maxPar - 16;
+      var pos = start;
+      var lastDir = -1;
+      var stops = [];
+      var ridden = {};
+      var guard = 0;
+      while (stops.length < target && guard < target * 10) {
+        guard += 1;
+        var options = [];
+        for (var d = 0; d < 4; d += 1) {
+          if (d !== lastDir) {
+            options.push(d);
+          }
+        }
+        var dir = options[Math.floor(Math.random() * options.length)];
+        var res = slideOn(wall, w, h, pos, dir);
+        if (!res.steps) {
+          continue;
+        }
+        var step = pos;
+        for (var k = 0; k < res.steps; k += 1) {
+          step += GLIDE_DIRS[dir][0] + GLIDE_DIRS[dir][1] * w;
+          ridden[step] = 1;
+        }
+        pos = res.pos;
+        stops.push(pos);
+        lastDir = dir;
+      }
+      if (stops.length < target) {
+        continue;
+      }
+      var away = stops[stops.length - 1];
+      if (away === start) {
+        continue;
+      }
+      /* The walk revisits cells, so the sockets come off the deduped trail. */
+      var uniq = [];
+      var got = {};
+      for (var u = 0; u < stops.length; u += 1) {
+        if (got[stops[u]]) {
+          continue;
+        }
+        got[stops[u]] = 1;
+        uniq.push(stops[u]);
+      }
+      var stars = [];
+      for (var s = 0; s < starCount; s += 1) {
+        var at = Math.floor(((s + 1) * uniq.length) / (starCount + 1));
+        var stop = uniq[at];
+        if (stop !== start && stars.indexOf(stop) < 0) {
+          stars.push(stop);
+        }
+      }
+      if (stars.length < starCount) {
+        continue;
+      }
+      /* Drift sites: ridden ice, clear of the start, the counterfactual gate
+       * and the stars, so a drift never doubles as a socket or a door. */
+      var sites = [];
+      for (var r = 0; r < cells.length; r += 1) {
+        if (
+          ridden[cells[r]] && cells[r] !== start && cells[r] !== away &&
+          stars.indexOf(cells[r]) < 0
+        ) {
+          sites.push(cells[r]);
+        }
+      }
+      if (sites.length < driftCount) {
+        continue;
+      }
+      var drift = [];
+      for (var z = 0; z < w * h; z += 1) {
+        drift.push(0);
+      }
+      var pool = sites.slice();
+      for (var p = 0; p < driftCount; p += 1) {
+        var pick = Math.floor(Math.random() * pool.length);
+        drift[pool[pick]] = 1;
+        pool.splice(pick, 1);
+      }
+      if (!glideHomePlausible(wall, drift, w, h, start, stars)) {
+        continue;
+      }
+      var par = glideSolve(wall, w, h, start, start, stars, drift);
+      if (par < minPar || par > maxPar) {
+        continue;
+      }
+      var one = glideSolve(wall, w, h, start, away, stars, drift);
+      /* The trail walk is itself a one-way play, so the re-hung price is
+       * always real; the deal ships only when the ride home provably costs
+       * the rung's toll. */
+      if (one < 1 || one > par - toll) {
+        continue;
+      }
+      return { wall: wall, start: start, goal: start, stars: stars, drifts: drift, par: par, away: away };
+    }
+    /* Kept playable even if the rink refuses every door. */
+    return glideDriftTrailGenerate(w, h, starCount, minPar, maxPar, density, driftCount);
+  }
+
   App.glyphGlideGenerate = glideGenerate;
   App.glyphGlideTrailGenerate = glideTrailGenerate;
   App.glyphGlideDriftGenerate = glideDriftTrailGenerate;
+  App.glyphGlideHomecomingGenerate = glideHomecomingGenerate;
   App.glyphGlideSolve = glideSolve;
   /* The ladder itself, for the checks: the gate walks the unlock chain the
    * campaign derives rather than trusting the picker. */
@@ -457,6 +753,11 @@
       "glL25": "The Seventh Drift", "glL26": "The Eight-Star Snowfield",
       "glL27": "The Ninth Drift", "glL28": "The Ten-Drift Vault",
       "glL29": "Above the Snowline", "glL30": "The Sky Rink",
+      "glL31": "The Long Way Home", "glL32": "Out and Back",
+      "glL33": "The Closed Circuit", "glL34": "The Return Gate",
+      "glL35": "The Farthest Star", "glL36": "Full Circle",
+      "glL37": "The Orbit Rink", "glL38": "The Homing Glide",
+      "glL39": "Where We Began", "glL40": "The Door We Left",
     },
     zh: {
       "glL11": "\u971c\u75d5\u6ed1\u9053", "glL12": "\u7409\u7483\u9636",
@@ -469,6 +770,11 @@
       "glL25": "\u7b2c\u4e03\u91cd\u96ea", "glL26": "\u516b\u661f\u96ea\u539f",
       "glL27": "\u7b2c\u4e5d\u91cd\u96ea", "glL28": "\u5341\u96ea\u51b0\u7a96",
       "glL29": "\u96ea\u7ebf\u4e4b\u4e0a", "glL30": "\u5929\u9876\u51b0\u573a",
+      "glL31": "\u6f2b\u6f2b\u5f52\u9014", "glL32": "\u5f80\u8fd4\u51b0\u9053",
+      "glL33": "\u73af\u7ebf\u51b0\u573a", "glL34": "\u5f52\u8fd4\u4e4b\u95e8",
+      "glL35": "\u6700\u8fdc\u4e00\u661f", "glL36": "\u539f\u70b9\u56de\u73af",
+      "glL37": "\u73af\u8f68\u51b0\u9762", "glL38": "\u5f52\u5de2\u6ed1\u8f68",
+      "glL39": "\u521d\u59cb\u4e4b\u51b0", "glL40": "\u542f\u7a0b\u4e4b\u95e8",
     },
   });
 
@@ -1801,11 +2107,13 @@
     /* ------------------------------------------------------------------ deal */
     function loadLevel(levelDef) {
       level = levelDef;
-      var deal = level.drifts
-        ? glideDriftTrailGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density, level.drifts)
-        : level.trail
-          ? glideTrailGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density)
-          : glideGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar);
+      var deal = level.home
+        ? glideHomecomingGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density, level.drifts, level.toll)
+        : level.drifts
+          ? glideDriftTrailGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density, level.drifts)
+          : level.trail
+            ? glideTrailGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density)
+            : glideGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar);
       w = level.w;
       h = level.h;
       wall = deal.wall;

@@ -180,7 +180,7 @@ async function main() {
     await click(".ldr-art-card"); await click(".ldr-view-photo");
     check("gallery artwork opens and focuses the photo studio", await evaluate("!document.querySelector('.lds-dates').hidden&&!document.querySelector('.lds-date-photo').hidden&&document.activeElement.classList.contains('lds-photo-canvas')"));
     await click(".lds-together-tab");
-    check("journey presents six connected goals", await evaluate("document.querySelectorAll('.ldr-goal').length===6"));
+    check("journey presents eight connected goals", await evaluate("document.querySelectorAll('.ldr-goal').length===8"));
     await click(".ldr-journey-details summary");
     await click('[data-goal="story"]');
     check("a Journey story goal opens the story activity", await evaluate("!document.querySelector('.lds-date-story').hidden"));

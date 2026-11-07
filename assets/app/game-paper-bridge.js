@@ -239,6 +239,84 @@
       solution: [[2,5,4,5],[4,5,8,5],[8,5,11,5],[7,5,8,5],[2,3,2,5],[2,3,4,5],[0,5,2,3],[2,3,4,1],[4,1,4,5],[4,1,8,5]],
     },
 
+    /* Ranks 31-40, the viaduct tier: crossings the first thirty never dealt.
+     * Every span here chains open air into three or more stretches, and the
+     * cart itself stands on stone between the banks at least twice - the
+     * first thirty never stand on more than one (b3, b5, b16 and b18 touch
+     * exactly one, the rest none). From b34 the stones stagger across rows -
+     * a mast to climb, a keel to dive for - where b11, b22 and b23 kept
+     * their islands all on one row; b33 chains four stones into a causeway,
+     * and b38 and b40 add a fourth island that works as a mast the deck
+     * hangs from, with the far ledge narrowed to a single column on b36,
+     * b39 and b40. Every plan was walked through bridgeCheck, the game's
+     * own word for "the cart rolls and the deck holds", and cannot spare a
+     * single beam (lift any one and the span falls); the flat rungs measured
+     * at three to five beams, the staggered at five to eight. The purse
+     * tightens as the stones multiply - two spare beams at b31-b34, one at
+     * b35-b38, and the last two rungs hand out exact change, the first
+     * spans to do it since the master term. Every number was measured,
+     * not guessed. */
+    {
+      id: "b31", labelKey: "pbrZ31", grip: 0, limit: 5,
+      startAt: [1, 3], targetAt: [10, 3],
+      ground: [[0,1,3],[4,4,3],[7,7,3],[10,11,3]],
+      solution: [[1,3,4,3],[4,3,7,3],[7,3,10,3]],
+    },
+    {
+      id: "b32", labelKey: "pbrZ32", grip: 0, limit: 6,
+      startAt: [1, 3], targetAt: [10, 3],
+      ground: [[0,1,3],[4,4,3],[8,8,3],[10,11,3],[6,6,4]],
+      solution: [[1,3,4,3],[4,3,8,3],[8,3,10,3],[6,3,6,4]],
+    },
+    {
+      id: "b33", labelKey: "pbrZ33", grip: 0, limit: 7,
+      startAt: [1, 3], targetAt: [11, 3],
+      ground: [[0,1,3],[3,3,3],[5,5,3],[7,7,3],[9,9,3],[11,11,3]],
+      solution: [[1,3,3,3],[3,3,5,3],[5,3,7,3],[7,3,9,3],[9,3,11,3]],
+    },
+    {
+      id: "b34", labelKey: "pbrZ34", grip: 1, limit: 7,
+      startAt: [1, 3], targetAt: [10, 3],
+      ground: [[0,1,3],[3,3,1],[7,7,5],[10,11,3]],
+      solution: [[1,3,3,1],[3,1,7,5],[7,5,9,3],[9,3,10,3],[3,1,4,2]],
+    },
+    {
+      id: "b35", labelKey: "pbrZ35", grip: 1, limit: 7,
+      startAt: [1, 3], targetAt: [10, 3],
+      ground: [[0,1,3],[3,3,2],[7,7,4],[9,9,2],[10,11,3]],
+      solution: [[1,3,2,2],[2,2,3,2],[3,2,4,1],[4,1,7,4],[7,4,9,2],[9,2,10,3]],
+    },
+    {
+      id: "b36", labelKey: "pbrZ36", grip: 1, limit: 7,
+      startAt: [1, 3], targetAt: [11, 3],
+      ground: [[0,1,3],[3,3,2],[5,5,4],[8,8,1],[11,11,3]],
+      solution: [[1,3,2,2],[2,2,3,2],[3,2,5,4],[5,4,8,1],[8,1,9,1],[9,1,11,3]],
+    },
+    {
+      id: "b37", labelKey: "pbrZ37", grip: 1, limit: 8,
+      startAt: [1, 3], targetAt: [10, 3],
+      ground: [[0,1,3],[3,3,2],[6,6,3],[9,9,2],[10,11,3]],
+      solution: [[1,3,2,2],[2,2,3,2],[3,2,4,1],[4,1,6,3],[6,3,8,1],[8,1,9,2],[9,2,10,3]],
+    },
+    {
+      id: "b38", labelKey: "pbrZ38", grip: 1, limit: 8,
+      startAt: [1, 3], targetAt: [10, 3],
+      ground: [[0,1,3],[3,3,2],[5,5,1],[7,7,2],[9,9,3],[10,11,3]],
+      solution: [[1,3,2,2],[2,2,3,2],[3,2,5,2],[5,2,7,2],[7,2,8,3],[8,3,9,3],[5,1,5,2]],
+    },
+    {
+      id: "b39", labelKey: "pbrZ39", grip: 1, limit: 8,
+      startAt: [1, 3], targetAt: [11, 3],
+      ground: [[0,1,3],[3,3,2],[6,6,3],[9,9,2],[11,11,3]],
+      solution: [[1,3,2,2],[2,2,3,2],[3,2,4,1],[4,1,6,3],[6,3,8,1],[8,1,9,2],[9,2,10,3],[10,3,11,3]],
+    },
+    {
+      id: "b40", labelKey: "pbrZ40", grip: 1, limit: 8,
+      startAt: [1, 3], targetAt: [11, 3],
+      ground: [[0,1,3],[3,3,2],[5,5,1],[7,7,2],[9,9,3],[11,11,3]],
+      solution: [[1,3,2,2],[2,2,3,2],[3,2,5,2],[5,2,7,2],[7,2,8,3],[8,3,9,3],[9,3,11,3],[5,1,5,2]],
+    },
+
   ];
 
   function pbrAt(x, y) {
@@ -1153,7 +1231,7 @@
       "pbrLineDone": "The whole line is bridged.",
       "pbrLockedSpan": "That span is still sealed - cross the one before it.",
       "pbrUnproven": "The stored plan for {name} now fails ({why}), so this span ships unproven.",
-      "pbrHint": "A deck node only stands when two supports hold it from directions that are not one straight line, so a flat span needs a pier underneath or a triangle beside it. Beams run along the eight lattice directions, and one longer than three nodes buckles unless a node carries its middle.",
+      "pbrHint": "A deck node only stands when two supports hold it from directions that are not one straight line, so a flat span needs a pier underneath or a triangle beside it. Beams run along the eight lattice directions, and one longer than three nodes buckles unless a node carries its middle. The later spans chain several voids at once: stand the cart on the stones between the banks and build each gap as its own little bridge - a stone can prop a joint from below, hang one from above, or simply carry the deck onward. The last viaducts hand out almost exactly the beams the plan needs, so count the voids before you draw.",
       "logPaperBridge": "Bridged a span with {n} beams",
     },
     zh: {
@@ -1227,7 +1305,7 @@
       "pbrLineDone": "整条线路都架通了。",
       "pbrLockedSpan": "这一跨还没开放——先跨过前面那一跨。",
       "pbrUnproven": "{name} 存档的架法现在检查不过（{why}），这一跨未获证明。",
-      "pbrHint": "桥面上的节点要被两个不在同一直线上的支撑拉住才站得住，所以平铺一跨必须下面立柱或旁边加三角撑。梁只能沿格点八方向走，长过三个节点而中部没节点承托就会失稳。",
+      "pbrHint": "桥面上的节点要被两个不在同一直线上的支撑拉住才站得住，所以平铺一跨必须下面立柱或旁边加三角撑。梁只能沿格点八方向走，长过三个节点而中部没节点承托就会失稳。后面的桥跨会一次串起好几段空档：让小车踩着两岸之间的踏石过河，把每段空档当成一座小桥来架——石头可以从下面撑住节点，可以从上面吊住节点，也可以直接驮着桥面往前走。末尾几跨给的梁数几乎就是标准根数，落笔前先把空档数清楚。",
       "logPaperBridge": "用 {n} 根梁架好了一跨",
     },
   });
@@ -1274,4 +1352,36 @@
   App.bridgeNodes = pbrNodes;
   App.bridgeSpan = pbrSpan;
   App.bridgeLevels = pbrLevels;
+
+  /* The viaduct tier carries its own names: addStrings only fills keys i18n.js
+   * does not already hold, so the picker never prints a raw key. It lives
+   * below the exports, exactly like the gridlock tier's pack in
+   * game-traffic.js, so the level gate can lift the checker into a bare
+   * sandbox without dragging an App call along. */
+  App.addStrings({
+    en: {
+      "pbrZ31": "The First Viaduct",
+      "pbrZ32": "The Tied Middle",
+      "pbrZ33": "The Causeway",
+      "pbrZ34": "Mast and Keel",
+      "pbrZ35": "The Three Steps",
+      "pbrZ36": "The Crooked Crossing",
+      "pbrZ37": "Thread the Stones",
+      "pbrZ38": "Four Stones, One Mast",
+      "pbrZ39": "No Spare Timber",
+      "pbrZ40": "The Last Viaduct",
+    },
+    zh: {
+      "pbrZ31": "连墩首跨",
+      "pbrZ32": "中跨系梁",
+      "pbrZ33": "石堤连渡",
+      "pbrZ34": "桅杆与龙骨",
+      "pbrZ35": "三级踏石",
+      "pbrZ36": "曲折横渡",
+      "pbrZ37": "穿石而行",
+      "pbrZ38": "四石一桅",
+      "pbrZ39": "寸木不让",
+      "pbrZ40": "终局长桥",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

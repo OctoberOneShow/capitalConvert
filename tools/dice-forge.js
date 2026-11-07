@@ -18,6 +18,19 @@
  *   node tools/dice-forge.js list          # measure the shipped tables
  *   node tools/dice-forge.js probe '<json>'
  *   node tools/dice-forge.js forge         # the fourth-tier brief, measured
+ *   node tools/dice-forge.js search '<json>'   # sixth-tier scan (see below)
+ *
+ * The search mode takes a JSON array of walk specs and reports, per target,
+ * the smallest in-band bounty the solver still holds (the starvation edge),
+ * so a tier is picked from measured tables instead of guessed ones. A spec:
+ *   { "id": "scan", "burn": [2,6], "pairs": false, "targets": [30,200,10] }
+ * walks targets lo..hi by step and prints, for each target, the smallest
+ * bounty whose table lands in the shipped bands - a best policy clears
+ * inside ten turns at least 45% of the time and the three-star line lands
+ * between 15% and 50% - plus the bounty where the line crosses the ceiling.
+ * A spec with "kind": "tax" instead walks the positive tithe at one fixed
+ * target and prints the deepest tax the bands still hold. Everything is
+ * measured under the same round-zero convention as the shipped ladder.
  */
 "use strict";
 
@@ -221,6 +234,95 @@ function main() {
         (twoBanks.clear * 100).toFixed(1) + "/" + (twoBanks.three * 100).toFixed(1) +
         " - no bounty lands it in the bands",
     );
+  }
+
+  if (mode === "search") {
+    /* The tier scan. Every number is measured - exact value iteration under
+     * the best stopping policy - and "in band" means the shipped bands the
+     * game's own comments pin: a best policy clears inside ten turns at
+     * least 45% of the time, and the three-star line lands between 15% and
+     * 50%. More bounty is strictly easier (each bank pays more), so the
+     * first in-band bounty scanned upward is the starvation edge; the scan
+     * then walks to the bounty whose line crosses the ceiling, so a rung's
+     * whole working economy is on the record. */
+    const specs = JSON.parse(fs.readFileSync(process.argv[3], "utf8"));
+    const inBand = function (m) {
+      return m.clear >= 0.45 && m.three >= 0.15 && m.three <= 0.50;
+    };
+    const felt = function (burn, pairs, target, tax) {
+      return { id: "probe", target: target, burn: burn, tax: tax, pairs: pairs };
+    };
+    const t0 = Date.now();
+
+    specs.forEach(function (spec) {
+      if (spec.kind === "tax") {
+        /* Deepest positive tithe the felt still holds in band, one point at
+         * a time. Deeper tax is strictly harder (a bank nets less), so the
+         * last in-band step is the edge. */
+        let deepest = null;
+        const maxTax = spec.maxTax || 60;
+        for (let tax = 1; tax <= maxTax; tax += 1) {
+          const m = measure(felt(spec.burn, spec.pairs, spec.target, tax));
+          if (inBand(m)) deepest = { tax: tax, m: m };
+        }
+        if (deepest) {
+          const starved = measure(felt(spec.burn, spec.pairs, spec.target, deepest.tax + 1));
+          console.log(
+            spec.id + " tax: burn [" + spec.burn.join(",") + "] " +
+              (spec.pairs ? "pairs " : "") + "target " + spec.target +
+              " holds tithe " + deepest.tax +
+              "  clears " + (deepest.m.clear * 100).toFixed(2) + "%" +
+              "  line " + (deepest.m.three * 100).toFixed(2) + "%" +
+              "  | one deeper: " + (starved.clear * 100).toFixed(2) + "/" +
+              (starved.three * 100).toFixed(2),
+          );
+        } else {
+          console.log(spec.id + " tax: burn [" + spec.burn.join(",") + "] target " +
+            spec.target + " holds no tithe in band up to " + maxTax);
+        }
+        return;
+      }
+
+      /* The walk: per target, the smallest in-band bounty and the ceiling
+       * where the three-star line crosses 50%. */
+      const lo = spec.targets[0];
+      const hi = spec.targets[1];
+      const step = spec.targets[2] || 10;
+      for (let target = lo; target <= hi; target += step) {
+        let edge = null;
+        for (let bounty = 1; bounty <= 240 && !edge; bounty += 6) {
+          if (inBand(measure(felt(spec.burn, spec.pairs, target, -bounty)))) {
+            /* Refine down to the exact smallest in-band bounty. */
+            let smallest = bounty;
+            for (let r = bounty - 1; r >= Math.max(1, bounty - 5); r -= 1) {
+              if (inBand(measure(felt(spec.burn, spec.pairs, target, -r)))) smallest = r;
+            }
+            edge = smallest;
+          }
+        }
+        if (!edge) {
+          console.log(spec.id + " t" + target + ": no in-band bounty to 240");
+          continue;
+        }
+        /* Walk up to the ceiling: the first bounty whose line leaves 50%. */
+        let ceiling = null;
+        for (let bounty = edge; bounty <= 260 && ceiling === null; bounty += 1) {
+          if (!inBand(measure(felt(spec.burn, spec.pairs, target, -bounty)))) ceiling = bounty - 1;
+        }
+        const m = measure(felt(spec.burn, spec.pairs, target, -edge));
+        const fat = ceiling === null
+          ? null
+          : measure(felt(spec.burn, spec.pairs, target, -ceiling));
+        console.log(
+          spec.id + " t" + target + ": bounty " + edge +
+            "  clears " + (m.clear * 100).toFixed(2) + "/" +
+            (m.three * 100).toFixed(2) +
+            "  ceiling " + (ceiling === null ? ">260" : ceiling) +
+            (fat ? " (" + (fat.clear * 100).toFixed(1) + "/" + (fat.three * 100).toFixed(1) + ")" : ""),
+        );
+      }
+    });
+    console.log("searched in " + (Date.now() - t0) + "ms");
   }
 }
 

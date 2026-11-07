@@ -18,6 +18,8 @@
  *   node tools/aurora-forge.js forge --only=f13 --seeds=12
  *   node tools/aurora-forge.js emit             # print verified JSON for 11-20
  *   node tools/aurora-forge.js flood            # rebuild the flood tier f31-f40
+ *   node tools/aurora-forge.js crest            # rebuild the crest tier f41-f44
+ *   node tools/aurora-forge.js zenith           # rebuild the zenith tier f45-f48
  */
 "use strict";
 
@@ -440,6 +442,16 @@ function main() {
     return;
   }
 
+  if (mode === "crest") {
+    crestEmit();
+    return;
+  }
+
+  if (mode === "zenith") {
+    zenithEmit();
+    return;
+  }
+
   if (mode === "list") {
     const levels = loadLevels();
     let bad = 0;
@@ -817,7 +829,210 @@ function floodEmit() {
   return out;
 }
 
-module.exports = { solve, loadLevels, checkBoard, generateBoard, boardStats, measure, emit, summitEmit, summitCandidates, summitSnake, summitCut, floodBoard, floodFloor, floodEmit, FLOOD_BRIEFS };
+/* ------------------------------------------------------------- crest -- */
+/* The crest tier f41-f44 carries the tide past the flood's whole cloth.
+ * The flood capstone held every one of its 144 cells in ribbon - there is
+ * no more cloth on the twelve panel - so the crest opens the grid to
+ * 13x13, a size no earlier rung used, and keeps the flood's course-by-
+ * course construction: straight ribbons, disjoint by construction, each
+ * pair's unique shortest path being its own course, so the solver's
+ * measured answer lands exactly on the manhattan floor the pair distances
+ * set and the proofs come home in a few hundred steps. The ink climbs
+ * seven cells a rung from just past the whole cloth, and every rung needs
+ * more ribbon than the twelve panel holds cells, so no crest weave could
+ * physically fit the flood's board. As the cloth fills the deck thins:
+ * sixteen ribbons at the crest's foot, then fifteen, fourteen, and
+ * thirteen at the top, where the capstone relays the whole cloth in
+ * courses that all run the panel's full span of thirteen - against the
+ * eight-cell ribbon floor the first whole cloth held. The courses are
+ * fixed exact-composition briefs, so the tier rebuilds byte for byte. */
+
+const CREST_SCREEN_CAP = 500000;
+const CREST_SIZE = 13;
+/* The flood capstone's whole cloth: the crest's first rung has to pass it. */
+const CREST_FLOOD_INK = 144;
+
+function crestBoard(brief) {
+  return floodBoard(Object.assign({ size: CREST_SIZE }, brief));
+}
+
+/* The four course plans: straight bars summing to the rung's ink, packed
+ * into thirteen lanes of thirteen. Row orders vary so the boards read
+ * apart; the capstone stands its thirteen courses on end to finish the
+ * cloth. */
+const CREST_BRIEFS = [
+  { id: "f41", labelKey: "auroL41", ink: 148, deck: 16,
+    rows: [[5, 5], [6, 5], [6, 5], [6, 6], [13], [13], [13], [13], [13], [13], [13], [13], []] },
+  { id: "f42", labelKey: "auroL42", ink: 155, deck: 15,
+    rows: [[13], [13], [13], [13], [], [13], [13], [13], [13], [7, 6], [7, 6], [7, 6], [12]] },
+  { id: "f43", labelKey: "auroL43", ink: 162, deck: 14,
+    rows: [[13], [13], [13], [13], [13], [13], [13], [13], [13], [13], [13], [6, 6], [7]] },
+  { id: "f44", labelKey: "auroL44", ink: 169, deck: 13,
+    rows: [],
+    cols: [[13], [13], [13], [13], [13], [13], [13], [13], [13], [13], [13], [13], [13]],
+    colTop: 0 },
+];
+
+function crestEmit() {
+  const out = [];
+  const problems = [];
+  let lastInk = CREST_FLOOD_INK;
+  CREST_BRIEFS.forEach(function (brief) {
+    const board = crestBoard(brief);
+    if (board.pairs.length !== brief.deck) {
+      problems.push(`${board.id}: ${board.pairs.length} ribbons against its brief of ${brief.deck}`);
+      return;
+    }
+    const report = checkBoard(board, CREST_SCREEN_CAP);
+    if (report.problems.length) {
+      problems.push(`${board.id}: ${report.problems.join("; ")}`);
+      return;
+    }
+    const floor = floodFloor(board.pairs);
+    if (report.measure.cells !== floor || report.measure.cells !== brief.ink) {
+      problems.push(`${board.id}: ink ${report.measure.cells} against floor ${floor} and brief ${brief.ink}`);
+      return;
+    }
+    if (report.measure.cells <= lastInk) {
+      problems.push(`${board.id}: ink ${report.measure.cells} does not pass the rung before it (${lastInk})`);
+      return;
+    }
+    lastInk = report.measure.cells;
+    const three = Math.round(report.measure.cells * 1.02);
+    out.push({
+      id: board.id,
+      labelKey: board.labelKey,
+      size: board.size,
+      pairs: board.pairs,
+      ink: report.measure.cells,
+      longest: report.measure.longest,
+      shortest: report.measure.shortest,
+      steps: report.measure.steps,
+      fill: report.measure.cells / (board.size * board.size),
+      starTimes: [three, Math.round(three * 1.55), Math.round(three * 2.15)],
+    });
+  });
+  if (problems.length) {
+    console.log(problems.join("\n"));
+    return out;
+  }
+  fs.writeFileSync(
+    path.join(__dirname, "_aurora_crest.json"),
+    JSON.stringify(out, null, 2) + "\n",
+  );
+  console.log(`wrote ${out.length} crest boards to _aurora_crest.json`);
+  out.forEach(function (board) {
+    console.log(
+      `${board.id}: size ${board.size} pairs ${board.pairs.length} ink ${board.ink} ` +
+        `fill ${(board.fill * 100).toFixed(0)}% steps ${board.steps} ` +
+        `ribbon ${board.shortest}-${board.longest} stars ${board.starTimes.join("/")}`,
+    );
+  });
+  return out;
+}
+
+/* ------------------------------------------------------------ zenith -- */
+/* The zenith tier f45-f48 carries the tide past the crest's cloth. The
+ * crest capstone relaid the whole cloth on the thirteen panel - 169 cells,
+ * every one of them in ribbon - so the zenith opens the grid to 14x14, a
+ * size no earlier rung used, and keeps the crest's course-by-course
+ * construction: straight ribbons, disjoint by construction, each pair's
+ * unique shortest path being its own course, so the solver's measured
+ * answer lands exactly on the manhattan floor the pair distances set. The
+ * ink climbs from just past the crest's cloth - f45 176, f46 183, f47
+ * 190, and the capstone 196, the third whole cloth, every cell of the
+ * fourteen panel in ribbon - and every rung needs more ribbon than the
+ * thirteen panel holds cells, so no zenith weave could physically fit the
+ * crest's board. The opener still carries sixteen courses; the cloth
+ * takes fourteen, and the capstone relays it in courses that all run the
+ * panel's full span of fourteen, against the eight-cell ribbon floor the
+ * first whole cloth held. The courses are fixed exact-composition briefs,
+ * so the tier rebuilds byte for byte. */
+
+const ZENITH_SCREEN_CAP = 500000;
+const ZENITH_SIZE = 14;
+/* The crest capstone's whole cloth: the zenith's first rung has to pass it. */
+const ZENITH_CREST_INK = 169;
+
+function zenithBoard(brief) {
+  return floodBoard(Object.assign({ size: ZENITH_SIZE }, brief));
+}
+
+/* The four course plans: straight bars summing to the rung's ink, packed
+ * into fourteen lanes of fourteen. The capstone stands the whole cloth on
+ * end in fourteen full-span courses, against the crest's thirteen. */
+const ZENITH_BRIEFS = [
+  { id: "f45", labelKey: "auroL45", ink: 176, deck: 16,
+    rows: [[5, 5], [6, 6], [7, 7], [14], [14], [14], [14], [14], [14], [14], [14], [14], [14], []] },
+  { id: "f46", labelKey: "auroL46", ink: 183, deck: 14,
+    rows: [[14], [14], [14], [14], [14], [14], [14], [14], [14], [14], [14], [14], [7], [8]] },
+  { id: "f47", labelKey: "auroL47", ink: 190, deck: 14,
+    rows: [[14], [14], [14], [14], [14], [14], [14], [14], [14], [14], [14], [14], [14], [8]] },
+  { id: "f48", labelKey: "auroL48", ink: 196, deck: 14,
+    rows: [],
+    cols: [[14], [14], [14], [14], [14], [14], [14], [14], [14], [14], [14], [14], [14], [14]],
+    colTop: 0 },
+];
+
+function zenithEmit() {
+  const out = [];
+  const problems = [];
+  let lastInk = ZENITH_CREST_INK;
+  ZENITH_BRIEFS.forEach(function (brief) {
+    const board = zenithBoard(brief);
+    if (board.pairs.length !== brief.deck) {
+      problems.push(`${board.id}: ${board.pairs.length} ribbons against its brief of ${brief.deck}`);
+      return;
+    }
+    const report = checkBoard(board, ZENITH_SCREEN_CAP);
+    if (report.problems.length) {
+      problems.push(`${board.id}: ${report.problems.join("; ")}`);
+      return;
+    }
+    const floor = floodFloor(board.pairs);
+    if (report.measure.cells !== floor || report.measure.cells !== brief.ink) {
+      problems.push(`${board.id}: ink ${report.measure.cells} against floor ${floor} and brief ${brief.ink}`);
+      return;
+    }
+    if (report.measure.cells <= lastInk) {
+      problems.push(`${board.id}: ink ${report.measure.cells} does not pass the rung before it (${lastInk})`);
+      return;
+    }
+    lastInk = report.measure.cells;
+    const three = Math.round(report.measure.cells * 1.02);
+    out.push({
+      id: board.id,
+      labelKey: board.labelKey,
+      size: board.size,
+      pairs: board.pairs,
+      ink: report.measure.cells,
+      longest: report.measure.longest,
+      shortest: report.measure.shortest,
+      steps: report.measure.steps,
+      fill: report.measure.cells / (board.size * board.size),
+      starTimes: [three, Math.round(three * 1.55), Math.round(three * 2.15)],
+    });
+  });
+  if (problems.length) {
+    console.log(problems.join(String.fromCharCode(10)));
+    return out;
+  }
+  fs.writeFileSync(
+    path.join(__dirname, "_aurora_zenith.json"),
+    JSON.stringify(out, null, 2) + String.fromCharCode(10),
+  );
+  console.log(`wrote ${out.length} zenith boards to _aurora_zenith.json`);
+  out.forEach(function (board) {
+    console.log(
+      `${board.id}: size ${board.size} pairs ${board.pairs.length} ink ${board.ink} ` +
+        `fill ${(board.fill * 100).toFixed(0)}% steps ${board.steps} ` +
+        `ribbon ${board.shortest}-${board.longest} stars ${board.starTimes.join("/")}`,
+    );
+  });
+  return out;
+}
+
+module.exports = { solve, loadLevels, checkBoard, generateBoard, boardStats, measure, emit, summitEmit, summitCandidates, summitSnake, summitCut, floodBoard, floodFloor, floodEmit, FLOOD_BRIEFS, crestBoard, crestEmit, CREST_BRIEFS, zenithBoard, zenithEmit, ZENITH_BRIEFS };
 
 if (require.main === module) {
   main();

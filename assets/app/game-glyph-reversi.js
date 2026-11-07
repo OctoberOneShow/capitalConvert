@@ -102,6 +102,44 @@
     { id: "r28", labelKey: "revL28", noise: 0.16, depth: 5, starMargin: [9, 5, 1] },
     { id: "r29", labelKey: "revL29", noise: 0.18, depth: 5, starMargin: [10, 6, 1] },
     { id: "r30", labelKey: "revL30", noise: 0.12, depth: 5, aiFirst: true, starMargin: [12, 7, 1] },
+    /* Ranks 31-40: the quieting tier. The ransom paid for the sixth ply with
+     * a tell that shook from the first disc to the last; this tier ships the
+     * widest hand the panel has ever shown - noise 0.24, past the 0.18 of
+     * r29 - and its new lever is when the shaking STOPS. `calm` is a disc
+     * count: once the board holds that many discs the roll is never taken
+     * again and the five-ply brain finishes the game clean. Every shipped
+     * hand that shook at all shook to the end; these ten close rung over
+     * rung - forty discs down to twenty-two - so the ransom shrinks with
+     * every rank while the hand that pays it grows wilder. The seeded
+     * ten-duel bench that judged every rank above judged these too - beaten
+     * outright and beaten inside its own three-star band before it shipped:
+     *   r31 10 at 1/10 (wins 2/10, best 10)
+     *   r32 10 at 1/10 (wins 2/10, best 10)
+     *   r33 10 at 2/10 (wins 2/10, best 10)
+     *   r34 10 at 2/10 (wins 2/10, best 10)
+     *   r35 10 at 2/10 (wins 2/10, best 10)
+     *   r36 10 at 1/10 (wins 1/10, best 10)
+     *   r37 10 at 1/10 (wins 2/10, best 10)
+     *   r38 10 at 1/10 (wins 1/10, best 10)
+     *   r39 10 at 1/10 (wins 1/10, best 10)
+     *   r40 28 at 1/10 (wins 1/10, best 28) - the richest line the bench
+     *        ever landed on this ladder, priced as the capstone's band
+     * and the tell that never closes was benched as the counterfactual: the
+     * same ten duels on the same seeds, calm struck out, score mean +0.8
+     * and five wins - the close is what costs the bench its games on every
+     * rung (the tier's own means sit between -18.4 and -32.6). A greedy hand
+     * that reads one ply and nothing else never lands a band on the tier
+     * (its best win on any rung is +4 to +20 against prices 10 and 28). */
+    { id: "r31", labelKey: "revL31", noise: 0.24, depth: 5, calm: 40, starMargin: [10, 5, 1] },
+    { id: "r32", labelKey: "revL32", noise: 0.24, depth: 5, calm: 38, starMargin: [10, 5, 1] },
+    { id: "r33", labelKey: "revL33", noise: 0.24, depth: 5, calm: 36, starMargin: [10, 5, 1] },
+    { id: "r34", labelKey: "revL34", noise: 0.24, depth: 5, calm: 34, starMargin: [10, 5, 1] },
+    { id: "r35", labelKey: "revL35", noise: 0.24, depth: 5, calm: 32, starMargin: [10, 5, 1] },
+    { id: "r36", labelKey: "revL36", noise: 0.24, depth: 5, calm: 30, starMargin: [10, 5, 1] },
+    { id: "r37", labelKey: "revL37", noise: 0.24, depth: 5, calm: 28, starMargin: [10, 5, 1] },
+    { id: "r38", labelKey: "revL38", noise: 0.24, depth: 5, calm: 26, starMargin: [10, 5, 1] },
+    { id: "r39", labelKey: "revL39", noise: 0.24, depth: 5, calm: 24, starMargin: [10, 5, 1] },
+    { id: "r40", labelKey: "revL40", noise: 0.24, depth: 5, calm: 22, starMargin: [28, 14, 1] },
   ];
   var REV_WEIGHTS = [
     120, -20, 10, 5, 5, 10, -20, 120,
@@ -113,6 +151,17 @@
     -20, -40, -5, -5, -5, -5, -40, -20,
     120, -20, 10, 5, 5, 10, -20, 120,
   ];
+  /* Discs on the board, the quieting's own clock: a pure count the rival's
+   * pick can read off any lay, with no state of its own. */
+  function revDiscs(board) {
+    var total = 0;
+    for (var i = 0; i < board.length; i += 1) {
+      if (board[i] !== REV_EMPTY) {
+        total += 1;
+      }
+    }
+    return total;
+  }
 
   /* Pure rules, exported for the static checks. */
   function revFlipsFor(board, player, index) {
@@ -249,7 +298,13 @@
         ranked.unshift({ index: deep.index, value: deep.value });
       }
     }
-    if (rank.noise && ranked.length > 1 && Math.random() < rank.noise) {
+    /* The quieting: a rank whose tell closes. Once the board holds `calm`
+     * discs the roll is never taken again - the hand is steady for good.
+     * Ranks without the field shake the way they always did, from the first
+     * disc of the game to the last, and the stream they read is untouched. */
+    var shaking = rank.noise && ranked.length > 1 &&
+      (rank.calm === undefined || revDiscs(board) < rank.calm);
+    if (shaking && Math.random() < rank.noise) {
       var pickFrom = 1 + Math.floor(Math.random() * Math.min(3, ranked.length - 1));
       return ranked[pickFrom].index;
     }
@@ -401,6 +456,16 @@
       "revL28": "The Heavy Ransom",
       "revL29": "The Widest Hand",
       "revL30": "The Last First Move",
+      "revL31": "The Opening Riot",
+      "revL32": "The Closing Tell",
+      "revL33": "The Shorter Riot",
+      "revL34": "The Turning Quiet",
+      "revL35": "The Halfway Calm",
+      "revL36": "The Sooner Steady",
+      "revL37": "The Early Calm",
+      "revL38": "The Quick Quiet",
+      "revL39": "The Brief Riot",
+      "revL40": "The Silence After",
     },
     zh: {
       "revL9": "\u4e0d\u673d\u8005",
@@ -425,6 +490,16 @@
       "revL28": "\u91cd\u8d4e\u91d1",
       "revL29": "\u6781\u98a4\u4e4b\u624b",
       "revL30": "\u6700\u540e\u7684\u5148\u624b",
+      "revL31": "\u5f00\u5c40\u4e4b\u4e71",
+      "revL32": "\u6536\u52bf\u7834\u7efd",
+      "revL33": "\u6e10\u77ed\u4e4b\u4e71",
+      "revL34": "\u8f6c\u9759\u4e4b\u65f6",
+      "revL35": "\u534a\u5c40\u4e4b\u9759",
+      "revL36": "\u63d0\u524d\u6536\u624b",
+      "revL37": "\u65e9\u9759\u4e4b\u624b",
+      "revL38": "\u901f\u9759\u4e4b\u5c40",
+      "revL39": "\u77ed\u6682\u4e4b\u4e71",
+      "revL40": "\u4e71\u540e\u4e4b\u5bc2",
     },
   });
 

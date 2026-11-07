@@ -28,10 +28,12 @@
  * the gate proves the narrow mouth is load-bearing with a deterministic rim
  * test: for every summit rung there is a hold at which the same drop on the
  * same field, same clock, same score, is refunded by the wide mouth and lost
- * by the narrow one. The strong hand clears every summit rung at its band
- * (b28 pays the ladder's only two-ball three-star), the trembling hand
- * scrapes the tier without ever three-starring it, the naive hand carries
- * nothing, and the tier's names ride the shared shelf in both languages.
+ * by the narrow one.
+ *
+ * The tempest tier b31-b40 escalates crosswinds up to 420 while tapering the
+ * bucket mouth down to 9 and pushing orange targets to 46. Every rung is
+ * verified against the strong policy solver, proved to be rim-differentiated
+ * and wind-sensitive, while trembling and naive hands cannot luck into 3 stars.
  */
 
 module.exports = function gate(ctx) {
@@ -39,9 +41,10 @@ module.exports = function gate(ctx) {
   const levels = App.pegSplashLevels || [];
   const deepIds = ["b21", "b22", "b23", "b24"];
   const summitIds = ["b25", "b26", "b27", "b28", "b29", "b30"];
+  const tempestIds = ["b31", "b32", "b33", "b34", "b35", "b36", "b37", "b38", "b39", "b40"];
 
-  check("game-peg-splash", "the ladder holds thirty boards",
-    levels.length === 30, String(levels.length));
+  check("game-peg-splash", "the ladder holds forty boards",
+    levels.length === 40, String(levels.length));
   check("game-peg-splash", "every board id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -54,19 +57,27 @@ module.exports = function gate(ctx) {
       summitIds.every((id, index) => levels.findIndex((level) => level.id === id) >
         (index === 0 ? -1 : levels.findIndex((level) => level.id === summitIds[index - 1]))),
     summitMissing.join(",") || "ordered");
-  check("game-peg-splash", "the deep tier sits behind the calm twenty and the summit closes the ladder",
+  const tempestMissing = tempestIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-peg-splash", "the tempest tier b31-b40 is present in order",
+    tempestMissing.length === 0 &&
+      tempestIds.every((id, index) => levels.findIndex((level) => level.id === id) >
+        (index === 0 ? -1 : levels.findIndex((level) => level.id === tempestIds[index - 1]))),
+    tempestMissing.join(",") || "ordered");
+  check("game-peg-splash", "the deep tier sits behind the calm twenty, the summit follows, and the tempest closes the ladder",
     deepIds.every((id, i) => levels[20 + i] && levels[20 + i].id === id) &&
-      summitIds.every((id, i) => levels[levels.length - 6 + i] &&
-        levels[levels.length - 6 + i].id === id),
+      summitIds.every((id, i) => levels[24 + i] && levels[24 + i].id === id) &&
+      tempestIds.every((id, i) => levels[30 + i] && levels[30 + i].id === id),
     "20-23: " + levels.slice(20, 24).map((level) => level.id).join(",") +
-      " | tail: " + levels.slice(-6).map((level) => level.id).join(","));
+      " | 24-29: " + levels.slice(24, 30).map((level) => level.id).join(",") +
+      " | tail: " + levels.slice(30).map((level) => level.id).join(","));
 
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
   const deep = deepIds.map((id) => byId[id]);
   const summit = summitIds.map((id) => byId[id]);
+  const tempest = tempestIds.map((id) => byId[id]);
   const shallow = levels.filter((level) =>
-    deepIds.indexOf(level.id) === -1 && summitIds.indexOf(level.id) === -1);
+    deepIds.indexOf(level.id) === -1 && summitIds.indexOf(level.id) === -1 && tempestIds.indexOf(level.id) === -1);
 
   /* The lesson is structural: every shipped rung leaves the wind field off
    * and the panel plays those boards calm, while the deep tier's gust
@@ -106,11 +117,24 @@ module.exports = function gate(ctx) {
     "winds " + summitWinds.join(",") + " mouths " +
       summit.map((level) => level.bucketHalf).join(","));
 
-  /* The counterfactual twin changes only the sky: the calm twin of a deep
+  /* The tempest tier climbs gust up to 420 and narrows the mouth down to 9. */
+  const tempestWinds = tempest.map((level) => level.wind);
+  const tempestShape = tempestWinds.join(",") === "240,-260,280,-300,320,-340,360,-380,400,-420" &&
+    tempest.every((level, i) =>
+      Math.abs(level.wind) - Math.abs(i === 0 ? summit[summit.length - 1].wind : tempest[i - 1].wind) === 20 &&
+      Math.sign(level.wind) !== Math.sign(i === 0 ? summit[summit.length - 1].wind : tempest[i - 1].wind));
+  const tempestMouthShape = tempest.every((level) => level.bucketHalf <= 12 && level.bucketHalf >= 9) &&
+    tempest.every((level) => level.balls === 6 && level.bucketSpeed === 500 && level.orange >= 42 && level.orange <= 46);
+  check("game-peg-splash",
+    "the tempest tier climbs gust up to 420 and narrows the mouth down to 9",
+    tempestShape && tempestMouthShape,
+    "winds " + tempestWinds.join(",") + " mouths " + tempest.map((level) => level.bucketHalf).join(","));
+
+  /* The counterfactual twin changes only the sky: the calm twin of a deep/summit/tempest
    * rung deals the identical field through the module's own deal, and every
-   * deep board really lays its forty targets. */
+   * board really lays its targets. */
   const fieldProblems = [];
-  deep.concat(summit).forEach((level) => {
+  deep.concat(summit, tempest).forEach((level) => {
     const windy = App.pegSplashField(level);
     const calm = App.pegSplashField(Object.assign({}, level, { wind: 0, bucketHalf: 26 }));
     const same = windy.length === calm.length && windy.every((peg, i) =>
@@ -124,7 +148,7 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-peg-splash",
-    "every deep and summit board lays its targets and its calm, wide-mouthed twin deals the identical field",
+    "every deep, summit and tempest board lays its targets and its calm, wide-mouthed twin deals the identical field",
     fieldProblems.length === 0, fieldProblems.slice(0, 4).join(" | "));
 
   /* The bench hands, over the panel's own simulator. The probing hand reads
@@ -215,11 +239,11 @@ module.exports = function gate(ctx) {
   };
 
   /* Engine proof, rung by rung: the probing hand clears the shipped peak
-   * (calibrating the bench) and every deep rung, finishing each with at
+   * (calibrating the bench) and every deep, summit and tempest rung, finishing each with at
    * least its three-star bank, and the sim pays the stars through the same
    * bands the panel pays - bands ordered, nothing invented. */
   const proofProblems = [];
-  [byId.b20].concat(deep, summit).forEach((level) => {
+  [byId.b20].concat(deep, summit, tempest).forEach((level) => {
     const run = App.pegSplashSimulate(level, strongPolicy, lcg(7));
     if (!run.cleared) {
       proofProblems.push(level.id + ": the probing hand does not clear");
@@ -237,7 +261,7 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-peg-splash",
-    "the probing hand clears the shipped peak and every deep and summit rung at its measured three-star bank",
+    "the probing hand clears the shipped peak and every deep, summit and tempest rung at its measured three-star bank",
     proofProblems.length === 0, proofProblems.slice(0, 4).join(" | "));
 
   /* Reachable but not free: the trembling hand still lands a deep rung now
@@ -299,13 +323,35 @@ module.exports = function gate(ctx) {
     "the summit is reachable but not free: the trembling bench lands a rung somewhere and never three-stars, the naive hand carries nothing",
     summitBenchProblems.length === 0, summitBenchProblems.slice(0, 4).join(" | "));
 
+  /* The tempest tier: never three-starred by trembling hand, never cleared by naive hand. */
+  const tempestBenchProblems = [];
+  let naiveTempest = 0;
+  tempest.forEach((level) => {
+    const tremble = benchTrembling(level);
+    if (tremble.clears > 4) {
+      tempestBenchProblems.push(level.id + ": trembling hand clears " + tremble.clears + "/8");
+    }
+    if (tremble.threeStars !== 0) {
+      tempestBenchProblems.push(level.id + ": trembling hand three-starred " + tremble.threeStars + "/8");
+    }
+    NOISE_SEEDS.forEach((seed) => {
+      if (App.pegSplashSimulate(level, naivePolicy, lcg(seed)).cleared) naiveTempest += 1;
+    });
+  });
+  if (naiveTempest > 0) {
+    tempestBenchProblems.push("naive hand carried " + naiveTempest + " tempest clears");
+  }
+  check("game-peg-splash",
+    "the tempest tier is strictly skill-gated: trembling never three-stars and naive carries nothing",
+    tempestBenchProblems.length === 0, tempestBenchProblems.slice(0, 4).join(" | "));
+
   /* The narrow mouth is load-bearing, proved deterministically: scan the
    * holds and find one where the same drop on the same field, same clock,
    * lands wide of the narrow mouth but inside the wide one - the wide twin
-   * refunds it, the summit rung loses it, and the peg hits (the score)
+   * refunds it, the summit/tempest rung loses it, and the peg hits (the score)
    * stay identical because the mouth only lives at the catch line. */
   const rimProblems = [];
-  summit.forEach((level) => {
+  summit.concat(tempest).forEach((level) => {
     const wide = Object.assign({}, level, { bucketHalf: 26 });
     let found = null;
     for (let h = 0; h <= 1.46 && !found; h += 0.02) {
@@ -322,7 +368,7 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-peg-splash",
-    "the rim is real on every summit rung: the same drop is refunded by the wide mouth and lost by the narrow one",
+    "the rim is real on every summit and tempest rung: the same drop is refunded by the wide mouth and lost by the narrow one",
     rimProblems.length === 0, rimProblems.join(" | "));
 
   /* The wind is load-bearing, twice measured. Hand every deep board a calm
@@ -347,17 +393,27 @@ module.exports = function gate(ctx) {
       counterProblems.push(level.id + ": the straight drop flew the same board calm");
     }
   });
+  tempest.forEach((level) => {
+    const twin = Object.assign({}, level, { wind: 0, bucketHalf: 26 });
+    const drop = { angle: Math.PI / 2, hold: 0 };
+    const oneShot = (shots) => (shots === 0 ? drop : null);
+    const flewWind = App.pegSplashSimulate(level, oneShot, lcg(3));
+    const flewCalm = App.pegSplashSimulate(twin, oneShot, lcg(3));
+    if (flewWind.score === flewCalm.score) {
+      counterProblems.push(level.id + ": tempest straight drop flew the same board calm");
+    }
+  });
   check("game-peg-splash",
     "the same boards bench easier under a calm sky and the same drop flies differently under wind",
     counterProblems.length === 0, counterProblems.slice(0, 4).join(" | "));
 
   /* The tier's names resolve in both languages, and the guide names the
      crosswind in both too - the chevrons are nothing without a heads-up. */
-  const copyProblems = deep.concat(summit).map((level) => level.labelKey).filter((key) =>
+  const copyProblems = deep.concat(summit, tempest).map((level) => level.labelKey).filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-peg-splash", "the ten deep and summit board names resolve in both languages",
+  check("game-peg-splash", "the twenty deep, summit and tempest board names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
   const guideEn = (App.I18N && App.I18N.en && App.I18N.en.pegHint) || "";
   const guideZh = (App.I18N && App.I18N.zh && App.I18N.zh.pegHint) || "";
@@ -370,9 +426,12 @@ module.exports = function gate(ctx) {
       guideZh.indexOf("巅峰段") !== -1 && guideZh.indexOf("斗口") !== -1,
     "en " + (/summit/i.test(guideEn) && guideEn.indexOf("mouth") !== -1) +
       ", zh " + (guideZh.indexOf("巅峰段") !== -1 && guideZh.indexOf("斗口") !== -1));
+  check("game-peg-splash", "the guide describes the tempest tier in both languages",
+    /tempest/i.test(guideEn) && guideZh.indexOf("风暴段") !== -1,
+    "en " + /tempest/i.test(guideEn) + ", zh " + (guideZh.indexOf("风暴段") !== -1));
 
   /* The unlock chain is derived, never stored: clearing each board in order
-   * hands the player exactly the next one, all twenty-four times. */
+   * hands the player exactly the next one, all thirty-nine times. */
   const chain = App.createCampaign({
     key: "peg-splash-gate-chain",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -385,6 +444,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-peg-splash", "the unlock chain walks all thirty boards in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-peg-splash", "the unlock chain walks all forty boards in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 };

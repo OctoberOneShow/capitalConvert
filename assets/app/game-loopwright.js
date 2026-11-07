@@ -893,6 +893,125 @@
         ["F", "F", "R", "P", "L", "F", "F", "F"],
       ],
     },
+
+    /* Floors 41-44: the moving yard. The ram corridor's pistons - one
+     * floor, one gimmick, forty floors ago - come back as the tier's dial:
+     * the crew's corridors themselves start breathing. Every piston is
+     * solid one tick in four, and each one is phased to slam on the very
+     * tick a crossing runner naturally arrives, so the gated run buys its
+     * step back with a single leading wait - f41's door stands at the
+     * center junction and gates the three late ghosts that cross it, f42
+     * adds the west rail's door for the first two ghosts, f43 closes the
+     * east rail behind the third and fourth, and the closer - whose route
+     * never crosses a door - keeps the eight-op line the whole ladder
+     * printed. The capstone then feeds a thirteenth plate down the west
+     * rail with the ladder's first nine-run crew: run one shoves its
+     * crate a third plate north and the new eighth body follows the rail
+     * to hold the plate the shove vacates. The doors here are aimed at
+     * the relay - each one slams on a ghost's own arrival tick while the
+     * closer's route crosses no door at all - and the firsts are
+     * measured, not asserted: nine runs and thirteen plates are both
+     * past anything the first forty floors held. Every door below is
+     * proved the same two
+     * ways: the shipped crew fails the moment that one door is walled
+     * shut - the phase is load-bearing, not decoration - and the phase
+     * law pins each door to the natural tick of the run it gates, while
+     * the searched alphabets come back empty at par-minus-one ops, so the
+     * shipped closer is the measured minimum over the movement chips the
+     * panel offers, with the crateless twins finding no win either. Every
+     * run keeps inside the panel's eight slots, the three-star line never
+     * moves - par runs, where the whole ladder printed it - and every
+     * floor was replayed through the forge's receipts and searched before
+     * it shipped. */
+    {
+      id: "f41", labelKey: "lpwF41",
+      map: ["########",
+            "#...G..#",
+            "#.P#PP.#",
+            "#PPTPPP#",
+            "#PP.CPP#",
+            "#CC..CC#",
+            "#..W...#",
+            "########"],
+      doorPlates: [], pistonOffsets: [2],
+      programs: [
+        ["L", "F", "F", "R", "P", "P"],
+        ["L", "F", "R", "P", "P"],
+        ["R", "F", "F", "L", "P", "P", "P"],
+        ["R", "F", "F", "F", "L", "P", "P"],
+        ["W", "F", "F", "F", "R", "F"],
+        ["W", "F", "F", "F", "R", "F", "L", "F"],
+        ["W", "F", "F", "F", "L", "F", "R", "F"],
+        ["F", "F", "R", "P", "L", "F", "F", "F"],
+      ],
+    },
+    {
+      id: "f42", labelKey: "lpwF42",
+      map: ["########",
+            "#...G..#",
+            "#.P#PP.#",
+            "#PPTPPP#",
+            "#PP.CPP#",
+            "#CC..CC#",
+            "#.TW...#",
+            "########"],
+      doorPlates: [], pistonOffsets: [2, 3],
+      programs: [
+        ["W", "L", "F", "F", "R", "P", "P"],
+        ["W", "L", "F", "R", "P", "P"],
+        ["R", "F", "F", "L", "P", "P", "P"],
+        ["R", "F", "F", "F", "L", "P", "P"],
+        ["W", "F", "F", "F", "R", "F"],
+        ["W", "F", "F", "F", "R", "F", "L", "F"],
+        ["W", "F", "F", "F", "L", "F", "R", "F"],
+        ["F", "F", "R", "P", "L", "F", "F", "F"],
+      ],
+    },
+    {
+      id: "f43", labelKey: "lpwF43",
+      map: ["########",
+            "#...G..#",
+            "#.P#PP.#",
+            "#PPTPPP#",
+            "#PP.CPP#",
+            "#CC..CC#",
+            "#.TWT..#",
+            "########"],
+      doorPlates: [], pistonOffsets: [2, 3, 3],
+      programs: [
+        ["W", "L", "F", "F", "R", "P", "P"],
+        ["W", "L", "F", "R", "P", "P"],
+        ["W", "R", "F", "F", "L", "P", "P", "P"],
+        ["W", "R", "F", "F", "F", "L", "P", "P"],
+        ["W", "F", "F", "F", "R", "F"],
+        ["W", "F", "F", "F", "R", "F", "L", "F"],
+        ["W", "F", "F", "F", "L", "F", "R", "F"],
+        ["F", "F", "R", "P", "L", "F", "F", "F"],
+      ],
+    },
+    {
+      id: "f44", labelKey: "lpwF44",
+      map: ["########",
+            "#...G..#",
+            "#PP#PP.#",
+            "#PPTPPP#",
+            "#PP.CPP#",
+            "#CC..CC#",
+            "#.TWT..#",
+            "########"],
+      doorPlates: [], pistonOffsets: [2, 3, 3],
+      programs: [
+        ["W", "L", "F", "F", "R", "P", "P", "P"],
+        ["W", "L", "F", "R", "P", "P"],
+        ["W", "R", "F", "F", "L", "P", "P", "P"],
+        ["W", "R", "F", "F", "F", "L", "P", "P"],
+        ["W", "F", "F", "F", "R", "F"],
+        ["W", "F", "F", "F", "R", "F", "L", "F"],
+        ["W", "F", "F", "F", "L", "F", "R", "F"],
+        ["W", "L", "F", "F", "R", "P"],
+        ["F", "F", "R", "P", "L", "F", "F", "F"],
+      ],
+    },
   ];
 
   function mulberry32(seed) {
@@ -1780,6 +1899,10 @@
       "lpwF38": "The Ram Corridor",
       "lpwF39": "The Closer's Crate",
       "lpwF40": "The Whole Crew",
+      "lpwF41": "The First Breath",
+      "lpwF42": "Two Doors Ajar",
+      "lpwF43": "Three Doors Ajar",
+      "lpwF44": "The Long Rail",
       "lpwOpF": "Forward",
       "lpwOpB": "Back",
       "lpwOpL": "Turn left",
@@ -1856,6 +1979,10 @@
       "lpwF38": "冲压长廊",
       "lpwF39": "收班人的货箱",
       "lpwF40": "全员到齐",
+      "lpwF41": "初次呼吸",
+      "lpwF42": "双门虚掩",
+      "lpwF43": "三门虚掩",
+      "lpwF44": "长栏三推",
       "lpwOpF": "前进",
       "lpwOpB": "后退",
       "lpwOpL": "左转",

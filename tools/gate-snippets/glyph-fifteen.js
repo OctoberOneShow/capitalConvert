@@ -36,18 +36,71 @@
  * time. Bands stay on the shipped curve and climb past the deep peak's on
  * all three thresholds, the padded and proven lines replay through the
  * real tray in order, and the save walks out holding three stars for
- * t20-t30. */
+ * t20-t30.
+ *
+ * The hadal tier t31-t40 dives past the summit and keeps sinking: every
+ * rung deals past 9200, six hundred steps at a time, to the 15400
+ * capstone. Each seeded deal again takes its whole walk, keeps the parity
+ * rule and leaves all twenty-four plates displaced; every admissible
+ * floor climbs past the summit's 96; every proven line is dearer than the
+ * shipped summit's deepest 202 and anchors its band on the shipped
+ * curve; and the walk stays load-bearing - the same seed dealt at the
+ * summit's ceiling proves a line of 134-176, under every hadal line. The
+ * padded and proven lines replay through the real tray in order, and the
+ * save walks out holding three stars for t20-t40.
+ *
+ * The abyss tier t41-t46 sinks past the hadal trenches: every rung deals
+ * past 15400, six hundred steps at a time, to the 19000 capstone. Each
+ * seeded deal again takes its whole walk, keeps the parity rule and
+ * leaves all twenty-four plates displaced. The admissible floor has no
+ * headroom left to climb - deeper walks saturate the tray's distance and
+ * the hadal tier already fished its tail to 106 - so the abyss sells its
+ * depth on the proven line, the same currency the bands anchor: every
+ * floor is pinned inside the tray's ceiling band (a hundred and two
+ * steps from home, one deal in about a thousand), every proven line is
+ * dearer than the hadal crown's measured 208 and anchors its band on the
+ * shipped curve, and the walk stays load-bearing - the same seed dealt
+ * at the hadal ceiling walk proves a line under the rung's. The padded
+ * and proven lines replay through the real tray in order, the save walks
+ * out holding three stars for t20-t46, and the shared stage names
+ * resolve in both languages.
+ *
+ * The benthic tier t47-t50 sinks past the abyssal plains: every rung
+ * deals past 19000, six hundred steps at a time, to the 21400 capstone.
+ * Each seeded deal again takes its whole walk, keeps the parity rule and
+ * leaves all twenty-four plates displaced, and the floor bar still pins
+ * every deal inside the tray's ceiling band (the floors run 104, 104,
+ * 104, 106). The tier keeps the abyss's currency and climbs on it: every
+ * proven line is dearer than the abyss crown's 210 - they run 212, 216,
+ * 222, 222, climbing rung over rung to a crown the capstone closes on -
+ * each anchoring its own three-star band on the shipped curve, and the
+ * walk stays load-bearing: the same seed dealt at the abyss ceiling walk
+ * (19000) proves a line of 138-188, under every benthic line. The padded
+ * and proven lines replay through the real tray in order, the save walks
+ * out holding three stars for t20-t50, and the shared stage names
+ * resolve in both languages. */
 
 const DEEP = ["t21", "t22", "t23", "t24"];
 const SUMMIT = ["t25", "t26", "t27", "t28", "t29", "t30"];
-/* The shipped gate seeds its benches; the deep and summit benches continue
- * the pattern. The seeds are tuned so the measured floors climb past the
- * tier below and the lines anchor their bands - the assertions below were
- * checked against exactly these deals. */
+const HADAL = ["t31", "t32", "t33", "t34", "t35", "t36", "t37", "t38", "t39", "t40"];
+const ABYSS = ["t41", "t42", "t43", "t44", "t45", "t46"];
+const BENTHIC = ["t47", "t48", "t49", "t50"];
+/* The shipped gate seeds its benches; the deep, summit, hadal, abyss and
+ * benthic benches continue the pattern. The seeds are tuned so the
+ * measured floors climb past the tier below and the lines anchor their
+ * bands - the assertions below were checked against exactly these deals. */
 const FT_SEEDS = { t20: 32001, t21: 37002, t22: 42011, t23: 44016, t24: 57033,
-  t25: 61040, t26: 63727, t27: 63294, t28: 65331, t29: 66406, t30: 80477 };
+  t25: 61040, t26: 63727, t27: 63294, t28: 65331, t29: 66406, t30: 80477,
+  t31: 513042, t32: 514446, t33: 525492, t34: 541830, t35: 506403,
+  t36: 509139, t37: 515325, t38: 521685, t39: 523149, t40: 551574,
+  t41: 396337, t42: 276150, t43: 436625, t44: 560320, t45: 534510, t46: 89000,
+  t47: 603736, t48: 204864, t49: 655849, t50: 473065 };
 const FT_WEIGHT = 2.5;
-const FT_BUDGET_MS = 15000;
+/* Effort cap in A* expansions, not wall-clock: deterministic for a given
+ * deal, immune to CPU contention. The deepest shipped deal (t31 at weight
+ * 2.5) measures 332,390 expansions; the cap keeps headroom above it and a
+ * deal that cannot clear it is genuinely too hard for the shipped bar. */
+const FT_EXPANSION_CAP = 600000;
 
 /* The shipped twenty rows, to prove the extension is additive: same order,
  * same grids, same walks, same bands, same label keys. */
@@ -131,8 +184,14 @@ function ftHeuristic(n) {
 }
 
 /* A* over blank moves. Weight 1 is the exact optimum; larger weights trade
- * optimality for speed and still return a complete, replayable line. */
-function ftSearch(n, boardIn, weight, budgetMs) {
+ * optimality for speed and still return a complete, replayable line. The
+ * solver's effort is capped in A* expansions, not wall-clock milliseconds:
+ * expansion counts are deterministic for a given deal, so the cap cannot
+ * flake when the suite shares a CPU with its neighbours. The deepest
+ * shipped deal (t31 at weight 2.5) measures 332,390 expansions; the cap
+ * leaves headroom above it, and a deal that cannot clear it is genuinely
+ * too hard for the shipped bar. */
+function ftSearch(n, boardIn, weight, maxExpansions) {
   const total = n * n;
   const goal = new Uint8Array(total);
   for (let i = 0; i < total; i += 1) goal[i] = (i + 1) % total;
@@ -191,13 +250,14 @@ function ftSearch(n, boardIn, weight, budgetMs) {
   const startKey = keyOf(board);
   open.set(startKey, { g: 0, bd: board, blank: board.indexOf(0), parent: null });
   hpush(startKey, weight * heuristic(board), 0);
-  const t0 = Date.now();
+  let expansions = 0;
   while (heap.length) {
     const cur = hpop();
     const node = open.get(cur.key);
     if (!node || node.g !== cur.g) continue;
     open.delete(cur.key);
     closed.set(cur.key, node.g);
+    expansions += 1;
     if (isGoal(node.bd)) {
       const line = [];
       for (let nd = node; nd.parent; nd = nd.parent) line.unshift(nd.blank);
@@ -222,8 +282,8 @@ function ftSearch(n, boardIn, weight, budgetMs) {
       open.set(k, { g: g2, bd, blank: t, parent: node });
       hpush(k, g2 + weight * heuristic(bd), g2);
     }
-    if (Date.now() - t0 > budgetMs) {
-      throw new Error("ft solver budget exceeded on " + total + " tiles");
+    if (expansions > maxExpansions) {
+      throw new Error("ft solver expansion cap exceeded on " + total + " tiles");
     }
   }
   return null;
@@ -253,9 +313,12 @@ module.exports = function gate(ctx) {
     };
   }
 
-  check("game-glyph-fifteen", "the ladder holds thirty boards with the deep and summit tiers present",
-    order.length === 30 && DEEP.every((id) => order.indexOf(id) >= 0) &&
-      SUMMIT.every((id) => order.indexOf(id) >= 0),
+  check("game-glyph-fifteen", "the ladder holds fifty boards with the deep, summit, hadal, abyss and benthic tiers present",
+    order.length === 50 && DEEP.every((id) => order.indexOf(id) >= 0) &&
+      SUMMIT.every((id) => order.indexOf(id) >= 0) &&
+      HADAL.every((id) => order.indexOf(id) >= 0) &&
+      ABYSS.every((id) => order.indexOf(id) >= 0) &&
+      BENTHIC.every((id) => order.indexOf(id) >= 0),
     order.length + " rows");
   check("game-glyph-fifteen", "every board id is distinct",
     new Set(order).size === order.length, order.join(","));
@@ -286,6 +349,14 @@ module.exports = function gate(ctx) {
   check("game-glyph-fifteen", "each summit row carries only the fields the engine reads, on the quintet tray",
     summitDrift.length === 0, summitDrift.join(","));
 
+  const hadalDrift = HADAL.filter((id) => {
+    const keys = Array.from(rows[id].text.matchAll(/([a-zA-Z]+)\s*:/g)).map((m) => m[1]);
+    return keys.join(",") !== "id,labelKey,grid,walk,starMoves" ||
+      rows[id].labelKey !== "ftL" + id.slice(1) || rows[id].grid !== 5;
+  });
+  check("game-glyph-fifteen", "each hadal row carries only the fields the engine reads, on the quintet tray",
+    hadalDrift.length === 0, hadalDrift.join(","));
+
   const quintetPeak = Math.max.apply(null,
     SHIPPED.filter((row) => row[1] === 5).map((row) => row[2]));
   const walkDrift = DEEP.filter((id) => rows[id].walk <= quintetPeak);
@@ -294,10 +365,80 @@ module.exports = function gate(ctx) {
     "deep walks " + DEEP.map((id) => rows[id].walk).join("/") +
     " vs quintet peak " + quintetPeak);
   const summitWalkDrift = SUMMIT.filter((id) => rows[id].walk <= rows.t24.walk);
-  check("game-glyph-fifteen", "every summit deal walks past the deep tier's ceiling, and t30 closes the ladder at its peak",
-    summitWalkDrift.length === 0 && rows.t30.walk === Math.max.apply(null, order.map((id) => rows[id].walk)),
+  check("game-glyph-fifteen", "every summit deal walks past the deep tier's ceiling, and t30 closes the summit at its peak",
+    summitWalkDrift.length === 0 && rows.t30.walk === Math.max.apply(null, SUMMIT.map((id) => rows[id].walk)),
     "summit walks " + SUMMIT.map((id) => rows[id].walk).join("/") +
     " vs deep peak " + rows.t24.walk);
+
+  const hadalWalkDrift = HADAL.filter((id) => rows[id].walk <= rows.t30.walk);
+  check("game-glyph-fifteen", "every hadal deal walks past the summit's ceiling, and t40 closes the hadal tier at its peak",
+    hadalWalkDrift.length === 0 && rows.t40.walk === Math.max.apply(null, HADAL.map((id) => rows[id].walk)),
+    "hadal walks " + HADAL.map((id) => rows[id].walk).join("/") +
+    " vs summit peak " + rows.t30.walk);
+
+  const abyssFieldDrift = ABYSS.filter((id) => {
+    const keys = Array.from(rows[id].text.matchAll(/([a-zA-Z]+)\s*:/g)).map((m) => m[1]);
+    return keys.join(",") !== "id,labelKey,grid,walk,starMoves" ||
+      rows[id].labelKey !== "lvlNum" + id.slice(1) || rows[id].grid !== 5;
+  });
+  check("game-glyph-fifteen", "each abyss row carries only the fields the engine reads, on the quintet tray",
+    abyssFieldDrift.length === 0, abyssFieldDrift.join(","));
+
+  const benthicFieldDrift = BENTHIC.filter((id) => {
+    const keys = Array.from(rows[id].text.matchAll(/([a-zA-Z]+)\s*:/g)).map((m) => m[1]);
+    return keys.join(",") !== "id,labelKey,grid,walk,starMoves" ||
+      rows[id].labelKey !== "lvlNum" + id.slice(1) || rows[id].grid !== 5;
+  });
+  check("game-glyph-fifteen", "each benthic row carries only the fields the engine reads, on the quintet tray",
+    benthicFieldDrift.length === 0, benthicFieldDrift.join(","));
+
+  const abyssWalkDrift = ABYSS.filter((id) => rows[id].walk <= rows.t40.walk);
+  check("game-glyph-fifteen", "every abyss deal walks past the hadal ceiling, and t46 closes the abyss tier at its peak",
+    abyssWalkDrift.length === 0 && rows.t46.walk === Math.max.apply(null, ABYSS.map((id) => rows[id].walk)),
+    "abyss walks " + ABYSS.map((id) => rows[id].walk).join("/") +
+    " vs hadal peak " + rows.t40.walk);
+
+  const benthicWalkDrift = BENTHIC.filter((id) => rows[id].walk <= rows.t46.walk);
+  check("game-glyph-fifteen", "every benthic deal walks past the abyss ceiling, and t50 closes the ladder at its peak",
+    benthicWalkDrift.length === 0 && rows.t50.walk === Math.max.apply(null, order.map((id) => rows[id].walk)),
+    "benthic walks " + BENTHIC.map((id) => rows[id].walk).join("/") +
+    " vs abyss peak " + rows.t46.walk);
+
+  const abyssBandProblems = [];
+  ["t40"].concat(ABYSS).forEach((id, index, ladder) => {
+    if (index === 0) return;
+    const prev = rows[ladder[index - 1]].bands;
+    const cur = rows[id].bands;
+    for (let k = 0; k < 3; k += 1) {
+      if (!(cur[k] > prev[k])) abyssBandProblems.push(id + ":band" + k);
+    }
+  });
+  ABYSS.forEach((id) => {
+    const [a, b, c] = rows[id].bands;
+    if (!(b > a * 1.4 && b < a * 1.6) || !(c > a * 2.1 && c < a * 2.35)) {
+      abyssBandProblems.push(id + ":curve " + (b / a).toFixed(2) + "/" + (c / a).toFixed(2));
+    }
+  });
+  check("game-glyph-fifteen", "the abyss bands climb past the hadal's on all three thresholds and keep the shipped curve",
+    abyssBandProblems.length === 0, abyssBandProblems.join(" | "));
+
+  const benthicBandProblems = [];
+  ["t46"].concat(BENTHIC).forEach((id, index, ladder) => {
+    if (index === 0) return;
+    const prev = rows[ladder[index - 1]].bands;
+    const cur = rows[id].bands;
+    for (let k = 0; k < 3; k += 1) {
+      if (!(cur[k] > prev[k])) benthicBandProblems.push(id + ":band" + k);
+    }
+  });
+  BENTHIC.forEach((id) => {
+    const [a, b, c] = rows[id].bands;
+    if (!(b > a * 1.4 && b < a * 1.6) || !(c > a * 2.1 && c < a * 2.35)) {
+      benthicBandProblems.push(id + ":curve " + (b / a).toFixed(2) + "/" + (c / a).toFixed(2));
+    }
+  });
+  check("game-glyph-fifteen", "the benthic bands climb past the abyss's on all three thresholds and keep the shipped curve",
+    benthicBandProblems.length === 0, benthicBandProblems.join(" | "));
 
   const bandProblems = [];
   ["t20"].concat(DEEP).forEach((id, index, ladder) => {
@@ -337,6 +478,24 @@ module.exports = function gate(ctx) {
   check("game-glyph-fifteen", "the summit bands climb past the deep peak's on all three thresholds and keep the shipped curve",
     summitBandProblems.length === 0, summitBandProblems.join(" | "));
 
+  const hadalBandProblems = [];
+  ["t30"].concat(HADAL).forEach((id, index, ladder) => {
+    if (index === 0) return;
+    const prev = rows[ladder[index - 1]].bands;
+    const cur = rows[id].bands;
+    for (let k = 0; k < 3; k += 1) {
+      if (!(cur[k] > prev[k])) hadalBandProblems.push(id + ":band" + k);
+    }
+  });
+  HADAL.forEach((id) => {
+    const [a, b, c] = rows[id].bands;
+    if (!(b > a * 1.4 && b < a * 1.6) || !(c > a * 2.1 && c < a * 2.35)) {
+      hadalBandProblems.push(id + ":curve " + (b / a).toFixed(2) + "/" + (c / a).toFixed(2));
+    }
+  });
+  check("game-glyph-fifteen", "the hadal bands climb past the summit's on all three thresholds and keep the shipped curve",
+    hadalBandProblems.length === 0, hadalBandProblems.join(" | "));
+
   /* ---- boot the real tray (the deal generator rides on the game) ------- */
   env.setMotion("off");
   const makeFt = (id, tag) => {
@@ -365,7 +524,7 @@ module.exports = function gate(ctx) {
   const deals = {};
   const floors = {};
   const dealProblems = [];
-  ["t20"].concat(DEEP).concat(SUMMIT).forEach((id) => {
+  ["t20"].concat(DEEP).concat(SUMMIT).concat(HADAL).concat(ABYSS).concat(BENTHIC).forEach((id) => {
     const deal = ftSeededRun(FT_SEEDS[id], () =>
       App.glyphFifteenShuffle(rows[id].grid, rows[id].walk));
     deals[id] = deal;
@@ -434,12 +593,113 @@ module.exports = function gate(ctx) {
     "every summit deal takes its whole walk, passes the sliding-parity rule, leaves all twenty-four plates displaced, and starts further from home than the deep peak's",
     summitDealProblems.length === 0, summitDealProblems.join(" | "));
 
+  const hadalDealProblems = [];
+  HADAL.forEach((id) => {
+    const deal = deals[id];
+    if (!deal || deal.board.length !== 25 || deal.blank < 0) {
+      hadalDealProblems.push(id + ":deal");
+      return;
+    }
+    if (deal.walk !== rows[id].walk) {
+      hadalDealProblems.push(id + ":walk " + deal.walk + "/" + rows[id].walk);
+    }
+    const tiles = deal.board.filter((v) => v !== 0);
+    let inversions = 0;
+    for (let i = 0; i < tiles.length; i += 1) {
+      for (let j = i + 1; j < tiles.length; j += 1) {
+        if (tiles[i] > tiles[j]) inversions += 1;
+      }
+    }
+    if (inversions % 2 !== 0) hadalDealProblems.push(id + ":parity " + inversions);
+    let displaced = 0;
+    for (let i = 0; i < deal.board.length; i += 1) {
+      if (deal.board[i] !== 0 && deal.board[i] !== (i + 1) % deal.board.length) displaced += 1;
+    }
+    if (displaced !== 24) hadalDealProblems.push(id + ":settled " + (24 - displaced) + " plates at home");
+    if (!(floors[id] > floors.t30)) {
+      hadalDealProblems.push(id + ":floor " + floors[id] + " vs t30 " + floors.t30);
+    }
+  });
+  check("game-glyph-fifteen",
+    "every hadal deal takes its whole walk, passes the sliding-parity rule, leaves all twenty-four plates displaced, and starts further from home than the summit's",
+    hadalDealProblems.length === 0, hadalDealProblems.join(" | "));
+
+  const abyssDealProblems = [];
+  ABYSS.forEach((id) => {
+    const deal = deals[id];
+    if (!deal || deal.board.length !== 25 || deal.blank < 0) {
+      abyssDealProblems.push(id + ":deal");
+      return;
+    }
+    if (deal.walk !== rows[id].walk) {
+      abyssDealProblems.push(id + ":walk " + deal.walk + "/" + rows[id].walk);
+    }
+    const tiles = deal.board.filter((v) => v !== 0);
+    let inversions = 0;
+    for (let i = 0; i < tiles.length; i += 1) {
+      for (let j = i + 1; j < tiles.length; j += 1) {
+        if (tiles[i] > tiles[j]) inversions += 1;
+      }
+    }
+    if (inversions % 2 !== 0) abyssDealProblems.push(id + ":parity " + inversions);
+    let displaced = 0;
+    for (let i = 0; i < deal.board.length; i += 1) {
+      if (deal.board[i] !== 0 && deal.board[i] !== (i + 1) % deal.board.length) displaced += 1;
+    }
+    if (displaced !== 24) abyssDealProblems.push(id + ":settled " + (24 - displaced) + " plates at home");
+    /* The floor is where the hadal tier already fished the tray's tail:
+     * deeper walks saturate the admissible distance, so the abyss tier's
+     * depth is sold on the proven line, and the floor bar pins every
+     * abyss deal inside the tray's ceiling band - a hundred and two steps
+     * from home, where one deal in about a thousand lands. */
+    if (!(floors[id] >= 102)) {
+      abyssDealProblems.push(id + ":floor " + floors[id] + " vs ceiling 102");
+    }
+  });
+  check("game-glyph-fifteen",
+    "every abyss deal takes its whole walk, passes the sliding-parity rule, leaves all twenty-four plates displaced, and starts inside the tray's ceiling band",
+    abyssDealProblems.length === 0, abyssDealProblems.join(" | "));
+
+  const benthicDealProblems = [];
+  BENTHIC.forEach((id) => {
+    const deal = deals[id];
+    if (!deal || deal.board.length !== 25 || deal.blank < 0) {
+      benthicDealProblems.push(id + ":deal");
+      return;
+    }
+    if (deal.walk !== rows[id].walk) {
+      benthicDealProblems.push(id + ":walk " + deal.walk + "/" + rows[id].walk);
+    }
+    const tiles = deal.board.filter((v) => v !== 0);
+    let inversions = 0;
+    for (let i = 0; i < tiles.length; i += 1) {
+      for (let j = i + 1; j < tiles.length; j += 1) {
+        if (tiles[i] > tiles[j]) inversions += 1;
+      }
+    }
+    if (inversions % 2 !== 0) benthicDealProblems.push(id + ":parity " + inversions);
+    let displaced = 0;
+    for (let i = 0; i < deal.board.length; i += 1) {
+      if (deal.board[i] !== 0 && deal.board[i] !== (i + 1) % deal.board.length) displaced += 1;
+    }
+    if (displaced !== 24) benthicDealProblems.push(id + ":settled " + (24 - displaced) + " plates at home");
+    /* the same ceiling-band bar the abyss holds: this deep, the floor has
+     * no headroom left to climb, so every benthic deal must still start
+     * inside the tray's tail - a hundred and two steps from home */
+    if (!(floors[id] >= 102)) {
+      benthicDealProblems.push(id + ":floor " + floors[id] + " vs ceiling 102");
+    }
+  });
+  check("game-glyph-fifteen",
+    "every benthic deal takes its whole walk, passes the sliding-parity rule, leaves all twenty-four plates displaced, and starts inside the tray's ceiling band",
+    benthicDealProblems.length === 0, benthicDealProblems.join(" | "));
+
   /* ---- the lines: the shipped gate's weighted search, like for like ---- */
   const lines = {};
   const solverProblems = [];
-  ["t20"].concat(DEEP).concat(SUMMIT).forEach((id) => {
+  ["t20"].concat(DEEP).concat(SUMMIT).concat(HADAL).concat(ABYSS).concat(BENTHIC).forEach((id) => {
     try {
-      lines[id] = ftSearch(rows[id].grid, deals[id].board, FT_WEIGHT, FT_BUDGET_MS);
+      lines[id] = ftSearch(rows[id].grid, deals[id].board, FT_WEIGHT, FT_EXPANSION_CAP);
     } catch (error) {
       lines[id] = null;
       solverProblems.push(id + ": " + error.message);
@@ -447,7 +707,7 @@ module.exports = function gate(ctx) {
     }
     if (!lines[id]) solverProblems.push(id + ": no line");
   });
-  check("game-glyph-fifteen", "the gate's solver finds a complete line on the shipped summit's deal, on every deep deal, and on every summit deal",
+  check("game-glyph-fifteen", "the gate's solver finds a complete line on the shipped summit's deal, on every deep deal, on every summit deal, on every hadal deal, on every abyss deal and on every benthic deal",
     solverProblems.length === 0, solverProblems.join(" | "));
 
   const deepLines = DEEP.map((id) => lines[id] ? lines[id].len : 0);
@@ -484,6 +744,137 @@ module.exports = function gate(ctx) {
     "every summit line is dearer than the shipped summit's and anchors its band, and t30 closes the game on its deepest proven line",
     summitLineProblems.length === 0, summitLineProblems.join(" | "));
 
+  const hadalLineProblems = [];
+  HADAL.forEach((id) => {
+    if (!lines[id]) {
+      hadalLineProblems.push(id + ": no line");
+      return;
+    }
+    if (!(lines[id].len > lines.t30.len)) {
+      hadalLineProblems.push(id + ":line " + lines[id].len + " vs t30 " + lines.t30.len);
+    }
+    if (lines[id].len > rows[id].bands[0]) {
+      hadalLineProblems.push(id + ":anchor " + lines[id].len + "/" + rows[id].bands[0]);
+    }
+  });
+  if (lines.t40 && HADAL.every((id) => lines[id])) {
+    if (!(lines.t40.len > lines.t30.len)) hadalLineProblems.push("t40:crown " + lines.t40.len);
+  }
+  check("game-glyph-fifteen",
+    "every hadal line is dearer than the shipped summit's deepest and anchors its band, and t40 closes the drawer on a line past the summit's crown",
+    hadalLineProblems.length === 0, hadalLineProblems.join(" | "));
+
+  const abyssLineProblems = [];
+  ABYSS.forEach((id) => {
+    if (!lines[id]) {
+      abyssLineProblems.push(id + ": no line");
+      return;
+    }
+    if (!(lines[id].len > lines.t40.len)) {
+      abyssLineProblems.push(id + ":line " + lines[id].len + " vs t40 " + lines.t40.len);
+    }
+    if (lines[id].len > rows[id].bands[0]) {
+      abyssLineProblems.push(id + ":anchor " + lines[id].len + "/" + rows[id].bands[0]);
+    }
+  });
+  if (lines.t46 && ABYSS.every((id) => lines[id])) {
+    if (!(lines.t46.len > lines.t40.len)) abyssLineProblems.push("t46:crown " + lines.t46.len);
+  }
+  check("game-glyph-fifteen",
+    "every abyss line is dearer than the hadal crown's and anchors its band, and t46 closes the drawer on a line past the hadal peak",
+    abyssLineProblems.length === 0, abyssLineProblems.join(" | "));
+
+  const benthicLineProblems = [];
+  BENTHIC.forEach((id) => {
+    if (!lines[id]) {
+      benthicLineProblems.push(id + ": no line");
+      return;
+    }
+    if (!(lines[id].len > lines.t46.len)) {
+      benthicLineProblems.push(id + ":line " + lines[id].len + " vs t46 " + lines.t46.len);
+    }
+    if (lines[id].len > rows[id].bands[0]) {
+      benthicLineProblems.push(id + ":anchor " + lines[id].len + "/" + rows[id].bands[0]);
+    }
+  });
+  if (lines.t50 && BENTHIC.every((id) => lines[id])) {
+    /* the tier's crown sits on the capstone: t50's line is the dearest
+     * the benthic tier proves, past the abyss peak's 210 */
+    const benthicMax = Math.max.apply(null, BENTHIC.map((id) => lines[id].len));
+    if (lines.t50.len !== benthicMax) {
+      benthicLineProblems.push("t50:crown " + lines.t50.len + " vs " + benthicMax);
+    }
+  }
+  check("game-glyph-fifteen",
+    "every benthic line is dearer than the abyss crown's and anchors its band, and t50 closes the drawer on the dearest line it has proven",
+    benthicLineProblems.length === 0, benthicLineProblems.join(" | "));
+
+  /* Load-bearing walk, per abyss rung: the same seed dealt at the hadal
+   * ceiling walk (15400) proves a line under the rung's - the depth, not
+   * the seed's luck, is what the abyss tier sells. */
+  const shallowAbyssProblems = [];
+  ABYSS.forEach((id) => {
+    const shallow = ftSeededRun(FT_SEEDS[id], () => App.glyphFifteenShuffle(5, rows.t40.walk));
+    let shallowLine = null;
+    try {
+      shallowLine = ftSearch(5, shallow.board, FT_WEIGHT, FT_EXPANSION_CAP);
+    } catch (error) {
+      shallowAbyssProblems.push(id + ": " + error.message);
+      return;
+    }
+    if (!shallowLine || !lines[id] || shallowLine.len >= lines[id].len) {
+      shallowAbyssProblems.push(id + ": shallow " +
+        (shallowLine ? shallowLine.len : "?") + " vs abyss " + (lines[id] ? lines[id].len : "?"));
+    }
+  });
+  check("game-glyph-fifteen",
+    "on the same seed the hadal's ceiling walk deals cheaper on every abyss rung, so the abyss walk is load-bearing",
+    shallowAbyssProblems.length === 0, shallowAbyssProblems.join(" | "));
+
+  /* Load-bearing walk, per benthic rung: the same seed dealt at the abyss
+   * ceiling walk (19000) proves a line under the rung's - the depth, not
+   * the seed's luck, is what the benthic tier sells. */
+  const shallowBenthicProblems = [];
+  BENTHIC.forEach((id) => {
+    const shallow = ftSeededRun(FT_SEEDS[id], () => App.glyphFifteenShuffle(5, rows.t46.walk));
+    let shallowLine = null;
+    try {
+      shallowLine = ftSearch(5, shallow.board, FT_WEIGHT, FT_EXPANSION_CAP);
+    } catch (error) {
+      shallowBenthicProblems.push(id + ": " + error.message);
+      return;
+    }
+    if (!shallowLine || !lines[id] || shallowLine.len >= lines[id].len) {
+      shallowBenthicProblems.push(id + ": shallow " +
+        (shallowLine ? shallowLine.len : "?") + " vs benthic " + (lines[id] ? lines[id].len : "?"));
+    }
+  });
+  check("game-glyph-fifteen",
+    "on the same seed the abyss's ceiling walk deals cheaper on every benthic rung, so the benthic walk is load-bearing",
+    shallowBenthicProblems.length === 0, shallowBenthicProblems.join(" | "));
+
+  /* Load-bearing walk, per hadal rung: the same seed dealt at the summit's
+   * ceiling walk (9200) proves a line under the rung's - the depth, not
+   * the seed's luck, is what the hadal tier sells. */
+  const shallowHadalProblems = [];
+  HADAL.forEach((id) => {
+    const shallow = ftSeededRun(FT_SEEDS[id], () => App.glyphFifteenShuffle(5, rows.t30.walk));
+    let shallowLine = null;
+    try {
+      shallowLine = ftSearch(5, shallow.board, FT_WEIGHT, FT_EXPANSION_CAP);
+    } catch (error) {
+      shallowHadalProblems.push(id + ": " + error.message);
+      return;
+    }
+    if (!shallowLine || !lines[id] || shallowLine.len >= lines[id].len) {
+      shallowHadalProblems.push(id + ": shallow " +
+        (shallowLine ? shallowLine.len : "?") + " vs hadal " + (lines[id] ? lines[id].len : "?"));
+    }
+  });
+  check("game-glyph-fifteen",
+    "on the same seed the summit's ceiling walk deals cheaper on every hadal rung, so the hadal walk is load-bearing",
+    shallowHadalProblems.length === 0, shallowHadalProblems.join(" | "));
+
   /* Load-bearing walk, per summit rung: the same seed dealt at the deep
    * tier's ceiling walk (5600) proves a line under the rung's - the depth,
    * not the seed's luck, is what the summit sells. */
@@ -492,7 +883,7 @@ module.exports = function gate(ctx) {
     const shallow = ftSeededRun(FT_SEEDS[id], () => App.glyphFifteenShuffle(5, rows.t24.walk));
     let shallowLine = null;
     try {
-      shallowLine = ftSearch(5, shallow.board, FT_WEIGHT, FT_BUDGET_MS);
+      shallowLine = ftSearch(5, shallow.board, FT_WEIGHT, FT_EXPANSION_CAP);
     } catch (error) {
       shallowSummitProblems.push(id + ": " + error.message);
       return;
@@ -510,7 +901,7 @@ module.exports = function gate(ctx) {
    * board whose line sits under the whole deep tier - the depth, not the
    * grid size, is what the tier sells. */
   const shallowDeal = ftSeededRun(FT_SEEDS.t24, () => App.glyphFifteenShuffle(5, rows.t17.walk));
-  const shallowLine = ftSearch(5, shallowDeal.board, FT_WEIGHT, FT_BUDGET_MS);
+  const shallowLine = ftSearch(5, shallowDeal.board, FT_WEIGHT, FT_EXPANSION_CAP);
   check("game-glyph-fifteen", "on the same tray the third tier's walk still deals a cheaper board, so the deep walk is load-bearing",
     !!shallowLine && Math.min.apply(null, deepLines) > shallowLine.len,
     "shallow " + (shallowLine ? shallowLine.len : "?") + " vs deep " + deepLines.join("/"));
@@ -549,6 +940,57 @@ module.exports = function gate(ctx) {
   });
   check("game-glyph-fifteen", "each summit line padded with round trips drops out of the three-star band into the two-star band and still clears inside the one-star line",
     summitPlanProblems.length === 0, summitPlanProblems.join(" | "));
+
+  const hadalPlanProblems = [];
+  const hadalPlans = {};
+  HADAL.forEach((id) => {
+    const len = lines[id] ? lines[id].len : Infinity;
+    const pairs = Math.floor((rows[id].bands[0] - len) / 2) + 4;
+    const padded = len + pairs * 2;
+    hadalPlans[id] = { pairs, padded };
+    if (!(padded > rows[id].bands[0] && padded <= rows[id].bands[1])) {
+      hadalPlanProblems.push(id + ":two-star " + padded + " vs " + rows[id].bands[0] + "/" + rows[id].bands[1]);
+    }
+    if (padded > rows[id].bands[2]) {
+      hadalPlanProblems.push(id + ":one-star " + padded + " vs " + rows[id].bands[2]);
+    }
+  });
+  check("game-glyph-fifteen", "each hadal line padded with round trips drops out of the three-star band into the two-star band and still clears inside the one-star line",
+    hadalPlanProblems.length === 0, hadalPlanProblems.join(" | "));
+
+  const abyssPlanProblems = [];
+  const abyssPlans = {};
+  ABYSS.forEach((id) => {
+    const len = lines[id] ? lines[id].len : Infinity;
+    const pairs = Math.floor((rows[id].bands[0] - len) / 2) + 4;
+    const padded = len + pairs * 2;
+    abyssPlans[id] = { pairs, padded };
+    if (!(padded > rows[id].bands[0] && padded <= rows[id].bands[1])) {
+      abyssPlanProblems.push(id + ":two-star " + padded + " vs " + rows[id].bands[0] + "/" + rows[id].bands[1]);
+    }
+    if (padded > rows[id].bands[2]) {
+      abyssPlanProblems.push(id + ":one-star " + padded + " vs " + rows[id].bands[2]);
+    }
+  });
+  check("game-glyph-fifteen", "each abyss line padded with round trips drops out of the three-star band into the two-star band and still clears inside the one-star line",
+    abyssPlanProblems.length === 0, abyssPlanProblems.join(" | "));
+
+  const benthicPlanProblems = [];
+  const benthicPlans = {};
+  BENTHIC.forEach((id) => {
+    const len = lines[id] ? lines[id].len : Infinity;
+    const pairs = Math.floor((rows[id].bands[0] - len) / 2) + 4;
+    const padded = len + pairs * 2;
+    benthicPlans[id] = { pairs, padded };
+    if (!(padded > rows[id].bands[0] && padded <= rows[id].bands[1])) {
+      benthicPlanProblems.push(id + ":two-star " + padded + " vs " + rows[id].bands[0] + "/" + rows[id].bands[1]);
+    }
+    if (padded > rows[id].bands[2]) {
+      benthicPlanProblems.push(id + ":one-star " + padded + " vs " + rows[id].bands[2]);
+    }
+  });
+  check("game-glyph-fifteen", "each benthic line padded with round trips drops out of the three-star band into the two-star band and still clears inside the one-star line",
+    benthicPlanProblems.length === 0, benthicPlanProblems.join(" | "));
 
   /* ---- the replay: every proof played through the real tray ------------ */
   const ftCanvasEl = env.byId("ftCanvas");
@@ -654,10 +1096,88 @@ module.exports = function gate(ctx) {
   check("game-glyph-fifteen", "each summit rung's padded line clears inside the two-star band and its proven line pays three stars for exactly the proven count",
     summitReplayProblems.length === 0, summitReplayProblems.join(" | "));
 
+  const hadalReplayProblems = [];
+  HADAL.forEach((id) => {
+    const deal = deals[id];
+    const line = lines[id];
+    const plan = hadalPlans[id];
+    /* Padded first, so the rung's first clear is the two-star one: the band
+     * payout is then observed through the engine, not derived. */
+    ftSelectLevel(id, FT_SEEDS[id]);
+    playPadded(deal, plan.pairs, line.line, 5);
+    const padded = ftRecord(id);
+    if (padded.stars !== 2) {
+      hadalReplayProblems.push(id + ":padded stars " + padded.stars);
+    }
+    /* Then the proven line: three stars, and the tray's own move counter
+     * must agree with the solver's cost to the slide. */
+    ftSelectLevel(id, FT_SEEDS[id]);
+    playLine(deal, line.line, 5);
+    const cleared = ftRecord(id);
+    if (cleared.stars !== 3) hadalReplayProblems.push(id + ":line stars " + cleared.stars);
+    if (cleared.best !== line.len) {
+      hadalReplayProblems.push(id + ":best " + cleared.best + " vs " + line.len);
+    }
+  });
+  check("game-glyph-fifteen", "each hadal rung's padded line clears inside the two-star band and its proven line pays three stars for exactly the proven count",
+    hadalReplayProblems.length === 0, hadalReplayProblems.join(" | "));
+
+  const abyssReplayProblems = [];
+  ABYSS.forEach((id) => {
+    const deal = deals[id];
+    const line = lines[id];
+    const plan = abyssPlans[id];
+    /* Padded first, so the rung's first clear is the two-star one: the band
+     * payout is then observed through the engine, not derived. */
+    ftSelectLevel(id, FT_SEEDS[id]);
+    playPadded(deal, plan.pairs, line.line, 5);
+    const padded = ftRecord(id);
+    if (padded.stars !== 2) {
+      abyssReplayProblems.push(id + ":padded stars " + padded.stars);
+    }
+    /* Then the proven line: three stars, and the tray's own move counter
+     * must agree with the solver's cost to the slide. */
+    ftSelectLevel(id, FT_SEEDS[id]);
+    playLine(deal, line.line, 5);
+    const cleared = ftRecord(id);
+    if (cleared.stars !== 3) abyssReplayProblems.push(id + ":line stars " + cleared.stars);
+    if (cleared.best !== line.len) {
+      abyssReplayProblems.push(id + ":best " + cleared.best + " vs " + line.len);
+    }
+  });
+  check("game-glyph-fifteen", "each abyss rung's padded line clears inside the two-star band and its proven line pays three stars for exactly the proven count",
+    abyssReplayProblems.length === 0, abyssReplayProblems.join(" | "));
+
+  const benthicReplayProblems = [];
+  BENTHIC.forEach((id) => {
+    const deal = deals[id];
+    const line = lines[id];
+    const plan = benthicPlans[id];
+    /* Padded first, so the rung's first clear is the two-star one: the band
+     * payout is then observed through the engine, not derived. */
+    ftSelectLevel(id, FT_SEEDS[id]);
+    playPadded(deal, plan.pairs, line.line, 5);
+    const padded = ftRecord(id);
+    if (padded.stars !== 2) {
+      benthicReplayProblems.push(id + ":padded stars " + padded.stars);
+    }
+    /* Then the proven line: three stars, and the tray's own move counter
+     * must agree with the solver's cost to the slide. */
+    ftSelectLevel(id, FT_SEEDS[id]);
+    playLine(deal, line.line, 5);
+    const cleared = ftRecord(id);
+    if (cleared.stars !== 3) benthicReplayProblems.push(id + ":line stars " + cleared.stars);
+    if (cleared.best !== line.len) {
+      benthicReplayProblems.push(id + ":best " + cleared.best + " vs " + line.len);
+    }
+  });
+  check("game-glyph-fifteen", "each benthic rung's padded line clears inside the two-star band and its proven line pays three stars for exactly the proven count",
+    benthicReplayProblems.length === 0, benthicReplayProblems.join(" | "));
+
   const ledger = JSON.parse(env.store.get("glyph-fifteen-campaign")).cleared;
-  const ledgerProblems = ["t20"].concat(DEEP).concat(SUMMIT).filter((id) =>
+  const ledgerProblems = ["t20"].concat(DEEP).concat(SUMMIT).concat(HADAL).concat(ABYSS).concat(BENTHIC).filter((id) =>
     !ledger[id] || ledger[id].stars !== 3);
-  check("game-glyph-fifteen", "the deep tier and the summit clear through the real tray in order and the save holds three stars for t20-t30",
+  check("game-glyph-fifteen", "the deep tier, the summit, the hadal tier, the abyss tier and the benthic tier clear through the real tray in order and the save holds three stars for t20-t50",
     ledgerProblems.length === 0, ledgerProblems.join(","));
 
   /* ---- the chain, derived and never stored ----------------------------- */
@@ -673,18 +1193,18 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < order.length ? order[index + 1] : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-glyph-fifteen", "the unlock chain hands each rung to the next, all thirty",
-    walked === 30 && chained && chain.clearedCount() === 30,
+  check("game-glyph-fifteen", "the unlock chain hands each rung to the next, all fifty",
+    walked === 50 && chained && chain.clearedCount() === 50,
     walked + " first clears, chained " + chained);
 
   /* ---- the names travel with the module, in both languages ------------- */
-  const labelProblems = DEEP.concat(SUMMIT).map((id) => rows[id].labelKey).filter((key) => {
+  const labelProblems = DEEP.concat(SUMMIT).concat(HADAL).concat(ABYSS).concat(BENTHIC).map((id) => rows[id].labelKey).filter((key) => {
     const en = App.I18N && App.I18N.en && App.I18N.en[key];
     const zh = App.I18N && App.I18N.zh && App.I18N.zh[key];
     return typeof en !== "string" || !en.length ||
       typeof zh !== "string" || !zh.length || zh === en ||
       !App.t(key) || App.t(key) === key;
   });
-  check("game-glyph-fifteen", "the ten deep and summit names resolve in both languages as real strings",
+  check("game-glyph-fifteen", "the thirty deep, summit, hadal, abyss and benthic names resolve in both languages as real strings",
     labelProblems.length === 0, labelProblems.join(","));
 };

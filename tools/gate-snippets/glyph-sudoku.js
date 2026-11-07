@@ -1,26 +1,35 @@
 "use strict";
 
-/* game-glyph-sudoku: the deep hall is dealt from seals the gate breaks
- * twice, and solved through the real board.
+/* game-glyph-sudoku: the deep hall and the undercroft are dealt from seals
+ * the gate breaks twice, and solved through the real board.
  *
  * The summit opened the 12x12 hall with its boxes three wide and four
  * tall; the deep hall turns that room every way it turns and digs each
- * geometry as deep as it will go. The gate proves the claim per rung: the
- * sealed seed deals the same board twice, the carve lands on the exact
- * givens count the rung asks for (the random deal only hopes), the answer
- * is one answer and a full valid grid, and the deal is a real carve - the
- * board holds empties, so no rung is the generator's cyclic fallback and
- * none is free. The clock keeps the shipped 1.2x ramp rung over rung, so
- * the tier's hardest room is also its longest. Then the proof is played:
- * each rung's unique answer is entered through the engine's own pad and
- * pointer paths cell by cell, and the engine must clear the board and pay
- * three stars for it - the concrete line the ladder sells is the answer
- * itself, and the replay walks it. The chain hands all thirty rungs on,
- * and the deep hall's shared stage names resolve in both languages. */
+ * geometry as deep as it will go. The undercroft then leaves the square
+ * entirely: fourteen, fifteen and sixteen across, in five box shapes the
+ * shipped ladder never drew, each shape opened twice and dug deeper the
+ * second time. The gate proves the claim per rung: the sealed seed deals
+ * the same board twice, the carve lands on the exact givens count the
+ * rung asks for (the random deal only hopes), the answer is one answer
+ * and a full valid grid, and the deal is a real carve - the board holds
+ * empties, so no rung is the generator's cyclic fallback and none is
+ * free. The clock keeps the shipped 1.2x ramp rung over rung across both
+ * tiers, so the game's hardest rooms are also its longest. Then the proof
+ * is played: each rung's unique answer is entered through the engine's
+ * own pad and pointer paths cell by cell, and the engine must clear the
+ * board and pay three stars for it - the concrete line the ladder sells
+ * is the answer itself, and the replay walks it. The chain hands all
+ * forty rungs on, the deep hall's shared stage names and the
+ * undercroft's own travel in both languages, and every undercroft
+ * geometry is checked against the shipped thirty to be a room the ladder
+ * never drew before. */
 
 const DEEP = ["u25", "u26", "u27", "u28", "u29", "u30"];
+const UNDERCROFT = [
+  "u31", "u32", "u33", "u34", "u35", "u36", "u37", "u38", "u39", "u40",
+];
 
-/* The shipped twenty-four rows' load-bearing fields, so the extension is
+/* The shipped thirty rows' load-bearing fields, so the extension is
  * provably additive: same order, same shapes, same seals, same clocks. */
 const SHIPPED = [
   ["u1", "sudL1", 4, 2, 2, 8, null], ["u2", "sudL2", 4, 2, 2, 6, null],
@@ -35,6 +44,9 @@ const SHIPPED = [
   ["u19", "lvlNum19", 9, 3, 3, 17, null], ["u20", "lvlNum20", 9, 3, 3, 17, null],
   ["u21", "lvlNum21", 9, 3, 3, 23, 216], ["u22", "lvlNum22", 10, 2, 5, 31, 128],
   ["u23", "lvlNum23", 10, 5, 2, 31, 5], ["u24", "lvlNum24", 12, 3, 4, 52, 20],
+  ["u25", "lvlNum25", 12, 4, 3, 50, 2], ["u26", "lvlNum26", 12, 4, 3, 48, 5],
+  ["u27", "lvlNum27", 12, 2, 6, 50, 5], ["u28", "lvlNum28", 12, 2, 6, 48, 5],
+  ["u29", "lvlNum29", 12, 6, 2, 50, 57], ["u30", "lvlNum30", 12, 3, 4, 48, 5],
 ];
 
 module.exports = function gate(ctx) {
@@ -67,9 +79,9 @@ module.exports = function gate(ctx) {
     };
   }
 
-  check("game-glyph-sudoku", "the ladder holds thirty grids",
-    order.length === 30, String(order.length));
-  check("game-glyph-sudoku", "every grid id is distinct and the ladder runs u1-u30 in order",
+  check("game-glyph-sudoku", "the ladder holds forty grids",
+    order.length === 40, String(order.length));
+  check("game-glyph-sudoku", "every grid id is distinct and the ladder runs u1-u40 in order",
     order.every((id, index) => id === "u" + (index + 1)), order.join(","));
   const deepMissing = DEEP.filter((id) => !order.includes(id));
   check("game-glyph-sudoku", "the deep hall u25-u30 is present, after the summit",
@@ -77,6 +89,12 @@ module.exports = function gate(ctx) {
       DEEP.every((id, index) => order.indexOf(id) >
         (index === 0 ? order.indexOf("u24") : order.indexOf(DEEP[index - 1]))),
     deepMissing.join(","));
+  const croftMissing = UNDERCROFT.filter((id) => !order.includes(id));
+  check("game-glyph-sudoku", "the undercroft u31-u40 is present, after the deep hall",
+    croftMissing.length === 0 &&
+      UNDERCROFT.every((id, index) => order.indexOf(id) >
+        (index === 0 ? order.indexOf("u30") : order.indexOf(UNDERCROFT[index - 1]))),
+    croftMissing.join(","));
 
   const untouched = SHIPPED.every(([id, labelKey, size, bw, bh, clues, seed], index) => {
     const row = rows[id];
@@ -84,8 +102,8 @@ module.exports = function gate(ctx) {
       row.labelKey === labelKey && row.size === size && row.bw === bw &&
       row.bh === bh && row.clues === clues && row.seed === seed;
   });
-  check("game-glyph-sudoku", "the shipped twenty-four rows are untouched",
-    untouched, untouched ? "u1-u24 match" : "a shipped row drifted");
+  check("game-glyph-sudoku", "the shipped thirty rows are untouched",
+    untouched, untouched ? "u1-u30 match" : "a shipped row drifted");
 
   const fieldDrift = DEEP.filter((id) => {
     const keys = Array.from(rows[id].text.matchAll(/([a-zA-Z]+)\s*:/g)).map((m) => m[1]);
@@ -95,6 +113,45 @@ module.exports = function gate(ctx) {
   check("game-glyph-sudoku",
     "each deep hall row carries only the fields the engine reads, sealed to a seed on the 12x12",
     fieldDrift.length === 0, fieldDrift.join(","));
+
+  const croftFieldDrift = UNDERCROFT.filter((id) => {
+    const keys = Array.from(rows[id].text.matchAll(/([a-zA-Z]+)\s*:/g)).map((m) => m[1]);
+    return keys.join(",") !== "id,labelKey,size,bw,bh,clues,seed,starTimes" ||
+      rows[id].seed === null;
+  });
+  check("game-glyph-sudoku",
+    "each undercroft row carries only the fields the engine reads, sealed to a seed",
+    croftFieldDrift.length === 0, croftFieldDrift.join(","));
+
+  /* The tier's advertised mechanic is the room itself: five box shapes the
+   * shipped thirty never drew, every one tiling its board cleanly and
+   * growing past the hall's twelve, and every shape dug deeper the second
+   * time it opens. */
+  const shippedShapes = SHIPPED.map(
+    ([id, labelKey, size, bw, bh]) => size + "x" + size + "/" + bw + "x" + bh);
+  const shapeProblems = UNDERCROFT.filter((id) => {
+    const row = rows[id];
+    return shippedShapes.includes(row.size + "x" + row.size + "/" + row.bw + "x" + row.bh) ||
+      row.size % row.bw !== 0 || row.size % row.bh !== 0 ||
+      row.bw < 2 || row.bh < 2 || row.size < 14;
+  });
+  check("game-glyph-sudoku",
+    "every undercroft geometry is a room the shipped ladder never drew, tiles its board, and grows past the hall's twelve",
+    shapeProblems.length === 0, shapeProblems.join(","));
+
+  const pairProblems = [];
+  const openedAt = {};
+  UNDERCROFT.forEach((id) => {
+    const row = rows[id];
+    const shape = row.size + "/" + row.bw + "x" + row.bh;
+    if (openedAt[shape] !== undefined && row.clues >= openedAt[shape]) {
+      pairProblems.push(id + " reopens " + shape + " at " + row.clues);
+    }
+    openedAt[shape] = row.clues;
+  });
+  check("game-glyph-sudoku",
+    "every undercroft shape is dug deeper the second time it opens",
+    pairProblems.length === 0, pairProblems.join(" | "));
 
   const rampProblems = [];
   DEEP.forEach((id, index) => {
@@ -109,56 +166,85 @@ module.exports = function gate(ctx) {
     "the deep hall clock keeps the shipped 1.2x ramp off the summit's bands, rung over rung",
     rampProblems.length === 0, rampProblems.join(" | "));
 
-  /* ---- the seals: every deep hall deal, broken twice ------------------- */
-  const deals = {};
-  const sealProblems = [];
-  DEEP.forEach((id) => {
-    const row = rows[id];
-    const dealA = App.glyphSudokuGenerate(row.size, row.bw, row.bh, row.clues, { seed: row.seed });
-    const dealB = App.glyphSudokuGenerate(row.size, row.bw, row.bh, row.clues, { seed: row.seed });
-    deals[id] = dealA;
-    if (JSON.stringify(dealA.puzzle) !== JSON.stringify(dealB.puzzle)) {
-      sealProblems.push(id + ": the seal dealt two boards");
-    }
-    if (dealA.givens !== row.clues) {
-      sealProblems.push(id + ": carve " + dealA.givens + " of " + row.clues);
-    }
-    const answers = App.glyphSudokuCountSolutions(dealA.puzzle, row.size, row.bw, row.bh, 2);
-    if (answers !== 1) {
-      sealProblems.push(id + ": " + answers + " answers");
-    }
-    const givens = dealA.puzzle.filter((v) => v > 0).length;
-    if (givens >= row.size * row.size) {
-      sealProblems.push(id + ": no carve, the board is the fallback");
-    }
-    if (!(row.starTimes[0] < row.starTimes[1] && row.starTimes[1] < row.starTimes[2])) {
-      sealProblems.push(id + ": star times do not fall");
-    }
+  const croftRampProblems = [];
+  UNDERCROFT.forEach((id, index) => {
+    const prev = index === 0 ? rows.u30 : rows[UNDERCROFT[index - 1]];
+    rows[id].starTimes.forEach((band, k) => {
+      if (band !== Math.round(prev.starTimes[k] * 1.2)) {
+        croftRampProblems.push(id + ":band" + k + " " + band + " vs " + prev.starTimes[k] + "*1.2");
+      }
+    });
   });
+  check("game-glyph-sudoku",
+    "the undercroft clock keeps the shipped 1.2x ramp off the deep hall's capstone, rung over rung",
+    croftRampProblems.length === 0, croftRampProblems.join(" | "));
+
+  /* ---- the seals: every sealed deal, broken twice ---------------------- */
+  const deals = {};
+  const breakSeals = (tier) => {
+    const problems = [];
+    tier.forEach((id) => {
+      const row = rows[id];
+      const dealA = App.glyphSudokuGenerate(row.size, row.bw, row.bh, row.clues, { seed: row.seed });
+      const dealB = App.glyphSudokuGenerate(row.size, row.bw, row.bh, row.clues, { seed: row.seed });
+      deals[id] = dealA;
+      if (JSON.stringify(dealA.puzzle) !== JSON.stringify(dealB.puzzle)) {
+        problems.push(id + ": the seal dealt two boards");
+      }
+      if (dealA.givens !== row.clues) {
+        problems.push(id + ": carve " + dealA.givens + " of " + row.clues);
+      }
+      const answers = App.glyphSudokuCountSolutions(dealA.puzzle, row.size, row.bw, row.bh, 2);
+      if (answers !== 1) {
+        problems.push(id + ": " + answers + " answers");
+      }
+      const givens = dealA.puzzle.filter((v) => v > 0).length;
+      if (givens >= row.size * row.size) {
+        problems.push(id + ": no carve, the board is the fallback");
+      }
+      if (!(row.starTimes[0] < row.starTimes[1] && row.starTimes[1] < row.starTimes[2])) {
+        problems.push(id + ": star times do not fall");
+      }
+    });
+    return problems;
+  };
+  const deepSealProblems = breakSeals(DEEP);
   check("game-glyph-sudoku",
     "every deep hall seal deals one board twice, carves to the exact givens count, keeps a single answer, and is a real carve",
-    sealProblems.length === 0, sealProblems.join(" | "));
+    deepSealProblems.length === 0, deepSealProblems.join(" | "));
+  const croftSealProblems = breakSeals(UNDERCROFT);
+  check("game-glyph-sudoku",
+    "every undercroft seal deals one board twice, carves to the exact givens count, keeps a single answer, and is a real carve",
+    croftSealProblems.length === 0, croftSealProblems.join(" | "));
 
-  const gridProblems = [];
-  DEEP.forEach((id) => {
-    const row = rows[id];
-    const deal = deals[id];
-    const solutionRows = Array.from({ length: row.size }, (_, r) =>
-      deal.solution.slice(r * row.size, (r + 1) * row.size));
-    if (deal.solution.length !== row.size * row.size ||
-        !App.glyphSudokuValid(solutionRows, row.size, row.bw, row.bh)) {
-      gridProblems.push(id + ": the sealed answer is not a full valid grid");
-    }
-    /* The carve disagrees with the answer on exactly the empties: every
-     * empty cell is a cell the player still has to earn. */
-    const empties = deal.puzzle.filter((v) => v === 0).length;
-    if (empties !== row.size * row.size - row.clues) {
-      gridProblems.push(id + ": " + empties + " empties vs " + (row.size * row.size - row.clues));
-    }
-  });
+  const gridProblemsFor = (tier) => {
+    const problems = [];
+    tier.forEach((id) => {
+      const row = rows[id];
+      const deal = deals[id];
+      const solutionRows = Array.from({ length: row.size }, (_, r) =>
+        deal.solution.slice(r * row.size, (r + 1) * row.size));
+      if (deal.solution.length !== row.size * row.size ||
+          !App.glyphSudokuValid(solutionRows, row.size, row.bw, row.bh)) {
+        problems.push(id + ": the sealed answer is not a full valid grid");
+      }
+      /* The carve disagrees with the answer on exactly the empties: every
+       * empty cell is a cell the player still has to earn. */
+      const empties = deal.puzzle.filter((v) => v === 0).length;
+      if (empties !== row.size * row.size - row.clues) {
+        problems.push(id + ": " + empties + " empties vs " + (row.size * row.size - row.clues));
+      }
+    });
+    return problems;
+  };
+  const deepGridProblems = gridProblemsFor(DEEP);
   check("game-glyph-sudoku",
     "every deep hall answer is a full valid grid and every empty cell is the player's to earn",
-    gridProblems.length === 0, gridProblems.join(" | "));
+    deepGridProblems.length === 0, deepGridProblems.join(" | "));
+  const croftGridProblems = gridProblemsFor(UNDERCROFT);
+  check("game-glyph-sudoku",
+    "every undercroft answer is a full valid grid and every empty cell is the player's to earn",
+    croftGridProblems.length === 0, croftGridProblems.join(" | "));
 
   /* ---- the replay: the unique answer, entered on the real board -------- */
   env.setMotion("off");
@@ -181,7 +267,7 @@ module.exports = function gate(ctx) {
   const sudPadEl = makeSud("sudPad");
   makeSud("gamePanelGlyphSudoku");
   const sudSeeded = {};
-  for (let c = 1; c <= 24; c += 1) sudSeeded["u" + c] = { stars: 3, best: 0 };
+  for (let c = 1; c <= 30; c += 1) sudSeeded["u" + c] = { stars: 3, best: 0 };
   env.store.set("glyph-sudoku-campaign", JSON.stringify({ v: 1, cleared: sudSeeded }));
   App.initGlyphSudokuGame();
 
@@ -204,33 +290,42 @@ module.exports = function gate(ctx) {
       sudSelectEl.value === levelId);
   };
 
-  /* The cell geometry the game draws: 12 cells of 25px inside a 8px inset
-   * (Math.floor((320 - 12) / 12) = 25, x0 = Math.floor((320 - 300) / 2)). */
-  const replayProblems = [];
-  DEEP.forEach((id) => {
-    const row = rows[id];
-    const deal = deals[id];
-    const cell = Math.floor((320 - 12) / row.size);
-    const x0 = Math.floor((320 - cell * row.size) / 2);
-    sudSelectLevel(id);
-    for (let index = 0; index < row.size * row.size; index += 1) {
-      const value = deal.solution[index];
-      if (deal.puzzle[index]) continue; /* a given: already on the board */
-      const c = index % row.size;
-      const r = Math.floor(index / row.size);
-      env.dispatch(sudCanvas, "pointerdown", {
-        clientX: x0 + c * cell + cell / 2,
-        clientY: x0 + r * cell + cell / 2,
-      });
-      sudPadEl.children[value - 1].click();
-    }
-    if (sudStars(id) !== 3) {
-      replayProblems.push(id + ": the unique answer paid " + sudStars(id) + " stars");
-    }
-  });
+  /* The cell geometry the game draws: Math.floor((320 - 12) / size) cells
+   * inside a Math.floor((320 - cell * size) / 2) inset, so the fourteen,
+   * fifteen and sixteen rooms land on the same canvas the twelve drew. */
+  const walkTier = (tier) => {
+    const problems = [];
+    tier.forEach((id) => {
+      const row = rows[id];
+      const deal = deals[id];
+      const cell = Math.floor((320 - 12) / row.size);
+      const x0 = Math.floor((320 - cell * row.size) / 2);
+      sudSelectLevel(id);
+      for (let index = 0; index < row.size * row.size; index += 1) {
+        const value = deal.solution[index];
+        if (deal.puzzle[index]) continue; /* a given: already on the board */
+        const c = index % row.size;
+        const r = Math.floor(index / row.size);
+        env.dispatch(sudCanvas, "pointerdown", {
+          clientX: x0 + c * cell + cell / 2,
+          clientY: x0 + r * cell + cell / 2,
+        });
+        sudPadEl.children[value - 1].click();
+      }
+      if (sudStars(id) !== 3) {
+        problems.push(id + ": the unique answer paid " + sudStars(id) + " stars");
+      }
+    });
+    return problems;
+  };
+  const deepReplayProblems = walkTier(DEEP);
   check("game-glyph-sudoku",
     "every deep hall rung clears through the real pad and pointer paths, and the unique answer pays its three stars",
-    replayProblems.length === 0, replayProblems.join(" | "));
+    deepReplayProblems.length === 0, deepReplayProblems.join(" | "));
+  const croftReplayProblems = walkTier(UNDERCROFT);
+  check("game-glyph-sudoku",
+    "every undercroft rung clears through the real pad and pointer paths, and the unique answer pays its three stars",
+    croftReplayProblems.length === 0, croftReplayProblems.join(" | "));
 
   /* ---- the chain, derived and never stored ----------------------------- */
   const chain = App.createCampaign({
@@ -245,8 +340,8 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < order.length ? order[index + 1] : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-glyph-sudoku", "the unlock chain hands each grid to the next, all thirty",
-    walked === 30 && chained && chain.clearedCount() === 30,
+  check("game-glyph-sudoku", "the unlock chain hands each grid to the next, all forty",
+    walked === 40 && chained && chain.clearedCount() === 40,
     walked + " first clears, chained " + chained);
 
   /* ---- the names travel in both languages ------------------------------ */
@@ -259,4 +354,13 @@ module.exports = function gate(ctx) {
   });
   check("game-glyph-sudoku", "the six deep hall names resolve in both languages as real strings",
     labelProblems.length === 0, labelProblems.join(","));
+  const croftLabelProblems = UNDERCROFT.map((id) => rows[id].labelKey).filter((key) => {
+    const en = App.I18N && App.I18N.en && App.I18N.en[key];
+    const zh = App.I18N && App.I18N.zh && App.I18N.zh[key];
+    return typeof en !== "string" || !en.length ||
+      typeof zh !== "string" || !zh.length || zh === en ||
+      !App.t(key) || App.t(key) === key;
+  });
+  check("game-glyph-sudoku", "the ten undercroft names resolve in both languages as real strings",
+    croftLabelProblems.length === 0, croftLabelProblems.join(","));
 };

@@ -201,7 +201,52 @@
     { id: "f29", labelKey: "dfzE29", seed: 2525, start: 0, goal: 8, days: 7, spread: 1,
       cap: 3, food: 5, reach: 2, chill: 2, hazardWeights: [0, 3, 0, 1] },
     { id: "f30", labelKey: "dfzE30", seed: 909, start: 0, goal: 11, days: 9, spread: 3,
-      cap: 5, food: 9, reach: 2, chill: 5, hazardWeights: [1, 2, 2, 3] }
+      cap: 5, food: 9, reach: 2, chill: 5, hazardWeights: [1, 2, 2, 3] },
+
+    /* ------------------------------------------------------------------
+     * The walk-out winters (f31-f40). Every expedition before this tier
+     * mustered at a trailhead - Base Camp or the Rescue Hut, the two ends
+     * of the map, all thirty times - and walked across. The walk-out tier
+     * musters where the storm caught the party instead: the Rock Shelter,
+     * the Cold Sink, the Serac Field, Depot Four, the Crevasse Rim, and
+     * once even the Rescue Hut itself, and every one of them walks OUT,
+     * west to Base Camp - a direction of travel the ladder never shipped
+     * on a five-kilo pack, in a chill-five sky, or under a whiteout-led
+     * forecast. The pack is the tier's second law: cap five is the coat
+     * and the crampons and nothing else, and the item table proves it -
+     * coat plus stove, coat plus rations, coat plus kit all weigh past
+     * five, so the melt, the extra pantry and the kit are left in the
+     * snow at every muster. Every deadline sits exactly two days over
+     * the line the planner proves on the shipped seed (3, 3, 3, 3, 4, 4,
+     * 5, 6, 7 and 7 days, measured, never falling rung over rung, under
+     * a chill-five sky the whole way through), so the forecast, not the
+     * calendar, is the enemy. The capstone walks out of the Crevasse Rim
+     * on a seven-day line - deeper than the summit capstone's own five
+     * from Base Camp, and deeper than any homeward leg the ladder ever
+     * shipped (f14, f18 and f22 proved four, four and five) - with the
+     * pantry cut to eight. Every number here was measured through
+     * freezePlan on the shipped seeds, and the gate re-proves the lot.
+     * ------------------------------------------------------------------ */
+    { id: "f31", labelKey: "dfzE31", seed: 11, start: 8, goal: 0, days: 5, spread: 1,
+      cap: 5, food: 9, reach: 2, chill: 5, hazardWeights: [0, 1, 1, 4] },
+    { id: "f32", labelKey: "dfzE32", seed: 3, start: 8, goal: 0, days: 5, spread: 1,
+      cap: 5, food: 8, reach: 1, chill: 5, hazardWeights: [0, 1, 1, 4] },
+    { id: "f33", labelKey: "dfzE33", seed: 5, start: 7, goal: 0, days: 5, spread: 1,
+      cap: 5, food: 9, reach: 1, chill: 5, hazardWeights: [0, 1, 1, 4] },
+    { id: "f34", labelKey: "dfzE34", seed: 9, start: 6, goal: 0, days: 5, spread: 1,
+      cap: 5, food: 8, reach: 1, chill: 5, hazardWeights: [0, 1, 1, 4] },
+    { id: "f35", labelKey: "dfzE35", seed: 2, start: 9, goal: 0, days: 6, spread: 1,
+      cap: 5, food: 9, reach: 1, chill: 5, hazardWeights: [0, 1, 1, 4] },
+    { id: "f36", labelKey: "dfzE36", seed: 6, start: 9, goal: 0, days: 6, spread: 1,
+      cap: 5, food: 8, reach: 1, chill: 5, hazardWeights: [0, 1, 1, 4] },
+    { id: "f37", labelKey: "dfzE37", seed: 4, start: 10, goal: 0, days: 7, spread: 1,
+      cap: 5, food: 9, reach: 1, chill: 5, hazardWeights: [0, 1, 1, 4] },
+    { id: "f38", labelKey: "dfzE38", seed: 1, start: 11, goal: 0, days: 8, spread: 1,
+      cap: 5, food: 9, reach: 1, chill: 5, hazardWeights: [0, 1, 1, 4] },
+    { id: "f39", labelKey: "dfzE39", seed: 17, start: 10, goal: 0, days: 9, spread: 1,
+      cap: 5, food: 9, reach: 1, chill: 5, hazardWeights: [0, 1, 1, 4] },
+    { id: "f40", labelKey: "dfzE40", seed: 10, start: 10, goal: 0, days: 9, spread: 1,
+      cap: 5, food: 8, reach: 1, chill: 5, hazardWeights: [0, 1, 1, 4] }
   ];
 
   function mulberry32(seed) {
@@ -1529,6 +1574,35 @@
       "dfzE28": "\u5f52\u9014\u65e0\u62a5",
       "dfzE29": "\u8f7b\u88c5\u75be\u884c",
       "dfzE30": "\u767d\u8272\u5bc2\u9759",
+    },
+  });
+
+  /* The walk-out winters carry their own names: addStrings only fills keys
+   * i18n.js does not already hold, so the picker never prints a raw key. */
+  App.addStrings({
+    en: {
+      "dfzE31": "The Walk Out",
+      "dfzE32": "The Blind Shelter",
+      "dfzE33": "The Cold Sink Road",
+      "dfzE34": "Through the Seracs",
+      "dfzE35": "Depot Four, Out",
+      "dfzE36": "The Depot's Eight",
+      "dfzE37": "The Rim Road",
+      "dfzE38": "The Hut Lets Go",
+      "dfzE39": "The Long Walk Out",
+      "dfzE40": "The Last Walk Out",
+    },
+    zh: {
+      "dfzE31": "\u5411\u897f\u64a4\u79bb",
+      "dfzE32": "\u5ca9\u5c4b\u76f2\u884c",
+      "dfzE33": "\u51b7\u7a74\u5f52\u8def",
+      "dfzE34": "\u7ed5\u8fc7\u51b0\u5854",
+      "dfzE35": "\u64a4\u79bb\u56db\u53f7\u7ad9",
+      "dfzE36": "\u516b\u4efd\u53e3\u7cae",
+      "dfzE37": "\u51b0\u9699\u7f18\u4e4b\u8def",
+      "dfzE38": "\u5c0f\u5c4b\u4e5f\u4e0d\u7559\u4eba",
+      "dfzE39": "\u6f2b\u957f\u897f\u64a4",
+      "dfzE40": "\u6700\u540e\u4e00\u64a4",
     },
   });
 

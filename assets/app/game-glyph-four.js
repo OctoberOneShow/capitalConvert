@@ -93,6 +93,39 @@
     { id: "f28", labelKey: "c4L28", depth: 20, tempo: 1, noise: 0, starMoves: [4, 5, 6] },
     { id: "f29", labelKey: "c4L29", depth: 21, tempo: 1, noise: 0, starMoves: [4, 5, 6] },
     { id: "f30", labelKey: "c4L30", depth: 22, tempo: 1, noise: 0, starMoves: [4, 5, 6] },
+    /* Ranks 31-40: the payback tier. Every deep rung since f14 has bought its
+     * winnability with the same crutch - one turn in five handed to the
+     * second-ranked column - and the wall behind the summit is measured: pull
+     * the crutch outright and the brain gives a mirror nothing quick, fifteen
+     * discs off the strong hand and nothing at all off the modest one. So the
+     * payback withdraws the crutch and re-buys the answer on the engine's
+     * other dial: the flicker, which answers with the second- or third-ranked
+     * column on a thin slice of turns instead of a fifth of them. The slice
+     * opens at an eighth - half the summit's concession - and thins one point
+     * of noise per rung to a thirty-third, the smallest hand the game has ever
+     * dealt a rival, on the deepest search it has ever fielded. Every number
+     * below was played for through the engine's own brains: on the gate's
+     * seeded midgame board every rung answers with the pure brain's own
+     * column - the search the summit shipped, unweakened - and on one mirror
+     * seed held across the tier, the engine's own depth-six brain, the
+     * weakest clean hand the gate fields, seated where the player sits takes
+     * the tier's loosest and tightest rungs, each for the floor clock's
+     * price of six discs, while the same seed pays that hand nothing at all
+     * against a 0.02 probe - the wall the tier stops at is measured, not
+     * guessed; the capstone ends the two-ply reference's paired night in
+     * five turns, pinned where the summit's wandered three through seven.
+     * The sight ask keeps the ladder's one-ply climb, twenty-three through
+     * thirty-two, purse-capped as ever - the flicker is the tier. */
+    { id: "f31", labelKey: "c4L31", depth: 23, tempo: 0, noise: 0.12, starMoves: [4, 5, 6] },
+    { id: "f32", labelKey: "c4L32", depth: 24, tempo: 0, noise: 0.11, starMoves: [4, 5, 6] },
+    { id: "f33", labelKey: "c4L33", depth: 25, tempo: 0, noise: 0.1, starMoves: [4, 5, 6] },
+    { id: "f34", labelKey: "c4L34", depth: 26, tempo: 0, noise: 0.09, starMoves: [4, 5, 6] },
+    { id: "f35", labelKey: "c4L35", depth: 27, tempo: 0, noise: 0.08, starMoves: [4, 5, 6] },
+    { id: "f36", labelKey: "c4L36", depth: 28, tempo: 0, noise: 0.07, starMoves: [4, 5, 6] },
+    { id: "f37", labelKey: "c4L37", depth: 29, tempo: 0, noise: 0.06, starMoves: [4, 5, 6] },
+    { id: "f38", labelKey: "c4L38", depth: 30, tempo: 0, noise: 0.05, starMoves: [4, 5, 6] },
+    { id: "f39", labelKey: "c4L39", depth: 31, tempo: 0, noise: 0.04, starMoves: [4, 5, 6] },
+    { id: "f40", labelKey: "c4L40", depth: 32, tempo: 0, noise: 0.03, starMoves: [4, 5, 6] },
   ];
 
   /* Pure rules, exported for the static checks. */
@@ -374,7 +407,7 @@
 
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already own, so the names it holds for rungs one to eight stay in
-   * the shared dictionary and only the two new rung names ride here. */
+   * the shared dictionary and the rungs past eight ride here. */
   App.addStrings({
     en: {
       "c4L9": "Sibyl",
@@ -399,6 +432,16 @@
       "c4L28": "The Farther Clock",
       "c4L29": "The Bottomless Question",
       "c4L30": "Grandmaster Horizon",
+      "c4L31": "The Reckoning",
+      "c4L32": "Cold Precision",
+      "c4L33": "The Thin Flicker",
+      "c4L34": "The Steady Hand",
+      "c4L35": "The Quiet Blade",
+      "c4L36": "The Unblinking Eye",
+      "c4L37": "The Narrow Gate",
+      "c4L38": "The Long Night",
+      "c4L39": "The Last Concession",
+      "c4L40": "Grandmaster Absolute",
     },
     zh: {
       "c4L9": "\u5360\u535c\u8005",
@@ -423,6 +466,16 @@
       "c4L28": "\u66f4\u8fdc\u949f",
       "c4L29": "\u65e0\u5e95\u4e4b\u95ee",
       "c4L30": "\u5b97\u5e08\u5929\u9645",
+      "c4L31": "\u6e05\u7b97\u8005",
+      "c4L32": "\u51b7\u7b97\u8005",
+      "c4L33": "\u5fae\u5149",
+      "c4L34": "\u7a33\u624b\u8005",
+      "c4L35": "\u9759\u5203",
+      "c4L36": "\u65e0\u77ac\u4e4b\u76ee",
+      "c4L37": "\u7a84\u95e8",
+      "c4L38": "\u957f\u591c",
+      "c4L39": "\u7ec8\u8ba9",
+      "c4L40": "\u5b97\u5e08\u65e0\u7455",
     },
   });
 

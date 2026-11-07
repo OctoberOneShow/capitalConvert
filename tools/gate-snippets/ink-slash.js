@@ -29,17 +29,26 @@
  * target on every seeded round. The curve is the clock's own currency: the
  * demand per second climbs strictly through the six and opens past the
  * hard tier's peak, each rung leads the ladder on the dial it is named
- * for, and the save leaves the summit holding all thirty rounds cleared. */
+ * for, and the save leaves the summit holding all thirty rounds cleared.
+ *
+ * The deluge s31-s40 runs the same hands against the triple: every card
+ * holds flood, haze and sprint at once at depths no shipped round ever
+ * held together, the cut takes the sprint away, and the demand per
+ * second - already the ladder's currency - opens past the summit's 930
+ * and climbs to the campaign record on s40, which closes the game
+ * holding the fastest pour, the deepest haze, the longest sprint and
+ * the biggest target on one card. */
 module.exports = function gate(ctx) {
   const { App, env, check } = ctx;
   const levels = App.slashLevels;
   const tierIds = ["s21", "s22", "s23", "s24"];
   const summitIds = ["s25", "s26", "s27", "s28", "s29", "s30"];
+  const delugeIds = ["s31", "s32", "s33", "s34", "s35", "s36", "s37", "s38", "s39", "s40"];
   const byId = (id) => levels.find((level) => level.id === id);
 
   /* ---- ladder shape ---- */
-  check("game-ink-slash", "the ladder holds all thirty rounds",
-    levels.length >= 30, String(levels.length));
+  check("game-ink-slash", "the ladder holds all forty rounds",
+    levels.length >= 40, String(levels.length));
   check("game-ink-slash", "every round id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -49,6 +58,9 @@ module.exports = function gate(ctx) {
   const missingSummit = summitIds.filter((id) => !byId(id));
   check("game-ink-slash", "the summit tier s25-s30 is present",
     missingSummit.length === 0, missingSummit.join(","));
+  const missingDeluge = delugeIds.filter((id) => !byId(id));
+  check("game-ink-slash", "the deluge tier s31-s40 is present",
+    missingDeluge.length === 0, missingDeluge.join(","));
 
   /* ---- stage the real panel in the stub DOM ---- */
   const doc = env.document;
@@ -386,9 +398,9 @@ module.exports = function gate(ctx) {
     summitDemands.every((v, i) => i === 0 || v > summitDemands[i - 1]) &&
       summitDemands[0] > tierPeak,
     summitDemands.join("/") + " vs tier " + tierPeak.toFixed(1));
-  check("game-ink-slash", "s30 ends the ladder as its highest demand per second",
+  check("game-ink-slash", "s30 ends the pre-deluge ladder as its highest demand per second",
     summitDemands[summitDemands.length - 1] ===
-      Math.max.apply(null, levels.map((l) => l.target / l.timeS)),
+      Math.max.apply(null, levels.slice(0, 30).map((l) => l.target / l.timeS)),
     "s30 " + summitDemands[summitDemands.length - 1].toFixed(1));
   check("game-ink-slash", "each summit round leads the ladder on the dial it is named for",
     byId("s25").timeS > Math.max.apply(null, levels.slice(0, 24).map((l) => l.timeS)) &&
@@ -403,13 +415,115 @@ module.exports = function gate(ctx) {
   check("game-ink-slash", "every cut left the summit unbeatable in its advertised shape",
     summitProofs.every((p) => p.endsWith(":ok")), summitProofs.join(" "));
 
+  /* ---- the deluge: the triple at depth, the same hands, the same cut -- */
+  const delugeProofs = [];
+  for (const id of delugeIds) {
+    const level = byId(id);
+    const thread = [];
+    for (let k = 1; k <= 4; k += 1) {
+      thread.push(playRound(id, k * 104729, { slice: true }));
+    }
+    const threeStars = thread.filter((r) => r.stars === 3).length;
+    check("game-ink-slash", id + ": the committed stroke clears with three stars and survives",
+      thread.every((r) => r.selected && r.cleared && r.survived) && threeStars >= 1,
+      JSON.stringify(thread.map((r) => [r.score, r.target, r.stars, r.survived ? 1 : 0])));
+
+    const idle = playRound(id, 97, { slice: false });
+    const lazy = [];
+    for (let k = 1; k <= 3; k += 1) {
+      lazy.push(playRound(id, k * 104729, { slice: true, strokeMs: 700 }));
+    }
+    check("game-ink-slash", id + ": doing nothing never scores and short swipes never clear",
+      idle.score === 0 && !idle.cleared && lazy.every((r) => !r.cleared),
+      "idle " + idle.score + " lazy " + JSON.stringify(lazy.map((r) => [r.score, r.target])));
+
+    /* The sprint is load-bearing on every deluge card: cut it on the live
+     * def, re-select so the engine re-deals under the cut, and the same
+     * threading stroke cannot reach the target on any seeded round. */
+    const saved = JSON.parse(JSON.stringify(level));
+    Object.assign(level, { rush: 0 });
+    const cutDeals = [];
+    for (let k = 1; k <= 4; k += 1) {
+      cutDeals.push(playRound(id, k * 104729, { slice: true }));
+    }
+    Object.assign(level, saved);
+    sel.value = id;
+    env.dispatch(sel, "change");
+    const cutClears = cutDeals.filter((d) => d.cleared).length;
+    delugeProofs.push(id + (cutClears === 0 ? ":ok" : ":" + cutClears + "/4"));
+    check("game-ink-slash", id + " (sprint removed): the same stroke cannot reach the target",
+      cutClears === 0 && cutDeals.every((d) => d.selected),
+      "cut clears " + cutClears + "/4 " + JSON.stringify(cutDeals.map((d) => [d.score, d.target])));
+
+    /* The bands are the engine's own derivation, not authored fields. */
+    check("game-ink-slash", id + " carries no authored star band",
+      level.starBands === undefined && level.bands === undefined && level.stars === undefined,
+      JSON.stringify(Object.keys(level)));
+
+    /* The clear survived the cut, the idle pen and the short swipes. */
+    check("game-ink-slash", id + " stays cleared in the campaign save",
+      readSave().cleared[id] && readSave().cleared[id].stars >= 1,
+      JSON.stringify(readSave().cleared[id] || null));
+
+    /* The next round unlocks only through the clear this round just recorded. */
+    const index = delugeIds.indexOf(id);
+    if (index + 1 < delugeIds.length) {
+      sel.value = delugeIds[index + 1];
+      env.dispatch(sel, "change");
+      check("game-ink-slash", delugeIds[index + 1] + " unlocks once " + id + " is cleared",
+        sel.value === delugeIds[index + 1], sel.value);
+    }
+  }
+  const saveDeluge = readSave().cleared || {};
+  const clearedDeluge = Object.keys(saveDeluge).filter((id) =>
+    saveDeluge[id] && saveDeluge[id].stars >= 1).length;
+  check("game-ink-slash", "the deluge ends the campaign: all forty rounds sit cleared in the save",
+    clearedDeluge === 40, String(clearedDeluge));
+
+  /* The deluge is the summit on the clock's own currency, cubed: every
+   * card holds the triple - a summit-grade flood, a live haze and a
+   * sprint at once, a board no shipped round ever held - the demand per
+   * second opens past the summit's peak and climbs strictly to the
+   * campaign record on s40, and the records the ladder keeps all move. */
+  const delugeDemands = delugeIds.map((id) => byId(id).target / byId(id).timeS);
+  const summitPeak = Math.max.apply(null,
+    summitIds.map((id) => byId(id).target / byId(id).timeS));
+  check("game-ink-slash", "the deluge's demand per second opens past the summit's " +
+      summitPeak.toFixed(0) + " and climbs strictly (" +
+      delugeDemands.map((n) => n.toFixed(0)).join(" -> ") + ")",
+    delugeDemands[0] > summitPeak &&
+      delugeDemands.every((v, i) => i === 0 || v > delugeDemands[i - 1]),
+    delugeDemands.join("/") + " vs summit " + summitPeak.toFixed(1));
+  check("game-ink-slash", "s40 ends the ladder as its highest demand per second",
+    delugeDemands[delugeDemands.length - 1] ===
+      Math.max.apply(null, levels.map((l) => l.target / l.timeS)),
+    "s40 " + delugeDemands[delugeDemands.length - 1].toFixed(1));
+  const preDeluge = levels.slice(0, 30);
+  check("game-ink-slash",
+    "every deluge card holds the triple - flood, haze and sprint at once - and no shipped round ever did",
+    delugeIds.every((id) =>
+      byId(id).spawnMs <= 235 && byId(id).bomb >= 0.36 && (byId(id).rush || 0) >= 13) &&
+      !preDeluge.some((l) => l.spawnMs <= 235 && l.bomb >= 0.36 && (l.rush || 0) >= 13),
+    delugeIds.map((id) => byId(id).spawnMs + "/" + byId(id).bomb + "/" + byId(id).rush).join(" "));
+  check("game-ink-slash", "s40 closes the campaign holding every record the ladder keeps",
+    byId("s40").spawnMs < Math.min.apply(null, preDeluge.map((l) => l.spawnMs)) &&
+      byId("s40").bomb > Math.max.apply(null, preDeluge.map((l) => l.bomb)) &&
+      byId("s38").rush > Math.max.apply(null, preDeluge.map((l) => l.rush || 0)) &&
+      byId("s40").target > Math.max.apply(null, preDeluge.map((l) => l.target)),
+    "spawnMs " + byId("s40").spawnMs + ", bomb " + byId("s40").bomb +
+      ", rush " + byId("s38").rush + ", target " + byId("s40").target);
+  check("game-ink-slash", "every cut left the deluge unbeatable in its advertised shape",
+    delugeProofs.every((p) => p.endsWith(":ok")), delugeProofs.join(" "));
+
   /* Copy travels with the module. */
   const copyKeys = ["slashL21", "slashL22", "slashL23", "slashL24",
-    "slashL25", "slashL26", "slashL27", "slashL28", "slashL29", "slashL30"];
+    "slashL25", "slashL26", "slashL27", "slashL28", "slashL29", "slashL30",
+    "slashL31", "slashL32", "slashL33", "slashL34", "slashL35",
+    "slashL36", "slashL37", "slashL38", "slashL39", "slashL40"];
   const copyProblems = copyKeys.filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-ink-slash", "the ten deep round names resolve in both languages",
+  check("game-ink-slash", "the twenty deep round names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 };

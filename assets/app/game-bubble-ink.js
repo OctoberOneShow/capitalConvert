@@ -77,7 +77,7 @@
      * against w22's 78 and w20's 64). Seeded planner runs: every new card
      * clears most of its six deals, lands the three-star line on at least
      * one, and none of them clears without its pour. */
-    { id: "w21", labelKey: "bubL21", target: 850, shots: 13, colors: 4, rows: 10, starGain: [1.04, 1.02, 1], sparse: 0.18 },
+{ id: "w21", labelKey: "bubL21", target: 850, shots: 13, colors: 4, rows: 10, starGain: [1.04, 1.02, 1], sparse: 0.18 },
     { id: "w22", labelKey: "bubL22", target: 850, shots: 12, colors: 3, rows: 10, starGain: [1.1, 1.04, 1] },
     { id: "w23", labelKey: "bubL23", target: 1000, shots: 14, colors: 3, rows: 9, starGain: [1.1, 1.05, 1], sparse: 0.18 },
     { id: "w24", labelKey: "bubL24", target: 880, shots: 10, colors: 3, rows: 10, starGain: [1.08, 1.04, 1] },
@@ -105,11 +105,43 @@
      * reach the target on a single seeded deal (measured cut maxima: 0,
      * 0, 315, 0, 285, 285 against three-star lines of 983-1080). */
     { id: "w25", labelKey: "bubL25", target: 910, shots: 10, colors: 3, rows: 11, starGain: [1.08, 1.04, 1], sparse: 0.18 },
-    { id: "w26", labelKey: "bubL26", target: 950, shots: 10, colors: 3, rows: 11, starGain: [1.08, 1.04, 1], sparse: 0.22 },
+{ id: "w26", labelKey: "bubL26", target: 950, shots: 10, colors: 3, rows: 11, starGain: [1.08, 1.04, 1], sparse: 0.22 },
     { id: "w27", labelKey: "bubL27", target: 870, shots: 9, colors: 3, rows: 10, starGain: [1.07, 1.04, 1], sparse: 0.18 },
-    { id: "w28", labelKey: "bubL28", target: 1000, shots: 10, colors: 3, rows: 11, starGain: [1.08, 1.04, 1], sparse: 0.22 },
+{ id: "w28", labelKey: "bubL28", target: 1000, shots: 10, colors: 3, rows: 11, starGain: [1.08, 1.04, 1], sparse: 0.22 },
     { id: "w29", labelKey: "bubL29", target: 850, shots: 8, colors: 3, rows: 10, starGain: [1.07, 1.04, 1], sparse: 0.18 },
     { id: "w30", labelKey: "bubL30", target: 870, shots: 8, colors: 3, rows: 10, starGain: [1.07, 1.04, 1], sparse: 0.22 },
+    /* Springs 31-40 are the hollow tier, and its dial is the deck: every card
+     * pours the summit's own wall - ten rows, the widest shafts, three inks -
+     * hung from a single row (`plateRows: 1`), where every sparse card before
+     * them pours a two-row plate, the engine's own default. One solid row
+     * carrying the whole wall severs sooner and the panels come down in
+     * curtains, which is what lifts the planner's four-deal ceiling from the
+     * summit's 870 to 940 in the same eight shots. Every number here was
+     * measured on the gate's own bench - one fresh boot per card, six seeded
+     * deals per card (seed k*31337), the panel's real flight - and the gate
+     * re-proves all of it: the planner clears four or more deals on every
+     * card and lands the three-star line on at least one, the price per shot
+     * climbs strictly from a hair past the summit's peak (980 in nine prices
+     * over 870 in eight) to the triad wall's measured ceiling of 940 in
+     * eight, and the pour-dial cut - six inks - leaves the same planner at
+     * 500 against three-star lines of 936 to 1129. w37 then thins the pour
+     * to two inks, never shipped before (the triad was the floor), and the
+     * price leaves the triad's economy: 1075, 1000, 960 and 815 in eight,
+     * seven, six and five shots, 134.4 to 163.0 demand per shot, the highest
+     * the ladder has ever asked. Those win lines all sit under the wall's
+     * all-pop floor - 108 bubbles pour, worth 1080 if every one is popped -
+     * so a round always clears before the well runs dry, and the dry-well
+     * draw itself now hands back the card's own inks instead of undefined. */
+{ id: "w31", labelKey: "bubL31", target: 980, shots: 9, colors: 3, rows: 10, starGain: [1.07, 1.03, 1], sparse: 0.22, plateRows: 1 },
+{ id: "w32", labelKey: "bubL32", target: 885, shots: 8, colors: 3, rows: 10, starGain: [1.07, 1.03, 1], sparse: 0.22, plateRows: 1 },
+{ id: "w33", labelKey: "bubL33", target: 895, shots: 8, colors: 3, rows: 10, starGain: [1.07, 1.03, 1], sparse: 0.22, plateRows: 1 },
+{ id: "w34", labelKey: "bubL34", target: 905, shots: 8, colors: 3, rows: 10, starGain: [1.07, 1.03, 1], sparse: 0.22, plateRows: 1 },
+{ id: "w35", labelKey: "bubL35", target: 915, shots: 8, colors: 3, rows: 10, starGain: [1.07, 1.03, 1], sparse: 0.22, plateRows: 1 },
+{ id: "w36", labelKey: "bubL36", target: 940, shots: 8, colors: 3, rows: 10, starGain: [1.07, 1.03, 1], sparse: 0.22, plateRows: 1 },
+    { id: "w37", labelKey: "bubL37", target: 1075, shots: 8, colors: 2, rows: 10, starGain: [1.05, 1.01, 1], sparse: 0.22, plateRows: 1 },
+    { id: "w38", labelKey: "bubL38", target: 1000, shots: 7, colors: 2, rows: 10, starGain: [1.05, 1.01, 1], sparse: 0.22, plateRows: 1 },
+    { id: "w39", labelKey: "bubL39", target: 960, shots: 6, colors: 2, rows: 10, starGain: [1.05, 1.01, 1], sparse: 0.22, plateRows: 1 },
+    { id: "w40", labelKey: "bubL40", target: 815, shots: 5, colors: 2, rows: 10, starGain: [1.05, 1.01, 1], sparse: 0.22, plateRows: 1 },
   ];
 
   /* ------------------------------------------------------------ colour math */
@@ -742,7 +774,18 @@
         }
       }
       var keys = Object.keys(present).map(Number);
-      return keys.length ? keys : level.colors;
+      if (keys.length) {
+        return keys;
+      }
+      /* The well is dry: hand back every ink the card pours. Returning the
+       * bare count left the next draw undefined once the hollow tier's
+       * two-ink cards came within one all-pop of emptying a wall, and the
+       * panel would have crashed on its own palette. */
+      var palette = [];
+      for (var i = 0; i < level.colors; i += 1) {
+        palette.push(i);
+      }
+      return palette;
     }
 
     function randomColor() {
@@ -1425,13 +1468,16 @@
       grid = emptyGrid();
       for (var r = 0; r < level.rows; r += 1) {
         for (var c = 0; c < grid[r].length; c += 1) {
-          /* A `sparse` wall is poured as panels on a plate: the top two rows
-           * stay solid and the body is carved with shafts, so every panel
-           * hangs from the plate by its own neck of row-two bubbles. Cut a
-           * neck and the whole panel drops - 15 a bubble to the pop's 10 -
-           * which is the read this tier is teaching. */
+          /* A `sparse` wall is poured as panels on a plate: the top rows stay
+           * solid - two of them unless the card thins the deck with
+           * `plateRows` - and the body is carved with shafts, so every panel
+           * hangs from the plate by its own neck. Cut a neck and the whole
+           * panel drops - 15 a bubble to the pop's 10 - which is the read
+           * this tier is teaching. A one-row deck is the hollow tier's dial:
+           * the whole wall hung from a single row, which severs sooner and
+           * pays in curtains. */
           grid[r][c] =
-            level.sparse && r >= 2 && c % 4 === 2
+            level.sparse && r >= (level.plateRows || 2) && c % 4 === 2
               ? -1
               : Math.floor(Math.random() * level.colors);
         }
@@ -1609,6 +1655,16 @@
       "bubL28": "The Loaded Slab",
       "bubL29": "The Eight-Shot Seam",
       "bubL30": "The Last Spring",
+      "bubL31": "The Single Stay",
+      "bubL32": "The Hanging Wall",
+      "bubL33": "The Steep Price",
+      "bubL34": "The Long Walk",
+      "bubL35": "The Steeper Step",
+      "bubL36": "The Deck's Ceiling",
+      "bubL37": "The Two-Ink Well",
+      "bubL38": "The Seven-Shot Seam",
+      "bubL39": "The Six-Shot Seam",
+      "bubL40": "The Last Price",
     },
     zh: {
       "bubL21": "三色墨井",
@@ -1621,6 +1677,16 @@
       "bubL28": "满载石板",
       "bubL29": "八发窄缝",
       "bubL30": "末泉之井",
+      "bubL31": "独梁之井",
+      "bubL32": "悬壁之井",
+      "bubL33": "陡价之井",
+      "bubL34": "漫长抬价",
+      "bubL35": "更陡一档",
+      "bubL36": "井板之顶",
+      "bubL37": "双色墨井",
+      "bubL38": "七发窄缝",
+      "bubL39": "六发窄缝",
+      "bubL40": "末价之井",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

@@ -429,6 +429,47 @@
        * tank (52) and the steepest pull (186) the ladder has carried,
        * over a chasm 100 deep past the right lip. */
     },
+    {
+      id: "s41", labelKey: "lantL41", gravity: 187, fuel: 51,
+      terrain: [[0, 262], [0.05, 236], [0.1, 280], [0.15, 300], [0.19, 250], [0.29, 250], [0.34, 340], [0.42, 340], [0.49, 296], [0.6, 306], [0.71, 262], [0.82, 276], [0.92, 244], [1, 284]],
+      pad: { x0: 0.19, x1: 0.2588, y: 250 },
+      starFuel: [6, 4, 2],
+      /* The Fracture, the trench opens: fourteen marks of ground - the
+       * busiest field any sector has hung (the Saw's thirteen was the
+       * ceiling) - under a twenty-two-pixel window, with the pull past
+       * the Pinpoint's and the tank drained to 51. A deeper floor would
+       * empty the tank before the flare, so the trench takes its depth
+       * in the ground, not the shelf. */
+    },
+    {
+      id: "s42", labelKey: "lantL42", gravity: 188, fuel: 50,
+      terrain: [[0, 258], [0.06, 232], [0.12, 276], [0.17, 298], [0.2, 246], [0.3, 246], [0.36, 340], [0.44, 340], [0.52, 292], [0.63, 300], [0.74, 152], [0.78, 168], [0.9, 250], [1, 280]],
+      pad: { x0: 0.2, x1: 0.2656, y: 246 },
+      starFuel: [8, 5, 3],
+      /* The Spire: 94 units of rock over the window's floor (the
+       * Tower's 88 was the ceiling) - a needle rising far right of the
+       * shelf, so the safe line threads the window while the spire
+       * walls off the wide approach. */
+    },
+    {
+      id: "s43", labelKey: "lantL43", gravity: 189, fuel: 49,
+      terrain: [[0, 254], [0.06, 230], [0.12, 276], [0.16, 308], [0.19, 232], [0.3, 232], [0.34, 340], [0.42, 340], [0.5, 292], [0.62, 300], [0.78, 258], [1, 282]],
+      pad: { x0: 0.19, x1: 0.2525, y: 232 },
+      starFuel: [7, 5, 3],
+      /* The Abyss: the deepest trap yet - 108 units of pit below the
+       * window, six past the Chasm's 102 - sunk past the right lip so
+       * the overshoot ends in the dark, on a twenty-pixel window. */
+    },
+    {
+      id: "s44", labelKey: "lantL44", gravity: 190, fuel: 48,
+      terrain: [[0, 254], [0.06, 230], [0.12, 276], [0.16, 308], [0.19, 232], [0.3, 232], [0.34, 340], [0.42, 340], [0.5, 292], [0.62, 300], [0.78, 258], [1, 282]],
+      pad: { x0: 0.19, x1: 0.2463, y: 232 },
+      starFuel: [7, 5, 2],
+      /* The Anvil, the trench's capstone: the steepest pull (190) and
+       * the deepest tank (48) the ladder has carried, paired on an
+       * eighteen-pixel window over the Abyss's own 108-deep pit - the
+       * depth stays, the light goes. */
+    },
   ];
 
   function initStarfallGame() {
@@ -946,6 +987,10 @@
       "lantL38": "The Thread",
       "lantL39": "The Chasm",
       "lantL40": "The Pinpoint",
+      "lantL41": "The Fracture",
+      "lantL42": "The Spire",
+      "lantL43": "The Abyss",
+      "lantL44": "The Anvil",
     },
     zh: {
       "lantL21": "幻谷",
@@ -968,6 +1013,10 @@
       "lantL38": "丝线",
       "lantL39": "深壑",
       "lantL40": "毫厘",
+      "lantL41": "断裂",
+      "lantL42": "尖塔",
+      "lantL43": "渊底",
+      "lantL44": "铁砧",
     },
   });
 

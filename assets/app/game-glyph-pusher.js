@@ -430,6 +430,161 @@
         "###########"
       ],
     },
+
+    /* k31-k40, the deep yard - the shed's own method, walked past its stop.
+     * Every room below was forged the way the far shed was: a mutation of
+     * the shipped summit skeleton (k23's eleven-wide felt, at most two
+     * teeth of its own), with the crates and diamonds held at three, and
+     * kept only when the exact push-optimal solver measured the rung's
+     * own price. The optima climb strictly above the far shed's capstone -
+     * thirty-three up to thirty-nine, then the yard's three long rooms at
+     * forty, forty-two and forty-four - and every band hangs off that measured
+     * optimum: three stars for the exact count, two for four pushes over,
+     * one for nine, the shed's own spread. The solver's plan replays
+     * through the engine in the gate, so a room that cannot be walked
+     * does not ship. The climb was walked by hand, rung by rung: each
+     * room differs from the one before by one moved crate, one moved
+     * diamond, or one new wall tooth, and the solver priced every step. */
+    {
+      id: "k31", labelKey: "lvlNum31", starMoves: [33, 37, 42],
+      map: [
+        "###########",
+        "#    #    #",
+        "# $$ # o  #",
+        "#   #   # #",
+        "## ###  # #",
+        "#       o #",
+        "# $@#   o #",
+        "#         #",
+        "###########"
+      ],
+    },
+    {
+      id: "k32", labelKey: "lvlNum32", starMoves: [34, 38, 43],
+      map: [
+        "###########",
+        "#    #    #",
+        "#  $ # o  #",
+        "# $ #   # #",
+        "## ###  # #",
+        "#       o #",
+        "# $@#   o #",
+        "#         #",
+        "###########"
+      ],
+    },
+    {
+      id: "k33", labelKey: "lvlNum33", starMoves: [35, 39, 44],
+      map: [
+        "###########",
+        "#    #    #",
+        "#  $ # o  #",
+        "#   #   # #",
+        "##$###  # #",
+        "#       o #",
+        "# $@#   o #",
+        "#         #",
+        "###########"
+      ],
+    },
+    {
+      id: "k34", labelKey: "lvlNum34", starMoves: [36, 40, 45],
+      map: [
+        "###########",
+        "#    #    #",
+        "#  $ # o  #",
+        "#   #   # #",
+        "##$###  # #",
+        "#        o#",
+        "# $@#   o #",
+        "#         #",
+        "###########"
+      ],
+    },
+    {
+      id: "k35", labelKey: "lvlNum35", starMoves: [37, 41, 46],
+      map: [
+        "###########",
+        "#    #    #",
+        "#  $ # o  #",
+        "#   #   # #",
+        "##$###  # #",
+        "#         #",
+        "# $@#   oo#",
+        "#         #",
+        "###########"
+      ],
+    },
+    {
+      id: "k36", labelKey: "lvlNum36", starMoves: [38, 42, 47],
+      map: [
+        "###########",
+        "#    #    #",
+        "#  $ #   o#",
+        "#   #   # #",
+        "##$###  # #",
+        "#       o #",
+        "# $@#    o#",
+        "#         #",
+        "###########"
+      ],
+    },
+    {
+      id: "k37", labelKey: "lvlNum37", starMoves: [39, 43, 48],
+      map: [
+        "###########",
+        "#    #    #",
+        "#  $ #   o#",
+        "#   #   # #",
+        "##$###  # #",
+        "#         #",
+        "# $@#   oo#",
+        "#         #",
+        "###########"
+      ],
+    },
+    {
+      id: "k38", labelKey: "lvlNum38", starMoves: [40, 44, 49],
+      map: [
+        "###########",
+        "#    #   o#",
+        "#  $ #    #",
+        "#   #   # #",
+        "##$### @# #",
+        "#         #",
+        "# $ #   oo#",
+        "#         #",
+        "###########"
+      ],
+    },
+    {
+      id: "k39", labelKey: "lvlNum39", starMoves: [42, 46, 51],
+      map: [
+        "###########",
+        "#    #   o#",
+        "#  $ #    #",
+        "#   #   # #",
+        "##$### @# #",
+        "#      #  #",
+        "# $ #   oo#",
+        "#         #",
+        "###########"
+      ],
+    },
+    {
+      id: "k40", labelKey: "lvlNum40", starMoves: [44, 48, 53],
+      map: [
+        "###########",
+        "#    #    #",
+        "#  $ #    #",
+        "#   #   #o#",
+        "##$### @# #",
+        "#      #  #",
+        "# $ #   oo#",
+        "#         #",
+        "###########"
+      ],
+    },
   ];
 
   function initGlyphPusherGame() {
@@ -893,7 +1048,35 @@
 
   /* The far shed reuses the shared lvlNum25-30 stage names; addStrings only
    * fills keys i18n.js lacks, so shipping a copy here would be dead weight
-   * (and the shadowing audit treats a duplicate as a defect). */
+   * (and the shadowing audit treats a duplicate as a defect). The deep yard
+   * walks past the shared shelf's end, so its nine rungs carry the shared
+   * numbering scheme on into keys the dictionary does not hold yet. */
+  App.addStrings({
+    en: {
+      "lvlNum31": "Stage XXXI",
+      "lvlNum32": "Stage XXXII",
+      "lvlNum33": "Stage XXXIII",
+      "lvlNum34": "Stage XXXIV",
+      "lvlNum35": "Stage XXXV",
+      "lvlNum36": "Stage XXXVI",
+      "lvlNum37": "Stage XXXVII",
+      "lvlNum38": "Stage XXXVIII",
+      "lvlNum39": "Stage XXXIX",
+      "lvlNum40": "Stage XL",
+    },
+    zh: {
+      "lvlNum31": "第三十一关",
+      "lvlNum32": "第三十二关",
+      "lvlNum33": "第三十三关",
+      "lvlNum34": "第三十四关",
+      "lvlNum35": "第三十五关",
+      "lvlNum36": "第三十六关",
+      "lvlNum37": "第三十七关",
+      "lvlNum38": "第三十八关",
+      "lvlNum39": "第三十九关",
+      "lvlNum40": "第四十关",
+    },
+  });
 
 
   /* Exported for the other modules. */

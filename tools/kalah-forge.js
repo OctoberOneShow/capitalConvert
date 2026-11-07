@@ -66,6 +66,23 @@
  * audit: every rung's measured bands beside its cut - the record reverted
  * and the rank re-benched - so a rung whose record is decorative shows a
  * cut that moves nothing.
+ *
+ * Ranks 41-44 were tuned here the same way, past the audit's capstone.
+ * A rout's margin pays in pairs of stones - the purse is forty-eight -
+ * so the toll counts down what the rival keeps: thirty-nine asks four,
+ * forty-one asks three, forty-three asks two. The shutout asks were
+ * benched for the tier across the whole tell range and rejected: the
+ * forty-five band never clears the fairness floor at any tell (12.5%
+ * at its widest, five on the audit's own tell, ten on the capstone's,
+ * zero with the runner-up sow on every hand) and the forty-seven reads
+ * the same, so the purse has no more stones to give. What pays the two
+ * breach tolls is the tell, opened past the audit's widest - twelve
+ * games in twenty-five, then fifty-three, fifty-seven and sixty-three
+ * in a hundred - and the same benches close the case in both
+ * directions: closed back to thirty-three the breach bands read 12.5%
+ * and 7.5%, off the floor, and each rung's own ask cut moves the share
+ * the moment it lands. `tier` prints the breach audit beside the
+ * audit's own.
  */
 "use strict";
 
@@ -186,6 +203,10 @@ const TIER_CUTS = {
   m38: { label: "slip 0.33 -> 0.12", patch: { slip: 0.12 } },
   m39: { label: "slip 0.33 -> 0.12", patch: { slip: 0.12 } },
   m40: { label: "toll 39 -> 37", patch: { margin: [37, 22, 1] } },
+  m41: { label: "tell 0.48 -> 0.33", patch: { slip: 0.33 } },
+  m42: { label: "tell 0.53 -> 0.33", patch: { slip: 0.33 } },
+  m43: { label: "tell 0.57 -> 0.33", patch: { slip: 0.33 } },
+  m44: { label: "tell 0.63 -> 0.33", patch: { slip: 0.33 } },
 };
 
 function main() {

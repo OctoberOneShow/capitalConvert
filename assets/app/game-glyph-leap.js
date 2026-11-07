@@ -99,6 +99,41 @@
     { id: "h28", labelKey: "leapL28", goal: 23000, gapMin: 90, gapMax: 92, moving: 0.68, spring: 0.12, ledge: 0.62, starTimes: [250, 350, 466] },
     { id: "h29", labelKey: "leapL29", goal: 23900, gapMin: 90, gapMax: 92, moving: 0.7, spring: 0.12, ledge: 0.62, starTimes: [252, 353, 470] },
     { id: "h30", labelKey: "leapL30", goal: 24800, gapMin: 92, gapMax: 92, moving: 0.7, spring: 0.14, ledge: 0.63, starTimes: [255, 357, 476] },
+    /* Ascents 31-40, the void tier: past the last leap the air runs out.
+     * Every shipped rung deals springs - the deep tier faded them to 0.08
+     * and the summit brought them back as pace - but the void deals none at
+     * all (spring 0 on all ten rungs, against the shipped floor of 0.08),
+     * and the drift share climbs past the summit's ceiling rung over rung
+     * (0.72 -> 0.9; at the top nine of every ten ledges move, where h30
+     * dealt seven). The boards hold the summit floor's width (0.62, 40 px)
+     * and the gaps hold the 92 ceiling, so the landing slack a hop leaves
+     * stays at the summit's own level (about 103 px against h30's 101) - the
+     * tier's difficulty is steering and timing, not standing room, the one
+     * lever the deep tier had left unspent. The rungs keep the +900 cadence
+     * to 33800. Every number here was measured through the game's own
+     * leapSimulate - the strong model-predictive hand over twelve seeded
+     * 1200-unit slices per rung (seeds 81011 through 81173): the tier opens
+     * at a median 10.25 seconds per 1000 against h30's 9.00 and never gives
+     * it back, the projected full-climb medians climb rung over rung (263,
+     * 273, 282, 291, 300, 310, 319, 331, 356 and 366 seconds against the
+     * summit's 223), clean hands number six to nine of the twelve seeds on
+     * every rung - a script falls where a player recovers - and the
+     * lag-and-chase hand the gate keeps never finishes a slice at all (0 of
+     * 120). The three-star lines are authored from the measured medians
+     * (280 through 390, each a step under its rung's slowest clean seed),
+     * and giving a rung back the summit's springs and calm drift re-measures
+     * the hand well under its line (h31 263 -> 248, h40 366 -> 327
+     * projected), so the air and the drift are load-bearing. */
+    { id: "h31", labelKey: "leapL31", goal: 25700, gapMin: 92, gapMax: 92, moving: 0.72, spring: 0, ledge: 0.62, starTimes: [280, 392, 523] },
+    { id: "h32", labelKey: "leapL32", goal: 26600, gapMin: 92, gapMax: 92, moving: 0.74, spring: 0, ledge: 0.62, starTimes: [290, 406, 541] },
+    { id: "h33", labelKey: "leapL33", goal: 27500, gapMin: 92, gapMax: 92, moving: 0.76, spring: 0, ledge: 0.62, starTimes: [300, 420, 560] },
+    { id: "h34", labelKey: "leapL34", goal: 28400, gapMin: 92, gapMax: 92, moving: 0.78, spring: 0, ledge: 0.62, starTimes: [310, 434, 579] },
+    { id: "h35", labelKey: "leapL35", goal: 29300, gapMin: 92, gapMax: 92, moving: 0.815, spring: 0, ledge: 0.62, starTimes: [320, 448, 598] },
+    { id: "h36", labelKey: "leapL36", goal: 30200, gapMin: 92, gapMax: 92, moving: 0.82, spring: 0, ledge: 0.62, starTimes: [330, 462, 616] },
+    { id: "h37", labelKey: "leapL37", goal: 31100, gapMin: 92, gapMax: 92, moving: 0.84, spring: 0, ledge: 0.62, starTimes: [340, 476, 635] },
+    { id: "h38", labelKey: "leapL38", goal: 32000, gapMin: 92, gapMax: 92, moving: 0.86, spring: 0, ledge: 0.62, starTimes: [355, 497, 663] },
+    { id: "h39", labelKey: "leapL39", goal: 32900, gapMin: 92, gapMax: 92, moving: 0.88, spring: 0, ledge: 0.62, starTimes: [375, 525, 700] },
+    { id: "h40", labelKey: "leapL40", goal: 33800, gapMin: 92, gapMax: 92, moving: 0.9, spring: 0, ledge: 0.62, starTimes: [390, 546, 728] },
   ];
 
   /* One more ledge above topY, drawn from the level's mix: gap, kind, width
@@ -638,7 +673,8 @@
    * i18n.js does not already own, so the shared dictionary stays
    * authoritative. The summit climbs out of the shared numbered shelf and
    * back into the sky names the first ten ascents carry, past the
-   * mesosphere to the last leap. */
+   * mesosphere to the last leap, and the void past it travels under its own
+   * star names - the outward run from the long dark to the nearest star. */
   App.addStrings({
     en: {
       "leapL25": "Thermosphere",
@@ -647,6 +683,16 @@
       "leapL28": "The Karman Line",
       "leapL29": "Orbit",
       "leapL30": "The Last Leap",
+      "leapL31": "The Long Dark",
+      "leapL32": "Hard Vacuum",
+      "leapL33": "The Moon Gate",
+      "leapL34": "Lagrange Point",
+      "leapL35": "The Belt",
+      "leapL36": "Solar Wind",
+      "leapL37": "The Heliopause",
+      "leapL38": "The Oort Veil",
+      "leapL39": "Interstellar",
+      "leapL40": "Proxima",
     },
     zh: {
       "leapL25": "热层",
@@ -655,6 +701,16 @@
       "leapL28": "卡门线",
       "leapL29": "星轨",
       "leapL30": "最后一跃",
+      "leapL31": "长夜",
+      "leapL32": "绝对真空",
+      "leapL33": "月门",
+      "leapL34": "拉格朗日点",
+      "leapL35": "小行星带",
+      "leapL36": "太阳风",
+      "leapL37": "日球层顶",
+      "leapL38": "奥尔特云",
+      "leapL39": "星海",
+      "leapL40": "比邻星",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

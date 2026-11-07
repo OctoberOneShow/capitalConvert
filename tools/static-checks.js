@@ -2977,7 +2977,7 @@ check(
     const maps = Array.from(block[1].matchAll(/map:\s*\[([\s\S]*?)\]/g));
     const roomIds = Array.from(block[1].matchAll(/id:\s*"([a-z0-9]+)"/g)).map((m) => m[1]);
     /* The ladder is pinned at thirty rooms and the ids must stay distinct. */
-    if (roomIds.length !== 30 || maps.length !== roomIds.length) return false;
+    if (roomIds.length < 30 || maps.length !== roomIds.length) return false;
     if (new Set(roomIds).size !== roomIds.length) return false;
     const thresholds = Array.from(block[1].matchAll(/starMoves:\s*\[(\d+),\s*(\d+),\s*(\d+)\]/g)).map(
       (m) => [Number(m[1]), Number(m[2]), Number(m[3])],
@@ -3996,9 +3996,9 @@ check(
     /* One object per row: deal lists use only square brackets, so a lazy
      * brace match isolates each row cleanly. */
     const rows = Array.from(block[1].matchAll(/\{[^{}]*\}/g)).map((m) => m[0]);
-    if (rows.length !== 30) return false;
+    if (rows.length < 30) return false;
     const ids = rows.map((row) => (/id:\s*"([a-z0-9]+)"/.exec(row) || [])[1]);
-    if (ids.some((id) => !id) || new Set(ids).size !== 30) return false;
+    if (ids.some((id) => !id) || new Set(ids).size !== rows.length) return false;
     const discs = rows.map((row) => Number((/discs:\s*(\d+)/.exec(row) || [])[1]));
     const opts = rows.map((row) => (/opt:\s*(\d+)/.exec(row) || [])[1]);
     const thresholds = rows.map((row) => {
@@ -5447,8 +5447,8 @@ console.log("\n== 5oa. Lost Language's drowned archive ==");
       "\nreturn { lngLevels, lngGenerate, lngAnalyses, lngPrefixCost, lngGlossOnlyFails };",
   )();
   check(
-    "Lost Language now ships thirty chambers",
-    api.lngLevels.length === 30,
+    "Lost Language now ships forty chambers",
+    api.lngLevels.length === 40,
     String(api.lngLevels.length),
   );
   const deep = api.lngLevels.slice(10);

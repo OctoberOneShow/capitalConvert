@@ -675,6 +675,337 @@
       ],
       starShots: [2, 8, 18],
     },
+
+    /* Courses 41-44: the singularity tier. The deep-field tier ended on a
+     * thirteen-well sky massing 18.6 with no well past 1.9; this tier
+     * breaks all three ceilings at once and rides one mechanic to do it -
+     * the singularity. Every course lifts the mass cap the extra notch to
+     * deal a 2.0 giant, the first wells the drawer has ever shipped past
+     * the 1.9 cap g34 broke, and every field runs fourteen wells, the
+     * first past the thirteen the deep-field tier topped out at. The sky
+     * keeps swelling past g40's capstone - 19.9, 20.4, 20.9, then the
+     * capstone's 22.1, a heavier sky rung over rung than any course before
+     * the tier - while the ring holds the eight-pixel floor, the par line
+     * climbs from nineteen to twenty-one launches, and every hole refuses
+     * the lazy straight line at every power. The tier opens with exactly
+     * one singularity per sky: g41 is the first fourteen-well field, g42
+     * heaves the heaviest sky to date, g43 doubles the mechanic with the
+     * first twin singularities, and the capstone g44 pairs the records -
+     * the heaviest sky the drawer has ever dealt under the deepest launch
+     * budget, both giants aboard. The giants are load-bearing, not
+     * scenery: cut the 2.0 wells out of a mutant copy of any tier course
+     * and the proven one-shot dies - the forge ships only answers that
+     * fall without their singularity, and the gate re-runs that cut on
+     * every shipped row. Each hole was flown before it shipped -
+     * tools/golf-forge.js lays the course from its own recorded seed
+     * (noted per hole), flies the aim space the panel flies, and ships
+     * only when a one-shot survives it with a basin >= 6 of 25; the gate
+     * re-generates every course from its seed and re-flies the recorded
+     * shot. Measured one-shots, for the record:
+     *   g41 14 wells   2.948rad / 0.15  basin  8/25  ride 3.12s
+     *   g42 14 wells  -2.812rad / 0.15  basin  6/25  ride 3.45s
+     *   g43 14 wells  -0.412rad / 0.20  basin  9/25  ride 2.77s
+     *   g44 14 wells   2.828rad / 0.25  basin  9/25  ride 2.05s */
+    {
+      /* Fourteen wells - the first field the sky has packed past the
+       * deep-field tier's thirteen - carrying the first 2.0 singularity
+       * the drawer has ever dealt, sitting fourteen pixels off the
+       * dead-level tee-to-ring line (seed 75). The proven one-shot is a
+       * slow reverse shot at idle power (basin 8/25). */
+      id: "g41", labelKey: "cgfL41",
+      tee: { x: 284, y: 159 }, target: { x: 36, y: 159, r: 8 },
+      wells: [
+        { x: 256, y: 52, m: 1.3, r: 12 },
+        { x: 93, y: 254, m: 1.3, r: 11 },
+        { x: 141, y: 145, m: 2, r: 12 },
+        { x: 217, y: 146, m: 0.8, r: 10 },
+        { x: 221, y: 147, m: 1.8, r: 12 },
+        { x: 79, y: 244, m: 1.2, r: 10 },
+        { x: 93, y: 69, m: 1.3, r: 10 },
+        { x: 62, y: 77, m: 1.2, r: 9 },
+        { x: 87, y: 201, m: 1.7, r: 10 },
+        { x: 173, y: 120, m: 1.3, r: 14 },
+        { x: 253, y: 299, m: 1.4, r: 11 },
+        { x: 122, y: 300, m: 1.7, r: 12 },
+        { x: 206, y: 260, m: 1.4, r: 12 },
+        { x: 208, y: 285, m: 1.5, r: 10 },
+      ],
+      starShots: [2, 8, 19],
+    },
+    {
+      /* The heaviest sky to date: fourteen wells massing 20.4 against
+       * g40's 18.6, the first rung past the old capstone, with its one
+       * 2.0 singularity squatting below the tee (seed 423). The proven
+       * one-shot climbs away from it at idle power (basin 6/25). */
+      id: "g42", labelKey: "cgfL42",
+      tee: { x: 284, y: 194 }, target: { x: 36, y: 77, r: 8 },
+      wells: [
+        { x: 203, y: 147, m: 1.6, r: 10 },
+        { x: 144, y: 70, m: 1.4, r: 12 },
+        { x: 147, y: 286, m: 1.7, r: 11 },
+        { x: 86, y: 135, m: 1.8, r: 10 },
+        { x: 144, y: 200, m: 1, r: 12 },
+        { x: 116, y: 289, m: 1.4, r: 11 },
+        { x: 99, y: 280, m: 1.8, r: 13 },
+        { x: 242, y: 250, m: 2, r: 11 },
+        { x: 172, y: 116, m: 1.3, r: 10 },
+        { x: 128, y: 167, m: 0.8, r: 11 },
+        { x: 156, y: 90, m: 1.4, r: 11 },
+        { x: 214, y: 88, m: 1.8, r: 10 },
+        { x: 193, y: 84, m: 1.6, r: 10 },
+        { x: 251, y: 96, m: 0.8, r: 10 },
+      ],
+      starShots: [2, 8, 19],
+    },
+    {
+      /* The first twin singularities: two 2.0 giants bracket the western
+       * pack where no earlier sky carried even one 2.0 well (seed 469).
+       * The proven one-shot threads the lane between them at a fifth
+       * power (basin 9/25). */
+      id: "g43", labelKey: "cgfL43",
+      tee: { x: 36, y: 245 }, target: { x: 284, y: 129, r: 8 },
+      wells: [
+        { x: 100, y: 251, m: 1.3, r: 13 },
+        { x: 86, y: 93, m: 2, r: 10 },
+        { x: 95, y: 203, m: 1.5, r: 10 },
+        { x: 88, y: 277, m: 2, r: 10 },
+        { x: 77, y: 102, m: 0.8, r: 11 },
+        { x: 86, y: 74, m: 1.6, r: 9 },
+        { x: 179, y: 70, m: 1.5, r: 13 },
+        { x: 149, y: 267, m: 1.7, r: 10 },
+        { x: 185, y: 113, m: 1.5, r: 10 },
+        { x: 228, y: 263, m: 1.1, r: 10 },
+        { x: 101, y: 56, m: 1.7, r: 14 },
+        { x: 177, y: 126, m: 1.1, r: 11 },
+        { x: 67, y: 135, m: 1.8, r: 12 },
+        { x: 70, y: 119, m: 1.3, r: 10 },
+      ],
+      starShots: [2, 9, 20],
+    },
+    {
+      /* The capstone pairs the records: the heaviest sky the drawer has
+       * ever dealt - fourteen wells massing 22.1, past g43's 20.9 - under
+       * the deepest launch budget the sky has ever asked for (twenty-one)
+       * with both 2.0 giants aboard (seed 1854). The proven one-shot
+       * slips under the pair at quarter power (basin 9/25). */
+      id: "g44", labelKey: "cgfL44",
+      tee: { x: 284, y: 192 }, target: { x: 36, y: 245, r: 8 },
+      wells: [
+        { x: 257, y: 135, m: 2, r: 10 },
+        { x: 241, y: 156, m: 1.8, r: 14 },
+        { x: 121, y: 293, m: 1.6, r: 10 },
+        { x: 217, y: 64, m: 1, r: 12 },
+        { x: 129, y: 244, m: 1.7, r: 10 },
+        { x: 142, y: 260, m: 1.8, r: 9 },
+        { x: 171, y: 108, m: 1.3, r: 12 },
+        { x: 79, y: 139, m: 1.6, r: 13 },
+        { x: 250, y: 164, m: 2, r: 13 },
+        { x: 236, y: 188, m: 1.7, r: 10 },
+        { x: 89, y: 104, m: 1.4, r: 13 },
+        { x: 146, y: 115, m: 1.8, r: 11 },
+        { x: 153, y: 63, m: 1.1, r: 13 },
+        { x: 133, y: 56, m: 1.3, r: 9 },
+      ],
+      starShots: [2, 9, 21],
+    },
+
+    /* Courses 45-50: the citadel tier. The singularity tier let its 2.0
+     * giants roam the sky; this tier parks one at the cup. Every course's
+     * ring guard - the nearest well to the ring - is a 2.0 singularity, the
+     * first guardians the sky has ever posted at that mass: the heaviest
+     * guardian any earlier course kept was g39's 1.9, sitting seventy-four
+     * pixels out, and the closest of any mass was g38's 1.5 at twenty-eight.
+     * The moat closes rung over rung through disjoint pixel bands the forge
+     * lays its candidates inside - 44-48, 40-43, 36-39, 32-35, 28-31, then
+     * the capstone's 24-27 - so the measured guard falls no matter where in
+     * its band each hole landed: 44, 42, 37, 33, 31, 26. The capstone's
+     * twenty-six beats g38's all-time closest approach at nearly twice the
+     * guardian mass, and its crash disc (radius sixteen with the comet
+     * aboard) reaches within ten pixels of the ring's center - through the
+     * thirteen-pixel capture disc - so the moat shot has to sling the last
+     * pixels around the giant rather than fly at the cup. The sky carries no
+     * filler: every well in every citadel masses at least 1.2 where every
+     * pre-tier sky carried wells down to 0.7, the body rungs floor at 1.3
+     * and 1.4, and every citadel sky out-masses the tier-five capstone's
+     * 22.1 (measured 22.2 to 24.0). The field holds fourteen wells, the ring
+     * holds the eight-pixel floor, and the par line climbs from twenty-one
+     * to the capstone's twenty-three, the deepest launch budget the sky has
+     * ever asked for. g47 doubles the mechanic - the first cup with a second
+     * 2.0 giant aboard - and the twins stay through the capstone. The giants
+     * are load-bearing, not scenery: the forge ranks every wide answer the
+     * aim space yields and ships only the widest one that dies when the 2.0
+     * wells are cut out of a mutant copy, and the gate re-runs that cut on
+     * every shipped row. Each hole was flown before it shipped -
+     * tools/golf-forge.js lays the course from its own recorded seed (noted
+     * per hole), flies the aim space the panel flies, and ships only when a
+     * one-shot survives it with a basin >= 6 of 25; the gate re-generates
+     * every course from its seed and re-flies the recorded shot. Measured
+     * one-shots, for the record:
+     *   g45 14 wells   2.948rad / 0.15  basin  7/25  ride 3.33s
+     *   g46 14 wells   0.158rad / 0.15  basin  6/25  ride 3.58s
+     *   g47 14 wells   2.918rad / 0.15  basin  8/25  ride 3.18s
+     *   g48 14 wells   0.368rad / 0.20  basin  6/25  ride 2.55s
+     *   g49 14 wells   0.458rad / 0.15  basin  7/25  ride 3.72s
+     *   g50 14 wells   0.038rad / 0.20  basin  6/25  ride 2.52s */
+    {
+      /* The moat opens: the first ring guard the sky has ever posted at
+       * mass 2.0, forty-four pixels off the cup with three more giants in
+       * the field behind it (seed 2422). The proven one-shot is a slow
+       * reverse shot at idle power (basin 7/25). */
+      id: "g45", labelKey: "cgfL45",
+      tee: { x: 284, y: 248 }, target: { x: 36, y: 280, r: 8 },
+      wells: [
+        { x: 111, y: 85, m: 1.3, r: 12 },
+        { x: 122, y: 107, m: 1.5, r: 9 },
+        { x: 154, y: 213, m: 2, r: 10 },
+        { x: 78, y: 187, m: 1.3, r: 10 },
+        { x: 220, y: 296, m: 2, r: 14 },
+        { x: 220, y: 232, m: 1.6, r: 13 },
+        { x: 257, y: 139, m: 1.4, r: 12 },
+        { x: 123, y: 232, m: 1.3, r: 11 },
+        { x: 148, y: 58, m: 1.8, r: 13 },
+        { x: 92, y: 142, m: 1.4, r: 11 },
+        { x: 77, y: 263, m: 2, r: 9 },
+        { x: 246, y: 285, m: 2, r: 10 },
+        { x: 235, y: 125, m: 1.3, r: 12 },
+        { x: 213, y: 77, m: 1.6, r: 13 },
+      ],
+      starShots: [2, 8, 21],
+    },
+    {
+      /* The moat closes to forty-two pixels and the sky thickens to 23.6,
+       * second-heaviest the drawer has dealt, with three 2.0 giants aboard -
+       * the southern one owning the cup's approach (seed 6874). The proven
+       * one-shot climbs the northern shore at idle power (basin 6/25). */
+      id: "g46", labelKey: "cgfL46",
+      tee: { x: 36, y: 147 }, target: { x: 284, y: 277, r: 8 },
+      wells: [
+        { x: 216, y: 254, m: 1.4, r: 11 },
+        { x: 129, y: 231, m: 2, r: 10 },
+        { x: 204, y: 245, m: 1.9, r: 11 },
+        { x: 120, y: 244, m: 2, r: 13 },
+        { x: 70, y: 101, m: 1.5, r: 12 },
+        { x: 115, y: 300, m: 1.5, r: 11 },
+        { x: 119, y: 184, m: 1.6, r: 11 },
+        { x: 84, y: 188, m: 1.5, r: 11 },
+        { x: 198, y: 71, m: 1.5, r: 10 },
+        { x: 161, y: 224, m: 1.7, r: 10 },
+        { x: 96, y: 270, m: 1.7, r: 12 },
+        { x: 248, y: 115, m: 1.6, r: 13 },
+        { x: 109, y: 230, m: 1.7, r: 11 },
+        { x: 246, y: 295, m: 2, r: 11 },
+      ],
+      starShots: [2, 8, 21],
+    },
+    {
+      /* The first twin-guarded cup: three 2.0 giants aboard, one owning the
+       * ring at thirty-seven pixels and two roaming the mid-field at
+       * ninety-seven and a hundred twenty-six - no earlier 2.0 giant ever
+       * came nearer to its ring than g41's hundred and six, and no earlier
+       * ring guard of any mass outmassed g39's 1.9 (seed 18768). The
+       * proven one-shot threads under the near twin at idle power
+       * (basin 8/25). */
+      id: "g47", labelKey: "cgfL47",
+      tee: { x: 284, y: 158 }, target: { x: 36, y: 198, r: 8 },
+      wells: [
+        { x: 251, y: 70, m: 1.8, r: 13 },
+        { x: 189, y: 103, m: 1.7, r: 12 },
+        { x: 234, y: 309, m: 1.8, r: 11 },
+        { x: 65, y: 221, m: 2, r: 12 },
+        { x: 155, y: 115, m: 1.3, r: 9 },
+        { x: 196, y: 53, m: 1.9, r: 10 },
+        { x: 160, y: 223, m: 2, r: 11 },
+        { x: 170, y: 295, m: 1.5, r: 13 },
+        { x: 102, y: 287, m: 1.8, r: 9 },
+        { x: 78, y: 285, m: 2, r: 13 },
+        { x: 202, y: 155, m: 1.7, r: 13 },
+        { x: 138, y: 55, m: 1.4, r: 13 },
+        { x: 65, y: 288, m: 1.3, r: 12 },
+        { x: 100, y: 245, m: 1.8, r: 13 },
+      ],
+      starShots: [2, 9, 22],
+    },
+    {
+      /* The moat at thirty-three pixels - the guardian's crash disc now
+       * reaches within eighteen pixels of the ring's center, five pixels
+       * short of the capture disc - under a 23.4 sky with three giants
+       * aboard (seed 3110). The proven one-shot is a flick over the moat at
+       * a fifth power (basin 6/25). */
+      id: "g48", labelKey: "cgfL48",
+      tee: { x: 36, y: 238 }, target: { x: 284, y: 279, r: 8 },
+      wells: [
+        { x: 159, y: 249, m: 1.5, r: 13 },
+        { x: 191, y: 125, m: 1.7, r: 10 },
+        { x: 149, y: 98, m: 1.5, r: 14 },
+        { x: 189, y: 305, m: 1.4, r: 9 },
+        { x: 257, y: 260, m: 2, r: 10 },
+        { x: 86, y: 108, m: 2, r: 13 },
+        { x: 238, y: 93, m: 1.4, r: 9 },
+        { x: 211, y: 74, m: 1.6, r: 14 },
+        { x: 116, y: 234, m: 1.5, r: 12 },
+        { x: 104, y: 195, m: 1.8, r: 13 },
+        { x: 123, y: 226, m: 1.9, r: 12 },
+        { x: 104, y: 95, m: 1.5, r: 13 },
+        { x: 167, y: 150, m: 2, r: 9 },
+        { x: 98, y: 194, m: 1.6, r: 10 },
+      ],
+      starShots: [2, 9, 22],
+    },
+    {
+      /* The moat at thirty-one pixels, the lightest citadel sky - 22.2,
+       * right at the tier's floor - and the guardian's crash disc kissing
+       * the capture disc's rim: thirteen pixels reach against a
+       * thirteen-pixel capture disc (seed 41464). The proven one-shot dives
+       * along the northern shore at idle power (basin 7/25). */
+      id: "g49", labelKey: "cgfL49",
+      tee: { x: 36, y: 76 }, target: { x: 284, y: 238, r: 8 },
+      wells: [
+        { x: 215, y: 245, m: 1.6, r: 9 },
+        { x: 129, y: 200, m: 1.2, r: 9 },
+        { x: 195, y: 290, m: 1.2, r: 11 },
+        { x: 180, y: 66, m: 1.3, r: 13 },
+        { x: 254, y: 245, m: 2, r: 13 },
+        { x: 75, y: 302, m: 1.4, r: 13 },
+        { x: 171, y: 302, m: 1.9, r: 10 },
+        { x: 206, y: 289, m: 1.7, r: 9 },
+        { x: 151, y: 53, m: 1.8, r: 11 },
+        { x: 189, y: 99, m: 1.7, r: 10 },
+        { x: 195, y: 86, m: 1.4, r: 13 },
+        { x: 172, y: 189, m: 1.4, r: 10 },
+        { x: 81, y: 137, m: 2, r: 12 },
+        { x: 226, y: 214, m: 1.6, r: 10 },
+      ],
+      starShots: [2, 9, 22],
+    },
+    {
+      /* The capstone pairs the records: the closest ring approach the sky
+       * has ever asked - twenty-six pixels, past g38's twenty-eight with a
+       * heavier guardian than any earlier course posted (2.0 against g39's
+       * 1.9) - and the deepest launch budget the sky has ever asked for
+       * (twenty-three), the crash disc reaching ten pixels from the ring's
+       * center, three inside the capture disc's rim, with both 2.0 giants
+       * aboard (seed 72623). The proven one-shot skips along the moat's
+       * inner wall at a fifth power (basin 6/25). */
+      id: "g50", labelKey: "cgfL50",
+      tee: { x: 36, y: 272 }, target: { x: 284, y: 253, r: 8 },
+      wells: [
+        { x: 84, y: 67, m: 1.5, r: 12 },
+        { x: 143, y: 120, m: 1.6, r: 12 },
+        { x: 176, y: 174, m: 1.4, r: 14 },
+        { x: 150, y: 56, m: 1.6, r: 9 },
+        { x: 251, y: 91, m: 1.3, r: 11 },
+        { x: 245, y: 66, m: 1.4, r: 11 },
+        { x: 249, y: 70, m: 1.6, r: 11 },
+        { x: 178, y: 219, m: 1.8, r: 12 },
+        { x: 87, y: 169, m: 1.6, r: 10 },
+        { x: 96, y: 124, m: 1.7, r: 11 },
+        { x: 258, y: 220, m: 2, r: 11 },
+        { x: 241, y: 72, m: 1.8, r: 12 },
+        { x: 160, y: 161, m: 1.6, r: 12 },
+        { x: 260, y: 244, m: 2, r: 11 },
+      ],
+      starShots: [2, 9, 23],
+    },
   ];
   /* A fixed starfield so the sky does not flicker between frames. */
   var cgfStars = [];
@@ -1167,6 +1498,16 @@
       "cgfL38": "The Picket",
       "cgfL39": "The Gatekeeper",
       "cgfL40": "The Sky's Edge",
+      "cgfL41": "Fourteen Wells",
+      "cgfL42": "The Crushing Sky",
+      "cgfL43": "Twin Singularities",
+      "cgfL44": "Event Horizon",
+      "cgfL45": "The Moat",
+      "cgfL46": "The Drawbridge",
+      "cgfL47": "The Wardens",
+      "cgfL48": "The Portcullis",
+      "cgfL49": "The Keep",
+      "cgfL50": "The Inner Sanctum",
     },
     zh: {
       "cgfL7": "逆向切",
@@ -1203,10 +1544,22 @@
       "cgfL38": "哨桩",
       "cgfL39": "守门人",
       "cgfL40": "天涯",
+      "cgfL41": "十四井",
+      "cgfL42": "坠天",
+      "cgfL43": "双奇点",
+      "cgfL44": "视界",
+      "cgfL45": "护城河",
+      "cgfL46": "吊桥",
+      "cgfL47": "双卫",
+      "cgfL48": "落闸",
+      "cgfL49": "主堡",
+      "cgfL50": "内城",
     },
   });
 
 
   /* Exported for the other modules. */
   App.initCometGolfGame = initCometGolfGame;
-})(window.CapitalConvert = window.CapitalConvert || {});
+
+
+  })(window.CapitalConvert = window.CapitalConvert || {});

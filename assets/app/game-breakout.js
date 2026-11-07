@@ -146,6 +146,77 @@
      * ball in the campaign carries the densest plate, and the heal never
      * quite stops. */
     { id: "x30", world: 2, labelKey: "brkL30", speed: 3.6, rows: ["tttssttx", "ttst.stt", "dtgssntd", "tttssttt", "tttssttt"] },
+    /* The tier of ten seals the plate. Every course of all ten walls runs all
+     * eight tiles - not one open cell anywhere - and every course keeps a
+     * pod, so whatever breach the rally opens, the wall replants into it.
+     * The keeps and the living summit all left lanes open; no shipped wall
+     * ever filled all five courses at once, and the gate proves both facts.
+     * The seal's price - every tile, every extra hit the two-hit plate
+     * charges, and both sprouts every pod can plant - climbs rung over rung
+     * from 66 to 84, and the ball runs faster than any wall before it, past
+     * the evergreen summit's 3.6. The rows keep the keeps' mirror law: every
+     * course still reads the same from both rails. */
+    /* The tidelock: the plain statement of the new law. A sealed drift plate
+     * - the whole wall slides on every save and none of it can be slipped. */
+    { id: "x31", world: 2, labelKey: "brkL31", speed: 3.65, rows: ["ddtsstdd", "dddssddd", "ddtsstdd", "dddssddd", "ddtsstdd"] },
+    /* The buoy field: normal pairs standing in the tide, the only course
+     * markers on an otherwise sliding plate. */
+    { id: "x32", world: 2, labelKey: "brkL32", speed: 3.7, rows: ["ddtsstdd", "nntsstnn", "ddtsstdd", "dddssddd", "ddtsstdd"] },
+    /* The seawall: the first tough plate of the tier, two hits from stem to
+     * stern over a sealed drift belly. */
+    { id: "x33", world: 2, labelKey: "brkL33", speed: 3.75, rows: ["ttsddstt", "dddssddd", "ddtsstdd", "dddssddd", "ttsddstt"] },
+    /* The double tide: drift braces ride the flanks of a drifting centre, so
+     * the wall shears against itself while it heals. */
+    { id: "x34", world: 2, labelKey: "brkL34", speed: 3.8, rows: ["ttsddstt", "ddtsstdd", "dddssddd", "ddtsstdd", "ttsddstt"] },
+    /* The inner shoals: a four-pod course banks the regrowth mid-wall, and
+     * the seal closes over ground that replants four tiles at a time. */
+    { id: "x35", world: 2, labelKey: "brkL35", speed: 3.85, rows: ["ttsddstt", "ddtsstdd", "ddssssdd", "dddssddd", "ttsddstt"] },
+    /* The breakwater: every course armored over the sealed tide - the
+     * densest plate the tier seals before its seal. */
+    { id: "x36", world: 2, labelKey: "brkL36", speed: 3.9, rows: ["ttsnnstt", "ttsddstt", "ddtsstdd", "ttsddstt", "ddtsstdd"] },
+    /* The last four walls carry the capstone law: all six kinds the engine
+     * knows ride one sealed mirrored plate, the sixfold seal's alphabet grown
+     * into a wall with no open ground. */
+    /* The storm seal: exploders flank the pod courses and a ghost plate
+     * phases over the tide - the alphabet's first seal. */
+    { id: "x37", world: 2, labelKey: "brkL37", speed: 3.95, rows: ["ttsnnstt", "ttxssxtt", "ggssssgg", "ttsddstt", "xxtsstxx"] },
+    /* The ghost harbor: a four-pod ghost course holds the middle while the
+     * powder pairs ride the flanks of a drift keel. */
+    { id: "x38", world: 2, labelKey: "brkL38", speed: 4.0, rows: ["ggssssgg", "ttxssxtt", "ttsnnstt", "ttsddstt", "ttxssxtt"] },
+    /* The deep seal: a four-pod armor crown over ghost and exploder courses,
+     * the heaviest regrowth of the tier under the fastest plate. */
+    { id: "x39", world: 2, labelKey: "brkL39", speed: 4.05, rows: ["ttsssstt", "ttsddstt", "ttsnnstt", "xxtsstxx", "ggssssgg"] },
+    /* The sealed grove: the tier's namesake and its last wall - powder,
+     * phase and tide on a four-pod plate at the fastest ball the campaign
+     * deals, and not one open cell to slip it through. */
+    { id: "x40", world: 2, labelKey: "brkL40", speed: 4.1, rows: ["ttsssstt", "ttxssxtt", "ggssssgg", "ttsddstt", "ttsnnstt"] },
+    /* The tier of four is the obsidian grove: the seal's closed mirrored
+     * plate carried past its capstone, running the census no shipped wall
+     * ever ran - every wall carries the full alphabet with exactly a pair of
+     * each of the four lesser kinds (two normals, two drift, two ghosts, two
+     * exploders), and the rest of the plate is armor and pods. The rung
+     * gradient inverts the seal's: the pods climb 14 -> 16 -> 18 -> 20 while
+     * the tough plate yields 18 -> 16 -> 14 -> 12, so the wall stops being
+     * hard and starts being alive, and the price - tiles, plate hits and
+     * replants - climbs 86 -> 92 past the seal's 84. The ball is already at
+     * the keyboard pace, so the obsidian rungs climb by 0.04 (4.14 up to
+     * 4.26): faster than any wall shipped, still inside the tracking hand's
+     * 4.4 cap. The mirror law rides along, and no course is left open. */
+    /* The obsidian gate: the plain statement of the census law - a pair of
+     * every lesser kind on one sealed mirrored plate, armor at the heart,
+     * pods on the flanks. */
+    { id: "x41", world: 2, labelKey: "brkL41", speed: 4.14, rows: ["xsttttsx", "gstddtsg", "nsttttsn", "ssttttss", "ssttttss"] },
+    /* The black orchard: the pods outplant the armor - a hard crown over
+     * courses that replant four tiles at a time, the first rung where the
+     * heal outgrows the grind. */
+    { id: "x42", world: 2, labelKey: "brkL42", speed: 4.18, rows: ["tsttttst", "gdsttsdg", "xstsstsx", "tstsstst", "nstsstsn"] },
+    /* The glass grove: another pod course, the armor lighter again, the
+     * glassy plate phases at the shoulders while the ball runs quicker. */
+    { id: "x43", world: 2, labelKey: "brkL43", speed: 4.22, rows: ["tsttttst", "gsdssdsg", "xstsstsx", "tstsstst", "nstsstsn"] },
+    /* The volcanic heart: the powder bed lives at the wall's foot where the
+     * rally lands, the densest regrowth of the tier rides above it, and the
+     * fastest ball the campaign deals carries the whole grove. */
+    { id: "x44", world: 2, labelKey: "brkL44", speed: 4.26, rows: ["tsttttst", "gsdssdsg", "nstsstsn", "tstsstst", "xssssssx"] },
   ];
 
   function initBreakoutGame() {
@@ -1774,7 +1845,7 @@
   }
 
 
-  /* The tier of four carries its own names: addStrings only fills keys i18n.js
+  /* The deeper tiers carry their own names: addStrings only fills keys i18n.js
    * does not already hold, so the picker never prints a raw key. */
   App.addStrings({
     en: {
@@ -1788,6 +1859,20 @@
       "brkL28": "The Drift Meadow",
       "brkL29": "The Iron Grove",
       "brkL30": "The Evergreen Seal",
+      "brkL31": "The Tidelock",
+      "brkL32": "The Buoy Field",
+      "brkL33": "The Seawall",
+      "brkL34": "The Double Tide",
+      "brkL35": "The Inner Shoals",
+      "brkL36": "The Breakwater",
+      "brkL37": "The Storm Seal",
+      "brkL38": "The Ghost Harbor",
+      "brkL39": "The Deep Seal",
+      "brkL40": "The Sealed Grove",
+      "brkL41": "The Obsidian Gate",
+      "brkL42": "The Black Orchard",
+      "brkL43": "The Glass Grove",
+      "brkL44": "The Volcanic Heart",
     },
     zh: {
       "brkL21": "逆潮闸",
@@ -1800,6 +1885,20 @@
       "brkL28": "\u6F02\u79FB\u8349\u7538",
       "brkL29": "\u94C1\u6728\u6797",
       "brkL30": "\u5E38\u9752\u5C01\u5370",
+      "brkL31": "\u6F6E\u95F8",
+      "brkL32": "\u6D6E\u6807\u9635",
+      "brkL33": "\u6D77\u5824",
+      "brkL34": "\u53CC\u6F6E",
+      "brkL35": "\u5185\u7901",
+      "brkL36": "\u9632\u6CE2\u5824",
+      "brkL37": "\u98CE\u66B4\u5C01\u5370",
+      "brkL38": "\u5E7D\u7075\u6E2F",
+      "brkL39": "\u6DF1\u6D77\u5C01\u5370",
+      "brkL40": "\u5C01\u82D1",
+      "brkL41": "\u9ED1\u66DC\u4E4B\u95E8",
+      "brkL42": "\u9ED1\u66DC\u679C\u56ED",
+      "brkL43": "\u73BB\u7483\u6797",
+      "brkL44": "\u706B\u5C71\u4E4B\u5FC3",
     },
   });
 

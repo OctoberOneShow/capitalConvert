@@ -754,6 +754,329 @@
       avoid: ["8,2", "9,2", "8,3", "9,3"],
       authored: [{ x: 0, y: 4 }, { x: 10, y: 4 }, { x: 0, y: 0 }, { x: 8, y: 4 }, { x: 9, y: 4 }, { x: 10, y: 0 }, { x: 0, y: 2 }, { x: 0, y: 3 }, { x: 10, y: 2 }, { x: 10, y: 3 }, { x: 8, y: 0 }, { x: 9, y: 0 }],
     },
+    /* ------------------------------------------------------------------
+     * The zenith tier (f41-f43). The widest tier filled fourteen-cell
+     * paper and stopped; this tier widens the paper again and
+     * takes one record per rung against every sheet before it: f41 the
+     * first fifteen-cell paper and the heaviest print the game has ever
+     * stamped (eighty-eight cells, past the capstone's eighty), f42 the
+     * first ten-crease sheet, f43 the first thirteen-stamp tray. Every
+     * sheet below was searched and certified by the same bar the forge
+     * applies to the shipped ladder - twelve seeded deals all solvable,
+     * no deal falling through to the authored reserve, every intended
+     * crease provably needed, and the keep-clear a whole orbit. */
+    {
+      id: "f41", labelKey: "lvlNum41",
+      side: 15,
+      wants: 12,
+      par: 9,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 7 },
+        { axis: "v", line: 19 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 7 },
+        { axis: "h", line: 25 },
+        { axis: "h", line: 27 },
+      ],
+      /* Three comb creases chain four columns into one orbit whose
+       * widest stamp floods eighty-eight cells - the heaviest print
+       * the drawer has ever stamped - while a four-by-two block of
+       * paired columns sits out the pool as the keep-clear. */
+      avoid: ["8,11", "8,12", "8,13", "8,14", "11,11", "11,12", "11,13", "11,14"],
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 8 }, { x: 0, y: 9 }, { x: 0, y: 10 }, { x: 0, y: 11 }, { x: 8, y: 0 }, { x: 8, y: 8 }, { x: 8, y: 9 }, { x: 8, y: 10 }, { x: 9, y: 0 }, { x: 9, y: 8 }, { x: 9, y: 9 }, { x: 9, y: 10 }, { x: 9, y: 11 }],
+    },
+    {
+      id: "f42", labelKey: "lvlNum42",
+      side: 15,
+      wants: 12,
+      par: 10,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 7 },
+        { axis: "v", line: 21 },
+        { axis: "v", line: 27 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 7 },
+        { axis: "h", line: 25 },
+        { axis: "h", line: 27 },
+      ],
+      /* The first sheet that asks for ten creases: five on each axis,
+       * combing the paper into a fifteen-orbit ladder whose heaviest
+       * print ties f41's eighty-eight cells, with an eight-cell
+       * keep-clear block parked mid-field. */
+      avoid: ["9,11", "9,12", "9,13", "9,14", "12,11", "12,12", "12,13", "12,14"],
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 8 }, { x: 0, y: 9 }, { x: 0, y: 10 }, { x: 0, y: 11 }, { x: 9, y: 0 }, { x: 9, y: 8 }, { x: 9, y: 9 }, { x: 9, y: 10 }, { x: 10, y: 0 }, { x: 10, y: 8 }, { x: 10, y: 9 }, { x: 10, y: 10 }, { x: 10, y: 11 }],
+    },
+    {
+      id: "f43", labelKey: "lvlNum43",
+      side: 15,
+      wants: 13,
+      par: 10,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 7 },
+        { axis: "v", line: 23 },
+        { axis: "v", line: 25 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 21 },
+        { axis: "h", line: 25 },
+        { axis: "h", line: 27 },
+      ],
+      /* The first thirteen-stamp tray: fourteen orbits in the pool, one
+       * four-cell keep-clear column block out of it, and the tray draws
+       * thirteen of the fourteen - one orbit of slack, where f42 drew
+       * twelve of fourteen. */
+      avoid: ["8,0", "8,1", "8,2", "8,3"],
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 4 }, { x: 0, y: 5 }, { x: 0, y: 6 }, { x: 0, y: 7 }, { x: 8, y: 4 }, { x: 8, y: 5 }, { x: 8, y: 6 }, { x: 8, y: 7 }, { x: 9, y: 0 }, { x: 9, y: 4 }, { x: 9, y: 5 }, { x: 9, y: 6 }, { x: 9, y: 7 }],
+    },
+    /* ------------------------------------------------------------------
+     * The apex tier (f44-f46). The zenith filled fifteen-cell paper;
+     * this tier widens it once more and takes one record per rung
+     * against every sheet before it: f44 the first sixteen-cell paper,
+     * f45 the widest open pool the drawer has dealt from (all sixteen
+     * orbits in play, the first summit sheet with no keep-clear at
+     * all), f46 the first fourteen-stamp tray. Every sheet was searched
+     * and certified by the same bar the forge applies to the shipped
+     * ladder - twelve seeded deals all solvable, no deal falling
+     * through to the authored reserve, every intended crease provably
+     * needed (each crease's cut strands more pool representatives than
+     * a deal can leave out), and the keep-clears, where one exists,
+     * whole orbits. */
+    {
+      id: "f44", labelKey: "lvlNum44",
+      side: 16,
+      wants: 13,
+      par: 10,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 7 },
+        { axis: "v", line: 25 },
+        { axis: "v", line: 27 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 7 },
+        { axis: "h", line: 25 },
+        { axis: "h", line: 27 },
+      ],
+      /* The first sixteen-cell paper: the low trio chains the first
+       * eight columns and rows while the twenty-five and twenty-seven
+       * creases band the last six into a second strip on each axis,
+       * sixteen orbits over the grid, with a six-cell keep-clear strip
+       * parked down the eighth column. */
+      avoid: ["8,10", "8,11", "8,12", "8,13", "8,14", "8,15"],
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 8 }, { x: 0, y: 9 }, { x: 0, y: 10 }, { x: 8, y: 0 }, { x: 8, y: 8 }, { x: 8, y: 9 }, { x: 9, y: 0 }, { x: 9, y: 8 }, { x: 9, y: 9 }, { x: 9, y: 10 }, { x: 10, y: 0 }, { x: 10, y: 8 }, { x: 10, y: 9 }, { x: 10, y: 10 }],
+    },
+    {
+      id: "f45", labelKey: "lvlNum45",
+      side: 16,
+      wants: 13,
+      par: 10,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 7 },
+        { axis: "v", line: 23 },
+        { axis: "v", line: 29 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 7 },
+        { axis: "h", line: 23 },
+        { axis: "h", line: 29 },
+      ],
+      /* The widest open pool the drawer has dealt from: sixteen orbits,
+       * none kept clear - the twenty-three and twenty-nine creases pair
+       * the far columns and rows off instead of banding them, so every
+       * representative stays open and the authored reserve inks the
+       * whole sixteen-by-sixteen. */
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 8 }, { x: 0, y: 10 }, { x: 0, y: 11 }, { x: 8, y: 0 }, { x: 8, y: 8 }, { x: 8, y: 10 }, { x: 8, y: 11 }, { x: 10, y: 0 }, { x: 10, y: 8 }, { x: 10, y: 10 }, { x: 10, y: 11 }, { x: 11, y: 0 }, { x: 11, y: 8 }, { x: 11, y: 10 }, { x: 11, y: 11 }],
+    },
+    {
+      id: "f46", labelKey: "lvlNum46",
+      side: 16,
+      wants: 14,
+      par: 10,
+      intended: [
+        { axis: "v", line: 1 },
+        { axis: "v", line: 3 },
+        { axis: "v", line: 7 },
+        { axis: "v", line: 25 },
+        { axis: "v", line: 27 },
+        { axis: "h", line: 1 },
+        { axis: "h", line: 3 },
+        { axis: "h", line: 7 },
+        { axis: "h", line: 23 },
+        { axis: "h", line: 29 },
+      ],
+      /* The first fourteen-stamp tray: fifteen open orbits, one
+       * four-cell keep-clear orbit of paired row strips out of the pool
+       * on the eighth column, and the tray draws fourteen of the
+       * fifteen - one orbit of slack, where f43 drew thirteen of
+       * fourteen. */
+      avoid: ["8,8", "8,9", "8,14", "8,15"],
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 8 }, { x: 0, y: 10 }, { x: 0, y: 11 }, { x: 8, y: 0 }, { x: 8, y: 10 }, { x: 8, y: 11 }, { x: 9, y: 0 }, { x: 9, y: 8 }, { x: 9, y: 10 }, { x: 9, y: 11 }, { x: 10, y: 0 }, { x: 10, y: 8 }, { x: 10, y: 10 }, { x: 10, y: 11 }],
+    },
+    /* ------------------------------------------------------------------
+     * The crown tier (f47-f56). The apex left the drawer one orbit of
+     * slack and stopped at ten creases; this tier closes the drawer out
+     * on eighteen-cell paper under eleven creases, and takes one record
+     * per rung against every sheet before it: f47 the first
+     * seventeen-cell paper and the first fifteen-stamp tray, f48 the
+     * heaviest print the game has ever stamped (a hundred and
+     * twenty-one cells, eleven columns by eleven rows, past the zenith's
+     * eighty-eight), f49 the first sixteen-stamp tray, dealt from the
+     * widest pool any sheet has drawn from (nineteen open orbits, past
+     * f45's sixteen), f50 the first eleven-crease sheet - and with it,
+     * necessarily, the first six-crease axis, f51 the first deal floor
+     * past the whole-cloth capstone's 192, f52 the first eighteen-cell
+     * paper, f53 and f54 the floor ladder again (242, then 258), f55 the
+     * widest sheet ever dealt with no keep-clear at all (eighteen open
+     * orbits on eighteen-cell paper, past f45's sixteen), and f56 the
+     * capstone: the only twelve-crease sheet the drawer holds, whose
+     * pool is spent exactly - sixteen stamps against sixteen open
+     * orbits - so every deal inks all 324 cells, the largest constant
+     * flood the game has ever dealt, past f40's 192. The deal floor -
+     * the least ink any conceivable deal can lay, the sum of the tray's
+     * smallest orbit prints - is the tier's difficulty line: it climbs
+     * 224, 242, 258, 324 across the floor rungs, and where it dips
+     * (f49's 117 under f48's 168, f52's 162, f55's 164) the dip is the
+     * record's own cost, paid in the orbits the pool and open-sheet
+     * records leave in play. Every sheet below was searched and
+     * certified by the forge's crown bench - twelve seeded deals all
+     * solvable, no deal falling through to the authored reserve, every
+     * intended crease provably needed on every dealt sheet, each
+     * crease's cut stranding more pool representatives than a deal can
+     * leave out, keep-clears whole orbits, and every record held against
+     * every sheet before it. */
+    {
+      id: "f47", labelKey: "shfS47",
+      side: 17,
+      wants: 15,
+      par: 10,
+      intended: [{ axis: "v", line: 1 }, { axis: "v", line: 3 }, { axis: "v", line: 7 }, { axis: "v", line: 27 }, { axis: "v", line: 31 }, { axis: "h", line: 1 }, { axis: "h", line: 3 }, { axis: "h", line: 11 }, { axis: "h", line: 27 }, { axis: "h", line: 29 }],
+      /* The first sheet past sixteen cells. The combs chain eleven of the
+       * seventeen columns and rows, two lone crossings sit out the pool as
+       * the keep-clear, and the widest stamps flood a hundred and four
+       * cells. */
+      avoid: ["8,4", "8,7"],
+      authored: [{ x: 0, y: 0 }, { x: 11, y: 0 }, { x: 13, y: 0 }, { x: 0, y: 4 }, { x: 0, y: 5 }, { x: 8, y: 0 }, { x: 9, y: 0 }, { x: 10, y: 0 }, { x: 11, y: 4 }, { x: 11, y: 5 }, { x: 13, y: 4 }, { x: 13, y: 5 }, { x: 9, y: 4 }, { x: 10, y: 4 }, { x: 8, y: 5 }],
+    },
+    {
+      id: "f48", labelKey: "shfS48",
+      side: 17,
+      wants: 15,
+      par: 10,
+      intended: [{ axis: "v", line: 1 }, { axis: "v", line: 3 }, { axis: "v", line: 7 }, { axis: "v", line: 23 }, { axis: "v", line: 31 }, { axis: "h", line: 1 }, { axis: "h", line: 3 }, { axis: "h", line: 7 }, { axis: "h", line: 23 }, { axis: "h", line: 31 }],
+      /* The heaviest print the drawer has ever stamped: one stamp on the
+       * wide orbit floods a hundred and twenty-one cells, eleven columns
+       * by eleven rows, past the zenith's eighty-eight. The pool is the
+       * tray plus one, so every deal runs close to the whole sheet. */
+      authored: [{ x: 0, y: 0 }, { x: 9, y: 0 }, { x: 10, y: 0 }, { x: 11, y: 0 }, { x: 0, y: 9 }, { x: 0, y: 10 }, { x: 0, y: 11 }, { x: 9, y: 9 }, { x: 10, y: 9 }, { x: 11, y: 9 }, { x: 9, y: 10 }, { x: 10, y: 10 }, { x: 11, y: 10 }, { x: 9, y: 11 }, { x: 10, y: 11 }],
+    },
+    {
+      id: "f49", labelKey: "shfS49",
+      side: 17,
+      wants: 16,
+      par: 10,
+      intended: [{ axis: "v", line: 1 }, { axis: "v", line: 3 }, { axis: "v", line: 7 }, { axis: "v", line: 23 }, { axis: "v", line: 31 }, { axis: "h", line: 1 }, { axis: "h", line: 3 }, { axis: "h", line: 7 }, { axis: "h", line: 27 }, { axis: "h", line: 29 }],
+      /* Sixteen stamps, the deepest tray, drawn from nineteen open orbits -
+       * the widest pool any sheet has dealt from, past f45's sixteen. Two
+       * lone crossings sit out; the dealt targets dip under f48's because
+       * those orbits never reach the ink. */
+      avoid: ["9,8", "14,8"],
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 11 }, { x: 9, y: 0 }, { x: 10, y: 0 }, { x: 11, y: 0 }, { x: 9, y: 11 }, { x: 10, y: 11 }, { x: 11, y: 11 }, { x: 0, y: 8 }, { x: 0, y: 9 }, { x: 0, y: 10 }, { x: 10, y: 8 }, { x: 11, y: 8 }, { x: 9, y: 9 }, { x: 10, y: 9 }, { x: 11, y: 9 }],
+    },
+    {
+      id: "f50", labelKey: "shfS50",
+      side: 17,
+      wants: 16,
+      par: 11,
+      intended: [{ axis: "v", line: 1 }, { axis: "v", line: 3 }, { axis: "v", line: 7 }, { axis: "v", line: 27 }, { axis: "v", line: 31 }, { axis: "h", line: 1 }, { axis: "h", line: 3 }, { axis: "h", line: 7 }, { axis: "h", line: 25 }, { axis: "h", line: 29 }, { axis: "h", line: 31 }],
+      /* The first eleven-crease sheet, and with it the first six-crease
+       * axis: five verticals comb eleven columns while six horizontals
+       * band the rows, and the widest print floods sixty-four cells. */
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 9 }, { x: 11, y: 0 }, { x: 11, y: 9 }, { x: 13, y: 0 }, { x: 13, y: 9 }, { x: 8, y: 0 }, { x: 9, y: 0 }, { x: 10, y: 0 }, { x: 0, y: 8 }, { x: 8, y: 9 }, { x: 9, y: 9 }, { x: 10, y: 9 }, { x: 11, y: 8 }, { x: 13, y: 8 }, { x: 8, y: 8 }],
+    },
+    {
+      id: "f51", labelKey: "shfS51",
+      side: 17,
+      wants: 16,
+      par: 11,
+      intended: [{ axis: "v", line: 1 }, { axis: "v", line: 3 }, { axis: "v", line: 9 }, { axis: "v", line: 29 }, { axis: "v", line: 31 }, { axis: "h", line: 1 }, { axis: "h", line: 3 }, { axis: "h", line: 7 }, { axis: "h", line: 25 }, { axis: "h", line: 29 }, { axis: "h", line: 31 }],
+      /* The first deal floor past the whole cloth: the tray's smallest
+       * orbits print enough that no deal can lay less than 224 cells of
+       * ink - a floor the capstone f40 never held. A single lone crossing
+       * sits out the pool. */
+      avoid: ["10,8"],
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 9 }, { x: 13, y: 0 }, { x: 13, y: 9 }, { x: 4, y: 0 }, { x: 4, y: 9 }, { x: 10, y: 0 }, { x: 11, y: 0 }, { x: 12, y: 0 }, { x: 0, y: 8 }, { x: 10, y: 9 }, { x: 11, y: 9 }, { x: 12, y: 9 }, { x: 13, y: 8 }, { x: 4, y: 8 }, { x: 11, y: 8 }],
+    },
+    {
+      id: "f52", labelKey: "shfS52",
+      side: 18,
+      wants: 16,
+      par: 11,
+      intended: [{ axis: "v", line: 1 }, { axis: "v", line: 3 }, { axis: "v", line: 7 }, { axis: "v", line: 25 }, { axis: "v", line: 33 }, { axis: "h", line: 1 }, { axis: "h", line: 3 }, { axis: "h", line: 7 }, { axis: "h", line: 27 }, { axis: "h", line: 31 }, { axis: "h", line: 33 }],
+      /* The first eighteen-cell paper. Two lone crossings sit out the
+       * pool, and the floor dips to 162 - the wider paper's own cost,
+       * paid back by the floor rungs that follow. */
+      avoid: ["10,8", "15,8"],
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 10 }, { x: 8, y: 0 }, { x: 8, y: 10 }, { x: 10, y: 0 }, { x: 11, y: 0 }, { x: 12, y: 0 }, { x: 10, y: 10 }, { x: 11, y: 10 }, { x: 12, y: 10 }, { x: 0, y: 8 }, { x: 0, y: 9 }, { x: 8, y: 8 }, { x: 8, y: 9 }, { x: 11, y: 8 }, { x: 12, y: 8 }],
+    },
+    {
+      id: "f53", labelKey: "shfS53",
+      side: 18,
+      wants: 16,
+      par: 11,
+      intended: [{ axis: "v", line: 1 }, { axis: "v", line: 3 }, { axis: "v", line: 25 }, { axis: "v", line: 29 }, { axis: "v", line: 31 }, { axis: "h", line: 1 }, { axis: "h", line: 3 }, { axis: "h", line: 7 }, { axis: "h", line: 25 }, { axis: "h", line: 31 }, { axis: "h", line: 33 }],
+      /* The floor ladder climbs again: no deal can lay less than 242
+       * cells, past f51's 224. The keep-clear is one paired-cell orbit -
+       * two adjacent cells that mirror only onto each other. */
+      avoid: ["4,12", "4,13"],
+      authored: [{ x: 8, y: 0 }, { x: 8, y: 8 }, { x: 0, y: 0 }, { x: 0, y: 8 }, { x: 8, y: 12 }, { x: 4, y: 0 }, { x: 5, y: 0 }, { x: 6, y: 0 }, { x: 7, y: 0 }, { x: 4, y: 8 }, { x: 5, y: 8 }, { x: 6, y: 8 }, { x: 7, y: 8 }, { x: 0, y: 12 }, { x: 5, y: 12 }, { x: 6, y: 12 }],
+    },
+    {
+      id: "f54", labelKey: "shfS54",
+      side: 18,
+      wants: 16,
+      par: 11,
+      intended: [{ axis: "v", line: 1 }, { axis: "v", line: 3 }, { axis: "v", line: 7 }, { axis: "v", line: 27 }, { axis: "v", line: 33 }, { axis: "h", line: 1 }, { axis: "h", line: 3 }, { axis: "h", line: 7 }, { axis: "h", line: 25 }, { axis: "h", line: 31 }, { axis: "h", line: 33 }],
+      /* The floor ladder's third step: 258 cells of guaranteed ink, past
+       * f53's 242, around another paired-cell keep-clear. */
+      avoid: ["8,12", "8,13"],
+      authored: [{ x: 0, y: 0 }, { x: 0, y: 8 }, { x: 10, y: 0 }, { x: 10, y: 8 }, { x: 12, y: 0 }, { x: 13, y: 0 }, { x: 12, y: 8 }, { x: 13, y: 8 }, { x: 0, y: 12 }, { x: 8, y: 0 }, { x: 9, y: 0 }, { x: 8, y: 8 }, { x: 9, y: 8 }, { x: 10, y: 12 }, { x: 12, y: 12 }, { x: 13, y: 12 }],
+    },
+    {
+      id: "f55", labelKey: "shfS55",
+      side: 18,
+      wants: 16,
+      par: 11,
+      intended: [{ axis: "v", line: 1 }, { axis: "v", line: 3 }, { axis: "v", line: 7 }, { axis: "v", line: 25 }, { axis: "v", line: 31 }, { axis: "v", line: 33 }, { axis: "h", line: 1 }, { axis: "h", line: 3 }, { axis: "h", line: 25 }, { axis: "h", line: 29 }, { axis: "h", line: 31 }],
+      /* The widest sheet ever dealt with no keep-clear at all: eighteen
+       * open orbits on eighteen-cell paper, past f45's sixteen. The floor
+       * dips to 164 - the open pool's own cost, the small orbits back in
+       * play. */
+      authored: [{ x: 0, y: 8 }, { x: 8, y: 8 }, { x: 0, y: 0 }, { x: 8, y: 0 }, { x: 12, y: 8 }, { x: 12, y: 0 }, { x: 0, y: 4 }, { x: 8, y: 4 }, { x: 0, y: 5 }, { x: 8, y: 5 }, { x: 0, y: 6 }, { x: 8, y: 6 }, { x: 0, y: 7 }, { x: 8, y: 7 }, { x: 12, y: 4 }, { x: 12, y: 5 }],
+    },
+    {
+      id: "f56", labelKey: "shfS56",
+      side: 18,
+      wants: 16,
+      par: 12,
+      intended: [{ axis: "v", line: 1 }, { axis: "v", line: 3 }, { axis: "v", line: 7 }, { axis: "v", line: 27 }, { axis: "v", line: 31 }, { axis: "v", line: 33 }, { axis: "h", line: 1 }, { axis: "h", line: 3 }, { axis: "h", line: 7 }, { axis: "h", line: 27 }, { axis: "h", line: 31 }, { axis: "h", line: 33 }],
+      /* The capstone: the only twelve-crease sheet the drawer holds, six
+       * creases on each axis. Its pool is spent exactly - sixteen stamps
+       * against sixteen open orbits - so every deal inks all 324 cells of
+       * the eighteen-by-eighteen sheet, the largest constant flood the
+       * game has ever dealt, past f40's 192. */
+      authored: [{ x: 0, y: 0 }, { x: 10, y: 0 }, { x: 0, y: 10 }, { x: 10, y: 10 }, { x: 8, y: 0 }, { x: 9, y: 0 }, { x: 0, y: 8 }, { x: 10, y: 8 }, { x: 0, y: 9 }, { x: 10, y: 9 }, { x: 8, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 8 }, { x: 9, y: 8 }, { x: 8, y: 9 }, { x: 9, y: 9 }],
+    },
   ];
 
   function shfKey(x, y) {
@@ -1462,6 +1785,16 @@
       "shfS38": "Twelve Stamps",
       "shfS39": "The Heavy Print",
       "shfS40": "The Whole Cloth",
+      "shfS47": "Seventeen Cells",
+      "shfS48": "The Great Print",
+      "shfS49": "Sixteen Stamps",
+      "shfS50": "The Eleven-Fold",
+      "shfS51": "The Deep Ink",
+      "shfS52": "Eighteen Cells",
+      "shfS53": "The Bare Pair",
+      "shfS54": "The Rising Ink",
+      "shfS55": "The Open Paper",
+      "shfS56": "Every Cell",
       "shfInkLabel": "Ink",
       "shfFoldLabel": "Creases",
       "shfSheetSelectLabel": "Pick a sheet",
@@ -1489,7 +1822,7 @@
       "shfAlready": "{name} is already pressed - take a new sheet.",
       "shfBestFolds": "best {n} creases",
       "shfNextSheet": "Next sheet unlocked.",
-      "shfCampaignDone": "All forty sheets pressed clean.",
+      "shfCampaignDone": "All fifty-six sheets pressed clean.",
       "shfLocked": "{name} is still folded away behind the sheet before it.",
       "shfHint": "Extra ink is a failure, so a crease you do not need is a trap - and the crossing cell of two creases often has to stay bare.",
       "logShadowFold": "Pressed a sheet on {n} creases",
@@ -1536,6 +1869,16 @@
       "shfS38": "十二枚印章",
       "shfS39": "重墨",
       "shfS40": "满纸",
+      "shfS47": "十七格",
+      "shfS48": "巨墨",
+      "shfS49": "十六枚印章",
+      "shfS50": "十一折",
+      "shfS51": "深墨",
+      "shfS52": "十八格",
+      "shfS53": "双格留白",
+      "shfS54": "涨墨",
+      "shfS55": "净纸",
+      "shfS56": "格格皆墨",
       "shfInkLabel": "墨点",
       "shfFoldLabel": "折痕",
       "shfSheetSelectLabel": "选择纸张",
@@ -1563,7 +1906,7 @@
       "shfAlready": "「{name}」已经拓好了——换一张纸再来。",
       "shfBestFolds": "最佳 {n} 道折痕",
       "shfNextSheet": "解锁下一张纸。",
-      "shfCampaignDone": "四十张纸都拓干净了。",
+      "shfCampaignDone": "五十六张纸都拓干净了。",
       "shfLocked": "「{name}」还压在上一张纸后面。",
       "shfHint": "多出图案之外的墨就算失败，所以用不上的折痕是个陷阱；两条折线的交叉格常常必须留空。",
       "logShadowFold": "用 {n} 道折痕拓好了一张纸",
@@ -1592,6 +1935,7 @@
         "Watch out: ink outside the target is a failure, so an unneeded crease - or a stamp on the crossing cell - ruins the print.",
         "Scoring: folds used against par decides the stars, and New Sheet deals a fresh target built from a known answer.",
         "New tier: ten more sheets widen the paper again - twelve, thirteen and finally fourteen cells a side - and pass every deep-tier ceiling: eleven and twelve stamps in the tray, the first nine-crease sheet, five creases on one axis, three keep-clear orbits, single prints of up to eighty cells, and two sheets that ink all but a keep-clear handful of the paper; the capstone floods 192 of its 196 cells on every deal.",
+        "Final tier: ten more sheets close the drawer out - seventeen and eighteen cells a side, the first eleven-crease sheet with six creases on one axis, fifteen and sixteen stamps in the tray, one print of a hundred and twenty-one cells; the least ink a deal can lay climbs past the whole cloth's 192 cells to 324, and the capstone spends its pool exactly - sixteen stamps against sixteen open orbits, every cell of the sheet inked on every deal.",
       ],
       zh: [
         "目标：把纸展开后的墨迹，正好落在图案上。",
@@ -1601,6 +1945,7 @@
         "小心：图案之外多出墨就算失败，所以多余的折线——或者压在对齐格上的章——都会毁掉这张拓片。",
         "计分：用的折痕数与标准用量对比决定星级；换一张纸会发一张由已知答案生成的新图案。",
         "新层级：再添十张纸，把纸幅再次拉宽——十二格、十三格，直至十四格见方，并越过深层的一切上限：印盘十一枚、十二枚，第一张九折纸，同轴五道折痕，三处留白，单枚印章最多铺出八十格墨；其中两张纸除了留白几乎要铺满整幅，收官任务每次开局都漫过 196 格中的 192 格。",
+        "收官层级：再添十张纸为折影收官——十七格、十八格见方，第一张十一道折痕的纸（同轴六道），印盘十五枚、十六枚，单枚印章最多铺出一百二十一格墨；每次开局至少能铺出的墨从满纸的一百九十二格一路涨到三百二十四格，收官纸恰好用尽印池：十六枚印章对十六个可盖位，十八格见方的纸每次开局格格皆墨。",
       ],
     },
   });

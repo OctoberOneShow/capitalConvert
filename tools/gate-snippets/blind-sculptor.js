@@ -39,16 +39,40 @@
  * pair three stars, the sweep two and past the budget nothing, and the
  * mechanic is cut out of a copy of every rung: strip the thinnest height
  * from the dealt solid and a height door opens - the wall contract, not the
- * fog, is what forces the vertical pair. */
+ * fog, is what forces the vertical pair.
+ *
+ * The fold tier b31-b40 spends the one lever the whole ladder had never
+ * touched: the door itself crosses the axes. Every pair of cuts that ever
+ * closed a shipped solid stayed on one axis - the shelf pairs on the height
+ * axis, the wall pairs on a vertical one - and these rungs deal "fold"
+ * solids, every block hidden in one front plane bent onto one side plane, so
+ * the only pair that pins the solid spends one probe on each arm. The gate
+ * holds the tier to the engine's currency over the panel's own stream: each
+ * deal is proved a fold (an independent re-statement of the contract), par 2
+ * with exactly one closing pair among the 36, that pair one front slice and
+ * one side slice, the 27 same-axis pairs closing nothing, the shelf habit
+ * dead while the sweep still finishes, and the solver's own two-probe line
+ * is the L itself. Thirteen blocks leave two of the fold's fifteen cells
+ * empty; fourteen leave one, and it lands on the crease every time - while
+ * the fog never moves, because C(27,14) is C(27,13): 20,058,300 solids, the
+ * summit's own ceiling. The tier's climb is the label: both arms named, then
+ * one dark, then both dark - nine corners to rule out against the summit's
+ * six wall pairs - and the cut proof runs both ways: delete an arm and a
+ * single slice closes what is left, so the L is why the fold takes two. */
 
 module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const levels = App.sculptorLevels || [];
   const deepIds = ["b21", "b22", "b23", "b24"];
   const summitIds = ["b25", "b26", "b27", "b28", "b29", "b30"];
+  const foldIds = ["b31", "b32", "b33", "b34", "b35", "b36", "b37", "b38", "b39", "b40"];
 
-  check("game-blind-sculptor", "the ladder holds thirty solids",
-    levels.length === 30, String(levels.length));
+  const expectedIds = Array.from({ length: 40 }, (_, index) => "b" + (index + 1));
+  check("game-blind-sculptor", "the ladder holds forty solids",
+    levels.length === 40, String(levels.length));
+  check("game-blind-sculptor", "the ids run b1 through b40 in order",
+    levels.map((level) => level.id).join(",") === expectedIds.join(","),
+    levels.map((level) => level.id).join(","));
   check("game-blind-sculptor", "every solid id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -61,19 +85,29 @@ module.exports = function gate(ctx) {
       summitIds.every((id, index) => levels.findIndex((level) => level.id === id) >
         (index === 0 ? -1 : levels.findIndex((level) => level.id === summitIds[index - 1]))),
     summitMissing.join(",") || "ordered");
-  check("game-blind-sculptor", "the deep tier sits behind the calm twenty and the summit closes the ladder",
+  const foldMissing = foldIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-blind-sculptor", "the fold tier b31-b40 is present in order",
+    foldMissing.length === 0 &&
+      foldIds.every((id, index) => levels.findIndex((level) => level.id === id) >
+        (index === 0 ? -1 : levels.findIndex((level) => level.id === foldIds[index - 1]))),
+    foldMissing.join(",") || "ordered");
+  check("game-blind-sculptor", "the deep tier sits behind the calm twenty, the summit follows, and the fold closes the ladder",
     deepIds.every((id, i) => levels[20 + i] && levels[20 + i].id === id) &&
-      summitIds.every((id, i) => levels[levels.length - 6 + i] &&
-        levels[levels.length - 6 + i].id === id),
+      summitIds.every((id, i) => levels[24 + i] && levels[24 + i].id === id) &&
+      foldIds.every((id, i) => levels[levels.length - 10 + i] &&
+        levels[levels.length - 10 + i].id === id),
     "20-23: " + levels.slice(20, 24).map((level) => level.id).join(",") +
-      " | tail: " + levels.slice(-6).map((level) => level.id).join(","));
+      " | 24-29: " + levels.slice(24, 30).map((level) => level.id).join(",") +
+      " | tail: " + levels.slice(-10).map((level) => level.id).join(","));
 
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
   const deep = deepIds.map((id) => byId[id]);
   const summit = summitIds.map((id) => byId[id]);
+  const fold = foldIds.map((id) => byId[id]);
   const shallow = levels.filter((level) =>
-    deepIds.indexOf(level.id) === -1 && summitIds.indexOf(level.id) === -1);
+    deepIds.indexOf(level.id) === -1 && summitIds.indexOf(level.id) === -1 &&
+    foldIds.indexOf(level.id) === -1);
 
   /* The lesson is structural: every shipped rung closes on the height axis
    * or on a pair the prover finds anywhere in the cube, and none carries the
@@ -114,6 +148,37 @@ module.exports = function gate(ctx) {
       summit.map((level) => level.axis || "dark").join(",") + ", slack " +
       summit.map((level) => level.slack).join(",") + ", tries " +
       summit.map((level) => level.tries).join(","));
+
+  /* The fold tier keeps the wall economy's floor and spends its own lever:
+   * every rung carries the fold flavour no earlier row ships, thirteen or
+   * fourteen blocks - fourteen matching the ceiling's own fog - and the
+   * naming ladder runs both arms named, one dark, both dark, twice. The
+   * economy reopens the way b21 reopened it for the walls, then floors. */
+  const foldShapeOk =
+    fold.every((level) => level.want === "fold" &&
+      (level.blocks === 13 || level.blocks === 14) &&
+      level.minPar === 2 && level.maxPar === 2) &&
+    fold.slice(0, 6).every((level) => level.blocks === 13) &&
+    fold.slice(6).every((level) => level.blocks === 14) &&
+    byId.b31.front === 1 && byId.b31.side === 2 &&
+    byId.b37.front === 2 && byId.b37.side === 0 &&
+    byId.b34.front === 2 && byId.b34.side === undefined &&
+    byId.b35.side === 1 && byId.b35.front === undefined &&
+    ["b36", "b40"].every((id) => byId[id].front === undefined && byId[id].side === undefined) &&
+    byId.b38.front === 0 && byId.b38.side === undefined &&
+    byId.b39.side === 2 && byId.b39.front === undefined &&
+    fold.map((level) => level.slack).join(",") === "2,2,1,1,1,1,1,1,1,1" &&
+    fold.map((level) => level.tries).join(",") === "3,2,1,1,1,1,1,1,1,1" &&
+    levels.slice(0, 30).every((level) => level.want !== "fold" &&
+      level.front === undefined && level.side === undefined);
+  check("game-blind-sculptor",
+    "the fold tier deals nothing but folds at thirteen and fourteen blocks, the naming ladder runs named/one dark/both dark twice, and no earlier rung carries the flavour",
+    foldShapeOk,
+    "blocks " + fold.map((level) => level.blocks).join(",") + ", arms " +
+      fold.map((level) => (level.front === undefined ? "-" : "F" + level.front) +
+        (level.side === undefined ? "-" : "/S" + level.side)).join(",") +
+      ", slack " + fold.map((level) => level.slack).join(",") + ", tries " +
+      fold.map((level) => level.tries).join(","));
 
   /* Geometry, matched to the module's own plane mapping (top = depth/width,
    * front and side = height/width and height/depth). */
@@ -298,6 +363,119 @@ module.exports = function gate(ctx) {
     summitDealProblems.slice(0, 4).join(" | ") ||
       "axes " + summitIds.map((id) => `${id} ${summitAxisTally[id].y}y/${summitAxisTally[id].x}x`).join(", "));
 
+  /* An independent re-statement of the fold contract, so a deal that fell
+   * back to the fixed staircase cannot slip through as a fold: every block
+   * inside one front plane bent onto one side plane, both arms alive and
+   * reaching both columns of their own axis, every height occupied, and
+   * neither folded plane packed all nine. */
+  const foldOf = (mask) => {
+    const all = (1 << 27) - 1;
+    for (let p = 0; p < 3; p += 1) {
+      for (let q = 0; q < 3; q += 1) {
+        let inside = 0;
+        for (let r = 0; r < 3; r += 1) for (let c = 0; c < 3; c += 1) {
+          inside |= 1 << idx(c, p, r);
+          inside |= 1 << idx(q, c, r);
+        }
+        if (mask & ~inside & all) continue;
+        let front = 0, side = 0, colsF = 0, colsS = 0, heights = 0, frontPlane = 0, sidePlane = 0;
+        for (let i = 0; i < 27; i += 1) {
+          if (!(mask & (1 << i))) continue;
+          heights |= 1 << heightOf(i);
+          const x = i % 3, y = Math.floor(i / 3) % 3;
+          if (y === p) frontPlane += 1;
+          if (x === q) sidePlane += 1;
+          if (y === p && x !== q) { front += 1; colsF |= 1 << x; }
+          if (x === q && y !== p) { side += 1; colsS |= 1 << y; }
+        }
+        if (bitCount(heights) < 3 || !front || !side) continue;
+        if (bitCount(colsF) < 2 || bitCount(colsS) < 2) continue;
+        if (frontPlane > 8 || sidePlane > 8) continue;
+        return { p, q };
+      }
+    }
+    return null;
+  };
+
+  /* Every fold rung replayed through the panel's own deal - the same
+   * sculptorGenerate call loadRound makes, on the module's own Lehmer stream
+   * (seed + round*101), so nothing here is probabilistic. Per deal: the fold
+   * contract holds, no single slice closes, exactly one pair closes and it
+   * spends one cut on the front arm and one on the side arm - the ladder's
+   * first cross-axis door - while all 27 same-axis pairs close nothing, the
+   * shelf habit leaves shapes standing and the sweep still finishes the run,
+   * and the solver's own two-probe line is the L itself. The named rungs
+   * must deal the corner their note names; the dark rungs must really deal
+   * several corners over the stream. */
+  const foldDealProblems = [];
+  const foldCornerTally = {};
+  fold.forEach((level) => {
+    foldCornerTally[level.id] = {};
+    for (let round = 1; round <= ROUNDS; round += 1) {
+      const deal = App.sculptorGenerate(3, level.blocks, level.seed + round * 101, level);
+      const tag = `${level.id} round ${round}`;
+      if (deal.par !== 2) { foldDealProblems.push(`${tag}: par ${deal.par} off the rung's two cuts`); continue; }
+      const found = foldOf(deal.mask);
+      if (!found) { foldDealProblems.push(`${tag}: not a fold (the dealer fell back)`); continue; }
+      if (level.front !== undefined && found.p !== level.front) {
+        foldDealProblems.push(`${tag}: the front arm left its named slice ${level.front}`);
+      }
+      if (level.side !== undefined && found.q !== level.side) {
+        foldDealProblems.push(`${tag}: the side arm left its named slice ${level.side}`);
+      }
+      const corner = found.p + "/" + found.q;
+      foldCornerTally[level.id][corner] = (foldCornerTally[level.id][corner] || 0) + 1;
+      const slices = [];
+      for (const axis of ["z", "y", "x"]) {
+        for (let i = 0; i < 3; i += 1) slices.push(App.sculptorSlice(deal.mask, axis, i));
+      }
+      const closes = (a, b) => App.sculptorCandidates(
+        [slices[a].key, slices[b].key], [slices[a], slices[b]], level.blocks, 0) === 1;
+      let doors = 0;
+      let crossDoors = 0;
+      let sameDoors = 0;
+      for (let a = 0; a < 9; a += 1) {
+        if (closes(a, a)) foldDealProblems.push(`${tag}: one slice closes the solid`);
+        for (let b = a + 1; b < 9; b += 1) {
+          if (!closes(a, b)) continue;
+          doors += 1;
+          if (slices[a].axis !== slices[b].axis && slices[a].axis !== "z" && slices[b].axis !== "z") crossDoors += 1;
+          else sameDoors += 1;
+        }
+      }
+      if (doors !== 1) foldDealProblems.push(`${tag}: ${doors} closing pairs, the door is not unique`);
+      if (crossDoors !== 1) foldDealProblems.push(`${tag}: ${crossDoors} cross-axis doors, the L is not the one way through`);
+      if (sameDoors !== 0) foldDealProblems.push(`${tag}: a same-axis pair closes a fold`);
+      const frontKey = "Y" + (found.p + 1);
+      const sideKey = "X" + (found.q + 1);
+      const fi = slices.findIndex((s) => s.key === frontKey);
+      const si = slices.findIndex((s) => s.key === sideKey);
+      if (!closes(fi, si)) {
+        foldDealProblems.push(`${tag}: the fold's own arms ${frontKey}+${sideKey} do not close it`);
+      }
+      const order = deal.order || [];
+      if (order.length !== 2 || order.slice().sort().join(",") !== [frontKey, sideKey].sort().join(",")) {
+        foldDealProblems.push(`${tag}: the solver's line ${order.join(">")} is not the L`);
+      }
+      const shelfPair = App.sculptorCandidates(["Z1", "Z2"],
+        [App.sculptorSlice(deal.mask, "z", 0), App.sculptorSlice(deal.mask, "z", 1)], level.blocks, 0);
+      if (shelfPair === 1) foldDealProblems.push(`${tag}: the shelf habit closes a fold`);
+      const sweep = App.sculptorCandidates(["Z1", "Z2", "Z3"], [
+        App.sculptorSlice(deal.mask, "z", 0),
+        App.sculptorSlice(deal.mask, "z", 1),
+        App.sculptorSlice(deal.mask, "z", 2),
+      ], level.blocks, 0);
+      if (sweep !== 1) foldDealProblems.push(`${tag}: the three-cut sweep cannot finish the run`);
+    }
+  });
+  const darkCorners = ["b36", "b40"].every((id) =>
+    Object.keys(foldCornerTally[id]).length >= 4);
+  check("game-blind-sculptor",
+    `every fold deal closes on one cross-axis L alone and the dark rungs really deal several corners (${ROUNDS} rounds x 10 rungs)`,
+    foldDealProblems.length === 0 && darkCorners,
+    foldDealProblems.slice(0, 4).join(" | ") ||
+      "corners " + foldIds.map((id) => `${id} ${Object.keys(foldCornerTally[id]).length}`).join(", "));
+
   /* The bands are the engine's own currency: par from the solver, the
    * shipped slack turning it into a probe budget, starsFor cutting the line.
    * Three stars cost the unique vertical pair; the shelf-habit line (the two
@@ -390,6 +568,17 @@ module.exports = function gate(ctx) {
     fogCeilingOk,
     `fog 12 = ${fog(12)}, fog 13 = ${fog(13)}`);
 
+  /* The fold stands on the same ceiling: C(27,14) is C(27,13) - the ceiling's
+   * own mirror - so the tier's climb is the door, not the fog, and the
+   * fourteen-block rungs hold 20,058,300 solids behind the L exactly as the
+   * summit did behind the wall. */
+  const foldFogOk = fog(14) === 20058300 && fog(14) === fog(13) &&
+    fold.every((level) => fog(level.blocks) === fog(13));
+  check("game-blind-sculptor",
+    "the fold stands on the same 20,058,300-solid fog at thirteen and fourteen blocks - the climb is the door, not the fog",
+    foldFogOk,
+    `fog 14 = ${fog(14)}, fog 13 = ${fog(13)}`);
+
   /* The summit's bands are the engine's own currency too: par from the
    * solver, the shipped slack turning it into a probe budget, starsFor
    * cutting the line. Three stars cost the vertical pair - now found among
@@ -431,6 +620,46 @@ module.exports = function gate(ctx) {
   check("game-blind-sculptor",
     "the summit bands pay the engine's par: the pair three stars, the sweep two, nothing past the budget, random hands one door in thirty-six",
     summitBandProblems.length === 0, summitBandProblems.slice(0, 4).join(" | "));
+
+  /* The fold's bands are the engine's own currency too: three stars cost the
+   * L - two probes, one per arm - the sweep line lands on two stars, nothing
+   * pays past the budget, and random two-cut hands still find the one cross
+   * door about one deal in thirty-six: reachable, not free. */
+  const foldBandProblems = [];
+  fold.forEach((level) => {
+    const deal = App.sculptorGenerate(3, level.blocks, level.seed + 101, level);
+    const budget = Math.max(2 + 1, deal.probes || 2 + level.slack);
+    const band = [2, 3, budget];
+    if (starsFor(2, band, "low") !== 3 || starsFor(3, band, "low") !== 2) {
+      foldBandProblems.push(`${level.id}: band ${band.join("/")} does not pay 3 stars for the L and 2 for the sweep`);
+    }
+    if (starsFor(budget + 1, band, "low") !== 0) {
+      foldBandProblems.push(`${level.id}: the band pays past the budget`);
+    }
+    const habitStars = starsFor(3, band, "low");
+    if (habitStars !== 2) foldBandProblems.push(`${level.id}: the shelf-habit line pays ${habitStars} stars`);
+    const rand = lcg(91000 + level.seed);
+    let hits = 0;
+    const axes = ["z", "y", "x"];
+    const sliceAt = (n) => App.sculptorSlice(deal.mask, axes[Math.floor(n / 3)], n % 3);
+    for (let trial = 0; trial < TRIALS; trial += 1) {
+      const a = Math.floor(rand() * 9);
+      let b = Math.floor(rand() * 9);
+      if (b === a) b = (b + 1 + Math.floor(rand() * 8)) % 9;
+      const one = sliceAt(a);
+      const two = sliceAt(b);
+      if (App.sculptorCandidates([one.key, two.key], [one, two], level.blocks, 0) === 1) hits += 1;
+    }
+    if (hits > TRIALS / 12) {
+      foldBandProblems.push(`${level.id}: random two-cut hands close the solid on ${hits}/${TRIALS} trials`);
+    }
+    if (hits === 0) {
+      foldBandProblems.push(`${level.id}: no random hand ever reached the door (${hits}/${TRIALS})`);
+    }
+  });
+  check("game-blind-sculptor",
+    "the fold bands pay the engine's par: the L three stars, the sweep two, nothing past the budget, random hands one door in thirty-six",
+    foldBandProblems.length === 0, foldBandProblems.slice(0, 4).join(" | "));
 
   /* The mechanic is load-bearing, cut out of a copy of every rung: strip the
    * thinnest height from the dealt solid - the contract fact that dies is
@@ -474,6 +703,33 @@ module.exports = function gate(ctx) {
     "strip a summit solid's thinnest height and a height door opens - the level stops demanding the vertical pair",
     summitCutProblems.length === 0, summitCutProblems.join(" | "));
 
+  /* The fold's mechanic is load-bearing: delete the side arm from a copy of
+   * every dealt fold and a single slice - the front plane - closes the
+   * remainder outright, so one arm alone is blind to the other and the L is
+   * why the fold takes two cuts. (That no full fold ever closes on a single
+   * slice is proved deal by deal in the streamed block above.) */
+  const foldCutProblems = [];
+  fold.forEach((level) => {
+    const deal = App.sculptorGenerate(3, level.blocks, level.seed + 101, level);
+    const found = foldOf(deal.mask);
+    if (!found) { foldCutProblems.push(`${level.id}: nothing dealt to cut`); return; }
+    let cut = deal.mask;
+    let cutBlocks = level.blocks;
+    for (let i = 0; i < 27; i += 1) {
+      if ((cut & (1 << i)) && (i % 3) === found.q && Math.floor(i / 3) % 3 !== found.p) {
+        cut &= ~(1 << i);
+        cutBlocks -= 1;
+      }
+    }
+    const frontSlice = App.sculptorSlice(cut, "y", found.p);
+    if (App.sculptorCandidates([frontSlice.key], [frontSlice], cutBlocks, 0) !== 1) {
+      foldCutProblems.push(`${level.id}: the armless copy did not close on the front plane alone`);
+    }
+  });
+  check("game-blind-sculptor",
+    "delete a fold's side arm and the front plane closes the rest alone - the arms are why the L takes two cuts",
+    foldCutProblems.length === 0, foldCutProblems.join(" | "));
+
   /* The tier's names, notes and the new-tier guide line resolve in both
    * languages. */
   const copyKeys = [];
@@ -503,6 +759,19 @@ module.exports = function gate(ctx) {
     (guide.zh || []).some((line) => line.indexOf("巅峰段") === 0);
   check("game-blind-sculptor", "the studio's guide carries the summit line in both languages",
     summitGuideOk, guide ? "en " + guide.en.length + " lines, zh " + guide.zh.length : "no guide");
+  const foldKeys = [];
+  fold.forEach((level) => { foldKeys.push(level.labelKey, level.noteKey); });
+  const foldCopyProblems = foldKeys.filter((key) =>
+    !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
+    !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
+    !App.t(key) || App.t(key) === key || App.I18N.zh[key] === App.I18N.en[key]);
+  check("game-blind-sculptor", "the ten fold solid names and notes resolve in both languages",
+    foldCopyProblems.length === 0, foldCopyProblems.join(","));
+  const foldGuideOk = !!guide &&
+    (guide.en || []).some((line) => line.indexOf("Fold:") === 0) &&
+    (guide.zh || []).some((line) => line.indexOf("折角段") === 0);
+  check("game-blind-sculptor", "the studio's guide carries the fold line in both languages",
+    foldGuideOk, guide ? "en " + guide.en.length + " lines, zh " + guide.zh.length : "no guide");
 
   /* The unlock chain is derived, never stored: clearing each solid in order
    * hands the player exactly the next one, all thirty times. */
@@ -518,6 +787,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-blind-sculptor", "the unlock chain walks all thirty solids in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-blind-sculptor", "the unlock chain walks all forty solids in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 };

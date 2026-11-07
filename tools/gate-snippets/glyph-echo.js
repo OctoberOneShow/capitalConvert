@@ -36,7 +36,18 @@
  * the live def - `reverse` relaxed to a forwards chime - and the mirrored
  * hand, the only hand that cleared the rung, loses all three lives on the
  * first non-palindromic chain of a seeded deal: the backwards order is
- * the summit's lesson, and without it the tier pays nothing. */
+ * the summit's lesson, and without it the tier pays nothing.
+ *
+ * The strobe tier c31-c40 plays the same hands and adds the one proof
+ * only it can give: the flash log. With removes logged beside adds, the
+ * goal-length show of a strobe chime must be a blink - every pad dark
+ * before the next link lands - while c30's goal-length show, run through
+ * the same forensics, must still overlap: the shipped wave, every glow
+ * before this tier sitting at or above its step. Its table proof carries
+ * the records the clocks win
+ * (length, pace, glow, blink depth) and the measured effort line, and
+ * its backwards cut repeats the summit's: the mirrored hand is the only
+ * hand that can live there. */
 module.exports = function gate(ctx) {
   const { App, env, check } = ctx;
   /* The module ships its table as glyphEchoLevels - Echo Cartographer owns
@@ -45,11 +56,12 @@ module.exports = function gate(ctx) {
   const levels = App.glyphEchoLevels;
   const tierIds = ["c21", "c22", "c23", "c24"];
   const summitIds = ["c25", "c26", "c27", "c28", "c29", "c30"];
+  const strobeIds = ["c31", "c32", "c33", "c34", "c35", "c36", "c37", "c38", "c39", "c40"];
   const byId = (id) => levels.find((level) => level.id === id);
 
   /* ---- ladder shape ---- */
-  check("game-glyph-echo", "the ladder holds all thirty chimes",
-    levels.length >= 30, String(levels.length));
+  check("game-glyph-echo", "the ladder holds all forty chimes",
+    levels.length >= 40, String(levels.length));
   check("game-glyph-echo", "every chime id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -59,6 +71,9 @@ module.exports = function gate(ctx) {
   const missingSummit = summitIds.filter((id) => !byId(id));
   check("game-glyph-echo", "the summit tier c25-c30 is present",
     missingSummit.length === 0, missingSummit.join(","));
+  const missingStrobe = strobeIds.filter((id) => !byId(id));
+  check("game-glyph-echo", "the strobe tier c31-c40 is present",
+    missingStrobe.length === 0, missingStrobe.join(","));
 
   /* ---- measured pressure, off the module's own table ---- */
   /* Effort = mean links per engaged second. A win replays every length from
@@ -149,11 +164,14 @@ module.exports = function gate(ctx) {
           add(...names) {
             real.add(...names);
             if (names.includes("is-lit")) {
-              log.push({ pad: index, at: env.clock.now });
+              log.push({ pad: index, at: env.clock.now, kind: "add" });
             }
           },
           remove(...names) {
             real.remove(...names);
+            if (names.includes("is-lit")) {
+              log.push({ pad: index, at: env.clock.now, kind: "remove" });
+            }
           },
           contains(name) {
             return real.contains(name);
@@ -207,7 +225,8 @@ module.exports = function gate(ctx) {
           env.timers.advance(600);
           continue;
         }
-        const chain = log.map((entry) => entry.pad);
+        const chain = log.filter((entry) => entry.kind === "add")
+          .map((entry) => entry.pad);
         log.length = 0;
         const taps = mirror ? chain.slice().reverse() : chain.slice();
         const goal = byId(levelId).goal;
@@ -421,12 +440,13 @@ module.exports = function gate(ctx) {
     index === 0 || value > list[index - 1]);
   const summitEfforts = summitIds.map((id) => effort(byId(id)));
   const hardMaxEffort = Math.max.apply(null, tierIds.map((id) => effort(byId(id))));
-  check("game-glyph-echo", "the summit's measured effort opens above c24 and climbs: " +
+  check("game-glyph-echo", "the summit's measured effort opens above c24 and closes at the " +
+      "pre-strobe highest on c30: " +
       summitEfforts.map((value) => value.toFixed(1)).join(" -> ") +
       " against the hard tier's " + hardMaxEffort.toFixed(1),
     climbs(summitEfforts) && summitEfforts[0] > hardMaxEffort &&
       summitEfforts[summitEfforts.length - 1] ===
-        Math.max.apply(null, levels.map(effort)),
+        Math.max.apply(null, levels.slice(0, 30).map(effort)),
     summitEfforts.map((value) => value.toFixed(3)).join(","));
   check("game-glyph-echo", "every summit chime pairs the backwards echo with a shortened glow",
     summitIds.every((id) => byId(id).reverse && byId(id).flashMs &&
@@ -436,36 +456,282 @@ module.exports = function gate(ctx) {
   const preSummitMaxReverseGoal = Math.max.apply(null,
     levels.slice(0, 24).filter((level) => level.reverse)
       .map((level) => level.goal));
-  check("game-glyph-echo", "the summit's mirrored length climbs to the campaign record: " +
+  check("game-glyph-echo", "the summit's mirrored length climbs to the pre-strobe record: " +
       summitGoals.join(" -> ") + " against the " + preSummitMaxReverseGoal +
       " mirrored links of the shipped chimes",
     climbs(summitGoals) && summitGoals[0] > preSummitMaxReverseGoal &&
-      byId("c30").goal === Math.max.apply(null, levels.map((level) => level.goal)),
+      byId("c30").goal === Math.max.apply(null, levels.slice(0, 30).map((level) => level.goal)),
     summitGoals.join("/") + " vs " + preSummitMaxReverseGoal);
   const summitSteps = summitIds.map((id) => byId(id).stepMs);
   const preSummitMinStep = Math.min.apply(null,
     levels.slice(0, 24).map((level) => level.stepMs));
   const eases = (list) => list.every((value, index) =>
     index === 0 || value <= list[index - 1]);
-  check("game-glyph-echo", "the summit's tempo never eases and c30 sets the pace record: " +
+  check("game-glyph-echo", "the summit's tempo never eases and c30 sets the pre-strobe pace record: " +
       summitSteps.join(" -> ") + " ms against the shipped " + preSummitMinStep,
     eases(summitSteps) && byId("c30").stepMs < preSummitMinStep,
     summitSteps.join("/") + " vs " + preSummitMinStep);
   const preSummitMinFlash = Math.min.apply(null,
     levels.slice(0, 24).map((level) => level.flashMs || 300));
-  check("game-glyph-echo", "c30 carries the shortest glow in the campaign",
+  check("game-glyph-echo", "c30 carries the shortest glow of the mirrored sky",
     byId("c30").flashMs < preSummitMinFlash &&
       summitIds.every((id, index) => index === 0 ||
         byId(id).flashMs <= byId(summitIds[index - 1]).flashMs),
     byId("c30").flashMs + " ms vs " + preSummitMinFlash);
 
+  /* ---- the strobe tier: ten chimes whose glow is shorter than the step - */
+  /* The summit left c1-c30 cleared at three stars, the save a player
+   * carries out of the mirrored sky; the strobe tier then plays on the
+   * live engine exactly as the summit did - five hands per rung, the
+   * reverse cut on a seeded deal, the unlock chain. The blink forensics
+   * follow the loop. */
+  const strobeCuts = [];
+  for (const id of strobeIds) {
+    const perfect = echoRun(id, {});
+    check("game-glyph-echo", id + ": a perfect-memory hand rings three stars",
+      perfect.stars === 3, JSON.stringify(perfect));
+    const steady = echoRun(id, { slips: 1 });
+    check("game-glyph-echo", id + ": one slip lands two stars",
+      steady.stars === 2, JSON.stringify(steady));
+    const shaky = echoRun(id, { slips: 2 });
+    check("game-glyph-echo", id + ": two slips land one star",
+      shaky.stars === 1, JSON.stringify(shaky));
+    const mash = echoRun(id, { slips: 3 });
+    check("game-glyph-echo", id + ": three wrong taps end the chime - no rung is free",
+      mash.outOfLives, JSON.stringify(mash));
+    check("game-glyph-echo", id + " is recorded cleared in the campaign save",
+      readSave().cleared[id] && readSave().cleared[id].stars === 3,
+      JSON.stringify(readSave().cleared[id] || null));
+
+    /* Goal length stays load-bearing on every strobe rung. */
+    const short = echoRun(id, { stopShort: true });
+    check("game-glyph-echo", id + ": a hand that stops one link short of the goal " +
+        "never clears", short.stars === null && (short.stalled || short.outOfLives),
+      JSON.stringify(short));
+
+    /* The cut: the backwards echo relaxed to a forwards chime on the live
+     * def, the mirrored hand unchanged - the rung's lesson removed. */
+    const live = byId(id);
+    const savedDef = JSON.parse(JSON.stringify(live));
+    live.reverse = false;
+    let found = null;
+    for (let seed = 1; seed <= 50 && !found; seed += 1) {
+      const run = seeded(seed, () => echoRun(id, { mirror: true }));
+      if (run.outOfLives) {
+        found = { seed, run };
+      }
+    }
+    Object.assign(live, savedDef);
+    sel.value = id;
+    env.dispatch(sel, "change");
+    strobeCuts.push(id + (found ? ":seed " + found.seed : ":alive"));
+    check("game-glyph-echo", id + " (backwards echo relaxed): the mirrored hand loses its " +
+        "lives on a seeded deal (seed " + (found ? found.seed : "-") + ")",
+      !!found && found.run.stars === null,
+      JSON.stringify(found ? found.run : { outOfLives: false }));
+    check("game-glyph-echo", id + " stays cleared after the cut hand's loss",
+      readSave().cleared[id] && readSave().cleared[id].stars === 3,
+      JSON.stringify(readSave().cleared[id] || null));
+
+    const index = strobeIds.indexOf(id);
+    if (index + 1 < strobeIds.length) {
+      const nextId = strobeIds[index + 1];
+      sel.value = nextId;
+      env.dispatch(sel, "change");
+      check("game-glyph-echo", nextId + " unlocks once " + id + " is cleared",
+        sel.value === nextId, sel.value);
+    }
+  }
+  check("game-glyph-echo", "every cut left its strobe rung unwinnable for the mirrored hand",
+    strobeCuts.every((line) => line.indexOf(":seed") >= 0), strobeCuts.join(" "));
+
+  /* ---- the blink, read off a fresh panel ---- */
+  /* Forensics pair: c30, the summit's wave, against c31, the strobe's
+   * first blink. Each probe re-stages the panel with fresh elements and
+   * boots a second engine on them (the first engine keeps only detached
+   * elements it can never fire again, so the probe's flash log sees one
+   * deal), plays two rounds, and reads the two-link show off that log:
+   * two adds one step apart, each paired with its remove through the
+   * order the engine schedules them in. On the strobe chime the first
+   * pad is dark before the second link lands; on c30 the glows still
+   * overlap - the wave every shipped glow rode. */
+  function showForensics(levelId) {
+    const step = byId(levelId).stepMs;
+    ["echoLevelSel", "echoStartBtn", "echoBoard", "echoRound", "echoLives",
+      "echoLongest", "echoResult", "echoBest", "echoPad0", "echoPad1",
+      "echoPad2", "echoPad3"].forEach((id) => {
+      const stale = doc.getElementById(id);
+      if (stale && stale.parentNode) {
+        stale.parentNode.removeChild(stale);
+      }
+    });
+    const probeSel = make("echoLevelSel", "select");
+    const probeStart = make("echoStartBtn", "button");
+    make("echoBoard");
+    make("echoRound");
+    make("echoLives");
+    make("echoLongest");
+    const probeResult = make("echoResult");
+    make("echoBest");
+    const probePads = [0, 1, 2, 3].map((n) => make("echoPad" + n, "button"));
+    const probeLog = [];
+    probePads.forEach((pad, index) => {
+      const real = pad.classList;
+      Object.defineProperty(pad, "classList", {
+        get() {
+          return {
+            add(...names) {
+              real.add(...names);
+              if (names.includes("is-lit")) {
+                probeLog.push({ pad: index, at: env.clock.now, kind: "add" });
+              }
+            },
+            remove(...names) {
+              real.remove(...names);
+              if (names.includes("is-lit")) {
+                probeLog.push({ pad: index, at: env.clock.now, kind: "remove" });
+              }
+            },
+            contains(name) {
+              return real.contains(name);
+            },
+            toggle(name, force) {
+              return real.toggle(name, force);
+            },
+          };
+        },
+      });
+    });
+    App.initGlyphEchoGame();
+    probeSel.value = levelId;
+    env.dispatch(probeSel, "change");
+    probeStart.click();
+    let turns = 0;
+    let show = null;
+    for (let guard = 0; guard < 20000 && !show; guard += 1) {
+      if (/Your turn/.test(probeResult.textContent)) {
+        turns += 1;
+        if (turns >= 2) {
+          /* the two-link show sits on the log with its removes; the last
+           * two adds are its links (any earlier entries are round one's
+           * tap flash and its remove) */
+          const adds = probeLog.filter((entry) => entry.kind === "add")
+            .map((entry) => entry.at).slice(-2);
+          const pairs = [];
+          const queues = new Map();
+          probeLog.forEach((entry) => {
+            if (entry.kind === "add") {
+              if (!queues.has(entry.pad)) {
+                queues.set(entry.pad, []);
+              }
+              queues.get(entry.pad).push(entry.at);
+            } else {
+              const queue = queues.get(entry.pad);
+              if (queue && queue.length) {
+                pairs.push({ at: queue.shift(), dark: entry.at });
+              }
+            }
+          });
+          show = adds.map((at) =>
+            pairs.find((pair) => pair.at === at)).filter(Boolean);
+          break;
+        }
+        const chain = probeLog.filter((entry) => entry.kind === "add")
+          .map((entry) => entry.pad);
+        probeLog.length = 0;
+        const taps = byId(levelId).reverse ? chain.slice().reverse() : chain.slice();
+        taps.forEach((padIndex) => probePads[padIndex].click());
+        env.timers.advance(600);
+        continue;
+      }
+      env.timers.advance(50);
+    }
+    if (!show || show.length !== 2) {
+      return { levelId, ok: false, why: "the two-link show was not captured" };
+    }
+    if (Math.abs((show[1].at - show[0].at) - step) > 10) {
+      return { levelId, ok: false, why: "the two links are not one step apart" };
+    }
+    return { levelId, ok: true, blink: show[0].dark < show[1].at,
+      firstDark: show[0].dark, secondAt: show[1].at };
+  }
+  const wave = showForensics("c30");
+  const blink = showForensics("c31");
+  check("game-glyph-echo",
+    "c30's two-link show still overlaps - the wave every shipped glow rode",
+    wave.ok && !wave.blink, JSON.stringify(wave));
+  check("game-glyph-echo",
+    "c31's two-link show is a blink - the first pad dark before the second link lands",
+    blink.ok && blink.blink, JSON.stringify(blink));
+
+  /* ---- the strobe's shape, off the module's own table ---- */
+  /* The strobe is the campaign's first blink: every rung glows shorter
+   * than its step (all thirty chimes before it ship glow >= step), the
+   * blink deepens rung over rung, the length, tempo and glow each climb
+   * to a campaign record on c40, the backwards echo stays on, and the
+   * measured effort opens above the summit's c30 and ends at the
+   * ladder's highest. */
+  const preStrobe = levels.slice(0, 30);
+  check("game-glyph-echo",
+    "every strobe chime glows shorter than its step - the first shipped glow to dip under the pace",
+    strobeIds.every((id) => byId(id).flashMs < byId(id).stepMs) &&
+      preStrobe.filter((level) => level.flashMs)
+        .every((level) => level.flashMs >= level.stepMs),
+    strobeIds.map((id) => byId(id).flashMs + "/" + byId(id).stepMs).join(" "));
+  const depths = strobeIds.map((id) => byId(id).stepMs - byId(id).flashMs);
+  check("game-glyph-echo",
+    "the blink deepens rung over rung: " + depths.join(" -> ") + " ms under the step",
+    climbs(depths), depths.join("/"));
+  const strobeGoals = strobeIds.map((id) => byId(id).goal);
+  const preStrobeMaxGoal = Math.max.apply(null,
+    preStrobe.map((level) => level.goal));
+  check("game-glyph-echo",
+    "the strobe length climbs to the campaign record: " + strobeGoals.join(" -> ") +
+      " against the mirrored sky's " + preStrobeMaxGoal,
+    climbs(strobeGoals) &&
+      byId("c40").goal === Math.max.apply(null, levels.map((level) => level.goal)),
+    strobeGoals.join("/") + " vs " + preStrobeMaxGoal);
+  const strobeSteps = strobeIds.map((id) => byId(id).stepMs);
+  const preStrobeMinStepMs = Math.min.apply(null,
+    preStrobe.map((level) => level.stepMs));
+  check("game-glyph-echo",
+    "the strobe tempo never eases and c40 sets the pace record: " +
+      strobeSteps.join(" -> ") + " ms against the mirrored sky's " + preStrobeMinStepMs,
+    strobeSteps.every((value, index) => index === 0 || value < strobeSteps[index - 1]) &&
+      byId("c40").stepMs < preStrobeMinStepMs,
+    strobeSteps.join("/") + " vs " + preStrobeMinStepMs);
+  const strobeFlashes = strobeIds.map((id) => byId(id).flashMs);
+  const preStrobeMinFlashMs = Math.min.apply(null,
+    preStrobe.map((level) => level.flashMs || 300));
+  check("game-glyph-echo",
+    "the glow shortens through the tier and c40 carries the shortest glow in the campaign",
+    strobeFlashes.every((value, index) => index === 0 || value < strobeFlashes[index - 1]) &&
+      byId("c40").flashMs < preStrobeMinFlashMs,
+    strobeFlashes.join("/") + " vs " + preStrobeMinFlashMs);
+  check("game-glyph-echo",
+    "every strobe chime keeps the backwards echo - the mirrored sky's lesson is the grammar now",
+    strobeIds.every((id) => byId(id).reverse),
+    strobeIds.filter((id) => !byId(id).reverse).join(","));
+  const strobeEfforts = strobeIds.map((id) => effort(byId(id)));
+  const strobeMaxEffort = Math.max.apply(null, summitIds.map((id) => effort(byId(id))));
+  check("game-glyph-echo",
+    "the strobe's measured effort opens above the summit and climbs to the campaign record: " +
+      strobeEfforts.map((value) => value.toFixed(1)).join(" -> ") +
+      " against the summit's " + strobeMaxEffort.toFixed(1),
+    climbs(strobeEfforts) && strobeEfforts[0] > strobeMaxEffort &&
+      strobeEfforts[strobeEfforts.length - 1] ===
+        Math.max.apply(null, levels.map(effort)),
+    strobeEfforts.map((value) => value.toFixed(3)).join(","));
+
   /* Copy travels with the module. */
   const copyKeys = ["echoL21", "echoL22", "echoL23", "echoL24",
-    "echoL25", "echoL26", "echoL27", "echoL28", "echoL29", "echoL30"];
+    "echoL25", "echoL26", "echoL27", "echoL28", "echoL29", "echoL30",
+    "echoL31", "echoL32", "echoL33", "echoL34", "echoL35",
+    "echoL36", "echoL37", "echoL38", "echoL39", "echoL40"];
   const copyProblems = copyKeys.filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-glyph-echo", "the ten hard and summit chime names resolve in both languages",
+  check("game-glyph-echo", "the twenty hard, summit and strobe chime names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 };

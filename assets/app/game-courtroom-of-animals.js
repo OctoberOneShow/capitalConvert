@@ -1823,6 +1823,645 @@
         { id: "k30c3", accused: "shrew", statements: ["k30s9"], exhibits: ["k30e4"], en: "Quill came over the cairn's foot, dragged the mirror down the drystone and hid it in the wall", zh: "奎尔从石堆脚过来，把镜子沿干石拖下去，藏在墙里" },
       ],
     },
+    /* k31-k40 - the tower tier, and its dial is the mud a question throws. A
+     * press may name a `taints` witness: the question drags that neighbour's
+     * name through the same mud it opens, and the bench believes the neighbour
+     * less for it - `taintCost` points of trust, one unless the case says
+     * otherwise - until a corroboration mends them. Structurally nothing
+     * before the tier names a taint, so every shipped press costs exactly what
+     * it cost. The cases walk the same ground the endgame walked - a toll tin,
+     * a cellar, a nest, a sluice - with the mud thrown deeper rung by rung:
+     * one taint at one point on the first case, three tainted questions by the
+     * last, the deepest at four points against a bar of two. Every number
+     * below is re-measured by the release gate through the module's own
+     * prover, which is deterministic - there are no seeds to pin. The bands
+     * open above k30's 32 and climb strictly (33 to 42); cutting the taint out
+     * of any tier press leaves a cheaper sound line on the same docket, and
+     * playing the tainted press without its mending lands the verdict in
+     * doubt - the prover's own numbers, never a guess. */
+    {
+      id: "k31", labelKey: "ctaCase31", time: 21, culprit: "kingfisher",
+      bar: { strength: 32, trust: 3 },
+      charge: {
+        en: "The toll tin hung on the ferry post at dusk with the crossing pennies in it, and at dawn it hung empty with the latch still shut. One charge here rests on a witness a tainted question would drag down, so the court must sweep up the mud its own question throws before it closes.",
+        zh: "黄昏时渡口的费钱罐挂在渡桩上，里面是过渡的铜子；天亮时罐子还挂着，锁扣没开，里面却空了。这里的一条指控，压在一位会被带泥的问题拖下水的证人身上——法庭得先扫清自己这一问溅出的泥，才好结案。",
+      },
+      suspects: [
+        { id: "kingfisher", en: "Dart the Kingfisher", zh: "翠鸟达特" },
+        { id: "water-rat", en: "Rill the Water Rat", zh: "水鼠里尔" },
+        { id: "moorhen", en: "Skerry the Moorhen", zh: "黑水鸡斯凯丽" },
+      ],
+      exhibits: [
+        { id: "k31e1", weight: 3, en: "The toll tin's latch is bent up at one corner, pried by something narrow and hard, and the tin's lid still carries the print of that pry.", zh: "费钱罐的锁扣一角被撬得翘起，撬它的东西又窄又硬；罐盖上还留着那一撬的印子。" },
+        { id: "k31e2", weight: 3, en: "A kingfisher's drop of white and a blue body-feather lie together on the post's top, fresh with the morning's first light.", zh: "渡桩顶上并排落着一点翠鸟的白粪和一根蓝身子羽，还是今晨头一茬光里新的。" },
+        { id: "k31e3", weight: 3, en: "Pennies lie in the mud below the post in a scatter that starts under the tin and runs toward the water, not away from it.", zh: "铜子散在桩下的泥里，散落的方向从罐底下起头、朝着水去，不是背着水去的。" },
+        { id: "k31e4", weight: 3, en: "The rat's run along the bank passes the post but shows no claw-mark on the post itself, and the mud at its foot is unbroken.", zh: "水鼠沿岸的跑道经过渡桩，可桩身上没有爪痕，桩脚的泥也没破。" },
+        { id: "k31e5", weight: 3, en: "A blue body-feather floats in the pool below the willow, and the oil on it beads the water it floats on.", zh: "柳树下的水塘里漂着一根蓝身子羽，羽上的油把托着它的水顶出一圈亮珠。" },
+        { id: "k31e6", weight: 2, en: "The post's top is ringed with droppings this morning, white over the old grey, and none of it was there at dusk.", zh: "今天早上桩顶围了一圈鸟粪，白的压着旧的灰；黄昏时那儿还什么都没有。" },
+      ],
+      witnesses: [
+        {
+          id: "k31w1", trust: 4, en: "Brose the water-rat", zh: "水鼠布罗斯",
+          statements: [
+            { id: "k31s1", claim: "k31c1", en: "I run the bank at night. The tin was heavy at dusk - I heard the pennies settle when the wind shook the post.", zh: "我夜里沿岸跑。黄昏时罐子是沉的——风摇渡桩的时候，我听见铜子在里头作响。" },
+            { id: "k31s2", claim: "k31c1", en: "A rat could climb that post, but the mud at its foot was unbroken at dawn, and my run passes it twice a night. If a rat had climbed, the mud would say so.", zh: "鼠爬得上那根桩，可天亮时桩脚的泥没破；我的跑道一夜经过它两回。要是有鼠爬过，泥会说出来的。" },
+            { id: "k31s3", claim: "k31c1", en: "The latch was still shut at dawn and the pennies were gone. A rat takes a tin down to open it; nothing carried the tin away.", zh: "天亮时锁扣还关着，铜子却没了。鼠会连罐拖下来再撬；可罐子没被带走。" },
+          ],
+        },
+        {
+          id: "k31w2", trust: 4, en: "Pile the moorhen", zh: "黑水鸡派尔",
+          statements: [
+            { id: "k31s4", claim: "k31c1", en: "I nest past the reeds and I saw a blue streak come off the post top at first light, low and fast, toward the far bank.", zh: "我在苇子那头做窝。头一茬光里，我看见一道蓝影从桩顶蹿下去，又低又快，直奔对岸。" },
+            { id: "k31s5", claim: "k31c1", en: "A moorhen cannot pry a latch shut with a bent corner. My bill is a reed-cutter, not a pry.", zh: "黑水鸡撬不出翘角的锁扣。我的嘴是割苇子的，不是撬东西的。" },
+            { id: "k31s6", claim: "k31c1", en: "The kingfisher's perch is the willow right over the ferry; he dives past that post a dozen times a day and he weighs nothing.", zh: "翠鸟的落脚点就在渡口上头那棵柳树；他一天从那根桩边掠过十几回，身上一点分量都没有。" },
+          ],
+        },
+        {
+          id: "k31w3", trust: 4, en: "Dart the kingfisher", zh: "翠鸟达特",
+          statements: [
+            { id: "k31s7", claim: "k31c1", en: "I fish the pool below the willow. I take minnows, not pennies; a penny is worth nothing in my beak and heavier than my breakfast.", zh: "我在柳树下的水塘捕鱼。我叼小鱼，不叼铜子；铜子在我嘴里一文不值，还比我的早饭沉。" },
+            { id: "k31s8", claim: "k31c1", en: "I was on the willow from the last bell to first light. I saw nothing on the post, because I sleep with my head under my wing.", zh: "从末次钟到头一茬光，我都在柳树上。桩上有什么我没看见——我睡觉时头埋在翅膀底下。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k31p1", witness: "k31w1", with: "k31e4", claim: "k31c1", cost: 1, en: "You say the mud would tell on a climbing rat. Here is the unbroken mud and your own run past it twice a night. Tell the court what the mud says about you.", zh: "你说泥会作证鼠爬过桩。泥就在这儿，没破；你的跑道一夜两回打它旁边过。说说看，泥对你自己说了什么。" },
+        { id: "k31p2", witness: "k31w2", with: "k31e3", claim: "k31c1", cost: 1, taints: "k31w3", taintCost: 1, en: "You saw a blue streak and now the pennies scatter toward the water. A moorhen picks the mud too, and a moorhen's bill pries reed joints open all day. Say why the scatter is not yours - and mind you do not drag the fisher's name through it to save your own.", zh: "你看见蓝影，如今铜子又朝着水散。黑水鸡也拾泥里的东西，整天用嘴撬苇节。说说这摊铜子为什么不是你拿的——可别为了洗清自己，把捕鱼那位拖下水。" },
+        { id: "k31p3", witness: "k31w3", with: "k31e2", claim: "k31c1", cost: 1, en: "You sleep with your head under your wing, and yet a drop and a feather sit on the post top, fresh. A kingfisher's own sign is under your beak. Say what a court should make of a bird whose sign outvotes his sleep.", zh: "你说睡觉时头埋在翅膀底下，可桩顶上明明落着一摊粪一根羽，还新鲜着。你自己的凭据就在嘴边。说说看，一只鸟的凭据和他的瞌睡，法庭该信哪个。" },
+        { id: "k31p4", witness: "k31w1", with: "k31e1", claim: "k31c2", cost: 1, en: "You say a rat takes the tin down to open it. Here is the pry-mark, and the tin still hangs. Say what pries a latch on the post itself, with the tin never coming down.", zh: "你说鼠会把罐子拖下来再撬。撬痕就在这儿，罐子却还挂着。说说看，罐子没下来，锁扣是在桩上被什么撬开的。" },
+      ],
+      vouches: [
+        { id: "k31v1", witness: "k31w1", exhibit: "k31e4", claim: "k31c1", en: "The bank run is the rat's own road and it passes the post twice a night; believe the rat about the road he keeps.", zh: "沿岸的跑道是水鼠自己走的路，一夜两回打桩边过；关于他守着的这条路，信水鼠的。" },
+        { id: "k31v2", witness: "k31w3", exhibit: "k31e2", claim: "k31c1", en: "The feather on the post is the blue streak's own. The moorhen saw what flew, and the feather says whose it was; believe the kingfisher's sign over the moorhen's eye.", zh: "桩上那根羽就是蓝影留下的。黑水鸡看见的是飞过去的那个，羽毛说明了它是谁的；信翠鸟的凭据，胜过信黑水鸡的眼。" },
+        { id: "k31v3", witness: "k31w2", exhibit: "k31e5", claim: "k31c1", en: "The moorhen saw the blue streak leave the post at first light, and the feather in the pool below the willow still beads its oil. A moorhen's eye is the pond's own eye; believe her about the flight she saw.", zh: "黑水鸡看见头一茬光里那道蓝影离开桩顶；柳树下水塘里那根羽，油还珠一样顶着水。黑水鸡的眼就是这口塘的眼；关于她看见的那一趟，信她的。" },
+      ],
+      claims: [
+        { id: "k31c1", accused: "kingfisher", statements: ["k31s1", "k31s2", "k31s3", "k31s4", "k31s5", "k31s6", "k31s7", "k31s8"], exhibits: ["k31e1", "k31e2", "k31e3", "k31e4", "k31e5", "k31e6"], en: "Dart pried the toll tin's latch on the post and let the pennies fall to the water, scattering them toward the pool where he fishes", zh: "达特撬开桩上费钱罐的锁扣，让铜子落进水里，散在他捕鱼的水塘那边" },
+        { id: "k31c2", accused: "water-rat", statements: ["k31s1", "k31s3"], exhibits: ["k31e4"], en: "Rill climbed the post in the dark, pried the latch and carried the pennies down his run", zh: "里尔摸黑爬上渡桩，撬开锁扣，把铜子顺着跑道搬走了" },
+        { id: "k31c3", accused: "moorhen", statements: ["k31s4"], exhibits: ["k31e3"], en: "Skerry picked the mud for pennies at dawn and scattered the rest toward the water", zh: "斯凯丽天亮时在泥里拾铜子，把剩下的朝着水那边扒散了" },
+      ],
+    },
+    {
+      id: "k32", labelKey: "ctaCase32", time: 22, culprit: "squirrel",
+      bar: { strength: 33, trust: 3 },
+      charge: {
+        en: "The walnut cellar under the snag was shuttered for winter, and at first frost the shutters stood open and the store was gone. Two questions here drag the same neighbour's name through the mud, and only two mendings set the name straight again.",
+        zh: "枯树底下的核桃窖入冬前封好了门；头一场霜下来，窖门开着，存粮没了。这案子里两问都把同一位邻居的名字拖进泥里，也只有两回作证能把名字洗干净。",
+      },
+      suspects: [
+        { id: "squirrel", en: "Furl the Squirrel", zh: "松鼠弗尔" },
+        { id: "jay", en: "Cass the Jay", zh: "松鸦卡斯" },
+        { id: "woodmouse", en: "Pip the Wood Mouse", zh: "林鼠皮普" },
+      ],
+      exhibits: [
+        { id: "k32e1", weight: 4, en: "The cellar's shutter is gnawed at the lift-edge in paired gouges a jaw's width apart, and a curl of snag-wood still hangs in the bite.", zh: "窖门的提边上有一对对牙啃的豁口，豁口间距正好一张嘴的宽，咬口里还挂着一卷枯树木屑。" },
+        { id: "k32e2", weight: 4, en: "Walnut shells in a drift against the snag's north side, cracked in two clean halves, each half licked empty.", zh: "枯树北面堆着扇形的核桃壳，都裂成干净的两半，每半都舔得干干净净。" },
+        { id: "k32e3", weight: 3, en: "A grey tail-hair caught in the shutter's bite, kinked the way a squirrel's tail-hair kinks.", zh: "窖门咬口里挂着一根灰尾毛，弯的，弯法正是松鼠尾毛的弯法。" },
+        { id: "k32e4", weight: 3, en: "A jay's blue wing-feather on the cellar roof, whole and unruffled, with no husk-dust anywhere on the stone.", zh: "窖顶上一根松鸦蓝翅羽，完整平整；石头上哪儿都没有壳屑。" },
+        { id: "k32e5", weight: 3, en: "The squirrel's drey hangs in the snag's crown, and the drey's floor is packed with walnut husk, still green with the season.", zh: "松鼠的窝就挂在枯树顶上；窝底垫满了核桃壳，还带着这个季节的青气。" },
+        { id: "k32e6", weight: 3, en: "The frost line stops at the snag's waist, and every gouge on the shutter sits above it, cut after the cold came down.", zh: "霜线停在枯树的腰上；窖门上每一道豁口都在霜线以上——都是霜降之后啃的。" },
+      ],
+      witnesses: [
+        {
+          id: "k32w1", trust: 4, en: "Cass the jay", zh: "松鸦卡斯",
+          statements: [
+            { id: "k32s1", claim: "k32c1", en: "I fly the glade at dusk. The shutters were fast when the frost came down, and the gnawing is fresh above the frost line.", zh: "黄昏时我在林间空地飞。霜下来的时候窖门还扣得紧紧的；啃痕是新的，就在霜线以上。" },
+            { id: "k32s2", claim: "k32c1", en: "A jay carries one acorn at a time and screams about it. Nobody has ever heard a jay keep a cellar quiet through a whole night.", zh: "松鸦一回衔一颗橡子，还叫得满林子都听见。谁也没听说过松鸦能整夜不出声地守着一窖粮。" },
+          ],
+        },
+        {
+          id: "k32w2", trust: 4, en: "Pip the wood mouse", zh: "林鼠皮普",
+          statements: [
+            { id: "k32s3", claim: "k32c1", en: "I run under the leaves. The shells are licked clean in both halves, and a mouse cannot crack a walnut - I have tried all my life and the nut wins.", zh: "我在落叶底下跑。壳是两半都舔干净的；鼠咬不开核桃——我试了一辈子，赢的总是核桃。" },
+            { id: "k32s4", claim: "k32c1", en: "The drift of shells leans north, against the wind that night. Whoever cracked them sat on the north side and tossed them over a shoulder.", zh: "壳堆朝北歪，顶着那夜的风。嗑壳的那位坐在北面，嗑完往肩后一扔。" },
+          ],
+        },
+        {
+          id: "k32w3", trust: 4, en: "Furl the squirrel", zh: "松鼠弗尔",
+          statements: [
+            { id: "k32s5", claim: "k32c1", en: "I bury my own nuts and I forget half of them. I did not need this cellar; I had my own maps.", zh: "我自己埋的核桃自己都忘一半。我不缺这一窖；我自己有图。" },
+            { id: "k32s6", claim: "k32c1", en: "The snag is two jumps from my drey. I cross that roof twice a day in autumn, but crossing is not gnawing.", zh: "枯树离我的窝两跳远。秋天我一天打窖顶过两回，可路过不是啃。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k32p1", witness: "k32w1", with: "k32e4", claim: "k32c1", cost: 1, en: "You say a jay screams about every acorn. Here is your own feather on the cellar roof and not a husk on the stone. Say what a jay was doing at the roof of a robbed cellar, screaming or not.", zh: "你说松鸦得了橡子必叫。你的羽毛就在被劫的窖顶上，石头上却一粒壳屑都没有。叫也好不叫也好，说说一只松鸦在窖顶上做什么。" },
+        { id: "k32p2", witness: "k32w3", with: "k32e1", claim: "k32c1", cost: 1, taints: "k32w2", taintCost: 1, en: "You say crossing is not gnawing, and here are paired gouges a jaw apart. A wood mouse gnaws too, and small. Say whose jaw the bite is - and do not hang it on the mouse under the leaves to keep it off your own drey.", zh: "你说路过不是啃，可成对的豁口就在这儿，间距一张嘴的宽。林鼠也会啃，嘴还小。说说这一口是谁的嘴——别顺手挂到落叶底下的鼠身上，好摘了你自己的窝。" },
+        { id: "k32p3", witness: "k32w2", with: "k32e2", claim: "k32c1", cost: 1, en: "You say a mouse cannot crack a walnut. The drift leans north against the wind, and a squirrel sits its tail on the north side to crack. Say what else licks both halves clean.", zh: "你说鼠咬不开核桃。壳堆顶着风朝北歪，松鼠嗑壳就爱把尾巴坐在北面。说说看，还有谁能把两半壳都舔得这么干净。" },
+        { id: "k32p4", witness: "k32w1", with: "k32e1", claim: "k32c2", cost: 1, en: "You fly the glade at dusk and the frost line tells you the bite is fresh. A jay's eye is the sharpest in the glade. Say why your eye found no bird at the shutters that night.", zh: "黄昏你在这片空地飞，霜线告诉你咬痕是新的。松鸦的眼是全林子最尖的。说说那夜你的眼为什么没在窖门上看见一只鸟。" },
+      ],
+      vouches: [
+        { id: "k32v1", witness: "k32w3", exhibit: "k32e3", claim: "k32c1", en: "The tail-hair in the bite kinks the squirrel's way, and a kink is a name. Believe the hair over the drey two jumps away.", zh: "咬口里那根尾毛的弯法是松鼠的弯法；弯法就是名字。信这根毛，别信两跳之外那个窝。" },
+        { id: "k32v2", witness: "k32w2", exhibit: "k32e2", claim: "k32c1", en: "The wood mouse told the court about the shells because the shells were all a mouse could do. Believe the mouse about the cracking he cannot do.", zh: "林鼠把壳的事讲给法庭，是因为壳的事就是一只鼠能做的全部。关于他做不出的那一口，信他的话。" },
+        { id: "k32v3", witness: "k32w1", exhibit: "k32e4", claim: "k32c1", en: "The jay's feather sits unruffled on the cellar roof and the stone under it is clean of husk; a jay that cracked a cellar open carries the dust of it in her wings. Believe the jay about the roof she kept, and the stone about the night.", zh: "松鸦的羽毛平平地落在窖顶上，底下的石头上一点壳屑都没有；撬开那口窖的松鸦，翅膀里总该带着屑。关于她守的那块窖顶，信松鸦的；那一夜，信石头的。" },
+      ],
+      claims: [
+        { id: "k32c1", accused: "squirrel", statements: ["k32s1", "k32s2", "k32s3", "k32s4", "k32s5", "k32s6"], exhibits: ["k32e1", "k32e2", "k32e3", "k32e4", "k32e5", "k32e6"], en: "Furl gnawed the cellar shutters open from the north side and cracked the winter store clean over two nights", zh: "弗尔从北面啃开窖门，两夜把过冬的存粮嗑得干干净净" },
+        { id: "k32c2", accused: "jay", statements: ["k32s1", "k32s2"], exhibits: ["k32e4"], en: "Cass lifted the shutter with her bill and flew the walnuts off one at a time", zh: "卡斯用嘴掀起窖门，把核桃一颗一颗叼走了" },
+        { id: "k32c3", accused: "woodmouse", statements: ["k32s3", "k32s4"], exhibits: ["k32e1"], en: "Pip opened the cellar from under the leaves and hauled the store away in pairs", zh: "皮普从落叶底下开的窖，把存粮一对一对拖走了" },
+      ],
+    },
+    {
+      id: "k33", labelKey: "ctaCase33", time: 23, culprit: "moorhen",
+      bar: { strength: 34, trust: 2 },
+      charge: {
+        en: "The reed nest on the mill pond held five coot eggs at dusk and five moorhen eggs at dawn, and one coot nest stands robbed behind the reeds. The court's best question here muddies a neighbour two points deep, and nothing but a corroboration washes it.",
+        zh: "磨坊塘苇丛里的窝，黄昏时是五个白骨顶的蛋，天亮时成了五个黑水鸡的蛋；苇子后头有一处白骨顶的窝被掏了。这案子里法庭最好的一问会把邻居拖进两指深的泥里，也唯有作证能洗净。",
+      },
+      suspects: [
+        { id: "moorhen", en: "Skerry the Moorhen", zh: "黑水鸡斯凯丽" },
+        { id: "coot", en: "Bald the Coot", zh: "白骨顶波德" },
+        { id: "grebe", en: "Crest the Grebe", zh: "鸊鷉克雷斯特" },
+      ],
+      exhibits: [
+        { id: "k33e1", weight: 4, en: "The robbed nest's rim is torn toward the water on one side, in a way a swimming body leaning in makes and a flying body does not.", zh: "被掏的窝沿有一面朝着水撕开，那是游水的身子探进来才撕得出的口子，飞着的身子撕不出。" },
+        { id: "k33e2", weight: 4, en: "Two coot down-feathers ride in the moorhen's new nest-lining, still curled from the robbed nest's cup.", zh: "黑水鸡新垫的窝衬里混着两根白骨顶的绒羽，卷曲的样子还是被掏那个窝里的样子。" },
+        { id: "k33e3", weight: 4, en: "A wake runs from the robbed nest's mouth to the reed screen, narrow, low and single - one body, swimming, at night.", zh: "一道水纹从被掏的窝口通到苇障，又窄又低，只有一道——夜里一个身子，游过去的。" },
+        { id: "k33e4", weight: 3, en: "The grebe's raft lies sunken-flat at its moorings all night, and no egg was ever laid or taken on a raft that flat.", zh: "鸊鷉的浮窝整夜平平地沉在水线，那么平的浮窝，从来放不下也藏不住一枚蛋。" },
+        { id: "k33e5", weight: 3, en: "A moorhen's lobed track pads the mud from the reed screen to the robbed nest's mouth, fresh and one-way.", zh: "苇障到被掏的窝口之间的泥上，印着黑水鸡带蹼瓣的脚印，新鲜的，只朝一个方向。" },
+        { id: "k33e6", weight: 3, en: "The coot's tally reed at her own nest still shows five nicks, one per egg, cut the evening before.", zh: "白骨顶自家窝边那根记数的苇秆上还有五个刻口，一枚蛋一个；是前一晚刻的。" },
+      ],
+      witnesses: [
+        {
+          id: "k33w1", trust: 4, en: "Bald the coot", zh: "白骨顶波德",
+          statements: [
+            { id: "k33s1", claim: "k33c1", en: "I count my own eggs at dusk; five. I count them again at dawn off the water; none. A coot does not miscount her own nest.", zh: "黄昏我数自己的蛋，五个。天亮再下水数，一个不剩。白骨顶不会数错自己的窝。" },
+            { id: "k33s2", claim: "k33c1", en: "The robbers on this pond are divers, not flyers. A flyer leaves a wing-print on the reeds; the reeds are not broken that way.", zh: "这塘里的贼是游水的，不是飞的。飞的会在苇子上留翅膀印；苇子没那样破过。" },
+          ],
+        },
+        {
+          id: "k33w2", trust: 4, en: "Crest the grebe", zh: "鸊鷉克雷斯特",
+          statements: [
+            { id: "k33s3", claim: "k33c1", en: "I dive for fish and I sleep on my raft. My raft was flat all night; a grebe with a stolen egg rides low, and mine rode lower still, but empty of anything but me.", zh: "我潜水抓鱼，睡在自己的浮窝上。我的浮窝整夜平平；叼着赃蛋的鸊鷉吃水更深，我的也沉，可上头除了我什么都没有。" },
+            { id: "k33s4", claim: "k33c1", en: "The wake is single and it runs to the reed screen, and the reed screen is one nest wide. Ask the nest what it lined itself with at dawn.", zh: "水纹只有一道，通到苇障；苇障后头就是一个窝的宽。去问那个窝，天亮时它拿什么衬了窝。" },
+          ],
+        },
+        {
+          id: "k33w3", trust: 3, en: "Skerry the moorhen", zh: "黑水鸡斯凯丽",
+          statements: [
+            { id: "k33s5", claim: "k33c1", en: "My five eggs are my own; I laid them over five nights and I sat them before the court knew this pond had a thief.", zh: "我的五个蛋是我自己的；我下了五个晚上，早在法庭知道这塘里有贼之前就孵上了。" },
+            { id: "k33s6", claim: "k33c1", en: "A moorhen's nest is a working nest; I line it every morning. What I line it with, the pond sheds and I gather.", zh: "黑水鸡的窝是要天天拾掇的窝；我每天早上都要衬它。衬窝的东西，塘里漂来什么，我拾什么。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k33p1", witness: "k33w1", with: "k33e4", claim: "k33c1", cost: 1, en: "You say the divers did it, and the grebe's raft is the flattest thing on this pond. Say what a flat raft proves about the nest behind the reeds.", zh: "你说贼是游水的，这塘里再没有比鸊鷉浮窝更平的东西了。说说那么平的浮窝，跟苇子后头那个被掏的窝有什么关系。" },
+        { id: "k33p2", witness: "k33w3", with: "k33e2", claim: "k33c1", cost: 1, taints: "k33w1", taintCost: 2, en: "You line your nest every morning with what the pond sheds. Two coot feathers ride in your lining, still curled. Say whose cup they were curled in - and do not count the robbed nest's owner a miscounting fool to keep them yours.", zh: "你说你的窝每天早上都用塘里漂来的东西衬。你的窝衬里混着两根白骨顶的绒羽，卷曲如故。说说它们原先蜷在谁的窝里——可别把被掏窝的那位说成数错蛋的糊涂虫，好把蛋说成你的。" },
+        { id: "k33p3", witness: "k33w2", with: "k33e3", claim: "k33c1", cost: 1, en: "You sleep on your raft and the wake is single. Say what swims this pond at night that is not you, and what it was doing at the robbed nest's mouth.", zh: "你睡在浮窝上，水纹只有一道。说说这塘里夜里游动的除了你还有谁，它在那被掏的窝口做什么。" },
+        { id: "k33p4", witness: "k33w1", with: "k33e1", claim: "k33c2", cost: 1, en: "You count your nest twice a day. Here is the rim torn toward the water, torn by a swimmer leaning in. Say what a counting coot was doing asleep while her rim was torn.", zh: "你一天数两回自己的窝。窝沿就在这儿，朝着水撕开，是游水的身子探进来撕的。说说窝沿被撕的时候，一位天天数蛋的白骨顶在睡什么觉。" },
+      ],
+      vouches: [
+        { id: "k33v1", witness: "k33w1", exhibit: "k33e1", claim: "k33c1", en: "The coot counts her own nest because the nest is hers to lose. Believe the coot about the count she never got wrong before this night.", zh: "白骨顶数自己的蛋，因为窝是她的，丢的是她的。关于她从没数错过的一回，信她。" },
+        { id: "k33v2", witness: "k33w2", exhibit: "k33e4", claim: "k33c1", en: "The grebe's raft was flat and empty all night, and the grebe told the court so before anyone asked. Believe the grebe about the raft he sleeps on.", zh: "鸊鷉的浮窝整夜平平、空空，没人问他他自己先说了。关于他睡觉的那只浮窝，信他。" },
+        { id: "k33v3", witness: "k33w3", exhibit: "k33e2", claim: "k33c1", en: "The feathers in the lining are the moorhen's own gathering, and a gatherer is not always a thief. Believe the moorhen about what the pond sheds, and the count about whose cup they left.", zh: "衬窝里的羽毛是黑水鸡拾来的，拾东西的不见得就是贼。塘里漂来什么，信她的；那两根羽离开谁的窝，信数出来的。" },
+      ],
+      claims: [
+        { id: "k33c1", accused: "moorhen", statements: ["k33s1", "k33s2", "k33s3", "k33s4", "k33s5", "k33s6"], exhibits: ["k33e1", "k33e2", "k33e3", "k33e4", "k33e5", "k33e6"], en: "Skerry swam the wake to the robbed nest at night, rolled the coot's five eggs into her own lining and let her nest tell the tale", zh: "斯凯丽夜里顺着水纹游到被掏的窝，把白骨顶的五枚蛋卷进自己的窝衬，让窝自己招了供" },
+        { id: "k33c2", accused: "grebe", statements: ["k33s3", "k33s4"], exhibits: ["k33e3"], en: "Crest slipped off his raft at the third bell and rolled the eggs through the reed screen", zh: "克雷斯特三更离开浮窝，把蛋从苇障里滚走了" },
+        { id: "k33c3", accused: "coot", statements: ["k33s1"], exhibits: ["k33e2"], en: "Bald hid her own eggs in the reeds to claim the mill's feeding ground and cried robbery at dawn", zh: "波德把自己的蛋藏进苇丛，好独占磨坊的食场，天亮时却喊起了被盗" },
+      ],
+    },
+    {
+      id: "k34", labelKey: "ctaCase34", time: 24, culprit: "dormouse",
+      bar: { strength: 35, trust: 3 },
+      charge: {
+        en: "The bee-bread crocks in the orchard wall were sealed with clay in autumn, and at the first warm night every seal was lifted whole and the crocks scooped. Two questions here drag two different neighbours, one two points deep, and the court must mend both before it closes.",
+        zh: "果园墙里的蜂窝粮坛入秋就用泥封好了；头一个暖夜，封泥被整块起走，坛被掏空。这案子里两问各拖了一位邻居，一处两指深——法庭得把两处都洗净才能结案。",
+      },
+      suspects: [
+        { id: "dormouse", en: "Hank the Dormouse", zh: "睡鼠汉克" },
+        { id: "hedgehog", en: "Brack the Hedgehog", zh: "刺猬布拉克" },
+        { id: "wren", en: "Kex the Wren", zh: "鹪鹩凯克斯" },
+      ],
+      exhibits: [
+        { id: "k34e1", weight: 4, en: "Every clay seal is lifted in one piece and set down beside its crock, unbroken - a claw small enough to feel the seam and patient enough to keep it whole.", zh: "每一块封泥都整块起出、又搁在坛边，一点没碎——那是小得能摸出泥缝、又有耐性不弄破的爪子干的。" },
+        { id: "k34e2", weight: 4, en: "A dormouse's drop, dry and pale, sits on the third crock's shoulder, and a dormouse hair rides in the lifted clay beside it.", zh: "第三个坛肩上有一粒睡鼠的粪，干而发白；旁边起下的封泥里还夹着一根睡鼠毛。" },
+        { id: "k34e3", weight: 4, en: "The wall's weep-holes are clean of clay crumbs the whole length, so the seals were never carried far and never dropped.", zh: "整条墙的泄水孔都干干净净，没有泥屑——封泥没被搬远，也没掉过。" },
+        { id: "k34e4", weight: 3, en: "A hedgehog track under the wall turns back on itself at the third crock, twice, in the manner of a body that found nothing worth the climb.", zh: "墙根下一道刺猬的脚印，在第三个坛前折了两回——像个什么都没找到、觉得不值得爬的身子走出来的。" },
+        { id: "k34e5", weight: 3, en: "The ivy up the orchard wall carries a rubbed strip at dormouse height, and a hair from the strip matches the hair in the lifted clay.", zh: "果园墙上的藤在睡鼠那么高的地方磨出了一条光带；带子里的一根毛，和封泥里那根对得上。" },
+        { id: "k34e6", weight: 3, en: "The crocks' wax lids are scored all the way round from underneath, the way a hand works a lid loose instead of a beak knocking one off.", zh: "坛口的蜡盖从底下被划了一整圈——那是一双手起盖子的手法，不是一张嘴啄开的路数。" },
+      ],
+      witnesses: [
+        {
+          id: "k34w1", trust: 4, en: "Brack the hedgehog", zh: "刺猬布拉克",
+          statements: [
+            { id: "k34s1", claim: "k34c1", en: "I sniff the wall every night for grubs. The seals were whole at dusk and the clay smell still held; whatever lifted them came after I turned back.", zh: "我夜夜沿着墙嗅虫子。黄昏时封泥都完整，泥味还没散；起封泥的那位，是在我回头之后来的。" },
+            { id: "k34s2", claim: "k34c1", en: "A hedgehog cannot open a seam without breaking it. I have broken three crocks in my life and I broke them honestly, by standing on them.", zh: "刺猬开泥封，没法不弄破。我这辈子弄破过三个坛子，都是实打实踩破的。" },
+            { id: "k34s3", claim: "k34c1", en: "My track turns back at the third crock because the grubs ended there. The wall goes on; my supper did not.", zh: "我的脚印在第三个坛前折回来，是因为虫子到那儿就没了。墙还长着；我的晚饭没有了。" },
+          ],
+        },
+        {
+          id: "k34w2", trust: 4, en: "Kex the wren", zh: "鹪鹩凯克斯",
+          statements: [
+            { id: "k34s4", claim: "k34c1", en: "I wake before the worms do. At the warm night's first light a small round body slipped out of the wall's crack and went up the ivy heavy.", zh: "我比虫子醒得早。那个暖夜头一茬光里，一个圆滚滚的小身子从墙缝里溜出来，沉沉地顺着藤爬上去。" },
+            { id: "k34s5", claim: "k34c1", en: "A wren cannot lift a clay seal whole; my bill lifts twigs. But a dormouse's hands lift seals the way a thief lifts lids - gently, and often.", zh: "鹪鹩的嘴只能掀树枝，整块起封泥是起不动的。可睡鼠的手起封泥，就像贼起盖子——又轻又熟。" },
+          ],
+        },
+        {
+          id: "k34w3", trust: 5, en: "Hank the dormouse", zh: "睡鼠汉克",
+          statements: [
+            { id: "k34s6", claim: "k34c1", en: "I sleep the warm nights through in the beam bank; ask the beetles if I stirred. Bee-bread is wasp work to dig and I am not a wasp.", zh: "暖夜里我在梁土里睡到天亮；问虫子去，我动没动。蜂窝粮要黄蜂的力气才掏得动，我不是黄蜂。" },
+            { id: "k34s7", claim: "k34c1", en: "The crocks sit above my beam bank and I have passed them all summer without a look. Passing is not scooping.", zh: "那些坛子就在我梁土的上头，我整个夏天打它们跟前过，一眼都没多看。路过不是掏。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k34p1", witness: "k34w1", with: "k34e4", claim: "k34c1", cost: 1, en: "You turned back at the third crock, you say, for the grubs ended. Here is your track turning twice. Say what a grubs-ended hedgehog smells like from the fourth crock on.", zh: "你说虫子到第三个坛就没了，你才回头。你的脚印在这儿，折了两回。说说看，从第四个坛起，一只没虫可吃的刺猬闻起来是什么味。" },
+        { id: "k34p2", witness: "k34w2", with: "k34e2", claim: "k34c1", cost: 1, taints: "k34w3", taintCost: 2, en: "You saw a small round body heavy up the ivy, and the third crock's shoulder carries a dormouse's drop. Say the body's name - and do not soften it by making the beam bank a sleeper's alibi.", zh: "你看见一个圆滚滚的小身子沉沉地爬上藤，第三个坛肩上还有一粒睡鼠的粪。把那个身子的名字说出来——别把它说轻了，把梁土说成什么瞌睡的不在场。" },
+        { id: "k34p3", witness: "k34w3", with: "k34e1", claim: "k34c1", cost: 1, en: "You say wasp work, and here are every seal lifted whole. Only a hand lifts clay like that. Say whose hands the court should look at, if not yours.", zh: "你说那得黄蜂的力气，可封泥全都是整块起出来的。那样的活只有手干得出来。如果不是你的手，法庭该看谁的手。" },
+        { id: "k34p4", witness: "k34w1", with: "k34e3", claim: "k34c2", cost: 1, taints: "k34w2", taintCost: 1, en: "The weep-holes are clean the whole wall's length, so the seals never travelled. Say what else was awake at the wall that night - and mind, the small brown bird you blame was awake for the worms, not the crocks.", zh: "整条墙的泄水孔都干净，封泥没挪过窝。说说那夜墙头醒着的还有谁——可你怪的那只小棕鸟，醒着是为了虫子，不是为了坛子。" },
+        { id: "k34p5", witness: "k34w2", with: "k34e1", claim: "k34c3", cost: 1, en: "You wake before the worms. Say what the wall's crack sounds like when a seal comes out whole, if you were awake to hear it.", zh: "你比虫子醒得早。既然醒着，说说整块封泥出墙时，那墙缝是什么响法。" },
+      ],
+      vouches: [
+        { id: "k34v1", witness: "k34w1", exhibit: "k34e4", claim: "k34c1", en: "The hedgehog's track turned twice and told the truth twice; a turn is not a theft. Believe the hedgehog about the grubs that ended.", zh: "刺猬的脚印折了两回，也说了两回实话；折返不是偷。关于虫子的尽头，信刺猬的。" },
+        { id: "k34v2", witness: "k34w3", exhibit: "k34e2", claim: "k34c1", en: "The drop on the crock's shoulder is the dormouse's own and the hair in the clay is his; a drop is a name a body cannot drop twice. Believe the drop over the beam bank.", zh: "坛肩上的粪是睡鼠自己的，封泥里的毛也是他的；粪是身上掉不出去的名字。信这粒粪，别信梁土。" },
+        { id: "k34v3", witness: "k34w2", exhibit: "k34e3", claim: "k34c1", en: "The wren wakes for worms and sleeps among twigs; a wren cannot carry what the weep-holes say was never carried. Believe the wren about the wall's quiet.", zh: "鹪鹩为虫子醒，在树枝里睡；泄水孔证明封泥没挪过窝，鹪鹩也确实搬不动它们。关于那面墙的安静，信鹪鹩的。" },
+      ],
+      claims: [
+        { id: "k34c1", accused: "dormouse", statements: ["k34s1", "k34s2", "k34s3", "k34s4", "k34s5", "k34s6", "k34s7"], exhibits: ["k34e1", "k34e2", "k34e3", "k34e4", "k34e5", "k34e6"], en: "Hank lifted every seal whole in the warm night, scooped the bee-bread and went heavy up the ivy to his beam bank", zh: "暖夜里汉克把封泥整块起出、掏空蜂窝粮，沉沉地顺着藤爬回梁土去了" },
+        { id: "k34c2", accused: "hedgehog", statements: ["k34s1", "k34s2"], exhibits: ["k34e4"], en: "Brack broke the seals for grubs and stood on the crocks he could not open", zh: "布拉克为虫子破了封泥，还踩开了他打不开的坛子" },
+        { id: "k34c3", accused: "wren", statements: ["k34s4", "k34s5"], exhibits: ["k34e3"], en: "Kex lifted the seals for the wax to line her nest", zh: "凯克斯为衬窝掀走封泥，图的是里头的蜡" },
+      ],
+    },
+    {
+      id: "k35", labelKey: "ctaCase35", time: 25, culprit: "newt",
+      bar: { strength: 36, trust: 2 },
+      charge: {
+        en: "The eel-grate at the mill race was wired shut against the fry, and at the spring spate the wires stood spread and the fry went down the race. One question here muddies a neighbour three points deep against a bar of two, and only its own mending puts the name back.",
+        zh: "磨坊水口的鳗栅为了拦鱼苗用铁丝扎死；春汛一来，铁丝全撑开了，鱼苗顺水口去了。这案子里有一问把邻居拖进三指深的泥，门槛只有两指——唯有它自己的那回作证能把名字捞回来。",
+      },
+      suspects: [
+        { id: "newt", en: "Elm the Newt", zh: "蝾螈埃尔姆" },
+        { id: "pike", en: "Gaff the Pike", zh: "狗鱼加夫" },
+        { id: "tortoise", en: "Grit the Tortoise", zh: "陆龟格里特" },
+      ],
+      exhibits: [
+        { id: "k35e1", weight: 4, en: "The grate's wires are spread in one wide gap, bent outward, and the bends carry the slick of a small slick body working them loose night after night.", zh: "栅上的铁丝撑开一道大口，向外弯着；弯头上有一层滑腻，是滑腻的小身子一夜一夜把它们拨松留下的。" },
+        { id: "k35e2", weight: 4, en: "A newt's cast skin hangs whole on the top wire, folded the way a newt folds when it backs out of its own coat.", zh: "栅顶的铁丝上挂着一张完整的蝾螈蜕，折法正是蝾螈蜕皮时倒退着出来的折法。" },
+        { id: "k35e3", weight: 4, en: "Fry scales dust the sill below the spread gap, and no scale lies above it on the dry stone.", zh: "撑开的口下面的门槛上积着一层鱼苗鳞；口上头的干石上，一片鳞也没有。" },
+        { id: "k35e4", weight: 4, en: "The tortoise's wall-hole at the race's edge sits dry, webbed with old spiderwork, the way it has sat since the spring before.", zh: "水口边的陆龟墙洞干着，结着陈年的蛛网——打去年春天起就是那个样子。" },
+        { id: "k35e5", weight: 4, en: "The spread wires' ends carry fine paired teeth-marks, bright over the old rust, and the pairs march the length of the gap.", zh: "撑开的铁丝头上留着细细的成对牙印，亮的压着旧的锈；一对一对，顺着那道口排到头。" },
+        { id: "k35e6", weight: 3, en: "Fry hover at the gap's mouth on the morning after, and the tortoise's wall-hole below the race sits behind them, unused.", zh: "第二天早上，鱼苗就在那道口边上打着转；水口下陆龟的墙洞在它们身后，一动没动。" },
+      ],
+      witnesses: [
+        {
+          id: "k35w1", trust: 4, en: "Grit the tortoise", zh: "陆龟格里特",
+          statements: [
+            { id: "k35s1", claim: "k35c1", en: "I keep the race's edge in flood time. The fry went through at the spate in one bright ribbon, and the ribbon came out of one gap, not many.", zh: "涨水的时候我守在水口边。鱼苗是汛头上过去的，亮亮的一条线；那线只从一个口里出来，不是许多口。" },
+            { id: "k35s2", claim: "k35c1", en: "A tortoise cannot spread iron wires. I push with my shell and my shell pushes down, not out.", zh: "陆龟撑不开铁丝。我用壳推，壳只会往下推，不会往外。" },
+          ],
+        },
+        {
+          id: "k35w2", trust: 4, en: "Gaff the pike", zh: "狗鱼加夫",
+          statements: [
+            { id: "k35s3", claim: "k35c1", en: "I hunt the pool below the race. The fry came down to me already scattered, and a pike herds, he does not scatter. Scattered fry are fry that slipped a grate.", zh: "我在水口下面的塘里猎食。鱼苗到我这里时已经散了；狗鱼只会赶，不会散。散了的鱼苗，是从栅上溜下来的鱼苗。" },
+            { id: "k35s4", claim: "k35c1", en: "A pike's snout bends wires outward, it is true - if he could hold them. Water does not let a pike hold anything small that long. Say who has hands instead of water.", zh: "狗鱼的吻确实能把铁丝往外顶——只要顶得住。水里可没有谁能那么久地按住一根小铁丝。说说谁有手，不用跟水较劲。" },
+          ],
+        },
+        {
+          id: "k35w3", trust: 5, en: "Elm the newt", zh: "蝾螈埃尔姆",
+          statements: [
+            { id: "k35s5", claim: "k35c1", en: "I sleep in the grate's shade; the shade is mine. A newt could not move a wire a fry could pass through, and a newt does not eat fry.", zh: "我睡在栅荫里；那荫是我的。蝾螈挪不动一根鱼苗钻得过的铁丝，蝾螈也不吃鱼苗。" },
+            { id: "k35s6", claim: "k35c1", en: "My skin splits of itself at the spate; every newt's does. A coat left on a wire is no more a crime than a coat left on a fence.", zh: "汛头我的皮自己就裂；每只蝾螈都这样。蜕挂在铁丝上，跟蜕挂在篱笆上一样，不算罪。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k35p1", witness: "k35w1", with: "k35e4", claim: "k35c1", cost: 1, en: "You keep the edge in flood time and your wall-hole sits webbed since last spring. Say what you keep at the edge, if not the sight of the gap opening.", zh: "涨水时你守在水口边，你的墙洞从去年春天起就结着蛛网。说说你守在水口边守的是什么——若不是看着那道口撑开。" },
+        { id: "k35p2", witness: "k35w2", with: "k35e2", claim: "k35c1", cost: 1, taints: "k35w3", taintCost: 3, en: "You say scattered fry are fry that slipped a grate, and the grate's own shade hangs a newt's coat. Say the slinker's name three times, if you saw him - and do not lean your whole hunt on a coat the water sheds anyway.", zh: "你说散了的鱼苗就是溜了栅的鱼苗，栅荫上又正挂着一件蝾螈的蜕。既然看见了，把那个溜边的名字连说三遍——可别把整场追猎押在一件水里随时会蜕的皮上。" },
+        { id: "k35p3", witness: "k35w3", with: "k35e1", claim: "k35c1", cost: 1, en: "You sleep in the grate's shade and the wires' bends carry a slick. Say what else works a wire loose night after night from inside a shade it owns.", zh: "你睡在栅荫里，铁丝的弯头上有滑腻。说说看，还有什么能一夜一夜、在它自己占着的荫里把铁丝拨松。" },
+        { id: "k35p4", witness: "k35w1", with: "k35e3", claim: "k35c2", cost: 1, en: "The fry scales dust the sill under the gap and none lie above. Say where the ribbon began, if not at the gap the wires show.", zh: "鱼苗鳞积在口下面的门槛上，口上头一片也没有。若不是铁丝撑开的那道口，那亮亮的一条线是从哪儿起的头。" },
+        { id: "k35p5", witness: "k35w2", with: "k35e1", claim: "k35c3", cost: 1, en: "You herd fry for a living. Say what a herded ribbon does at a gap that was not there the dusk before.", zh: "你赶鱼苗是老本行。说说一队赶拢的鱼苗，撞上前一晚还不存在的那道口，会怎么样。" },
+      ],
+      vouches: [
+        { id: "k35v1", witness: "k35w1", exhibit: "k35e4", claim: "k35c1", en: "The tortoise's hole is webbed and dry and has been since the spring before; a body does not rob through a spider's front door. Believe the tortoise about the edge he keeps.", zh: "陆龟的墙洞干着、结着蛛网，去年春天就这样；没有谁会从蛛网的大门去行窃。关于他守的水口，信陆龟的。" },
+        { id: "k35v2", witness: "k35w3", exhibit: "k35e2", claim: "k35c1", en: "The coat on the wire is the newt's own, and a shed coat is a season, not a deed. Believe the newt about the coat, and the bends about the body that worked them.", zh: "铁丝上的蜕是蝾螈自己的；蜕皮是节令，不是罪。蜕的事信蝾螈的；铁丝的弯头，信那双拨松它的身子。" },
+        { id: "k35v3", witness: "k35w2", exhibit: "k35e3", claim: "k35c1", en: "The pike read the scattered ribbon before the court did, and a hunter knows his own scatter from another's. Believe the pike about the fry he never touched.", zh: "鱼苗散了，狗鱼比法庭先看出来；猎手认得自己的散场和别人的散场。关于他没碰过的那些鱼苗，信狗鱼的。" },
+      ],
+      claims: [
+        { id: "k35c1", accused: "newt", statements: ["k35s1", "k35s2", "k35s3", "k35s4", "k35s5", "k35s6"], exhibits: ["k35e1", "k35e2", "k35e3", "k35e4", "k35e5", "k35e6"], en: "Elm worked the wires loose from the shade night after night, spread the gap for the spate and let the fry go down the race", zh: "埃尔姆一夜一夜在栅荫里把铁丝拨松，汛前撑开那道口，让鱼苗顺水口去了" },
+        { id: "k35c2", accused: "pike", statements: ["k35s3", "k35s4"], exhibits: ["k35e3"], en: "Gaff bent the wires with his snout to herd the fry down to his pool", zh: "加夫用吻顶弯铁丝，把鱼苗赶进自己的塘里" },
+        { id: "k35c3", accused: "tortoise", statements: ["k35s1"], exhibits: ["k35e4"], en: "Grit widened his wall-hole under the race and let the fry out at his own door", zh: "格里特把水口下的墙洞拓宽，让鱼苗从自家门口出去" },
+      ],
+    },
+    {
+      id: "k36", labelKey: "ctaCase36", time: 26, culprit: "wagtail",
+      bar: { strength: 37, trust: 3 },
+      charge: {
+        en: "The chapel bell's pull-rope was frayed at dusk and cut clean at dawn, and the bell has not rung true since. Two questions here each muddy a different neighbour two points deep, and the court must mend both names before the charge stands.",
+        zh: "礼拜堂钟的拉绳黄昏时还只是起毛，天亮时被齐齐割断，钟声从此不正。这案子里两问各拖一位邻居、各两指深——两条名字都洗净了，指控才立得住。",
+      },
+      suspects: [
+        { id: "wagtail", en: "Quill the Wagtail", zh: "鹡鸰奎尔" },
+        { id: "bat", en: "Veil the Bat", zh: "蝙蝠维尔" },
+        { id: "starling", en: "Murm the Starling", zh: "椋鸟默姆" },
+      ],
+      exhibits: [
+        { id: "k36e1", weight: 4, en: "The rope's cut end shows one clean slice through the laid strands, the slice of a fine hard edge drawn once and true.", zh: "绳的断口把搓紧的股绳一刀过净——那是一口又细又硬的刃，抽过一次，抽得又直又准。" },
+        { id: "k36e2", weight: 4, en: "A wagtail lands and walks the bell-loft sill every morning; the sill's dust holds her three-toed walk in a fresh line to the frayed place.", zh: "鹡鸰每天早上都落进钟楼、在门槛上走；槛上的灰留着她三趾的脚印，新鲜的，一直走到起毛的地方。" },
+        { id: "k36e3", weight: 4, en: "A strand of the bell-rope hangs in the bat's corner crevice, pulled in and packed like lining.", zh: "钟绳的一股挂在蝙蝠的墙角缝里，抽进去、垫成了衬里。" },
+        { id: "k36e4", weight: 4, en: "The starling's roost is the elm off the chapel yard, and the elm's droppings hold no fibre at all on the morning after.", zh: "椋鸟宿在礼拜堂院子外那棵榆树上；第二天早上，榆树下的白粪里一点纤维也没有。" },
+        { id: "k36e5", weight: 4, en: "A wagtail's dropping sits on the frayed place of the rope, fresh, white over the rope's old grey.", zh: "拉绳起毛的地方落着一撮鹡鸰的粪，新鲜的，白的压着绳上旧的灰。" },
+        { id: "k36e6", weight: 4, en: "The loft doorstone carries three-toed prints in and out, fresh in the dawn damp, and the door was shut at dusk.", zh: "钟楼的门槛石上进进出出印着三趾的脚印，晨潮里还新着；可黄昏时门是关着的。" },
+      ],
+      witnesses: [
+        {
+          id: "k36w1", trust: 5, en: "Veil the bat", zh: "蝙蝠维尔",
+          statements: [
+            { id: "k36s1", claim: "k36c1", en: "I fly the yard between the bells. The rope frayed at dusk, top to bottom, and a fray is worn, not cut. What cut it came after the fraying wore it thin.", zh: "两钟之间我在院子里飞。黄昏时绳是起毛的，从头到脚；起毛是磨出来的，不是割出来的。割它的那位，是等它磨细了才来的。" },
+            { id: "k36s2", claim: "k36c1", en: "A bat hangs in crevices and lines them with whatever hangs loose. A strand of rope in my corner is a strand of rope in my corner; the cut was not made by hanging.", zh: "蝙蝠宿在缝里，缝里垫的都是挂得松的东西。我墙角里那股绳，就是一股绳；割口可不是垫窝垫出来的。" },
+          ],
+        },
+        {
+          id: "k36w2", trust: 4, en: "Murm the starling", zh: "椋鸟默姆",
+          statements: [
+            { id: "k36s3", claim: "k36c1", en: "I roost over the yard and I read the yard each dawn. A rope does not cut itself clean in one slice; I have pulled many a thread loose and none of them ends the way that rope ends.", zh: "我在院子里过夜，每天早上把院子读一遍。绳不会自己齐齐地一刀断；我扯过的线头多了，没有一根的断口像那根绳。" },
+            { id: "k36s4", claim: "k36c1", en: "The wagtail walks the sill every morning and the sill shows her walk to the very fray. Ask what she walked there for, at an hour when no bell calls anyone.", zh: "鹡鸰天天早上在门槛上走，槛上的灰一直记到起毛的地方。问问她无钟可敲的时辰，去那儿走的什么路。" },
+          ],
+        },
+        {
+          id: "k36w3", trust: 5, en: "Quill the wagtail", zh: "鹡鸰奎尔",
+          statements: [
+            { id: "k36s5", claim: "k36c1", en: "I walk sills for midges; midges bank on warm stone at dawn. A walk is a walk, and a walk does not cut laid rope.", zh: "我在槛上走是为了小蚊虫；天亮时暖石头上蚊子成堆。走就是走，走路割不断搓紧的绳。" },
+            { id: "k36s6", claim: "k36c1", en: "My bill is a fly-picker, a soft pick at a hard edge. It has never sliced anything, and it never will.", zh: "我的嘴是拣虫子的嘴，碰上硬边也只能轻轻啄。它什么都没割过，以后也不会。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k36p1", witness: "k36w1", with: "k36e3", claim: "k36c1", cost: 1, en: "You line your corner with whatever hangs loose, and a rope strand hangs there packed like lining. Say when you pulled it in, if the rope was whole at dusk and cut at dawn.", zh: "你的墙角什么松挂什么，一股绳就垫在里头。黄昏绳还是整的，天亮就断了——说说你是什么时候把它拽进缝里的。" },
+        { id: "k36p2", witness: "k36w2", with: "k36e1", claim: "k36c1", cost: 1, taints: "k36w3", taintCost: 2, en: "You read the yard each dawn, and the slice is a fine hard edge drawn once. A wagtail's bill is exactly that edge. Say so plainly to the court - and do not soften it by turning a midge-walk into an alibi.", zh: "你每天早上读院子，断口是一口又细又硬的刃抽出来的；鹡鸰的嘴正是这样一口刃。跟法庭直说——别拿什么捉蚊子的散步，把话说软了。" },
+        { id: "k36p3", witness: "k36w3", with: "k36e2", claim: "k36c1", cost: 1, taints: "k36w1", taintCost: 2, en: "You pick flies soft, you say, and yet the sill's dust shows your three toes at the fray at first light. Say what a fly-picker was picking at a frayed rope's foot - and do not hang the cut on the crevice's sleeper to be rid of it.", zh: "你说你的嘴软，只会拣虫子；可槛上的灰记着你天亮时三趾走过起毛的绳脚。说说一位拣虫子的在起了毛的绳脚上拣什么——也别为了脱身，把割口挂到缝里睡觉的那位头上。" },
+        { id: "k36p4", witness: "k36w2", with: "k36e4", claim: "k36c2", cost: 1, en: "Your droppings hold no fibre the morning after, and a roost that cuts rope eats fibre. Say what a fibre-less roost proves about the sleeper in it.", zh: "第二天早上你的白粪里一点纤维没有；割绳的宿处该吃下纤维。说说一口没有纤维的白粪，替里头睡的那位证明了什么。" },
+        { id: "k36p5", witness: "k36w1", with: "k36e1", claim: "k36c2", cost: 1, en: "You fly between the bells and you know the rope's voice. Say what a cut rope does to a bell's voice, and who in the yard gains a quiet bell.", zh: "你在两钟之间飞，你认得钟绳的嗓音。说说割断的绳会把钟声变成什么样，又有什么人图一口安静的钟。" },
+        { id: "k36p6", witness: "k36w3", with: "k36e1", claim: "k36c3", cost: 1, en: "You say your bill never sliced anything. Here is one clean slice through laid strands. Say what else in this yard draws an edge once and true.", zh: "你说你的嘴什么都没割过。齐齐的一刀就在这儿。说说这院子里还有谁能把刃抽得又直又准。" },
+      ],
+      vouches: [
+        { id: "k36v1", witness: "k36w1", exhibit: "k36e3", claim: "k36c1", en: "The bat hangs in crevices and lines them; lining is not cutting, and the bat said frayed before anyone said cut. Believe the bat about the fraying.", zh: "蝙蝠宿缝、缝里垫东西；垫不是割。人人说割之前，蝙蝠先说的是起毛。关于起毛，信蝙蝠的。" },
+        { id: "k36v2", witness: "k36w2", exhibit: "k36e4", claim: "k36c1", en: "The starling's roost holds no fibre and the starling read the cut for what it was. Believe the starling about the yard he reads every dawn.", zh: "椋鸟的白粪里没有纤维，断口也被他一眼读成了一刀。关于他每天早上读的院子，信椋鸟的。" },
+        { id: "k36v3", witness: "k36w3", exhibit: "k36e2", claim: "k36c1", en: "The wagtail's walk was a midge-walk and the midges bank at dawn; the walk put her at the sill, and the sill put her near the fray - near, not at it. Believe the walk about the midges and the court about the slice.", zh: "鹡鸰走槛是为小蚊虫，蚊子天亮时在暖石上成堆；那趟路把她带到了槛上，也把她带到了起毛处——是旁边，不是跟前。走的事信她的，那一刀，信法庭的。" },
+      ],
+      claims: [
+        { id: "k36c1", accused: "wagtail", statements: ["k36s1", "k36s2", "k36s3", "k36s4", "k36s5", "k36s6"], exhibits: ["k36e1", "k36e2", "k36e3", "k36e4", "k36e5", "k36e6"], en: "Quill walked the sill to the frayed rope at first light and cut the strands clean with a bill honed on midges", zh: "奎尔天亮时沿槛走到起毛的绳脚，用一张拣虫子磨利的嘴把绳股齐齐割断" },
+        { id: "k36c2", accused: "bat", statements: ["k36s1", "k36s2"], exhibits: ["k36e3"], en: "Veil cut the rope in the dark and hauled the strand in for lining", zh: "维尔夜里割了绳，把那股绳拖进缝里垫了窝" },
+        { id: "k36c3", accused: "starling", statements: ["k36s3"], exhibits: ["k36e4"], en: "Murm cut the rope to still a bell that woke his roost", zh: "默姆割了绳，好让吵醒他一窝的钟从此哑了" },
+      ],
+    },
+    {
+      id: "k37", labelKey: "ctaCase37", time: 27, culprit: "coot",
+      bar: { strength: 38, trust: 2 },
+      charge: {
+        en: "The mill-sluice's flood boards were drawn at dusk and two stood drawn at dawn, and the millpond mudded the watercress beds below. One question here muddies a neighbour three points deep against a bar of two, and only its own mending puts the name back.",
+        zh: "磨坊闸口的挡水板黄昏时都插得好好的，天亮时两块被抽起，塘水浑了下游的豆瓣菜田。这案子里有一问把邻居拖进三指深的泥，而门槛只有两指——唯有它自己的那回作证能把名字捞回来。",
+      },
+      suspects: [
+        { id: "coot", en: "Bald the Coot", zh: "白骨顶波德" },
+        { id: "moorhen", en: "Skerry the Moorhen", zh: "黑水鸡斯凯丽" },
+        { id: "mallard", en: "Reed the Mallard", zh: "绿头鸭里德" },
+      ],
+      exhibits: [
+        { id: "k37e1", weight: 5, en: "The two drawn boards stand stacked on the sill's dry end, lifted not dropped, with the wet line of their edges still matched.", zh: "两块抽起的挡水板齐齐摞在闸台干处，是搬上去的，不是扔下的；板沿的湿线还一对得齐齐的。" },
+        { id: "k37e2", weight: 4, en: "A coot's big lobed foot prints the sill's mud at both drawn slots, and the prints press deeper at the heel than at the toes.", zh: "闸台泥上、两个抽空的槽口边，都印着白骨顶那带蹼瓣的大脚；印子脚跟深、脚趾浅。" },
+        { id: "k37e3", weight: 4, en: "The cress beds below wear a fan of fresh silt the morning after, fanned wide exactly where the drawn boards let the pond cut loose.", zh: "第二天早上，下游的豆瓣菜田上蒙着一层新泥扇，扇开的宽窄正好是挡板抽走后塘水撒欢的地方。" },
+        { id: "k37e4", weight: 4, en: "The mallard's night stand is the bank gravel above the weir, and the gravel shows no track down to the sluice at all.", zh: "绿头鸭夜里宿在堰上头的砾石岸；砾石上根本没有通到闸口的脚印。" },
+        { id: "k37e5", weight: 4, en: "The sill's mud carries the wet line of the two drawn slots, and the boards were never dropped to the mud at all - lifted and stacked dry.", zh: "闸台的泥上留着一道湿线，正是两个抽空槽口的位置；那两块板压根没落到泥里——是干着被摞上去的。" },
+        { id: "k37e6", weight: 4, en: "A coot's breast-feather rides the stack's top board, pressed into the wet line while it was still wet.", zh: "摞顶那块板上有一根白骨顶的胸羽，是湿线未干的时候压上去的。" },
+      ],
+      witnesses: [
+        {
+          id: "k37w1", trust: 4, en: "Reed the mallard", zh: "绿头鸭里德",
+          statements: [
+            { id: "k37s1", claim: "k37c1", en: "I sleep on the gravel and I wake with the wind. No board was drawn while I stood the bank; the drawing came in the last dark hour, and the bank is too far back to see it.", zh: "我睡在砾石上，风一吹就醒。我守岸的时候没有板被抽走；抽板是最后那段黑夜里的事，岸离得远，看不见。" },
+            { id: "k37s2", claim: "k37c1", en: "A mallard cannot stack wet boards end to end and match their wet lines. My bill drags, it does not stack.", zh: "绿头鸭没法把湿板端端正正摞起来、把湿线对齐。我的嘴只会拖，不会摞。" },
+          ],
+        },
+        {
+          id: "k37w2", trust: 5, en: "Skerry the moorhen", zh: "黑水鸡斯凯丽",
+          statements: [
+            { id: "k37s3", claim: "k37c1", en: "I nest below the cress and I know what silt does to a cress bed. The fan is fresh and the fan is single - one drawing, at one hour, by one body.", zh: "我在豆瓣菜田下游做窝，泥沙毁起菜田来我见得多了。那把泥扇是新的，也只有一把——一次抽板、一个时辰、一个身子。" },
+            { id: "k37s4", claim: "k37c1", en: "A moorhen's foot is small and light on a sill; my prints never press heel-deep in sill mud. The prints at the slots are not mine.", zh: "黑水鸡的脚小而轻，落在闸台的泥上从没压出过跟深的印。槽口边的印子不是我的。" },
+          ],
+        },
+        {
+          id: "k37w3", trust: 3, en: "Bald the coot", zh: "白骨顶波德",
+          statements: [
+            { id: "k37s5", claim: "k37c1", en: "I dive for weed all day and sleep in the reeds at night. The cress below is every diving bird's larder; muddying it starves my own table too.", zh: "我白天潜水衔草，夜里睡在苇丛。下游的菜田是所有潜水鸟的粮库；搅浑它，饿的是我自己的桌子。" },
+            { id: "k37s6", claim: "k37c1", en: "My feet are big, yes - big feet grip wet boards better than small ones. Any foot could have printed that sill if any foot had reason to.", zh: "我的脚是大——大脚抓湿板才抓得稳。只要有必要，谁的脚都能在闸台上留下印子。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k37p1", witness: "k37w1", with: "k37e4", claim: "k37c1", cost: 1, en: "You stand the bank too far back to see the drawing, you say, and the gravel shows no track to the sluice. Say what a bank-sleeper knows of the last dark hour at all.", zh: "你说岸离得远看不见抽板，砾石上也没有通到闸口的脚印。说说看，一位岸上睡觉的，对最后那段黑夜到底知道多少。" },
+        { id: "k37p2", witness: "k37w3", with: "k37e2", claim: "k37c1", cost: 1, taints: "k37w2", taintCost: 3, en: "You say any foot could print the sill if any foot had reason. The prints are heel-deep and lobed, and only one bird on this pond wears lobes. Say the bird's name - and do not drown the moorhen's small feet in your big answer.", zh: "你说只要有理由，谁的脚都能在闸台留印。可那印子跟深、带蹼瓣，这塘里只有一位脚上带蹼瓣。把那位指出来——别用你那套大脚的讲究，把黑水鸡的小脚淹了。" },
+        { id: "k37p3", witness: "k37w2", with: "k37e3", claim: "k37c1", cost: 1, en: "You know what silt does to a cress bed, and the fan is single and fresh. Say what hour a single drawing must fall on, if the cress below still feeds the pond at dawn.", zh: "你见过泥沙毁菜田，那把泥扇又是新的、只有一把。若天亮时下游的菜田还养着这塘的鸟，说说那一回抽板该落在哪个时辰。" },
+        { id: "k37p4", witness: "k37w3", with: "k37e1", claim: "k37c2", cost: 1, en: "You muddying your own larder is a fair question, and here stand your boards stacked dry and matched. Say who else on this pond stacks wet boards like a cooper.", zh: "搅浑自家粮库这一条，问得在理；你的板就在这儿，端端正正摞着、湿线对齐。说说这塘里还有谁能像箍桶匠一样摞湿板。" },
+        { id: "k37p5", witness: "k37w1", with: "k37e2", claim: "k37c2", cost: 1, taints: "k37w3", taintCost: 2, en: "You woke with the wind and heard nothing, you say. The sill's mud says heel-deep lobes, and only one lobe wears this pond. Say whose lobes the court should read - and do not be kind about it at your bank's distance.", zh: "你说风吹就醒、什么都没听见。闸台的泥说：跟深、带蹼瓣。这塘里只有一副蹼瓣。说说法庭该去读谁的蹼瓣——隔着一条岸，就别装好人了。" },
+        { id: "k37p6", witness: "k37w2", with: "k37e1", claim: "k37c3", cost: 1, en: "You read the fan as one drawing, one hour, one body. Say what else the stacked boards say about the hour, if the dry end held them above the spate line.", zh: "你把泥扇读成一次抽板、一个时辰、一个身子。若闸台干处把板留在汛线以上，说说那摞板对时辰还说了什么。" },
+      ],
+      vouches: [
+        { id: "k37v1", witness: "k37w1", exhibit: "k37e4", claim: "k37c1", en: "The mallard's gravel shows no track down to the sluice, and a mallard cannot stack what he cannot reach. Believe the mallard about the bank he slept on.", zh: "绿头鸭的砾石岸上没有通到闸口的脚印，够不着的东西他也摞不了。关于他睡的岸，信绿头鸭的。" },
+        { id: "k37v2", witness: "k37w2", exhibit: "k37e3", claim: "k37c1", en: "The moorhen reads silt the way a farmer reads weather, and her own feet never pressed the sill. Believe the moorhen about the fan and about the prints that are not hers.", zh: "黑水鸡读泥沙像庄稼人读天时，她自己的脚从没压过闸台。关于那把泥扇，也关于那双不是她的脚印，信黑水鸡的。" },
+        { id: "k37v3", witness: "k37w3", exhibit: "k37e2", claim: "k37c1", en: "The coot's lobes are the pond's only lobes, and a print is a name pressed into mud. Believe the mud over the muddied.", zh: "白骨顶的蹼瓣是全塘独一份；印子就是踩进泥里的名字。信泥，别信被泥糊住的。" },
+      ],
+      claims: [
+        { id: "k37c1", accused: "coot", statements: ["k37s1", "k37s2", "k37s3", "k37s4", "k37s5", "k37s6"], exhibits: ["k37e1", "k37e2", "k37e3", "k37e4", "k37e5", "k37e6"], en: "Bald drew the flood boards in the last dark hour to splash the cress beds and open the weed below for her own diving", zh: "波德在最后那段黑夜里抽起挡水板，搅浑菜田，好让下游的草根露出水面自己取食" },
+        { id: "k37c2", accused: "mallard", statements: ["k37s1", "k37s2"], exhibits: ["k37e4"], en: "Reed drew the boards from the bank to muddy the beds he grazes at dawn", zh: "里德从岸上抽了板，搅浑他清早吃草的那几块田" },
+        { id: "k37c3", accused: "moorhen", statements: ["k37s3"], exhibits: ["k37e3"], en: "Skerry drew the boards to shell the cress beds into her own nest lining", zh: "斯凯丽抽了板，把菜田里的嫩芽搅下来衬自己的窝" },
+      ],
+    },
+    {
+      id: "k38", labelKey: "ctaCase38", time: 28, culprit: "starling",
+      bar: { strength: 39, trust: 2 },
+      charge: {
+        en: "The weathercock's mica scales were whole at dusk and at dawn the cock stood bald on the wind side, the scales gone. Two questions here drag two different neighbours three points deep, and both names must be mended twice over.",
+        zh: "风信鸡上的云母鳞片黄昏时还全着，天亮时迎风那面秃了，鳞片没了。这案子里两问各拖一位邻居、各三指深，两条名字都得洗净两回。",
+      },
+      suspects: [
+        { id: "starling", en: "Murm the Starling", zh: "椋鸟默姆" },
+        { id: "bat", en: "Veil the Bat", zh: "蝙蝠维尔" },
+        { id: "magpie", en: "Tess the Magpie", zh: "喜鹊特丝" },
+      ],
+      exhibits: [
+        { id: "k38e1", weight: 5, en: "The cock's wind side is peeled in overlapping scoops, each scoop the width of a starling's breast, and the mica's backing-paper still hangs in two of them.", zh: "风信鸡迎风那面的鳞被一片片剥下，每片的宽窄正合一只椋鸟的胸；其中两片还挂着云母的衬纸。" },
+        { id: "k38e2", weight: 5, en: "A mica scale lies in the starling's roost-elm fork, worked into the nest-moss like a shining tile.", zh: "一片云母鳞嵌在椋鸟宿的榆树杈上，砌进窝苔里，亮得像一片瓦。" },
+        { id: "k38e3", weight: 4, en: "The bat's crevice under the loft carries no mica and no fibre, and the crevice's lining is moss as it has been all season.", zh: "钟楼下的蝙蝠墙缝里没有云母也没有纤维，缝里衬的还是苔，一整季都没变过。" },
+        { id: "k38e4", weight: 4, en: "A magpie's track circles the weathervane's post twice in the frost, and every circle keeps to the ground.", zh: "霜上有一道喜鹊的脚印，绕着风信鸡的杆转了两圈；每一圈都贴着地面。" },
+        { id: "k38e5", weight: 4, en: "The peeled scoops climb the wind side one under another, low first, and the lowest sits one hop off the loft sill.", zh: "剥口顺着迎风面一片压一片往上爬，最低的那片起头，就在离钟楼门槛一跳远的地方。" },
+        { id: "k38e6", weight: 4, en: "The roost-elm's fork holds moss worked into a cup this week, and the cup's rim shines with mica dust.", zh: "宿榆的树杈上有个这星期才絮起来的苔杯；杯沿上闪着云母的粉。" },
+      ],
+      witnesses: [
+        {
+          id: "k38w1", trust: 5, en: "Tess the magpie", zh: "喜鹊特丝",
+          statements: [
+            { id: "k38s1", claim: "k38c1", en: "I collect what shines; the whole village knows my wire. If I had taken those scales the wire would hold them, and my wire holds nothing new since midwinter.", zh: "我收亮的东西；全村都知道我那根铁丝。要是我拿的那些鳞片，铁丝上就该有；冬至以来，铁丝上没添过新东西。" },
+            { id: "k38s2", claim: "k38c1", en: "My track circles the post and stays on the ground. A magpie scales a post from the ground up in hops, and the frost shows my hops - none reach the cock.", zh: "我的脚印绕着杆转，一直贴着地面。喜鹊上杆是一蹦一蹦的，霜上就有我的蹦痕——没有一蹦够到鸡身。" },
+          ],
+        },
+        {
+          id: "k38w2", trust: 4, en: "Veil the bat", zh: "蝙蝠维尔",
+          statements: [
+            { id: "k38s3", claim: "k38c1", en: "I fly the yard at dusk and I sleep the dark through. A bat cannot peel mica from a wind side; my thumbs are hooks for hanging, not scoops.", zh: "黄昏我在院里飞，黑透就睡。蝙蝠剥不下迎风面的云母；我的拇指是挂东西的钩，不是剥皮的铲。" },
+            { id: "k38s4", claim: "k38c1", en: "My crevice lines with moss all season and the moss is moss still. Say what a lining that never changed proves about the crevice's tenant.", zh: "我的墙缝整季衬苔，如今还是苔。说说一季没变过的衬里，替缝里住的那位证明了什么。" },
+          ],
+        },
+        {
+          id: "k38w3", trust: 5, en: "Murm the starling", zh: "椋鸟默姆",
+          statements: [
+            { id: "k38s5", claim: "k38c1", en: "I line with moss and feather, not with tile. A scale in a fork is a scale the wind put there; the wind peels that cock every hard frost.", zh: "我衬窝用苔和羽毛，不用瓦片。树杈上那片鳞是风放的；每回硬霜过后，风都会剥那只风信鸡。" },
+            { id: "k38s6", claim: "k38c1", en: "My roost is the elm and the fork is mine, yes. What the fork holds, forty birds hold with me.", zh: "我宿榆树，那树杈是我的，没错。可那杈上的东西，是四十只鸟一起的家当。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k38p1", witness: "k38w1", with: "k38e4", claim: "k38c1", cost: 1, en: "You collect what shines, you say, and your wire holds nothing new. Say what a collector's eye was doing circling the cock's post twice in the frost.", zh: "你说你收亮的东西，铁丝上没添新的。那双收藏家的眼，霜天里绕着风信鸡的杆转了两圈，是在做什么。" },
+        { id: "k38p2", witness: "k38w2", with: "k38e3", claim: "k38c1", cost: 1, taints: "k38w3", taintCost: 3, en: "Your crevice's moss is moss as it has been all season, you say. The scoops on the cock are a starling's breast wide, and the fork over the roost holds a scale. Say the tenant's name the court should read - and do not let a season of moss wash a whole wind side clean.", zh: "你说墙缝的衬苔一季没变。可鸡身的鳞片剥口一片个顶个椋鸟胸的宽，宿树的树杈上就嵌着一片。说说法庭该去读哪一位的名字——别拿一季的苔，把迎风整面洗得干干净净。" },
+        { id: "k38p3", witness: "k38w3", with: "k38e1", claim: "k38c1", cost: 1, taints: "k38w1", taintCost: 3, en: "You blame the wind, and the backing-paper still hangs in two of the scoops - wind does not leave paper. Say whose breast the scoops are the width of, and do not send the court counting a magpie's hops for it.", zh: "你怪风，可剥口里有两片还挂着衬纸——风可留不下纸。说说那些剥口个个是什么胸口的宽——也别把法庭支去数喜鹊的蹦痕。" },
+        { id: "k38p4", witness: "k38w1", with: "k38e1", claim: "k38c2", cost: 1, en: "The wire holds nothing new, you say, and two scoops still hang their backing-paper. Say what a peeled cock is worth at a roost forty birds strong.", zh: "你说铁丝上没添新的，可两片剥口还挂着衬纸。说说一只剥秃的风信鸡，对一窝四十口的宿处值多少。" },
+        { id: "k38p5", witness: "k38w2", with: "k38e4", claim: "k38c2", cost: 1, en: "You sleep the dark through, you say, and the frost held two clean circles of a ground bird. Say what a crevice's tenant knows of a frost-bound post at all.", zh: "你说你黑透就睡。霜上可是清清楚楚两圈贴地的鸟踪。说说缝里的住户，对一根冻透的杆子能知道什么。" },
+        { id: "k38p6", witness: "k38w3", with: "k38e2", claim: "k38c3", cost: 1, en: "Forty birds hold the fork, you say, and one scale worked into the moss like a tile. Say what forty birds wanted with a single shining tile.", zh: "你说那树杈是四十口的家当，可嵌进苔里的亮瓦只有一片。说说四十只鸟要一片亮瓦做什么。" },
+      ],
+      vouches: [
+        { id: "k38v1", witness: "k38w1", exhibit: "k38e4", claim: "k38c1", en: "The magpie's hops stay on the ground and her wire tells on her for a fact. Believe the magpie about the hops, and the wire about the wire.", zh: "喜鹊的蹦痕贴着地面，铁丝也不替她瞒事。蹦的事信她的；铁丝的事信铁丝的。" },
+        { id: "k38v2", witness: "k38w2", exhibit: "k38e3", claim: "k38c1", en: "The crevice's moss is the season's own moss, and a tenant whose lining never changed never left. Believe the bat about the dark.", zh: "墙缝的苔就是这一季的苔；衬里没换过的住户，就没出过门。关于黑夜，信蝙蝠的。" },
+        { id: "k38v3", witness: "k38w3", exhibit: "k38e2", claim: "k38c1", en: "The scale in the fork is worked in like a tile and a tile is a choice, not a windfall. Believe the fork over the wind the starling blamed.", zh: "树杈上那片鳞是砌进去的，像一片瓦；瓦是挑来的，不是天上刮来的。信那道树杈，别信椋鸟怪的风。" },
+      ],
+      claims: [
+        { id: "k38c1", accused: "starling", statements: ["k38s1", "k38s2", "k38s3", "k38s4", "k38s5", "k38s6"], exhibits: ["k38e1", "k38e2", "k38e3", "k38e4", "k38e5", "k38e6"], en: "Murm peeled the cock's wind side scale by scale at the roost hour and tiled the shining scales into the roost fork", zh: "默姆趁着宿树的时辰，一片一片剥下风信鸡迎风面的鳞，把亮瓦砌进了宿树的树杈" },
+        { id: "k38c2", accused: "magpie", statements: ["k38s1", "k38s2"], exhibits: ["k38e4"], en: "Tess took the scales for her wire and hid the shine under her circling", zh: "特丝把鳞片收去她的铁丝，用绕圈把亮处藏了" },
+        { id: "k38c3", accused: "bat", statements: ["k38s3"], exhibits: ["k38e3"], en: "Veil peeled the scales on a dusk flight and hung them in the crevice", zh: "维尔黄昏一次飞掠剥了鳞，挂进了墙缝" },
+      ],
+    },
+    {
+      id: "k39", labelKey: "ctaCase39", time: 29, culprit: "woodmouse",
+      bar: { strength: 40, trust: 2 },
+      charge: {
+        en: "The vestry's candle ends were boxed for the winter feast, and at the feast's eve the box stood open, its wax shavings gone and the shavings' smell all through the wall. One question here muddies a neighbour four points deep against a bar of two, and only a mending that names the smell can lift it.",
+        zh: "圣器室攒着过冬节用的蜡烛头，装了箱；节前夜箱子敞着，蜡屑没了，墙里都是蜡的气味。这案子里有一问把邻居拖进四指深的泥，门槛只有两指——唯有指名道姓洗那股气味的作证才捞得回来。",
+      },
+      suspects: [
+        { id: "woodmouse", en: "Pip the Wood Mouse", zh: "林鼠皮普" },
+        { id: "shrew", en: "Quill the Shrew", zh: "鼩鼱奎尔" },
+        { id: "rook", en: "Croak the Rook", zh: "白嘴鸦克罗克" },
+      ],
+      exhibits: [
+        { id: "k39e1", weight: 5, en: "The box's lid is gnawed at the lip in paired gouges no wider than a thumb-nail, and a whisker - a mouse's whisker - rests in the wax still soft at the rim.", zh: "箱盖的口沿上有一对对牙啃的豁口，宽不过一个拇指甲；一根胡须——鼠的胡须——落在蜡上，蜡沿还软着。" },
+        { id: "k39e2", weight: 5, en: "A wax-shaving trail runs from the vestry's wall to the mouse-hole by the boiler, shavings dropped narrow-side up the whole way.", zh: "一路蜡屑从圣器室的墙根通到锅炉边的鼠洞；一路上屑片都是窄面朝上掉的。" },
+        { id: "k39e3", weight: 5, en: "The rook's roost-tree stands bare of wax smell at every nest, and the shrew's run by the vestry carries no shavings at all.", zh: "白嘴鸦的宿树上，每个窝都闻不到蜡味；鼩鼱沿圣器室的跑道上一粒蜡屑也没有。" },
+        { id: "k39e4", weight: 4, en: "The vestry's cat-shaped shadow of a doorstone shows no dropping of any kind the whole frost week.", zh: "门槛石那一块，整整一个霜周，什么粪都没有落过。" },
+        { id: "k39e5", weight: 4, en: "The boiler hole's threshold carries wax shavings packed into the nest-moss, fresh over the old seed-husks.", zh: "锅炉洞的门槛上，蜡屑被压进了窝苔里；新鲜的压着旧的谷壳。" },
+        { id: "k39e6", weight: 4, en: "The vestry wall's skirting is gnawed at one point, paired gouges no wider than a thumb-nail, and the gnawing smells of wax.", zh: "圣器室的墙脚有一处被啃过，成对的豁口宽不过一个拇指甲；啃口上就是蜡的气味。" },
+      ],
+      witnesses: [
+        {
+          id: "k39w1", trust: 4, en: "Quill the shrew", zh: "鼩鼱奎尔",
+          statements: [
+            { id: "k39s1", claim: "k39c1", en: "I run the vestry wall at night and I smell everything twice. The wax smell lived in the wall by the boiler, and it did not live there the frost week before.", zh: "我夜里沿圣器室的墙跑，什么气味都过两遍鼻子。蜡味是后来才住进锅炉边的墙里的；前一个霜周还没有。" },
+            { id: "k39s2", claim: "k39c1", en: "A shrew eats her own weight in one day and none of it is wax. A shrew cannot even lift a candle end; my jaws close on worms, not on tallow.", zh: "鼩鼱一天吃下与自己等重的食物，没有一样是蜡。鼩鼱连蜡烛头都衔不动；我的嘴合上是捉虫的，合不上牛脂。" },
+          ],
+        },
+        {
+          id: "k39w2", trust: 4, en: "Croak the rook", zh: "白嘴鸦克罗克",
+          statements: [
+            { id: "k39s3", claim: "k39c1", en: "I roost high and I read the yard from the roost. Wax does not fly to a roost-tree; every nest is cold of it. Say where the smell went, if not along the ground.", zh: "我宿在高处，从宿树上读院子。蜡不会飞上宿树；每个窝都闻不到。若不是贴着地面走的，那股味儿去了哪儿。" },
+            { id: "k39s4", claim: "k39c1", en: "A rook's bill is a pick and a tear, and a box lid is neither. Say what ground-runner the paired gouges fit, if not the run that passes the vestry wall.", zh: "白嘴鸦的嘴是啄的、撕的，箱盖两样都沾不上。说说那一对对的豁口合哪位贴地跑的，若不是打圣器室墙边过的那条跑道。" },
+          ],
+        },
+        {
+          id: "k39w3", trust: 5, en: "Pip the wood mouse", zh: "林鼠皮普",
+          statements: [
+            { id: "k39s5", claim: "k39c1", en: "I carry seeds and I sleep deep. The vestry is the cat's ground, and no mouse crosses a cat's ground for wax.", zh: "我搬种子、睡得沉。圣器室是猫的地界，没有鼠会为蜡闯猫的地界。" },
+            { id: "k39s6", claim: "k39c1", en: "My whiskers break all winter; a whisker in the wax is a whisker, not a witness. Say what a whisker knows of a whole box of candle ends.", zh: "我的胡须一冬要断好几根；落在蜡里的胡须就是胡须，不是证人。说说一嘴胡须，对一整箱蜡烛头能知道什么。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k39p1", witness: "k39w1", with: "k39e4", claim: "k39c1", cost: 1, en: "You smell everything twice, you say, and the doorstone's shadow held nothing the whole frost week. Say what a clean doorstone proves about the runners under the vestry wall.", zh: "你说什么气味都过两遍鼻子，可门槛石那一块，整一个霜周什么都没落。说说一块干净的门槛石，替圣器室墙下跑动的各位证明了什么。" },
+        { id: "k39p2", witness: "k39w2", with: "k39e1", claim: "k39c1", cost: 1, taints: "k39w3", taintCost: 4, en: "You read the yard from the roost and the gouges fit a ground-runner's jaw. Say the jaw's owner four times if you dare - and do not pick at the shrew to soften the name, for her jaws close on worms and not on wax.", zh: "你从宿树上读院子，豁口合一张贴地跑的嘴。敢的话，把那张嘴的主人连说四遍——可别拿鼩鼱垫话，她的嘴合上捉虫，合不上蜡。" },
+        { id: "k39p3", witness: "k39w3", with: "k39e2", claim: "k39c2", cost: 1, en: "You carry seeds and the shaving trail runs narrow-side up to your own boiler hole. Say what else drops shavings narrow-side up the whole wall.", zh: "你说你搬种子，可蜡屑一路窄面朝上、一直落到你的锅炉洞口。说说还有谁能把屑片撒得一路窄面朝上。" },
+        { id: "k39p4", witness: "k39w1", with: "k39e3", claim: "k39c2", cost: 1, taints: "k39w2", taintCost: 2, en: "The roost-tree is cold of wax and your run carries no shavings, you both say. Say what a clean roost and a clean run prove about the smell that stayed in the wall - and do not hang the wall on wings that were asleep above it.", zh: "宿树上闻不到蜡味，你的跑道上一粒蜡屑也没有——你们两位都这么说。说说干净的宿树和干净的跑道，替留在墙里的那股气味证明了什么——可别把墙上的事，挂到头顶上睡着的翅膀身上。" },
+        { id: "k39p5", witness: "k39w2", with: "k39e3", claim: "k39c3", cost: 1, en: "You read the yard from the roost. Say what a roost reads of a wall that never shows itself above the frost.", zh: "你从宿树上读院子。说说一面从不出霜线的墙，宿树能读到它什么。" },
+        { id: "k39p6", witness: "k39w3", with: "k39e1", claim: "k39c3", cost: 1, en: "A whisker is not a witness, you say. Here are paired gouges no wider than a thumb-nail, and a trail to your own door. Say what a court should weigh: the whisker, or the walk it took.", zh: "你说胡须不是证人。一对对豁口就在这儿，宽不过一个拇指甲；屑路一直通到你家门口。说说法庭该称一称哪个：那根胡须，还是它走过的那条路。" },
+        { id: "k39p7", witness: "k39w1", with: "k39e2", claim: "k39c1", cost: 1, en: "You smell everything twice, and the trail of shavings runs narrow-side up the whole wall. Say what a twice-smelled trail says about the hole it stops at.", zh: "你说什么气味都要过两遍鼻子；屑路一路窄面朝上、贴着整面墙走。说说一条嗅过两遍的屑路，对它停住的洞口说了什么。" },
+      ],
+      vouches: [
+        { id: "k39v1", witness: "k39w1", exhibit: "k39e3", claim: "k39c1", en: "The shrew's run is clean of shavings and her jaws close on worms. Believe the shrew about the wall she smells twice, and the wax she cannot carry.", zh: "鼩鼱的跑道上一粒蜡屑没有，她的嘴合上捉虫。关于她嗅两遍的那面墙，也关于她衔不动的蜡，信鼩鼱的。" },
+        { id: "k39v2", witness: "k39w2", exhibit: "k39e3", claim: "k39c1", en: "The rook read the yard from above and read it cold of wax. Believe the rook about the roost-tree, and the ground about the ground-runner.", zh: "白嘴鸦从高处读院子，读出宿树上一星蜡味也无。宿树的事信白嘴鸦的；贴地跑的事，信地面本身。" },
+        { id: "k39v3", witness: "k39w3", exhibit: "k39e2", claim: "k39c1", en: "The trail ends at the boiler hole and nowhere else, and the whisker in the wax is soft at the rim. Believe the trail over the whisker's owner, and the whisker over his forgetting.", zh: "屑路到锅炉洞口为止，再没有第二头；蜡里的胡须落处还软着。信那条屑路，别信屑路主人的嘴；信胡须，别信他的忘性。" },
+      ],
+      claims: [
+        { id: "k39c1", accused: "woodmouse", statements: ["k39s1", "k39s2", "k39s3", "k39s4", "k39s5", "k39s6"], exhibits: ["k39e1", "k39e2", "k39e3", "k39e4", "k39e5", "k39e6"], en: "Pip gnawed the box's lid for the candle ends and hauled the shavings home to the boiler hole down a trail of his own dropping", zh: "皮普啃开箱盖叼走蜡烛头，顺着一路掉屑的道把蜡屑搬回了锅炉洞" },
+        { id: "k39c2", accused: "shrew", statements: ["k39s1", "k39s2"], exhibits: ["k39e3"], en: "Quill stripped the box for the tallow grubs she hunts in wax", zh: "奎尔为了蜡里她猎的虫，把箱子掏空了" },
+        { id: "k39c3", accused: "rook", statements: ["k39s3"], exhibits: ["k39e1"], en: "Croak lifted the box's lid from the roost flight and carried the ends to the tree", zh: "克罗克从宿树上俯冲下来掀了箱盖，把蜡烛头带回树上" },
+      ],
+    },
+    {
+      id: "k40", labelKey: "ctaCase40", time: 30, culprit: "plover",
+      bar: { strength: 41, trust: 2 },
+      charge: {
+        en: "The salt-marsh sheep were marked in their own grease at shearing, and on the market's eve three fleeces stood re-marked in another flock's grease, clean over the old marks. Three questions here muddy all three neighbours, two and three points deep against a bar of two, and every name the court muddies it must mend before the verdict holds.",
+        zh: "盐沼的羊剪毛时就用自家羊油打了记号；集前夜，三张毛皮被用别家的羊油重新打了记号，旧记号盖得干干净净。这案子里三问把三位邻居都拖进泥里，两指、三指深，门槛只有两指——法庭糊了谁的名字，就得先把谁洗净，判决才算数。",
+      },
+      suspects: [
+        { id: "plover", en: "Reeve the Plover", zh: "鸻里夫" },
+        { id: "curlew", en: "Skein the Curlew", zh: "杓鹬斯凯恩" },
+        { id: "hare", en: "Moss the Hare", zh: "野兔莫斯" },
+      ],
+      exhibits: [
+        { id: "k40e1", weight: 4, en: "The re-marked grease is river-clay yellow, not marsh-green, and the clay is the plover's bathing pool at the river's bend, the one warm spate leaves.", zh: "重打的油痕是河泥的黄，不是盐沼的绿；那河泥正是鸻在河湾打滚的塘——涨水时唯一留暖水的塘。" },
+        { id: "k40e2", weight: 4, en: "A plover's short bill prints the re-marked grease on all three fleeces, and the print's two steps walk the fleece from shoulder to tail, marking as it goes.", zh: "三张毛皮的新油痕上，都印着鸻那短嘴的印；印子两步一步从肩走到尾，边走边打。" },
+        { id: "k40e3", weight: 4, en: "The curlew's long bill cannot press a print shorter than itself, and no curlew print of any length lies in the re-marked grease.", zh: "杓鹬的长嘴压不出比自己短的印；重打的油痕上，什么长度的杓鹬嘴印都没有。" },
+        { id: "k40e4", weight: 4, en: "The hare's form by the marsh gate sits on old wool the wind gathered, and the wool is this flock's, unmarked and ungreased.", zh: "盐沼门口的野兔窝里垫着风刮拢的旧羊毛；那羊毛是这群羊的，没打过记号，也没沾过油。" },
+        { id: "k40e5", weight: 4, en: "The bathing pool's clay is stamped at first light with one bird's prints, three toes forward, and the prints leave the pool by the marsh path.", zh: "头一茬光里，河泥塘的泥上印着一只鸟的脚印，三趾朝前；印子出塘，顺着上滩的那条路去了。" },
+      ],
+      witnesses: [
+        {
+          id: "k40w1", trust: 5, en: "Skein the curlew", zh: "杓鹬斯凯恩",
+          statements: [
+            { id: "k40s1", claim: "k40c1", en: "I probe the marsh from dusk to dark and my bill is a yard of it. The re-marking smells of river clay, and the river clay is one pool's; the marsh has no clay in it at all.", zh: "我从黄昏探到天黑，嘴就有一码长。重打的油是河泥味；河泥只有一个塘有，盐沼里可一星半点都没有。" },
+            { id: "k40s2", claim: "k40c1", en: "A curlew cannot walk a fleece; my legs are built for the marsh and a fleece rolls under them. The prints walk shoulder to tail in two steps, and two steps is a short bill's ground.", zh: "杓鹬上不了羊毛皮；我的腿是盐沼的腿，羊毛皮会从脚下滚走。那些印子两步从肩走到尾——两步，正是短嘴的地界。" },
+            { id: "k40s7", claim: "k40c1", en: "The marsh has no clay in it; I have probed every yard of it for worms. The clay the fleeces wear is river clay, and the river is one bend away.", zh: "盐沼里没有河泥；为了虫子我一码一码都探过。毛皮上那层泥是河泥；河湾就在一步之外。" },
+            { id: "k40s8", claim: "k40c1", en: "A curlew's print is a long sickle in the mud. There is no sickle on the fleeces; the prints there are short, and they walk.", zh: "杓鹬的印子在泥里是一把长镰。毛皮上没有镰刀印；那儿的印子短短的，是走出来的。" },
+          ],
+        },
+        {
+          id: "k40w2", trust: 4, en: "Moss the hare", zh: "野兔莫斯",
+          statements: [
+            { id: "k40s3", claim: "k40c1", en: "I sit the gate at night and I chew what the wind brings. The wool in my form is this flock's and the wind gathered it; a hare does not shear, and a hare does not grease.", zh: "我夜里守着门，风送来什么我嚼什么。窝里的羊毛是这群羊的，风刮的；野兔不剪毛，也不打油。" },
+            { id: "k40s4", claim: "k40c1", en: "The plover bathes at the river bend at first light, every day, and comes up the marsh after. Ask the flock what the marsh smelled like the morning after the market's eve.", zh: "鸻每天头一茬光在河湾打滚，然后上盐沼来。问问这群羊，集前夜过后那个早上，盐沼闻着是什么味。" },
+            { id: "k40s9", claim: "k40c1", en: "The flock pens two fields from my gate, and the gate's mud held no track to the pen on the market's eve. A hare sits where the night happens, and the night happened over there.", zh: "羊栏离我的门两块田；集前夜，门口的泥上没有一道通向羊栏的脚印。野兔守在夜发生的地方，而那夜的案子出在另一头。" },
+            { id: "k40s10", claim: "k40c1", en: "A hare greases nothing; my form is wool and wind, and the wool in it is this flock's own, gathered unmarked.", zh: "野兔什么油也打不了；我的窝是羊毛和风，窝里那点毛是这群羊自己的，风刮来的，没打过记号。" },
+          ],
+        },
+        {
+          id: "k40w3", trust: 5, en: "Reeve the plover", zh: "鸻里夫",
+          statements: [
+            { id: "k40s5", claim: "k40c1", en: "I bathe in clay because the marsh has no fresh water; every shore bird on this marsh bathes somewhere, and the curlew bathes in the sea. Clay is a bath, not a brush.", zh: "我在河泥里打滚是因为盐沼没有淡水；这滩上每个岸鸟都得找个地方洗，杓鹬洗的是海水。泥是澡，不是刷子。" },
+            { id: "k40s6", claim: "k40c1", en: "My bill is short and my walk is short, and I have never stood on a fleece in my life. A bird who prints as he walks is a bird who walks - say where the walking is, if not at the bath.", zh: "我嘴短步子也短，这辈子没站上过羊毛皮。边走边印的鸟就是走路的鸟——如果不是在洗澡塘，说说它还在哪儿走。" },
+            { id: "k40s11", claim: "k40c1", en: "I bathe at the bend and I walk up the marsh after, every day of the season. Say what a walking bird walks over, if three fleeces lie penned two fields from the gate.", zh: "我在这塘里洗澡，洗完就上滩走一趟——这个季节天天如此。若三张毛皮关在离门两块田的栏里，说说一只走路的鸟都走过了什么。" },
+            { id: "k40s12", claim: "k40c1", en: "The re-marking is not my brush; I have no brush. A bill that prints as it walks prints its own short walk, and my walk is the pool's.", zh: "重打的记号不是我的刷子干的；我没有刷子。边走边印的嘴印出来的是自己的短步子；我的步子，是那口塘的。" },
+            { id: "k40s13", claim: "k40c1", en: "The old marks stood in the grease a whole season; the new ones sat on top of them wet. Ask the shearer which mark the wool held first.", zh: "旧记号在羊油里站了一整个季节；新记号是湿着压上去的。去问剪毛的，羊毛上先有的是哪一个。" },
+            { id: "k40s14", claim: "k40c1", en: "If the court wants my pool's clay on a fleece, let it lay pool clay on old grease and read the wet of it. Wet clay marks deep and dries light; the fleeces' new marks are deep still.", zh: "法庭若要证明毛皮上有我塘里的泥，就拿塘泥抹到旧油上，读它的湿气。湿泥打的记号深、干了就淡；毛皮上的新记号到现在还深着。" },
+          ],
+        },
+      ],
+      presses: [
+        { id: "k40p1", witness: "k40w1", with: "k40e3", claim: "k40c1", cost: 1, taints: "k40w2", taintCost: 2, en: "Your bill is a yard of marsh, you say, and no print of any length lies in the re-marked grease. Say what a marsh-yard knows of a river-clay pool it never probes.", zh: "你说你的嘴是盐沼里的一码。可重打的油痕上，什么长度的嘴印都没有。说说一码的盐沼嘴，对它从不去探的河泥塘知道什么。" },
+        { id: "k40p2", witness: "k40w2", with: "k40e1", claim: "k40c1", cost: 1, taints: "k40w3", taintCost: 3, en: "The re-marking is river-clay yellow, and one bird on this marsh bathes in river clay. Say the bather's name - and do not sweep the marsh floor with a hare's form to blur the yellow.", zh: "重打的油是河泥的黄，这滩上只有一位在河泥里打滚。把打滚的那位指出来——可别拿野兔窝里那点旧毛把满滩一扫，把黄色扫糊了。" },
+        { id: "k40p3", witness: "k40w3", with: "k40e2", claim: "k40c1", cost: 1, taints: "k40w1", taintCost: 3, en: "You print as you walk, you say, and the prints walk shoulder to tail on all three fleeces. Say whose ground two steps is - and do not put your short bill's ground under a yard-long marsh bill to be rid of it.", zh: "你说你边走边印，三张毛皮上的印子都两步从肩走到尾。说说两步是谁的地界——可别把短嘴的地界，硬塞给那一码长的盐沼嘴。" },
+        { id: "k40p4", witness: "k40w1", with: "k40e1", claim: "k40c2", cost: 1, taints: "k40w2", taintCost: 2, en: "The clay is the river pool's and the marsh has none of its own, you say. Say what a gate-sitting hare knows of river clay at all - and mind, the form she sits is lined with wool, not with clay.", zh: "你说河泥是那个塘的、盐沼里没有。说说守门的野兔对河泥到底知道多少——还有，她窝里垫的是羊毛，可不是泥。" },
+        { id: "k40p5", witness: "k40w2", with: "k40e2", claim: "k40c2", cost: 1, en: "You sit the gate at night, and the fleeces stand penned two fields from the gate. Say what a sitting hare hears of three fleeces re-marked in one night.", zh: "你夜里守着门，可那三张毛皮关在离门两块田的栏里。说说守门的野兔，对一夜之间重打记号的三张毛皮听见了什么。" },
+        { id: "k40p6", witness: "k40w3", with: "k40e1", claim: "k40c3", cost: 1, en: "Clay is a bath, you say, and the clay on the fleeces is the pool's own yellow. Say what a bath leaves behind, if it leaves its own colour on another flock's grease.", zh: "你说泥是澡堂。可毛皮上的泥就是那个塘的黄。说说一池澡堂留得下什么——若它把自己的颜色留在了别家羊的油上。" },
+      ],
+      vouches: [
+        { id: "k40v1", witness: "k40w1", exhibit: "k40e3", claim: "k40c1", en: "The curlew's yard is a yard long and the grease holds no print of it, long or short. Believe the curlew about the bill the marsh built her.", zh: "杓鹬的地界有一码长，油痕上却没有她的印，长的短的都没有。关于盐沼给她造的那张嘴，信杓鹬的。" },
+        { id: "k40v2", witness: "k40w2", exhibit: "k40e4", claim: "k40c1", en: "The hare's form is lined with the flock's own wool, gathered, not greased. Believe the hare about the wool, and the gate about the night.", zh: "野兔窝里垫的是这群羊自己的毛，风刮的，没沾油。毛的事信野兔的；那夜的事信门口的。" },
+        { id: "k40v3", witness: "k40w3", exhibit: "k40e2", claim: "k40c1", en: "The prints are short and they walk, and the only short walker who bathes in that yellow is the plover himself. Believe the prints over the bather's bath.", zh: "印子短，而且是走出来的；在那塘黄泥里洗澡的短嘴鸟，只有鸻自己。信印子，别信洗澡的嘴。" },
+      ],
+      claims: [
+        { id: "k40c1", accused: "plover", statements: ["k40s1", "k40s2", "k40s3", "k40s4", "k40s5", "k40s6", "k40s7", "k40s8", "k40s9", "k40s10", "k40s11", "k40s12", "k40s13", "k40s14"], exhibits: ["k40e1", "k40e2", "k40e3", "k40e4", "k40e5"], en: "Reeve came up from his clay bath on the market's eve and walked all three fleeces shoulder to tail, re-marking them clean over the old grease", zh: "集前夜里夫从河泥塘上来，把三张毛皮从肩到尾走了一遍，用塘里的黄泥把旧记号齐齐盖了" },
+        { id: "k40c2", accused: "curlew", statements: ["k40s1", "k40s2"], exhibits: ["k40e3"], en: "Skein probed the fleeces at dusk and re-marked them with marsh grease on a yard-long bill", zh: "斯凯恩黄昏在毛皮上探了一遍，用一码长嘴蘸着盐沼的油重打了记号" },
+        { id: "k40c3", accused: "hare", statements: ["k40s3"], exhibits: ["k40e4"], en: "Moss greased the fleeces from her form at the gate to hide the wool she had gathered", zh: "莫斯为了盖住她窝里垫的羊毛，从门口的窝里出去给毛皮打了油" },
+      ],
+    },
   ];
 
   /* --- pure core --------------------------------------------------------- */
@@ -2312,6 +2951,14 @@
       }
       state.delta[press.witness] = (state.delta[press.witness] || 0) -
         (press.cost == null ? 1 : press.cost);
+      if (press.taints) {
+        /* The tower presses: a question can drag a neighbour's name through
+         * the same mud it opens, and the bench believes the neighbour less
+         * for it until a corroboration mends them. Nothing before the tier
+         * names a taint, so every shipped press costs exactly what it cost. */
+        state.delta[press.taints] = (state.delta[press.taints] || 0) -
+          (press.taintCost == null ? 1 : press.taintCost);
+      }
     }
     for (i = 0; i < used.length; i += 1) {
       var vouch = ctaIn(def, "vouches", used[i]);
@@ -2881,6 +3528,18 @@
       if (kind === "presses") {
         state.delta[witness.id] = (state.delta[witness.id] || 0) -
           (item.cost == null ? 1 : item.cost);
+        if (item.taints) {
+          /* The tower presses: the question also drags the named neighbour's
+           * name through the mud, and the bench believes them less for it
+           * until a corroboration mends them. Nothing before the tier names
+           * a taint, so every shipped press costs exactly what it cost. */
+          state.delta[item.taints] = (state.delta[item.taints] || 0) -
+            (item.taintCost == null ? 1 : item.taintCost);
+          addNote(t("ctaTaintOut", {
+            w: ctaWord(caseDef, ctaIn(caseDef, "witnesses", item.taints) || witness),
+            c: ctaWord(caseDef, item),
+          }));
+        }
         if (item.exposes) {
           state.exposed[item.exposes] = 1;
           owner = ctaOwner(caseDef, item.exposes);
@@ -3380,6 +4039,16 @@
       "ctaCase28": "Eighteen Actions",
       "ctaCase29": "The Mended Witness",
       "ctaCase30": "The Exhibit That Waited",
+      "ctaCase31": "The Ferry Tin",
+      "ctaCase32": "The Open Shutters",
+      "ctaCase33": "The Swapped Eggs",
+      "ctaCase34": "The Lifted Seals",
+      "ctaCase35": "The Spread Grate",
+      "ctaCase36": "The Cut Bell-Rope",
+      "ctaCase37": "The Drawn Boards",
+      "ctaCase38": "The Stripped Weathervane",
+      "ctaCase39": "The Candle Box",
+      "ctaCase40": "The Re-marked Fleeces",
       "ctaCaseSelectLabel": "Take a case from the docket",
       "ctaTimeLabel": "Court time",
       "ctaWordsLabel": "Testimony",
@@ -3440,6 +4109,7 @@
       "ctaVouchOk": "{w} is believed a little more: trust {tt}/{total}.",
       "ctaVouchAgain": "That witness is already corroborated by this exhibit.",
       "ctaLieOut": "The account is out: {s} - said by {w}, and now nobody will take it whole.",
+      "ctaTaintOut": "The word is tainted: {c} dragged {w}'s name through the mud, and the bench believes them less for it.",
       "ctaWordLie": "RECALLED - {s}",
       "ctaWordUnheard": "(not yet asked: word {n})",
       "ctaNoOption": "There is no option {n} on this bench.",
@@ -3505,6 +4175,16 @@
       "ctaCase28": "十八次动作",
       "ctaCase29": "补回来的证人",
       "ctaCase30": "等着证人的物证",
+      "ctaCase31": "渡口铁盒",
+      "ctaCase32": "开着的仓门",
+      "ctaCase33": "换过的鸟蛋",
+      "ctaCase34": "揭开的泥封",
+      "ctaCase35": "撑开的铁栅",
+      "ctaCase36": "割断的钟绳",
+      "ctaCase37": "拉起的闸板",
+      "ctaCase38": "剥鳞的风标",
+      "ctaCase39": "蜡烛匣",
+      "ctaCase40": "重新做记号的羊毛",
       "ctaCaseSelectLabel": "从案卷里挑一件案子",
       "ctaTimeLabel": "庭上时间",
       "ctaWordsLabel": "证词",
@@ -3567,6 +4247,7 @@
       "ctaVouchOk": "{w}更被信一些了：信任 {tt}/{total}。",
       "ctaVouchAgain": "这位证人已经用过这件物证的旁证。",
       "ctaLieOut": "说法被推翻了：{s}——出自{w}，如今再没人会全盘信它。",
+      "ctaTaintOut": "证词被拖下泥：{c}把{w}的名字搅进了泥里，法庭因此不再全信他。",
       "ctaNoOption": "这席上没有第 {n} 项。",
       "ctaLockedOption": "这一项还没准备好：{w}",
       "ctaFactList": "已听到：{w} || 已呈堂：{e} || 案件点 {n}（含 {p} 次逼问）|| 完全接上的指控 {s} 项，眼下对着干的矛盾 {x} 处 || 还剩 {t} 次动作。",
@@ -3617,7 +4298,7 @@
         '<rect x="72" y="46" width="34" height="16" rx="3" fill="none" stroke="#ff6b35" stroke-width="2"/>' +
         '<text x="89" y="57" font-size="8" fill="#ff6b35" text-anchor="middle">trust</text></svg>',
       en: [
-        "Goal: close one of thirty cases with a verdict the numbers behind it actually support.",
+        "Goal: close one of forty cases with a verdict the numbers behind it actually support.",
         "Action: click a witness to take their testimony in order, click an exhibit to mark it, then press 1 to 4 to spend an action, Enter to confirm, Escape back to the bench, L to read out everything you have established.",
         "Two numbers: claim strength comes from testimony, exhibit weight and contradictions; witness trust is separate, starts at the case's own value, and is what the bench will believe.",
         "The trade-off: pressing a witness adds 2 to the charge it serves and costs that witness 1 trust; corroborating a witness with a marked exhibit adds 1 to both.",
@@ -3625,7 +4306,7 @@
         "Scoring: the verdict quality is the gate, the case strength of your closing sets the stars, and the bands are measured from each case's own best-play line.",
       ],
       zh: [
-        "目标：在三十件案子里结一件，判决要能被它背后的数字真正撑住。",
+        "目标：在四十件案子里结一件，判决要能被它背后的数字真正撑住。",
         "操作：点证人按顺序取他的证词，点物证把它呈堂，再按 1 到 4 花掉一次庭上动作，回车确认，Esc 回证人席，L 键念出你已确立的一切。",
         "两个数字：指控强度来自证词、物证分量与矛盾；证人信任是另一回事，由案子自己给定，那才是法庭愿意信多少。",
         "取舍：逼一个证人，替他服务的那条指控加 2，可这位证人的信任减 1；用已呈堂的物证为他旁证，两边各加 1。",

@@ -1,7 +1,7 @@
 "use strict";
 
-/* game-ember-sticks: perfect play wins every table, and the endgame tier
- * narrows the dawdle
+/* game-ember-sticks: perfect play wins every table, the endgame tier
+ * narrows the dawdle, and the cold endgame freezes it shut
  *
  * The game's own perfect-play functions are the solver: nimBestMove answers
  * every position, a brute-force oracle proves the opening rows a first-
@@ -12,6 +12,17 @@
  * the win-by-strategy proof stays intact, and the dawdle margin - the room
  * between the line and the longest winning line - narrows rung over rung
  * from the widest felt's eleven of your turns down to one.
+ *
+ * The cold endgame s31-s40 takes the dial past its stop: every rung there
+ * is a misere win whose slowest winning line IS the engine's own line, so
+ * the margin reads zero - dawdle one turn past the shipped line and the
+ * win is gone - while the line itself lengthens, six turns to eight, over
+ * felts that widen from sixteen sticks to forty-three. The gate proves
+ * each rung's freeze through the same solver, prices it against the same
+ * felt under normal rules (where the dawdle room survives at two turns or
+ * more), and settles the geometry with the oracle: six of the ten felts
+ * sit one stone from a shape that loses outright, and the four lightest
+ * are proven robust - every one-stone neighbour is still a win.
  *
  * The margin is priced by twins and ablations: the full staircase s25 grew
  * from owns the margin s25 misses by one step, seven even twos dawdle to
@@ -28,13 +39,14 @@ module.exports = function gate(ctx) {
   const nim = new Function(slice + "\nreturn { nimBestMove, nimTotal, nimLevels };")();
   const levels = nim.nimLevels;
   const summitIds = ["s25", "s26", "s27", "s28", "s29", "s30"];
+  const deepIds = ["s31", "s32", "s33", "s34", "s35", "s36", "s37", "s38", "s39", "s40"];
 
   /* ---- ladder shape ---- */
-  check("game-ember-sticks", "the sticks ladder holds thirty tables",
-    levels.length === 30, String(levels.length));
+  check("game-ember-sticks", "the sticks ladder holds forty tables",
+    levels.length === 40, String(levels.length));
   check("game-ember-sticks", "every table id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length);
-  check("game-ember-sticks", "the ids run s1 through s30 in order",
+  check("game-ember-sticks", "the ids run s1 through s40 in order",
     levels.every((level, index) => level.id === "s" + (index + 1)),
     levels.map((level) => level.id).join(","));
   const summitMissing = summitIds.filter((id) => !levels.some((level) => level.id === id));
@@ -43,6 +55,12 @@ module.exports = function gate(ctx) {
       summitIds.every((id, index) => levels.findIndex((level) => level.id === id) >
         (index === 0 ? -1 : levels.findIndex((level) => level.id === summitIds[index - 1]))),
     summitMissing.join(",") || "ordered");
+  const deepMissing = deepIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-ember-sticks", "the cold endgame s31-s40 is present in order",
+    deepMissing.length === 0 &&
+      deepIds.every((id, index) => levels.findIndex((level) => level.id === id) >
+        (index === 0 ? levels.findIndex((level) => level.id === "s30") : levels.findIndex((level) => level.id === deepIds[index - 1]))),
+    deepMissing.join(",") || "ordered");
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
 
@@ -242,12 +260,117 @@ module.exports = function gate(ctx) {
     "the shipped shapes sit one stone from losing: matched threes, even twos and the seven-step stair all lose",
     lossProblems.length === 0, lossProblems.join(" | "));
 
+  /* ---- the cold endgame: the dawdle is frozen shut at zero ------------- */
+  /* Every s31-s40 rung is a misere first-player win whose slowest winning
+   * line is the engine's own - measured, not assumed - while a faster win
+   * still exists below the line, so the freeze is a real ceiling over a
+   * real game, not an empty felt. */
+  const deepMeasured = {};
+  deepIds.forEach((id) => {
+    const level = byId[id];
+    const range = turnRange(level.rows, level.misere);
+    const line = shippedLine(level.rows, level.misere);
+    deepMeasured[id] = { range: range, line: line };
+    const label = `${id} [${level.rows.join(",")}] ${level.misere ? "misere" : "normal"}`;
+    check("game-ember-sticks", `${label} bands rise for the low scorer`,
+      level.starTurns[0] <= level.starTurns[1] && level.starTurns[1] <= level.starTurns[2],
+      level.starTurns.join("/"));
+    check("game-ember-sticks", `${label} is a first-player win`,
+      oracle(level.rows, level.misere) === true);
+    check("game-ember-sticks", `${label} the shipped perfect line wins the table`,
+      line.won === true, `turns ${line.turns}`);
+    check("game-ember-sticks", `${label} the three-star line stays pinned at the engine's own line`,
+      line.turns === level.starTurns[0], `${line.turns} vs ${level.starTurns[0]}`);
+    check("game-ember-sticks", `${label} the dawdle is frozen shut: the slowest win is the engine's own line`,
+      range.max === line.turns, `max ${range.max} vs line ${line.turns}`);
+    check("game-ember-sticks", `${label} a faster win still lives under the frozen ceiling`,
+      range.min < line.turns, `min ${range.min} vs line ${line.turns}`);
+    check("game-ember-sticks", `${label} every winning line lands inside the one-star turn`,
+      range.max <= level.starTurns[2], `${range.max} vs ${level.starTurns[2]}`);
+    check("game-ember-sticks", `${label} the game's own move stays sound along every play line`,
+      soundOnPaths(level.rows, level.misere) === true);
+  });
+
+  /* The tier's dial is the line length: it never shortens, it steps 6-7-8,
+   * and inside one speed the felt still widens rung over rung. */
+  const deepProblems = [];
+  let prevDeepLine = measured.s30.line.turns;
+  let prevDeepTotal = nim.nimTotal(byId.s30.rows);
+  deepIds.forEach((id) => {
+    const line = deepMeasured[id].line.turns;
+    const total = nim.nimTotal(byId[id].rows);
+    if (line < prevDeepLine) {
+      deepProblems.push(id + " line " + line + " shortens on the rung before it (" + prevDeepLine + ")");
+    }
+    if (line === prevDeepLine && total <= prevDeepTotal) {
+      deepProblems.push(id + " total " + total + " does not widen on the same-speed rung before it (" + prevDeepTotal + ")");
+    }
+    prevDeepLine = line;
+    prevDeepTotal = total;
+  });
+  check("game-ember-sticks",
+    "the cold endgame's line never shortens (6-6-6-7-7-7-8-8-8-8) and same-speed felts widen rung over rung",
+    deepProblems.length === 0, deepProblems.join(" | "));
+
+  /* The rule is what freezes the speed: the same felt under normal rules
+   * keeps two turns or more of dawdle room on every rung of the tier. */
+  const freezeProblems = [];
+  deepIds.forEach((id) => {
+    const level = byId[id];
+    const normalRange = turnRange(level.rows, false);
+    const normalLine = shippedLine(level.rows, false);
+    const normalMargin = normalRange.max - normalLine.turns;
+    if (!(normalMargin >= 2)) {
+      freezeProblems.push(id + " normal twin margin " + normalMargin + " does not price the freeze");
+    }
+  });
+  check("game-ember-sticks",
+    "the freeze is the rule's own work: every cold felt dawdles for two turns or more under normal rules",
+    freezeProblems.length === 0, freezeProblems.join(" | "));
+
+  /* The geometry owns the wins: six felts sit one stone from a loss, the
+   * four lightest are robust under any single stone. */
+  const deepLossProblems = [];
+  [
+    ["s32", [1, 2, 5, 5, 5, 6], "the stray one lifted away"],
+    ["s33", [4, 4, 4, 4, 4, 5, 6, 7], "a five lifted to a six"],
+    ["s35", [2, 4, 4, 4, 5, 5, 6], "the three raised to a four"],
+    ["s36", [4, 4, 4, 5, 5, 5, 6, 7], "a five lifted to a six"],
+    ["s39", [2, 4, 5, 5, 5, 5, 6], "a five lifted away"],
+    ["s40", [4, 5, 5, 5, 5, 5, 6, 7], "a five lowered to a four"],
+  ].forEach((pair) => {
+    if (oracle(pair[1], true) !== false) {
+      deepLossProblems.push(pair[0] + " neighbour [" + pair[1].join(",") + "] (" + pair[2] + ") is not a loss");
+    }
+  });
+  check("game-ember-sticks",
+    "six cold felts sit one stone from losing: the lifted stray, the raised five, the raised three and four, the dropped five, the lowered five all lose",
+    deepLossProblems.length === 0, deepLossProblems.join(" | "));
+  const robustProblems = [];
+  ["s31", "s34", "s37", "s38"].forEach((id) => {
+    const rows = byId[id].rows;
+    for (let row = 0; row < rows.length && robustProblems.length === 0; row += 1) {
+      for (let delta = -1; delta <= 1 && robustProblems.length === 0; delta += 2) {
+        const value = rows[row] + delta;
+        if (value < 1) continue;
+        const next = rows.slice();
+        next[row] = value;
+        if (oracle(next, true) !== true) {
+          robustProblems.push(id + " neighbour [" + next.join(",") + "] is a loss");
+        }
+      }
+    }
+  });
+  check("game-ember-sticks",
+    "the four lightest cold felts are robust: every one-stone neighbour is still a win",
+    robustProblems.length === 0, robustProblems.join(" | "));
+
   /* ---- the names travel with the module ---- */
-  const copyProblems = summitIds.map((id) => byId[id].labelKey).filter((key) =>
+  const copyProblems = summitIds.concat(deepIds).map((id) => byId[id].labelKey).filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-ember-sticks", "the six endgame names resolve in both languages",
+  check("game-ember-sticks", "the sixteen endgame names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 
   /* ---- the unlock chain is derived, never stored ---- */
@@ -263,6 +386,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-ember-sticks", "the unlock chain walks all thirty tables in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-ember-sticks", "the unlock chain walks all forty tables in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 };

@@ -22,7 +22,7 @@
       }) : [];
     }); return out;
   }
-  function journeyGoals(partner, album, dates, home, starpath) {
+  function journeyGoals(partner, album, dates, home, starpath, duet) {
     var id = partner.id, room = home && home.homes && home.homes[id];
     return [
       { id: "photo", key: "ldrGoalPhoto", detail: "ldrGoalPhotoHint", done: !!(dates.snapshots && dates.snapshots[id]) },
@@ -30,7 +30,9 @@
       { id: "starpath", key: "ldrGoalStarpath", detail: "ldrGoalStarpathHint", done: !!(starpath && starpath.cleared) },
       { id: "kitty", key: "ldrGoalKitty", detail: "ldrGoalKittyHint", done: !!(dates.badges && dates.badges[id]) },
       { id: "cook", key: "ldrGoalCook", detail: "ldrGoalCookHint", done: !!(room && Object.keys(room.records || {}).some(function (key) { return room.records[key] > 0; })) },
-      { id: "mission", key: "ldrGoalMission", detail: "ldrGoalMissionHint", done: Object.keys(album.memories || {}).some(function (key) { return key.indexOf(id + ":") === 0; }) }
+      { id: "mission", key: "ldrGoalMission", detail: "ldrGoalMissionHint", done: Object.keys(album.memories || {}).some(function (key) { return key.indexOf(id + ":") === 0; }) },
+      { id: "duet", key: "ldrGoalDuet", detail: "ldrGoalDuetHint", done: !!(duet && duet.partners && Array.isArray(duet.partners[id]) && duet.partners[id].some(function (record) { return record && record.stars > 0 && record.accuracy >= 70; })) },
+      { id: "storyAll", activity: "story", key: "ldrGoalStoryAll", detail: "ldrGoalStoryAllHint", done: !!(dates.stories && Array.isArray(dates.stories[id]) && ["quiet", "adventure", "cafe-quiet", "cafe-adventure", "observatory-quiet", "observatory-adventure"].every(function (ending) { return dates.stories[id].indexOf(ending) >= 0; })) }
     ];
   }
   function mountJourney(host, options) {
@@ -40,7 +42,7 @@
     node("span", "ldr-overline", "ldrJourneyTag", heading);
     var title = node("h4", "", null, heading), count = node("span", "ldr-journey-count", null, top);
     var track = node("div", "ldr-journey-track", null, root), fill = node("i", "", null, track);
-    track.setAttribute("role", "progressbar"); track.setAttribute("aria-valuemin", "0"); track.setAttribute("aria-valuemax", "6");
+    track.setAttribute("role", "progressbar"); track.setAttribute("aria-valuemin", "0");
     var next = node("p", "ldr-journey-next", null, root), recommendation;
     var go = button("ldr-journey-continue", null, root, function () { options.go(recommendation); });
     var details = node("details", "ldr-journey-details", null, root);
@@ -49,17 +51,18 @@
     var goals = node("div", "ldr-goals", null, details);
     function refresh() {
       var p = options.getPartner(), state = options.getState();
-      var list = journeyGoals(p, state.album || {}, state.dates || {}, state.home || {}, state.starpath || {});
+      var list = journeyGoals(p, state.album || {}, state.dates || {}, state.home || {}, state.starpath || {}, state.duet || {});
       var done = list.filter(function (goal) { return goal.done; }).length;
-      recommendation = (list.find(function (goal) { return !goal.done; }) || { id: "starpath" }).id;
+      var nextGoal = list.find(function (goal) { return !goal.done; }) || { id: "starpath" };
+      recommendation = nextGoal.activity || nextGoal.id;
       title.textContent = App.t("ldrJourneyTitle", { name: App.t(p.nameKey) });
-      count.textContent = done + " / 6"; fill.style.width = done / 6 * 100 + "%";
-      track.setAttribute("aria-valuenow", String(done)); track.setAttribute("aria-label", title.textContent);
-      next.textContent = App.t(done === 6 ? "ldrJourneyComplete" : list.find(function (goal) { return !goal.done; }).detail);
-      go.textContent = App.t(done === 6 ? "ldrJourneyExplore" : "ldrJourneyContinue");
+      count.textContent = done + " / " + list.length; fill.style.width = done / list.length * 100 + "%";
+      track.setAttribute("aria-valuemax", String(list.length)); track.setAttribute("aria-valuenow", String(done)); track.setAttribute("aria-label", title.textContent);
+      next.textContent = App.t(done === list.length ? "ldrJourneyComplete" : nextGoal.detail);
+      go.textContent = App.t(done === list.length ? "ldrJourneyExplore" : "ldrJourneyContinue");
       while (goals.firstChild) { goals.removeChild(goals.firstChild); }
       list.forEach(function (goal) {
-        var b = button("ldr-goal", null, goals, function () { options.go(goal.id); });
+        var b = button("ldr-goal", null, goals, function () { options.go(goal.activity || goal.id); });
         b.setAttribute("data-goal", goal.id); b.setAttribute("data-complete", String(goal.done));
         node("span", "ldr-goal-mark", null, b).textContent = goal.done ? "✓" : "◇";
         node("span", "", null, b).textContent = App.t(goal.key);
@@ -196,8 +199,10 @@
     ldrImageError: ["This artwork could not be loaded. Choose another photograph or try again.", "这张画面暂时无法加载，可切换照片或重新打开。"],
     ldrOpenArt: ["Open {title}", "打开 {title}"], ldrGalleryNote: ["Official artwork © Infold / Papergames. Gallery and original fan gameplay by this project.", "官方角色画面 © Infold / 叠纸。本项目为同人画廊与原创玩法。"],
     ldrJourneyTag: ["A LITTLE CLOSER", "慢慢靠近"], ldrJourneyTitle: ["Your journey with {name}", "与{name}的心动旅程"],
-    ldrJourneyAll: ["Six moments to discover", "展开六个心动目标"], ldrJourneyContinue: ["Make our next memory →", "留下下一个回忆 →"],
-    ldrJourneyExplore: ["Explore the constellations →", "继续探索星轨 →"], ldrJourneyComplete: ["Six moments, one shared journey. Keep exploring for better stars and new memories.", "六个瞬间，一段共同的旅程。继续探索，收集更多星光与回忆。"],
+    ldrJourneyAll: ["Eight moments to discover", "展开八个心动目标"], ldrJourneyContinue: ["Make our next memory →", "留下下一个回忆 →"],
+    ldrJourneyExplore: ["Explore the constellations →", "继续探索星轨 →"], ldrJourneyComplete: ["Eight moments, one shared journey. Keep exploring for better stars and new memories.", "八个瞬间，一段共同的旅程。继续探索，收集更多星光与回忆。"],
+    ldrGoalDuet: ["Share a successful duet", "完成一次正式合拍"], ldrGoalDuetHint: ["Reach 70% in Performance mode on any duet chart with this partner.", "与这位搭档在任一正式合拍谱面中达到 70% 准确率。"],
+    ldrGoalStoryAll: ["Discover all six endings", "收集六种约会结局"], ldrGoalStoryAllHint: ["Find both endings in the night walk, café and observatory. Your journal keeps them ready to reread.", "在临空夜游、咖啡馆和天文台各找到两种结局，手记会保存它们，随时都能重温。"],
     ldrGoalPhoto: ["Our first photograph", "第一张合照"], ldrGoalPhotoHint: ["Start with a photograph. Choose an artwork, frame it your way, and save the moment.", "从一张照片开始：选择画面，调整构图，保存你们的瞬间。"],
     ldrGoalStory: ["A story for two", "双人故事"], ldrGoalStoryHint: ["Choose how a date unfolds and discover your first story ending.", "决定约会的走向，收藏第一个故事结局。"],
     ldrGoalStarpath: ["A constellation between us", "星光相连"], ldrGoalStarpathHint: ["Rotate the stars and guide a thread of light to your partner in Starpath.", "旋转星点，让一束光沿着星轨抵达搭档身边。"],

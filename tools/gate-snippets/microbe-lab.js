@@ -1,7 +1,8 @@
 "use strict";
 
-/* game-microbe-lab: the long bench, dishes m25-m30, and the summit bench,
- * dishes m31-m40, proved by the dish's own floor line.
+/* game-microbe-lab: the long bench, dishes m25-m30, the summit bench,
+ * dishes m31-m40, and the cinder bench, dishes m41-m44, proved by the
+ * dish's own floor line.
  *
  * The greedy allocator that proves every shipped dish proves these the
  * same way: the line must survive the whole trial at the floor of four or
@@ -25,7 +26,30 @@
  * clamp's own cost: traitMax caps what a strain may stack AND what a card
  * may demand. The forge's summit table is held to the shipped rows row
  * for row, the copy resolves in both language packs, and the unlock chain
- * walks all forty dishes in order. */
+ * walks all forty-four dishes in order.
+ *
+ * The cinder bench crosses the two floors the summit only reached - the
+ * budget under fifteen (m41) and the trial past twelve (m42, m43) - one
+ * rung a floor, with the hand, the pool, the flask, the climb and the
+ * soft opening held at the capstone's own minimums, and the capstone m44
+ * narrows the deck to flare and venom over fifteen generations. Its
+ * difficulty is measured three ways the engine prints. The windows: how
+ * many of two hundred seedings even finish, counted for the capstone's
+ * own lever set on the same range, strictly under it at m41 and shut to
+ * two at m44. The slips: the walk with its last spendable point thrown at
+ * the legal raise that keeps the fewest survivors - the one mistake the
+ * culture forgives - which lands the culture on the floor line and banks
+ * exactly one star on m41-m43, while the capstone forgives nothing at all.
+ * And the floats: the cinder cultures are the first one-point-hand
+ * cultures the lab ships that never touch the floor of four, where the
+ * capstone's own rode it. The not-decorative checks cut each crossed
+ * floor out of a mutated copy and watch the window climb back - the
+ * budget floor is m41's price and the narrowed deck is m44's - and cut
+ * the extra generations out of m42 and m43 and watch the walk fall under
+ * the shipped two-star line. The two-star band on m41-m43 is the
+ * conservative middle (the dip leaves no walk between the clean line and
+ * the slip line), the same kind of line the summit's capstone shipped
+ * below every bankable win. */
 
 module.exports = function gate(ctx) {
   const { App, check, path, root } = ctx;
@@ -33,9 +57,10 @@ module.exports = function gate(ctx) {
   const levels = App.microbeLevels;
   const benchIds = ["m25", "m26", "m27", "m28", "m29", "m30"];
   const summitIds = ["m31", "m32", "m33", "m34", "m35", "m36", "m37", "m38", "m39", "m40"];
+  const cinderIds = ["m41", "m42", "m43", "m44"];
 
-  check("game-microbe-lab", "the ladder holds forty dishes",
-    levels.length === 40, String(levels.length));
+  check("game-microbe-lab", "the ladder holds forty-four dishes",
+    levels.length === 44, String(levels.length));
   check("game-microbe-lab", "every dish id is distinct",
     new Set(levels.map((l) => l.id)).size === levels.length,
     levels.map((l) => l.id).join(","));
@@ -43,8 +68,10 @@ module.exports = function gate(ctx) {
   levels.forEach((level) => { byId[level.id] = level; });
   const bench = benchIds.map((id) => byId[id]);
   const summit = summitIds.map((id) => byId[id]);
+  const cinder = cinderIds.map((id) => byId[id]);
   const benchMissing = benchIds.filter((id) => !byId[id]);
   const summitMissing = summitIds.filter((id) => !byId[id]);
+  const cinderMissing = cinderIds.filter((id) => !byId[id]);
   check("game-microbe-lab", "the long-bench dishes m25-m30 exist in order",
     benchMissing.length === 0 &&
       benchIds.every((id, index) => levels.findIndex((l) => l.id === id) >
@@ -55,12 +82,17 @@ module.exports = function gate(ctx) {
       summitIds.every((id, index) => levels.findIndex((l) => l.id === id) >
         (index === 0 ? -1 : levels.findIndex((l) => l.id === summitIds[index - 1]))),
     summitMissing.join(",") || "ordered");
+  check("game-microbe-lab", "the cinder dishes m41-m44 exist in order",
+    cinderMissing.length === 0 &&
+      cinderIds.every((id, index) => levels.findIndex((l) => l.id === id) >
+        (index === 0 ? levels.findIndex((l) => l.id === "m40") : levels.findIndex((l) => l.id === cinderIds[index - 1]))),
+    cinderMissing.join(",") || "ordered");
 
   /* The floor line: the greedy allocator proves every rung the way it
    * proves the shipped thirty. */
   const proofs = new Map();
   const lineProblems = [];
-  bench.concat(summit).forEach((level) => {
+  bench.concat(summit).concat(cinder).forEach((level) => {
     const proof = App.microbeBeatable(level);
     proofs.set(level.id, proof);
     if (proof.collapsed || proof.cleared !== level.gens || proof.minSurvivors < 4) {
@@ -78,7 +110,7 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-microbe-lab",
-    "every long-bench and summit dish survives the greedy line inside the shipped window",
+    "every long-bench, summit and cinder dish survives the greedy line inside the shipped window",
     lineProblems.length === 0, lineProblems.slice(0, 4).join(" | "));
 
   /* The opening drop: m25's greedy line lands strictly below the deep
@@ -265,10 +297,228 @@ module.exports = function gate(ctx) {
       }),
     "a summit row drifted from the shipped dish");
 
+  /* ---- the cinder bench: the two floors the summit only reached, crossed
+   * one rung a floor. The lever line first: nothing the capstone set is
+   * given back - budget, pool, flask, climb, opening and hand all hold at
+   * m40's minimums while the budget and the trial cross floors no shipped
+   * dish had crossed, and neither rises nor shortens inside the tier. ---- */
+  const cinderLoose = cinder.filter((l) =>
+    l.cap > capstone.cap || l.traitMax > capstone.traitMax || l.start > capstone.start ||
+    l.base > capstone.base || l.step > capstone.step ||
+    handOf(l) > handOf(capstone) || l.gens < capstone.gens);
+  check("game-microbe-lab",
+    `no cinder dish loosens a lever the summit's capstone set (m40 cap ${capstone.cap} tm ${capstone.traitMax} start ${capstone.start} base ${capstone.base} step ${capstone.step} points ${handOf(capstone)} gens ${capstone.gens})`,
+    cinderLoose.length === 0, cinderLoose.map((l) => l.id).join(","));
+  const cinderCaps = cinder.map((l) => l.cap);
+  const cinderGens = cinder.map((l) => l.gens);
+  check("game-microbe-lab",
+    `the cinder budget never rises and the trial never shortens across the tier ` +
+      `(cap ${cinderCaps.join("/")} gens ${cinderGens.join("/")})`,
+    !rises(cinderCaps) && !falls(cinderGens), "a cinder lever rose mid-tier");
+  check("game-microbe-lab",
+    "the cinder capstone holds every tier extreme at once",
+    byId.m44.cap === Math.min(...cinderCaps) &&
+      byId.m44.traitMax === Math.min(...cinder.map((l) => l.traitMax)) &&
+      byId.m44.start === Math.min(...cinder.map((l) => l.start)) &&
+      byId.m44.base === Math.min(...cinder.map((l) => l.base)) &&
+      handOf(byId.m44) === Math.min(...cinder.map(handOf)) &&
+      byId.m44.gens === Math.max(...cinderGens),
+    `m44 cap ${byId.m44.cap} tm ${byId.m44.traitMax} start ${byId.m44.start} ` +
+      `base ${byId.m44.base} points ${handOf(byId.m44)} gens ${byId.m44.gens}`);
+
+  /* The records: each crossed floor is a first against every dish before
+   * it, scoped by position. */
+  check("game-microbe-lab",
+    "m41 is the first dish under fifteen",
+    byId.m41.cap === 14 && before("m41").every((l) => l.cap >= 15),
+    "previous floor " + Math.min.apply(null, before("m41").map((l) => l.cap)));
+  check("game-microbe-lab",
+    "m42 runs the first trial past twelve",
+    byId.m42.gens === 13 && before("m42").every((l) => l.gens <= 12),
+    "previous peak " + Math.max.apply(null, before("m42").map((l) => l.gens)));
+  check("game-microbe-lab",
+    "m44 runs the longest trial the lab has shipped, fifteen generations",
+    byId.m44.gens === 15 && before("m44").every((l) => l.gens <= 14),
+    "previous peak " + Math.max.apply(null, before("m44").map((l) => l.gens)));
+  check("game-microbe-lab",
+    "m44 narrows the deck to flare and venom under a budget no earlier two-throat dish ran",
+    (function () {
+      const ids = cardsOf(byId.m44);
+      const earlierTwoThroatCaps = before("m44")
+        .filter((l) => { const set = cardsOf(l); return set.size === 2 && set.has("flare") && set.has("venom"); })
+        .map((l) => l.cap);
+      return ids.size === 2 && ids.has("flare") && ids.has("venom") &&
+        byId.m44.cap < Math.min.apply(null, earlierTwoThroatCaps.concat([99]));
+    })(),
+    "an earlier two-throat dish already ran a tighter budget");
+  check("game-microbe-lab",
+    "the cinder cultures never touch the floor of four - the first one-point-hand cultures that float, where the capstone's own rode it",
+    cinder.every((l) => proofs.get(l.id).minSurvivors === 5) &&
+      proofs.get("m40").minSurvivors === 4,
+    "cinder floors " + cinder.map((l) => proofs.get(l.id).minSurvivors).join("/") +
+      ", m40 floor " + proofs.get("m40").minSurvivors);
+
+  /* The windows: how many of two hundred seedings even finish the dish -
+   * the collapse margin, counted for the capstone's own lever set on the
+   * same range. The proof is deterministic, so the measured ladder is
+   * pinned: the copy resolves the same numbers byte for byte or fails. */
+  const WIN_LO = 60000;
+  const WIN_N = 200;
+  const windowOver = (level) => {
+    let count = 0;
+    for (let seed = WIN_LO; seed < WIN_LO + WIN_N; seed += 1) {
+      const proof = App.microbeBeatable(Object.assign({}, level, { seed: seed }));
+      if (!proof.collapsed && proof.minSurvivors >= 4) count += 1;
+    }
+    return count;
+  };
+  const capstoneSet = {
+    id: "capstone-set", gens: capstone.gens, seed: capstone.seed, cap: capstone.cap,
+    traitMax: capstone.traitMax, start: capstone.start, base: capstone.base,
+    step: capstone.step, points: capstone.points, plan: capstone.plan,
+  };
+  const capstoneWindow = windowOver(capstoneSet);
+  const cinderWindows = cinder.map((level) => windowOver(level));
+  check("game-microbe-lab",
+    `the cinder window opens under the capstone's own lever set ` +
+      `(${cinderWindows[0]} vs ${capstoneWindow} of ${WIN_N} seedings), never rises across the tier, ` +
+      `and shuts at the capstone (${cinderWindows.join(" -> ")})`,
+    cinderWindows[0] < capstoneWindow &&
+      cinderWindows.every((value, index) => index === 0 || value <= cinderWindows[index - 1]) &&
+      cinderWindows[cinderWindows.length - 1] < cinderWindows[0],
+    JSON.stringify(cinderWindows.concat([capstoneWindow])));
+  check("game-microbe-lab",
+    "the measured window ladder is the one the cinder tier shipped with",
+    JSON.stringify(cinderWindows.concat([capstoneWindow])) === JSON.stringify([48, 48, 48, 2, 57]),
+    JSON.stringify(cinderWindows.concat([capstoneWindow])));
+
+  /* The not-decorative cuts: restore each crossed floor on a mutated copy
+   * and the window climbs back - the rung's window is the lever's price,
+   * not the seed's luck. And cut the extra generations out of m42 and m43
+   * and the walk falls under the shipped two-star line - the copy lands on
+   * the previous rung's own dish, which is exactly the record the rung
+   * took. */
+  const m41Mutated = Object.assign({}, byId.m41, { cap: 15 });
+  const m41MutatedWindow = windowOver(m41Mutated);
+  check("game-microbe-lab",
+    `cut the budget floor out of m41 and the window climbs back to the capstone's own ` +
+      `(${m41MutatedWindow} vs the rung's ${cinderWindows[0]})`,
+    m41MutatedWindow === capstoneWindow && m41MutatedWindow > cinderWindows[0],
+    JSON.stringify(m41MutatedWindow));
+  const m44Mutated = Object.assign({}, byId.m44, { plan: capstone.plan });
+  const m44MutatedWindow = windowOver(m44Mutated);
+  check("game-microbe-lab",
+    `restore the whole deck on m44 and the window climbs back to the thirteenth rung's ` +
+      `(${m44MutatedWindow} vs the capstone's ${cinderWindows[3]})`,
+    m44MutatedWindow === cinderWindows[2] && m44MutatedWindow > cinderWindows[3],
+    JSON.stringify(m44MutatedWindow));
+  const m42Cut = App.microbeBeatable(Object.assign({}, byId.m42, { gens: 12 }));
+  const m43Cut = App.microbeBeatable(Object.assign({}, byId.m43, { gens: 13 }));
+  check("game-microbe-lab",
+    `cut the thirteenth generation out of m42 and the walk banks ${m42Cut.metric}, ` +
+      `under the shipped two-star line ${byId.m42.starBand[1]}`,
+    !m42Cut.collapsed && m42Cut.metric === proofs.get("m41").metric &&
+      m42Cut.metric < byId.m42.starBand[1],
+    JSON.stringify(m42Cut));
+  check("game-microbe-lab",
+    `cut the fourteenth generation out of m43 and the walk banks ${m43Cut.metric}, ` +
+      `under the shipped two-star line ${byId.m43.starBand[1]}`,
+    !m43Cut.collapsed && m43Cut.metric === proofs.get("m42").metric &&
+      m43Cut.metric < byId.m43.starBand[1],
+    JSON.stringify(m43Cut));
+
+  /* The slip line: the walk with its last spendable point thrown at the
+   * legal raise that keeps the fewest survivors - the one mistake the
+   * culture forgives. On m41-m43 it lands the culture on the floor line,
+   * and the one-star line sits a hundred under that, so a dawdling win
+   * still stars; the capstone forgives nothing at all. */
+  const cinderTraits = ["heat", "acid", "speed", "defence"];
+  const cinderSum = (microbe) => cinderTraits.reduce((total, name) => total + microbe.traits[name], 0);
+  const cinderSlip = (level) => {
+    const spendable = [];
+    let list = App.microbePopulation(level, level.seed);
+    for (let gen = 0; gen < level.gens; gen += 1) {
+      const card = App.microbeCard(level, gen);
+      const plan = App.microbeAllocate(list, card, App.microbeSequence(level).slice(gen + 1, gen + 4), 1, level);
+      if (plan.waste === 0) spendable.push(gen);
+      list = App.microbeSurvive(list, card, level).offspring;
+    }
+    const last = spendable[spendable.length - 1];
+    list = App.microbePopulation(level, level.seed);
+    let survivors = 0;
+    let waste = 0;
+    let floor = 6;
+    for (let gen = 0; gen < level.gens; gen += 1) {
+      const card = App.microbeCard(level, gen);
+      if (gen === last) {
+        let worst = null;
+        for (let pick = 0; pick < list.length; pick += 1) {
+          for (const trait of cinderTraits) {
+            const microbe = list[pick];
+            if (microbe.traits[trait] >= level.traitMax || cinderSum(microbe) >= level.cap) continue;
+            const trial = list.map((other) => ({ id: other.id, name: other.name, traits: Object.assign({}, other.traits) }));
+            trial[pick].traits[trait] += 1;
+            const survived = App.microbeSurvive(trial, card, level).survived;
+            if (!worst || survived < worst.survived) worst = { survived, trial };
+          }
+        }
+        if (worst) {
+          list = worst.trial;
+        } else {
+          waste += 1;
+        }
+      } else {
+        const plan = App.microbeAllocate(list, card, App.microbeSequence(level).slice(gen + 1, gen + 4), 1, level);
+        list = plan.list;
+        waste += plan.waste;
+      }
+      const outcome = App.microbeSurvive(list, card, level);
+      if (outcome.collapsed) return { lost: true, gen: gen + 1 };
+      floor = Math.min(floor, outcome.survived);
+      survivors += outcome.survived;
+      list = outcome.offspring;
+    }
+    const metric = App.microbeMetric(survivors, waste);
+    const stars = metric >= level.starBand[0] ? 3 : metric >= level.starBand[1] ? 2 : metric >= level.starBand[2] ? 1 : 0;
+    return { lost: false, metric: metric, stars: stars, floor: floor };
+  };
+  const slipProblems = [];
+  cinder.forEach((level, index) => {
+    const slipped = cinderSlip(level);
+    if (index < cinder.length - 1) {
+      if (slipped.lost || slipped.stars !== 1 || slipped.floor < 4) {
+        slipProblems.push(`${level.id}: slip ${JSON.stringify(slipped)}`);
+      }
+    } else if (!slipped.lost) {
+      slipProblems.push(`${level.id}: a slip survived the capstone`);
+    }
+  });
+  check("game-microbe-lab",
+    "the one slip the culture forgives banks exactly one star on m41-m43, and none survives the capstone",
+    slipProblems.length === 0, slipProblems.join(" | "));
+
+  /* Provenance for the cinder tier: the forge's CINDER table is the
+   * documented measurement of these four dishes - it has to agree with the
+   * shipped rows it claims to have walked, band and trial included. */
+  check("game-microbe-lab",
+    "the forge's cinder table matches the shipped tier row for row",
+    mcbForge.CINDER.length === cinder.length &&
+      mcbForge.CINDER.every((candidate) => {
+        const level = byId[candidate.id];
+        return !!level &&
+          level.seed === candidate.seed && level.cap === candidate.cap &&
+          level.traitMax === candidate.traitMax && level.start === candidate.start &&
+          level.base === candidate.base && level.step === candidate.step &&
+          level.points === candidate.points && level.gens === candidate.gens &&
+          JSON.stringify(level.plan) === JSON.stringify(candidate.plan) &&
+          JSON.stringify(level.starBand) === JSON.stringify(candidate.starBand);
+      }),
+    "a cinder row drifted from the shipped dish");
+
   /* The copy travels: dish names and twist lines resolve to real text in
    * both dictionaries, and through App.t itself. */
   const copyProblems = [];
-  benchIds.concat(summitIds).forEach((id) => {
+  benchIds.concat(summitIds).concat(cinderIds).forEach((id) => {
     const n = Number(id.slice(1));
     ["mcbZ" + n, "mcbTwist" + n].forEach((key) => {
       const en = App.t(key);
@@ -279,11 +529,11 @@ module.exports = function gate(ctx) {
     });
   });
   check("game-microbe-lab",
-    "the long-bench and summit names and twist lines resolve to distinct values in both languages",
+    "the long-bench, summit and cinder names and twist lines resolve to distinct values in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 
   /* The unlock chain is derived, never stored: clearing each dish in order
-   * must hand the player exactly the next one, all forty times, with
+   * must hand the player exactly the next one, all forty-four times, with
    * nothing left locked behind the last. */
   const chain = App.createCampaign({
     key: "microbe-lab-gate-chain",
@@ -297,6 +547,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-microbe-lab", "the unlock chain walks all forty dishes in order",
-    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
+  check("game-microbe-lab", "the unlock chain walks all forty-four dishes in order",
+    walked === 44 && chained && chain.clearedCount() === 44, walked + " first clears");
 };

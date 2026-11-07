@@ -33,15 +33,26 @@
  * bill and is measured too: the burn a landing charges climbs with
  * gravity (near 47 at 177, near 54 by 186 on the swarm's numbers), so
  * the tier drains 57 to 52 and ships its deep floors early. Star bands,
- * both languages and the unlock chain are checked last. */
+ * both languages and the unlock chain are checked last.
+ *
+ * The trench tier s41-s44 keeps the range sinking past the chasm: the
+ * pull resumes its walk (187 to 190) and the tank drains to 48, but the
+ * tier's records live in the ground rather than the shelf - a deeper
+ * floor than the Sink's 322 would empty the tank before the flare at
+ * this pull - so each rung takes one structural record against every
+ * sector before it (fourteen marks of ground, a 94-unit spire, a pit
+ * 108 below the window) and the capstone pairs the steepest pull and
+ * the deepest tank the ladder has carried on the tier's tightest
+ * window. The window line never widens and never steals the Pinpoint's
+ * sixteen; the bands stay the measured landing's own 62/42/22 line. */
 module.exports = function gate(ctx) {
   const { App, check, path, root } = ctx;
   const forge = require(path.join(root, "tools", "starfall-forge.js"));
   const lantLevels = forge.loadLevels();
   const LANT_WIDTH = 320;
 
-  check("game-starfall", "the sky holds forty sectors",
-    lantLevels.length === 40, String(lantLevels.length));
+  check("game-starfall", "the sky holds forty-four sectors",
+    lantLevels.length === 44, String(lantLevels.length));
   check("game-starfall", "every sector id is distinct",
     new Set(lantLevels.map((level) => level.id)).size === lantLevels.length,
     lantLevels.map((level) => level.id).join(" "));
@@ -90,9 +101,11 @@ module.exports = function gate(ctx) {
   const lantSummitIds = ["s21", "s22", "s23", "s24"];
   const lantRidgeIds = ["s25", "s26", "s27", "s28", "s29", "s30"];
   const lantChasmIds = ["s31", "s32", "s33", "s34", "s35", "s36", "s37", "s38", "s39", "s40"];
+  const lantTrenchIds = ["s41", "s42", "s43", "s44"];
   const lantSummit = lantLevels.filter((level) => lantSummitIds.includes(level.id));
   const lantRidge = lantLevels.filter((level) => lantRidgeIds.includes(level.id));
   const lantChasm = lantLevels.filter((level) => lantChasmIds.includes(level.id));
+  const lantTrench = lantLevels.filter((level) => lantTrenchIds.includes(level.id));
 
   /* The ascent never backs up, anywhere on the ladder. */
   check("game-starfall", "gravity only climbs across the whole ladder",
@@ -240,13 +253,67 @@ module.exports = function gate(ctx) {
       ", tank " + Math.min.apply(null, lantBefore("s40").map((level) => level.fuel)) +
       ", gravity " + Math.max.apply(null, lantBefore("s40").map((level) => level.gravity)));
 
+  /* ---- the trench tier s41-s44: the pull keeps climbing, the tank keeps
+   * draining, and the depth moves into the ground ------------------------
+   * A deeper floor than the Sink's 322 would empty the tank before the
+   * flare at this pull - the Sink's own comment says so - so the trench
+   * takes its records in the ground itself: the busiest field, the
+   * tallest rock, the deepest pit, then the capstone pairing the steepest
+   * pull and the deepest tank the ladder has carried. One structural
+   * record a rung against every sector before it, each a number the
+   * engine printed; the gravity walk resumes one unit a rung, the tank
+   * drains one a rung, and the window line never widens (and never steals
+   * the Pinpoint's sixteen). */
+  const lantTrenchG = lantTrench.map((level) => level.gravity);
+  const lantTrenchF = lantTrench.map((level) => level.fuel);
+  const lantTrenchW = lantTrench.map((level) => lantWidthOf(level));
+  check("game-starfall", "the trench tier rows all exist",
+    lantTrench.length === 4, lantTrench.map((level) => level.id).join(","));
+  check("game-starfall",
+    "the trench tier resumes the gravity walk - 187 to 190, one unit a rung, still 45 inside the engine's thrust",
+    lantTrenchG[0] === 187 && lantTrenchG[lantTrenchG.length - 1] === 190 &&
+    lantTrenchG.every((g, i) => i === 0 || g === lantTrenchG[i - 1] + 1) &&
+    lantTrenchG.every((g) => g > 186 && g <= 200) &&
+    235 - lantTrenchG[lantTrenchG.length - 1] >= 45,
+    lantTrenchG.join("/"));
+  check("game-starfall",
+    "the trench tier's tank starts under the chasm's 52, never rises and ends at 48",
+    lantTrenchF[0] === 51 && lantTrenchF[lantTrenchF.length - 1] === 48 &&
+    lantNeverFalls(lantTrenchF) && lantTrenchF[0] < lantChasm[lantChasm.length - 1].fuel,
+    lantTrenchF.join("/"));
+  check("game-starfall",
+    "the trench windows never widen and none steals the Pinpoint's sixteen",
+    lantNeverFalls(lantTrenchW) && lantTrenchW.every((w) => w > 16.5),
+    lantTrenchW.map((w) => w.toFixed(2)).join("/"));
+
+  lantRecord("s41", "draws the busiest ground yet - fourteen marks of broken earth",
+    lantSheet("s41").terrain.length === 14 &&
+      lantBefore("s41").every((level) => level.terrain.length < 14),
+    "previous peak " + Math.max.apply(null, lantBefore("s41").map((level) => level.terrain.length)));
+  lantRecord("s42", "raises the tallest rock yet - 94 units of spire over the window's floor",
+    Math.round(lantWallOf(lantSheet("s42"))) === 94 &&
+      lantBefore("s42").every((level) => lantWallOf(level) < 94),
+    "previous peak " + Math.max.apply(null, lantBefore("s42").map(lantWallOf)).toFixed(2));
+  lantRecord("s43", "sinks the deepest trap yet - a pit 108 below the window",
+    Math.round(lantBasinOf(lantSheet("s43"))) === 108 &&
+      lantBefore("s43").every((level) => lantBasinOf(level) < 108),
+    "previous peak " + Math.max.apply(null, lantBefore("s43").map(lantBasinOf)).toFixed(2));
+  lantRecord("s44", "pairs the records: the steepest pull and the deepest tank on the tier's tightest window",
+    lantSheet("s44").fuel === 48 && lantSheet("s44").gravity === 190 &&
+      Math.round(lantWidthOf(lantSheet("s44"))) === 18 &&
+      lantBefore("s44").every((level) => level.fuel > 48 && level.gravity < 190) &&
+      lantTrenchW[3] === Math.min.apply(null, lantTrenchW),
+    "previous floors tank " +
+      Math.min.apply(null, lantBefore("s44").map((level) => level.fuel)) +
+      ", gravity " + Math.max.apply(null, lantBefore("s44").map((level) => level.gravity)));
+
   /* The swarm's own bench over the chasm tier: the measured landing must
    * keep the headroom the star bands stand on, and every band must be
    * that landing's own 62/42/22 line (floors 6/4/2), descending, with
    * the three-star line reachable and never free. The calibrated tiers
    * above the chasm are held to the same calibration. */
-  const lantCalibrated = lantSummit.concat(lantRidge, lantChasm);
-  lantChasm.forEach((level) => {
+  const lantCalibrated = lantSummit.concat(lantRidge, lantChasm, lantTrench);
+  lantChasm.concat(lantTrench).forEach((level) => {
     const landing = lantSeeded(level.gravity, () => forge.bestLanding(level));
     check("game-starfall",
       `${level.id}: the measured landing keeps the bands' headroom`,
@@ -270,7 +337,7 @@ module.exports = function gate(ctx) {
       level.starFuel.join("/") + " vs fuel " + landing.fuel);
   });
   check("game-starfall",
-    "every calibrated tier ships the swarm's own calibration (s21-s40)",
+    "every calibrated tier ships the swarm's own calibration (s21-s44)",
     lantCalibrated.every((level) => {
       const landing = lantSeeded(level.gravity + 1, () => forge.bestLanding(level));
       return !!landing && landing.safe &&
@@ -279,9 +346,9 @@ module.exports = function gate(ctx) {
         level.starFuel[2] === Math.max(2, Math.round(landing.fuel * 0.22));
     }), "a calibrated band drifted off the measured landing");
 
-  /* The chasm sector names travel with the module: both languages hold a
-   * real string for every name (lantL31-lantL40 from the module's own
-   * addStrings), and t() never falls back to the key. */
+  /* The chasm and trench sector names travel with the module: both
+   * languages hold a real string for every name (lantL31-lantL44 from the
+   * module's own addStrings), and t() never falls back to the key. */
   check("game-starfall", "the chasm sector names resolve in both languages",
     lantChasmIds.every((id) => {
       const key = "lantL" + id.slice(1);
@@ -289,6 +356,13 @@ module.exports = function gate(ctx) {
       const zh = App.I18N && App.I18N.zh ? App.I18N.zh[key] : null;
       return !!en && en !== key && !!zh && zh !== key && App.t(key) !== key;
     }), "a chasm label fell back to its key");
+  check("game-starfall", "the trench sector names resolve in both languages",
+    lantTrenchIds.every((id) => {
+      const key = "lantL" + id.slice(1);
+      const en = App.I18N && App.I18N.en ? App.I18N.en[key] : null;
+      const zh = App.I18N && App.I18N.zh ? App.I18N.zh[key] : null;
+      return !!en && en !== key && !!zh && zh !== key && App.t(key) !== key;
+    }), "a trench label fell back to its key");
   check("game-starfall", "the summit and ridge sector names resolve in both languages",
     lantSummitIds.concat(lantRidgeIds).every((id) => {
       const key = "lantL" + id.slice(1);
@@ -313,7 +387,7 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < lantLevels.length ? lantLevels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) lantChained = false;
   });
-  check("game-starfall", "the unlock chain walks all forty sectors in order",
-    lantWalked === 40 && lantChained && lantChain.clearedCount() === 40,
+  check("game-starfall", "the unlock chain walks all forty-four sectors in order",
+    lantWalked === 44 && lantChained && lantChain.clearedCount() === 44,
     lantWalked + " first clears");
 };

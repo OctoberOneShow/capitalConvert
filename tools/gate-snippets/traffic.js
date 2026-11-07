@@ -1,32 +1,43 @@
 "use strict";
 
-/* game-traffic: the depot tier is measured through the lot's own slide rules.
+/* game-traffic: the depot and gridlock tiers are measured through the lot's
+ * own slide rules.
  *
  * The gate prices every board with a unit-step breadth-first walk over
  * trafSlide/trafTaxiOut - the exact functions commitMove answers to - so an
  * escape that cannot be driven fails here, not on the road. The shipped
- * boards keep their shipped pars; the depot tier j25-j30 holds the tighter
- * line: three stars sits one step above the measured optimum, every depot
- * optimum costs strictly more than any shipped board's (24 against the
+ * boards keep their shipped pars. Two tiers hold the tight line. The depot
+ * tier j25-j30: three stars sits one step above the measured optimum, every
+ * depot optimum costs strictly more than any board before it (24 against the
  * shipped peak of 13), and the grids really are fuller - eight or nine
  * vehicles with a truck in every deal, and a vertical car standing in the
- * taxi's own lane at the start, so the wall the escape negotiates is on the
- * board, not just in the par numbers. trafficSolvable re-proves each deal
- * through the same rules the build ships. */
+ * taxi's own lane at the start. The gridlock tier j31-j40 is the ceiling:
+ * eleven vehicles - the paint rail's own count, where the depot topped out
+ * at nine - the cab backed against the left wall with all four lane cells
+ * standing cars, and every optimum above the depot summit. trafficSolvable
+ * re-proves each deal through the same rules the build ships. */
 
 module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const levels = App.trafLevels;
   const depotIds = ["j25", "j26", "j27", "j28", "j29", "j30"];
+  const gridlockIds = ["j31", "j32", "j33", "j34", "j35", "j36", "j37", "j38", "j39", "j40"];
 
-  check("game-traffic", "the ladder holds thirty boards",
-    levels.length === 30, String(levels.length));
+  const expectedIds = Array.from({ length: 40 }, (_, index) => "j" + (index + 1));
+  check("game-traffic", "the ladder holds forty boards",
+    levels.length === 40, String(levels.length));
   check("game-traffic", "every board id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
-  const missing = depotIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-traffic", "the ids run j1 through j40 in order",
+    levels.map((level) => level.id).join(",") === expectedIds.join(","),
+    levels.map((level) => level.id).join(","));
+  const missingDepot = depotIds.filter((id) => !levels.some((level) => level.id === id));
   check("game-traffic", "the depot tier j25-j30 is present",
-    missing.length === 0, missing.join(","));
+    missingDepot.length === 0, missingDepot.join(","));
+  const missingGridlock = gridlockIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-traffic", "the gridlock tier j31-j40 is present",
+    missingGridlock.length === 0, missingGridlock.join(","));
 
   /* The pricer: one unit step per layer, because commitMove counts every
    * cell a car slides as its own move. */
@@ -88,29 +99,29 @@ module.exports = function gate(ctx) {
     "every board is solvable and priced under its own three-star line",
     problems.length === 0, problems.join(" | "));
 
-  /* The depot tier is the hard tier: each depot optimum costs strictly more
-   * than any shipped board's, the tier climbs rung over rung, and the
-   * three-star slack is the tightest the lot ships - one step over the
-   * optimum (the shipped boards run +1 to +7). */
-  const shipped = levels.filter((level) => !depotIds.includes(level.id));
-  const shippedPeak = Math.max.apply(null, shipped.map((level) => optima[level.id]));
+  /* The depot tier is the hard tier of the first thirty: each depot optimum
+   * costs strictly more than any board before it, the tier climbs rung over
+   * rung, and the three-star slack is the tightest the lot ships - one step
+   * over the optimum (the boards before it run +1 to +7). */
+  const before = levels.filter((level) => !depotIds.includes(level.id) && !gridlockIds.includes(level.id));
+  const beforePeak = Math.max.apply(null, before.map((level) => optima[level.id]));
   const depot = depotIds.map((id) => byId[id]);
   const depotProblems = [];
   let last = 0;
   depot.forEach((level) => {
     const opt = optima[level.id];
-    if (opt <= shippedPeak) depotProblems.push(`${level.id} optimum ${opt} not above the shipped peak ${shippedPeak}`);
+    if (opt <= beforePeak) depotProblems.push(`${level.id} optimum ${opt} not above the peak before it (${beforePeak})`);
     if (opt <= last) depotProblems.push(`${level.id} optimum ${opt} does not climb past the rung before it (${last})`);
     if (level.par[0] !== opt + 1) depotProblems.push(`${level.id} three-star line ${level.par[0]} is not the measured optimum + 1 (${opt})`);
     last = opt;
   });
   check("game-traffic",
-    "every depot board costs more than any shipped board and climbs in order",
+    "every depot board costs more than any board before it and climbs in order",
     depotProblems.length === 0, depotProblems.join(" | "));
 
-  /* The wall is structural: eight or nine vehicles (the shipped peak is
-   * eight), a truck in every deal, and a vertical car standing in the taxi's
-   * own lane ahead of it at the start. */
+  /* The depot wall is structural: eight or nine vehicles (the shipped peak
+   * is eight), a truck in every deal, and a vertical car standing in the
+   * taxi's own lane ahead of it at the start. */
   const shapeProblems = [];
   depot.forEach((level) => {
     if (level.cars.length < 8) shapeProblems.push(`${level.id} runs only ${level.cars.length} vehicles`);
@@ -131,8 +142,73 @@ module.exports = function gate(ctx) {
     "every depot grid really walls the taxi: full lots, trucks, a car in the lane",
     shapeProblems.length === 0, shapeProblems.join(" | "));
 
+  /* The gridlock tier is the ceiling: eleven vehicles (the paint rail's own
+   * count, where the depot topped out at nine), the cab backed against the
+   * left wall, all four lane cells standing cars - a four-car wall the first
+   * thirty never deal - and every optimum strictly above the depot summit.
+   * The star lines keep the depot's spread: optimum + 1 / + 5 / + 10. */
+  const depotPeak = Math.max.apply(null, depot.map((level) => optima[level.id]));
+  const gridlock = gridlockIds.map((id) => byId[id]);
+  const gridlockProblems = [];
+  last = 0;
+  gridlock.forEach((level) => {
+    const opt = optima[level.id];
+    if (opt <= depotPeak) gridlockProblems.push(`${level.id} optimum ${opt} not above the depot summit (${depotPeak})`);
+    if (opt <= last) gridlockProblems.push(`${level.id} optimum ${opt} does not climb past the rung before it (${last})`);
+    if (level.par[0] !== opt + 1 || level.par[1] !== opt + 5 || level.par[2] !== opt + 10) {
+      gridlockProblems.push(`${level.id} star lines ${level.par.join("/")} are not the measured optimum + 1 / + 5 / + 10 (${opt})`);
+    }
+    last = opt;
+  });
+  check("game-traffic",
+    "every gridlock board costs more than the depot summit and climbs in order",
+    gridlockProblems.length === 0, gridlockProblems.join(" | "));
+
+  /* The gridlock wall is structural: eleven vehicles, a truck in every deal,
+   * the cab against the left wall, and a standing car over every lane cell -
+   * the wall is the board, not a detail of it. */
+  const gridlockShapeProblems = [];
+  gridlock.forEach((level) => {
+    if (level.cars.length !== 11) gridlockShapeProblems.push(`${level.id} runs ${level.cars.length} vehicles, not eleven`);
+    if (!level.cars.some((car) => car[2] === 3)) gridlockShapeProblems.push(level.id + " ships no truck");
+    const taxi = level.cars[0];
+    if (taxi[0] !== 0) gridlockShapeProblems.push(`${level.id} starts the cab at column ${taxi[0]}, not against the left wall`);
+    const grid = App.trafGrid(level.cars);
+    for (let x = taxi[0] + taxi[2]; x < SIZE; x += 1) {
+      const occupant = grid[x + taxi[1] * SIZE];
+      if (occupant < 0) gridlockShapeProblems.push(`${level.id} leaves lane cell ${x} open at the start`);
+      else if (level.cars[occupant][3] === 1) gridlockShapeProblems.push(`${level.id} has a horizontal car standing in lane cell ${x}`);
+    }
+    if (App.trafTaxiOut(level.cars.map((car) => car.slice()))) {
+      gridlockShapeProblems.push(level.id + " starts with the taxi already out");
+    }
+  });
+  check("game-traffic",
+    "every gridlock deal is eleven cars against a full standing wall",
+    gridlockShapeProblems.length === 0, gridlockShapeProblems.join(" | "));
+
+  /* The shape is fresh: across the first thirty boards no deal reaches ten
+   * vehicles, and none walls all four lane cells from the cab at the wall -
+   * their fullest lane is three standing cars. */
+  const staleProblems = [];
+  before.forEach((level) => {
+    if (level.cars.length >= 10) staleProblems.push(`${level.id} already deals ${level.cars.length} vehicles`);
+    const taxi = level.cars[0];
+    const grid = App.trafGrid(level.cars);
+    if (taxi[0] === 0) {
+      let full = true;
+      for (let x = taxi[0] + taxi[2]; x < SIZE; x += 1) {
+        if (grid[x + taxi[1] * SIZE] < 0) full = false;
+      }
+      if (full) staleProblems.push(level.id + " already walls the whole lane from the left wall");
+    }
+  });
+  check("game-traffic",
+    "the first thirty never deal the gridlock shape: no ten-car lots, no four-car wall",
+    staleProblems.length === 0, staleProblems.join(" | "));
+
   /* The unlock chain is derived, never stored: clearing each board in order
-   * hands the player exactly the next one, all thirty times. */
+   * hands the player exactly the next one, all forty times. */
   const chain = App.createCampaign({
     key: "traffic-gate-chain",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.id })),
@@ -145,6 +221,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-traffic", "the unlock chain walks all thirty boards in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-traffic", "the unlock chain walks all forty boards in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 };

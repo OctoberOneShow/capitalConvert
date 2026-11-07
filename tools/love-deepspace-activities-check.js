@@ -208,7 +208,7 @@ async function main() {
     await resize(1100);
     for (const page of PAGES) {
       await load(page);
-      check(page + " retains the existing six Journey goals", await evaluate("document.querySelectorAll('.ldr-goal').length===6"));
+      check(page + " presents eight connected Journey goals", await evaluate("document.querySelectorAll('.ldr-goal').length===8"));
       check(page + " offers three Passport activities", await evaluate("['mosaic','bouquet','expedition'].every(id=>!!document.querySelector('[data-passport='+id+']'))"));
       for (const activity of ["mosaic", "bouquet", "expedition"]) {
         await openActivity(activity);

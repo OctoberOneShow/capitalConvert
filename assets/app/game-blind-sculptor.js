@@ -181,6 +181,72 @@
      * probe and one submission - the cube's deepest fog behind an unlabeled
      * axis, with the empty slice waiting to mislead. */
     { id: "b30", labelKey: "bldL30", noteKey: "bldN30", blocks: 13, want: "hollow", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 3000 },
+    /* --- the fold tier: the door crosses the axes. Every pair of cuts that
+     * ever closed a shipped solid stayed on one axis - the shelf pairs of
+     * rungs 1-20 on the height axis, the wall pairs of 21-30 on a vertical
+     * one. The ten rungs below deal "fold" solids: every block hides in one
+     * front plane bent onto one side plane, an L standing in a corner of the
+     * cube, and the only pair of cuts that pins it spends one probe on each
+     * arm. No pair on any single axis closes anything at any price, and no
+     * single cut does - the door is the ladder's first to cross axes, and
+     * it is unique: over 200 streamed rounds per rung (seed + round*101,
+     * the deal the panel deals) not one rung fell back, every deal closed on
+     * exactly one pair among the 36, that pair always spent one cut on the
+     * front arm and one on the side arm, and the 27 same-axis pairs closed
+     * nothing every time. The flavour is the lever - no shipped rung carries
+     * it - and its three structural facts are what kill the same-axis doors:
+     * both arms alive and reaching both columns of their own axis (else the
+     * pair along the other axis closes instead), every height occupied (a
+     * height pair cannot hold the solid), and neither folded plane packed
+     * all nine (a packed plane would hand the pair beside it a free
+     * complement read, the same door the wall contract bans with the same
+     * clause). The size walks the fog ceiling's mirror: thirteen blocks
+     * leave two of the fold's fifteen cells empty, fourteen leave one - and
+     * the measurements put that cell on the crease in 200 deals out of 200,
+     * so the arms sit at their full six and six. The fog itself never
+     * moves: C(27,14) is C(27,13), 20,058,300 solids before the first probe,
+     * the summit's own ceiling - the tier climbs on the door instead. The
+     * note names the arms at first, then one goes dark, then both: nine
+     * corners to rule out, against the summit's six wall pairs. The economy
+     * reopens the way b21 reopened it for the walls - four probes and three
+     * submissions while the L is learned - then floors at one and one. Every
+     * number here was measured through the engine's own candidate counter,
+     * and the gate re-proves the lot. --- */
+    /* Front 2 folded onto side 3, thirteen blocks, four probes and three
+     * submissions: the intro rung. The shelf habit closes nothing - after
+     * both height cuts a whole arm's quota is still loose - so the stars
+     * live on the L. */
+    { id: "b31", labelKey: "bldL31", noteKey: "bldN31", blocks: 13, want: "fold", front: 1, side: 2, minPar: 2, maxPar: 2, slack: 2, tries: 3, seed: 31 },
+    /* Both arms still named, two submissions: the crease is the only thing
+     * the arms share, and the free count does the rest. */
+    { id: "b32", labelKey: "bldL32", noteKey: "bldN32", blocks: 13, want: "fold", front: 1, side: 2, minPar: 2, maxPar: 2, slack: 2, tries: 2, seed: 310 },
+    /* The floor on a named fold: one spare probe, one submission - walk the
+     * L straight away, because the sweep only saves the run. */
+    { id: "b33", labelKey: "bldL33", noteKey: "bldN33", blocks: 13, want: "fold", front: 1, side: 2, minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 3100 },
+    /* The side arm goes dark: three side slices could hold it, and only the
+     * true partner closes the fold. The front arm stays on the label. */
+    { id: "b34", labelKey: "bldL34", noteKey: "bldN34", blocks: 13, want: "fold", front: 2, minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 32 },
+    /* The front arm's turn to go dark: the L is half named, and a first cut
+     * spent on the wrong arm is a run spent. */
+    { id: "b35", labelKey: "bldL35", noteKey: "bldN35", blocks: 13, want: "fold", side: 1, minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 320 },
+    /* Both arms dark: the fold hides in one of nine corners, nothing on the
+     * label, and the height axis closes nothing at any price. */
+    { id: "b36", labelKey: "bldL36", noteKey: "bldN36", blocks: 13, want: "fold", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 3200 },
+    /* The mercy rung: the arms come back named - and the corner is missing
+     * a single block. Fourteen of the fold's fifteen cells stand, the arms
+     * at their full six and six, so the free count pins the crease the
+     * moment the two cuts are home. */
+    { id: "b37", labelKey: "bldL37", noteKey: "bldN37", blocks: 14, want: "fold", front: 2, side: 0, minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 33 },
+    /* The fuller fold with the side arm dark: fourteen blocks, one crease
+     * cell empty, one submission - the L leaves even less room for a wasted
+     * cut than the thirteen-block folds did. */
+    { id: "b38", labelKey: "bldL38", noteKey: "bldN38", blocks: 14, want: "fold", front: 0, minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 330 },
+    /* The front arm's turn to go dark at fourteen: the fuller L, half named,
+     * and the one submission is all there is. */
+    { id: "b39", labelKey: "bldL39", noteKey: "bldN39", blocks: 14, want: "fold", side: 2, minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 3300 },
+    /* The last solid: fourteen blocks - every cell of the fold but one - in
+     * a corner nobody names, one spare probe and one submission. */
+    { id: "b40", labelKey: "bldL40", noteKey: "bldN40", blocks: 14, want: "fold", minPar: 2, maxPar: 2, slack: 1, tries: 1, seed: 3400 },
   ];
 
   /* --- geometry, all pure --- */
@@ -531,6 +597,54 @@
     return false;
   }
 
+  /* A fold hides every block in one front plane bent onto one side plane - an
+   * L standing in the cube's corner. The two arms share only the crease
+   * column, so neither arm's own axis holds a door: a front pair misses the
+   * side arm, a side pair misses the front arm, and no height pair can hold
+   * the solid. What closes a fold is one cut on each arm - the ladder's first
+   * door to cross axes. The arms must both be alive and reach both columns of
+   * their own axis (else the pair along the other axis closes instead), every
+   * height stays occupied, and neither folded plane may pack all nine of its
+   * cells - a packed plane would hand the pair beside it a free complement
+   * read, exactly the door the wall contract bans with the same clause. */
+  function bldFoldOk(mask) {
+    var p, q, frontCells, sideCells, inside, i, bit;
+    for (p = 0; p < 3; p += 1) {
+      for (q = 0; q < 3; q += 1) {
+        frontCells = bldPlaneCells("y", p);
+        sideCells = bldPlaneCells("x", q);
+        inside = 0;
+        for (i = 0; i < 9; i += 1) {
+          inside |= 1 << frontCells[i];
+          inside |= 1 << sideCells[i];
+        }
+        if (mask & ~inside & bldAll) continue; /* a block outside the fold */
+        var front = 0, side = 0, colsF = 0, colsS = 0, zAll = 0, frontPlane = 0, sidePlane = 0;
+        for (i = 0; i < 27; i += 1) {
+          bit = 1 << i;
+          if (!(mask & bit)) continue;
+          zAll |= 1 << bldZ(i);
+          if (bldY(i) === p) frontPlane += 1;
+          if (bldX(i) === q) sidePlane += 1;
+          if (bldY(i) === p && bldX(i) !== q) {
+            front += 1;
+            colsF |= 1 << bldX(i);
+          }
+          if (bldX(i) === q && bldY(i) !== p) {
+            side += 1;
+            colsS |= 1 << bldY(i);
+          }
+        }
+        if (bldCount(zAll) < 3) continue; /* a height pair would hold the solid */
+        if (!front || !side) continue; /* one arm empty: a single plane closes it */
+        if (bldCount(colsF) < 2 || bldCount(colsS) < 2) continue;
+        if (frontPlane > 8 || sidePlane > 8) continue; /* a packed plane opens the complement door */
+        return { front: p, side: q };
+      }
+    }
+    return null;
+  }
+
   function bldFlavorOk(mask, want) {
     if (want === "flat") return bldHeightSpan(mask) === 1;
     if (want === "two") return bldHeightSpan(mask) === 2;
@@ -538,6 +652,7 @@
     if (want === "overhang") return bldHeightSpan(mask) >= 2 && bldHasOverhang(mask);
     if (want === "wall") return bldWallOk(mask, false);
     if (want === "hollow") return bldWallOk(mask, true);
+    if (want === "fold") return bldFoldOk(mask);
     return bldHeightSpan(mask) >= 2;
   }
 
@@ -575,6 +690,17 @@
       var hi = pair === 0 ? 1 : 2;
       for (i = 0; i < 9; i += 1) pool.push(bldPlaneCells(bldAxes[a], b)[i]);
       for (i = 0; i < 9; i += 1) pool.push(bldPlaneCells(bldAxes[a], hi)[i]);
+      return pool;
+    }
+    if (want === "fold") {
+      /* One front plane folded onto one side plane - the L the ladder's pairs
+       * never took. The rung's note may name either arm (filter.front,
+       * filter.side, a slice index each); a dark arm leaves the choice to the
+       * deal, so a folded solid is dealt from one of nine corners. */
+      a = filter && typeof filter.front === "number" ? bldClamp(filter.front) : Math.floor(rng() * 3);
+      var edge = filter && typeof filter.side === "number" ? bldClamp(filter.side) : Math.floor(rng() * 3);
+      for (i = 0; i < 9; i += 1) pool.push(bldPlaneCells(bldAxes[1], a)[i]);
+      for (i = 0; i < 9; i += 1) pool.push(bldPlaneCells(bldAxes[2], edge)[i]);
       return pool;
     }
     for (i = 0; i < bldCells; i += 1) pool.push(i);
@@ -1530,7 +1656,7 @@
       "bldPrompt": "{name}: {blocks} blocks hidden, {probes} probes, par {par} of them. {note}",
       "bldDone": "This solid is finished - start a new round or pick another one.",
       "bldNextBlock": "Next solid unlocked.",
-      "bldCampaignDone": "Thirty solids, all rebuilt blind.",
+      "bldCampaignDone": "Forty solids, all rebuilt blind.",
       "bldLocked": "{name} waits until the solid before it is rebuilt.",
       "bldLayerNow": "Building height {n}.",
       "bldEscape": "{left} probes left, {placed} blocks placed, {shapes} shapes still fit (par {par}).",
@@ -1659,7 +1785,7 @@
       "bldPrompt": "{name}：藏着 {blocks} 个方块，给你 {probes} 次探针，标准 {par} 次。{note}",
       "bldDone": "这个立体已经重建好了——换下一个或者开一局新的。",
       "bldNextBlock": "解锁下一个立体。",
-      "bldCampaignDone": "三十个立体全部盲眼重建完毕。",
+      "bldCampaignDone": "四十个立体全部盲眼重建完毕。",
       "bldLocked": "「{name}」要等前一个立体重建完才开放。",
       "bldLayerNow": "正在搭建第 {n} 层。",
       "bldEscape": "还剩 {left} 次探针，已放 {placed} 块，仍有 {shapes} 种形状符合（标准 {par} 次）。",
@@ -1694,6 +1820,7 @@
         "Scoring: probes used are graded against a solver's measured par; a reveal costs two probes and is never required.",
         "New tier: the deep walls stand on every height yet hide in two slices of one vertical axis - each rung's note names the axis, only that axis's own pair of slices closes the solid, the hollow rung's middle slice reads empty, and the two-shelf habit cannot close these at all.",
         "Summit: the last six walls carry thirteen blocks - the deepest fog the cube deals - and the note stops naming the axis: the wall hides in two slices of the front or side axis and the deal decides which, the hollow slice goes unlabeled, and the ladder closes at one spare probe and one submission.",
+        "Fold: the last ten solids bend one front plane onto one side plane - an L in a corner of the cube. The only pair of cuts that closes a fold spends one probe on each arm: no two cuts on a single axis close anything, the note names the arms at first and then goes dark, and the last folds carry fourteen blocks - every cell of the L but one.",
       ],
       zh: [
         "目标：重建一个隐藏的 3x3x3 立体。它由几个方块组成会写在面板上，这部分不要钱。",
@@ -1704,6 +1831,7 @@
         "计分：用掉的探针次数和解题器实测的标准次数对比给星；揭示一次要花两次探针，但从不必需。",
         "新层级：深层的墙每个高度都站着方块，却整体藏在同一根竖直轴的两个切面里——每个关卡的说明会写明是哪根轴；能收口的只有那根轴自己的一对切面；空心关卡的中间切面读出来全是空的；两层搁板的旧习惯在这里收不了口。",
         "巅峰段：最后六面墙砌十三个方块——整个立方体最深的雾——而且说明不再写明轴向：墙藏在正视或侧视的两个切面里，由发牌决定；空心的切面也没有了标签；全梯以一次余量、一次提交收束。",
+        "折角段：最后十个立体把一个正视切面折到侧视切面上——立方体角落里的一堵 L 形墙。能收口的只有一臂一刀的那对切面：同一根轴上的任何两刀都收不了口；说明先写明两臂，随后转暗；最后的折角砌十四块——整堵 L 只缺一格。",
       ],
     },
   });
@@ -1717,4 +1845,54 @@
   App.sculptorStatus = sculptorStatus;
   App.sculptorLevels = bldLevels;
   App.sculptorCellIndex = bldIndex;
+
+  /* The fold tier carries its own names and notes: addStrings only fills keys
+   * i18n.js does not already hold, so the picker never prints a raw key and
+   * the thirty solids above keep theirs. */
+  App.addStrings({
+    en: {
+      "bldL31": "The Folded Corner",
+      "bldL32": "The Shared Crease",
+      "bldL33": "Down the L",
+      "bldL34": "The Dark Arm",
+      "bldL35": "The Other Arm Dark",
+      "bldL36": "Nine Corners",
+      "bldL37": "The Missing Cell",
+      "bldL38": "The Fuller Fold",
+      "bldL39": "The Half-Named L",
+      "bldL40": "The Last Fold",
+      "bldN31": "Every block hides in one front slice folded onto one side slice - an L standing in a corner of the cube. The pair that closes it spends one cut on each arm; no two cuts on a single axis close anything.",
+      "bldN32": "Both arms are still named and the crease is all they share: read each arm in turn and the fold closes at two cuts - the sweep would only save the run.",
+      "bldN33": "One spare probe, one submission, and the fold still named: walk the L straight away - the three-cut sweep finishes the run at two stars, never three.",
+      "bldN34": "The side arm goes dark: three side slices could hold it, and only its true partner closes the fold. The front arm is still on the label.",
+      "bldN35": "The front arm goes dark instead: the L is half named, and a first cut spent on the wrong arm is the run spent.",
+      "bldN36": "Nothing is named: the fold hides in one of nine corners, every pair on a single axis closes nothing at any price, and no single cut ever will.",
+      "bldN37": "The arms come back named, and the corner is missing a single block: fourteen of the fold's fifteen cells stand, so the free count pins the crease the moment both cuts are home.",
+      "bldN38": "Fourteen blocks and the side arm dark: the fuller fold leaves even less room for a wasted cut, and one submission is all you get.",
+      "bldN39": "The front arm's turn to go dark at fourteen blocks: the fuller L is half named, and the one submission is all there is.",
+      "bldN40": "The last solid: fourteen blocks - every cell of the fold but one - in a corner nobody names, one spare probe and one submission.",
+    },
+    zh: {
+      "bldL31": "\u6298\u89d2",
+      "bldL32": "\u4e00\u9053\u6298\u7f1d",
+      "bldL33": "\u987a\u7740L\u8d70",
+      "bldL34": "\u6697\u6389\u7684\u4e00\u81c2",
+      "bldL35": "\u6362\u6697\u4e00\u81c2",
+      "bldL36": "\u4e5d\u5904\u6298\u89d2",
+      "bldL37": "\u7f3a\u4e00\u683c",
+      "bldL38": "\u66f4\u6ee1\u7684\u6298\u89d2",
+      "bldL39": "\u534a\u660e\u534a\u6697",
+      "bldL40": "\u6700\u540e\u4e00\u6298",
+      "bldN31": "\u6240\u6709\u65b9\u5757\u90fd\u85cf\u5728\u4e00\u4e2a\u6b63\u89c6\u5207\u9762\u6298\u5230\u4e00\u4e2a\u4fa7\u89c6\u5207\u9762\u7684 L \u5f62\u91cc\uff0c\u7acb\u5728\u7acb\u65b9\u4f53\u7684\u4e00\u4e2a\u89d2\u843d\u3002\u80fd\u6536\u53e3\u7684\u90a3\u5bf9\u5207\u9762\u4e00\u81c2\u4e00\u5200\uff1b\u540c\u4e00\u6839\u8f74\u4e0a\u7684\u4efb\u4f55\u4e24\u5200\u90fd\u6536\u4e0d\u4e86\u53e3\u3002",
+      "bldN32": "\u4e24\u81c2\u90fd\u8fd8\u5199\u5728\u8bf4\u660e\u4e0a\uff0c\u5b83\u4eec\u53ea\u5171\u7528\u4e00\u9053\u6298\u7f1d\uff1a\u4f9d\u6b21\u8bfb\u5b8c\u4e24\u81c2\uff0c\u4e24\u5200\u6536\u53e3\u2014\u2014\u4e09\u5200\u6a2a\u626b\u53ea\u80fd\u4fdd\u4f4f\u8fd9\u4e00\u5c40\u3002",
+      "bldN33": "\u4e00\u6b21\u4f59\u91cf\u3001\u4e00\u6b21\u63d0\u4ea4\uff0c\u6298\u89d2\u4f9d\u7136\u5199\u5728\u8bf4\u660e\u4e0a\uff1a\u76f4\u63a5\u8d70\u90a3\u6761 L\u2014\u2014\u4e09\u5200\u6a2a\u626b\u53ea\u503c\u4e24\u661f\uff0c\u4e09\u661f\u62ff\u4e0d\u5230\u3002",
+      "bldN34": "\u4fa7\u81c2\u8f6c\u6697\uff1a\u4e09\u4e2a\u4fa7\u89c6\u5207\u9762\u90fd\u53ef\u80fd\u85cf\u7740\u5b83\uff0c\u53ea\u6709\u771f\u6b63\u7684\u90a3\u4e00\u4f4d\u80fd\u6536\u53e3\u3002\u6b63\u81c2\u8fd8\u5199\u5728\u8bf4\u660e\u4e0a\u3002",
+      "bldN35": "\u8fd9\u56de\u8f6e\u5230\u6b63\u81c2\u8f6c\u6697\uff1aL \u53ea\u5199\u4e86\u4e00\u534a\uff0c\u7b2c\u4e00\u5200\u82e5\u843d\u5728\u9519\u7684\u4e00\u81c2\u4e0a\uff0c\u8fd9\u4e00\u5c40\u5c31\u4ea4\u4ee3\u4e86\u3002",
+      "bldN36": "\u4ec0\u4e48\u90fd\u4e0d\u5199\uff1a\u6298\u89d2\u85cf\u5728\u4e5d\u5904\u89d2\u843d\u4e4b\u4e00\uff0c\u540c\u4e00\u6839\u8f74\u4e0a\u7684\u4efb\u4f55\u4e24\u5200\u51fa\u591a\u5927\u4ef7\u94b1\u90fd\u6536\u4e0d\u4e86\u53e3\uff0c\u5355\u72ec\u4e00\u5200\u66f4\u4e0d\u884c\u3002",
+      "bldN37": "\u4e24\u81c2\u7684\u540d\u5b57\u53c8\u56de\u6765\u4e86\uff0c\u800c\u6298\u89d2\u7f3a\u4e86\u4e00\u683c\uff1a\u5341\u4e94\u683c\u91cc\u7acb\u7740\u5341\u56db\u5757\uff0c\u4e24\u5200\u4e00\u843d\uff0c\u514d\u8d39\u7684\u65b9\u5757\u6570\u5c31\u628a\u6298\u7f1d\u9489\u6b7b\u3002",
+      "bldN38": "\u5341\u56db\u5757\u52a0\u4fa7\u81c2\u8f6c\u6697\uff1a\u66f4\u6ee1\u7684\u6298\u89d2\u5bb9\u4e0d\u4e0b\u4e00\u5200\u6d6a\u8d39\uff0c\u800c\u4f60\u53ea\u6709\u4e00\u6b21\u63d0\u4ea4\u3002",
+      "bldN39": "\u5341\u56db\u5757\u65f6\u8f6e\u5230\u6b63\u81c2\u8f6c\u6697\uff1a\u66f4\u6ee1\u7684 L \u53ea\u5199\u4e86\u4e00\u534a\uff0c\u800c\u4e00\u6b21\u63d0\u4ea4\u5c31\u662f\u5168\u90e8\u3002",
+      "bldN40": "\u6700\u540e\u4e00\u4e2a\u7acb\u4f53\uff1a\u5341\u56db\u5757\u2014\u2014\u6298\u89d2\u7684\u5341\u4e94\u683c\u53ea\u7f3a\u4e00\u683c\u2014\u2014\u85cf\u5728\u4e00\u4e2a\u6ca1\u4eba\u6307\u540d\u7684\u89d2\u843d\uff0c\u4e00\u6b21\u4f59\u91cf\u3001\u4e00\u6b21\u63d0\u4ea4\u3002",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

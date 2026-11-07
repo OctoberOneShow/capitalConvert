@@ -55,14 +55,15 @@
     });
   }
 
-  /* Thirty districts, always the same thirty: open land, a river of
+  /* Forty districts, always the same forty: open land, a river of
    * water, a brownfield of foul ground, a listed corner that bans worksites,
    * the full city with all three at once, then a back ladder of twenty-rung
    * shape - cuts, lattices, banned rings and shorter ledgers that squeeze the
-   * same knobs with a smaller margin each time - and a deep tier of ten
-   * districts where the worksite itself is priced out of the plan. stars/plan/
-   * proof are filled by omvProveAll(), from the measured plan - no band here
-   * is invented. */
+   * same knobs with a smaller margin each time - a deep tier of ten
+   * districts where the worksite itself is priced out of the plan, and a
+   * charter tier of ten zoned districts where the ground itself answers to a
+   * single blueprint. stars/plan/proof are filled by omvProveAll(), from the
+   * measured plan - no band here is invented. */
   function omvDistrict(id, labelKey, slack, blocked, fouled, heritage) {
     return {
       id: id, labelKey: labelKey, turns: 10, slack: slack,
@@ -78,6 +79,17 @@
   function omvFarDistrict(id, labelKey, turns, slack, blocked, fouled, heritage) {
     var def = omvDistrict(id, labelKey, slack, blocked, fouled, heritage);
     def.turns = turns;
+    return def;
+  }
+
+  /* Rungs 31-40 author zoning law: `zone` reserves lots for one blueprint, a
+   * field no shipped rung carried, and the legality reader itself enforces it.
+   * Everything else delegates to the far-district shape the engine already
+   * reads, so a zone rung is a district like any other - only the ground has
+   * a rule of its own. */
+  function omvZoneDistrict(id, labelKey, turns, slack, zoneKind, zoneLots, blocked, fouled, heritage) {
+    var def = omvFarDistrict(id, labelKey, turns, slack, blocked, fouled, heritage);
+    def.zone = { kind: zoneKind, lots: omvXY(zoneLots) };
     return def;
   }
 
@@ -259,6 +271,41 @@
       omvBayExcept(omvTriangleLots.concat(omvTriangleLands, omvTriangleWorks)), omvTriangleFoul, omvTriangleLands),
     omvFarDistrict("o30", "omvZ30", 5, 0.03,
       omvBayExcept(omvBeaconLots.concat(omvBeaconLands, omvBeaconWorks)), omvBeaconFoul, omvBeaconLands),
+
+    /* Rungs 31-40, the charter tier, and the one lever the ladder has never
+     * pulled: zoning law. Each rung reserves a shape of lots for a single
+     * blueprint - `zone`, a field the thirty shipped rungs never carried - and
+     * the legality reader refuses anything else on that ground (the fresh
+     * grid stamps the reserved lots, omvLegal returns "nozoned", and the
+     * panel draws the reserve glyph). The zoned kind is chosen so that
+     * hands which follow the law and fill the reserve first waste their turns
+     * on it - the ground obeys, and the zones sit where a plan would want
+     * something else. The deep tier's worksite lesson stays the deep tier's
+     * own: the charter's ground is open, so its measured plans may buy a
+     * worksite where the law lets the ground carry one. slack never rises
+     * down the tier and the ledgers shorten; stars/plan/proof stay measured -
+     * omvProveAll() fills them from omvBeatable() at load, under the enforced
+     * zones. */
+    omvZoneDistrict("o31", "omvZ31", 9, 0.05, omvGreen,
+      [[2, 2], [3, 2], [2, 3], [3, 3]]),
+    omvZoneDistrict("o32", "omvZ32", 8, 0.05, omvStop,
+      [[1, 3], [2, 3], [3, 3], [4, 3]], omvXY([[0, 0], [5, 5]]), omvXY([[2, 1]])),
+    omvZoneDistrict("o33", "omvZ33", 8, 0.04, omvWork,
+      [[1, 1], [2, 1], [3, 1], [4, 1]], omvXY([[0, 5], [5, 0]])),
+    omvZoneDistrict("o34", "omvZ34", 7, 0.04, omvTap,
+      [[2, 2], [3, 2], [2, 3], [3, 3]], null, omvXY([[1, 5], [4, 5]])),
+    omvZoneDistrict("o35", "omvZ35", 7, 0.04, omvGreen,
+      [[1, 1], [3, 1], [4, 1], [5, 1]], omvXY([[2, 1]]), null, omvXY([[2, 1]])),
+    omvZoneDistrict("o36", "omvZ36", 6, 0.04, omvStop,
+      [[0, 2], [1, 2], [4, 2], [5, 2]], omvXY([[2, 1], [2, 2], [2, 3], [2, 4], [3, 4], [3, 3], [3, 2], [3, 1]])),
+    omvZoneDistrict("o37", "omvZ37", 6, 0.03, omvWork,
+      [[2, 4], [3, 4], [2, 5], [3, 5]], null, omvXY([[3, 0], [0, 3], [5, 2]])),
+    omvZoneDistrict("o38", "omvZ38", 5, 0.03, omvTap,
+      [[1, 2], [4, 2], [1, 3], [4, 3]], null, omvXY([[2, 0], [3, 0], [2, 5], [3, 5]])),
+    omvZoneDistrict("o39", "omvZ39", 5, 0.03, omvStop,
+      [[2, 1], [3, 1], [2, 4], [3, 4]], omvXY([[0, 0], [0, 1], [5, 4], [5, 5]])),
+    omvZoneDistrict("o40", "omvZ40", 5, 0.03, omvWork,
+      [[2, 2], [3, 2], [2, 3], [3, 3]], null, omvXY([[2, 2], [3, 3]])),
   ];
 
   /* --- grid helpers -------------------------------------------------------- */
@@ -281,6 +328,15 @@
     return {
       side: omvSide, level: def.id, cells: omvBlank(null),
       blocked: omvFlags(def.blocked), fouled: omvFlags(def.fouled), heritage: omvFlags(def.heritage),
+      /* Dear ground: a district may charge the ledger for every build on
+       * certain lots. Rungs that ship no priced ground read exactly as they
+       * always did. */
+      priced: omvFlags(def.priced),
+      /* Zoned ground: the charter tier reserves lots for a single blueprint,
+       * and the legality reader refuses anything else there. Rungs that ship
+       * no zone read exactly as they always did. */
+      zoned: omvFlags(def.zone && def.zone.lots),
+      zoneKind: def.zone ? def.zone.kind : null,
     };
   }
 
@@ -292,10 +348,13 @@
         side: grid.side || omvSide, cells: grid.cells,
         blocked: grid.blocked || omvBlank(false), fouled: grid.fouled || omvBlank(false),
         heritage: grid.heritage || omvBlank(false),
+        priced: grid.priced || omvBlank(false),
+        zoned: grid.zoned || omvBlank(false),
+        zoneKind: grid.zoneKind || null,
       };
     }
     if (grid && grid.length === omvSide * omvSide) {
-      return { side: omvSide, cells: grid, blocked: omvBlank(false), fouled: omvBlank(false), heritage: omvBlank(false) };
+      return { side: omvSide, cells: grid, blocked: omvBlank(false), fouled: omvBlank(false), heritage: omvBlank(false), priced: omvBlank(false), zoned: omvBlank(false), zoneKind: null };
     }
     return omvFresh(omvDistricts[0]);
   }
@@ -393,6 +452,9 @@
     if (g.cells[index]) {
       return "taken";
     }
+    if (g.zoned && g.zoned[index] && g.zoneKind && kind !== g.zoneKind) {
+      return "nozoned";
+    }
     return kind === omvWork && omvWorkBanned(g, index) ? "banned" : "ok";
   }
 
@@ -406,6 +468,7 @@
     var next = {
       side: g.side, level: grid && grid.level ? grid.level : "", cells: g.cells.slice(),
       blocked: g.blocked, fouled: g.fouled, heritage: g.heritage,
+      priced: g.priced,
     };
     next.cells[cy * g.side + cx] = kind;
     return next;
@@ -613,7 +676,7 @@
     var index = omvCoord(y) * g.side + omvCoord(x);
     var where = omvName(Math.max(0, Math.min(g.cells.length - 1, index)));
     if (why !== "ok") {
-      return { ok: false, why: why, delta: 0, total: omvScore(g), lines: [omvWhyText(why, where)] };
+      return { ok: false, why: why, delta: 0, total: omvScore(g), lines: [omvWhyText(why, where, g)] };
     }
     var before = omvAnalyze(g);
     var after = omvAnalyze(omvPlace(g, kind, x, y));
@@ -880,6 +943,11 @@
     function terrainMark(index) {
       if (grid.heritage[index]) { return "\u25c6"; }
       if (grid.blocked[index]) { return "\u2248"; }
+      /* A zoned lot wears the lowercase glyph of the blueprint it reserves,
+       * so the plate says what the aria label says. */
+      if (grid.zoned[index] && omvSpecies[grid.zoneKind]) {
+        return omvSpecies[grid.zoneKind].glyph.toLowerCase();
+      }
       return analysis.foul[index] && !grid.cells[index] ? "\u2020" : "\u00b7";
     }
 
@@ -890,6 +958,9 @@
       }
       if (grid.heritage[index]) { return t("omvCellLand", { where: where }); }
       if (grid.blocked[index]) { return t("omvCellWater", { where: where }); }
+      if (grid.zoned[index] && omvSpecies[grid.zoneKind]) {
+        return t("omvCellZone", { where: where, name: t(omvSpecies[grid.zoneKind].key) });
+      }
       return analysis.foul[index] ? t("omvCellFoul", { where: where }) : t("omvCellLot", { where: where });
     }
 
@@ -1033,7 +1104,7 @@
       }
       var why = omvLegal(grid, kind, x, y);
       if (why !== "ok") {
-        result.textContent = omvWhyText(why, omvName(omvCoord(y) * omvSide + omvCoord(x)));
+        result.textContent = omvWhyText(why, omvName(omvCoord(y) * omvSide + omvCoord(x)), grid);
         preview = omvPreview(grid, kind, x, y);
         render();
         return;
@@ -1129,7 +1200,9 @@
         ? t("omvPrompt", {
             name: t(def.labelKey), n: def.turns, plan: omvInt(proof.plan),
             need: def.stars[2], mid: def.stars[1], high: def.stars[0],
-          })
+          }) + (def.zone
+            ? " " + t("omvZoneNote", { name: t(omvSpecies[def.zone.kind].key), n: def.zone.lots.length })
+            : "")
         : t("omvUnproven", { name: t(def.labelKey) });
       render();
       refreshPicker();
@@ -1243,6 +1316,16 @@
       "omvZ28": "The Wide Bank",
       "omvZ29": "The Market Triangle",
       "omvZ30": "The Last Light",
+      "omvZ31": "The Garden Clause",
+      "omvZ32": "The Transit Row",
+      "omvZ33": "The Works Ground",
+      "omvZ34": "The Water Court",
+      "omvZ35": "The Listed Green",
+      "omvZ36": "The Stop Ledger",
+      "omvZ37": "The Quiet Shelf",
+      "omvZ38": "The Tap Lock",
+      "omvZ39": "The Charter Row",
+      "omvZ40": "The Zoned City",
       "omvTurnLabel": "Placements",
       "omvScoreLabel": "District",
       "omvGoalLabel": "Bands",
@@ -1270,6 +1353,7 @@
       "omvCellLand": "{where}, listed landmark - nothing builds here and no worksite within 2 streets",
       "omvCellWater": "{where}, water, nothing builds here",
       "omvCellFoul": "{where}, fouled lot",
+      "omvCellZone": "{where}, zoned ground - only a {name} may stand here",
       "omvCellLot": "{where}, open lot",
       "omvBlueAria": "Blueprint {n}: {name}",
       "omvUndoAria": "Undo last placement, {n} placed so far",
@@ -1299,17 +1383,19 @@
       "omvNoWater": "{where} is water - only dry lots take a blueprint.",
       "omvNoLand": "{where} is the listed landmark - the town keeps it open.",
       "omvNoBanned": "No worksite at {where}: the listed landmark is too close.",
+      "omvNoZoned": "{where} is zoned ground - only a {name} may stand there.",
       "omvNoBad": "That blueprint does not exist.",
       "omvPlaced": "{name} built at {where}; the ledger re-read. {left} placements left.",
       "omvUndone": "Took the {name} back off {where}. {left} placements left.",
       "omvNothingToUndo": "Nothing built yet, so there is nothing to take back.",
       "omvShut": "The ledger has closed - press New District to plan again.",
       "omvPrompt": "{name}: {n} placements. The measured plan reached {plan} points, so {need} clears the district, {mid} is two stars and {high} is three.",
+      "omvZoneNote": "The charter zones {n} lots for a {name} alone - nothing else may stand there.",
       "omvWin": "The district reads {n} points - {s} stars. The measured plan reached {plan}.",
       "omvShort": "The district reached {n} points and needed {need}, short by {gap}. The unmet need: {why}",
       "omvNoNeed": "no single need went unmet - the town is simply too small, so build more homes and the worksites and taps they need.",
       "omvNextDistrict": "Next district unlocked.",
-      "omvCampaignDone": "All thirty districts are planned.",
+      "omvCampaignDone": "All forty districts are planned.",
       "omvLockedDistrict": "That district is still sealed - clear the one before it.",
       "omvUnproven": "{name} could not be proven clearable by the measured plan, so it is on hold.",
       "omvHint": "Every blueprint solves one need and opens another: a tap waters three homes but burns the lot a worksite wanted, a worksite employs two homes and fouls the four it fronts, and a stop pays only for a home that had no job within three streets. Nothing is random - rerun a district and it is dealt the same.",
@@ -1347,6 +1433,16 @@
       "omvZ28": "宽滩",
       "omvZ29": "三角集市",
       "omvZ30": "最后一盏灯",
+      "omvZ31": "花园条款",
+      "omvZ32": "公交一排",
+      "omvZ33": "工作地专区",
+      "omvZ34": "水站庭院",
+      "omvZ35": "挂牌绿地",
+      "omvZ36": "站牌账册",
+      "omvZ37": "静默南台",
+      "omvZ38": "水站之锁",
+      "omvZ39": "章程一排",
+      "omvZ40": "分区之城",
       "omvTurnLabel": "放置",
       "omvScoreLabel": "城区",
       "omvGoalLabel": "分档",
@@ -1374,6 +1470,7 @@
       "omvCellLand": "{where}，挂牌老建筑：这里不能盖，两格内也不许盖工作地",
       "omvCellWater": "{where}，水面：不能盖",
       "omvCellFoul": "{where}，被污染的地块",
+      "omvCellZone": "{where}，规划用地——只能盖{name}",
       "omvCellLot": "{where}，空地",
       "omvBlueAria": "第 {n} 张图纸：{name}",
       "omvUndoAria": "悔掉上一手，已盖 {n} 个",
@@ -1403,17 +1500,19 @@
       "omvNoWater": "{where} 是水面——只有旱地能按图纸盖。",
       "omvNoLand": "{where} 是挂牌老建筑——全城替它留着。",
       "omvNoBanned": "{where} 不能盖工作地：离挂牌老建筑太近。",
+      "omvNoZoned": "{where} 是规划用地——只能盖{name}。",
       "omvNoBad": "没有这张图纸。",
       "omvPlaced": "在 {where} 盖好{name}，这块值 {s}，账本重算。还剩 {left} 手。",
       "omvUndone": "把 {where} 的{name}收回来了。还剩 {left} 手。",
       "omvNothingToUndo": "还没盖任何东西，没什么可悔的。",
       "omvShut": "账本已经结了——按“换个城区”再规划一轮。",
       "omvPrompt": "{name}：共 {n} 手。量出来的规划能到 {plan} 分，所以 {need} 分过关，{mid} 分两星，{high} 分三星。",
+      "omvZoneNote": "章程把 {n} 块地划给了{name}——别的图纸盖不上去。",
       "omvWin": "城区合计 {n} 分 - 获得 {s} 星。实测规划能到 {plan} 分。",
       "omvShort": "城区只有 {n} 分，要 {need} 分才过关，差 {gap} 分。没被满足的需求：{why}",
       "omvNoNeed": "没有哪一项单独拖了后腿——就是城太小，多盖住宅，再补上它们要的水站和工作地。",
       "omvNextDistrict": "解锁下一个城区。",
-      "omvCampaignDone": "三十个城区都规划完了。",
+      "omvCampaignDone": "四十个城区都规划完了。",
       "omvLockedDistrict": "这个城区还没开放——先过掉前一个。",
       "omvUnproven": "{name} 没能被实测规划证明可以过关，所以暂缓开放。",
       "omvHint": "每种图纸都解决一个需求、同时制造另一个：一个水站供三户，却占掉工作地要的那块；工作地招两户，却污染四面；公交站只有让 3 格外的人家找到活才值钱。这里没有随机——同一个城区每次都长一个样，重来就能更好。",
@@ -1446,6 +1545,7 @@
         "Undo: keys u, z or Backspace lift the last building off, and the ledger re-reads after every placement you make.",
         "Scoring: the ledger prints every point in words and digits - homes, watered, employed, jobless, idle taps, quiet greens - each with its own sum, and the number in a cell is exactly what that lot contributes.",
         "New tier: districts 21 to 30 are listed old towns across the bay - every home lot is inside a landmark's ban ring, the only legal worksite lots lie across the water past even a stop's five-street walk of every garden lot, so the measured plan closes without a single worksite and roofs, water and greens carry the ledger alone.",
+        "New tier: districts 31 to 40 answer to zoning law - the charter reserves a shape of lots for a single blueprint and the town refuses anything else on that ground, so the plan pays for the reservation and a hand that obeys the law first wastes its turns filling it.",
       ],
       zh: [
         "目标：把城区的账本刷到 HUD 显示的过关线——三星就是实测规划那条线。",
@@ -1455,6 +1555,7 @@
         "悔手：u、z 或退格键能把上一手取回来，每一手都会让账本当场重算。",
         "计分：账本把每一分都写成文字加数字——住着几户、通水几户、就业几户、失业几户、几个空守水站、几块不涨分的绿地——每格上的数字就是这块地自己的贡献。",
         "新层级：第 21 到 30 关是隔湾的挂牌老城——每块住宅用地都在老建筑的禁建圈里，唯一合法的工作地地块隔水相望，离每块绿地都超出公交站的五格通勤，所以实测规划一张工作地都不盖，住宅、给水和绿地要独自撑起账本。",
+        "新层级：第 31 到 40 关开始实行分区法——章程把一片地块划给单一图纸，城区拒绝在这块地上盖任何别的东西，规划要为这笔圈地买单，而先把规划用地填满的守规矩一手只会白白耗掉自己的手数。",
       ],
     },
   });

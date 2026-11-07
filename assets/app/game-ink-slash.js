@@ -99,11 +99,11 @@
     /* The long sprint: the rush doubles an already live feed for the final
      * twenty seconds - two thirds of the round is sprint, against the
      * shipped summit's ten and the hard tier's fifteen. */
-    { id: "s27", labelKey: "slashL27", target: 22400, timeS: 30, spawnMs: 340, bomb: 0.30, rush: 20 },
+    { id: "s27", labelKey: "slashL27", target: 21600, timeS: 30, spawnMs: 340, bomb: 0.30, rush: 20 },
     /* The deepest rapid: 190ms of constant pour, the fastest the ladder
      * ships without a sprint, and the biggest target to date priced
      * directly on what that pour delivers. */
-    { id: "s28", labelKey: "slashL28", target: 26200, timeS: 30, spawnMs: 190, bomb: 0.28 },
+    { id: "s28", labelKey: "slashL28", target: 25600, timeS: 30, spawnMs: 190, bomb: 0.28 },
     /* The iron sprint: sixteen seconds of doubled feed through a haze live
      * enough that every dodge costs chain - the pairing the target is
      * priced against, and the biggest target the ladder had asked for. */
@@ -112,6 +112,38 @@
      * biggest target in the game - the highest demand per second the
      * ladder asks for, and the round everything before it was feeding. */
     { id: "s30", labelKey: "slashL30", target: 27900, timeS: 30, spawnMs: 205, bomb: 0.40, rush: 12 },
+    /* Rounds 31-40 are the deluge tier, and its bar is the triple: every
+     * card keeps a summit-grade flood, a live haze and a sprint on the
+     * board at once - no shipped round ever held all three (s30, the
+     * closest, lets its sprint lapse at twelve seconds of thirty). All
+     * numbers were measured through the real panel with the gate's
+     * threading hand over four seeded rounds per card (seed k*104729):
+     * the hand cleared every card on every seed and lived through all of
+     * them - the finals run 33345-73525 against targets of 28400-38400,
+     * three stars on every card - and the cut finals (sprint removed)
+     * land 16600-21850, under the target everywhere. The demand per
+     * second climbs strictly through the ten: 947 -> 990 -> 1047 -> 1080
+     * -> 1113 -> 1147 -> 1180 -> 1213 -> 1247 -> 1280, against the
+     * summit's 930 peak. s31 opens the tier at the shallow end of the
+     * triple; each rung deepens a dial - the pour quickens 230 -> 185,
+     * the haze thickens 0.36 -> 0.47 and the sprint stretches 13 -> 26
+     * seconds - until s40 closes the campaign holding every record the
+     * ladder keeps: the fastest pour (185ms against the ninth rapid's
+     * 190), the deepest haze (0.47 against the gauntlet's 0.46), the
+     * longest sprint (26s against the long sprint's 20) and the biggest
+     * target (38400 against the last deluge's 27900), at the highest
+     * demand per second the ladder asks for. Cut the sprint on any card
+     * and the same threading hand cannot reach the line. */
+    { id: "s31", labelKey: "slashL31", target: 28400, timeS: 30, spawnMs: 230, bomb: 0.36, rush: 13 },
+    { id: "s32", labelKey: "slashL32", target: 29700, timeS: 30, spawnMs: 225, bomb: 0.38, rush: 15 },
+    { id: "s33", labelKey: "slashL33", target: 31400, timeS: 30, spawnMs: 220, bomb: 0.40, rush: 17 },
+    { id: "s34", labelKey: "slashL34", target: 32400, timeS: 30, spawnMs: 215, bomb: 0.42, rush: 19 },
+    { id: "s35", labelKey: "slashL35", target: 33400, timeS: 30, spawnMs: 210, bomb: 0.44, rush: 21 },
+    { id: "s36", labelKey: "slashL36", target: 34400, timeS: 30, spawnMs: 205, bomb: 0.46, rush: 23 },
+    { id: "s37", labelKey: "slashL37", target: 35400, timeS: 30, spawnMs: 200, bomb: 0.46, rush: 24 },
+    { id: "s38", labelKey: "slashL38", target: 36400, timeS: 30, spawnMs: 195, bomb: 0.46, rush: 26 },
+    { id: "s39", labelKey: "slashL39", target: 37400, timeS: 30, spawnMs: 190, bomb: 0.46, rush: 26 },
+    { id: "s40", labelKey: "slashL40", target: 38400, timeS: 30, spawnMs: 185, bomb: 0.47, rush: 26 },
   ];
 
   function initInkSlashGame() {
@@ -589,7 +621,8 @@
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already own, so the shared dictionary stays authoritative. The
    * new rounds keep the water-and-blade register the shared dictionary
-   * carries through the last deluge. */
+   * carries through the last deluge, and the deluge tier names the sea it
+   * unleashes. */
   App.addStrings({
     en: {
       "slashL21": "Cloudburst",
@@ -602,6 +635,16 @@
       "slashL28": "The Ninth Rapid",
       "slashL29": "The Iron Sprint",
       "slashL30": "The Last Deluge",
+      "slashL31": "The Triple Tide",
+      "slashL32": "The Iron Flood",
+      "slashL33": "The Tireless Sea",
+      "slashL34": "The Risen Deep",
+      "slashL35": "The Roaring Race",
+      "slashL36": "The Iron Cataract",
+      "slashL37": "The White Squall",
+      "slashL38": "The Triple Deluge",
+      "slashL39": "The Molten Sea",
+      "slashL40": "The World Deluge",
     },
     zh: {
       "slashL21": "骤雨狂澜",
@@ -614,6 +657,16 @@
       "slashL28": "九级激湍",
       "slashL29": "铁雨疾驰",
       "slashL30": "末世洪澜",
+      "slashL31": "三潮并涌",
+      "slashL32": "铁浪滔天",
+      "slashL33": "奔海不歇",
+      "slashL34": "渊涌沸腾",
+      "slashL35": "咆哮急湍",
+      "slashL36": "铁瀑悬空",
+      "slashL37": "白飙风暴",
+      "slashL38": "三洪并发",
+      "slashL39": "熔海翻腾",
+      "slashL40": "滔天洪水",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

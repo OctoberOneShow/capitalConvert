@@ -16,17 +16,21 @@
    * full disjoint path set, so a ribbon solution always exists. Star times
    * are [3-star, 2-star, 1-star] seconds.
    *
-   * Forty boards in five tiers. Rungs 1-10 grow the grid (5x5 up to
-   * 8x8) and the ribbon count with it while the boards stay airy enough that
-   * every pair is legible at a glance. Rungs 11-20 grow the density instead:
-   * they are forged solution-first by tools/aurora-forge.js, laid out in the
-   * order that forge measured, so each rung needs more inked cells than the
-   * one before it (60 up to 76) and their star bands follow the same climb.
-   * Rungs 21-24 open the 10x10 panel at the full sixteen-ribbon deck, the
-   * summit (25-30) opens the eleventh row, where the same deck has to
-   * weave a bigger panel - past a hundred inked cells - and the flood
-   * (31-40) opens the twelfth and lays it course by course, the ink
-   * climbing from 116 to the whole cloth: all 144 cells in ribbon. */
+    * Forty-four boards in six tiers. Rungs 1-10 grow the grid (5x5 up to
+    * 8x8) and the ribbon count with it while the boards stay airy enough that
+    * every pair is legible at a glance. Rungs 11-20 grow the density instead:
+    * they are forged solution-first by tools/aurora-forge.js, laid out in the
+    * order that forge measured, so each rung needs more inked cells than the
+    * one before it (60 up to 76) and their star bands follow the same climb.
+    * Rungs 21-24 open the 10x10 panel at the full sixteen-ribbon deck, the
+    * summit (25-30) opens the eleventh row, where the same deck has to
+    * weave a bigger panel - past a hundred inked cells - and the flood
+    * (31-40) opens the twelfth and lays it course by course, the ink
+    * climbing from 116 to the whole cloth: all 144 cells in ribbon. The
+    * crest (41-44) carries the tide past it: the grid opens to 13x13, the
+    * ink climbs from 148 to the second whole cloth - all 169 cells in
+    * ribbon - and the deck thins to thirteen ribbons, every one spanning
+    * the panel. */
   var auroraLevels = [
     {
       id: "f1", labelKey: "auroL1", size: 5,
@@ -301,6 +305,101 @@
       id: "f40", labelKey: "auroL40", size: 12,
       pairs: [[0, 0, 11, 0], [0, 1, 11, 1], [0, 2, 11, 2], [0, 3, 11, 3], [0, 4, 0, 11], [1, 4, 1, 11], [2, 4, 2, 11], [3, 4, 3, 11], [4, 4, 4, 11], [5, 4, 5, 11], [6, 4, 6, 11], [7, 4, 7, 11], [8, 4, 8, 11], [9, 4, 9, 11], [10, 4, 10, 11], [11, 4, 11, 11]],
       starTimes: [147, 228, 316],
+    },
+
+    /* ------------------------------------------------------------------
+     * The crest tier (f41-f44). The flood had filled the twelve-across
+     * panel to the whole cloth - 144 cells, the most ribbon the drawer
+     * has ever held - so the crest carries the tide past it: the grid
+     * opens to 13x13, a size no earlier rung used, and the tide still
+     * comes in course by course - straight ribbons, disjoint by
+     * construction, each pair's unique shortest path being its own
+     * course, so the solver's measured answer lands exactly on the
+     * manhattan floor the pair distances set - the weave is pinned by
+     * geometry, never searched for. The ink climbs seven cells a rung
+     * from just past the whole cloth: f41 148, f42 155,
+     * f43 162, f44 169 - the second whole cloth, the biggest full
+     * panel the drawer has ever held, and every rung needs more ribbon
+     * than the twelve panel holds cells, so no crest weave could
+     * physically fit the flood's board. As the cloth fills the deck
+     * thins: 16 ribbons at the crest's foot, then 15, 14, and
+     * 13 at the top, where the capstone relays the whole cloth in
+     * courses that all run the panel's full span of thirteen - against
+     * the eight-cell ribbon floor the first whole cloth held. Every
+     * board was verified by tools/aurora-forge.js (`node
+     * tools/aurora-forge.js crest` rebuilds this block from
+     * tools/_aurora_crest.json): the solver re-solves each board from
+     * the pairs alone at the screen cap, lands on the floor, and the
+     * rungs sit in the order that measure climbs. The star bands
+     * follow the same one-second-per-inked-cell pace the whole forged
+     * ladder ships at.
+     * ------------------------------------------------------------------ */
+    {
+      id: "f41", labelKey: "auroL41", size: 13,
+      pairs: [[0, 0, 4, 0], [5, 0, 9, 0], [0, 1, 5, 1], [6, 1, 10, 1], [0, 2, 5, 2], [6, 2, 10, 2], [0, 3, 5, 3], [6, 3, 11, 3], [0, 4, 12, 4], [0, 5, 12, 5], [0, 6, 12, 6], [0, 7, 12, 7], [0, 8, 12, 8], [0, 9, 12, 9], [0, 10, 12, 10], [0, 11, 12, 11]],
+      starTimes: [151, 234, 325],
+    },
+    {
+      id: "f42", labelKey: "auroL42", size: 13,
+      pairs: [[0, 0, 12, 0], [0, 1, 12, 1], [0, 2, 12, 2], [0, 3, 12, 3], [0, 5, 12, 5], [0, 6, 12, 6], [0, 7, 12, 7], [0, 8, 12, 8], [0, 9, 6, 9], [7, 9, 12, 9], [0, 10, 6, 10], [7, 10, 12, 10], [0, 11, 6, 11], [7, 11, 12, 11], [0, 12, 11, 12]],
+      starTimes: [158, 245, 340],
+    },
+    {
+      id: "f43", labelKey: "auroL43", size: 13,
+      pairs: [[0, 0, 12, 0], [0, 1, 12, 1], [0, 2, 12, 2], [0, 3, 12, 3], [0, 4, 12, 4], [0, 5, 12, 5], [0, 6, 12, 6], [0, 7, 12, 7], [0, 8, 12, 8], [0, 9, 12, 9], [0, 10, 12, 10], [0, 11, 5, 11], [6, 11, 11, 11], [0, 12, 6, 12]],
+      starTimes: [165, 256, 355],
+    },
+    {
+      id: "f44", labelKey: "auroL44", size: 13,
+      pairs: [[0, 0, 0, 12], [1, 0, 1, 12], [2, 0, 2, 12], [3, 0, 3, 12], [4, 0, 4, 12], [5, 0, 5, 12], [6, 0, 6, 12], [7, 0, 7, 12], [8, 0, 8, 12], [9, 0, 9, 12], [10, 0, 10, 12], [11, 0, 11, 12], [12, 0, 12, 12]],
+      starTimes: [172, 267, 370],
+    },
+
+    /* ------------------------------------------------------------------
+     * The zenith tier (f45-f48). The crest capstone relaid the whole
+     * cloth on the thirteen panel - 169 cells, every one of them in
+     * ribbon - so the zenith carries the tide past it: the grid opens
+     * to 14x14, a size no earlier rung used, and the tide still comes
+     * in course by course - straight ribbons, disjoint by construction,
+     * each pair's unique shortest path being its own course, so the
+     * solver's measured answer lands exactly on the manhattan floor the
+     * pair distances set - the weave is pinned by geometry, never
+     * searched for. The ink climbs from just past the crest's cloth:
+     * f45 176, f46 183, f47 190, f48 196 -
+     * the third whole cloth, every cell of the fourteen panel in
+     * ribbon, and every rung needs more ribbon than the thirteen panel
+     * holds cells, so no zenith weave could physically fit the crest's
+     * board. The opener still carries 16 courses; the cloth takes 14,
+     * and the capstone relays it in courses that all run the panel's
+     * full span of fourteen - against the eight-cell ribbon floor the
+     * first whole cloth held. Every board was verified by
+     * tools/aurora-forge.js (`node tools/aurora-forge.js zenith`
+     * rebuilds this block from tools/_aurora_zenith.json): the solver
+     * re-solves each board from the pairs alone, and a candidate only
+     * ships when that solver proves it at the screen cap. The rungs sit
+     * in the order that re-solve measured - no rung needs less ribbon
+     * than the one before it - and the star bands follow the same
+     * one-second-per-inked-cell pace the whole forged ladder ships at.
+     * ------------------------------------------------------------------ */
+    {
+      id: "f45", labelKey: "auroL45", size: 14,
+      pairs: [[0, 0, 4, 0], [5, 0, 9, 0], [0, 1, 5, 1], [6, 1, 11, 1], [0, 2, 6, 2], [7, 2, 13, 2], [0, 3, 13, 3], [0, 4, 13, 4], [0, 5, 13, 5], [0, 6, 13, 6], [0, 7, 13, 7], [0, 8, 13, 8], [0, 9, 13, 9], [0, 10, 13, 10], [0, 11, 13, 11], [0, 12, 13, 12]],
+      starTimes: [180, 279, 387],
+    },
+    {
+      id: "f46", labelKey: "auroL46", size: 14,
+      pairs: [[0, 0, 13, 0], [0, 1, 13, 1], [0, 2, 13, 2], [0, 3, 13, 3], [0, 4, 13, 4], [0, 5, 13, 5], [0, 6, 13, 6], [0, 7, 13, 7], [0, 8, 13, 8], [0, 9, 13, 9], [0, 10, 13, 10], [0, 11, 13, 11], [0, 12, 6, 12], [0, 13, 7, 13]],
+      starTimes: [187, 290, 402],
+    },
+    {
+      id: "f47", labelKey: "auroL47", size: 14,
+      pairs: [[0, 0, 13, 0], [0, 1, 13, 1], [0, 2, 13, 2], [0, 3, 13, 3], [0, 4, 13, 4], [0, 5, 13, 5], [0, 6, 13, 6], [0, 7, 13, 7], [0, 8, 13, 8], [0, 9, 13, 9], [0, 10, 13, 10], [0, 11, 13, 11], [0, 12, 13, 12], [0, 13, 7, 13]],
+      starTimes: [194, 301, 417],
+    },
+    {
+      id: "f48", labelKey: "auroL48", size: 14,
+      pairs: [[0, 0, 0, 13], [1, 0, 1, 13], [2, 0, 2, 13], [3, 0, 3, 13], [4, 0, 4, 13], [5, 0, 5, 13], [6, 0, 6, 13], [7, 0, 7, 13], [8, 0, 8, 13], [9, 0, 9, 13], [10, 0, 10, 13], [11, 0, 11, 13], [12, 0, 12, 13], [13, 0, 13, 13]],
+      starTimes: [200, 310, 430],
     },
   ];
   /* Sixteen entries so a fourteen-ribbon board still gives every ribbon its
@@ -1369,6 +1468,44 @@
       "auroL38": "夜光",
       "auroL39": "漫天",
       "auroL40": "极光",
+    },
+  });
+
+
+  /* The crest climbs past the flooded sky: the tide springs, stands high,
+   * breaks, and rolls the whole cloth out again in one long swell - the
+   * second full panel, every ribbon on it running the full thirteen. */
+  App.addStrings({
+    en: {
+      "auroL41": "Spring Tide",
+      "auroL42": "High Water",
+      "auroL43": "Crest",
+      "auroL44": "The Long Swell",
+    },
+    zh: {
+      "auroL41": "春潮",
+      "auroL42": "满潮",
+      "auroL43": "浪巅",
+      "auroL44": "长涌",
+    },
+  });
+
+
+  /* The zenith climbs past the cresting tide: the sky opens to the meridian,
+   * catches the solar wind, reaches the true zenith, and rolls the whole cloth
+   * out once more across all fourteen spans - the third full panel. */
+  App.addStrings({
+    en: {
+      "auroL45": "Meridian Tide",
+      "auroL46": "Solar Wind",
+      "auroL47": "Zenith Arch",
+      "auroL48": "The Third Cloth",
+    },
+    zh: {
+      "auroL45": "子午天潮",
+      "auroL46": "太阳风",
+      "auroL47": "天顶穹弧",
+      "auroL48": "三度织锦",
     },
   });
 

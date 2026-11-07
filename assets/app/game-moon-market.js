@@ -156,6 +156,52 @@
     { id: "m30", labelKey: "mktS30", seed: 3769, start: 420, cap: 12, fee: 3,
       amp: [1.6, 1.6, 1.6, 1.6], eventWeights: [2, 2, 1, 2], target: 950, feeRamp: 5,
       toll: 9, starCredits: [1303, 1127, 950] },
+
+    /* Seats 31..40 bend the last lever the house owns, `capRamp`: the shelf
+     * itself moves every night (day d trades under cap + capRamp*d), so a
+     * hold bought before the shelf moves sits through a different market
+     * than the same cargo bought after it. The first five seats breathe
+     * outward (+2, +2, +3, +3, +4 - the widest shelf trades thirty on a
+     * four-slot morning), the last five breathe inward (-2, -2, -2, -3, -4,
+     * and a -4 shelf that opened at twelve is gone by Thursday), so the
+     * same cargo is never worth the same amount twice. Every band below was
+     * measured by replaying lines through mktStep on the row's own seed:
+     * the cap-aware line - the shipped greedy's shape reading the day's
+     * real shelf - banks the three-star band, the seat's own blind greedy
+     * banks exactly its one-star band, and the buy-and-hold carrier banks
+     * nothing. On the inward seats the blind greedy is refused at the gate
+     * its own assumption built; on the outward seats it simply never learns
+     * the extra shelf was there. */
+    { id: "m31", labelKey: "mktS31", seed: 136, start: 460, cap: 7, fee: 3,
+      amp: [2, 0.4, 0.4, 2], eventWeights: [1, 2, 1, 1], target: 705, capRamp: 2,
+      starCredits: [940, 822, 705] },
+    { id: "m32", labelKey: "mktS32", seed: 136, start: 480, cap: 8, fee: 2,
+      amp: [0.6, 0.6, 2.2, 0.6], eventWeights: [2, 1, 1, 1], target: 1247, capRamp: 3,
+      starCredits: [1590, 1420, 1247] },
+    { id: "m33", labelKey: "mktS33", seed: 136, start: 500, cap: 6, fee: 4,
+      amp: [1.6, 1.6, 1.6, 1.6], eventWeights: [1, 1, 1, 2], target: 647, capRamp: 3,
+      starCredits: [980, 813, 647] },
+    { id: "m34", labelKey: "mktS34", seed: 110, start: 520, cap: 4, fee: 2,
+      amp: [2.2, 0.6, 0.6, 0.6], eventWeights: [1, 1, 2, 1], target: 668, capRamp: 4,
+      starCredits: [948, 808, 668] },
+    { id: "m35", labelKey: "mktS35", seed: 178, start: 520, cap: 5, fee: 3,
+      amp: [1.4, 1.4, 1.4, 1.4], eventWeights: [1, 2, 1, 1], target: 900, capRamp: 4,
+      starCredits: [1208, 1054, 900] },
+    { id: "m36", labelKey: "mktS36", seed: 113, start: 460, cap: 8, fee: 2,
+      amp: [1.6, 1.6, 1.6, 1.6], eventWeights: [1, 2, 2, 1], target: 460, capRamp: -2,
+      starCredits: [1006, 733, 460] },
+    { id: "m37", labelKey: "mktS37", seed: 206, start: 460, cap: 12, fee: 3,
+      amp: [2.2, 0.5, 0.5, 0.5], eventWeights: [1, 1, 2, 1], target: 590, capRamp: -2,
+      starCredits: [1112, 851, 590] },
+    { id: "m38", labelKey: "mktS38", seed: 121, start: 500, cap: 12, fee: 3,
+      amp: [2.2, 0.5, 0.5, 0.5], eventWeights: [1, 1, 2, 1], target: 588, capRamp: -2,
+      starCredits: [744, 666, 588] },
+    { id: "m39", labelKey: "mktS39", seed: 149, start: 520, cap: 10, fee: 2,
+      amp: [0.6, 2.4, 0.6, 0.6], eventWeights: [2, 1, 1, 1], target: 560, capRamp: -3,
+      starCredits: [872, 716, 560] },
+    { id: "m40", labelKey: "mktS40", seed: 113, start: 540, cap: 12, fee: 3,
+      amp: [1.6, 1.6, 1.6, 1.6], eventWeights: [1, 2, 1, 1], target: 540, capRamp: -4,
+      starCredits: [1220, 880, 540] },
   ];
 
   function mulberry32(seed) {
@@ -245,6 +291,15 @@
     return { prices: prices, events: events };
   }
 
+  /* The breathing warehouse: `capRamp` moves the shelf every night, so day d
+   * trades under cap + capRamp*d. A hold bought before the shelf moves sits
+   * through a different market than the same cargo bought after it. The field
+   * is absent on m1..m30, where this reads exactly the shipped flat cap and
+   * every shipped week replays byte-identically. */
+  function mktCap(level, day) {
+    return level.cap + (level.capRamp ? level.capRamp * day : 0);
+  }
+
   function mktCopy(state) {
     return {
       level: state.level,
@@ -307,7 +362,7 @@
           notes.push("poor");
           continue;
         }
-        if (mktTotal(next.holds) + qty > next.level.cap) {
+        if (mktTotal(next.holds) + qty > mktCap(next.level, next.day)) {
           notes.push("full");
           continue;
         }
@@ -656,7 +711,7 @@
       var dayNo = Math.min(state.day + 1, mktDays);
       dayEl.textContent = t("mktDayStat", { n: dayNo, total: mktDays });
       cashEl.textContent = String(state.cash);
-      cargoEl.textContent = t("mktCargoStat", { n: mktTotal(state.holds), max: state.level.cap });
+      cargoEl.textContent = t("mktCargoStat", { n: mktTotal(state.holds), max: mktCap(state.level, state.day) });
       goalEl.textContent = String(state.level.target);
       lotText.textContent = t("mktLotLabel", { n: lot });
     }
@@ -891,6 +946,16 @@
       "mktS28": "The Turnstile",
       "mktS29": "The Forced Exit",
       "mktS30": "The Bell Tolls",
+      "mktS31": "The First Shelf",
+      "mktS32": "The Growing Store",
+      "mktS33": "Room to Spare",
+      "mktS34": "The Four-Slot Morning",
+      "mktS35": "The Grand Warehouse",
+      "mktS36": "The First Ebb",
+      "mktS37": "The Narrowing",
+      "mktS38": "Shelves Going Out",
+      "mktS39": "The Vanishing Aisle",
+      "mktS40": "The Last Shelf",
       "mktIce": "Moon Ice",
       "mktGrain": "Hydro Grain",
       "mktAlloy": "Regolith Alloy",
@@ -932,8 +997,8 @@
       "mktShort": "Missed the target: {n} of {t} credits.",
       "mktBankrupt": "The storage fee due on day {n} outran your credits - the colony seizes the cargo.",
       "mktNextSeat": "Next seat unlocked.",
-      "mktAllSeats": "All thirty seats traded.",
-      "mktHint": "Arrows pick a commodity, +/- size the lot, Enter buys, Shift+Enter sells, D ends the day; positions are force-sold on day 7.",
+      "mktAllSeats": "All forty seats traded.",
+      "mktHint": "Arrows pick a commodity, +/- size the lot, Enter buys, Shift+Enter sells, D ends the day; positions are force-sold on day 7. Breathing warehouse: seats 31-40 move the shelf itself every night - outward seats grow a new row of slots by the morning, inward seats take one away, and the shelf you priced at dawn can be gone by Thursday, so size every lot against tonight's shelf, not the seat's opening one.",
       "logMoonMarket": "Banked {n} credits at the moon market",
     },
     zh: {
@@ -968,6 +1033,16 @@
       "mktS28": "十字转门",
       "mktS29": "强制离场",
       "mktS30": "收盘钟税",
+      "mktS31": "头一层货架",
+      "mktS32": "长起来的库房",
+      "mktS33": "地方宽裕",
+      "mktS34": "四格的清晨",
+      "mktS35": "大库房",
+      "mktS36": "第一次退潮",
+      "mktS37": "越收越窄",
+      "mktS38": "货架正在搬走",
+      "mktS39": "消失的过道",
+      "mktS40": "最后一层货架",
       "mktIce": "月冰",
       "mktGrain": "水培谷物",
       "mktAlloy": "月壤合金",
@@ -1009,8 +1084,8 @@
       "mktShort": "没达标：只有 {n}/{t} 信用点。",
       "mktBankrupt": "第 {n} 天的仓储费超出了你的信用点——殖民地没收了货物。",
       "mktNextSeat": "解锁下一个席位。",
-      "mktAllSeats": "三十个席位全部交易完毕。",
-      "mktHint": "方向键选商品，加减号调批量，回车买入，Shift+回车卖出，D 结束当天；第 7 天所有持仓会被强制卖出。",
+      "mktAllSeats": "四十个席位全部交易完毕。",
+      "mktHint": "方向键选商品，加减号调批量，回车买入，Shift+回车卖出，D 结束当天；第 7 天所有持仓会被强制卖出。呼吸库房：第 31-40 关每晚都在搬动货架——向外扩的席位清晨多出一排舱位，向内收的席位少掉一排，清晨看好的货架到周四可能已经不在，所以每笔批量都要按今晚的货架下注，而不是按席位开盘时的货架。",
       "logMoonMarket": "在月球市场赚到了 {n} 信用点",
     },
   });
@@ -1070,6 +1145,7 @@
   App.marketCeiling = mktCeiling;
   App.marketBand = mktBand;
   App.marketSchedule = mktSchedule;
+  App.marketCap = mktCap;
   App.marketDeal = mktDeal;
   App.marketLevels = mktLevels;
 })(window.CapitalConvert = window.CapitalConvert || {});

@@ -368,6 +368,71 @@
       momentScale: 0.86, drift: 0.125, wind: true, scoreMin: 84, behaviourMin: 27,
       frameW: 176, frameH: 130, start: { x: 208, y: 172, focus: 0.42 },
       roster: [{ sp: "otter", n: 2 }, { sp: "coot", n: 3 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 2 }] },
+    /* ------------------------------------------------------------------
+     * The storm front (pph31-pph40). The tour's `wind` has always been a
+     * reading of the pond, not a law of it - the header says so - and the
+     * storm makes it a law: every pond below carries `gust`, a dial no
+     * shipped pond has, and the wind walks the viewfinder along the water
+     * whether or not a hand is on it (pphStep drifts the frame by
+     * sin(t + windPhase) * gust, the same seeded wind phase the focus ring
+     * already drifts by). The dial is the tier's own currency and it
+     * strictly rises: 18, 21, 24, 27, 30, 33, 36, 39, 42 and 45 px a
+     * second across the ten rungs. Everything under it is the shipped
+     * ladder pushed to or past its extremes, measured rung by rung: the
+     * behaviour bar climbs 27 to 30 - two points under the coot's own
+     * moment ceiling, where rung 30 left five - the window never widens
+     * past the deep tiers' 0.85 while rung 30 deals 0.86, the ring drifts
+     * 0.13 to 0.15 against the shipped 0.125 ceiling, and the roll falls
+     * 7-7-7-6-6-6-5-5-5-5 to the last pond's five frames for four
+     * species. Every seed was chosen by the house law - at least half of
+     * the twenty-four rounds the pond actually deals (seed + round x 131)
+     * reach their own measured band (12 to 15 of 24 here, the storm end
+     * sitting right on the floor of the law) - and every band still sits
+     * on the scripted line the module proves at load: the line wins
+     * inside the roll on the tuned seed with every kept shot clearing
+     * the raised bar. The glass widens toward the end - 176 to 184 - the
+     * one mercy the storm grants, because the boat will not sit still.
+     * ------------------------------------------------------------------ */
+    { id: "pph31", labelKey: "pphZ31", seed: 17128, budget: 7, need: 4,
+      momentScale: 0.85, drift: 0.13, wind: true, gust: 18, scoreMin: 84, behaviourMin: 27,
+      frameW: 176, frameH: 130, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "coot", n: 3 }, { sp: "otter", n: 2 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 2 }] },
+    { id: "pph32", labelKey: "pphZ32", seed: 17198, budget: 7, need: 4,
+      momentScale: 0.85, drift: 0.13, wind: true, gust: 21, scoreMin: 84, behaviourMin: 27,
+      frameW: 175, frameH: 129, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "coot", n: 3 }, { sp: "otter", n: 2 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 2 }] },
+    { id: "pph33", labelKey: "pphZ33", seed: 17114, budget: 7, need: 4,
+      momentScale: 0.84, drift: 0.135, wind: true, gust: 24, scoreMin: 84, behaviourMin: 28,
+      frameW: 174, frameH: 128, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "coot", n: 3 }, { sp: "otter", n: 2 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 2 }] },
+    { id: "pph34", labelKey: "pphZ34", seed: 17198, budget: 6, need: 4,
+      momentScale: 0.84, drift: 0.135, wind: true, gust: 27, scoreMin: 84, behaviourMin: 28,
+      frameW: 173, frameH: 127, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "coot", n: 3 }, { sp: "otter", n: 2 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 2 }] },
+    { id: "pph35", labelKey: "pphZ35", seed: 17114, budget: 6, need: 4,
+      momentScale: 0.84, drift: 0.14, wind: true, gust: 30, scoreMin: 84, behaviourMin: 28,
+      frameW: 172, frameH: 126, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "coot", n: 3 }, { sp: "otter", n: 2 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 2 }] },
+    { id: "pph36", labelKey: "pphZ36", seed: 17711, budget: 6, need: 4,
+      momentScale: 0.85, drift: 0.14, wind: true, gust: 33, scoreMin: 84, behaviourMin: 29,
+      frameW: 178, frameH: 131, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "coot", n: 2 }, { sp: "otter", n: 3 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 2 }] },
+    { id: "pph37", labelKey: "pphZ37", seed: 17527, budget: 5, need: 4,
+      momentScale: 0.83, drift: 0.14, wind: true, gust: 36, scoreMin: 84, behaviourMin: 29,
+      frameW: 170, frameH: 125, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "coot", n: 3 }, { sp: "otter", n: 2 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 2 }] },
+    { id: "pph38", labelKey: "pphZ38", seed: 17711, budget: 5, need: 4,
+      momentScale: 0.85, drift: 0.145, wind: true, gust: 39, scoreMin: 84, behaviourMin: 29,
+      frameW: 180, frameH: 132, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "coot", n: 2 }, { sp: "otter", n: 3 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 2 }] },
+    { id: "pph39", labelKey: "pphZ39", seed: 17755, budget: 5, need: 4,
+      momentScale: 0.85, drift: 0.145, wind: true, gust: 42, scoreMin: 84, behaviourMin: 30,
+      frameW: 182, frameH: 133, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "coot", n: 2 }, { sp: "otter", n: 3 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 2 }] },
+    { id: "pph40", labelKey: "pphZ40", seed: 17920, budget: 5, need: 4,
+      momentScale: 0.85, drift: 0.15, wind: true, gust: 45, scoreMin: 84, behaviourMin: 30,
+      frameW: 184, frameH: 134, start: { x: 208, y: 172, focus: 0.42 },
+      roster: [{ sp: "coot", n: 2 }, { sp: "otter", n: 3 }, { sp: "warbler", n: 3 }, { sp: "heron", n: 2 }] },
   ];
 
   /* Every control is one tap of the same pure stepper, so a key press and a
@@ -724,6 +789,7 @@
     out.momentLeft = timed.open ? Math.round(Math.max(0, timed.left) * 10) / 10 : 0;
 
     /* behaviour: only the moment itself pays in full. */
+    var hard = level || state.level || null;
     out.behaviour = pphInt(pphClamp(pphBehMax * out.gate * (sp.quality || 0.8), 0, pphBehMax));
     if (isOpen) {
       why("pphRMoment", { sp: t(sp.labelKey), b: t(out.words) }, 0);
@@ -781,7 +847,6 @@
     }
 
     out.score = pphInt(pphClamp(out.behaviour + out.composition + out.timing, 0, 100));
-    var hard = level || state.level || null;
     if (hard) {
       out.behaviourShot = out.moment && out.behaviour >= (hard.behaviourMin || 22) && out.score >= (hard.scoreMin || 50);
     }
@@ -852,6 +917,16 @@
     next.time = state.time + step;
     if (next.drift > 0) {
       next.focus = pphClamp(next.focus + Math.cos((next.time + next.windPhase) * 0.9) * next.drift * step, 0, 1);
+    }
+    /* The storm tier's gust: on these ponds the wind walks the boat itself,
+     * so the viewfinder drifts along the water whether or not a hand is on
+     * it - the same seeded wind phase the focus ring already drifts by, at
+     * the pond's own `gust` speed. No shipped pond carries `gust`, so the
+     * dial is inert for every one of them. */
+    if (next.level && next.level.gust) {
+      next.frame.x = pphClamp(
+        next.frame.x + Math.sin((next.time + next.windPhase) * 0.7) * next.level.gust * step,
+        next.frame.w / 2, pphW - next.frame.w / 2);
     }
     return next;
   }
@@ -2154,8 +2229,9 @@
     },
   });
 
-  /* The last ponds carry their own names: addStrings only fills keys i18n.js
-   * does not already hold, so the picker never prints a raw key. */
+  /* The last ponds and the storm front carry their own names: addStrings only
+   * fills keys i18n.js does not already hold, so the picker never prints a
+   * raw key. */
   App.addStrings({
     en: {
       "pphZ25": "The Single Flock",
@@ -2164,6 +2240,16 @@
       "pphZ28": "The Last Exposure",
       "pphZ29": "The High Bar",
       "pphZ30": "The Still Hour",
+      "pphZ31": "The First Gust",
+      "pphZ32": "The Rising Wind",
+      "pphZ33": "White Horses",
+      "pphZ34": "The Squall",
+      "pphZ35": "The Rocking Boat",
+      "pphZ36": "Reedtop Gusts",
+      "pphZ37": "The Gale",
+      "pphZ38": "Storm Glass",
+      "pphZ39": "The Whitecaps",
+      "pphZ40": "The Storm's Hour",
     },
     zh: {
       "pphZ25": "\u6ee1\u5858\u4e00\u65cf",
@@ -2172,6 +2258,16 @@
       "pphZ28": "\u672b\u5f20\u5e95\u7247",
       "pphZ29": "\u9ad8\u95e8\u69db",
       "pphZ30": "\u9759\u6c34\u4e00\u523b",
+      "pphZ31": "\u5934\u4e00\u9635\u98ce",
+      "pphZ32": "\u98ce\u8d77\u4e86",
+      "pphZ33": "\u767d\u6d6a\u5934",
+      "pphZ34": "\u98d1\u98ce",
+      "pphZ35": "\u8239\u8eab\u6447\u6643",
+      "pphZ36": "\u82c7\u68a2\u98ce",
+      "pphZ37": "\u5f3a\u98ce",
+      "pphZ38": "\u98ce\u66b4\u74f6",
+      "pphZ39": "\u6ee1\u5858\u767d\u6d6a",
+      "pphZ40": "\u98ce\u66b4\u7684\u65f6\u523b",
     },
   });
 
@@ -2205,14 +2301,16 @@
         "Cost: a shutter that fires outside the moment spooks everything in the frame, and a spooked creature relocates onto a reedier line with a shorter window for the rest of the outing.",
         "Read it: the state line and the contact sheet print the same words and digits the canvas shows, so you can play it with the screen off.",
         "Scoring: the album is the sum of the best shot per species, with frames left over as the tie-break, and the star bands are measured from a scripted best play.",
+        "Storm: the last ten ponds put the wind to work - the viewfinder drifts along the water on its own (gust, rising pond by pond), the behaviour bar climbs to 30, the ring runs faster than any pond before, and the roll falls to five frames for four species. Pan early, shoot on the swing.",
       ],
       zh: [
         "目标：在胶卷拍完之前成册——按要求让若干个物种各留下一张行为照。",
         "操作：方向键或拖拽平移取景框，Z 与 X 转对焦环，空格切换精细对焦，U 把对焦环吸附到主体上，回车曝光一张。",
         "规则：一张照片有三个数字——行为、构图、时机；只有被预告的“精彩时刻”才付满行为分，每只生灵头上都有倒数圈。",
         "代价：错过时刻的快门会惊起框里所有生灵，受惊的那只此后改走更藏芦苇的路线，窗口也更短，整次外出都回不来。",
-        "读法：状态行与样张表把画布上的字和数字原样写出来，不看画面也能拍。",
-        "计分：相册分是每个物种最好一张之和，剩余张数作平手参照；星级门槛由一条编排好的最佳走线实测得出。",
+        "\u8bfb\u6cd5\uff1a\u72b6\u6001\u884c\u4e0e\u6837\u5f20\u8868\u628a\u753b\u5e03\u4e0a\u7684\u5b57\u548c\u6570\u5b57\u539f\u6837\u5199\u51fa\u6765\uff0c\u4e0d\u770b\u753b\u9762\u4e5f\u80fd\u62cd\u3002",
+        "\u8ba1\u5206\uff1a\u76f8\u518c\u5206\u662f\u6bcf\u4e2a\u7269\u79cd\u6700\u597d\u4e00\u5f20\u4e4b\u548c\uff0c\u5269\u4f59\u5f20\u6570\u4f5c\u5e73\u624b\u53c2\u7167\uff1b\u661f\u7ea7\u95e8\u69db\u7531\u4e00\u6761\u7f16\u6392\u597d\u7684\u6700\u4f73\u8d70\u7ebf\u5b9e\u6d4b\u5f97\u51fa\u3002",
+        "\u98ce\u66b4\uff1a\u6700\u540e\u5341\u4e2a\u6c34\u5858\u8ba9\u98ce\u771f\u6b63\u5e72\u8d77\u6d3b\u6765\u2014\u2014\u53d6\u666f\u6846\u4f1a\u81ea\u5df1\u6cbf\u7740\u6c34\u9762\u6f02\uff08gust\uff0c\u4e00\u5858\u6bd4\u4e00\u5858\u5927\uff09\uff0c\u884c\u4e3a\u95e8\u69db\u6da8\u5230 30\uff0c\u5bf9\u7126\u73af\u8dd1\u5f97\u6bd4\u4ee5\u524d\u4efb\u4f55\u4e00\u5858\u90fd\u5feb\uff0c\u80f6\u5377\u964d\u5230\u56db\u4e2a\u7269\u79cd\u4e94\u5f20\u3002\u65e9\u70b9\u5e73\u79fb\uff0c\u8d81\u6446\u52a8\u4e2d\u51fa\u624b\u3002",
       ],
     },
   });

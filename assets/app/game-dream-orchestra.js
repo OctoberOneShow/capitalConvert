@@ -172,6 +172,61 @@
       beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
       rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 4, bassGap: 3,
         echoGap: 2, codaFrom: 8, codaStrRun: 1, hushFrom: 10, hushTo: 10 }, stepMs: 140 },
+    /* Rungs 31-40 are the rationed bar, and its dial is new: a bar ration,
+     * the total rings a voice may spend in the whole bar (bassCap, strCap,
+     * bellCap - the cap sentence the panel has shipped all along). Every
+     * rung keeps the summit's own load - the full sixteen-beat bar, rest
+     * zero, the 140 ms floor, and the dealt line at fifteen notes, d30's
+     * own count - and adds the ration on top, walking one dial tighter per
+     * rung and never loosening one: the caps arrive at the voices'
+     * unrationed appetite (7/5/6), the bell's share walks six to three, the
+     * run caps close to d29's all-ones, the bell's wait walks to five, and
+     * the closer leashes both rhythm voices between steps, where the bar
+     * spends its every allowed ring - 7/5/3, fifteen notes, no slack. Each
+     * rung's ration is measured on its dealt line, not the dials: the gate
+     * re-deals the same seed without the ration and the line it draws breaks
+     * the shipped law with the cap's own violation, so every ration binds.
+     * No shipped piece names a bar ration; the fields are inert for d1-d30. */
+    { id: "d31", labelKey: "drmP31", seed: 6311, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 3,
+        bassCap: 7, strCap: 5, bellCap: 6 }, stepMs: 140 },
+    { id: "d32", labelKey: "drmP32", seed: 6312, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 3,
+        bassCap: 7, strCap: 5, bellCap: 5 }, stepMs: 140 },
+    { id: "d33", labelKey: "drmP33", seed: 6313, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 4,
+        bassCap: 7, strCap: 5, bellCap: 5 }, stepMs: 140 },
+    { id: "d34", labelKey: "drmP34", seed: 6314, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 4,
+        bassCap: 7, strCap: 5, bellCap: 4 }, stepMs: 140 },
+    { id: "d35", labelKey: "drmP35", seed: 6315, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 2, strRun: 2, bellRun: 1, bellGap: 4,
+        bassCap: 7, strCap: 5, bellCap: 3 }, stepMs: 140 },
+    { id: "d36", labelKey: "drmP36", seed: 6316, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 2, strRun: 1, bellRun: 1, bellGap: 4,
+        bassCap: 7, strCap: 5, bellCap: 3 }, stepMs: 140 },
+    { id: "d37", labelKey: "drmP37", seed: 6317, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 1, strRun: 1, bellRun: 1, bellGap: 4,
+        bassCap: 7, strCap: 5, bellCap: 3 }, stepMs: 140 },
+    { id: "d38", labelKey: "drmP38", seed: 6318, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 1, strRun: 1, bellRun: 1, bellGap: 5,
+        bassCap: 7, strCap: 5, bellCap: 3 }, stepMs: 140 },
+    { id: "d39", labelKey: "drmP39", seed: 6319, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 1, strRun: 1, bellRun: 1, bellGap: 5,
+        bassCap: 7, strCap: 5, bellCap: 3, strGap: 2 }, stepMs: 140 },
+    { id: "d40", labelKey: "drmP40", seed: 6320, voices: ["bass", "str", "bell"],
+      beats: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+      rest: 0, rules: { bassRun: 1, strRun: 1, bellRun: 1, bellGap: 5,
+        bassCap: 7, strCap: 5, bellCap: 3, strGap: 2, bassGap: 2 }, stepMs: 140 },
   ];
 
   function mulberry32(seed) {
@@ -245,6 +300,18 @@
     return rules.strGap || 0;
   }
 
+  /* The bar ration: a voice may ring only so many times in the whole bar.
+   * A zero/absent value leaves a voice unrationed. */
+  function drmCapOf(rules, id) {
+    if (id === "bass") {
+      return rules.bassCap || 0;
+    }
+    if (id === "str") {
+      return rules.strCap || 0;
+    }
+    return rules.bellCap || 0;
+  }
+
   function drmHushed(rules, step) {
     return rules.hushFrom != null && rules.hushTo != null &&
       step >= rules.hushFrom && step <= rules.hushTo;
@@ -258,6 +325,7 @@
     var target = [];
     var last = {};
     var run = {};
+    var total = {};
     var i, j;
     for (i = 0; i < drmSteps; i += 1) {
       target.push(null);
@@ -265,6 +333,7 @@
     for (i = 0; i < level.voices.length; i += 1) {
       last[level.voices[i]] = -99;
       run[level.voices[i]] = 0;
+      total[level.voices[i]] = 0;
     }
     for (j = 0; j < level.beats.length; j += 1) {
       var step = level.beats[j];
@@ -287,6 +356,11 @@
             last.str !== undefined && step - last.str < level.rules.echoGap) {
           continue;
         }
+        /* A voice that has spent its ration sits the beat out. */
+        var cap = drmCapOf(level.rules, id);
+        if (cap && total[id] >= cap) {
+          continue;
+        }
         eligible.push(id);
       }
       var mustPlace = level.beats.length - j <= 4 - drmCountTarget(target);
@@ -302,6 +376,7 @@
       var row = voice.lo + Math.floor(rng() * span) % Math.max(1, span);
       target[step] = { v: voiceId, r: row };
       run[voiceId] = last[voiceId] === step - 1 ? run[voiceId] + 1 : 1;
+      total[voiceId] += 1;
       last[voiceId] = step;
     }
     return target;
@@ -367,11 +442,15 @@
       var runLen = 0;
       var lastAt = -99;
       var gap = drmGapOf(rules, voice.id);
+      var total = 0;
+      var cap = drmCapOf(rules, voice.id);
+      var capStruck = false;
       for (var s = 0; s < drmSteps; s += 1) {
         if (line[s] === -1) {
           runLen = 0;
           continue;
         }
+        total += 1;
         runLen = s === lastAt + 1 ? runLen + 1 : 1;
         var limit = drmRunLimit(rules, voice.id, s);
         if (runLen > limit) {
@@ -393,6 +472,12 @@
         }
         if (drmHushed(rules, s)) {
           out.push({ voice: voice.id, step: s, kind: "hush", n: 0 });
+        }
+        /* The ration counts the whole bar, not the run: the sentence lands on
+         * the first note that spends the voice over its cap. */
+        if (cap && !capStruck && total > cap) {
+          out.push({ voice: voice.id, step: s, kind: "cap", n: cap });
+          capStruck = true;
         }
         lastAt = s;
       }
@@ -1084,6 +1169,16 @@
       "drmP28": "The Silent Core",
       "drmP29": "The Mirror Law",
       "drmP30": "Every Law at Once",
+      "drmP31": "The Ration",
+      "drmP32": "The Bell's Allowance",
+      "drmP33": "The Longer Wait",
+      "drmP34": "The Fourth Ring",
+      "drmP35": "The Third Ring",
+      "drmP36": "The Single Steps",
+      "drmP37": "The Single Bass",
+      "drmP38": "The Five-Step Wait",
+      "drmP39": "The Held Breath",
+      "drmP40": "The Spent Bar",
       "drmVBass": "Bass",
       "drmVStr": "Strings",
       "drmVBell": "Bells",
@@ -1118,7 +1213,7 @@
       "drmWon": "{name} matches every marked beat with {n} notes - {s} stars!",
       "drmPaused": "Playback stopped while you were away; the score is untouched.",
       "drmNextPiece": "Next piece unlocked.",
-      "drmAllPieces": "All thirty pieces scored.",
+      "drmAllPieces": "All forty pieces scored.",
       "drmHint": "Fewer notes earn more stars: place only what the target asks for. The playhead reads as text, so the puzzle works on mute.",
       "logDreamOrchestra": "Scored {name} with {n} notes",
     },
@@ -1154,6 +1249,16 @@
       "drmP28": "静默核心",
       "drmP29": "镜像法则",
       "drmP30": "万律齐鸣",
+      "drmP31": "配给之律",
+      "drmP32": "钟之份额",
+      "drmP33": "更长等候",
+      "drmP34": "四响之限",
+      "drmP35": "三响之限",
+      "drmP36": "独步弦行",
+      "drmP37": "单步低音",
+      "drmP38": "五步之候",
+      "drmP39": "弦间屏息",
+      "drmP40": "用尽之节",
       "drmVBass": "低音",
       "drmVStr": "弦乐",
       "drmVBell": "钟琴",
@@ -1188,7 +1293,7 @@
       "drmWon": "{name}全部重拍命中，用了 {n} 个音符——获得 {s} 星！",
       "drmPaused": "离开时已停止播放；你的乐谱原封不动。",
       "drmNextPiece": "解锁下一首乐曲。",
-      "drmAllPieces": "三十首乐曲全部编完。",
+      "drmAllPieces": "四十首乐曲全部编完。",
       "drmHint": "音符越少星越多：只放目标要求的音。播放头有文字显示，静音也能解谜。",
       "logDreamOrchestra": "为{name}编了 {n} 个音符",
     },

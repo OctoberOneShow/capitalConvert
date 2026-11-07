@@ -27,19 +27,27 @@
  * and the same greedy line must fall short on every deal. The derived bands
  * have to fall strictly from the three-star line to the target inside each
  * rung, the price per move has to climb through the six and open above p24,
- * and p30 has to end the ladder as its biggest target and heaviest demand. */
+ * and p30 has to end the ladder as its biggest target and heaviest demand.
+ *
+ * The sprint tier p31-p40 runs the same proofs against the budget: every
+ * card gives fewer moves than the Geyser's eight - the shortest budgets
+ * the ladder ever dealt - on the triad pour, the cut still forces the
+ * classic six inks on a copy, and the price per move opens past the
+ * Watershed's 543 and climbs to the campaign record on p40. */
 module.exports = function gate(ctx) {
   const { App, env, check } = ctx;
   const levels = App.cascadeLevels;
   const tierIds = ["p21", "p22", "p23", "p24"];
   const summitIds = ["p25", "p26", "p27", "p28", "p29", "p30"];
+  const sprintIds = ["p31", "p32", "p33", "p34", "p35",
+    "p36", "p37", "p38", "p39", "p40"];
   const byId = (id) => levels.find((level) => level.id === id);
 
   /* ---- ladder shape ---- */
   check("game-ink-cascade", "the ladder holds at least twenty-four pools",
     levels.length >= 24, String(levels.length));
-  check("game-ink-cascade", "the ladder holds all thirty pools",
-    levels.length >= 30, String(levels.length));
+  check("game-ink-cascade", "the ladder holds all forty pools",
+    levels.length >= 40, String(levels.length));
   check("game-ink-cascade", "every pool id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -49,6 +57,9 @@ module.exports = function gate(ctx) {
   const missingSummit = summitIds.filter((id) => !byId(id));
   check("game-ink-cascade", "the summit tier p25-p30 is present",
     missingSummit.length === 0, missingSummit.join(","));
+  const missingSprint = sprintIds.filter((id) => !byId(id));
+  check("game-ink-cascade", "the sprint tier p31-p40 is present",
+    missingSprint.length === 0, missingSprint.join(","));
 
   /* ---- stage the real panel in the stub DOM ---- */
   if (env.timers && env.timers.advance) env.timers.advance(10000);
@@ -474,14 +485,126 @@ module.exports = function gate(ctx) {
       summitDemands.map((n) => n.toFixed(0)).join(" -> ") + " vs " + fittedDemand.toFixed(0) + ")",
     summitDemands.every((v, i) => (i === 0 || v > summitDemands[i - 1]) && v > fittedDemand),
     summitDemands.join("/") + " vs " + fittedDemand);
-  check("game-ink-cascade", "p30 is the summit: the biggest target and the heaviest demand in the ladder",
-    byId("p30").target === Math.max.apply(null, levels.map((level) => level.target)) &&
+  check("game-ink-cascade", "p30 closes the pre-sprint ladder: the biggest target and the heaviest demand shipped before the sprint",
+    byId("p30").target === Math.max.apply(null, levels.slice(0, 30).map((level) => level.target)) &&
       summitDemands[summitDemands.length - 1] ===
-        Math.max.apply(null, levels.map((level) => level.target / level.moves)),
+        Math.max.apply(null, levels.slice(0, 30).map((level) => level.target / level.moves)),
     "target " + byId("p30").target + ", demand " +
       summitDemands[summitDemands.length - 1].toFixed(0));
   check("game-ink-cascade", "every summit cut left its rung unbeatable in the advertised shape",
     summitProofs.every((p) => p.endsWith(":ok")), summitProofs.join(" "));
+
+  /* ---- the sprint tier: the same proofs against the budget ---- */
+  const sprintProofs = [];
+  for (const id of sprintIds) {
+    const level = byId(id);
+    const deals = [];
+    for (let k = 1; k <= 6; k += 1) deals.push(playDeal(id, k * 7919, "greedy"));
+    const clears = deals.filter((d) => d.cleared).length;
+    const threeStars = deals.filter((d) => d.stars === 3).length;
+    check("game-ink-cascade", id + ": the greedy line clears most seeded deals and lands the top band",
+      deals.every((d) => d.selected) && clears >= 4 && threeStars >= 1,
+      "clears " + clears + "/6, three-star " + threeStars + " " +
+        JSON.stringify(deals.map((d) => [d.score, d.stars])));
+
+    const ordinary = [];
+    for (let k = 1; k <= 6; k += 1) ordinary.push(playDeal(id, k * 7919, "one"));
+    const ordClears = ordinary.filter((d) => d.cleared).length;
+    const ordStars = ordinary.map((d) => d.stars);
+    check("game-ink-cascade", id + ": the ordinary one-ply hand still clears inside the bands",
+      ordClears >= 2 && ordStars.every((stars) => stars >= 0 && stars <= 3),
+      "clears " + ordClears + "/6 stars " + JSON.stringify(ordStars));
+
+    const idle = seeded(97, () => {
+      sel.value = id;
+      env.dispatch(sel, "change");
+      for (let tick = 0; tick < 40; tick += 1) {
+        env.timers.advance(100);
+        if (env.timers.pendingTimeouts() === 0) break;
+      }
+      return {
+        score: env.byId("inkScore").textContent,
+        text: resultEl.textContent,
+        moves: env.byId("inkMoves").textContent,
+      };
+    });
+    const wild = [];
+    for (let k = 1; k <= 5; k += 1) wild.push(playDeal(id, k * 6271, "random"));
+    const wildMax = Math.max.apply(null, wild.map((d) => d.score));
+    const greedyMax = Math.max.apply(null, deals.map((d) => d.score));
+    check("game-ink-cascade", id + ": doing nothing never scores and the searched line outscores every random hand",
+      idle.score === "0/" + level.target && !/Cleared /.test(idle.text) &&
+        wildMax < greedyMax,
+      "idle " + idle.score + " wild max " + wildMax + " vs greedy " + greedyMax);
+
+    /* The pour is load-bearing, cut on a copy: the classic six inks cannot
+     * feed a sprint card's price on any seeded deal. */
+    const index = levels.indexOf(level);
+    const clone = JSON.parse(JSON.stringify(level));
+    clone.colors = 6;
+    levels[index] = clone;
+    const cutDeals = [];
+    for (let k = 1; k <= 4; k += 1) cutDeals.push(playDeal(id, k * 7919, "greedy"));
+    levels[index] = level;
+    sel.value = id;
+    env.dispatch(sel, "change");
+    const cutClears = cutDeals.filter((d) => d.cleared).length;
+    sprintProofs.push(id + (cutClears === 0 ? ":ok" : ":" + cutClears + "/4"));
+    check("game-ink-cascade", id + " (pour cut to six inks on a copy): the same greedy line cannot reach the target",
+      cutClears === 0 && cutDeals.every((d) => d.selected),
+      "cut clears " + cutClears + "/4 " + JSON.stringify(cutDeals.map((d) => [d.score, d.target])));
+
+    /* The bands are the engine's own derivation, not authored fields, and
+     * they fall strictly from the three-star line down to the target. */
+    const bands = [
+      Math.round(level.target * 1.4),
+      Math.round(level.target * 1.2),
+      level.target,
+    ];
+    check("game-ink-cascade", id + " carries no authored star band and its bands fall strictly",
+      level.starBands === undefined && level.bands === undefined && level.stars === undefined &&
+        bands[0] > bands[1] && bands[1] > bands[2],
+      JSON.stringify(Object.keys(level)) + " bands " + bands.join("/"));
+
+    /* The clear survived the cut and the idle hand. */
+    check("game-ink-cascade", id + " stays cleared in the campaign save",
+      readSave().cleared[id] && readSave().cleared[id].stars >= 1,
+      JSON.stringify(readSave().cleared[id] || null));
+
+    /* The next sprint rung unlocks only through the clear just recorded. */
+    const at = sprintIds.indexOf(id);
+    if (at + 1 < sprintIds.length) {
+      sel.value = sprintIds[at + 1];
+      env.dispatch(sel, "change");
+      check("game-ink-cascade", sprintIds[at + 1] + " unlocks once " + id + " is cleared",
+        sel.value === sprintIds[at + 1], sel.value);
+    }
+  }
+
+  /* The sprint is priced on the card's own currency: the price per move
+   * opens past the summit's heaviest and climbs strictly to the campaign
+   * record on p40, and every budget is one the ladder had never given. */
+  const p30 = byId("p30");
+  const summitPeakDemand = p30.target / p30.moves;
+  const sprintDemands = sprintIds.map((id) => byId(id).target / byId(id).moves);
+  check("game-ink-cascade", "the sprint's demand per move opens above the Watershed's " +
+      summitPeakDemand.toFixed(0) + " and climbs strictly (" +
+      sprintDemands.map((n) => n.toFixed(0)).join(" -> ") + ")",
+    sprintDemands[0] > summitPeakDemand &&
+      sprintDemands.every((v, i) => i === 0 || v > sprintDemands[i - 1]),
+    sprintDemands.join("/") + " vs summit " + summitPeakDemand.toFixed(0));
+  check("game-ink-cascade", "every sprint budget is one the ladder had never given, down to p40's floor",
+    sprintIds.every((id) => byId(id).moves < Math.min.apply(null,
+      levels.slice(0, 30).map((level) => level.moves))) &&
+      byId("p40").moves === Math.min.apply(null, levels.map((level) => level.moves)),
+    sprintIds.map((id) => byId(id).moves).join("/") + " vs shipped floor " +
+      Math.min.apply(null, levels.slice(0, 30).map((level) => level.moves)));
+  check("game-ink-cascade", "p40 ends the ladder as its heaviest demand per move",
+    sprintDemands[sprintDemands.length - 1] ===
+      Math.max.apply(null, levels.map((level) => level.target / level.moves)),
+    "p40 " + sprintDemands[sprintDemands.length - 1].toFixed(0));
+  check("game-ink-cascade", "every sprint cut left its rung unbeatable in the advertised shape",
+    sprintProofs.every((p) => p.endsWith(":ok")), sprintProofs.join(" "));
 
   /* Copy travels with the module. */
   const copyKeys = ["inkL21", "inkL22", "inkL23", "inkL24"];
@@ -500,4 +623,14 @@ module.exports = function gate(ctx) {
     !App.t(key) || App.t(key) === key);
   check("game-ink-cascade", "the six summit names resolve in both languages",
     summitCopyProblems.length === 0, summitCopyProblems.join(","));
+
+  /* Copy travels with the module. */
+  const sprintKeys = ["inkL31", "inkL32", "inkL33", "inkL34", "inkL35",
+    "inkL36", "inkL37", "inkL38", "inkL39", "inkL40"];
+  const sprintCopyProblems = sprintKeys.filter((key) =>
+    !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
+    !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
+    !App.t(key) || App.t(key) === key);
+  check("game-ink-cascade", "the ten sprint names resolve in both languages",
+    sprintCopyProblems.length === 0, sprintCopyProblems.join(","));
 };

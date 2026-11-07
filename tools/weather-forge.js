@@ -358,6 +358,100 @@ const DEEP_SEASONS = [
   },
 ];
 
+/* The walled coast (w41-w44). The crowded decade ended on eleven parishes
+ * at forty loom points, and every season it shipped drew from a fully open
+ * sea column - all eight rows kept a live water cell at x=0. These four
+ * close the coast: ridge runs down onto the open column itself, so whole
+ * rows lose their sea mouth and the canals have to share the mouths that
+ * remain. The walled rows keep no lake, so their parishes - all huddled
+ * within two cells of the wall - drink only from branch arrows pushed out
+ * of the open rows beside them; that is what makes the wall load-bearing
+ * rather than scenery. The mouths shrink 6 -> 5 -> 4 -> 3 across the tier,
+ * the parishes climb past the decade's eleven, and each weave costs more
+ * loom points than the shipped capstone's forty. Each brief carries the
+ * weave that was proven for it, so the forge re-proves and re-prunes
+ * instead of re-searching, and the shipped points sit within two of the
+ * weave's own spend. */
+const COAST_SEASONS = [
+  {
+    id: "w41", points: 43, ticks: 20, width: 14,
+    cfg: { source: 8, lakeSource: 4 },
+    ridge: [spot(0, 3), spot(0, 6)],
+    lake: [spot(9, 1), spot(7, 5)],
+    villages: [
+      village(5, 0), village(2, 1), village(8, 1), village(7, 2),
+      village(1, 3), village(2, 4), village(7, 4), village(2, 5),
+      village(6, 5), village(2, 6), village(7, 7),
+    ],
+    plan: [
+      wind(0, 0), wind(1, 0), wind(2, 0), wind(3, 0),
+      wind(4, 0), wind(0, 1), wind(1, 1), wind(4, 1),
+      wind(5, 1), wind(6, 1), wind(7, 1), wind(0, 2),
+      wind(1, 2, 1), wind(3, 2), wind(4, 2), wind(5, 2),
+      wind(6, 2), wind(0, 4), wind(1, 4), wind(4, 4, 1),
+      wind(5, 4), wind(6, 4), wind(0, 5), wind(1, 5),
+      wind(3, 5), wind(4, 5), wind(5, 5), wind(1, 6),
+      wind(0, 7), wind(1, 7, 3), wind(4, 7), wind(5, 7),
+      wind(6, 7), wind(5, 6, 1), pump(7, 5), wind(6, 0, 2),
+      shade(8, 1), shade(7, 2), shade(7, 7), shade(6, 5),
+    ],
+  },
+  {
+    id: "w42", points: 28, ticks: 20, width: 14,
+    cfg: { source: 8, lakeSource: 2.5 },
+    ridge: [spot(0, 1), spot(0, 4), spot(0, 6)],
+    lake: [spot(9, 2), spot(8, 5), spot(9, 7)],
+    villages: [
+      village(5, 0), village(1, 1), village(2, 2), village(8, 2),
+      village(5, 3), village(6, 3), village(1, 4), village(2, 5),
+      village(9, 5), village(1, 6), village(3, 7), village(8, 7),
+    ],
+    plan: [
+      wind(0, 0), wind(1, 0), wind(2, 0), wind(3, 0), wind(4, 0),
+      wind(0, 2), wind(1, 2, 3), shade(2, 2), wind(3, 2, 2), wind(9, 2, 2),
+      wind(0, 3), wind(1, 3), wind(2, 3), wind(3, 3), wind(4, 3), shade(6, 3),
+      wind(0, 5), wind(1, 5, 3), shade(2, 5), wind(3, 5, 2), wind(8, 5, 0),
+      wind(0, 7), wind(1, 7, 3), wind(2, 7), shade(3, 7), wind(9, 7, 2),
+    ],
+  },
+  {
+    id: "w43", points: 25, ticks: 20, width: 14,
+    cfg: { source: 8, lakeSource: 2.5 },
+    ridge: [spot(0, 1), spot(0, 3), spot(0, 5), spot(0, 7)],
+    lake: [spot(9, 2), spot(8, 4), spot(8, 6)],
+    villages: [
+      village(4, 0), village(5, 0), village(9, 0), village(2, 2),
+      village(8, 2), village(1, 1), village(1, 3), village(2, 4),
+      village(7, 4), village(1, 5), village(7, 6), village(2, 7),
+    ],
+    plan: [
+      wind(0, 0), wind(1, 0), wind(2, 0), wind(3, 0), shade(5, 0),
+      wind(6, 0), wind(7, 0), wind(8, 0), shade(9, 0),
+      wind(0, 2), wind(1, 2, 3), shade(2, 2), wind(3, 2, 2), wind(9, 2, 2),
+      wind(0, 4), wind(1, 4, 3), shade(2, 4), wind(3, 4, 2), wind(8, 4, 2),
+      wind(0, 6), wind(1, 6, 3), wind(2, 6, 1), wind(8, 6, 2), shade(2, 7),
+    ],
+  },
+  {
+    id: "w44", points: 21, ticks: 20, width: 14,
+    cfg: { source: 8, lakeSource: 2.5, rainAt: 54, dump: 0.5, floodLimit: 70, floodWeight: 3 },
+    ridge: [spot(0, 1), spot(0, 3), spot(0, 4), spot(0, 6), spot(0, 7)],
+    lake: [spot(2, 5), spot(4, 5), spot(8, 5), spot(9, 2)],
+    villages: [
+      village(5, 0), village(8, 0), village(3, 2), village(8, 2),
+      village(5, 5), village(7, 5), village(9, 5), village(1, 1),
+      village(1, 3), village(2, 4), village(4, 4), village(1, 6),
+    ],
+    plan: [
+      wind(0, 0), wind(1, 0, 1), wind(4, 0), shade(5, 0),
+      wind(6, 0), wind(7, 0), shade(8, 0),
+      wind(0, 2), wind(1, 2, 1), wind(2, 2), shade(3, 2), wind(9, 2, 2),
+      wind(0, 5), wind(1, 5, 1), wind(2, 5, 3), wind(4, 5, 3),
+      shade(5, 5), wind(6, 5, 2), wind(8, 5, 2), shade(9, 5),
+    ],
+  },
+];
+
 function cellsOf(level) {
   const taken = {};
   (level.ridge || []).forEach((cell) => {
@@ -456,16 +550,23 @@ function candidateCells(level, plan) {
 }
 
 /* The seed is the canal every player would draw first: from the open sea along
- * the settlement's own row, one arrow per cell, skipping mountains. Two
- * settlements in a row share one canal, exactly as in the shipped seasons. */
+ * the settlement's own row, one arrow per cell, skipping mountains - and
+ * skipping the parishes themselves, because an arrow parked on a settlement
+ * shoves its own rain away and the village never fills. Two settlements in a
+ * row share one canal, exactly as in the shipped seasons; the one farther
+ * inland waits for the search to shade it or feed it from a lake. */
 function seedPlan(level) {
   const ridge = cellsOf(level);
+  const home = {};
+  level.villages.forEach((v) => {
+    home[v.x + "," + v.y] = true;
+  });
   const used = {};
   const plan = [];
   level.villages.forEach((v) => {
     for (let x = 0; x < v.x; x += 1) {
       const key = x + "," + v.y;
-      if (ridge[key] || used[key]) continue;
+      if (ridge[key] || used[key] || home[key]) continue;
       used[key] = true;
       plan.push({ x: x, y: v.y, kind: "w", dir: 0 });
     }
@@ -503,7 +604,10 @@ function freeDeficit(level, plan) {
 function sow(level) {
   let plan = seedPlan(level);
   let best = freeDeficit(level, plan);
-  for (let round = 0; round < 40 && best > -90; round += 1) {
+  /* The decade and the coast crowd twelve parishes onto one map, and a canal
+   * is no progress at all until its last cell lands, so the sow gets enough
+   * rounds to finish the canals it starts. */
+  for (let round = 0; round < 110 && best > 0; round += 1) {
     let pick = null;
     let pickScore = best;
     const moves = [];
@@ -541,7 +645,7 @@ function sow(level) {
 function weave(level, initPlan) {
   let plan = initPlan && initPlan.length ? initPlan.slice() : seedPlan(level);
   let best = deficit(level, plan);
-  for (let round = 0; round < 60 && best > 0; round += 1) {
+  for (let round = 0; round < 150 && best > 0; round += 1) {
     let pick = null;
     let pickScore = best;
     const moves = [];
@@ -623,14 +727,20 @@ function prune(level, plan) {
   return current;
 }
 
-if (process.argv.includes("--forge") || process.argv.includes("--summit") || process.argv.includes("--deep")) {
-  /* --summit weaves only the far-ridge seasons (w25-w30), and --deep the
-   * crowded decade (w31-w40), so a tier can be iterated without re-running
-   * the shipped briefs ahead of it. An optional id after --deep weaves one
-   * season on its own: node tools/weather-forge.js --deep w35. */
+if (process.argv.includes("--forge") || process.argv.includes("--summit") || process.argv.includes("--deep") || process.argv.includes("--coast")) {
+  /* --summit weaves only the far-ridge seasons (w25-w30), --deep the
+   * crowded decade (w31-w40), and --coast the walled coast (w41-w44), so a
+   * tier can be iterated without re-running the shipped briefs ahead of it.
+   * An optional id after a tier flag weaves one season on its own:
+   * node tools/weather-forge.js --deep w35. */
   const wlkSummitIds = ["w25", "w26", "w27", "w28", "w29", "w30"];
+  const wlkCoastArg = process.argv[process.argv.indexOf("--coast") + 1];
   const wlkDeepArg = process.argv[process.argv.indexOf("--deep") + 1];
-  const wlkBriefs = process.argv.includes("--deep")
+  const wlkBriefs = process.argv.includes("--coast")
+    ? (wlkCoastArg && !wlkCoastArg.startsWith("--")
+      ? COAST_SEASONS.filter((season) => season.id === wlkCoastArg)
+      : COAST_SEASONS)
+    : process.argv.includes("--deep")
     ? (wlkDeepArg && !wlkDeepArg.startsWith("--")
       ? DEEP_SEASONS.filter((season) => season.id === wlkDeepArg)
       : DEEP_SEASONS)
@@ -641,8 +751,17 @@ if (process.argv.includes("--forge") || process.argv.includes("--summit") || pro
     /* Weave and re-window until the two agree: the windows say what counts as
      * a harvest, the weave is aimed at them, and each pass re-aims both at the
      * season the other one just produced. A season that ships an authored
-     * weave starts from it - the forge then only re-proves it. */
-    let plan = season.plan ? season.plan.slice() : sow(season);
+     * weave starts from it - the forge then only re-proves it.
+     *
+     * A brief with no authored weave is sown against a fatter purse first:
+     * if the sow runs out of points mid-canal, the windows get cut around a
+     * dry settlement and the search then reads real rain as a miss - the dry
+     * line is a hard gate, so the map has to be watered before the windows
+     * exist. The weave and the pruner trim the weave back to the shipped
+     * budget afterwards. */
+    let plan = season.plan
+      ? season.plan.slice()
+      : sow(Object.assign({}, season, { points: season.points + 30 }));
     if (!Array.isArray(plan)) throw new Error(season.id + " sow returned " + typeof plan);
     let level = window(Object.assign({}, season, { plan: plan }), season.width / 2);
     plan = weave(level, plan).plan;
@@ -651,11 +770,12 @@ if (process.argv.includes("--forge") || process.argv.includes("--summit") || pro
       season.width / 2,
     );
     plan = weave(level, plan).plan;
-    /* The crowded decade ships pruned weaves: re-window off the current plan,
-     * drop every tool the season clears without, and repeat until the windows
-     * and the weave stop moving - the plan that ships is load-bearing down to
-     * its last arrow against the windows that ship beside it. */
-    if (process.argv.includes("--deep")) {
+    /* The crowded decade and the coast ship pruned weaves: re-window off the
+     * current plan, drop every tool the season clears without, and repeat
+     * until the windows and the weave stop moving - the plan that ships is
+     * load-bearing down to its last arrow against the windows that ship
+     * beside it. */
+    if (process.argv.includes("--deep") || process.argv.includes("--coast")) {
       for (let pass = 0; pass < 6; pass += 1) {
         const wlkRe = window(Object.assign({}, season, { plan: plan }), season.width / 2);
         const wlkPruned = prune(

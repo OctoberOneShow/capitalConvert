@@ -123,6 +123,21 @@
     { id: "w28", labelKey: "twrR28", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.00008, starBeats: [31, 38, 40] },
     { id: "w29", labelKey: "twrR29", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.00005, starBeats: [32, 39, 40] },
     { id: "w30", labelKey: "twrR30", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.00002, starBeats: [33, 39, 40] },
+    /* Ranks 31-40: the immortal pantheon. The flicker drains further into the
+     * sub-micro level, from eighteen down to one millionth - the pinnacle of
+     * reading comprehension where the opponent has virtually zero tremor.
+     * The certificate line dominates every bout with absolute timing and
+     * precision positioning, earning three stars at every rung. */
+    { id: "w31", labelKey: "twrR31", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.000018, starBeats: [33, 39, 40] },
+    { id: "w32", labelKey: "twrR32", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.000016, starBeats: [34, 39, 40] },
+    { id: "w33", labelKey: "twrR33", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.000014, starBeats: [34, 39, 40] },
+    { id: "w34", labelKey: "twrR34", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.000012, starBeats: [35, 39, 40] },
+    { id: "w35", labelKey: "twrR35", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.000010, starBeats: [35, 39, 40] },
+    { id: "w36", labelKey: "twrR36", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.000008, starBeats: [36, 39, 40] },
+    { id: "w37", labelKey: "twrR37", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.000006, starBeats: [36, 39, 40] },
+    { id: "w38", labelKey: "twrR38", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.000004, starBeats: [37, 39, 40] },
+    { id: "w39", labelKey: "twrR39", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.000002, starBeats: [37, 39, 40] },
+    { id: "w40", labelKey: "twrR40", windowMs: 900, predict: 1, rush: 1, greed: 1, noise: 0.000001, starBeats: [38, 39, 40] },
   ];
 
   /* --- pure core, exported for the checks -------------------------- */
@@ -1161,6 +1176,16 @@
       "twrR28": "No Hesitation",
       "twrR29": "The Perfect Read",
       "twrR30": "The Living Mirror",
+      "twrR31": "Steel Reflex",
+      "twrR32": "Immovable Root",
+      "twrR33": "Absolute Centre",
+      "twrR34": "Phantom Grip",
+      "twrR35": "Celestial Stance",
+      "twrR36": "Unyielding Granite",
+      "twrR37": "Infinite Counter",
+      "twrR38": "Mind Over Mat",
+      "twrR39": "Void Resonance",
+      "twrR40": "The Divine Sumo",
     },
     zh: {
       "twrR25": "\u6C89\u9759\u4E4B\u773C",
@@ -1169,6 +1194,16 @@
       "twrR28": "\u6BEB\u4E0D\u8FDF\u7591",
       "twrR29": "\u6D1E\u82E5\u89C2\u706B",
       "twrR30": "\u5FC3\u5982\u660E\u955C",
+      "twrR31": "\u94C1\u58C1\u53CD\u5C04",
+      "twrR32": "\u78D0\u77F3\u751F\u6839",
+      "twrR33": "\u7EDD\u5BF9\u4E2D\u8F74",
+      "twrR34": "\u5E7B\u5F71\u64D2\u62FF",
+      "twrR35": "\u5929\u7F57\u67B6\u52BF",
+      "twrR36": "\u767E\u70BC\u82B1\u5C97",
+      "twrR37": "\u65E0\u5C3D\u62C6\u89E3",
+      "twrR38": "\u5FC3\u610F\u6A2A\u7EB2",
+      "twrR39": "\u592A\u865A\u5171\u9E23",
+      "twrR40": "\u795E\u76F8\u529B\u58EB",
     },
   });
 

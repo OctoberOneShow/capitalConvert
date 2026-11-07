@@ -393,6 +393,159 @@
       ],
       starNudges: [212, 216, 221],
     },
+    /* Celestial Tier p31-p40: The Astral Act (天幕皮影).
+     * Handcrafted, measured two-beat shadow challenges climbing monotonically
+     * past p30's 212-nudge summit, crowning in p40's supreme 276-nudge road. */
+    /* p31 - The Phoenix Wings (凤翼凌霄): wide wing spread, vertical lamp tracking */
+    {
+      id: "p31", labelKey: "shpP31", briefKey: "shpB31",
+      baseY: 125, l1: 46, l2: 42, baseMovable: true,
+      start: { lampX: 20, lampY: 20, ang1: -160, ang2: -40, baseX: 130 },
+      solutions: [
+        { lampX: 85, lampY: 95, ang1: 145, ang2: 25, baseX: 165 },
+        { lampX: 45, lampY: 205, ang1: -145, ang2: -25, baseX: 210 },
+      ],
+      targets: [
+        { baseY: 176, aY: 381, bY: 293, tol: 16 },
+        { baseY: 81, aY: -8, bY: 14, tol: 16 },
+      ],
+      starNudges: [216, 220, 225],
+    },
+    /* p32 - The Crescent Archer (弯弓望月): deep draw, low corner lamp, forward rod advance */
+    {
+      id: "p32", labelKey: "shpP32", briefKey: "shpB32",
+      baseY: 120, l1: 48, l2: 40, baseMovable: true,
+      start: { lampX: 20, lampY: 35, ang1: 40, ang2: 160, baseX: 130 },
+      solutions: [
+        { lampX: 55, lampY: 65, ang1: -75, ang2: -145, baseX: 175 },
+        { lampX: 115, lampY: 215, ang1: 95, ang2: 15, baseX: 215 },
+      ],
+      targets: [
+        { baseY: 177, aY: 81, bY: 30, tol: 16 },
+        { baseY: 39, aY: 124, bY: 164, tol: 16 },
+      ],
+      starNudges: [222, 226, 231],
+    },
+    /* p33 - The Dual Reflection (阴阳双影): inverted symmetry across the central axis */
+    {
+      id: "p33", labelKey: "shpP33", briefKey: "shpB33",
+      baseY: 130, l1: 45, l2: 38, baseMovable: true,
+      start: { lampX: 185, lampY: 260, ang1: -160, ang2: 120, baseX: 130 },
+      solutions: [
+        { lampX: 75, lampY: 60, ang1: 65, ang2: -50, baseX: 145 },
+        { lampX: 75, lampY: 200, ang1: -65, ang2: 50, baseX: 195 },
+      ],
+      targets: [
+        { baseY: 285, aY: 340, bY: 222, tol: 16 },
+        { baseY: 69, aY: 21, bY: 88, tol: 16 },
+      ],
+      starNudges: [228, 232, 237],
+    },
+    /* p34 - The Temple Bell (古寺晨钟): heavy pendular swing with 40px plinth translation */
+    {
+      id: "p34", labelKey: "shpP34", briefKey: "shpB34",
+      baseY: 135, l1: 50, l2: 36, baseMovable: true,
+      start: { lampX: 140, lampY: 20, ang1: -160, ang2: -140, baseX: 130 },
+      solutions: [
+        { lampX: 45, lampY: 145, ang1: 45, ang2: 110, baseX: 175 },
+        { lampX: 125, lampY: 45, ang1: -140, ang2: 65, baseX: 215 },
+      ],
+      targets: [
+        { baseY: 125, aY: 184, bY: 244, tol: 16 },
+        { baseY: 220, aY: 241, bY: 282, tol: 16 },
+      ],
+      starNudges: [234, 238, 243],
+    },
+    /* p35 - The Water Dragon (游龙戏波): serpentine wave with 50/45 extended limb reach */
+    {
+      id: "p35", labelKey: "shpP35", briefKey: "shpB35",
+      baseY: 110, l1: 50, l2: 45, baseMovable: true,
+      start: { lampX: 20, lampY: 170, ang1: 140, ang2: -160, baseX: 130 },
+      solutions: [
+        { lampX: 100, lampY: 80, ang1: -45, ang2: 85, baseX: 185 },
+        { lampX: 35, lampY: 170, ang1: 135, ang2: -75, baseX: 135 },
+      ],
+      targets: [
+        { baseY: 151, aY: 71, bY: 144, tol: 16 },
+        { baseY: 11, aY: 69, bY: -67, tol: 16 },
+      ],
+      starNudges: [240, 244, 249],
+    },
+    /* p36 - The Constellation Weaver (织星玉衡): acute angular choreography, all four levers */
+    {
+      id: "p36", labelKey: "shpP36", briefKey: "shpB36",
+      baseY: 140, l1: 44, l2: 42, baseMovable: true,
+      start: { lampX: 20, lampY: 20, ang1: -160, ang2: 160, baseX: 130 },
+      solutions: [
+        { lampX: 65, lampY: 45, ang1: 75, ang2: -115, baseX: 170 },
+        { lampX: 135, lampY: 215, ang1: -95, ang2: 45, baseX: 210 },
+      ],
+      targets: [
+        { baseY: 258, aY: 323, bY: 282, tol: 16 },
+        { baseY: 50, aY: -61, bY: 69, tol: 16 },
+      ],
+      starNudges: [246, 250, 255],
+    },
+    /* p37 - The Wind and the Kite (长风引鸢): extreme off-axis shear with towering shadow */
+    {
+      id: "p37", labelKey: "shpP37", briefKey: "shpB37",
+      baseY: 115, l1: 48, l2: 44, baseMovable: true,
+      start: { lampX: 20, lampY: 20, ang1: -20, ang2: 160, baseX: 130 },
+      solutions: [
+        { lampX: 120, lampY: 120, ang1: -120, ang2: -80, baseX: 185 },
+        { lampX: 45, lampY: 255, ang1: 60, ang2: 140, baseX: 130 },
+      ],
+      targets: [
+        { baseY: 106, aY: -84, bY: -213, tol: 16 },
+        { baseY: -165, aY: 25, bY: 17, tol: 16 },
+      ],
+      starNudges: [252, 256, 261],
+    },
+    /* p38 - The Golden Cicada (金蝉脱壳): huge near silhouette to lean distant silhouette */
+    {
+      id: "p38", labelKey: "shpP38", briefKey: "shpB38",
+      baseY: 130, l1: 46, l2: 40, baseMovable: true,
+      start: { lampX: 140, lampY: 260, ang1: -160, ang2: -140, baseX: 130 },
+      solutions: [
+        { lampX: 45, lampY: 85, ang1: 110, ang2: 20, baseX: 190 },
+        { lampX: 155, lampY: 55, ang1: -70, ang2: -160, baseX: 220 },
+      ],
+      targets: [
+        { baseY: 164, aY: 259, bY: 241, tol: 16 },
+        { baseY: 222, aY: 112, bY: 116, tol: 16 },
+      ],
+      starNudges: [258, 262, 267],
+    },
+    /* p39 - The Dancing Crane (白鹤踏云): 180 forearm somersault and plinth glide */
+    {
+      id: "p39", labelKey: "shpP39", briefKey: "shpB39",
+      baseY: 120, l1: 50, l2: 46, baseMovable: true,
+      start: { lampX: 230, lampY: 260, ang1: 140, ang2: -160, baseX: 130 },
+      solutions: [
+        { lampX: 95, lampY: 135, ang1: -95, ang2: 75, baseX: 180 },
+        { lampX: 35, lampY: 55, ang1: 85, ang2: -105, baseX: 220 },
+      ],
+      targets: [
+        { baseY: 99, aY: -30, bY: 90, tol: 16 },
+        { baseY: 148, aY: 216, bY: 160, tol: 16 },
+      ],
+      starNudges: [264, 268, 273],
+    },
+    /* p40 - The Celestial Sovereign (天穹绝唱): supreme grand finale, maximum 276-nudge road */
+    {
+      id: "p40", labelKey: "shpP40", briefKey: "shpB40",
+      baseY: 115, l1: 50, l2: 48, baseMovable: true,
+      start: { lampX: 15, lampY: 275, ang1: -175, ang2: -175, baseX: 120 },
+      solutions: [
+        { lampX: 115, lampY: 110, ang1: 60, ang2: 20, baseX: 175 },
+        { lampX: 30, lampY: 250, ang1: -120, ang2: -160, baseX: 220 },
+      ],
+      targets: [
+        { baseY: 125, aY: 215, bY: 202, tol: 16 },
+        { baseY: 58, aY: -42, bY: -189, tol: 16 },
+      ],
+      starNudges: [276, 280, 285],
+    },
   ];
   /* The free performance stage: no target, same geometry, same controls. */
   var shpFreePuppet = {
@@ -1267,6 +1420,16 @@
       "shpP28": "The rod answers the arms",
       "shpP29": "The tight quartet",
       "shpP30": "The last fire",
+      "shpP31": "The phoenix wings",
+      "shpP32": "The crescent archer",
+      "shpP33": "The dual reflection",
+      "shpP34": "The temple bell",
+      "shpP35": "The water dragon",
+      "shpP36": "The constellation weaver",
+      "shpP37": "The wind and the kite",
+      "shpP38": "The golden cicada",
+      "shpP39": "The dancing crane",
+      "shpP40": "The celestial sovereign",
       "shpPFree": "Free performance",
       "shpB1": "one long, even shadow",
       "shpB2": "the head folds back up",
@@ -1298,6 +1461,16 @@
       "shpB28": "two beats - both hinges and the rod, lamp frozen",
       "shpB29": "two beats - four levers with no slack",
       "shpB30": "two beats - every lever, a half-turn, the longest road",
+      "shpB31": "two beats - wings span wide, lamp follows high to low",
+      "shpB32": "two beats - deep draw, corner lamp and forward plinth",
+      "shpB33": "two beats - inverted shadow across the horizontal axis",
+      "shpB34": "two beats - heavy pendular swing while the plinth walks",
+      "shpB35": "two beats - serpentine undulation from high wave to deep dive",
+      "shpB36": "two beats - acute hinge choreography across all four levers",
+      "shpB37": "two beats - extreme off-axis shear throws a towering shadow",
+      "shpB38": "two beats - broad near shadow sheds into a lean far silhouette",
+      "shpB39": "two beats - full forearm somersault with plinth glide",
+      "shpB40": "two beats - all four levers, full upper arm flip, the longest road",
       "shpBFree": "no ghost, just rays",
       "shpLeverLabel": "Lever",
       "shpNudgesLabel": "Nudges",
@@ -1359,6 +1532,16 @@
       "shpP28": "支杆应臂",
       "shpP29": "四方紧合",
       "shpP30": "终场焰火",
+      "shpP31": "凤翼凌霄",
+      "shpP32": "弯弓望月",
+      "shpP33": "阴阳双影",
+      "shpP34": "古寺晨钟",
+      "shpP35": "游龙戏波",
+      "shpP36": "织星玉衡",
+      "shpP37": "长风引鸢",
+      "shpP38": "金蝉脱壳",
+      "shpP39": "白鹤踏云",
+      "shpP40": "天穹绝唱",
       "shpPFree": "自由演出",
       "shpB1": "一道匀长的影子",
       "shpB2": "头颅折回上方",
@@ -1390,6 +1573,16 @@
       "shpB28": "两个节拍 - 灯不动，双臂与支杆同行",
       "shpB29": "两个节拍 - 四杆联动，不容偏差",
       "shpB30": "两个节拍 - 全杆齐动，半圈翻转，最长之路",
+      "shpB31": "两个节拍 - 展翼千仞，灯随云影自上而下",
+      "shpB32": "两个节拍 - 满弓劲射，幽角探灯，支杆进逼",
+      "shpB33": "两个节拍 - 轴线两端上下镜像倒影",
+      "shpB34": "两个节拍 - 摆锤沉重晃荡，支杆大步行移",
+      "shpB35": "两个节拍 - 长躯起伏，自层云直探深澜",
+      "shpB36": "两个节拍 - 锐角折叠，四杆默契联动",
+      "shpB37": "两个节拍 - 极度偏轴错切，投下擎天巨影",
+      "shpB38": "两个节拍 - 庞然近影褪去，化作精巧纤影",
+      "shpB39": "两个节拍 - 前臂翻转半圈，台座悠然滑步",
+      "shpB40": "两个节拍 - 四杆齐动，上臂半圈翻转，登峰造极最长之路",
       "shpBFree": "没有目标，只有光线",
       "shpLeverLabel": "操作杆",
       "shpNudgesLabel": "挪动",

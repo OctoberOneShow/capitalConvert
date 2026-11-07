@@ -98,6 +98,50 @@
     { id: "s28", labelKey: "nimL28", rows: [3, 3, 3, 3, 3, 4], misere: false, starTurns: [4, 6, 9] },
     { id: "s29", labelKey: "nimL29", rows: [2, 2, 2, 2, 2, 2, 3], misere: false, starTurns: [5, 6, 7] },
     { id: "s30", labelKey: "nimL30", rows: [2, 3, 4, 5, 6, 7], misere: true, starTurns: [5, 6, 6] },
+
+    /* Tables 31-40, the cold endgame - the dawdle is not narrowed but gone.
+     * On the last stair the longest winning line cost one turn more than the
+     * engine's own; on every felt below it costs none. Each rung is a misere
+     * first-player win whose slowest win IS the engine's own line - dawdle a
+     * single turn past the shipped line and the win is gone, so the one-star
+     * line sits on the three-star line and any win that exists at all is a
+     * three-star win. The dial is the line length itself: three six-turn
+     * felts widen from sixteen sticks to thirty-seven, three seven-turn felts
+     * run twenty to thirty-nine, and four eight-turn felts close the room at
+     * forty-three - the longest forced win the ladder has ever shipped. The
+     * rule is what freezes the speed, and the twins price it: the same felt
+     * under normal rules dawdles for two to thirteen turns - room the
+     * misere rule takes away. Where the geometry allows it the neighbours
+     * prove the wins are the shapes' own: s32 without its stray one, s33's
+     * five lifted to a six, s35's three raised, s36's five lifted, s39
+     * without a five, and s40 with a five lowered all lose outright; on the
+     * four lightest felts every one-stone neighbour is still a win - the
+     * win there is robust, not a knife edge. All numbers below were
+     * measured through the game's own nimBestMove - the oracle, the fastest
+     * and longest winning lines and the shipped line:
+     *   s31 [1,1,1,3,3,3,4]     line 6, fastest 5, total 16
+     *   s32 [1,1,2,5,5,5,6]     line 6, fastest 5, total 25
+     *   s33 [4,4,4,4,4,5,5,7]   line 6, fastest 5, total 37
+     *   s34 [1,3,3,3,3,3,4]     line 7, fastest 5, total 20
+     *   s35 [2,3,4,4,5,5,6]     line 7, fastest 5, total 29
+     *   s36 [4,4,4,5,5,5,5,7]   line 7, fastest 5, total 39
+     *   s37 [2,3,3,3,3,3,3,4]   line 8, fastest 5, total 24
+     *   s38 [2,3,3,5,5,5,5,6]   line 8, fastest 5, total 34
+     *   s39 [2,4,5,5,5,5,5,6]   line 8, fastest 5, total 37
+     *   s40 [5,5,5,5,5,5,6,7]   line 8, fastest 5, total 43
+     * and the cold twins price the freeze: s33's felt under normal rules
+     * dawdles for twelve turns and s40's for thirteen, margins the misere
+     * rule reduces to none. */
+    { id: "s31", labelKey: "nimL31", rows: [1, 1, 1, 3, 3, 3, 4], misere: true, starTurns: [6, 6, 6] },
+    { id: "s32", labelKey: "nimL32", rows: [1, 1, 2, 5, 5, 5, 6], misere: true, starTurns: [6, 6, 6] },
+    { id: "s33", labelKey: "nimL33", rows: [4, 4, 4, 4, 4, 5, 5, 7], misere: true, starTurns: [6, 6, 6] },
+    { id: "s34", labelKey: "nimL34", rows: [1, 3, 3, 3, 3, 3, 4], misere: true, starTurns: [7, 7, 7] },
+    { id: "s35", labelKey: "nimL35", rows: [2, 3, 4, 4, 5, 5, 6], misere: true, starTurns: [7, 7, 7] },
+    { id: "s36", labelKey: "nimL36", rows: [4, 4, 4, 5, 5, 5, 5, 7], misere: true, starTurns: [7, 7, 7] },
+    { id: "s37", labelKey: "nimL37", rows: [2, 3, 3, 3, 3, 3, 3, 4], misere: true, starTurns: [8, 8, 8] },
+    { id: "s38", labelKey: "nimL38", rows: [2, 3, 3, 5, 5, 5, 5, 6], misere: true, starTurns: [8, 8, 8] },
+    { id: "s39", labelKey: "nimL39", rows: [2, 4, 5, 5, 5, 5, 5, 6], misere: true, starTurns: [8, 8, 8] },
+    { id: "s40", labelKey: "nimL40", rows: [5, 5, 5, 5, 5, 5, 6, 7], misere: true, starTurns: [8, 8, 8] },
   ];
 
   function nimTotal(rows) {
@@ -358,7 +402,11 @@
    * does not already own, so the shared dictionary stays authoritative. The
    * first twelve tables carry the fire names the shared dictionary holds;
    * the study tables rode the shared numbered shelf - and the endgame
-   * returns to the fire's remains, down to the last stair. */
+   * returns to the fire's remains, down to the last stair. The cold
+   * endgame that follows walks the ash past it: kindling counted out,
+   * rings of ember, the broad ash, the long dark, coals that cool slowly,
+   * the wide frost, the still felt, the white hearth, the deep frost and
+   * the last ember still holding its heat. */
   App.addStrings({
     en: {
       "nimL25": "Char Steps",
@@ -367,6 +415,16 @@
       "nimL28": "Matched Coals",
       "nimL29": "Driftwood",
       "nimL30": "The Last Stair",
+      "nimL31": "Cold Kindling",
+      "nimL32": "Ember Rings",
+      "nimL33": "The Broad Ash",
+      "nimL34": "The Long Dark",
+      "nimL35": "Slow Coals",
+      "nimL36": "The Wide Frost",
+      "nimL37": "The Still Felt",
+      "nimL38": "White Hearth",
+      "nimL39": "Deep Frost",
+      "nimL40": "The Last Ember",
     },
     zh: {
       "nimL25": "炭阶",
@@ -375,6 +433,16 @@
       "nimL28": "齐炭",
       "nimL29": "浮柴",
       "nimL30": "末阶",
+      "nimL31": "冷柴",
+      "nimL32": "烬环",
+      "nimL33": "阔灰",
+      "nimL34": "长暗",
+      "nimL35": "缓炭",
+      "nimL36": "阔霜",
+      "nimL37": "静桌",
+      "nimL38": "白灶",
+      "nimL39": "深霜",
+      "nimL40": "末烬",
     },
   });
 

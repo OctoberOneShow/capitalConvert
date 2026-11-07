@@ -56,14 +56,18 @@ module.exports = function gate(ctx) {
     rod: from.baseX !== to.baseX,
   });
 
-  check("game-shadow-puppeteer", "the campaign holds at least thirty poses",
-    shpPuzzles.length >= 30, String(shpPuzzles.length));
+  check("game-shadow-puppeteer", "the campaign holds forty poses",
+    shpPuzzles.length === 40, String(shpPuzzles.length));
   check("game-shadow-puppeteer", "every pose id is distinct",
     new Set(shpPuzzles.map((puzzle) => puzzle.id)).size === shpPuzzles.length);
   const shpTier = ["p25", "p26", "p27", "p28", "p29", "p30"];
+  const shpCelestial = ["p31", "p32", "p33", "p34", "p35", "p36", "p37", "p38", "p39", "p40"];
   const shpMissing = shpTier.filter((id) => !shpById(id));
   check("game-shadow-puppeteer", "the new tier p25-p30 is present",
     shpMissing.length === 0, shpMissing.join(","));
+  const shpCelestialMissing = shpCelestial.filter((id) => !shpById(id));
+  check("game-shadow-puppeteer", "the celestial tier p31-p40 is present",
+    shpCelestialMissing.length === 0, shpCelestialMissing.join(","));
 
   /* Every ghost was built from the module's own projection, so the module's
    * own fit percentage must clear the shipped pass bar on every beat. */
@@ -315,19 +319,46 @@ module.exports = function gate(ctx) {
       shpTierSpans.every((span) => span > shpP24Span),
     shpTierSpans.join("/") + " vs " + shpP24Span);
   const shpEarlierSpans = shpPuzzles
-    .filter((puzzle) => puzzle.id !== "p30" && puzzle.solutions && puzzle.targets)
+    .filter((puzzle) => {
+      const num = parseInt(puzzle.id.slice(1), 10);
+      return num < 30 && puzzle.solutions && puzzle.targets;
+    })
     .map(shpChainSpan);
-  check("game-shadow-puppeteer", "p30 is the longest measured road in the play",
+  check("game-shadow-puppeteer", "p30 is the longest measured road of the summit tier",
     shpP30Chain && shpEarlierSpans.length > 0 &&
       shpEarlierSpans.every((span) => shpChainSpan(shpP30) > span),
     shpP30 ? shpChainSpan(shpP30) + " vs " + Math.max.apply(null, shpEarlierSpans) : "missing");
 
+  const shpP30Span = shpP30 && shpTwoBeat(shpP30) ? shpChainSpan(shpP30) : 0;
+  const shpCelestialSpans = shpCelestial.map((id) => shpById(id)).filter(Boolean).map(shpChainSpan);
+  check("game-shadow-puppeteer", "the celestial tier opens above p30's measured anchor",
+    shpCelestialSpans.length === 10 &&
+      shpCelestialSpans.every((span) => span > shpP30Span),
+    shpCelestialSpans.join("/") + " vs " + shpP30Span);
+
+  const celestialAscending = shpCelestialSpans.every((span, i) => i === 0 || span > shpCelestialSpans[i - 1]);
+  check("game-shadow-puppeteer", "the celestial tier spans strictly ascend",
+    celestialAscending, shpCelestialSpans.join("<"));
+
+  const shpPreP40Spans = shpPuzzles
+    .filter((puzzle) => puzzle.id !== "p40" && puzzle.solutions && puzzle.targets)
+    .map(shpChainSpan);
+  const shpP40 = shpById("p40");
+  check("game-shadow-puppeteer", "p40 is the longest measured road in the entire campaign",
+    shpP40 && shpPreP40Spans.length > 0 &&
+      shpPreP40Spans.every((span) => shpChainSpan(shpP40) > span),
+    shpP40 ? shpChainSpan(shpP40) + " vs " + Math.max.apply(null, shpPreP40Spans) : "missing");
+
   /* Copy travels with the module: a real string in both packs, and t() never
    * falls back to the raw key. */
-  const shpCopyKeys = ["shpP21", "shpP22", "shpP23", "shpP24",
+  const shpCopyKeys = [
+    "shpP21", "shpP22", "shpP23", "shpP24",
     "shpP25", "shpP26", "shpP27", "shpP28", "shpP29", "shpP30",
+    "shpP31", "shpP32", "shpP33", "shpP34", "shpP35", "shpP36", "shpP37", "shpP38", "shpP39", "shpP40",
     "shpB21", "shpB22", "shpB23", "shpB24",
-    "shpB25", "shpB26", "shpB27", "shpB28", "shpB29", "shpB30"];
+    "shpB25", "shpB26", "shpB27", "shpB28", "shpB29", "shpB30",
+    "shpB31", "shpB32", "shpB33", "shpB34", "shpB35", "shpB36", "shpB37", "shpB38", "shpB39", "shpB40",
+  ];
   const shpCopyProblems = shpCopyKeys.filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
@@ -353,8 +384,8 @@ module.exports = function gate(ctx) {
       shpChained = false;
     }
   });
-  check("game-shadow-puppeteer", "the unlock chain walks all thirty poses in order",
-    shpWalked === shpPuzzles.length && shpChained &&
-      shpChain.clearedCount() === shpPuzzles.length,
+  check("game-shadow-puppeteer", "the unlock chain walks all forty poses in order",
+    shpWalked === 40 && shpChained &&
+      shpChain.clearedCount() === 40,
     shpWalked + " first clears");
 };

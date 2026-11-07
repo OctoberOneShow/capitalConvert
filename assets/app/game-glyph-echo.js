@@ -87,6 +87,34 @@
     { id: "c28", labelKey: "echoL28", goal: 36, stepMs: 95, reverse: true, flashMs: 145 },
     { id: "c29", labelKey: "echoL29", goal: 38, stepMs: 92, reverse: true, flashMs: 140 },
     { id: "c30", labelKey: "echoL30", goal: 40, stepMs: 88, reverse: true, flashMs: 135 },
+    /* c31-c40 are the strobe tier, and its dial has never moved before:
+     * every strobe chime's glow is SHORTER than its step - the pad goes
+     * dark before the next link lands, and every glow the campaign ever
+     * shipped sat at or above its step, so the fast chimes' lights
+     * overlap into a rolling wave that here becomes a blink. The backwards echo
+     * stays on - the summit's lesson is the game's grammar now - and the
+     * clocks climb on top of c30's records: 41 links at an 86 ms step
+     * under a 62 ms glow opens the tier, and each rung adds a link,
+     * speeds the step and deepens the blink (the glow runs 24 ms under
+     * the step at c31 and 33 ms under at c40, whose 35 ms glow and 50
+     * link chain are campaign records on both dials). Measured effort -
+     * links per engaged second, shows and pauses included - climbs
+     * 8.2 -> 8.3 -> 8.5 -> 8.8 -> 9.0 -> 9.2 -> 9.4 -> 9.7 -> 9.9 -> 10.2
+     * across the tier against 8.0 for c30, and a winning echo taps 861
+     * links on c31 and 1,275 on c40 against the 820 of c30. The blink is
+     * load-bearing: relax `reverse` on the live chime and the mirrored
+     * hand loses all three lives on the first non-palindromic chain
+     * (seeded deals; the gate's scan takes the first killing seed). */
+    { id: "c31", labelKey: "echoL31", goal: 41, stepMs: 86, reverse: true, flashMs: 62 },
+    { id: "c32", labelKey: "echoL32", goal: 42, stepMs: 84, reverse: true, flashMs: 59 },
+    { id: "c33", labelKey: "echoL33", goal: 43, stepMs: 82, reverse: true, flashMs: 56 },
+    { id: "c34", labelKey: "echoL34", goal: 44, stepMs: 80, reverse: true, flashMs: 53 },
+    { id: "c35", labelKey: "echoL35", goal: 45, stepMs: 78, reverse: true, flashMs: 50 },
+    { id: "c36", labelKey: "echoL36", goal: 46, stepMs: 76, reverse: true, flashMs: 47 },
+    { id: "c37", labelKey: "echoL37", goal: 47, stepMs: 74, reverse: true, flashMs: 44 },
+    { id: "c38", labelKey: "echoL38", goal: 48, stepMs: 72, reverse: true, flashMs: 41 },
+    { id: "c39", labelKey: "echoL39", goal: 49, stepMs: 70, reverse: true, flashMs: 38 },
+    { id: "c40", labelKey: "echoL40", goal: 50, stepMs: 68, reverse: true, flashMs: 35 },
   ];
 
   function initGlyphEchoGame() {
@@ -401,6 +429,16 @@
       "echoL28": "The Eternal Eclipse",
       "echoL29": "Starlight Reversed",
       "echoL30": "The Last Reflection",
+      "echoL31": "The First Flicker",
+      "echoL32": "The Strobe Star",
+      "echoL33": "Pulsar Veil",
+      "echoL34": "The Blinking Nebula",
+      "echoL35": "Heartbeat of the Void",
+      "echoL36": "The Faltering Comet",
+      "echoL37": "The End-World Lighthouse",
+      "echoL38": "The Dying Star",
+      "echoL39": "Signal in the Dark",
+      "echoL40": "The Endless Blink",
     },
     zh: {
       "echoL21": "漫漫长夜",
@@ -413,6 +451,16 @@
       "echoL28": "永夜之蚀",
       "echoL29": "星光倒流",
       "echoL30": "终镜回响",
+      "echoL31": "初次明灭",
+      "echoL32": "频闪星",
+      "echoL33": "脉冲星帷",
+      "echoL34": "明灭星云",
+      "echoL35": "虚空心跳",
+      "echoL36": "蹒跚彗星",
+      "echoL37": "尽头灯塔",
+      "echoL38": "濒死之星",
+      "echoL39": "暗夜信号",
+      "echoL40": "无尽明灭",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

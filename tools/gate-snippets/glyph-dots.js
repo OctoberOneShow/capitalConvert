@@ -54,7 +54,31 @@
  * lands nine under every band, and d30 closes the ladder as the
  * campaign's heaviest flipped shake and highest three-star ask. The
  * sweep also measures where the shake must stop: at 0.04 the greedy hand
- * overtakes the strong one. */
+ * overtakes the strong one.
+ *
+ * The far tier d31-d40 pours the plates the ladder never held, and it is
+ * steady-handed: no rung of the tier shakes at all, so every deal is
+ * deterministic and the tier rides the deterministic two-seed bar at one
+ * seed per deal, with the drift checked by re-running a deal under a second
+ * seed. The mirror half plays the summit's wide plate the other way round -
+ * the opening stick the player's - under tails the mirrored plate bears
+ * (five and six back). The great half pours the first nine-box plates,
+ * flipped and mirrored both, under tails the great plate bears - the
+ * untailed plate, then holds four through seven - and it closes on the
+ * first blunder-free rank to play the double cross blind (setup without the
+ * count). The band of every far rung is the strong line's own measured win,
+ * and the asks climb thirty, thirty-two, thirty-three, thirty-five,
+ * thirty-seven, thirty-nine, forty-one, forty-three, forty-five and
+ * forty-nine, each past the summit's heaviest ask of twenty-nine, with the
+ * competent line landing exactly on every band and the greedy hand under
+ * every band. The tail sweep on the flipped great plate is the tier's
+ * minimality proof: the untailed plate lands twenty-one, the plate is lost
+ * outright at tails two and three, and the smallest tail that wins at all
+ * is four - d40's dial - which lands twenty-nine, so the counter seated
+ * back into the blind closer drops its band out of reach, and every shipped
+ * tail is load-bearing. The decline signatures travel with the tier: no
+ * blunder-free rival below declines a cascade of four, six or seven boxes,
+ * and the far deals decline all three. */
 
 module.exports = function gate(ctx) {
   const { App, check, fs, path, root } = ctx;
@@ -64,9 +88,10 @@ module.exports = function gate(ctx) {
   const liveLevels = App.dotsLevels;
   const deepIds = ["d21", "d22", "d23", "d24"];
   const summitIds = ["d25", "d26", "d27", "d28", "d29", "d30"];
+  const farIds = ["d31", "d32", "d33", "d34", "d35", "d36", "d37", "d38", "d39", "d40"];
 
   check("game-glyph-dots", "the module exports its ladder for the gate",
-    Array.isArray(liveLevels) && liveLevels.length === 30,
+    Array.isArray(liveLevels) && liveLevels.length === 40,
     String(liveLevels && liveLevels.length));
 
   const dotsSource = fs
@@ -102,8 +127,8 @@ module.exports = function gate(ctx) {
     "the benched engine and the booted module carry the same ladder",
     wiringProblems.length === 0, wiringProblems.join(" | "));
 
-  check("game-glyph-dots", "the ladder holds thirty rungs",
-    levels.length === 30, String(levels.length));
+  check("game-glyph-dots", "the ladder holds forty rungs",
+    levels.length === 40, String(levels.length));
   check("game-glyph-dots", "every rung id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -115,6 +140,10 @@ module.exports = function gate(ctx) {
     !levels.some((level) => level.id === id));
   check("game-glyph-dots", "the summit tier d25-d30 is present",
     missingSummit.length === 0, missingSummit.join(","));
+  const missingFar = farIds.filter((id) =>
+    !levels.some((level) => level.id === id));
+  check("game-glyph-dots", "the far tier d31-d40 is present",
+    missingFar.length === 0, missingFar.join(","));
 
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
@@ -208,8 +237,19 @@ module.exports = function gate(ctx) {
   /* One full deal: the rank's own rival against one scripted hand, under a
    * seeded stream. Records the final margin, whether the rival laid the
    * opening stick, and every rival decline with the cascade size it left
-   * standing - the hold signature the structural checks read. */
+   * standing - the hold signature the structural checks read. A deal is a
+   * pure function of the rank's play fields, the hand and the seed, so
+   * repeated benching of the same triple (the tail sweeps replay a shipped
+   * rank's own point, the drift run re-runs a benched seed) replays the
+   * memo instead of paying for the deal twice. */
+  const playMemo = new Map();
   const dotsPlay = (rank, policy, seed) => {
+    const key = JSON.stringify([rank.boxes, rank.blunder, rank.hold,
+      rank.foeFirst, rank.setup, rank.count, rank.edge]) +
+      "|" + policy.name + "|" + seed;
+    if (playMemo.has(key)) {
+      return playMemo.get(key);
+    }
     const realRandom = Math.random;
     Math.random = (() => {
       let s = seed >>> 0;
@@ -256,11 +296,13 @@ module.exports = function gate(ctx) {
           }
         }
       }
-      return {
+      const record = {
         margin: api.dotsCount(state, 1) - api.dotsCount(state, 2),
         firstByRival,
         declines,
       };
+      playMemo.set(key, record);
+      return record;
     } finally {
       Math.random = realRandom;
     }
@@ -424,7 +466,7 @@ module.exports = function gate(ctx) {
     level.boxes === 6 && level.foeFirst);
   const shakyFlipped = levels.filter((level) =>
     level.blunder > 0 && level.foeFirst);
-  const tierIds = deepIds.concat(summitIds);
+  const tierIds = deepIds.concat(summitIds, farIds);
   check("game-glyph-dots",
     "no rung outside the deep and summit tiers pairs the six-box plate or a blunder with the opening stick; the deep pairings and the summit's shaken trio all ship",
     flippedSmall.every((level) => deepIds.includes(level.id)) &&
@@ -622,18 +664,18 @@ module.exports = function gate(ctx) {
    * signature stays unique. */
   const shakyBands = shakyIds.map((id) => byId[id].margin[0]);
   check("game-glyph-dots",
-    "the shaken rungs raise the three-star ask past the deep tier and climb through the three",
+    "the shaken rungs raise the three-star ask past the deep tier and climb through the three, and the summit closes the first thirty at the highest ask",
     climbs(shakyBands) && shakyBands[0] > byId.d24.margin[0] &&
       byId.d30.margin[0] ===
-        Math.max.apply(null, levels.map((l) => l.margin[0])),
+        Math.max.apply(null, levels.slice(0, 30).map((l) => l.margin[0])),
     `${shakyBands.join(" -> ")} vs d24 ${byId.d24.margin[0]}`);
   check("game-glyph-dots",
-    "d30 ends the ladder as the heaviest shake any flipped rank carries, and the wide half pours the first eight-box plates",
+    "d30 ends the first thirty as the heaviest shake any flipped rank carries, and the wide half pours the first eight-box plates",
     byId.d30.blunder === Math.max.apply(null,
-        levels.filter((l) => l.foeFirst).map((l) => l.blunder || 0)) &&
+        levels.slice(0, 30).filter((l) => l.foeFirst).map((l) => l.blunder || 0)) &&
       levels.slice(0, 24).every((l) => l.boxes < byId.d25.boxes) &&
       wideIds.every((id) => byId[id].boxes === 8) &&
-      levels.filter((l) => (l.hold || 0) === 5).length === 1 &&
+      levels.slice(0, 30).filter((l) => (l.hold || 0) === 5).length === 1 &&
       summitRun.d25.declines.some((size) => size === 5) &&
       wideIds.every((id) =>
         !summitRun[id].declines.some((size) => size === 3)),
@@ -685,18 +727,224 @@ module.exports = function gate(ctx) {
       wideSweep[4] !== narrowestWide && wideSweep[5] !== narrowestWide,
     `holds zero through five: ${wideSweep.join(", ")}`);
 
+  /* ---- the far tier d31-d40: the plates the drawer never held ---- */
+
+  /* Every far rung benched once. No far rank shakes, so every deal is
+   * deterministic and the tier rides the shipped deterministic bar at one
+   * seed per deal, carried by the competent line: it wins every far deal at
+   * its own measured ask, the greedy hand never three-stars, and the bands
+   * run downwards. The plate-reading line is benched at the tier's
+   * bookends, where it drops the small-tail great plate outright and never
+   * beats the competent line, so the competent line is the tier's strong
+   * line. The drift is proven by re-running one deal under a second seed. */
+  const farLite = (rank, seedCount) => {
+    const best = [];
+    const naive = [];
+    let firstByRival = true;
+    const declines = [];
+    for (let i = 0; i < seedCount; i += 1) {
+      const careful = dotsPlay(rank, dotsCareful, seeds[i]);
+      const plain = dotsPlay(rank, dotsPlain, seeds[i]);
+      best.push(careful.margin);
+      naive.push(plain.margin);
+      declines.push(...careful.declines, ...plain.declines);
+      if (!careful.firstByRival || !plain.firstByRival) {
+        firstByRival = false;
+      }
+    }
+    return { best, naive, firstByRival, declines };
+  };
+  /* The sweep and cut rows never read the greedy line - they ask what the
+   * competent line's own margin does under a re-dialed rank - so they ride
+   * the margins-only bench and never pay for a hand they drop. */
+  const farMargins = (rank, seedCount) => {
+    const best = [];
+    for (let i = 0; i < seedCount; i += 1) {
+      best.push(dotsPlay(rank, dotsCareful, seeds[i]).margin);
+    }
+    return { best };
+  };
+  const farRun = {};
+  farIds.forEach((id) => {
+    farRun[id] = farLite(byId[id], 1);
+  });
+  const farBarProblems = [];
+  farIds.forEach((id) => {
+    const rank = byId[id];
+    const run = farRun[id];
+    const name = `${id} boxes=${rank.boxes} hold=${rank.hold || 0}` +
+      ` foeFirst=${!!rank.foeFirst} count=${rank.count !== false}` +
+      ` bands=${rank.margin.join("/")}`;
+    if (rank.blunder !== 0) {
+      farBarProblems.push(`${name} the far tier ships a shake`);
+    }
+    if (!(rank.margin[0] >= rank.margin[1] && rank.margin[1] >= rank.margin[2])) {
+      farBarProblems.push(`${name} bands do not run downwards`);
+    }
+    if (run.best[0] < rank.margin[0]) {
+      farBarProblems.push(`${name} three stars are not earned` +
+        ` (${run.best[0]} vs ${rank.margin[0]})`);
+    }
+    if (!run.naive.every((m) => m < rank.margin[0])) {
+      farBarProblems.push(`${name} the greedy hand three-stars` +
+        ` (naive max ${Math.max.apply(null, run.naive)})`);
+    }
+    if (rank.foeFirst && !run.firstByRival) {
+      farBarProblems.push(`${name} the rival did not lay the opening stick`);
+    }
+  });
+  const farDrift = farMargins(byId.d31, 2);
+  if (farDrift.best[0] !== farDrift.best[1]) {
+    farBarProblems.push("d31's deterministic deal drifts across seeds");
+  }
+  check("game-glyph-dots",
+    "every far rung is steady-handed and clears the deterministic bar at its own measured ask",
+    farBarProblems.length === 0, farBarProblems.join(" | "));
+  const d33Sharp = dotsPlay(byId.d33, dotsSharp, seeds[0]);
+  const d40Sharp = dotsPlay(byId.d40, dotsSharp, seeds[0]);
+  check("game-glyph-dots",
+    "the plate-reading line never beats the competent line on the far deals it plays, and drops the small-tail great plate outright",
+    d33Sharp.margin < 0 &&
+      d33Sharp.margin <= farRun.d33.best[0] &&
+      d40Sharp.margin <= farRun.d40.best[0],
+    `d33 sharp ${d33Sharp.margin} vs competent ${farRun.d33.best[0]}; ` +
+      `d40 sharp ${d40Sharp.margin} vs competent ${farRun.d40.best[0]}`);
+
+  /* The climb, in the engine's own currency: the three-star ask steps up at
+   * every far rung, opens past the summit's heaviest band, and closes at
+   * the ladder's highest ask. */
+  const farBands = farIds.map((id) => byId[id].margin[0]);
+  check("game-glyph-dots",
+    "the far asks climb at every rung past the summit's heaviest, and d40 closes the ladder at the highest ask the campaign prints",
+    narrows(farBands.map((v) => -v)) &&
+      farBands[0] > byId.d30.margin[0] &&
+      byId.d40.margin[0] ===
+        Math.max.apply(null, levels.map((l) => l.margin[0])),
+    `${farBands.join(" -> ")} vs d30 ${byId.d30.margin[0]}`);
+
+  /* The shape is fresh: the first thirty never hand the player the opening
+   * stick on a plate this wide, never pour a nine-box plate, and never play
+   * the double cross blind without a shake - the far tier ships all three. */
+  const firstThirty = levels.slice(0, 30);
+  check("game-glyph-dots",
+    "the far shape is fresh: no earlier rung mirrors the wide plate, pours nine boxes, or plays the double cross blind",
+    firstThirty.every((l) => !(l.boxes === 8 && !l.foeFirst)) &&
+      firstThirty.every((l) => l.boxes < byId.d33.boxes) &&
+      farIds.every((id) => byId[id].boxes === 8 || byId[id].boxes === 9) &&
+      firstThirty.every((l) => (l.count || l.blunder > 0 || !(l.hold > 0))) &&
+      levels.filter((l) => l.setup && !l.count && l.blunder === 0 &&
+        (l.hold || 0) > 0).length === 1,
+    "nine-box first at d33; blind steady double cross: " +
+      levels.filter((l) => l.setup && !l.count && l.blunder === 0 &&
+        (l.hold || 0) > 0).map((l) => l.id).join(","));
+
+  /* The tail sweep on the flipped great plate is the tier's minimality
+   * proof, and it doubles as the cut table: the untailed plate lands
+   * twenty-one, the plate is lost outright at tails two and three, and the
+   * smallest tail that wins at all is four - d40's dial - so every shipped
+   * tail is load-bearing: cut d33's tail to four and the ask falls to
+   * twenty-nine, cut d40's tail away and the strong line lands twenty-one,
+   * and seating the counter back into the blind closer drops its band out
+   * of reach. The sweep benches the holds the shipped rungs do not already
+   * cover; d33 (hold five), d35 (hold six) and d37 (hold seven) are the
+   * shipped points themselves. */
+  const greatSweep = {};
+  [0, 2, 3, 4].forEach((hold) => {
+    greatSweep[hold] = farMargins(
+      Object.assign({}, byId.d40, { count: true, hold }), 1);
+  });
+  const greatSweepProblems = [];
+  if (greatSweep[0].best[0] !== 21) {
+    greatSweepProblems.push(`the untailed plate lands ${greatSweep[0].best[0]}, not twenty-one`);
+  }
+  if (greatSweep[2].best[0] >= 0 || greatSweep[3].best[0] >= 0) {
+    greatSweepProblems.push(`the plate is not lost outright at tails two and three` +
+      ` (${greatSweep[2].best[0]}, ${greatSweep[3].best[0]})`);
+  }
+  if (greatSweep[4].best[0] !== 29) {
+    greatSweepProblems.push(`the smallest winning tail lands ${greatSweep[4].best[0]}, not twenty-nine`);
+  }
+  if (greatSweep[0].best[0] >= byId.d33.margin[0]) {
+    greatSweepProblems.push("cutting d33's tail to four does not drop it under its band");
+  }
+  if (greatSweep[0].best[0] >= byId.d40.margin[0]) {
+    greatSweepProblems.push("cutting d40's tail away does not drop it under its band");
+  }
+  if (greatSweep[4].best[0] >= byId.d40.margin[0]) {
+    greatSweepProblems.push("seating the counter back into d40 does not drop it under its band");
+  }
+  check("game-glyph-dots",
+    "the great plate's tail sweep loses the plate at two and three and lands every shipped tail load-bearing",
+    greatSweepProblems.length === 0, greatSweepProblems.join(" | "));
+
+  /* The mirror cut, both ways: unflip a mirrored rung and the ask falls
+   * under its band (the flipped eight-box deals land twenty-four and
+   * twenty-eight); unflip a great rung and the flipped deal is the sweep's
+   * own or a shipped rung's point, all under the mirrored bands. */
+  const mirrorProblems = [];
+  const d31flipped = farMargins(Object.assign({}, byId.d31, { foeFirst: true }), 1);
+  if (d31flipped.best[0] >= byId.d31.margin[0]) {
+    mirrorProblems.push(`d31 flipped back lands ${d31flipped.best[0]}, still at its band`);
+  }
+  const d32flipped = farMargins(Object.assign({}, byId.d32, { foeFirst: true }), 1);
+  if (d32flipped.best[0] >= byId.d32.margin[0]) {
+    mirrorProblems.push(`d32 flipped back lands ${d32flipped.best[0]}, still at its band`);
+  }
+  const d34flipped = greatSweep[0];
+  if (d34flipped.best[0] >= byId.d34.margin[0]) {
+    mirrorProblems.push(`d34 flipped lands ${d34flipped.best[0]}, still at its band`);
+  }
+  const d36flipped = greatSweep[4];
+  if (d36flipped.best[0] >= byId.d36.margin[0]) {
+    mirrorProblems.push(`d36 flipped lands ${d36flipped.best[0]}, still at its band`);
+  }
+  const d38flipped = farRun.d35;
+  if (d38flipped.best[0] >= byId.d38.margin[0]) {
+    mirrorProblems.push(`d38 flipped lands ${d38flipped.best[0]}, still at its band`);
+  }
+  const d39flipped = farRun.d37;
+  if (d39flipped.best[0] >= byId.d39.margin[0]) {
+    mirrorProblems.push(`d39 flipped lands ${d39flipped.best[0]}, still at its band`);
+  }
+  check("game-glyph-dots",
+    "cutting the mirror out of any mirrored far rung drops it under its band",
+    mirrorProblems.length === 0, mirrorProblems.join(" | "));
+
+  /* The decline signatures travel with the tier: no blunder-free rival
+   * below declines a cascade of four, six or seven boxes - the holds below
+   * run one, two, three and five - and the far deals decline all three
+   * sizes. */
+  const signatureProblems = [];
+  const signatureSizes = [4, 6, 7];
+  levels.forEach((rank) => {
+    if (rank.blunder !== 0 || farIds.includes(rank.id)) return;
+    const hold = rank.hold || 0;
+    if (signatureSizes.includes(hold)) {
+      signatureProblems.push(rank.id + " holds " + hold);
+    }
+  });
+  [4, 6, 7].forEach((size) => {
+    if (!farIds.some((id) => farRun[id].declines.includes(size))) {
+      signatureProblems.push("the far tier never declines a " + size + "-box cascade");
+    }
+  });
+  check("game-glyph-dots",
+    "the four-, six- and seven-box declines are the far tier's alone: shipped in its deals, absent below",
+    signatureProblems.length === 0, signatureProblems.join(" | "));
+
   /* The tier's names travel with the page: both languages hold a real string
    * and t() never falls back to the raw key - read from the booted module's
    * own strings, which addStrings fills at boot. */
-  const copyProblems = tierIds.map((id) => byId[id].labelKey).filter((key) =>
-    !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
-    !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
-    !App.t(key) || App.t(key) === key);
-  check("game-glyph-dots", "the ten deep and summit rung names resolve in both languages",
+  const copyProblems = tierIds.concat(farIds).map((id) => byId[id].labelKey)
+    .filter((key) =>
+      !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
+      !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
+      !App.t(key) || App.t(key) === key);
+  check("game-glyph-dots", "the twenty deep, summit and far rung names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 
   /* The unlock chain is derived, never stored: clearing each rung in order
-   * hands the player exactly the next one, all thirty times, under the
+   * hands the player exactly the next one, all forty times, under the
    * campaign key the game itself ships. */
   const chain = App.createCampaign({
     key: "dots-campaign",
@@ -714,7 +962,7 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-glyph-dots", "the unlock chain walks all thirty rungs in order",
-    walked === 30 && chained && chain.clearedCount() === 30,
+  check("game-glyph-dots", "the unlock chain walks all forty rungs in order",
+    walked === 40 && chained && chain.clearedCount() === 40,
     walked + " first clears");
 };

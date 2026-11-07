@@ -224,7 +224,7 @@
       w: row.w, h: row.h, finds: row.finds, base: row.base, slope: row.slope,
       debris: row.debris, spread: row.spread, air: row.air, pingRadius: row.pingRadius,
       pingCost: row.pingCost, docCost: row.docCost, liftCost: row.liftCost, silt: row.silt,
-      bays: row.bays, quickReach: row.quickReach, ambig: row.ambig || 0,
+      bays: row.bays, quickReach: row.quickReach, ambig: row.ambig || 0, tide: row.tide,
       starQuality: row.starQuality, id: row.id, labelKey: row.labelKey,
     };
     if (typeof side === "number" && side > 6) {
@@ -242,11 +242,13 @@
   function ocnDepth(shape, y) { return shape.base + y * shape.slope; }
 
   /* Air for the ascent: the lift line pulls you to the boat in a straight line,
-   * so the number is planable and never maze-dependent. */
+   * so the number is planable and never maze-dependent. `tide` is a dive's
+   * current: the pull home costs that many times more air. Wrecks that leave
+   * the field off ascend exactly as they always did. */
   function ocnAscent(wreck, cell) {
     var dx = cell.x - wreck.entry.x;
     var dy = cell.y - wreck.entry.y;
-    return Math.max(1, Math.ceil(Math.sqrt(dx * dx + dy * dy)));
+    return Math.max(1, Math.ceil(Math.sqrt(dx * dx + dy * dy) * (wreck.tide || 1)));
   }
 
   /* Swim steps over open sand from any cell; -1 means unreachable. */
@@ -471,11 +473,14 @@
     var near = 0;
     for (i = 0; i < arts.length; i += 1) {
       if (!arts[i].unique) { ambiguous += 1; }
-      if (ocnAscent({ entry: entry }, arts[i]) <= shape.quickReach) { near += 1; }
+      /* The near count reads the same tide the dive will: a hurried sweep's
+       * reach is measured against the pull home it will actually pay. */
+      if (ocnAscent({ entry: entry, tide: shape.tide }, arts[i]) <= shape.quickReach) { near += 1; }
     }
     return {
       w: w, h: h, seed: seed, silt: shape.silt ? 1 : 0, bays: shape.bays ? 1 : 0,
       air: shape.air, quickReach: shape.quickReach, pingRadius: shape.pingRadius,
+      tide: shape.tide,
       costs: { step: 1, ping: shape.pingCost, doc: shape.docCost, lift: shape.liftCost },
       grid: grid, entry: entry, artifacts: arts, berths: berths, berthAt: berthAt,
       ambiguous: ambiguous, near: near,
@@ -523,8 +528,9 @@
     }
     return {
       w: w, h: h, seed: base, silt: 0, bays: 0, air: shape.air, quickReach: shape.quickReach,
-      pingRadius: shape.pingRadius, grid: grid, entry: { x: 1, y: 1 }, artifacts: arts,
-      berths: berths, berthAt: ocnBlank(w, h, 0), ambiguous: 0, near: arts.length ? 1 : 0,
+      pingRadius: shape.pingRadius, tide: shape.tide, grid: grid, entry: { x: 1, y: 1 },
+      artifacts: arts, berths: berths, berthAt: ocnBlank(w, h, 0), ambiguous: 0,
+      near: arts.length ? 1 : 0,
       costs: { step: 1, ping: shape.pingCost, doc: shape.docCost, lift: shape.liftCost },
     };
   }

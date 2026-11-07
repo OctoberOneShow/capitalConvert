@@ -257,21 +257,35 @@ function mulberry(seed) {
 }
 
 /* Lay a ford: one lane per row, a second opposing train through the rows the
- * brief marks, speeds rising and gaps narrowing as the ladder climbs. */
+ * brief marks, speeds rising and gaps narrowing as the ladder climbs.
+ *
+ * An optional spec.len narrows the props themselves - the one lane field the
+ * shipped ladder never briefed before the shoals tier. It carries four bands
+ * (riv/road for the base six lanes, rivX/roadX for the cross trains) and is
+ * all-or-nothing: when it is absent every band falls back to the shipped
+ * 70-100 / 58-76 so the deep, summit, deluge and flood briefs forge
+ * byte-identical lanes to the day they shipped. */
 function forgeFord(spec, seed) {
   const rng = mulberry(seed);
   const band = spec.band;
+  const len = spec.len || null;
+  const lenRiv = len ? len.riv : [70, 100];
+  const lenRoad = len ? len.road : [70, 100];
+  const lenRivX = len ? len.rivX : [58, 76];
+  const lenRoadX = len ? len.roadX : [58, 76];
   const even = function (lo, hi) {
     const v = Math.round(lo + rng() * (hi - lo));
     return v % 2 === 0 ? v : v + 1;
   };
   const lanes = [];
   [1, 2, 3, 5, 6, 7].forEach(function (row) {
+    const river = RIVER_ROWS.indexOf(row) !== -1;
+    const lenBand = river ? lenRiv : lenRoad;
     lanes.push({
       row: row,
       dir: rng() < 0.5 ? 1 : -1,
       speed: even(band[0], band[1]),
-      len: even(70, 100),
+      len: even(lenBand[0], lenBand[1]),
       gap: even(band[2], band[3]),
     });
   });
@@ -279,12 +293,24 @@ function forgeFord(spec, seed) {
     const first = lanes.find(function (lane) {
       return lane.row === row;
     });
+    const lenBand = RIVER_ROWS.indexOf(row) !== -1 ? lenRivX : lenRoadX;
+    /* The first counter-train a row takes runs express (band + 10..26, the
+     * shipped rule). A THIRD train on a row - the shoals tier's own move -
+     * runs local: base-band tempo, base-band windows, so a tripled street
+     * reads local / express against the base instead of stacking two
+     * expresses on it. Briefs that never repeat a row forge exactly the
+     * lanes they always did. */
+    const seen = lanes.filter(function (lane) {
+      return lane.row === row && lane !== first;
+    }).length;
+    const speedBand = seen === 0 ? [band[0] + 10, band[1] + 26] : [band[0], band[1]];
+    const gapBand = seen === 0 ? [band[2] - 4, band[3] + 6] : [band[2], band[3]];
     lanes.push({
       row: row,
       dir: first ? -first.dir : 1,
-      speed: even(band[0] + 10, band[1] + 26),
-      len: even(58, 76),
-      gap: even(band[2] - 4, band[3] + 6),
+      speed: even(speedBand[0], speedBand[1]),
+      len: even(lenBand[0], lenBand[1]),
+      gap: even(gapBand[0], gapBand[1]),
     });
   });
   return { id: spec.id, labelKey: spec.labelKey, lanes: lanes, starTimes: [0, 0, 0] };
@@ -388,6 +414,34 @@ function main() {
     };
     Object.keys(delugeBriefs).forEach(function (id) {
       brief[id] = delugeBriefs[id];
+    });
+    /* The timetable tier lays the ladder's first third trains - streets
+     * only, in the order the campaign doubled them (6 at c10, 7 at c21,
+     * 5 at c23), with row 2, the first doubled river, taking the rivers'
+     * only third trains beside them from c48. The cross list repeats a row
+     * to triple it: the first repeat rolls express (+10..+26 over the
+     * band), the second rolls local (base tempo, base windows) - the rule
+     * the deluge and flood briefs never touch. The bands hold the
+     * floodgate's own 232/274/50/64, stepping to 238/280/48/62 at c51 and
+     * 244/286/46/60 for the capstone; the seeds below are the ones the
+     * shipped rungs were forged from, searched against the whole ladder so
+     * each holds its rung's measured record, the route ladder only climbs,
+     * and the tier's ablation pair (street third train load-bearing, river
+     * third train shadow) stands rung by rung. */
+    const timetableBriefs = {
+      c45: { id: "c45", labelKey: "croL45", band: [232, 274, 50, 64], cross: [6, 2, 7, 5, 1, 3, 6], seed: 1 },
+      c46: { id: "c46", labelKey: "croL46", band: [232, 274, 50, 64], cross: [6, 2, 7, 5, 1, 3, 7], seed: 1 },
+      c47: { id: "c47", labelKey: "croL47", band: [232, 274, 50, 64], cross: [6, 2, 7, 5, 1, 3, 5], seed: 1 },
+      c48: { id: "c48", labelKey: "croL48", band: [232, 274, 50, 64], cross: [6, 2, 7, 5, 1, 3, 6, 2], seed: 52 },
+      c49: { id: "c49", labelKey: "croL49", band: [232, 274, 50, 64], cross: [6, 2, 7, 5, 1, 3, 7, 2], seed: 36 },
+      c50: { id: "c50", labelKey: "croL50", band: [232, 274, 50, 64], cross: [6, 2, 7, 5, 1, 3, 5, 2], seed: 28 },
+      c51: { id: "c51", labelKey: "croL51", band: [238, 280, 48, 62], cross: [6, 2, 7, 5, 1, 3, 6, 2], seed: 42 },
+      c52: { id: "c52", labelKey: "croL52", band: [238, 280, 48, 62], cross: [6, 2, 7, 5, 1, 3, 7, 2], seed: 21 },
+      c53: { id: "c53", labelKey: "croL53", band: [238, 280, 48, 62], cross: [6, 2, 7, 5, 1, 3, 5, 2], seed: 32 },
+      c54: { id: "c54", labelKey: "croL54", band: [244, 286, 46, 60], cross: [6, 2, 7, 5, 1, 3, 6, 2], seed: 44 },
+    };
+    Object.keys(timetableBriefs).forEach(function (id) {
+      brief[id] = timetableBriefs[id];
     });
     (ids.length ? ids : Object.keys(brief)).forEach(function (id) {
       const spec = brief[id];

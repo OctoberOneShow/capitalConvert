@@ -91,6 +91,40 @@
     { id: "q28", labelKey: "sorL28", tubes: 17, colors: 15, shuffle: 150, starMoves: [63, 83, 103], maxPath: 63 },
     { id: "q29", labelKey: "sorL29", tubes: 17, colors: 15, shuffle: 150, starMoves: [60, 80, 100], maxPath: 60 },
     { id: "q30", labelKey: "sorL30", tubes: 17, colors: 15, shuffle: 150, starMoves: [57, 77, 97], maxPath: 57 },
+    /* Ranks 31-40 are the narrow tier, and its dial is one the ladder had
+     * never shipped: the last spare vial holds two units of glass instead
+     * of four, so the same fifteen colours have to be threaded through
+     * half the staging room. All numbers were measured through the
+     * module's own dealer and solver on the gate's seeded deals. The
+     * floor is proved the way the deep tier proved its two-spare floor:
+     * narrow both spares and the dealer starves - four of six pinned
+     * deals collapse to the one-pour fallback - so one narrow vial is
+     * all the glass the ladder can still deal. On the same eight seeds
+     * under loose acceptance the full glass sorts in 58-72 moves and the
+     * narrow glass in 58-85: the glass itself is what the extra length
+     * is made of. The bands are the solver's own line (starMoves[0] is
+     * maxPath, the shipped law) and descend 84, 82, 78, 76, 74, 72, 70,
+     * 68, 66, 64 while the bench's longest replay shortens 70 -> 63; on
+     * each rung's pinned line deal the replay lands exactly on the band,
+     * eight seeded deals per rung all sort clean, and none of the eighty
+     * fell back. Below the close the edge is measured too: maxPath 58
+     * already starves one deal in ten and 54 starves eight, so the close
+     * at 64 sits a measured six moves above the first starvation. The
+     * dials are load-bearing by cut: cut the glass on the open rungs and
+     * the same seeds sort in 58-72 - back inside the world the shipped
+     * summit played in - and on the close rungs relax the acceptance to
+     * the roof and the unfiltered racks carry walks of 67-72, past every
+     * close band, landing two stars, not three. */
+    { id: "q31", labelKey: "sorL31", tubes: 17, colors: 15, shuffle: 150, starMoves: [84, 104, 124], maxPath: 84, narrow: 1 },
+    { id: "q32", labelKey: "sorL32", tubes: 17, colors: 15, shuffle: 150, starMoves: [82, 102, 122], maxPath: 82, narrow: 1 },
+    { id: "q33", labelKey: "sorL33", tubes: 17, colors: 15, shuffle: 150, starMoves: [78, 98, 118], maxPath: 78, narrow: 1 },
+    { id: "q34", labelKey: "sorL34", tubes: 17, colors: 15, shuffle: 150, starMoves: [76, 96, 116], maxPath: 76, narrow: 1 },
+    { id: "q35", labelKey: "sorL35", tubes: 17, colors: 15, shuffle: 150, starMoves: [74, 94, 114], maxPath: 74, narrow: 1 },
+    { id: "q36", labelKey: "sorL36", tubes: 17, colors: 15, shuffle: 150, starMoves: [72, 92, 112], maxPath: 72, narrow: 1 },
+    { id: "q37", labelKey: "sorL37", tubes: 17, colors: 15, shuffle: 150, starMoves: [70, 90, 110], maxPath: 70, narrow: 1 },
+    { id: "q38", labelKey: "sorL38", tubes: 17, colors: 15, shuffle: 150, starMoves: [68, 88, 108], maxPath: 68, narrow: 1 },
+    { id: "q39", labelKey: "sorL39", tubes: 17, colors: 15, shuffle: 150, starMoves: [66, 86, 106], maxPath: 66, narrow: 1 },
+    { id: "q40", labelKey: "sorL40", tubes: 17, colors: 15, shuffle: 150, starMoves: [64, 84, 104], maxPath: 64, narrow: 1 },
   ];
 
   /* Bilingual copy for the deeper rack. addStrings only fills keys the shared
@@ -107,6 +141,11 @@
       "sorL25": "The Solver's Line", "sorL26": "The Counted Pour",
       "sorL27": "The Measured Rack", "sorL28": "The Narrow Line",
       "sorL29": "The Last Slack", "sorL30": "To the Last Drop",
+      "sorL31": "The Narrow Vial", "sorL32": "Half Glass",
+      "sorL33": "The Pinched Rack", "sorL34": "Thin Glass",
+      "sorL35": "The Tight Neck", "sorL36": "Two Units Wide",
+      "sorL37": "The Bottleneck", "sorL38": "The Squeezed Vial",
+      "sorL39": "The Last Room", "sorL40": "To the Brim",
     },
     zh: {
       "sorL11": "\u7b2c\u4e94\u53ea\u7a7a\u74f6", "sorL12": "\u7a84\u67b6",
@@ -119,6 +158,11 @@
       "sorL25": "\u89e3\u6cd5\u4e4b\u7ebf", "sorL26": "\u70b9\u6ef4\u5fc5\u8f83",
       "sorL27": "\u6beb\u5398\u74f6\u67b6", "sorL28": "\u4e00\u7ebf\u4e4b\u5bbd",
       "sorL29": "\u6700\u540e\u7684\u4f59\u91cf", "sorL30": "\u4e00\u6ef4\u4e0d\u5269",
+      "sorL31": "\u7a84\u53e3\u74f6", "sorL32": "\u534a\u76cf\u4e4b\u91cf",
+      "sorL33": "\u6536\u7a84\u7684\u74f6\u67b6", "sorL34": "\u8584\u73bb\u7483",
+      "sorL35": "\u7ec6\u9888\u4e4b\u74f6", "sorL36": "\u4e24\u683c\u4e4b\u5bbd",
+      "sorL37": "\u74f6\u9888", "sorL38": "\u6324\u538b\u4e4b\u74f6",
+      "sorL39": "\u6700\u540e\u7684\u4f59\u9699", "sorL40": "\u6ee1\u81f3\u74f6\u53e3",
     },
   });
 
@@ -126,8 +170,14 @@
    * into a random permutation, then DFS-verify the deal can actually be
    * finished before offering it. Exported for the checks. The helpers
    * below deliberately re-declare the capacity so the slice is
-   * self-contained and runnable headless. */
+   * self-contained and runnable headless. The `narrow` count narrows the
+   * rack's last spare tubes to two units of glass, so the same fifteen
+   * colours have to be threaded through less staging room. */
   var SORT_CAP = 4;
+
+  function sortCapOf(tubes, index, narrow) {
+    return narrow && index >= tubes.length - narrow ? 2 : SORT_CAP;
+  }
 
   function sortTopRun(tubes, index) {
     var tube = tubes[index];
@@ -154,9 +204,9 @@
     return !dest.length || dest[dest.length - 1] === run.color;
   }
 
-  function sortPour(tubes, from, to) {
+  function sortPour(tubes, from, to, narrow) {
     var run = sortTopRun(tubes, from);
-    var amount = Math.min(run.count, SORT_CAP - tubes[to].length);
+    var amount = Math.min(run.count, sortCapOf(tubes, to, narrow) - tubes[to].length);
     for (var u = 0; u < amount; u += 1) {
       tubes[to].push(tubes[from].pop());
     }
@@ -176,8 +226,10 @@
   }
 
   /* Depth-first search with a visited set; returns one winning pour
-   * sequence or null when the node budget runs out. */
-  function sortSolve(start, maxNodes) {
+   * sequence or null when the node budget runs out. The narrow count
+   * shrinks the last tubes' glass, and the search has to stage through
+   * whatever room it is given. */
+  function sortSolve(start, maxNodes, narrow) {
     var seen = {};
     var nodes = 0;
     var path = [];
@@ -210,7 +262,7 @@
           continue;
         }
         for (var b = 0; b < tubes.length; b += 1) {
-          if (a === b || tubes[b].length >= SORT_CAP) {
+          if (a === b || tubes[b].length >= sortCapOf(tubes, b, narrow)) {
             continue;
           }
           if (tubes[b].length && tubes[b][tubes[b].length - 1] !== run.color) {
@@ -222,7 +274,7 @@
           var next = tubes.map(function (tube) {
             return tube.slice();
           });
-          var amount = Math.min(run.count, SORT_CAP - next[b].length);
+          var amount = Math.min(run.count, sortCapOf(next, b, narrow) - next[b].length);
           for (var u = 0; u < amount; u += 1) {
             next[b].push(next[a].pop());
           }
@@ -242,7 +294,7 @@
       : null;
   }
 
-  function sortGenerate(colors, tubeCount, depth, maxPath) {
+  function sortGenerate(colors, tubeCount, depth, maxPath, narrow) {
     var attempt;
     for (attempt = 0; attempt < 60; attempt += 1) {
       var units = [];
@@ -270,18 +322,24 @@
       if (sortIsUniform(tubes)) {
         continue;
       }
-      var solution = sortSolve(tubes, 30000);
+      var solution = sortSolve(tubes, 30000, narrow || 0);
       if (solution && solution.length && (!maxPath || solution.length <= maxPath)) {
         return { tubes: tubes, solution: solution };
       }
     }
-    /* Deterministic fallback: one unit parked in the spare tube, so the
-     * deal is always exactly one legal pour from done. */
+    /* Deterministic fallback: one unit parked in a spare tube, so the
+     * deal is always exactly one legal pour from done. With narrow glass
+     * the unit parks in the narrow vial itself - it holds one, and its
+     * single pour tops the colour's own tube back up to four. */
     var safe = [];
     for (var i2 = 0; i2 < tubeCount; i2 += 1) {
       safe.push(i2 < colors ? [i2, i2, i2, i2] : []);
     }
     if (tubeCount > colors) {
+      if (narrow > 0) {
+        safe[tubeCount - 1].push(safe[0].pop());
+        return { tubes: safe, solution: [[tubeCount - 1, 0]] };
+      }
       safe[colors].push(safe[0].pop());
     }
     return { tubes: safe, solution: tubeCount > colors ? [[0, colors]] : [] };
@@ -356,9 +414,25 @@
       });
     }
 
+    /* A narrow vial holds two units of glass; the rack's last `narrow`
+     * spares are poured into it. A colour can never finish in one, so a
+     * solved rack always finds them empty - but they stage real units
+     * while the rack is live, and the pour rules give them only two. */
+    function capOf(index) {
+      return level.narrow && index >= tubes.length - level.narrow ? 2 : sortCap;
+    }
+
+    function isComplete(index) {
+      var tube = tubes[index];
+      return tube.length > 0 && tube.length === capOf(index) &&
+        tube.every(function (c) {
+          return c === tube[0];
+        });
+    }
+
     function allDone() {
-      return tubes.every(function (tube) {
-        return !tube.length || isDone(tube);
+      return tubes.every(function (tube, index) {
+        return !tube.length || isComplete(index);
       });
     }
 
@@ -423,7 +497,7 @@
       if (solved || from === to) {
         return false;
       }
-      if (!tubes[from].length || tubes[to].length >= sortCap) {
+      if (!tubes[from].length || tubes[to].length >= capOf(to)) {
         return false;
       }
       if (isDone(tubes[from])) {
@@ -435,7 +509,7 @@
         return false;
       }
       var rect = tubeRect(to);
-      var amount = sortPour(tubes, from, to);
+      var amount = sortPour(tubes, from, to, level.narrow || 0);
       moves += 1;
       if (!clockRunning) {
         clockRunning = true;
@@ -517,7 +591,8 @@
 
     function loadLevel(levelDef) {
       level = levelDef;
-      var deal = sortGenerate(level.colors, level.tubes, level.shuffle, level.maxPath);
+      var deal = sortGenerate(
+        level.colors, level.tubes, level.shuffle, level.maxPath, level.narrow || 0);
       tubes = deal.tubes;
       moves = 0;
       solved = false;
@@ -556,8 +631,9 @@
         }
         ctx.stroke();
         ctx.shadowBlur = 0;
-        /* Liquid units, bottom-up */
-        var unitH = (r.h - 14) / sortCap;
+        /* Liquid units, bottom-up. A narrow vial's two units fill the
+         * same glass, which is how the rack shows the tighter vial. */
+        var unitH = (r.h - 14) / capOf(index);
         tube.forEach(function (color, unit) {
           var y = r.y + r.h - 7 - (unit + 1) * unitH;
           var wave = Math.sin(time / 300 + unit * 0.9 + index) * 1.2;

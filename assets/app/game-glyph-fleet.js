@@ -73,6 +73,39 @@
     { id: "bf28", labelKey: "fltL28", skill: 14, starShots: [19, 26, 33] },
     { id: "bf29", labelKey: "fltL29", skill: 14, starShots: [19, 25, 32] },
     { id: "bf30", labelKey: "fltL30", skill: 14, starShots: [18, 25, 31] },
+    /* Ranks 31-40: the new navies. Every shipped rank refits the same
+     * four-hull navy - four, three, three, two, twelve cells of it, the
+     * only fleet the ladder has ever laid - so the tier's new lever is the
+     * navy itself: `fleet` is the hull table the admiral lays, and no
+     * shipped rank carries one. The tonnage climbs thirteen to twenty-two
+     * down the tier, flagship by flagship, to a pair of six-deck hulls no
+     * sea this drawer has sailed could hold. Every number here is the
+     * shipped hunt's own measured line - the parity sweep plus target
+     * queue the shipped header quotes, four hundred seeded deals a rank:
+     * the hunt's mean climbs 41.05, 41.97, 42.83, 43.14, 43.89, 44.51,
+     * 45.60, 46.41, 47.41, 48.13 - never faster down the tier, six shots
+     * a rung's worth harder at the capstone than at its base - and the
+     * three-star band sits where the hunt actually lands it, 14.5, 17.0,
+     * 17.5, 20.3, 18.0, 19.8, 15.3, 15.8, 11.5 and 14.8 per cent of the
+     * same deals, with one star on seven deals in ten. The counterfactual
+     * navy was benched on the very same seeds: strike the fleet field and
+     * every rung's hunt gets measurably cheaper - the paired mean falls
+     * 1.01, 1.93, 2.79, 3.10, 3.85, 4.47, 5.57, 6.37, 7.37 and 8.10
+     * shots - and the tier's own three-star lines land on 19.5 up to
+     * 54.5 per cent of the struck navy's deals, which is what free looks
+     * like. The random-cell trap hand never lands a band on any rung: its
+     * best four hundred deals bottom out at 41 to 44 shots against
+     * three-star lines of 34 to 41, and it pays the sixties on average. */
+    { id: "bf31", labelKey: "fltL31", skill: 14, fleet: [5, 3, 3, 2], starShots: [34, 41, 45] },
+    { id: "bf32", labelKey: "fltL32", skill: 14, fleet: [5, 4, 3, 2], starShots: [36, 42, 46] },
+    { id: "bf33", labelKey: "fltL33", skill: 14, fleet: [5, 5, 3, 2], starShots: [37, 43, 46] },
+    { id: "bf34", labelKey: "fltL34", skill: 14, fleet: [5, 5, 3, 3], starShots: [38, 44, 47] },
+    { id: "bf35", labelKey: "fltL35", skill: 14, fleet: [5, 5, 4, 3], starShots: [38, 44, 48] },
+    { id: "bf36", labelKey: "fltL36", skill: 14, fleet: [5, 5, 4, 4], starShots: [39, 45, 48] },
+    { id: "bf37", labelKey: "fltL37", skill: 14, fleet: [5, 5, 5, 4], starShots: [39, 46, 49] },
+    { id: "bf38", labelKey: "fltL38", skill: 14, fleet: [5, 5, 5, 5], starShots: [40, 46, 50] },
+    { id: "bf39", labelKey: "fltL39", skill: 14, fleet: [6, 5, 5, 5], starShots: [40, 46, 50] },
+    { id: "bf40", labelKey: "fltL40", skill: 14, fleet: [6, 6, 5, 5], starShots: [41, 47, 51] },
   ];
   var FLT_EMPTY = 0;
   var FLT_MISS = 1;
@@ -80,13 +113,18 @@
   var FLT_SUNK = 3;
 
   /* Pure helpers, exported for the static checks. */
-  function fltPlace() {
+  /* The navy a rank sails: every shipped rank sails the standard four-hull
+   * navy, so fltPlace reads its argument as the hull table and falls back to
+   * the shipped one when no rank carries a fleet - which is every shipped
+   * call, game and gate alike. */
+  function fltPlace(ships) {
+    var shape = ships && ships.length ? ships : FLT_SHIPS;
     for (var attempt = 0; attempt < 200; attempt += 1) {
       var occupied = {};
-      var ships = [];
+      var shipsOut = [];
       var ok = true;
-      for (var s = 0; s < FLT_SHIPS.length && ok; s += 1) {
-        var size = FLT_SHIPS[s];
+      for (var s = 0; s < shape.length && ok; s += 1) {
+        var size = shape[s];
         for (var tryT = 0; tryT < 60 && ok; tryT += 1) {
           var horiz = Math.random() < 0.5;
           var x = Math.floor(Math.random() * (horiz ? FLT_N - size + 1 : FLT_N));
@@ -105,7 +143,7 @@
           if (clash) {
             continue;
           }
-          ships.push({ cells: cells, hits: 0, size: size });
+          shipsOut.push({ cells: cells, hits: 0, size: size });
           for (var c2 = 0; c2 < cells.length; c2 += 1) {
             occupied[cells[c2]] = true;
           }
@@ -116,15 +154,15 @@
           ok = false;
         }
       }
-      if (ok && ships.length === FLT_SHIPS.length) {
-        return { ships: ships, occupied: occupied };
+      if (ok && shipsOut.length === shape.length) {
+        return { ships: shipsOut, occupied: occupied };
       }
     }
     /* Statistically unreachable fallback: single-cell ships. */
     var ships2 = [];
     var occ2 = {};
-    for (var f = 0; f < 12; f += 1) {
-      ships2.push({ cells: [f], hits: 0, size: 1 });
+    for (var f = 0; f < shape.length; f += 1) {
+      ships2.push({ cells: [f], hits: 0, size: shape[f] });
       occ2[f] = true;
     }
     return { ships: ships2, occupied: occ2 };
@@ -597,7 +635,7 @@
     function renderHud() {
       shotsEl.textContent = String(playerShots);
       sunkEl.textContent =
-        FLT_SHIPS.length - shipsAlive(aiFleet) + "/" + FLT_SHIPS.length;
+        aiFleet.ships.length - shipsAlive(aiFleet) + "/" + aiFleet.ships.length;
       timeEl.textContent = clockRunning
         ? ((Date.now() - startedAt) / 1000).toFixed(1) + "s"
         : timeEl.textContent;
@@ -624,7 +662,10 @@
       aiTimer = null;
       level = levelDef;
       playerFleet = fltPlace();
-      aiFleet = fltPlace();
+      /* The fleet-shape ranks' twist: a rival that sails its own navy. Every
+       * shipped rank carries no fleet field, so the admiral lays the shipped
+       * four-hull navy exactly as always, byte for byte. */
+      aiFleet = fltPlace(levelDef.fleet);
       enemyBoard = [];
       homeBoard = [];
       for (var i = 0; i < FLT_N * FLT_N; i += 1) {
@@ -974,6 +1015,16 @@
       "fltL28": "Triton's Grip",
       "fltL29": "The Drowned Crown",
       "fltL30": "Ocean's Last Horizon",
+      "fltL31": "The Dreadnought",
+      "fltL32": "The Long Hull",
+      "fltL33": "The Twin Titans",
+      "fltL34": "The Iron Pair",
+      "fltL35": "The Weighted Line",
+      "fltL36": "The Balanced Fleet",
+      "fltL37": "The Heavy Core",
+      "fltL38": "The Four Fives",
+      "fltL39": "The Grand Dreadnought",
+      "fltL40": "The Double Colossus",
     },
     zh: {
       "fltL9": "海军大将",
@@ -992,12 +1043,22 @@
       "fltL22": "无声舰队",
       "fltL23": "风暴堡垒",
       "fltL24": "大洋主权巅峰",
-      "fltL25": "巨鲸战线",
-      "fltL26": "深水之主",
-      "fltL27": "深渊舰队",
-      "fltL28": "海神之握",
-      "fltL29": "沉没之冠",
-      "fltL30": "沧海终章",
+      "fltL25": "\u5de8\u9cb8\u6218\u7ebf",
+      "fltL26": "\u6df1\u6c34\u4e4b\u4e3b",
+      "fltL27": "\u6df1\u6e0a\u8230\u961f",
+      "fltL28": "\u6d77\u795e\u4e4b\u63e1",
+      "fltL29": "\u6c89\u6ca1\u4e4b\u51a0",
+      "fltL30": "\u6ca7\u6d77\u7ec8\u7ae0",
+      "fltL31": "\u65e0\u754f\u8230",
+      "fltL32": "\u957f\u8237\u91cd\u8230",
+      "fltL33": "\u53cc\u5b50\u5de8\u8230",
+      "fltL34": "\u94c1\u7532\u53cc\u96c4",
+      "fltL35": "\u91cd\u88c5\u6218\u5217",
+      "fltL36": "\u5747\u8861\u8230\u961f",
+      "fltL37": "\u91cd\u6838\u8230\u961f",
+      "fltL38": "\u56db\u4e94\u7f16\u961f",
+      "fltL39": "\u5de8\u578b\u65e0\u754f\u8230",
+      "fltL40": "\u53cc\u67f1\u5de8\u517d",
     },
   });
 

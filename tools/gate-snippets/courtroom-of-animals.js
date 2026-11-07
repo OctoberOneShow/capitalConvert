@@ -1,6 +1,6 @@
 "use strict";
 
-/* game-courtroom-of-animals: a thirty case docket, proved at deal time
+/* game-courtroom-of-animals: a forty case docket, proved at deal time
  *
  * The courtroom game ships one authored docket and one exported prover. This
  * gate re-runs that prover over every shipped case, so a case is only on the
@@ -30,7 +30,8 @@
  *        leaves its witness under the bar, and only the mending puts it back;
  *   k30  the exhibit that waits on a witness: the mirror counts only through a
  *        question anchored on the mole's third word, and the summit case is the
- *        hardest measured case on the ladder.
+ *        hardest measured case on the shipped ladder.
+ *
  */
 module.exports = function gate(ctx) {
   const { App, check, fs, path, root } = ctx;
@@ -39,6 +40,7 @@ module.exports = function gate(ctx) {
   const ids = cases.map((def) => def.id);
   const expected = Array.from({ length: 30 }, (_, i) => "k" + (i + 1));
   const newIds = ["k25", "k26", "k27", "k28", "k29", "k30"];
+  const towerIds = Array.from({ length: 10 }, (_, i) => "k" + (31 + i));
   const ladderIds = expected.slice(20);
   const shippedIds = expected.slice(0, 24);
 
@@ -185,25 +187,149 @@ module.exports = function gate(ctx) {
       "new lows " + newIds.map((id) => bands(caseById(id))[2]).join(",") +
       " vs shipped highs " + shippedTop.map((t) => t[0]).join(","));
 
-    const tops = cases.map((def) => bands(def)[0]);
+    const tops = cases.slice(0, 30).map((def) => bands(def)[0]);
     const maxTop = Math.max.apply(null, tops);
-    const maxActions = Math.max.apply(null, cases.map((def) => App.courtBestLine(def).actions));
-    const maxNeeded = Math.max.apply(null, cases.map((def) => App.courtSolvable(def).needed));
-    const maxTime = Math.max.apply(null, cases.map((def) => def.time));
+    const maxActions = Math.max.apply(null, cases.slice(0, 30).map((def) => App.courtBestLine(def).actions));
+    const maxNeeded = Math.max.apply(null, cases.slice(0, 30).map((def) => App.courtSolvable(def).needed));
+    const maxTime = Math.max.apply(null, cases.slice(0, 30).map((def) => def.time));
     const summit = caseById("k30");
-    check(slug, "k30 is the hardest measured case on the ladder",
+    check(slug, "k30 is the hardest measured case on the shipped ladder",
       bands(summit)[0] === maxTop &&
       tops.filter((value) => value === maxTop).length === 1 &&
       App.courtBestLine(summit).actions === maxActions &&
-      cases.filter((def) => App.courtBestLine(def).actions === maxActions).length === 1 &&
+      cases.slice(0, 30).filter((def) => App.courtBestLine(def).actions === maxActions).length === 1 &&
       App.courtSolvable(summit).needed === maxNeeded &&
-      cases.filter((def) => App.courtSolvable(def).needed === maxNeeded).length === 1 &&
+      cases.slice(0, 30).filter((def) => App.courtSolvable(def).needed === maxNeeded).length === 1 &&
       summit.time === maxTime &&
-      cases.filter((def) => def.time === maxTime).length === 1,
+      cases.slice(0, 30).filter((def) => def.time === maxTime).length === 1,
       `top ${maxTop}, actions ${maxActions}, proof ${maxNeeded}, clock ${maxTime}`);
   } else {
     check(slug, "k21..k30 all exist for the endgame proof", false, "missing");
   }
+
+  /* --- the tower: the mud a question throws ----------------------------- */
+
+  if (towerIds.every((id) => caseById(id))) {
+    /* Structural first: no shipped press names a taint, and the ten author
+     * the mud the tier comment prints, deepest on the true charge's own
+     * questions. */
+    check(slug, "no press before the tower names a taint - the lever is dead for k1-k30",
+      cases.slice(0, 30).every((def) =>
+        (def.presses || []).every((press) =>
+          press.taints === undefined && press.taintCost === undefined)),
+      cases.slice(0, 30).filter((def) =>
+        (def.presses || []).some((press) => press.taints !== undefined))
+        .map((def) => def.id).join(","));
+    const mudOf = (def) => {
+      const claim = def.claims[0];
+      return (def.presses || []).filter((press) => press.claim === claim.id && press.taints)
+        .map((press) => press.taintCost == null ? 1 : press.taintCost).join("+");
+    };
+    const mud = towerIds.map((id) => mudOf(caseById(id)));
+    check(slug, "the tower authors the mud the tier prints, pinned case by case, three tainted questions by the closer",
+      mud.join(" ") === "1 1 2 2 3 2+2 3 3+3 4 2+3+3" &&
+        Math.max.apply(null, towerIds.map((id) =>
+          (caseById(id).presses || []).filter((press) => press.claim === caseById(id).claims[0].id && press.taints)
+            .reduce((sum, press) => sum + (press.taintCost == null ? 1 : press.taintCost), 0))) === 8,
+      mud.join(" "));
+
+    /* The bands open above the shipped summit and climb strictly, and no
+     * tower rung is handed an easier band than any shipped case - including
+     * the summit's own floor of 32. */
+    const towerTop = towerIds.map((id) => bands(caseById(id)));
+    check(slug, "the tower bands open above k30 and climb strictly (" +
+        towerTop.map((top) => top[0]).join(" -> ") + " vs " + bands(caseById("k30"))[0] + ")",
+      towerTop.every((top, index) =>
+        (index === 0 || top[0] > towerTop[index - 1][0]) && top[0] > bands(caseById("k30"))[0]),
+      towerTop.map((top) => top.join("/")).join(" "));
+    const shippedAllTop = cases.slice(0, 30).map((def) => bands(def));
+    check(slug, "no tower rung is handed an easier band than any shipped case",
+      towerTop.every((top) => shippedAllTop.every((old) => bandsAtLeast(top, old))),
+      "tower floors " + towerTop.map((top) => top[2]).join(",") +
+      " vs shipped highs " + shippedAllTop.map((t) => t[0]).join(","));
+
+    /* The mud is load-bearing: strip the taint from the true charge's own
+     * questions and the best sound line's trust rises on every rung - the
+     * mending the tower buys is never decorative. */
+    const trustGaps = [];
+    towerIds.forEach((id) => {
+      const def = caseById(id);
+      const cut = clone(def);
+      const claimId = def.claims[0].id;
+      (cut.presses || []).forEach((press) => {
+        if (press.claim === claimId) {
+          delete press.taints;
+          delete press.taintCost;
+        }
+      });
+      const whole = App.courtBestLine(def);
+      const bare = App.courtBestLine(cut);
+      const ok = !!whole && !!bare && bare.trust > whole.trust;
+      if (!ok) {
+        trustGaps.push(id + ": trust " + (whole ? whole.trust : "-") + " vs " +
+          (bare ? bare.trust : "-"));
+      }
+    });
+    check(slug, "cutting the tower's mud out of the true charge's questions raises the sound line's trust on every rung",
+      trustGaps.length === 0, trustGaps.join(" | "));
+
+    /* The trap holds everywhere: the true charge's questions played without
+     * any mending never land a just verdict. */
+    const trapGaps = [];
+    towerIds.forEach((id) => {
+      const def = caseById(id);
+      const claim = def.claims[0];
+      const state = App.courtState(def);
+      (claim.statements || []).forEach((statementId) => {
+        const owner = (def.witnesses || []).find((witness) =>
+          (witness.statements || []).some((word) => word.id === statementId));
+        if (owner) {
+          owner.statements.forEach((word) => { state.statements[word.id] = 1; });
+        }
+      });
+      (claim.exhibits || []).forEach((exhibitId) => { state.exhibits[exhibitId] = 1; });
+      (def.presses || []).forEach((press) => {
+        if (press.claim !== claim.id) {
+          return;
+        }
+        state.presses[press.id] = 1;
+        state.delta[press.witness] = (state.delta[press.witness] || 0) -
+          (press.cost == null ? 1 : press.cost);
+        if (press.taints) {
+          state.delta[press.taints] = (state.delta[press.taints] || 0) -
+            (press.taintCost == null ? 1 : press.taintCost);
+        }
+      });
+      const trap = App.courtVerdict(state, claim.id);
+      if (trap.verdict === "just") {
+        trapGaps.push(id + ": the unmended questions still carry the verdict");
+      }
+    });
+    check(slug, "the tower's trap holds: the true charge's questions without their mendings never land a just verdict",
+      trapGaps.length === 0, trapGaps.join(" | "));
+
+    /* The closer: the tower's last case is the hardest measured case on the
+     * whole ladder - top band, actions, proof cost and clock, each alone. */
+    const allTops = cases.map((def) => bands(def)[0]);
+    const allMaxTop = Math.max.apply(null, allTops);
+    const allMaxActions = Math.max.apply(null, cases.map((def) => App.courtBestLine(def).actions));
+    const allMaxNeeded = Math.max.apply(null, cases.map((def) => App.courtSolvable(def).needed));
+    const allMaxTime = Math.max.apply(null, cases.map((def) => def.time));
+    const closer = caseById("k40");
+    check(slug, "k40 is the hardest measured case on the whole ladder",
+      bands(closer)[0] === allMaxTop &&
+      allTops.filter((value) => value === allMaxTop).length === 1 &&
+      App.courtBestLine(closer).actions === allMaxActions &&
+      cases.filter((def) => App.courtBestLine(def).actions === allMaxActions).length === 1 &&
+      App.courtSolvable(closer).needed === allMaxNeeded &&
+      cases.filter((def) => App.courtSolvable(def).needed === allMaxNeeded).length === 1 &&
+      closer.time === allMaxTime &&
+      cases.filter((def) => def.time === allMaxTime).length === 1,
+      `top ${allMaxTop}, actions ${allMaxActions}, proof ${allMaxNeeded}, clock ${allMaxTime}`);
+  } else {
+    check(slug, "k31..k40 all exist for the tower proof", false, "missing");
+  }
+
 
   /* --- k21: the two-action press is why the corroboration pays ---------- */
 
@@ -575,8 +701,8 @@ module.exports = function gate(ctx) {
   check(slug, "every authored case record carries English and Chinese prose",
     bare.length === 0, bare.slice(0, 12).join(",") + (bare.length > 12 ? "..." : ""));
 
-  check(slug, "the six summit labels resolve in both languages",
-    newIds.every((id) => {
+  check(slug, "the sixteen summit and tower labels resolve in both languages",
+    newIds.concat(towerIds).every((id) => {
       const def = caseById(id);
       const en = def && dicts.en[def.labelKey];
       const zh = def && dicts.zh[def.labelKey];
@@ -584,7 +710,7 @@ module.exports = function gate(ctx) {
         typeof zh === "string" && zh.length > 0 && zh !== def.labelKey &&
         en !== zh && App.t(def.labelKey) !== def.labelKey;
     }),
-    newIds.map((id) => (caseById(id) || {}).labelKey).join(","));
+    newIds.concat(towerIds).map((id) => (caseById(id) || {}).labelKey).join(","));
 
   /* --- guide ------------------------------------------------------------ */
 
@@ -592,12 +718,13 @@ module.exports = function gate(ctx) {
   const guide = guides.find((item) => item.id === "courtroomOfAnimals") || null;
   const source = fs.readFileSync(
     path.join(root, "assets", "app", "game-courtroom-of-animals.js"), "utf8");
-  const saysThirty = /close one of thirty cases/.test(source) &&
-    /在三十件案子里/.test(source) &&
-    !/close one of twenty-four cases/.test(source) && !/在二十四件案子里/.test(source);
+  
+  const saysForty = /close one of forty cases/.test(source) &&
+    /在四十件案子里/.test(source) &&
+    !/close one of thirty cases/.test(source) && !/在三十件案子里/.test(source);
 
   check(slug, "the guide gives the live ladder length, not a shipped one",
-    !!guide && saysThirty && cases.length >= 30,
+    !!guide && saysForty && cases.length >= 40,
     guide ? `${cases.length} cases; en ${guide.en[0]}; zh ${guide.zh[0]}` : "no guide");
 
   /* --- unlock chain ----------------------------------------------------- */
@@ -618,7 +745,7 @@ module.exports = function gate(ctx) {
       chained = false;
     }
   });
-  check(slug, "the unlock chain walks all thirty cases in order",
+  check(slug, "the unlock chain walks all forty cases in order",
     walked === cases.length && chained && chain.clearedCount() === cases.length,
     `${walked} first clears of ${cases.length}`);
 };

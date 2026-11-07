@@ -10,6 +10,7 @@
  *   node tools/microbe-forge.js            # audit every shipped rung
  *   node tools/microbe-forge.js --mine     # score the candidate table below
  *   node tools/microbe-forge.js --summit   # score the summit table below
+ *   node tools/microbe-forge.js --cinder   # score the 41-44 windows and slip
  *   node tools/microbe-forge.js --search   # re-run the 21-24 seed search
  *   node tools/microbe-forge.js --sweep    # walk the lever space
  */
@@ -137,6 +138,54 @@ const SUMMIT = [
   { id: "m40", gens: 12, seed: 50005, cap: 15, traitMax: 4, start: 11, base: 2, step: 1, points: 1,
     plan: [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]],
     starBand: [4990, 4690, 4340] },
+];
+
+/* The cinder bench, dishes 41-44: the documented measurement of the tier
+ * that crosses the two floors the summit only reached. The whole-deck rows
+ * share the summit capstone's deck, climb and soft opening (base 2, step 1,
+ * points 1, traitMax 4, start 11) and carry them past two floors no shipped
+ * dish had crossed - the budget under fifteen (m41) and the trial past
+ * twelve (m42, m43) - and the capstone narrows the deck to flare and venom
+ * over fifteen generations. The anchor is the shipped culture's own walk:
+ * the cinder cultures are the ones that never dip (the first one-point-hand
+ * cultures the lab has shipped that never touch the floor of four), the
+ * three-star line sits one hundred and one under that walk, and the
+ * one-star line sits one hundred under the floor line the one surviving
+ * slip lands on. Kept row-for-row equal to the shipped table; the gate
+ * re-checks that equality. */
+const CINDER = [
+  /* m41 - Fourteen Tall: the budget crosses under fifteen. A colony at
+   * fourteen points is shut three generations in, so the founding batch
+   * either freezes into a shape that covers the whole storm or rides the
+   * floor from the dip on: 270 of a thousand seedings finish where the
+   * capstone's own levers finish 308, and restoring fifteen on a mutated
+   * copy climbs the window back to the capstone's own - the rung's window
+   * is the budget's price, not the seed's luck. */
+  { id: "m41", gens: 12, seed: 60018, cap: 14, traitMax: 4, start: 11, base: 2, step: 1, points: 1,
+    plan: [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]],
+    starBand: [6790, 6490, 4990] },
+  /* m42 - Thirteen Deep: the trial crosses past twelve. One more generation
+   * of the same storm on the same culture; the extra floor ride pays five
+   * hundred and ninety-nine into the metric, and a mutated copy cut back to
+   * twelve walks under the shipped two-star line. */
+  { id: "m42", gens: 13, seed: 60018, cap: 14, traitMax: 4, start: 11, base: 2, step: 1, points: 1,
+    plan: [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]],
+    starBand: [7389, 7089, 5390] },
+  /* m43 - Fourteen Deep: one more floor ride, fourteen generations. */
+  { id: "m43", gens: 14, seed: 60018, cap: 14, traitMax: 4, start: 11, base: 2, step: 1, points: 1,
+    plan: [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]],
+    starBand: [7988, 7688, 5788] },
+  /* m44 - The Last Throat: the capstone. The deck narrows to flare and
+   * venom - the two aligned pairs - over fifteen generations, the longest
+   * trial the lab has shipped. The window shuts: fourteen seedings in a
+   * thousand finish (the whole deck back on the same levers finishes
+   * forty-eight in two hundred where the narrowed one finishes two), the
+   * shipped culture is the only seeding in its range that never dips, and
+   * no slip survives it - the engine's line is the only line that finishes
+   * the dish. */
+  { id: "m44", gens: 15, seed: 60655, cap: 14, traitMax: 4, start: 11, base: 2, step: 1, points: 1,
+    plan: [["heat", "speed"], ["acid", "defence"]],
+    starBand: [8587, 8287, 7937] },
 ];
 
 function line(label, level, band) {
@@ -268,6 +317,103 @@ if (process.argv.includes("--summit")) {
   process.exit(0);
 }
 
+if (process.argv.includes("--cinder")) {
+  /* Documents the seeding windows the cinder bench ships from and the slip
+   * its one-star line is anchored to. The walk is the same greedy allocator;
+   * the slip is the walk with its last spendable point thrown at the legal
+   * raise that keeps the fewest survivors - the one mistake the culture
+   * forgives, which lands it on the floor line. The capstone forgives
+   * nothing, and the mutation lines re-measure the two window claims the
+   * gate holds: the budget floor is m41's price and the narrowed deck is
+   * m44's. */
+  const TRAITS = ["heat", "acid", "speed", "defence"];
+  const traitSum = (microbe) => TRAITS.reduce((total, name) => total + microbe.traits[name], 0);
+  const slip = (slot) => {
+    const level = Object.assign({}, slot);
+    const spendable = [];
+    let list = App.microbePopulation(level, level.seed);
+    for (let gen = 0; gen < level.gens; gen += 1) {
+      const card = App.microbeCard(level, gen);
+      const plan = App.microbeAllocate(list, card, App.microbeSequence(level).slice(gen + 1, gen + 4), 1, level);
+      if (plan.waste === 0) spendable.push(gen);
+      list = App.microbeSurvive(list, card, level).offspring;
+    }
+    const last = spendable[spendable.length - 1];
+    list = App.microbePopulation(level, level.seed);
+    let survivors = 0;
+    let waste = 0;
+    for (let gen = 0; gen < level.gens; gen += 1) {
+      const card = App.microbeCard(level, gen);
+      if (gen === last) {
+        let worst = null;
+        for (let pick = 0; pick < list.length; pick += 1) {
+          for (const trait of TRAITS) {
+            const microbe = list[pick];
+            if (microbe.traits[trait] >= level.traitMax || traitSum(microbe) >= level.cap) continue;
+            const trial = list.map((other) => ({ id: other.id, name: other.name, traits: Object.assign({}, other.traits) }));
+            trial[pick].traits[trait] += 1;
+            const survived = App.microbeSurvive(trial, card, level).survived;
+            if (!worst || survived < worst.survived) worst = { survived, trial };
+          }
+        }
+        if (worst) {
+          list = worst.trial;
+        } else {
+          waste += 1;
+        }
+      } else {
+        const plan = App.microbeAllocate(list, card, App.microbeSequence(level).slice(gen + 1, gen + 4), 1, level);
+        list = plan.list;
+        waste += plan.waste;
+      }
+      const outcome = App.microbeSurvive(list, card, level);
+      if (outcome.collapsed) return { lost: true, gen: gen + 1 };
+      survivors += outcome.survived;
+      list = outcome.offspring;
+    }
+    return { lost: false, metric: App.microbeMetric(survivors, waste) };
+  };
+  CINDER.forEach((slot) => {
+    let finish = 0;
+    let floats = 0;
+    for (let seed = 60000; seed < 61000; seed += 1) {
+      const proof = App.microbeBeatable(Object.assign({}, slot, { seed: seed }));
+      if (proof.collapsed) continue;
+      finish += 1;
+      if (proof.minSurvivors >= 5) floats += 1;
+    }
+    const proof = App.microbeBeatable(slot);
+    const slipped = slip(slot);
+    const slipText = slipped.lost
+      ? `no slip survives (the last spendable point thrown wide loses the culture at gen ${slipped.gen})`
+      : `slip banks ${slipped.metric} against the one-star line ${slot.starBand[2]}`;
+    console.log(
+      `${slot.id} seed ${slot.seed} -> ${proof.collapsed ? "COLLAPSED at gen " + proof.gen :
+        `metric ${proof.metric}, floor ${proof.minSurvivors}, window ${proof.metric - slot.starBand[0]}`}` +
+        `, ${finish}/1000 seedings finish, ${floats} never dip` +
+        `, ${slipText}`,
+    );
+  });
+  const wholeDeck = [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]];
+  const windowOf = (level, cap, plan) => {
+    let count = 0;
+    for (let seed = 60000; seed < 60200; seed += 1) {
+      const proof = App.microbeBeatable(Object.assign({}, level, { seed: seed, cap: cap, plan: plan }));
+      if (!proof.collapsed && proof.minSurvivors >= 4) count += 1;
+    }
+    return count;
+  };
+  console.log(
+    `m41 window over 200 seedings: cap 14 -> ${windowOf(CINDER[0], 14, CINDER[0].plan)}` +
+      `, cap 15 (the mutated copy) -> ${windowOf(CINDER[0], 15, CINDER[0].plan)}`,
+  );
+  console.log(
+    `m44 window over 200 seedings: two throats -> ${windowOf(CINDER[3], 14, CINDER[3].plan)}` +
+      `, whole deck (the mutated copy) -> ${windowOf(CINDER[3], 14, wholeDeck)}`,
+  );
+  process.exit(0);
+}
+
 /* The audit runs only on the command line: the verify-levels gate requires
  * this module for CANDIDATES (the documented measurement of the 21-24 tier)
  * and for SUMMIT (the documented measurement of the 31-40 tier), both kept
@@ -282,4 +428,4 @@ if (require.main === module) {
   }
 }
 
-module.exports = { CANDIDATES, SUMMIT, line };
+module.exports = { CANDIDATES, SUMMIT, CINDER, line };

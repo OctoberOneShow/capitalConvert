@@ -102,6 +102,44 @@
     { id: "l28", labelKey: "lfsZ28", need: 11, named: "glintfin", namedNeed: 6, pool: ["glintfin", "razor", "lurker", "glintfin", "razor", "glintfin", "razor"], fuel: 252, starFuel: [15, 11, 5], band: 60, surge: 1.45 },
     { id: "l29", labelKey: "lfsZ29", need: 11, named: "lurker", namedNeed: 6, pool: ["lurker", "glintfin", "lurker", "lurker", "lurker", "razor", "glintfin"], fuel: 264, starFuel: [40, 30, 14], band: 44, surge: 1.5 },
     { id: "l30", labelKey: "lfsZ30", need: 12, named: "razor", namedNeed: 6, pool: ["razor", "razor", "glintfin", "razor", "razor", "glintfin", "razor"], fuel: 276, starFuel: [20, 15, 8], band: 78, surge: 1.6 },
+
+    /* Rungs 31-40 - The Testy Water. The summit spent the fight's other lever:
+     * surge stretched every run a fish makes. This tier spends the one it
+     * left - the run COUNT. `testy` adds head-shakes to every hooked fish
+     * (runs + testy), so the rhythm you learned is unchanged and the verse
+     * count simply grows: a glintfin that took two runs takes three, a razor
+     * three takes four, a lurker four takes five - and from l34 the dial
+     * steps to two, so a lurker fight runs six verses. Every shipped bed
+     * leaves the field off, so v1-30 replay byte for byte, and no bed here
+     * carries a surge - the two levers never share a night. The tank is
+     * capped at one size for the whole tier (270, against the summit's
+     * climbing 176-276): the nights do not get longer by grant, the fish get
+     * testier and the quota deepens (need 12 to 18, namedNeed 6 to 10, the
+     * deepest haul the lake has asked). No bed here deals a snatcher - the
+     * summit cleared the thief out of its long fights and the testy water
+     * keeps it cleared. Every number below was measured, not guessed: the
+     * same scripted night that priced the summit (strikes at half the
+     * species window, reel fed 150ms late under a limit governor) replayed
+     * over a hundred dealt seeds per bed lands the quota on every one of
+     * them, and its measured burn climbs 120, 135, 146, 160, 170, 175, 178,
+     * 183, 185 and 194 seconds - every rung above the last, the capstone a
+     * fifth again longer than the shipped summit's own average night (158).
+     * The bands sit stepped down from that script's worst dealt leftover on
+     * the same seeds, so three stars is the script itself with a little
+     * slack, and the gate re-proves the lot: cutting `testy` out of a copy
+     * of each bed hands the same dealt night strictly more leftover fuel in
+     * aggregate, and the cut twin never once lost a night the bed as
+     * shipped won. */
+    { id: "l31", labelKey: "lfsZ31", need: 12, named: "lurker", namedNeed: 6, pool: ["lurker", "lurker", "lurker", "lurker", "lurker", "razor", "glintfin"], fuel: 270, starFuel: [109, 78, 49], band: 44, testy: 1 },
+    { id: "l32", labelKey: "lfsZ32", need: 13, named: "glintfin", namedNeed: 7, pool: ["glintfin", "glintfin", "glintfin", "glintfin", "glintfin", "razor", "lurker"], fuel: 270, starFuel: [102, 73, 46], band: 60, testy: 1 },
+    { id: "l33", labelKey: "lfsZ33", need: 14, named: "glintfin", namedNeed: 7, pool: ["glintfin", "glintfin", "glintfin", "glintfin", "razor", "lurker"], fuel: 270, starFuel: [92, 66, 41], band: 60, testy: 1 },
+    { id: "l34", labelKey: "lfsZ34", need: 16, named: "lurker", namedNeed: 8, pool: ["lurker", "lurker", "lurker", "lurker", "lurker", "razor", "glintfin"], fuel: 270, starFuel: [63, 45, 28], band: 44, testy: 2 },
+    { id: "l35", labelKey: "lfsZ35", need: 16, named: "glintfin", namedNeed: 8, pool: ["glintfin", "glintfin", "glintfin", "glintfin", "glintfin", "razor", "lurker", "lurker"], fuel: 270, starFuel: [20, 14, 9], band: 60, testy: 2 },
+    { id: "l36", labelKey: "lfsZ36", need: 17, named: "glintfin", namedNeed: 9, pool: ["glintfin", "glintfin", "glintfin", "glintfin", "glintfin", "glintfin", "razor", "lurker"], fuel: 270, starFuel: [59, 42, 27], band: 60, testy: 2 },
+    { id: "l37", labelKey: "lfsZ37", need: 18, named: "lurker", namedNeed: 10, pool: ["lurker", "lurker", "lurker", "lurker", "lurker", "lurker", "razor", "glintfin"], fuel: 270, starFuel: [47, 34, 21], band: 44, testy: 2 },
+    { id: "l38", labelKey: "lfsZ38", need: 18, named: "lurker", namedNeed: 10, pool: ["lurker", "lurker", "lurker", "lurker", "lurker", "lurker", "razor", "razor", "glintfin"], fuel: 270, starFuel: [50, 36, 23], band: 44, testy: 2 },
+    { id: "l39", labelKey: "lfsZ39", need: 18, named: "lurker", namedNeed: 10, pool: ["lurker", "lurker", "lurker", "lurker", "lurker", "lurker", "razor", "razor", "razor"], fuel: 270, starFuel: [66, 48, 30], band: 44, testy: 2 },
+    { id: "l40", labelKey: "lfsZ40", need: 18, named: "glintfin", namedNeed: 10, pool: ["glintfin", "glintfin", "glintfin", "glintfin", "glintfin", "glintfin", "razor", "razor", "razor"], fuel: 270, starFuel: [58, 42, 26], band: 60, testy: 2 },
   ];
 
   /* --- pure core ---------------------------------------------------------- */
@@ -521,7 +559,10 @@
           limit: 100,
           over: 0,
           slack: 0,
-          runs: spec.runs,
+          /* `testy` is a bed's temper: extra head-shakes every hooked fish
+           * takes before it tires. Beds that leave it off fight exactly as
+           * they always did. */
+          runs: spec.runs + (level.testy || 0),
           runTimer: 0,
           waitTimer: spec.wait * 0.5,
           inRun: false,
@@ -1060,6 +1101,16 @@
       "lfsZ28": "The Long Haul",
       "lfsZ29": "The Lightless Grounds",
       "lfsZ30": "The Longest Night",
+      "lfsZ31": "The Testy Shallows",
+      "lfsZ32": "The Spear Bed",
+      "lfsZ33": "The Sullen Deep",
+      "lfsZ34": "The Grudge Grounds",
+      "lfsZ35": "The Barbed Race",
+      "lfsZ36": "The Crosscurrent",
+      "lfsZ37": "The Sulking Grounds",
+      "lfsZ38": "The Knife School",
+      "lfsZ39": "The Bearer of Grudges",
+      "lfsZ40": "The Last Temper",
       "lfsSpGlintfin": "Glintfin",
       "lfsSpRazor": "Razor",
       "lfsSpLurker": "Pale lurker",
@@ -1122,8 +1173,18 @@
       "lfsZ26": "守夜",
       "lfsZ27": "脱缰之鱼",
       "lfsZ28": "长夜重网",
-      "lfsZ29": "无光渔场",
-      "lfsZ30": "最漫长的一夜",
+      "lfsZ29": "\u65e0\u5149\u6e14\u573a",
+      "lfsZ30": "\u6700\u6f2b\u957f\u7684\u4e00\u591c",
+      "lfsZ31": "\u813e\u6c14\u6d45\u6ee9",
+      "lfsZ32": "\u5200\u9c7c\u5b55\u5730",
+      "lfsZ33": "\u95f7\u58f0\u6df1\u6c34",
+      "lfsZ34": "\u8bb0\u4ec7\u6e14\u573a",
+      "lfsZ35": "\u5e26\u523a\u6025\u6d41",
+      "lfsZ36": "\u9006\u6d41\u4ea4\u6c47",
+      "lfsZ37": "\u751f\u95f7\u6c14\u6d34\u573a",
+      "lfsZ38": "\u5200\u9c7c\u5b66\u5802",
+      "lfsZ39": "\u6ee1\u8179\u6028\u6c14",
+      "lfsZ40": "\u6700\u540e\u7684\u813e\u6c14",
       "lfsSpGlintfin": "闪光鱼",
       "lfsSpRazor": "刀鱼",
       "lfsSpLurker": "白潜鱼",
@@ -1183,6 +1244,7 @@
         "Fight: holding Enter loads the line. Above 100% for more than 0.4s it snaps, near 0% the hook shakes out, so wind during the pause and ease during the pull.",
         "Scoring: stars come from the fuel left when your nets are full, and a snatcher stealing bites costs you that time.",
         "Summit: the last six beds fish water that makes every run run long - the pull you ease through stretches and the pause you wind in stays short. The deepest quotas ride on the longest nights.",
+        "The testy water: the final ten beds add head-shakes to every hooked fish - same rhythm, more verses - on one capped tank, with no thief and no surge. The deepest quotas ride on the touchiest fish.",
       ],
       zh: [
         "目标：在灯油耗尽前钓满这一夜的渔获，有些钓点还指定必须留下的鱼。",
@@ -1190,8 +1252,9 @@
         "咬口：每种鱼的来法不同——闪光鱼绕圈靠近，刀鱼直接冲，白潜鱼要等灯火暗下来才肯开口。",
         "刺鱼：屏上报出 BITE 计时时按回车刺鱼，错过窗口它就吐钩。",
         "搏鱼：按住回车会给线加载。张力超 100% 撑过 0.4 秒就断线，接近 0% 钩子会被甩掉，所以它停你收、它冲你松。",
-        "计分：星级看封网时剩下的灯油秒数，抢食者抢走的每一口都在偷你的时间。",
-        "巅峰段：最后六个钓点的水域让每一次冲刺都拖得更长——要松的线更久，能收的歇更短。最深的渔获压在最长的夜里。",
+        "\u8ba1\u5206\uff1a\u661f\u7ea7\u770b\u5c01\u7f51\u65f6\u5269\u4e0b\u7684\u706f\u6cb9\u79d2\u6570\uff0c\u62a2\u98df\u8005\u62a2\u8d70\u7684\u6bcf\u4e00\u53e3\u90fd\u5728\u5077\u4f60\u7684\u65f6\u95f4\u3002",
+        "\u5dc5\u5cf0\u6bb5\uff1a\u6700\u540e\u516d\u4e2a\u9493\u70b9\u7684\u6c34\u57df\u8ba9\u6bcf\u4e00\u6b21\u51b2\u523a\u90fd\u62d6\u5f97\u66f4\u957f\u2014\u2014\u8981\u677e\u7684\u7ebf\u66f4\u4e45\uff0c\u80fd\u6536\u7684\u6b47\u66f4\u77ed\u3002\u6700\u6df1\u7684\u6e14\u83b7\u538b\u5728\u6700\u957f\u7684\u591c\u91cc\u3002",
+        "\u813e\u6c14\u6c34\uff1a\u6700\u540e\u5341\u4e2a\u9493\u70b9\u7ed9\u6bcf\u6761\u4e0a\u94a9\u7684\u9c7c\u52a0\u4e86\u51e0\u6b21\u51b2\u523a\u2014\u2014\u8282\u594f\u4e0d\u53d8\uff0c\u56de\u5408\u66f4\u591a\u2014\u2014\u800c\u4e14\u5168\u7a0b\u4e00\u6839\u6c14\u91cf\u74f6\uff0c\u65e2\u6ca1\u6709\u62a2\u98df\u8005\uff0c\u4e5f\u4e0d\u518d\u62d6\u957f\u51b2\u523a\u3002\u6700\u6df1\u7684\u6e14\u83b7\u538b\u5728\u6700\u813e\u6c14\u7684\u9c7c\u8eab\u4e0a\u3002",
       ],
     },
   });

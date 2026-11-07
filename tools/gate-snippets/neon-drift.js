@@ -26,14 +26,21 @@
  * capstone pairing most gates with the longest tape. The tier's measured par
  * dips once, at its door - n31's boulevard hands the scripted line two
  * full-throttle straights - and never falls after it; every rung also has
- * its advertised lesson cut out of a clone and re-measured. */
+ * its advertised lesson cut out of a clone and re-measured.
+ *
+ * The fifth tier n41-n44 repeats that audit on four more rungs: the gate
+ * record taken to 43 on a sixth comb band, the longest tape stretched to
+ * 2996px, forty hairpin teeth past the Stack's twenty-nine, and a capstone
+ * pairing forty-seven gates with the densest field the ladder has threaded.
+ * The measured par never falls across either tier, and each new rung also
+ * has its advertised lesson cut out of a clone and re-measured. */
 module.exports = function gate(ctx) {
   const { App, check, path, root } = ctx;
   const drift = require(path.join(root, "tools", "drift-forge.js"));
   const nirCourses = drift.loadCourses();
 
-  check("game-neon-drift", "the ladder holds forty courses",
-    nirCourses.length === 40, String(nirCourses.length));
+  check("game-neon-drift", "the ladder holds fifty-four courses",
+    nirCourses.length === 54, String(nirCourses.length));
   check("game-neon-drift", "every course id is distinct and in ladder order",
     new Set(nirCourses.map((c) => c.id)).size === nirCourses.length &&
     nirCourses.every((c, index) => c.id === "n" + (index + 1)),
@@ -269,15 +276,16 @@ module.exports = function gate(ctx) {
       ? nirCut30BoostReport.keyboard.worst.toFixed(1) : "-") +
     " vs " + (nirReport30.keyboard ? nirReport30.keyboard.worst.toFixed(1) : "-"));
 
-  /* The fourth tier n31-n40: ten rungs, each carrying one structural record
-   * measured against every course before it, all off the forge's
+  /* The wide tier n31-n44: fourteen rungs, each carrying one structural
+   * record measured against every course before it, all off the forge's
    * courseMetrics - the same polyline arithmetic the stepper drives. */
-  const nirWideIds = ["n31", "n32", "n33", "n34", "n35", "n36", "n37", "n38", "n39", "n40"];
+  const nirWideIds = ["n31", "n32", "n33", "n34", "n35", "n36", "n37", "n38", "n39", "n40",
+    "n41", "n42", "n43", "n44"];
   const nirWide = nirCourses.filter((c) => nirWideIds.includes(c.id));
   const nirWideProblems = [];
-  check("game-neon-drift", "the fourth tier rows all exist",
-    nirWide.length === 10, nirWide.map((c) => c.id).join(","));
-  check("game-neon-drift", "the fourth tier holds the shipped 20-22px envelope",
+  check("game-neon-drift", "the wide tier rows all exist",
+    nirWide.length === 14, nirWide.map((c) => c.id).join(","));
+  check("game-neon-drift", "the wide tier holds the shipped 20-22px envelope",
     nirWide.every((c) => c.width >= 20 && c.width <= 22),
     nirWide.map((c) => c.id + ":w" + c.width).join(" "));
 
@@ -292,7 +300,7 @@ module.exports = function gate(ctx) {
       (best, c) => Math.max(best, nirMetrics.get(c.id)[key]), -Infinity);
   };
 
-  /* The dual bar through the module's own arithmetic, fourth tier: par from
+  /* The dual bar through the module's own arithmetic, wide tier: par from
    * App.driftPar, bands on the shipped calibration, the authored limit on
    * the derived net - and the pars climb strictly once the tier's door is
    * open. */
@@ -332,7 +340,7 @@ module.exports = function gate(ctx) {
     "n31 " + App.driftPar(nirWide[0]) + " vs n30 " + nirN30Par +
     "; rises " + (nirWideProblems.length ? nirWideProblems.join("; ") : "clean"));
 
-  /* The ten records, each against every course before it. */
+  /* The fourteen records, each against every course before it. */
   const nirById = (id) => nirCourses.filter((c) => c.id === id)[0];
   const nirM = (id) => nirMetrics.get(id);
 
@@ -383,8 +391,27 @@ module.exports = function gate(ctx) {
     nirM("n40").tape === 2846 && nirM("n40").tape > nirPeakBefore("n40", "tape"),
     "gates " + nirM("n40").gates + " vs peak " + nirPeakBefore("n40", "gates") +
     "; tape " + nirM("n40").tape + " vs peak " + nirPeakBefore("n40", "tape"));
+  check("game-neon-drift",
+    "n41 takes the gate record again: 43 past the Full Measure's 42",
+    nirM("n41").gates === 43 && nirM("n41").gates > nirPeakBefore("n41", "gates"),
+    "gates " + nirM("n41").gates + " vs peak " + nirPeakBefore("n41", "gates"));
+  check("game-neon-drift",
+    "n42 stretches the longest tape: 2996px past the Sextet's 2857",
+    nirM("n42").tape === 2996 && nirM("n42").tape > nirPeakBefore("n42", "tape"),
+    "tape " + nirM("n42").tape + " vs peak " + nirPeakBefore("n42", "tape"));
+  check("game-neon-drift",
+    "n43 packs the most hairpin teeth: 40 past the Stack's 29",
+    nirM("n43").hairpins === 40 && nirM("n43").hairpins > nirPeakBefore("n43", "hairpins"),
+    "hairpins " + nirM("n43").hairpins + " vs peak " + nirPeakBefore("n43", "hairpins"));
+  check("game-neon-drift",
+    "n44 pairs the records: 47 gates and the densest field, past every course before it",
+    nirM("n44").gates === 47 && nirM("n44").gates > nirPeakBefore("n44", "gates") &&
+    nirM("n44").density > nirPeakBefore("n44", "density"),
+    "gates " + nirM("n44").gates + " vs peak " + nirPeakBefore("n44", "gates") +
+    "; density " + nirM("n44").density.toFixed(2) + " vs peak " +
+    nirPeakBefore("n44", "density").toFixed(2));
 
-  /* Mechanic proofs for the fourth tier: each advertised lesson cut out of a
+  /* Mechanic proofs for the wide tier: each advertised lesson cut out of a
    * clone and re-measured through the forge's reference line. */
   const nirWideById = (id) => nirWide.filter((course) => course.id === id)[0];
 
@@ -481,8 +508,76 @@ module.exports = function gate(ctx) {
     "cut " + (nirCut40Report.keyboard ? nirCut40Report.keyboard.worst.toFixed(1) : "-") +
     " vs " + (nirReport40.keyboard ? nirReport40.keyboard.worst.toFixed(1) : "-"));
 
+  const nirCut41 = nirCloneCut(nirWideById("n41"), (course) => {
+    course.points = course.points.slice(0, 40);
+  });
+  const nirCut41Par = nirCutPar(nirCut41);
+  check("game-neon-drift", "n41's sixth band is load-bearing: dropping it shortens the lap",
+    nirCut41Par !== null && nirCut41Par < App.driftPar(nirWideById("n41")) - 4,
+    "cut par " + nirCut41Par);
+
+  const nirCut42 = nirCloneCut(nirWideById("n42"), (course) => {
+    course.points = course.points.slice(0, 40);
+  });
+  const nirCut42Par = nirCutPar(nirCut42);
+  check("game-neon-drift", "n42's tail band is load-bearing: dropping it shortens the lap",
+    nirCut42Par !== null && nirCut42Par < App.driftPar(nirWideById("n42")) - 4,
+    "cut par " + nirCut42Par);
+
+  const nirCut43 = nirCloneCut(nirWideById("n43"), (course) => {
+    for (let i = 16; i <= 22; i += 1) course.points[i].y = 52;
+  });
+  const nirCut43Par = nirCutPar(nirCut43);
+  check("game-neon-drift", "n43's third rank is load-bearing: flattening it shortens the lap",
+    nirCut43Par !== null && nirCut43Par < App.driftPar(nirWideById("n43")) - 5,
+    "cut par " + nirCut43Par);
+
+  const nirCut44 = nirCloneCut(nirWideById("n44"), (course) => {
+    for (let i = 41; i < course.points.length; i += 1) course.points[i].y = 364;
+  });
+  const nirCut44Par = nirCutPar(nirCut44);
+  check("game-neon-drift", "n44's last rank is load-bearing: flattening it shortens the lap",
+    nirCut44Par !== null && nirCut44Par < App.driftPar(nirWideById("n44")) - 5,
+    "cut par " + nirCut44Par);
+
+  /* The sixth tier: the loom tier - n45 through n54. Stacked braids across
+   * the arena's full height, with teeth bitten to depth 46 and pitch climbing
+   * to 40, all inside the 20-21px corridor. Par never falls from n45 (113) up
+   * to n54 (149). */
+  const nirLoomIds = [
+    "n45", "n46", "n47", "n48", "n49", "n50", "n51", "n52", "n53", "n54",
+  ];
+  const nirLoom = nirCourses.filter((c) => nirLoomIds.includes(c.id));
+  check("game-neon-drift", "the loom tier rows all exist",
+    nirLoom.length === 10, nirLoom.map((c) => c.id).join(","));
+  check("game-neon-drift", "the loom tier holds the 20-21px corridor",
+    nirLoom.every((c) => c.width >= 20 && c.width <= 21),
+    nirLoom.map((c) => c.id + ":w" + c.width).join(" "));
+
+  /* The loom tier pars never fall */
+  let nirLoomPrevPar = App.driftPar(nirCourses.find((c) => c.id === "n44"));
+  const nirLoomParProblems = [];
+  nirLoom.forEach((c) => {
+    const p = App.driftPar(c);
+    if (p === null || p < nirLoomPrevPar) {
+      nirLoomParProblems.push(c.id + " par " + p + " fell below " + nirLoomPrevPar);
+    }
+    nirLoomPrevPar = p;
+  });
+  check("game-neon-drift", "the loom tier pars never fall from n44 to n54",
+    nirLoomParProblems.length === 0, nirLoomParProblems.join("; ") || "monotone climb");
+
+  const nirCut54 = nirCloneCut(nirCourses.find((c) => c.id === "n54"), (course) => {
+    for (let i = 48; i < course.points.length; i += 1) course.points[i].y = 365;
+  });
+  const nirCut54Par = nirCutPar(nirCut54);
+  check("game-neon-drift", "n54's last rank is load-bearing: flattening it shortens the lap",
+    nirCut54Par !== null && nirCut54Par < App.driftPar(nirCourses.find((c) => c.id === "n54")) - 10,
+    "cut par " + nirCut54Par);
+
+
   /* The course names travel with the module: both languages hold a real
-   * string for every course (n1-n40 from the module's own addStrings), and
+   * string for every course (n1-n44 from the module's own addStrings), and
    * t() never falls back to the key. */
   check("game-neon-drift", "every course name resolves in both languages",
     nirCourses.every((course) =>
@@ -492,7 +587,7 @@ module.exports = function gate(ctx) {
 
   /* The unlock chain is derived, never stored, so it scales with the ladder:
    * clearing each course in order must hand the player exactly the next one,
-   * all forty times, with nothing left locked behind the last. */
+   * all forty-four times, with nothing left locked behind the last. */
   const nirChain = App.createCampaign({
     key: "neon-drift-gate-chain",
     levels: nirCourses.map((c) => ({ id: c.id, labelKey: c.labelKey })),
@@ -505,7 +600,7 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < nirCourses.length ? nirCourses[index + 1].id : null;
     if (outcome.unlockedNext !== expected) nirChained = false;
   });
-  check("game-neon-drift", "the unlock chain walks all forty courses in order",
-    nirWalked === 40 && nirChained && nirChain.clearedCount() === 40,
+  check("game-neon-drift", "the unlock chain walks all fifty-four courses in order",
+    nirWalked === 54 && nirChained && nirChain.clearedCount() === 54,
     nirWalked + " first clears");
 };

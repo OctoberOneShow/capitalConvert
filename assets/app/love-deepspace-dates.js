@@ -2,6 +2,7 @@
  * Local portraits are official; dialogue, mini-games and collectible art are original. */
 (function (App) {
   var ids = ["xavier", "zayne", "rafayel", "sylus", "caleb"];
+  var storyEndings = ["quiet", "adventure", "cafe-quiet", "cafe-adventure", "observatory-quiet", "observatory-adventure"];
   var chatMoodKeys = { happy: "ldsChatMoodHappy", tired: "ldsChatMoodTired", worried: "ldsChatMoodWorried" };
   var artTitles = {
     xavier: ["Fallen Crown", "Celestial Yearn", "Seeker Of Light", "A Day Of Snow", "Cosmic Encounter", "Unreturned Traveler", "Lost Signal", "Enlightenment"],
@@ -23,8 +24,8 @@
   var toySymbols = ["🐰", "🐱", "🦊", "🐳", "⭐"];
   function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
   function readDates(raw) {
-    var result = { version: 1, plushies: {}, badges: {}, stories: {}, photos: [], snapshots: {}, focus: {}, clawBest: {}, journal: [], strips: [] }, saved;
-    ids.forEach(function (id) { result.plushies[id] = []; result.badges[id] = false; result.stories[id] = []; result.snapshots[id] = false; result.focus[id] = 0; result.clawBest[id] = 0; });
+    var result = { version: 1, plushies: {}, badges: {}, stories: {}, storyFavorites: {}, photos: [], snapshots: {}, focus: {}, clawBest: {}, journal: [], strips: [] }, saved;
+    ids.forEach(function (id) { result.plushies[id] = []; result.badges[id] = false; result.stories[id] = []; result.storyFavorites[id] = []; result.snapshots[id] = false; result.focus[id] = 0; result.clawBest[id] = 0; });
     try { saved = JSON.parse(raw || "null"); } catch (error) { return result; }
     if (!saved || saved.version !== 1) { return result; }
     ids.forEach(function (id) {
@@ -33,7 +34,9 @@
       result.badges[id] = !!(saved.badges && saved.badges[id] === true);
       result.snapshots[id] = !!(saved.snapshots && saved.snapshots[id] === true);
       var endings = saved.stories && saved.stories[id];
-      result.stories[id] = Array.isArray(endings) ? ["quiet", "adventure"].filter(function (ending) { return endings.indexOf(ending) >= 0; }) : [];
+      result.stories[id] = Array.isArray(endings) ? storyEndings.filter(function (ending) { return endings.indexOf(ending) >= 0; }) : [];
+      var favorites = saved.storyFavorites && saved.storyFavorites[id];
+      result.storyFavorites[id] = Array.isArray(favorites) ? result.stories[id].filter(function (ending) { return favorites.indexOf(ending) >= 0; }) : [];
       var count = saved.focus && saved.focus[id];
       result.focus[id] = typeof count === "number" && isFinite(count) ? clamp(Math.floor(count), 0, 999) : 0;
       var best = saved.clawBest && saved.clawBest[id]; result.clawBest[id] = typeof best === "number" && isFinite(best) ? clamp(Math.floor(best), 0, 2000) : 0;
@@ -207,7 +210,7 @@
     var partner, mode = "starpath", claw, kitty, active = false, paused = false, raf = null, last = 0;
     var keys = {}, held = 0, aimed = null, drop = false, grip = false, help = false, kittyWait = 0, guard = false, kittyAction = "";
     var kittySession = 0;
-    var storyStep = 0, storyScore = 0, storyChoices = [], focusElapsed = 0, focusLimit = 60, focusDone = false;
+    var storyStep = 0, storyScore = 0, storyChoices = [], storyLocation = "linkon", storyReview = false, focusElapsed = 0, focusLimit = 60, focusDone = false;
     var photo = { scene: "night", frame: "polaroid", sticker: "heart", zoom: 1, pan: .62, art: 0 }, photoDrag = null;
     function el(tag, cls, key, parent) {
       var n = document.createElement(tag); if (cls) { n.className = cls; }
@@ -231,16 +234,21 @@
     el("strong", "", "ldsDateTitle", intro); el("p", "", "ldsDateIntro", intro);
     var nav = el("div", "lds-date-nav", null, root); nav.setAttribute("role", "group"); nav.setAttribute("aria-label", t("ldsDateTitle"));
     var tabs = {}, pages = {};
-    ["claw", "kitty", "story", "photo", "focus", "chat", "home", "cook", "starpath", "mosaic", "bouquet", "expedition"].forEach(function (id) {
+    ["duet", "claw", "kitty", "story", "photo", "focus", "chat", "home", "cook", "starpath", "mosaic", "bouquet", "expedition"].forEach(function (id) {
       var key = "ldsDate" + id.charAt(0).toUpperCase() + id.slice(1);
       tabs[id] = btn("lds-date-tab", key, nav, function () { select(id); });
       tabs[id].setAttribute("data-date", id);
       pages[id] = el("div", "lds-date-page lds-date-" + id, null, root); pages[id].hidden = id !== mode;
     });
+    if (window.location && typeof URLSearchParams !== "undefined") { var requestedActivity = new URLSearchParams(window.location.search || "").get("activity"); if (Object.prototype.hasOwnProperty.call(pages, requestedActivity)) { mode = requestedActivity; } }
     var homeGame = App.mountLdsHome(pages, {
       getDates: function () { return progress; }, onSelect: select,
       isHidden: function () { return options.isHidden() || root.hidden; },
       onRunning: options.onRunning, onMoment: options.onMoment, onReward: options.onReward
+    });
+    var duetGame = App.mountLdsDuet(pages.duet, {
+      isHidden: function () { return options.isHidden() || root.hidden || pages.duet.hidden; },
+      onRunning: options.onRunning, onMoment: options.onMoment, onReward: function (kind, value) { options.onReward(kind, value); if (journey && partner) { journey.refresh(); } }
     });
     var starpathGame = App.mountLdsStarpath(pages.starpath, {
       isHidden: function () { return options.isHidden() || root.hidden || pages.starpath.hidden; },
@@ -268,7 +276,7 @@
     });
     var journey = App.mountLdsJourney(root, {
       getPartner: function () { return partner; },
-      getState: function () { return { album: options.getAlbum ? options.getAlbum() : {}, dates: progress, home: homeGame.inspect().progress, starpath: starpathGame.getProgress() }; },
+      getState: function () { return { album: options.getAlbum ? options.getAlbum() : {}, dates: progress, home: homeGame.inspect().progress, starpath: starpathGame.getProgress(), duet: duetGame.getProgress() }; },
       go: visitActivity
     });
     root.insertBefore(journey.element, nav);
@@ -436,24 +444,53 @@
     chatBubble.tabIndex = -1;
 
     // Original branching vignettes; partner-specific lines surround three choices.
+    var storyLocationLabel = el("label", "lds-story-location", null, pages.story); el("span", "", "ldsStoryLocation", storyLocationLabel);
+    var storyLocationSelect = el("select", "", null, storyLocationLabel); storyLocationSelect.setAttribute("aria-label", t("ldsStoryLocation"));
+    ["linkon", "cafe", "observatory"].forEach(function (location) { var n = el("option", "", "ldsStoryPlace" + location, storyLocationSelect); n.value = location; });
+    storyLocationSelect.addEventListener("change", function () { storyLocation = storyLocationSelect.value; storyStep = 0; storyScore = 0; storyChoices = []; storyReview = false; renderStory(); tell("ldsStoryHint"); });
     var storyTitle = el("h4", "", null, pages.story);
-    var storyText = el("p", "lds-story-text", null, pages.story);
+    var storyText = el("p", "lds-story-text", null, pages.story); storyText.tabIndex = -1;
     var storyNav = el("div", "lds-story-choices", null, pages.story);
+    var storyJournal = el("details", "lds-story-journal", null, pages.story); el("summary", "lds-story-journal-title", "ldsStoryJournalTitle", storyJournal);
+    var favoriteOnlyLabel = el("label", "lds-story-filter", null, storyJournal), favoriteOnly = el("input", "", null, favoriteOnlyLabel); favoriteOnly.type = "checkbox"; el("span", "", "ldsStoryFavoritesOnly", favoriteOnlyLabel); favoriteOnly.addEventListener("change", renderEndings);
+    var endingShelf = el("div", "lds-story-endings", null, storyJournal), endingEmpty = el("p", "lds-date-hint", "ldsStoryFavoritesEmpty", storyJournal);
+    function renderEndings() {
+      while (endingShelf.firstChild) { endingShelf.removeChild(endingShelf.firstChild); }
+      var visible = 0;
+      storyEndings.forEach(function (ending, index) {
+        var owned = progress.stories[partner.id].indexOf(ending) >= 0, favorite = progress.storyFavorites[partner.id].indexOf(ending) >= 0;
+        if (favoriteOnly.checked && !favorite) { return; } visible++;
+        var card = el("div", "lds-story-ending", null, endingShelf); card.setAttribute("data-owned", String(owned)); card.setAttribute("data-ending", ending);
+        var read = btn("lds-story-review", null, card, function () {
+          if (!owned) { return; } storyReview = true; storyLocation = ending.indexOf("-") < 0 ? "linkon" : ending.split("-")[0]; storyLocationSelect.value = storyLocation;
+          storyStep = 3; storyScore = ending.indexOf("adventure") >= 0 ? 3 : 0; storyChoices = []; options.onMoment("Talk"); renderStory(); tell("ldsStoryReviewing"); storyText.focus({ preventScroll: true }); if (storyText.scrollIntoView) { storyText.scrollIntoView({ block: "nearest", behavior: reduced() ? "auto" : "smooth" }); }
+        }); read.textContent = (owned ? "↗ " : "◇ ") + t("ldsStoryEnding" + index); read.disabled = !owned; read.setAttribute("aria-label", t(owned ? "ldsStoryReread" : "ldsMemoryLocked") + " · " + t("ldsStoryEnding" + index));
+        var heart = btn("lds-story-heart", null, card, function () {
+          if (!owned) { return; } var list = progress.storyFavorites[partner.id], at = list.indexOf(ending);
+          if (at < 0) { list.push(ending); } else { list.splice(at, 1); } save();
+          // Keep keyboard focus on the same heart while rebuilding the filter.
+          renderEndings(); var replacement = endingShelf.querySelector('[data-ending="' + ending + '"] .lds-story-heart');
+          if (replacement) { replacement.focus({ preventScroll: true }); } else { favoriteOnly.focus({ preventScroll: true }); }
+        }); heart.disabled = !owned; heart.textContent = favorite ? "♥" : "♡"; heart.setAttribute("aria-pressed", String(favorite)); heart.setAttribute("aria-label", t(favorite ? "ldsStoryUnfavorite" : "ldsStoryFavorite") + " · " + t("ldsStoryEnding" + index));
+      }); endingEmpty.hidden = !favoriteOnly.checked || visible > 0;
+    }
     function renderStory() {
-      storyTitle.textContent = t("ldsStoryTitle", { name: t(partner.nameKey), n: Math.min(3, storyStep + 1) });
+      if (!partner) { return; } pages.story.setAttribute("data-location", storyLocation);
+      storyTitle.textContent = t("ldsStorySessionTitle", { name: t(partner.nameKey), place: t("ldsStoryPlace" + storyLocation), n: Math.min(3, storyStep + 1) });
       while (storyNav.firstChild) { storyNav.removeChild(storyNav.firstChild); }
       if (storyStep === 3) {
         var ending = storyScore >= 2 ? "adventure" : "quiet";
-        storyText.textContent = t(ending === "adventure" ? "ldsStoryAdventureEnd" : "ldsStoryQuietEnd", { name: t(partner.nameKey) });
-        reward("story", ending); tell("ldsStorySaved"); return;
+        storyText.textContent = t(storyLocation === "linkon" ? (ending === "adventure" ? "ldsStoryAdventureEnd" : "ldsStoryQuietEnd") : "ldsStory" + storyLocation + "End" + ending, { name: t(partner.nameKey) });
+        if (!storyReview) { reward("story", storyLocation === "linkon" ? ending : storyLocation + "-" + ending); storyJournal.open = true; } renderEndings(); tell(storyReview ? "ldsStoryReviewing" : "ldsStorySaved"); return;
       }
       var selected = storyChoices.length ? t("ldsStoryReply" + storyChoices[storyChoices.length - 1], { name: t(partner.nameKey) }) + " " : "";
-      storyText.textContent = selected + t("ldsStoryScene" + storyStep, { name: t(partner.nameKey) }) + " " + t("ldsDateLine" + partner.id.charAt(0).toUpperCase() + partner.id.slice(1));
+      var sceneKey = storyLocation === "linkon" ? "ldsStoryScene" + storyStep : "ldsStory" + storyLocation + "Scene" + storyStep + (storyStep ? storyChoices[storyStep - 1] : "");
+      storyText.textContent = selected + t(sceneKey, { name: t(partner.nameKey) }) + " " + t("ldsDateLine" + partner.id.charAt(0).toUpperCase() + partner.id.slice(1));
       [0, 1].forEach(function (choice) {
-        btn("lds-story-choice", "ldsStoryChoice" + storyStep + choice, storyNav, function () {
+        btn("lds-story-choice", "ldsStory" + (storyLocation === "linkon" ? "" : storyLocation) + "Choice" + storyStep + choice, storyNav, function () {
           storyChoices.push(choice); storyScore += choice; storyStep++; options.onMoment(choice ? "Skill" : "Talk"); renderStory();
         });
-      });
+      }); renderEndings();
     }
 
     // All exported photographs are rendered from local portrait pixels, never a remote video.
@@ -619,7 +656,7 @@
       el("p", "lds-challenge-record", null, shelf).textContent = t("ldsChallengeBest", { n: progress.clawBest[id] });
     }
     function syncToolbar() {
-      toolbar.hidden = ["photo", "chat", "home", "cook", "starpath", "mosaic", "bouquet", "expedition"].indexOf(mode) >= 0; pauseBtn.hidden = mode === "story";
+      toolbar.hidden = ["duet", "photo", "chat", "home", "cook", "starpath", "mosaic", "bouquet", "expedition"].indexOf(mode) >= 0; pauseBtn.hidden = mode === "story";
       pauseBtn.textContent = t(active ? "ldsBattlePause" : paused ? "ldsDateResume" : "ldsDateStart");
       pauseBtn.disabled = mode === "claw" && claw.done || mode === "kitty" && kitty.done || mode === "focus" && focusDone;
       root.setAttribute("data-active", String(active)); root.setAttribute("data-paused", String(paused));
@@ -629,6 +666,7 @@
     }
     function pause() {
       homeGame.pause();
+      duetGame.pause();
       // Untimed boards guard hidden input themselves. A lasting pause here
       // would strand them after focus returns or the drawer reopens.
       if (!active) { clearInputs(); return; } active = false; paused = true; cancel(); clearInputs();
@@ -656,7 +694,7 @@
       if (mode !== "kitty") { syncToolbar(); } if (active) { raf = window.requestAnimationFrame(frame); }
     }
     function start() {
-      if (active || pauseBtn.disabled || ["story", "photo", "chat", "home", "cook", "starpath", "mosaic", "bouquet", "expedition"].indexOf(mode) >= 0) { return; }
+      if (active || pauseBtn.disabled || ["duet", "story", "photo", "chat", "home", "cook", "starpath", "mosaic", "bouquet", "expedition"].indexOf(mode) >= 0) { return; }
       active = true; paused = false; clearInputs(); last = performance.now(); syncToolbar(); options.onRunning(true);
       tell(mode === "claw" ? "ldsClawReady" : mode === "kitty" ? (kitty.turn === "you" ? "ldsKittyYourTurn" : "ldsKittyThinking") : "ldsFocusStarted");
       if (mode === "claw") { machine.focus({ preventScroll: true }); }
@@ -666,7 +704,7 @@
       active = false; paused = false; cancel(); clearInputs(); guard = false; kittyAction = ""; options.onRunning(false);
       claw = createClaw(partner.id, challenge.checked);
       kitty = createKitty(partner.id, advanced.checked, (Date.now() ^ Math.imul(++kittySession, 2654435761)) >>> 0);
-      storyStep = 0; storyScore = 0; storyChoices = []; focusElapsed = 0; focusDone = false;
+      storyStep = 0; storyScore = 0; storyChoices = []; storyReview = false; focusElapsed = 0; focusDone = false;
       chatMood = null; chatChoice = null; renderChat();
       renderKitty(); renderStory(); syncFocus(); syncClaw(); renderShelf(); syncToolbar();
       tell("ldsDateReady", { name: t(partner.nameKey) });
@@ -679,6 +717,7 @@
       if (id === "chat") { renderChat(); }
       if (id === "home" || id === "cook") { homeGame.refresh(); }
       if (id === "starpath") { starpathGame.refresh(); }
+      if (id === "duet") { duetGame.refresh(); }
       if (adventures[id]) { adventures[id].refresh(); }
       if (partner) { journey.refresh(); passport.refresh(); }
       syncToolbar();
@@ -696,6 +735,7 @@
       if (!progress.focus[partner.id]) { progress.focus[partner.id] = 0; }
       root.style.setProperty("--lds-date-accent", partner.color);
       homeGame.setPartner(partner);
+      if (changed) { duetGame.setPartner(partner); }
       starpathGame.setPartner(partner);
       if (changed) { Object.keys(adventures).forEach(function (id) { adventures[id].setPartner(partner); }); }
       stripShots = []; stripImages = []; syncStrip();
@@ -718,9 +758,9 @@
     root.addEventListener("focusout", function (e) {
       if (!e.relatedTarget || (!root.contains(e.relatedTarget) && !(mode === "focus" && options.isCompanionTarget(e.relatedTarget)))) { pause(); }
     });
-    return { element: root, pause: pause, setPartner: setPartner, select: select, start: start, refresh: function () { if (!partner) { return; } journey.refresh(); passport.refresh(); if (mode === "starpath") { starpathGame.refresh(); } if (adventures[mode]) { adventures[mode].refresh(); } },
+    return { element: root, pause: pause, setPartner: setPartner, select: select, start: start, refresh: function () { if (!partner) { return; } journey.refresh(); passport.refresh(); if (mode === "starpath") { starpathGame.refresh(); } if (mode === "duet") { duetGame.refresh(); } if (adventures[mode]) { adventures[mode].refresh(); } },
       setArt: function (index) { photo.art = sceneArt(partner.id, index).index; photo.pan = sceneArt(partner.id, index).x; syncPhotoControls(); updatePhotoImage(); },
-      inspect: function () { return { claw: claw, kitty: kitty, progress: progress, active: active, paused: paused, mode: mode, focusElapsed: focusElapsed, home: homeGame.inspect(), starpath: starpathGame.getProgress(), adventures: {mosaic:adventures.mosaic.inspect(),bouquet:adventures.bouquet.inspect(),expedition:adventures.expedition.inspect()}, stripShots: stripShots }; } };
+      inspect: function () { return { claw: claw, kitty: kitty, progress: progress, active: active, paused: paused, mode: mode, focusElapsed: focusElapsed, home: homeGame.inspect(), starpath: starpathGame.getProgress(), adventures: {mosaic:adventures.mosaic.inspect(),bouquet:adventures.bouquet.inspect(),expedition:adventures.expedition.inspect()}, duet: duetGame.inspect(), stripShots: stripShots }; } };
   }
   App.addStrings({
     en: {
@@ -786,7 +826,7 @@
       "ldsDateEvol": "Evol assist · E",
       "ldsDateCollected": "Collected",
       "ldsDateCollection": "Keepsakes with {name}",
-      "ldsDateCollectionStats": "Plushies {n}/5 · Kitty badge {b}/1 · Story endings {s}/2 · Focus sessions {f}",
+      "ldsDateCollectionStats": "Plushies {n}/5 · Kitty badge {b}/1 · Story endings {s}/6 · Focus sessions {f}",
       "ldsDateReward": "A new keepsake together · Affinity +2",
       "ldsDatePhotoReward": "Your first snapshot together · Affinity +2",
       "ldsClawHint": "Hold A / D or the arrows to move, or drag inside the machine. Space drops the claw. Aim ahead of the moving plushies! E steadies them for two seconds, once per session. P / Esc pauses.",
@@ -826,7 +866,7 @@
       "ldsKittyLost": "Your partner wins this round. Try saving your strongest cards for matching cups.",
       "ldsKittyTie": "A tie. Another cup of tea and a rematch?",
       "ldsStoryTitle": "A Linkon evening with {name} · {n}/3",
-      "ldsStoryHint": "Follow the evening through three choices. Explore both endings to collect two keepsakes.",
+      "ldsStoryHint": "Choose a night walk, a midnight café, or the observatory. Your choices change the next scene. Discover two endings in each location: six keepsakes per partner.",
       "ldsStoryScene0": "The hunt is over. Outside the station, {name} waits under the amber streetlights. There is still time before the last train.",
       "ldsStoryScene1": "A tiny stall offers warm drinks and paper stars. Across the road, music drifts from the night market. {name} leaves the next step to you.",
       "ldsStoryScene2": "The sky clears above the waterfront. {name} slows his pace to match yours. One last moment before you both head home.",
@@ -840,7 +880,7 @@
       "ldsStoryReply1": "{name} accepts your challenge with a spark in his eyes.",
       "ldsStoryQuietEnd": "Quiet constellation. You and {name} watch the last reflections fade on the river. No grand promise is needed; the walk home together is enough.",
       "ldsStoryAdventureEnd": "Lantern promise. You and {name} turn the evening into a small adventure, then tuck a paper star into your pocket—a promise to find the next one together.",
-      "ldsStorySaved": "This ending is saved in your keepsakes. Replay to find the other ending.",
+      "ldsStorySaved": "This ending is saved. Start a new session or choose another location to discover more keepsakes.",
       "ldsDateLineXavier": "“We can take the long way. I'm not in a hurry.”",
       "ldsDateLineZayne": "“It's cooler by the water. Stay close.”",
       "ldsDateLineRafayel": "“An ordinary evening? Only if you insist. I have ideas.”",
@@ -939,7 +979,7 @@
       "ldsDateEvol": "Evol 助力 · E",
       "ldsDateCollected": "已收藏",
       "ldsDateCollection": "与 {name} 的纪念品",
-      "ldsDateCollectionStats": "娃娃 {n}/5 · 喵喵徽章 {b}/1 · 故事结局 {s}/2 · 陪伴次数 {f}",
+      "ldsDateCollectionStats": "娃娃 {n}/5 · 喵喵徽章 {b}/1 · 故事结局 {s}/6 · 陪伴次数 {f}",
       "ldsDateReward": "一起收获了新的纪念品 · 羁绊 +2",
       "ldsDatePhotoReward": "第一次一起拍照 · 羁绊 +2",
       "ldsClawHint": "按住 A / D 或方向键移动，也可以在机器内拖动。空格放下爪子，预判移动中的娃娃！E 可让娃娃静止两秒，每局限一次。P / Esc 暂停。",
@@ -979,7 +1019,7 @@
       "ldsKittyLost": "这局搭档赢了，试试把高分牌留给同色杯子吧。",
       "ldsKittyTie": "平局，再喝杯茶，然后来一局？",
       "ldsStoryTitle": "与 {name} 的临空之夜 · {n}/3",
-      "ldsStoryHint": "三次选择决定今晚的走向，探索两种结局，收藏两份纪念。",
+      "ldsStoryHint": "选择夜间散步、午夜咖啡馆或天文台。你的选择会改变下一段场景；每处有两种结局，每位搭档共六份纪念。",
       "ldsStoryScene0": "狩猎结束了，{name} 在车站外的暖色路灯下等你。距离末班车还有一点时间。",
       "ldsStoryScene1": "小摊卖着热饮和纸星星，马路对面传来夜市的音乐。{name} 把下一步交给你决定。",
       "ldsStoryScene2": "海滨的天空终于放晴，{name} 放慢脚步与你并肩。回家之前，还剩最后一段相处时光。",
@@ -993,7 +1033,7 @@
       "ldsStoryReply1": "{name} 接下你的挑战，眼睛里闪过一点笑意。",
       "ldsStoryQuietEnd": "静谧星座。你与 {name} 看着河面上最后的倒影渐渐散去。不需要盛大的约定，一起走回家的这一段路就足够了。",
       "ldsStoryAdventureEnd": "灯笼之约。你与 {name} 把夜晚变成一场小小的冒险，将纸星星放进口袋，约定下一次还要一起寻找。",
-      "ldsStorySaved": "这个结局已加入纪念品，重新体验可找到另一个结局。",
+      "ldsStorySaved": "这个结局已收藏。再开一局，或换个地点，发现更多纪念吧。",
       "ldsDateLineXavier": "「可以绕远一点，我不着急。」",
       "ldsDateLineZayne": "「水边比较凉，靠近我一点。」",
       "ldsDateLineRafayel": "「普通的夜晚？那可未必，我有很多想法。」",
@@ -1076,6 +1116,37 @@
     });
   });
   App.addStrings(chatStrings);
+  var storyCopy = {
+    ldsStoryLocation: ["Tonight's destination", "今晚去哪里"], ldsStoryPlacelinkon: ["Linkon night walk", "临空夜游"], ldsStoryPlacecafe: ["Midnight café", "午夜咖啡馆"], ldsStoryPlaceobservatory: ["The observatory", "天文台之夜"],
+    ldsStoryJournalTitle: ["Your ending journal", "你们的结局手记"], ldsStoryFavoritesOnly: ["Favourites only", "只看心动收藏"],
+    ldsStoryFavorite: ["Favourite ending", "收藏这个结局"], ldsStoryUnfavorite: ["Remove favourite", "取消心动收藏"], ldsStoryReread: ["Read this ending again", "重温这个结局"],
+    ldsStoryReviewing: ["Revisiting a saved ending. No new rewards are claimed. Choose a location or New session to begin another date.", "正在重温已收藏的结局，不会重复领取奖励。选择地点或新的一局，即可开始另一场约会。"],
+    ldsStoryFavoritesEmpty: ["No favourites here yet. Unlock an ending, then tap its heart to keep it close.", "还没有心动收藏。解锁结局后，点亮旁边的爱心，把喜欢的瞬间留在这里。"],
+    ldsStorySessionTitle: ["{place} with {name} · {n}/3", "与 {name} 的{place} · {n}/3"],
+    ldsStoryEnding0: ["Quiet constellation", "安静星座"], ldsStoryEnding1: ["Lantern promise", "灯笼之约"], ldsStoryEnding2: ["Borrowed pages", "借来的书页"], ldsStoryEnding3: ["Midnight recipe", "午夜食谱"], ldsStoryEnding4: ["Under one sky", "同一片星空"], ldsStoryEnding5: ["Meteor hunters", "追光的人"],
+    ldsStorycafeScene0: ["Rain sends you and {name} into a tiny bookshop café. The owner offers the last table and asks whether you would like a book or an apron. The kitchen smells of cinnamon.", "一场雨把你和 {name} 留在小小的书店咖啡馆。店主指了指最后一张桌子，问你们想要一本书，还是一条围裙。厨房飘来肉桂香。"],
+    ldsStorycafeScene10: ["A folded note falls from a borrowed novel. Someone has underlined a sentence about finding a home. {name} asks what that word means to you.", "借来的小说里落下一张折好的纸。有人在关于归处的句子下面画了线。{name} 问你，对你来说，那个词意味着什么。"],
+    ldsStorycafeScene11: ["Flour lands on both your sleeves. The recipe is smudged, and {name} insists the missing ingredient is a story only you can tell.", "面粉落在你们的袖口，食谱上的一行字被弄花了。{name} 却说，缺少的那种原料，是一个只有你能讲的故事。"],
+    ldsStorycafeScene20: ["The rain softens. Your cups cool while {name} listens without interrupting. There is still a blank page beside the window.", "雨声渐轻。杯中的热气慢慢散去，{name} 一直没有打断你的话。窗边还放着一页空白的纸。"],
+    ldsStorycafeScene21: ["Your secret menu now has a title and no sensible measurements. {name} draws a small star on the receipt and asks who will test the next version.", "你们的秘密菜单有了名字，却没有一项靠谱的用量。{name} 在收据上画了颗小星星，问下一个版本要让谁来试吃。"],
+    ldsStorycafeChoice00: ["Borrow a book and share the window seat", "借一本书，分享窗边的位置"], ldsStorycafeChoice01: ["Put on an apron and help in the kitchen", "系上围裙，一起去厨房帮忙"],
+    ldsStorycafeChoice10: ["Tell him a memory that feels like home", "讲一段让你想起家的回忆"], ldsStorycafeChoice11: ["Invent a secret menu together", "一起编一份秘密菜单"],
+    ldsStorycafeChoice20: ["Write a bookmark for your next visit", "写张书签，留给下次来访"], ldsStorycafeChoice21: ["Promise to test a new recipe next time", "约好下次再试一个新食谱"],
+    ldsStorycafeEndquiet: ["Borrowed pages. You leave a bookmark between two unfinished chapters. {name} remembers the page number. There is no hurry to finish a story you can return to together.", "借来的书页。你把书签夹在两个尚未读完的章节之间。{name} 记住了页码。一个能一起回来接着读的故事，不必急着翻到结尾。"],
+    ldsStorycafeEndadventure: ["Midnight recipe. The owner keeps your ridiculous menu behind the counter. You and {name} take the first batch home, already arguing fondly about tomorrow's improvement.", "午夜食谱。店主把你们那份离谱的菜单收在柜台后。你和 {name} 带走了第一份成品，回家的路上，还在笑着争论明天该怎么改良。"],
+    ldsStoryobservatoryScene0: ["The observatory opens for one last hour. Clouds cover the dome, but {name} has brought an old star map with a route drawn in the margin. You can wait for clear skies or try following it.", "天文台还开放最后一个小时。云层遮住了穹顶，{name} 却带来一张旧星图，边角画着一条路线。你们可以等待放晴，也可以试着沿着它寻找。"],
+    ldsStoryobservatoryScene10: ["The telescope shows only clouds. Below, the city's windows look like another constellation. {name} moves his chair beside yours and leaves the map open.", "望远镜里暂时只有云。山下的万家灯火，却像另一片星座。{name} 把椅子挪到你身边，没有收起那张星图。"],
+    ldsStoryobservatoryScene11: ["The first marker leads to a brass telescope behind the dome. A handwritten note points toward the roof. {name} holds the door against the wind while you read it.", "第一个标记把你们带到穹顶后的黄铜望远镜旁。手写的便条指向屋顶。你读字的时候，{name} 替你挡住了被风吹动的门。"],
+    ldsStoryobservatoryScene20: ["A gap opens in the clouds. For a moment, the sky and the city seem equally close. {name} asks which part of tonight you would most like to remember.", "云层终于露出一角。那一刻，天空与城市仿佛离你们同样近。{name} 问，今晚最想记住的，是哪一个瞬间。"],
+    ldsStoryobservatoryScene21: ["The route ends on a sheltered balcony. A distant streak crosses the sky just as you unfold the last note. {name} laughs: you found the right place a little early.", "路线的尽头是一处避风的露台。你展开最后一张便条时，远处恰好有一道光划过。{name} 笑了，说你们比约定的时间早找到这里一点。"],
+    ldsStoryobservatoryChoice00: ["Wait by the telescope together", "一起守在望远镜旁"], ldsStoryobservatoryChoice01: ["Follow the route on his star map", "沿着他星图上的路线寻找"],
+    ldsStoryobservatoryChoice10: ["Give this view a name only you know", "给眼前的风景取一个秘密名字"], ldsStoryobservatoryChoice11: ["Plot a route to watch the meteors", "规划一条追寻流光的路线"],
+    ldsStoryobservatoryChoice20: ["Keep the star map as tonight's bookmark", "把星图当作今晚的书签"], ldsStoryobservatoryChoice21: ["Plan your next night under the stars", "约好下一次一起看星空"],
+    ldsStoryobservatoryEndquiet: ["Under one sky. Nothing spectacular needs to happen. You and {name} fold the star map together and stay until the last light in the dome goes out.", "同一片星空。不必每个夜晚都有盛大的奇迹。你和 {name} 一起折好星图，坐到穹顶里的最后一盏灯熄灭。"],
+    ldsStoryobservatoryEndadventure: ["Meteor hunters. The old map has a new route in your handwriting. {name} circles a date in its margin. The next destination is already a promise shared between you.", "追光的人。旧星图上多了一条由你画下的路线。{name} 在边角圈好一个日期。下一个目的地，已经成了你们之间的约定。"]
+  };
+  var storyStrings = { en: {}, zh: {} }; Object.keys(storyCopy).forEach(function (key) { storyStrings.en[key] = storyCopy[key][0]; storyStrings.zh[key] = storyCopy[key][1]; }); App.addStrings(storyStrings);
+  App.ldsStoryEndings = storyEndings;
   App.ldsReadDates = readDates;
   App.ldsCreateClaw = createClaw; App.ldsStepClaw = stepClaw;
   App.ldsCreateKitty = createKitty; App.ldsKittyPlay = kittyPlay; App.ldsKittyAssist = kittyAssist; App.ldsKittyPartner = kittyPartner; App.ldsKittyTactic = kittyTactic;

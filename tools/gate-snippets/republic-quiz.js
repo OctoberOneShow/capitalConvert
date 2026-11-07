@@ -19,25 +19,31 @@ module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const decks = App.republicDecks;
   const frontierIds = ["q25", "q26", "q27", "q28", "q29", "q30"];
+  const odysseyIds = ["q31", "q32", "q33", "q34", "q35", "q36", "q37", "q38", "q39", "q40"];
   const goldTierIds = ["q11", "q12", "q13", "q14", "q15", "q16",
     "q17", "q18", "q19", "q20", "q21", "q22", "q23", "q24"];
 
   const ids = decks.map((deck) => deck.id);
-  check("game-republic-quiz", "the ladder holds thirty decks",
-    decks.length === 30, String(decks.length));
+  check("game-republic-quiz", "the ladder holds forty decks",
+    decks.length === 40, String(decks.length));
   check("game-republic-quiz", "every deck id is distinct",
     new Set(ids).size === ids.length, ids.join(","));
-  check("game-republic-quiz", "the deck ids stay in order q1-q30",
+  check("game-republic-quiz", "the deck ids stay in order q1-q40",
     ids.every((id, index) => id === "q" + (index + 1)), ids.join(","));
 
   const byId = {};
   decks.forEach((deck) => { byId[deck.id] = deck; });
   const frontier = frontierIds.map((id) => byId[id]);
+  const odyssey = odysseyIds.map((id) => byId[id]);
   const goldTier = goldTierIds.map((id) => byId[id]);
   check("game-republic-quiz", "the wider-world tier q25-q30 is present in order",
     frontier.every((deck) => !!deck) &&
       frontierIds.every((id, index) => ids.indexOf(id) > (index === 0 ? -1 : ids.indexOf(frontierIds[index - 1]))),
     frontier.filter((deck) => !deck).join(",") || "ordered");
+  check("game-republic-quiz", "the modern-odyssey tier q31-q40 is present in order",
+    odyssey.every((deck) => !!deck) &&
+      odysseyIds.every((id, index) => ids.indexOf(id) > (index === 0 ? -1 : ids.indexOf(odysseyIds[index - 1]))),
+    odyssey.filter((deck) => !deck).join(",") || "ordered");
 
   /* Shape: every deck in the ladder, shipped or new, in both languages. */
   const shapeProblems = [];
@@ -90,28 +96,29 @@ module.exports = function gate(ctx) {
     "the computing-age tier q11-q24 keeps its seven cards and [5,4,2] bands",
     goldProblems.length === 0, goldProblems.join(","));
 
-  /* The wider-world tier: same seven-card shape, bands pulled in to [6,5,3]
+  /* The wider-world and odyssey tiers: same seven-card shape, bands pulled in to [6,5,3]
    * - one miss at the summit, strictly tighter than the tier below. */
-  const frontierProblems = [];
-  frontier.forEach((deck) => {
+  const upperTier = frontier.concat(odyssey);
+  const upperProblems = [];
+  upperTier.forEach((deck) => {
     if (deck.cards.length !== 7 || deck.stars[0] !== 6 ||
       deck.stars[1] !== 5 || deck.stars[2] !== 3) {
-      frontierProblems.push(deck.id + ":" + deck.cards.length + "/" + deck.stars.join("-"));
+      upperProblems.push(deck.id + ":" + deck.cards.length + "/" + deck.stars.join("-"));
     }
   });
   check("game-republic-quiz",
-    "the wider-world tier q25-q30 keeps seven cards and the tightened [6,5,3] bands",
-    frontierProblems.length === 0, frontierProblems.join(","));
+    "the wider-world and odyssey tiers q25-q40 keep seven cards and the tightened [6,5,3] bands",
+    upperProblems.length === 0, upperProblems.join(","));
   check("game-republic-quiz",
     "the summit bands are strictly tighter than the computing-age bands",
-    frontier.every((deck) => deck.stars[0] > byId.q24.stars[0] &&
+    upperTier.every((deck) => deck.stars[0] > byId.q24.stars[0] &&
       deck.stars[1] > byId.q24.stars[1] && deck.stars[2] > byId.q24.stars[2]),
-    frontier.map((deck) => deck.stars.join("/")).join(","));
+    upperTier.map((deck) => deck.stars.join("/")).join(","));
 
   /* The names travel in both packs, the way archive-escape's gate reads
    * them: t() resolves off the live dictionary, zh holds its own value. */
   const nameProblems = [];
-  frontierIds.forEach((deckId, index) => {
+  frontierIds.concat(odysseyIds).forEach((deckId, index) => {
     const key = "rqD" + (25 + index);
     const en = App.t(key);
     const zh = App.I18N.zh[key];
@@ -120,7 +127,7 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-republic-quiz",
-    "the six wider-world deck names resolve to distinct names in both languages",
+    "all sixteen upper deck names resolve to distinct names in both languages",
     nameProblems.length === 0, nameProblems.join(" | "));
 
   /* The quiz must not teach the same question twice across the ladder. */
@@ -135,6 +142,6 @@ module.exports = function gate(ctx) {
       seen[asked] = deck.id;
     });
   });
-  check("game-republic-quiz", "no question is asked twice across the thirty decks",
+  check("game-republic-quiz", "no question is asked twice across the forty decks",
     repeats.length === 0, repeats.join(" | "));
 };

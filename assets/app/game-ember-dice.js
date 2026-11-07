@@ -199,7 +199,12 @@
      * was measured too and cannot ship at any bounty: a target one bank
      * clears three-stars 50.7% of the time (over the ceiling) and a target
      * needing two banks clears 26.9% (under the floor), so the fourth ember
-     * lives on the small felt alone. */
+     * lives on the small felt alone. (Correction, sixth tier: the two
+     * probes were honest but the gap between them was not empty - the 48
+     * felt, where the first bank needs the felt's top two sums, ships all
+     * three four-ember pairs felts in a bounty one window wide, each
+     * measuring 55.94% clear and a 41.89% line. The wall was the probe,
+     * not the felt; the sixth tier deals it.) */
     { id: "t31", labelKey: "diceTable31", ruleKey: "diceRule31", target: 90, burn: [1, 2, 3, 6], tax: -26, pairs: false },
     { id: "t32", labelKey: "diceTable32", ruleKey: "diceRule32", target: 60, burn: [1], tax: 10, pairs: false },
     { id: "t33", labelKey: "diceTable33", ruleKey: "diceRule33", target: 280, burn: [1, 2, 3], tax: -129, pairs: true },
@@ -210,6 +215,132 @@
     { id: "t38", labelKey: "diceTable38", ruleKey: "diceRule38", target: 110, burn: [1, 3, 5], tax: -22, pairs: false },
     { id: "t39", labelKey: "diceTable39", ruleKey: "diceRule39", target: 110, burn: [1, 2, 3], tax: -21, pairs: false },
     { id: "t40", labelKey: "diceTable40", ruleKey: "diceRule40", target: 110, burn: [2, 4, 6], tax: -23, pairs: false },
+
+    /* Tables 41-44, the fifth tier - the famine walk. Every felt before this
+     * one charged the rolls it survived and paid whatever lived; this tier
+     * takes the paying pips away rung over rung, until the die keeps a single
+     * live face. The walk is measured in survival: a roll survives 18 times
+     * in 36 on the opener, 12 on the second rung, 9 when the famine reaches
+     * the twins, and 6 on the last gate - strictly scarcer every rung, and
+     * the last gate's lone pip is the loneliest felt the room has run, six
+     * surviving rolls in thirty-six against the nine of the Last Ember and
+     * the Quiet One.
+     *
+     * The dial moves because the old one is spent: the summit and the fourth
+     * tier walked the three-star line down to the Ash Vault's 15.0 and the
+     * bands have no room under their own floor, so the famine spends the
+     * solver's OTHER line instead - the share of best-policy runs that clear
+     * at all - and that share descends strictly rung over rung, 53.10, 50.61,
+     * 47.05, 45.73, every rung under the Even Embers' capstone (53.84), the
+     * first tier whose difficulty line has moved past the capstone on the
+     * clear share. The three-star lines ride in band and climb as the clear
+     * share falls (15.3, 23.2, 24.7, 26.3) - the famine's banks, when they
+     * land at all, land fat with bounty - so the tier is held at both ends:
+     * the clear share descends, and the Ash Vault keeps the deepest
+     * three-star line in the ladder.
+     *
+     * The records, one per rung against every table before it. 41 splits the
+     * small felt down the half the Low Embers never ran: every face that
+     * burns (the 4, the 5, the 6) outrolls every face that pays (the 1, the
+     * 2, the 3). 42 burns every face above the deuce - the lowest-paying
+     * purse any felt has carried, the 1 and the 2 against the world. 43
+     * carries the split to the twins, the first pairs felt where both dice
+     * must land under 4. 44 leaves the die one live pip - the ace - five of
+     * the six faces burn, past the Fourth Ember's four, on the smallest
+     * target the room has printed (26, under the Long Table's 40), where
+     * even that ask clears for barely more than the band floor allows.
+     *
+     * All numbers were measured through the game's own solver in
+     * tools/dice-forge.js - exact value iteration over (turns, bank, stake)
+     * under the best stopping policy, no dice rolled - under the same
+     * round-zero convention the fourth tier pinned, so every ordering here
+     * reproduces from the forge as shipped. Every bounty below is the
+     * smallest one the solver holds inside the shipped bands, and the famine
+     * edge is tighter than the shipped tiers': one bounty stingier - a single
+     * point - and every rung falls out (41's clear to 47.4 with its line
+     * under the floor, 42's to 35.8, 43's to 41.5, 44's to 18.0). The gate
+     * also proves the walk is what the difficulty is made of: give each
+     * famine felt its pips back - one burn face, the 6, at the same economy -
+     * and every rung's clear share jumps back over the capstone (99.8, 100.0,
+     * 99.9, 100.0), the descent collapsed. And the one-star line is real the
+     * honest way: under a dawdling hand that banks every live roll, each
+     * famine rung still clears exactly on the tenth turn - 12.3%, 8.5%, 7.2%,
+     * 5.8% of dawdling runs - so the whole ladder, first through
+     * forty-fourth, stays starred from the solver's own lines. */
+    { id: "t41", labelKey: "diceTable41", ruleKey: "diceRule41", target: 44, burn: [4, 5, 6], tax: -8, pairs: false },
+    { id: "t42", labelKey: "diceTable42", ruleKey: "diceRule42", target: 32, burn: [3, 4, 5, 6], tax: -9, pairs: false },
+    { id: "t43", labelKey: "diceTable43", ruleKey: "diceRule43", target: 40, burn: [4, 5, 6], tax: -15, pairs: true },
+    { id: "t44", labelKey: "diceTable44", ruleKey: "diceRule44", target: 26, burn: [2, 3, 4, 5, 6], tax: -12, pairs: false },
+
+    /* Tables 45-50, the sixth tier - the last deal. The famine stripped the
+     * small felt to one live pip, and the scan says every other dial is
+     * spent: at the starvation edge the solver pins each pairs felt's
+     * three-star line within a tick of its own asymptote whatever the
+     * target, the house's tithe cannot land on any famine felt at all, and
+     * the five-ember pairs cannot ship at any bounty to 240. What the room
+     * still held was the pairs it never dealt - and the wall the fourth
+     * tier measured wrong. Its two probes were honest - a one-bank target
+     * rides the ceiling at 50.7%, a two-bank target busts the floor at
+     * 26.9% - but between them sits a knife-edge the probes did not cut:
+     * at the 48 felt, where the first bank needs the felt's top two sums,
+     * all three four-ember pairs felts land in a bounty one window wide,
+     * and each measures the same table, 55.94% clear and a 41.89% line,
+     * because the event is the same - the first surviving roll reaches the
+     * threshold stake. The wall was the probe, not the felt. The opener
+     * deals it: 55.94/41.89 at a 39 bounty, with 38 under the floor (36.61
+     * clear) and 40 over the ceiling (a 50.67 line) - the only two-sided
+     * edge in the ladder, one bounty either side and the rung falls out
+     * both ways.
+     *
+     * The rest of the deal is the unlit pairs, every one at the 200 felt -
+     * the depth the deal is dealt at - on the smallest bounty that holds it
+     * in band. The tier's line is the descent: 22.70, 19.37, 17.20, 16.22,
+     * 15.20, strictly rung over rung, the closing rung a fifth of a point
+     * over the Ash Vault's floor and the deepest line the ladder has
+     * printed since. The clear shares ride in band (45.19 to 55.94), the
+     * deal runs the scarce end too - the Broken Wall's felt survives 4
+     * rolls in thirty-six, the scarcity the fourth tier measured, while
+     * every other rung keeps nine or more - and the Ash Vault keeps the
+     * deepest three-star line in the ladder.
+     *
+     * The records, one per rung against every table before it. 45 breaks
+     * the wall (above). 46 mirrors the famine twins - the first pairs felt
+     * that spares exactly the ace and the two highest pips, 1, 5 and 6 -
+     * and pins the invariance: its line prints 22.70 at the 120, 200 and
+     * 240 felts to the decimal, so the target is not the dial here either.
+     * 47 is the first pairs felt whose highest paying pip is the four, one
+     * pip looser than the famine twins. 48 is the first pairs parity
+     * split, two odd faces burning and nothing else. 49 burns the four and
+     * the six and nothing else, the first pairs felt that spares the five
+     * beside them. 50 closes the deal with the widest survivors the twins
+     * have run - 1, 4, 5 and 6, four wide from the ace to the six, past
+     * the mirror's three - and rides the bank quantum down:
+     * the line at the edge is sawtoothed in the five-pip banks, 16.23 at
+     * the 195 felt, 15.20 at the 200, 18.28 at the 205, and the 200 is the
+     * deepest dip the walk ran.
+     *
+     * Every bounty below is the smallest one the solver holds inside the
+     * shipped bands, and one stingier falls out on every rung - 45 is
+     * flanked both ways (a 36.61 clear at 38, a 50.67 line at 40), 46's
+     * clear to 41.47, 47's to 44.18 with its line at 13.00, 48's to
+     * 43.75, 49's to 42.50, 50's to 42.30 - and the felt, not the target,
+     * is what the tier prices: at each rung's own economy a shipped cousin
+     * measures a different table on both lines (the famine cousin at the
+     * mirror's bounty cannot even hold the floor, 39.98 clear, the 2/6
+     * twins at the 47 rung's economy measure 61.46/23.95, the 1/2 twins at
+     * the 48 rung's 54.51/19.78 and the 49 rung's 62.71/24.90, the 2/6
+     * twins at the 50 rung's 57.47/21.46). All numbers were measured
+     * through the game's own solver in tools/dice-forge.js - exact value
+     * iteration over (turns, bank, stake) under the best stopping policy,
+     * no dice rolled - under the same round-zero convention the fourth
+     * tier pinned, so every ordering here reproduces from the forge as
+     * shipped. */
+    { id: "t45", labelKey: "diceTable45", ruleKey: "diceRule45", target: 48, burn: [1, 2, 3, 6], tax: -39, pairs: true },
+    { id: "t46", labelKey: "diceTable46", ruleKey: "diceRule46", target: 200, burn: [2, 3, 4], tax: -89, pairs: true },
+    { id: "t47", labelKey: "diceTable47", ruleKey: "diceRule47", target: 200, burn: [5, 6], tax: -45, pairs: true },
+    { id: "t48", labelKey: "diceTable48", ruleKey: "diceRule48", target: 200, burn: [1, 3], tax: -41, pairs: true },
+    { id: "t49", labelKey: "diceTable49", ruleKey: "diceRule49", target: 200, burn: [4, 6], tax: -44, pairs: true },
+    { id: "t50", labelKey: "diceTable50", ruleKey: "diceRule50", target: 200, burn: [2, 3], tax: -41, pairs: true },
   ];
 
   function initEmberDiceGame() {
@@ -493,6 +624,26 @@
       "diceRule38": "The Odd Embers: one die, a 1, a 3 or a 5 burns the stake, and every bank pays you an extra 22. Target {t}.",
       "diceRule39": "The Low Embers: one die, a 1, a 2 or a 3 burns the stake, and every bank pays you an extra 21. Target {t}.",
       "diceRule40": "The Even Embers: one die, a 2, a 4 or a 6 burns the stake, and every bank pays you an extra 23. Target {t}.",
+      "diceTable41": "The High Embers",
+      "diceTable42": "The Thin Purse",
+      "diceTable43": "The Famine Twins",
+      "diceTable44": "The Last Pip",
+      "diceRule41": "The High Embers: one die, a 4, a 5 or a 6 burns the stake, and every bank pays you an extra 8. Target {t}.",
+      "diceRule42": "The Thin Purse: one die, a 3, a 4, a 5 or a 6 burns the stake, and every bank pays you an extra 9. Target {t}.",
+      "diceRule43": "The Famine Twins: two dice add together, a 4, a 5 or a 6 on either die burns the stake, and every bank pays you an extra 15. Target {t}.",
+      "diceRule44": "The Last Pip: one die, a 2, a 3, a 4, a 5 or a 6 burns the stake, and every bank pays you an extra 12. Target {t}.",
+      "diceTable45": "The Broken Wall",
+      "diceTable46": "The Mirror Twins",
+      "diceTable47": "The Wide Gate",
+      "diceTable48": "The Odd Twins",
+      "diceTable49": "The Spared Five",
+      "diceTable50": "The Last Deal",
+      "diceRule45": "The Broken Wall: two dice add together, a 1, a 2, a 3 or a 6 on either die burns the stake, and every bank pays you an extra 39. Target {t}.",
+      "diceRule46": "The Mirror Twins: two dice add together, a 2, a 3 or a 4 on either die burns the stake, and every bank pays you an extra 89. Target {t}.",
+      "diceRule47": "The Wide Gate: two dice add together, a 5 or a 6 on either die burns the stake, and every bank pays you an extra 45. Target {t}.",
+      "diceRule48": "The Odd Twins: two dice add together, a 1 or a 3 on either die burns the stake, and every bank pays you an extra 41. Target {t}.",
+      "diceRule49": "The Spared Five: two dice add together, a 4 or a 6 on either die burns the stake, and every bank pays you an extra 44. Target {t}.",
+      "diceRule50": "The Last Deal: two dice add together, a 2 or a 3 on either die burns the stake, and every bank pays you an extra 41. Target {t}.",
       "diceBurns": "A {f}! The stake burns to ash.",
       "diceAllTables": " All {n} tables are yours!",
     },
@@ -567,6 +718,26 @@
       "diceRule38": "奇烬桌：一颗骰子，1、3、5 任何一点都会烧光赌注，每次「收下」额外给 22。目标 {t}。",
       "diceRule39": "低烬桌：一颗骰子，1、2、3 任何一点都会烧光赌注，每次「收下」额外给 21。目标 {t}。",
       "diceRule40": "偶烬桌：一颗骰子，2、4、6 任何一点都会烧光赌注，每次「收下」额外给 23。目标 {t}。",
+      "diceTable41": "高烬桌",
+      "diceTable42": "薄赏桌",
+      "diceTable43": "饥烬双骰",
+      "diceTable44": "末点桌",
+      "diceRule41": "高烬桌：一颗骰子，4、5、6 任何一点都会烧光赌注，每次「收下」额外给 8。目标 {t}。",
+      "diceRule42": "薄赏桌：一颗骰子，3、4、5、6 任何一点都会烧光赌注，每次「收下」额外给 9。目标 {t}。",
+      "diceRule43": "饥烬双骰：两颗骰子相加，任何一颗掷出 4、5 或 6 就烧光赌注，每次「收下」额外给 15。目标 {t}。",
+      "diceRule44": "末点桌：一颗骰子，2、3、4、5、6 任何一点都会烧光赌注，每次「收下」额外给 12。目标 {t}。",
+      "diceTable45": "破墙桌",
+      "diceTable46": "镜像双生桌",
+      "diceTable47": "宽门桌",
+      "diceTable48": "奇数双生桌",
+      "diceTable49": "留五桌",
+      "diceTable50": "终局牌桌",
+      "diceRule45": "破墙桌：两颗骰子相加，任意一颗掷出 1、2、3 或 6 都会烧光赌注，每次「收下」额外给 39。目标 {t}。",
+      "diceRule46": "镜像双生桌：两颗骰子相加，任意一颗掷出 2、3 或 4 都会烧光赌注，每次「收下」额外给 89。目标 {t}。",
+      "diceRule47": "宽门桌：两颗骰子相加，任意一颗掷出 5 或 6 都会烧光赌注，每次「收下」额外给 45。目标 {t}。",
+      "diceRule48": "奇数双生桌：两颗骰子相加，任意一颗掷出 1 或 3 都会烧光赌注，每次「收下」额外给 41。目标 {t}。",
+      "diceRule49": "留五桌：两颗骰子相加，任意一颗掷出 4 或 6 都会烧光赌注，每次「收下」额外给 44。目标 {t}。",
+      "diceRule50": "终局牌桌：两颗骰子相加，任意一颗掷出 2 或 3 都会烧光赌注，每次「收下」额外给 41。目标 {t}。",
       "diceBurns": "掷出 {f}！赌注化为灰烬。",
       "diceAllTables": " {n} 张牌桌都是你的了！",
     },

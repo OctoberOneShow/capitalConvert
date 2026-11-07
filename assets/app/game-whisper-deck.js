@@ -26,7 +26,7 @@
    * same deck for a longer night. Absent `duels`, every rung replays
    * exactly the four-duel run it shipped with. */
   function wsdRunDuels(level) {
-    return Math.max(1, Math.min(8, wsdInt(level && level.duels) || DUELS));
+    return Math.max(1, Math.min(10, wsdInt(level && level.duels) || DUELS));
   }
   var TYPES = { strike: "strike", guard: "guard", flow: "flow" };
 
@@ -238,6 +238,62 @@
       id: "w30", labelKey: "wsdZ30", twistKey: "wsdTwist30", seed: 14659, breath: 3, duels: 8, starResolve: [10, 5, 1],
       deck: ["gust", "gust", "claw", "claw", "fang", "lance", "riposte", "riposte", "wall", "sidewall", "shell", "sip", "airy", "hush"],
       foes: ["choir", "wraith", "thunder", "deacon", "hollow", "thunder", "wraith", "thunder"],
+    },
+    /* w31-40: the abyss tier is the supreme vigil. The summit pushed the run
+     * to eight duels; the abyss tier stretches into nine and ten duels,
+     * pairing these deepest nights with thin breath (w33 at 9 duels, w38 at 10 duels),
+     * ravenous card-eating horrors, and the culminating Abyssal Crown w40
+     * which confronts four thunders across ten unrelenting duels.
+     * Bands are calibrated directly from scripted best-play benchmarks. */
+    {
+      id: "w31", labelKey: "wsdZ31", twistKey: "wsdTwist31", seed: 15101, breath: 3, duels: 9, starResolve: [24, 14, 5],
+      deck: ["gust", "gust", "claw", "claw", "fang", "lance", "riposte", "wall", "sidewall", "shell", "sip", "sip", "airy", "hush", "sip", "wall", "riposte"],
+      foes: ["murmur", "caller", "choir", "deacon", "hollow", "wraith", "thunder", "choir", "deacon"],
+    },
+    {
+      id: "w32", labelKey: "wsdZ32", twistKey: "wsdTwist32", seed: 15203, breath: 3, duels: 9, starResolve: [26, 17, 9],
+      deck: ["gust", "gust", "claw", "fang", "fang", "lance", "riposte", "wall", "wall", "sidewall", "sidewall", "shell", "sip", "sip", "airy", "hush", "hush"],
+      foes: ["murmur", "antiphon", "choir", "hollow", "thunder", "wraith", "deacon", "wraith", "thunder"],
+    },
+    {
+      id: "w33", labelKey: "wsdZ33", twistKey: "wsdTwist33", seed: 15307, breath: 2, duels: 9, starResolve: [19, 11, 3],
+      deck: ["gust", "gust", "claw", "fang", "lance", "riposte", "wall", "sidewall", "shell", "sip", "sip", "sip", "airy", "airy", "hush", "hush", "sip"],
+      foes: ["murmur", "caller", "murmur", "caller", "murmur", "choir", "caller", "murmur", "choir"],
+    },
+    {
+      id: "w34", labelKey: "wsdZ34", twistKey: "wsdTwist34", seed: 15413, breath: 3, duels: 9, starResolve: [29, 19, 10],
+      deck: ["gust", "gust", "claw", "claw", "fang", "fang", "lance", "riposte", "wall", "wall", "sidewall", "shell", "sip", "sip", "airy", "hush", "hush", "sip"],
+      foes: ["murmur", "hollow", "choir", "wraith", "deacon", "hollow", "thunder", "wraith", "hollow"],
+    },
+    {
+      id: "w35", labelKey: "wsdZ35", twistKey: "wsdTwist35", seed: 15521, breath: 3, duels: 9, starResolve: [16, 9, 2],
+      deck: ["gust", "gust", "claw", "claw", "fang", "fang", "lance", "riposte", "riposte", "wall", "wall", "sidewall", "shell", "sip", "sip", "airy", "hush", "hush"],
+      foes: ["caller", "choir", "deacon", "thunder", "wraith", "deacon", "hollow", "thunder", "thunder"],
+    },
+    {
+      id: "w36", labelKey: "wsdZ36", twistKey: "wsdTwist36", seed: 16109, breath: 3, duels: 10, starResolve: [22, 13, 5],
+      deck: ["gust", "gust", "claw", "claw", "fang", "fang", "lance", "riposte", "riposte", "wall", "sidewall", "shell", "sip", "sip", "airy", "hush", "sip", "wall"],
+      foes: ["murmur", "caller", "choir", "antiphon", "hollow", "deacon", "wraith", "thunder", "choir", "deacon"],
+    },
+    {
+      id: "w37", labelKey: "wsdZ37", twistKey: "wsdTwist37", seed: 16223, breath: 3, duels: 10, starResolve: [23, 17, 11],
+      deck: ["gust", "gust", "claw", "fang", "lance", "riposte", "riposte", "wall", "wall", "sidewall", "sidewall", "shell", "sip", "sip", "sip", "airy", "hush", "hush"],
+      foes: ["caller", "choir", "hollow", "wraith", "thunder", "deacon", "thunder", "wraith", "hollow", "thunder"],
+    },
+    {
+      id: "w38", labelKey: "wsdZ38", twistKey: "wsdTwist38", seed: 16333, breath: 2, duels: 10, starResolve: [21, 12, 4],
+      deck: ["gust", "gust", "claw", "fang", "fang", "lance", "riposte", "wall", "sidewall", "shell", "sip", "sip", "sip", "airy", "airy", "hush", "hush", "sip", "hush"],
+      foes: ["murmur", "caller", "murmur", "caller", "murmur", "caller", "choir", "murmur", "caller", "choir"],
+    },
+    {
+      id: "w39", labelKey: "wsdZ39", twistKey: "wsdTwist39", seed: 16447, breath: 3, duels: 10, starResolve: [20, 11, 2],
+      deck: ["gust", "gust", "claw", "claw", "fang", "fang", "lance", "lance", "riposte", "riposte", "wall", "sidewall", "bulwark", "shell", "sip", "sip", "airy", "hush", "sip", "wall"],
+      foes: ["choir", "deacon", "wraith", "thunder", "hollow", "thunder", "deacon", "wraith", "hollow", "thunder"],
+    },
+    {
+      id: "w40", labelKey: "wsdZ40", twistKey: "wsdTwist40", seed: 17301, breath: 3, duels: 10, starResolve: [16, 8, 1],
+      deck: ["gust", "gust", "claw", "claw", "fang", "fang", "lance", "lance", "riposte", "riposte", "wall", "sidewall", "bulwark", "shell", "sip", "sip", "airy", "hush", "sip", "hush", "wall"],
+      foes: ["deacon", "choir", "wraith", "thunder", "deacon", "hollow", "thunder", "wraith", "thunder", "thunder"],
     },
   ];
 
@@ -1137,6 +1193,26 @@
       "wsdTwist28": "eight bells: the engine's own ceiling, and the last encore arrives unmended",
       "wsdTwist29": "the thin eighth: eight duels on two breath, walked on draws alone",
       "wsdTwist30": "the thunder court: three thunders over eight duels, the heaviest table yet",
+      "wsdZ31": "The Ninth Bell",
+      "wsdZ32": "The Iron Nave",
+      "wsdZ33": "The Thin Ninth",
+      "wsdZ34": "Abyssal Gobblers",
+      "wsdZ35": "The Thunder Vigil",
+      "wsdZ36": "Ten Bells",
+      "wsdZ37": "The Tolling Bastion",
+      "wsdZ38": "The Thin Tenth",
+      "wsdZ39": "Void Chorus",
+      "wsdZ40": "The Abyssal Crown",
+      "wsdTwist31": "the ninth bell: nine duels, testing stamina through a deep encore",
+      "wsdTwist32": "the iron nave: nine duels behind a fortified battery of walls and shells",
+      "wsdTwist33": "the thin ninth: nine duels on two breath a turn, sustained by flow and draw",
+      "wsdTwist34": "abyssal gobblers: nine duels facing three ravenous card-eating horrors",
+      "wsdTwist35": "the thunder vigil: nine duels under triple thunder and twin deacons",
+      "wsdTwist36": "ten bells: the ten-duel frontier, marching through every voice in the dark",
+      "wsdTwist37": "the tolling bastion: ten duels weathering quadruple thunder strikes",
+      "wsdTwist38": "the thin tenth: ten duels on two breath, the absolute limit of draw discipline",
+      "wsdTwist39": "void chorus: ten duels against five apex horrors, requiring full deck mastery",
+      "wsdTwist40": "the abyssal crown: ten duels facing four thunders, the supreme apex of the campaign",
       "wsdBreathLabel": "Breath",
       "wsdResolveLabel": "Resolve",
       "wsdDuelLabel": "Duel",
@@ -1277,6 +1353,26 @@
       "wsdTwist28": "八声钟：引擎自己的上限，休整未完第八场也要开打",
       "wsdTwist29": "窄息八场：两口气走八场，全靠抽牌走完",
       "wsdTwist30": "雷霆法庭：三记雷霆压八场，战役至今最重的一桌",
+      "wsdZ31": "九声钟",
+      "wsdZ32": "铁壁殿堂",
+      "wsdZ33": "窄息九钟",
+      "wsdZ34": "深渊吞噬",
+      "wsdZ35": "雷霆守望",
+      "wsdZ36": "十声钟",
+      "wsdZ37": "鸣钟壁垒",
+      "wsdZ38": "窄息十场",
+      "wsdZ39": "太虚合唱",
+      "wsdZ40": "深渊冠冕",
+      "wsdTwist31": "九声钟：九场对决，在漫长守夜中考验耐力与余气",
+      "wsdTwist32": "铁壁殿堂：九场对决，背靠坚实壁垒与硬壳抵御轮番冲击",
+      "wsdTwist33": "窄息九钟：两口气走完九场，全靠流转抽牌与精准节奏",
+      "wsdTwist34": "深渊吞噬：九场对决，三度直面吞噬珍贵手牌的空洞与幽魂",
+      "wsdTwist35": "雷霆守望：九场对决，三记雷霆与双执事轮番重压",
+      "wsdTwist36": "十声钟：十场对决新关口，直面黑暗中响起的每一道回声",
+      "wsdTwist37": "鸣钟壁垒：十场对决，在四重雷霆碾压下守住心气",
+      "wsdTwist38": "窄息十场：两口气挺过十场对决，将抽牌调度推向极境",
+      "wsdTwist39": "太虚合唱：十场对决，五位顶尖强敌连场，全副牌组倾囊相授",
+      "wsdTwist40": "深渊冠冕：十场对决，四记雷霆镇守终局，战役最高峰",
       "wsdBreathLabel": "气息",
       "wsdResolveLabel": "心气",
       "wsdDuelLabel": "对决",

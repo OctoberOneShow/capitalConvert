@@ -34,7 +34,7 @@
   var nirBoostTime = 1.2;
   var nirPadRadius = 22;
 
-  /* Forty authored centre lines. `limit` is only a safety net: the real bands
+  /* Fifty-four authored centre lines. `limit` is only a safety net: the real bands
    * come from nirPar() measuring the scripted line on the same stepper, and the
    * timeout a run actually meets is nirLimit() = max(limit, ceil(par * 1.9)).
    * Each authored limit is therefore written to agree with that derived value.
@@ -378,6 +378,150 @@
        * twelve teeth, two pads on the racing line. */
       points: [{ x: 44, y: 64 }, { x: 100, y: 26 }, { x: 156, y: 64 }, { x: 212, y: 26 }, { x: 268, y: 64 }, { x: 324, y: 26 }, { x: 380, y: 64 }, { x: 404, y: 110 }, { x: 380, y: 144 }, { x: 324, y: 106 }, { x: 268, y: 144 }, { x: 212, y: 106 }, { x: 156, y: 144 }, { x: 100, y: 106 }, { x: 44, y: 144 }, { x: 20, y: 192 }, { x: 44, y: 224 }, { x: 100, y: 186 }, { x: 156, y: 224 }, { x: 212, y: 186 }, { x: 268, y: 224 }, { x: 324, y: 186 }, { x: 380, y: 224 }, { x: 404, y: 274 }, { x: 380, y: 304 }, { x: 324, y: 266 }, { x: 268, y: 304 }, { x: 212, y: 266 }, { x: 156, y: 304 }, { x: 100, y: 266 }, { x: 44, y: 304 }, { x: 20, y: 354 }, { x: 44, y: 384 }, { x: 81, y: 346 }, { x: 119, y: 384 }, { x: 156, y: 346 }, { x: 193, y: 384 }, { x: 231, y: 346 }, { x: 268, y: 384 }, { x: 305, y: 346 }, { x: 343, y: 384 }, { x: 380, y: 346 }, { x: 16, y: 396 }],
       pads: [{ x: 156, y: 64 }, { x: 268, y: 144 }],
+    },
+    /* ------------------------------------------------------------------
+     * The fifth tier (n41-n44). The Full Measure closed the fourth tier
+     * at forty-two gates on a 2846px tape; this tier widens the book
+     * again, one record per rung, each measured against every course
+     * before it through the forge's courseMetrics: n41 takes the gate
+     * count to 43 on a sixth comb band, n42 stretches the tape to
+     * 2996px, n43 packs forty hairpin teeth past the Stack's twenty-nine
+     * and n44 pairs the records - forty-seven gates and the densest
+     * field the engine has threaded (1.96 gates per 100px past the
+     * Apiary's 1.85) with the rank hand-offs squeezed to four pixels of
+     * clearance on the 20px floor. The measured par never falls: 94.3,
+     * 96.2, 109.4, 112.5. Every course below was checked by
+     * tools/drift-forge.js the way the header demands - the scripted
+     * reference line finishes at 60 Hz and a keyboard lap (steering
+     * re-issued every 3-6 frames, across 729 line variants and three
+     * phase offsets) clears the three-star band with the forge's ship
+     * margin. */
+    {
+      id: "n41", labelKey: "nirZ41", width: 22, limit: 180, basePar: 94,
+      /* The Sextet: a sixth comb band on the Gridlock's 62px tooth pitch -
+       * 43 gates, one past the Full Measure's 42, the gate record again.
+       * Five wall hairpins hand the bands off and every tooth drops 46px,
+       * so the lap is six cycles of brake, flick, hand-off, closing on a
+       * four-tooth band pitched at 42px. */
+      points: [{ x: 24, y: 384 }, { x: 86, y: 338 }, { x: 148, y: 384 }, { x: 210, y: 338 }, { x: 272, y: 384 }, { x: 334, y: 338 }, { x: 396, y: 384 }, { x: 410, y: 352 }, { x: 396, y: 319 }, { x: 334, y: 273 }, { x: 272, y: 319 }, { x: 210, y: 273 }, { x: 148, y: 319 }, { x: 86, y: 273 }, { x: 24, y: 319 }, { x: 10, y: 287 }, { x: 24, y: 254 }, { x: 86, y: 208 }, { x: 148, y: 254 }, { x: 210, y: 208 }, { x: 272, y: 254 }, { x: 334, y: 208 }, { x: 396, y: 254 }, { x: 410, y: 222 }, { x: 396, y: 189 }, { x: 334, y: 143 }, { x: 272, y: 189 }, { x: 210, y: 143 }, { x: 148, y: 189 }, { x: 86, y: 143 }, { x: 24, y: 189 }, { x: 10, y: 157 }, { x: 24, y: 124 }, { x: 86, y: 78 }, { x: 148, y: 124 }, { x: 210, y: 78 }, { x: 272, y: 124 }, { x: 334, y: 78 }, { x: 396, y: 124 }, { x: 410, y: 92 }, { x: 396, y: 59 }, { x: 354, y: 13 }, { x: 312, y: 59 }, { x: 270, y: 13 }],
+      pads: [],
+    },
+    {
+      id: "n42", labelKey: "nirZ42", width: 22, limit: 183, basePar: 96,
+      /* The Marathon: the Sextet's frame stretched to the arena walls -
+       * teeth across the full 388px span, 50px deep, six bands and a
+       * tail tightened to a 48px pitch. 2996px of centre line, the
+       * longest tape the engine has measured (the Full Measure carried
+       * 2846); the lap is won by never stopping through the hand-offs. */
+      points: [{ x: 16, y: 384 }, { x: 81, y: 334 }, { x: 145, y: 384 }, { x: 210, y: 334 }, { x: 275, y: 384 }, { x: 339, y: 334 }, { x: 404, y: 384 }, { x: 410, y: 351 }, { x: 404, y: 318 }, { x: 339, y: 268 }, { x: 275, y: 318 }, { x: 210, y: 268 }, { x: 145, y: 318 }, { x: 81, y: 268 }, { x: 16, y: 318 }, { x: 10, y: 285 }, { x: 16, y: 252 }, { x: 81, y: 202 }, { x: 145, y: 252 }, { x: 210, y: 202 }, { x: 275, y: 252 }, { x: 339, y: 202 }, { x: 404, y: 252 }, { x: 410, y: 219 }, { x: 404, y: 186 }, { x: 339, y: 136 }, { x: 275, y: 186 }, { x: 210, y: 136 }, { x: 145, y: 186 }, { x: 81, y: 136 }, { x: 16, y: 186 }, { x: 10, y: 153 }, { x: 16, y: 120 }, { x: 81, y: 70 }, { x: 145, y: 120 }, { x: 210, y: 70 }, { x: 275, y: 120 }, { x: 339, y: 70 }, { x: 404, y: 120 }, { x: 410, y: 87 }, { x: 404, y: 54 }, { x: 356, y: 4 }, { x: 308, y: 54 }, { x: 260, y: 4 }],
+      pads: [],
+    },
+    {
+      id: "n43", labelKey: "nirZ43", width: 21, limit: 208, basePar: 109,
+      /* The Rasp: six ranks of hairpin teeth on a 37px pitch - forty of
+       * them, eleven past the Stack's twenty-nine, the deepest hairpin
+       * count the ladder has carried. The wall bulges hold the ranks
+       * 17px apart, and the scripted line never leaves second gear. */
+      points: [{ x: 58, y: 32 }, { x: 95, y: 72 }, { x: 133, y: 32 }, { x: 170, y: 72 }, { x: 207, y: 32 }, { x: 245, y: 72 }, { x: 282, y: 32 }, { x: 326, y: 81 }, { x: 282, y: 89 }, { x: 245, y: 129 }, { x: 207, y: 89 }, { x: 170, y: 129 }, { x: 133, y: 89 }, { x: 95, y: 129 }, { x: 58, y: 89 }, { x: 14, y: 138 }, { x: 58, y: 146 }, { x: 95, y: 186 }, { x: 133, y: 146 }, { x: 170, y: 186 }, { x: 207, y: 146 }, { x: 245, y: 186 }, { x: 282, y: 146 }, { x: 326, y: 195 }, { x: 282, y: 203 }, { x: 245, y: 243 }, { x: 207, y: 203 }, { x: 170, y: 243 }, { x: 133, y: 203 }, { x: 95, y: 243 }, { x: 58, y: 203 }, { x: 14, y: 252 }, { x: 58, y: 260 }, { x: 95, y: 300 }, { x: 133, y: 260 }, { x: 170, y: 300 }, { x: 207, y: 260 }, { x: 245, y: 300 }, { x: 282, y: 260 }, { x: 326, y: 309 }, { x: 282, y: 317 }, { x: 245, y: 357 }, { x: 207, y: 317 }, { x: 170, y: 357 }, { x: 133, y: 317 }, { x: 95, y: 357 }, { x: 58, y: 317 }],
+      pads: [],
+    },
+    {
+      id: "n44", labelKey: "nirZ44", width: 20, limit: 214, basePar: 113,
+      /* The Vise: seven ranks on the 20px floor - 47 gates, one past the
+       * Rasp, and 1.96 gates per 100px, the densest gate field the
+       * engine has threaded (the Apiary held 1.85). The wall bulges
+       * squeeze to four pixels of clearance, so every hand-off is a
+       * near-stop thread. */
+      points: [{ x: 76, y: 30 }, { x: 113, y: 74 }, { x: 150, y: 30 }, { x: 186, y: 74 }, { x: 223, y: 30 }, { x: 260, y: 74 }, { x: 292, y: 78 }, { x: 260, y: 82 }, { x: 223, y: 126 }, { x: 186, y: 82 }, { x: 150, y: 126 }, { x: 113, y: 82 }, { x: 76, y: 126 }, { x: 44, y: 130 }, { x: 76, y: 134 }, { x: 113, y: 178 }, { x: 150, y: 134 }, { x: 186, y: 178 }, { x: 223, y: 134 }, { x: 260, y: 178 }, { x: 292, y: 182 }, { x: 260, y: 186 }, { x: 223, y: 230 }, { x: 186, y: 186 }, { x: 150, y: 230 }, { x: 113, y: 186 }, { x: 76, y: 230 }, { x: 44, y: 234 }, { x: 76, y: 238 }, { x: 113, y: 282 }, { x: 150, y: 238 }, { x: 186, y: 282 }, { x: 223, y: 238 }, { x: 260, y: 282 }, { x: 292, y: 286 }, { x: 260, y: 290 }, { x: 223, y: 334 }, { x: 186, y: 290 }, { x: 150, y: 334 }, { x: 113, y: 290 }, { x: 76, y: 334 }, { x: 44, y: 338 }, { x: 76, y: 342 }, { x: 113, y: 386 }, { x: 150, y: 342 }, { x: 186, y: 386 }, { x: 223, y: 342 }, { x: 260, y: 386 }],
+      pads: [],
+    },
+    {
+      id: "n45", labelKey: "nirZ45", width: 21, limit: 215, basePar: 113,
+      /* The Selvedge: the braid pattern the Vise runs, opened one notch -
+       * teeth at depth 40 on a 21px tape, four full-height bands, 49 gates.
+       * Found by the forge's jitter search (tools/drift-forge.js forge): 150
+       * seeds swept, and the gentlest reference lap at or above 112.9
+       * shipped - measured 113. */
+      points: [{ x: 78, y: 30 }, { x: 110, y: 70 }, { x: 148, y: 30 }, { x: 182, y: 70 }, { x: 222, y: 30 }, { x: 256, y: 70 }, { x: 290, y: 78 }, { x: 260, y: 82 }, { x: 226, y: 122 }, { x: 190, y: 82 }, { x: 152, y: 122 }, { x: 115, y: 82 }, { x: 81, y: 122 }, { x: 43, y: 130 }, { x: 74, y: 134 }, { x: 114, y: 174 }, { x: 150, y: 134 }, { x: 182, y: 174 }, { x: 218, y: 134 }, { x: 256, y: 174 }, { x: 294, y: 182 }, { x: 261, y: 186 }, { x: 226, y: 226 }, { x: 187, y: 186 }, { x: 151, y: 226 }, { x: 115, y: 186 }, { x: 80, y: 226 }, { x: 44, y: 234 }, { x: 76, y: 238 }, { x: 112, y: 278 }, { x: 150, y: 238 }, { x: 184, y: 278 }, { x: 220, y: 238 }, { x: 255, y: 278 }, { x: 293, y: 286 }, { x: 261, y: 290 }, { x: 222, y: 330 }, { x: 188, y: 290 }, { x: 153, y: 330 }, { x: 114, y: 290 }, { x: 78, y: 330 }, { x: 46, y: 338 }, { x: 76, y: 342 }, { x: 112, y: 382 }, { x: 148, y: 342 }, { x: 183, y: 382 }, { x: 220, y: 342 }, { x: 257, y: 382 }, { x: 292, y: 390 }],
+      pads: [],
+    },
+    {
+      id: "n46", labelKey: "nirZ46", width: 21, limit: 221, basePar: 116,
+      /* The Warp: the Selvedge re-jittered - the same braid with every x
+       * nudged a couple of pixels, which is all the reference's chaotic lap
+       * needs to add three seconds (116 measured). The forge swept 360
+       * seeds and shipped the shallowest survivor. */
+      points: [{ x: 76, y: 30 }, { x: 113, y: 70 }, { x: 147, y: 30 }, { x: 185, y: 70 }, { x: 218, y: 30 }, { x: 256, y: 70 }, { x: 291, y: 78 }, { x: 259, y: 82 }, { x: 222, y: 122 }, { x: 187, y: 82 }, { x: 154, y: 122 }, { x: 115, y: 82 }, { x: 80, y: 122 }, { x: 43, y: 130 }, { x: 75, y: 134 }, { x: 114, y: 174 }, { x: 147, y: 134 }, { x: 186, y: 174 }, { x: 218, y: 134 }, { x: 258, y: 174 }, { x: 294, y: 182 }, { x: 259, y: 186 }, { x: 226, y: 226 }, { x: 189, y: 186 }, { x: 153, y: 226 }, { x: 115, y: 186 }, { x: 78, y: 226 }, { x: 43, y: 234 }, { x: 76, y: 238 }, { x: 110, y: 278 }, { x: 146, y: 238 }, { x: 184, y: 278 }, { x: 221, y: 238 }, { x: 258, y: 278 }, { x: 292, y: 286 }, { x: 259, y: 290 }, { x: 225, y: 330 }, { x: 188, y: 290 }, { x: 152, y: 330 }, { x: 115, y: 290 }, { x: 80, y: 330 }, { x: 45, y: 338 }, { x: 76, y: 342 }, { x: 110, y: 382 }, { x: 147, y: 342 }, { x: 182, y: 382 }, { x: 220, y: 342 }, { x: 256, y: 382 }, { x: 293, y: 390 }],
+      pads: [],
+    },
+    {
+      id: "n47", labelKey: "nirZ47", width: 20, limit: 228, basePar: 120,
+      /* The Weft: the braid back on the 20px floor, teeth at depth 40 and
+       * the pitch stretched to 38 - 119.7 measured, 3.7 over the Warp. The
+       * forge's pool held 128 dual-bar survivors; this was the shallowest
+       * of them. */
+      points: [{ x: 78, y: 30 }, { x: 111, y: 70 }, { x: 147, y: 30 }, { x: 184, y: 70 }, { x: 218, y: 30 }, { x: 254, y: 70 }, { x: 294, y: 78 }, { x: 262, y: 82 }, { x: 223, y: 122 }, { x: 187, y: 82 }, { x: 150, y: 122 }, { x: 114, y: 82 }, { x: 80, y: 122 }, { x: 46, y: 130 }, { x: 77, y: 134 }, { x: 113, y: 174 }, { x: 146, y: 134 }, { x: 183, y: 174 }, { x: 218, y: 134 }, { x: 255, y: 174 }, { x: 290, y: 182 }, { x: 258, y: 186 }, { x: 222, y: 226 }, { x: 190, y: 186 }, { x: 154, y: 226 }, { x: 117, y: 186 }, { x: 80, y: 226 }, { x: 42, y: 234 }, { x: 75, y: 238 }, { x: 114, y: 278 }, { x: 146, y: 238 }, { x: 184, y: 278 }, { x: 219, y: 238 }, { x: 255, y: 278 }, { x: 293, y: 286 }, { x: 260, y: 290 }, { x: 224, y: 330 }, { x: 189, y: 290 }, { x: 154, y: 330 }, { x: 116, y: 290 }, { x: 78, y: 330 }, { x: 46, y: 338 }, { x: 76, y: 342 }, { x: 113, y: 382 }, { x: 146, y: 342 }, { x: 186, y: 382 }, { x: 220, y: 342 }, { x: 257, y: 382 }, { x: 292, y: 390 }],
+      pads: [],
+    },
+    {
+      id: "n48", labelKey: "nirZ48", width: 21, limit: 253, basePar: 133,
+      /* The Heddle: the teeth bite to depth 46 on the widest pitch the braid
+       * has used - 132.9 measured, 13.2 over the Weft, the tier's biggest
+       * single jump. The forge's pool held 90 dual-bar survivors out of 250
+       * seeds; the shallowest shipped. */
+      points: [{ x: 76, y: 30 }, { x: 112, y: 76 }, { x: 147, y: 30 }, { x: 186, y: 76 }, { x: 218, y: 30 }, { x: 254, y: 76 }, { x: 292, y: 30 }, { x: 327, y: 78 }, { x: 296, y: 82 }, { x: 262, y: 128 }, { x: 226, y: 82 }, { x: 190, y: 128 }, { x: 154, y: 82 }, { x: 115, y: 128 }, { x: 78, y: 82 }, { x: 43, y: 130 }, { x: 74, y: 134 }, { x: 112, y: 180 }, { x: 149, y: 134 }, { x: 184, y: 180 }, { x: 221, y: 134 }, { x: 254, y: 180 }, { x: 294, y: 134 }, { x: 326, y: 182 }, { x: 296, y: 186 }, { x: 260, y: 232 }, { x: 222, y: 186 }, { x: 189, y: 232 }, { x: 151, y: 186 }, { x: 118, y: 232 }, { x: 79, y: 186 }, { x: 43, y: 234 }, { x: 74, y: 238 }, { x: 111, y: 284 }, { x: 149, y: 238 }, { x: 183, y: 284 }, { x: 219, y: 238 }, { x: 255, y: 284 }, { x: 293, y: 238 }, { x: 327, y: 286 }, { x: 294, y: 290 }, { x: 258, y: 336 }, { x: 225, y: 290 }, { x: 189, y: 336 }, { x: 154, y: 290 }, { x: 117, y: 336 }, { x: 82, y: 290 }, { x: 43, y: 338 }, { x: 77, y: 342 }, { x: 112, y: 388 }, { x: 149, y: 342 }, { x: 184, y: 388 }, { x: 218, y: 342 }, { x: 257, y: 388 }, { x: 292, y: 342 }, { x: 328, y: 390 }],
+      pads: [],
+    },
+    {
+      id: "n49", labelKey: "nirZ49", width: 21, limit: 262, basePar: 138,
+      /* The Shed: eight teeth per band at depth 46 and pitch 36, stretching the
+       * arena's return rows across x 326-330 - 137.6 measured, 4.7 over the
+       * Heddle. The forge cleared seed 73 with a 53.7 worst keyboard margin. */
+      points: [{ x: 77, y: 30 }, { x: 114, y: 76 }, { x: 150, y: 30 }, { x: 182, y: 76 }, { x: 222, y: 30 }, { x: 254, y: 76 }, { x: 291, y: 30 }, { x: 326, y: 78 }, { x: 298, y: 82 }, { x: 259, y: 128 }, { x: 222, y: 82 }, { x: 188, y: 128 }, { x: 152, y: 82 }, { x: 116, y: 128 }, { x: 81, y: 82 }, { x: 43, y: 130 }, { x: 74, y: 134 }, { x: 111, y: 180 }, { x: 146, y: 134 }, { x: 182, y: 180 }, { x: 222, y: 134 }, { x: 256, y: 180 }, { x: 291, y: 134 }, { x: 330, y: 182 }, { x: 296, y: 186 }, { x: 262, y: 232 }, { x: 222, y: 186 }, { x: 190, y: 232 }, { x: 152, y: 186 }, { x: 117, y: 232 }, { x: 80, y: 186 }, { x: 46, y: 234 }, { x: 78, y: 238 }, { x: 112, y: 284 }, { x: 149, y: 238 }, { x: 185, y: 284 }, { x: 221, y: 238 }, { x: 254, y: 284 }, { x: 292, y: 238 }, { x: 329, y: 286 }, { x: 296, y: 290 }, { x: 259, y: 336 }, { x: 225, y: 290 }, { x: 189, y: 336 }, { x: 154, y: 290 }, { x: 114, y: 336 }, { x: 78, y: 290 }, { x: 46, y: 338 }, { x: 77, y: 342 }, { x: 114, y: 388 }, { x: 148, y: 342 }, { x: 184, y: 388 }, { x: 218, y: 342 }, { x: 257, y: 388 }, { x: 291, y: 342 }, { x: 327, y: 390 }],
+      pads: [],
+    },
+    {
+      id: "n50", labelKey: "nirZ50", width: 21, limit: 268, basePar: 141,
+      /* The Shuttle: the pitch stretched to 38 across the whole arena - the
+       * out-rows reach x 343 and the return rows swing back from x 341 -
+       * 140.6 measured. The keyboard lap needed 98.7 of its 133.6 budget:
+       * the tightest keyboard margin in the tier, and still clear. */
+      points: [{ x: 77, y: 30 }, { x: 113, y: 76 }, { x: 151, y: 30 }, { x: 190, y: 76 }, { x: 230, y: 30 }, { x: 268, y: 76 }, { x: 302, y: 30 }, { x: 343, y: 78 }, { x: 311, y: 82 }, { x: 274, y: 128 }, { x: 236, y: 82 }, { x: 198, y: 128 }, { x: 157, y: 82 }, { x: 118, y: 128 }, { x: 81, y: 82 }, { x: 45, y: 130 }, { x: 74, y: 134 }, { x: 114, y: 180 }, { x: 151, y: 134 }, { x: 190, y: 180 }, { x: 229, y: 134 }, { x: 264, y: 180 }, { x: 306, y: 134 }, { x: 341, y: 182 }, { x: 312, y: 186 }, { x: 270, y: 232 }, { x: 233, y: 186 }, { x: 197, y: 232 }, { x: 160, y: 186 }, { x: 118, y: 232 }, { x: 84, y: 186 }, { x: 44, y: 234 }, { x: 78, y: 238 }, { x: 113, y: 284 }, { x: 154, y: 238 }, { x: 189, y: 284 }, { x: 227, y: 238 }, { x: 267, y: 284 }, { x: 302, y: 238 }, { x: 340, y: 286 }, { x: 312, y: 290 }, { x: 272, y: 336 }, { x: 235, y: 290 }, { x: 198, y: 336 }, { x: 157, y: 290 }, { x: 120, y: 336 }, { x: 83, y: 290 }, { x: 45, y: 338 }, { x: 75, y: 342 }, { x: 115, y: 388 }, { x: 154, y: 342 }, { x: 191, y: 388 }, { x: 230, y: 342 }, { x: 265, y: 388 }, { x: 303, y: 342 }, { x: 344, y: 390 }],
+      pads: [],
+    },
+    {
+      id: "n51", labelKey: "nirZ51", width: 21, limit: 272, basePar: 143,
+      /* The Twill: the Shuttle's frame with every x nudged and the teeth at
+       * depth 46 - 142.9 measured, 2.3 over the Shuttle. The forge's pool
+       * held 40 dual-bar survivors out of 300 seeds; the shallowest shipped
+       * with the keyboard at 83.3 of its 135.8 budget. */
+      points: [{ x: 76, y: 30 }, { x: 115, y: 76 }, { x: 154, y: 30 }, { x: 188, y: 76 }, { x: 230, y: 30 }, { x: 266, y: 76 }, { x: 304, y: 30 }, { x: 344, y: 78 }, { x: 309, y: 82 }, { x: 271, y: 128 }, { x: 234, y: 82 }, { x: 196, y: 128 }, { x: 156, y: 82 }, { x: 122, y: 128 }, { x: 84, y: 82 }, { x: 44, y: 130 }, { x: 78, y: 134 }, { x: 114, y: 180 }, { x: 150, y: 134 }, { x: 189, y: 180 }, { x: 228, y: 134 }, { x: 265, y: 180 }, { x: 306, y: 134 }, { x: 340, y: 182 }, { x: 310, y: 186 }, { x: 273, y: 232 }, { x: 236, y: 186 }, { x: 197, y: 232 }, { x: 158, y: 186 }, { x: 119, y: 232 }, { x: 81, y: 186 }, { x: 45, y: 234 }, { x: 76, y: 238 }, { x: 116, y: 284 }, { x: 152, y: 238 }, { x: 188, y: 284 }, { x: 226, y: 238 }, { x: 265, y: 284 }, { x: 303, y: 238 }, { x: 343, y: 286 }, { x: 312, y: 290 }, { x: 271, y: 336 }, { x: 232, y: 290 }, { x: 196, y: 336 }, { x: 158, y: 290 }, { x: 122, y: 336 }, { x: 81, y: 290 }, { x: 45, y: 338 }, { x: 78, y: 342 }, { x: 115, y: 388 }, { x: 150, y: 342 }, { x: 191, y: 388 }, { x: 227, y: 342 }, { x: 266, y: 388 }, { x: 306, y: 342 }, { x: 344, y: 390 }],
+      pads: [],
+    },
+    {
+      id: "n52", labelKey: "nirZ52", width: 21, limit: 280, basePar: 147,
+      /* The Loom: the pitch back to 38 with the depth-46 teeth - 147.3
+       * measured, 4.4 over the Twill. The forge's pool held 64 dual-bar
+       * survivors out of 450 seeds; the shallowest shipped with the keyboard
+       * at 43.9 of its 139.9 budget. */
+      points: [{ x: 78, y: 30 }, { x: 114, y: 76 }, { x: 153, y: 30 }, { x: 189, y: 76 }, { x: 230, y: 30 }, { x: 268, y: 76 }, { x: 305, y: 30 }, { x: 342, y: 78 }, { x: 312, y: 82 }, { x: 273, y: 128 }, { x: 235, y: 82 }, { x: 198, y: 128 }, { x: 156, y: 82 }, { x: 120, y: 128 }, { x: 80, y: 82 }, { x: 46, y: 130 }, { x: 75, y: 134 }, { x: 114, y: 180 }, { x: 154, y: 134 }, { x: 190, y: 180 }, { x: 230, y: 134 }, { x: 268, y: 180 }, { x: 305, y: 134 }, { x: 342, y: 182 }, { x: 312, y: 186 }, { x: 271, y: 232 }, { x: 235, y: 186 }, { x: 197, y: 232 }, { x: 160, y: 186 }, { x: 118, y: 232 }, { x: 82, y: 186 }, { x: 42, y: 234 }, { x: 74, y: 238 }, { x: 113, y: 284 }, { x: 151, y: 238 }, { x: 192, y: 284 }, { x: 227, y: 238 }, { x: 264, y: 284 }, { x: 302, y: 238 }, { x: 341, y: 286 }, { x: 309, y: 290 }, { x: 270, y: 336 }, { x: 235, y: 290 }, { x: 194, y: 336 }, { x: 158, y: 290 }, { x: 120, y: 336 }, { x: 81, y: 290 }, { x: 42, y: 338 }, { x: 75, y: 342 }, { x: 113, y: 388 }, { x: 150, y: 342 }, { x: 190, y: 388 }, { x: 228, y: 342 }, { x: 264, y: 388 }, { x: 303, y: 342 }, { x: 344, y: 390 }],
+      pads: [],
+    },
+    {
+      id: "n53", labelKey: "nirZ53", width: 21, limit: 283, basePar: 149,
+      /* The Jacquard: pitch 38 with teeth depth 46, swinging wide across
+       * x 341-343 - 148.9 measured, 1.6 over the Bobbin. The forge verified
+       * seed 13 with 45.7 worst keyboard margin. */
+      points: [{ x: 76, y: 30 }, { x: 113, y: 76 }, { x: 150, y: 30 }, { x: 188, y: 76 }, { x: 226, y: 30 }, { x: 264, y: 76 }, { x: 302, y: 30 }, { x: 341, y: 78 }, { x: 310, y: 82 }, { x: 274, y: 128 }, { x: 235, y: 82 }, { x: 197, y: 128 }, { x: 157, y: 82 }, { x: 118, y: 128 }, { x: 82, y: 82 }, { x: 43, y: 130 }, { x: 76, y: 134 }, { x: 115, y: 180 }, { x: 150, y: 134 }, { x: 191, y: 180 }, { x: 228, y: 134 }, { x: 267, y: 180 }, { x: 303, y: 134 }, { x: 340, y: 182 }, { x: 311, y: 186 }, { x: 272, y: 232 }, { x: 232, y: 186 }, { x: 195, y: 232 }, { x: 156, y: 186 }, { x: 118, y: 232 }, { x: 81, y: 186 }, { x: 46, y: 234 }, { x: 75, y: 238 }, { x: 115, y: 284 }, { x: 151, y: 238 }, { x: 189, y: 284 }, { x: 227, y: 238 }, { x: 267, y: 284 }, { x: 302, y: 238 }, { x: 342, y: 286 }, { x: 308, y: 290 }, { x: 270, y: 336 }, { x: 234, y: 290 }, { x: 194, y: 336 }, { x: 156, y: 290 }, { x: 119, y: 336 }, { x: 84, y: 290 }, { x: 42, y: 338 }, { x: 74, y: 342 }, { x: 115, y: 388 }, { x: 150, y: 342 }, { x: 188, y: 388 }, { x: 227, y: 342 }, { x: 268, y: 388 }, { x: 306, y: 342 }, { x: 343, y: 390 }],
+      pads: [],
+    },
+    {
+      id: "n54", labelKey: "nirZ54", width: 21, limit: 284, basePar: 149,
+      /* The Full Weave: pitch 40 with depth 46, swinging full-arena across
+       * x 354-357 - 149.0 measured, the loom tier's capstone. The forge verified
+       * seed 42 with 67.0 worst keyboard margin. */
+      points: [{ x: 77, y: 30 }, { x: 116, y: 76 }, { x: 158, y: 30 }, { x: 197, y: 76 }, { x: 234, y: 30 }, { x: 276, y: 76 }, { x: 315, y: 30 }, { x: 357, y: 78 }, { x: 326, y: 82 }, { x: 284, y: 128 }, { x: 243, y: 82 }, { x: 206, y: 128 }, { x: 165, y: 82 }, { x: 123, y: 128 }, { x: 82, y: 82 }, { x: 44, y: 130 }, { x: 77, y: 134 }, { x: 117, y: 180 }, { x: 154, y: 134 }, { x: 196, y: 180 }, { x: 238, y: 134 }, { x: 274, y: 180 }, { x: 316, y: 134 }, { x: 354, y: 182 }, { x: 323, y: 186 }, { x: 282, y: 232 }, { x: 242, y: 186 }, { x: 205, y: 232 }, { x: 164, y: 186 }, { x: 122, y: 232 }, { x: 82, y: 186 }, { x: 46, y: 234 }, { x: 76, y: 238 }, { x: 118, y: 284 }, { x: 155, y: 238 }, { x: 196, y: 284 }, { x: 234, y: 238 }, { x: 274, y: 284 }, { x: 316, y: 238 }, { x: 356, y: 286 }, { x: 323, y: 290 }, { x: 285, y: 336 }, { x: 243, y: 290 }, { x: 203, y: 336 }, { x: 165, y: 290 }, { x: 126, y: 336 }, { x: 84, y: 290 }, { x: 43, y: 338 }, { x: 75, y: 342 }, { x: 115, y: 388 }, { x: 154, y: 342 }, { x: 197, y: 388 }, { x: 237, y: 342 }, { x: 277, y: 388 }, { x: 318, y: 342 }, { x: 354, y: 390 }],
+      pads: [],
     },
   ];
 
@@ -793,7 +937,11 @@
    *   n34 21.6 vs 69.3   n35 50.5 vs 73.1   n36 24.2 vs 77.8
    *   n37 29.1 vs 81.7   n38 43.1 vs 85.8   n39 45.6 vs 91.6
    *   n40 57.0 vs 92.9
-   * All ten clear, and no band was lifted to get there. Rule for later
+   * All ten clear, and no band was lifted to get there. The 41-44 tier
+   * was held to the same bar through the forge replay:
+   *   n41 40.5 vs 94.3   n42 43.7 vs 96.2   n43 30.5 vs 109.4
+   *   n44 59.1 vs 112.5
+   * All four clear, and no band was lifted to get there. Rule for later
    * passes: only ever lift a band a keyboard lap cannot reach - and re-run this
    * replay after any change to points, width, pads or the stepper. */
   function nirBands(course) {
@@ -1378,6 +1526,20 @@
       "nirZ38": "The Runway",
       "nirZ39": "The Stack",
       "nirZ40": "The Full Measure",
+      "nirZ41": "The Sextet",
+      "nirZ42": "The Marathon",
+      "nirZ43": "The Rasp",
+      "nirZ44": "The Vise",
+      "nirZ45": "The Selvedge",
+      "nirZ46": "The Warp",
+      "nirZ47": "The Weft",
+      "nirZ48": "The Heddle",
+      "nirZ49": "The Shed",
+      "nirZ50": "The Shuttle",
+      "nirZ51": "The Twill",
+      "nirZ52": "The Loom",
+      "nirZ53": "The Jacquard",
+      "nirZ54": "The Full Weave",
       "nirClockLabel": "Clock",
       "nirGateLabel": "Gates",
       "nirScrapLabel": "Scrapes",
@@ -1444,6 +1606,20 @@
       "nirZ38": "长直跑道",
       "nirZ39": "密叠齿阵",
       "nirZ40": "终极满量",
+      "nirZ41": "六段连环",
+      "nirZ42": "耐力长圈",
+      "nirZ43": "粗锉齿阵",
+      "nirZ44": "虎钳密阵",
+      "nirZ45": "布边道",
+      "nirZ46": "经线阵",
+      "nirZ47": "纬线阵",
+      "nirZ48": "综片阵",
+      "nirZ49": "梭口道",
+      "nirZ50": "梭子道",
+      "nirZ51": "斜纹阵",
+      "nirZ52": "织机阵",
+      "nirZ53": "提花阵",
+      "nirZ54": "满织终局",
       "nirClockLabel": "计时",
       "nirGateLabel": "门",
       "nirScrapLabel": "撞墙",

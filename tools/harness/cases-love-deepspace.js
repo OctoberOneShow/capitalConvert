@@ -3,7 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const { createEnvironment, check, run } = require("./lib");
-const source = ["i18n", "core", "game-campaign", "game-registry", "love-deepspace-combat", "love-deepspace-home", "love-deepspace-release", "love-deepspace-starpath", "love-deepspace-mosaic", "love-deepspace-bouquet", "love-deepspace-expedition", "love-deepspace-dates", "game-love-deepspace", "game-guide"]
+const source = ["i18n", "core", "game-campaign", "game-registry", "love-deepspace-combat", "love-deepspace-home", "love-deepspace-release", "love-deepspace-starpath", "love-deepspace-mosaic", "love-deepspace-bouquet", "love-deepspace-expedition", "love-deepspace-duet", "love-deepspace-dates", "game-love-deepspace", "game-guide"]
   .map(name => fs.readFileSync(path.join(__dirname, "../../assets/app", name + ".js"), "utf8")).join("\n");
 function boot(options, live) {
   const env = createEnvironment(options);
@@ -663,10 +663,140 @@ run("Love and Deepspace expanded memory copy", () => {
   }
 });
 
+run("Love and Deepspace duet charts", () => {
+  const App = boot().window.CapitalConvert, M = App.ldsDuet, progress = M.read(null);
+  const charts = new Set();
+  function perfectPerformance(partner, difficulty) {
+    const s = M.create(partner, difficulty), events = s.notes.flatMap(n => [{ time: n.time, lane: n.lane, down: true }, { time: n.time + (n.duration || 0) + .005, lane: n.lane, down: false }]).sort((a, b) => a.time - b.time);
+    for (const e of events) { M.step(s, Math.max(0, e.time - s.time)); if (e.down) M.press(s, e.lane); else M.release(s, e.lane); }
+    M.step(s, s.end - s.time + .1); return s;
+  }
+  for (const partner of App.ldsPartners) for (let difficulty = 0; difficulty < 3; difficulty++) {
+    const chart = M.create(partner.id, difficulty); charts.add(JSON.stringify(chart.notes));
+    const latest = [-1, -1, -1, -1];
+    check("Love and Deepspace duet charts", partner.id + " chart " + difficulty + " has no impossible same-lane overlaps", chart.notes.every(n => { const valid = n.time > latest[n.lane]; latest[n.lane] = n.time + n.duration; return valid; }));
+    const s = perfectPerformance(partner.id, difficulty), r = M.result(s);
+    check("Love and Deepspace duet charts", partner.id + " chart " + difficulty + " is fully playable including chords and holds", s.done && s.perfect === s.units && !s.missed && r.accuracy === 100 && r.grade === "S" && r.combo === s.units);
+    check("Love and Deepspace duet charts", "the first real clear earns one keepsake", M.record(progress, s).fresh && !M.record(progress, s).fresh && progress.partners[partner.id][difficulty].stars === 3);
+  }
+  check("Love and Deepspace duet charts", "all fifteen partner/difficulty charts differ", charts.size === 15);
+  const early = M.create("xavier", 0); M.step(early, 3); M.press(early, early.notes[0].lane); const score = early.score; for (let n = 0; n < 30; n++) M.press(early, early.notes[0].lane);
+  check("Love and Deepspace duet charts", "key repeat cannot multiply a note's points", early.perfect === 1 && early.score === score);
+  const hold = M.create("xavier", 0), note = hold.notes.find(n => n.duration); M.step(hold, note.time); M.press(hold, note.lane); M.release(hold, note.lane);
+  check("Love and Deepspace duet charts", "releasing a hold early misses its tail exactly once", note.status === "miss" && hold.events.length === 1 && hold.events[0].kind === "miss");
+  const offset = M.create("zayne", 0); M.step(offset, 2.92); M.press(offset, offset.notes[0].lane, .08);
+  check("Love and Deepspace duet charts", "input calibration adjusts the judged time", offset.notes[0].head === "perfect");
+  const spam = M.create("caleb", 2); while (!spam.done) { M.step(spam, .2); for (let lane = 0; lane < 4; lane++) { M.press(spam, lane); M.release(spam, lane); } }
+  check("Love and Deepspace duet charts", "pressing every lane continuously cannot earn a first clear", M.result(spam).stars === 0 && !M.record(progress, spam).fresh);
+  const idle = M.create("xavier", 0); M.step(idle, idle.end + 1);
+  check("Love and Deepspace duet charts", "idle play accounts for every missed head and tail and earns nothing", idle.missed === idle.units && M.result(idle).accuracy === 0 && !M.record(progress, idle).fresh);
+  check("Love and Deepspace duet charts", "a weaker replay cannot lower a personal best", progress.partners.xavier[0].accuracy === 100);
+  const migrated = M.read(JSON.stringify(progress));
+  check("Love and Deepspace duet charts", "all partner ranks survive serialization", App.ldsPartners.every(p => migrated.partners[p.id].every(r => r.stars === 3)));
+  const invalid = M.read('{"version":1,"partners":{"xavier":[{"score":123,"accuracy":20,"combo":1,"stars":3,"grade":"S"},{"accuracy":999,"score":2,"combo":1}]}}');
+  check("Love and Deepspace duet charts", "stored rank and stars are derived from validated accuracy", invalid.partners.xavier[0].stars === 0 && invalid.partners.xavier[0].grade === "D" && invalid.partners.xavier[1] === null);
+});
+
+run("Love and Deepspace duet lifecycle", () => {
+  const env = boot({}, true), App = env.window.CapitalConvert, dates = env.dates, root = dates.element;
+  env.byId("gamePanelLoveDeepspace").hidden = false; dates.select("duet");
+  const duet = root.querySelector(".ldd-duet"), play = duet.querySelector(".ldd-actions button"); play.click(); env.tick(100);
+  check("Love and Deepspace duet lifecycle", "starting a duet starts exactly one animation loop", dates.inspect().duet.active && env.frames.size === 1);
+  const time = dates.inspect().duet.state.time; env.tick(600);
+  check("Love and Deepspace duet lifecycle", "a background gap pauses without advancing the chart", dates.inspect().duet.paused && dates.inspect().duet.state.time === time && !env.frames.size);
+  play.click(); const state = dates.inspect().duet.state; state.time = 3; env.dispatch(duet, "keydown", { key: "d", target: duet });
+  check("Love and Deepspace duet lifecycle", "the real keyboard handler judges a note", state.notes[0].status === "hit" && state.perfect === 1);
+  state.notes.forEach(n => { n.status = "hit"; }); state.perfect = state.units; state.missed = 0; state.time = state.end - .01; env.tick(16);
+  const bonds = () => JSON.parse(env.store.get("love-deepspace-album-v1")).bonds.xavier;
+  check("Love and Deepspace duet lifecycle", "a completed chart saves a rank, adds affinity, and cancels frames", state.done && bonds() === 2 && !env.frames.size && JSON.parse(env.store.get("love-deepspace-duet-v1")).partners.xavier[0].grade === "S");
+  duet.querySelectorAll(".ldd-actions button")[1].click(); play.click(); const replay = dates.inspect().duet.state; replay.notes.forEach(n => { n.status = "hit"; }); replay.perfect = replay.units; replay.time = replay.end - .01; env.tick(16);
+  check("Love and Deepspace duet lifecycle", "repeated clears do not farm affinity", bonds() === 2 && !env.frames.size);
+  duet.querySelectorAll(".ldd-actions button")[1].click(); play.click(); dates.select("story");
+  check("Love and Deepspace duet lifecycle", "switching activities pauses the song", !env.frames.size && dates.inspect().duet.paused);
+  dates.select("duet"); play.click(); App.quietResetLoveDeepspace();
+  check("Love and Deepspace duet lifecycle", "closing the drawer pauses the song", !env.frames.size && dates.inspect().duet.paused);
+  const reload = boot({ store: env.store }, true);
+  check("Love and Deepspace duet lifecycle", "duet records survive reload", reload.dates.inspect().duet.progress.partners.xavier[0].grade === "S");
+});
+
+run("Love and Deepspace duet practice", () => {
+  for (const pace of [.5, .75, 1]) {
+    const env = boot({}, true), dates = env.dates, root = dates.element; env.byId("gamePanelLoveDeepspace").hidden = false; dates.select("duet");
+    const duet = root.querySelector(".ldd-duet"), mode = duet.querySelector(".ldd-mode"), speed = duet.querySelector(".ldd-speed"), play = duet.querySelector(".ldd-actions button");
+    mode.value = "practice"; env.dispatch(mode, "change"); speed.value = String(pace); env.dispatch(speed, "change"); play.click(); env.tick(400);
+    check("Love and Deepspace duet practice", pace + " speed changes chart time without changing wall time", Math.abs(dates.inspect().duet.state.time - .4 * pace) < .00001 && mode.disabled && speed.disabled);
+    env.dispatch(duet, "keydown", { key: "p", target: duet }); const at = dates.inspect().duet.state.time; env.tick(200);
+    check("Love and Deepspace duet practice", "pausing practice freezes the chart and its controls", dates.inspect().duet.paused && dates.inspect().duet.state.time === at && !env.frames.size && mode.disabled);
+  }
+  const env = boot({}, true), App = env.window.CapitalConvert, dates = env.dates, root = dates.element, panel = env.byId("gamePanelLoveDeepspace"); panel.hidden = false; dates.select("duet");
+  const duet = root.querySelector(".ldd-duet"), mode = duet.querySelector(".ldd-mode"), mirror = duet.querySelector(".ldd-mirror"), play = duet.querySelector(".ldd-actions button");
+  mode.value = "practice"; env.dispatch(mode, "change"); mirror.checked = true; env.dispatch(mirror, "change");
+  const original = App.ldsDuet.create("xavier", 0), mirrored = dates.inspect().duet.state;
+  check("Love and Deepspace duet practice", "mirror practice swaps all lanes and updates the visible key hints", mirrored.notes.every((n,i) => n.lane === 3 - original.notes[i].lane) && duet.querySelectorAll(".ldd-lane").every((lane,i) => lane.querySelectorAll(".ldd-note").every(n => n.getAttribute("data-key") === ["D","F","J","K"][i])));
+  const before = env.store.get("love-deepspace-album-v1"), ranks = JSON.stringify(dates.inspect().duet.progress); play.click(); mirrored.notes.forEach(n => { n.status = "hit"; }); mirrored.perfect = mirrored.units; mirrored.time = mirrored.end - .001; env.tick(16);
+  check("Love and Deepspace duet practice", "a perfect practice run never saves ranks, stars or affinity", mirrored.done && env.store.get("love-deepspace-duet-v1") === undefined && JSON.stringify(dates.inspect().duet.progress) === ranks && env.store.get("love-deepspace-album-v1") === before && !env.frames.size);
+  check("Love and Deepspace duet practice", "the model also refuses to rank a completed practice chart", !App.ldsDuet.record(dates.inspect().duet.progress, mirrored).fresh && JSON.stringify(dates.inspect().duet.progress) === ranks);
+  check("Love and Deepspace duet practice", "practice leaves the real duet Journey goal unfinished", panel.querySelector('.ldr-goal[data-goal="duet"]').getAttribute("data-complete") === "false");
+  mode.value = "ranked"; env.dispatch(mode, "change"); const ranked = dates.inspect().duet.state;
+  check("Love and Deepspace duet practice", "returning to Performance restores the original chart despite the mirror checkbox", !ranked.practice && ranked.notes.every((n,i) => n.lane === original.notes[i].lane) && duet.querySelector(".ldd-speed-label").hidden);
+  play.click(); ranked.notes.forEach(n => { n.status = "hit"; }); ranked.perfect = ranked.units; ranked.time = ranked.end - .001; env.tick(16);
+  check("Love and Deepspace duet practice", "a real first clear immediately updates the Journey goal", panel.querySelector('.ldr-goal[data-goal="duet"]').getAttribute("data-complete") === "true" && dates.inspect().duet.progress.partners.xavier[0].stars === 3 && JSON.parse(env.store.get("love-deepspace-album-v1")).bonds.xavier === 2);
+});
+
+run("Love and Deepspace ending journal", () => {
+  const env = boot({}, true), dates = env.dates, root = dates.element, panel = env.byId("gamePanelLoveDeepspace"); panel.hidden = false; dates.select("story");
+  check("Love and Deepspace ending journal", "locked endings cannot be reread or favourited", root.querySelectorAll(".lds-story-review").every(n => n.disabled) && root.querySelectorAll(".lds-story-heart").every(n => n.disabled));
+  for (let i = 0; i < 3; i++) root.querySelector(".lds-story-choice").click();
+  root.querySelector('.lds-story-ending[data-ending="quiet"] .lds-story-heart').click();
+  check("Love and Deepspace ending journal", "favouriting an unlocked ending saves it and retains keyboard focus", dates.inspect().progress.storyFavorites.xavier.join() === "quiet" && env.document.activeElement === root.querySelector('.lds-story-ending[data-ending="quiet"] .lds-story-heart'));
+  const only = root.querySelector(".lds-story-filter input"); only.checked = true; env.dispatch(only, "change");
+  check("Love and Deepspace ending journal", "the favourite filter shows only saved favourites", root.querySelectorAll(".lds-story-ending").length === 1);
+  root.querySelector(".lds-story-heart").click();
+  check("Love and Deepspace ending journal", "removing the last filtered favourite shows an empty state and focuses the filter", !root.querySelectorAll(".lds-story-ending").length && !root.querySelector('[data-i18n="ldsStoryFavoritesEmpty"]').hidden && env.document.activeElement === only);
+  only.checked = false; env.dispatch(only, "change"); const beforeDates = env.store.get("love-deepspace-dates-v1"), beforeAlbum = env.store.get("love-deepspace-album-v1");
+  root.querySelector('.lds-story-ending[data-ending="quiet"] .lds-story-review').click();
+  check("Love and Deepspace ending journal", "rereading displays the saved ending without replaying choices or claiming rewards", !root.querySelectorAll(".lds-date-story .lds-story-choice").length && env.store.get("love-deepspace-dates-v1") === beforeDates && env.store.get("love-deepspace-album-v1") === beforeAlbum && env.document.activeElement === root.querySelector(".lds-story-text"));
+  root.querySelector('.lds-story-ending[data-ending="quiet"] .lds-story-heart').click();
+  const reload = boot({store:env.store},true);
+  check("Love and Deepspace ending journal", "ending favourites survive a reload", reload.dates.inspect().progress.storyFavorites.xavier.join() === "quiet");
+  const location = root.querySelector(".lds-story-location select"); location.value = "cafe"; env.dispatch(location,"change"); for(let i=0;i<3;i++) root.querySelectorAll(".lds-story-choice")[1].click();
+  check("Love and Deepspace ending journal", "starting a new location after rereading still earns a new ending", dates.inspect().progress.stories.xavier.includes("cafe-adventure") && JSON.parse(env.store.get("love-deepspace-album-v1")).bonds.xavier === 4);
+  const invalid = env.window.CapitalConvert.ldsReadDates('{"version":1,"stories":{"xavier":["quiet"]},"storyFavorites":{"xavier":["quiet","quiet","cafe-quiet","unknown"],"sylus":["quiet"]}}');
+  check("Love and Deepspace ending journal", "save migration keeps only unique, unlocked favourites for the right partner", invalid.storyFavorites.xavier.join() === "quiet" && !invalid.storyFavorites.sylus.length);
+});
+
+run("Love and Deepspace expanded dates", () => {
+  for (const language of ["en-US", "zh-CN"]) {
+    const env = boot({ language }, true), App = env.window.CapitalConvert, dates = env.dates, root = dates.element, panel = env.byId("gamePanelLoveDeepspace"); panel.hidden = false;
+    const location = root.querySelector(".lds-story-location select");
+    for (const partner of App.ldsPartners) {
+      panel.querySelectorAll(".lds-partner-card").find(p => p.getAttribute("data-partner") === partner.id).click(); dates.select("story");
+      for (const place of ["linkon", "cafe", "observatory"]) for (const choice of [0, 1]) {
+        location.value = place; env.dispatch(location, "change"); for (let i = 0; i < 3; i++) root.querySelectorAll(".lds-story-choice")[choice].click();
+        const ending = (place === "linkon" ? "" : place + "-") + (choice ? "adventure" : "quiet");
+        check("Love and Deepspace expanded dates", language + " " + partner.id + " collects " + ending, dates.inspect().progress.stories[partner.id].includes(ending) && !root.querySelector(".lds-story-text").textContent.includes("undefined"));
+      }
+      const count = root.querySelectorAll('.lds-story-ending[data-owned="true"]').length;
+      check("Love and Deepspace expanded dates", "all six endings display and each rewards once", count === 6 && JSON.parse(env.store.get("love-deepspace-album-v1")).bonds[partner.id] === 12);
+    }
+    location.value = "cafe"; env.dispatch(location, "change"); root.querySelectorAll(".lds-story-choice")[0].click(); const left = root.querySelector(".lds-story-text").textContent;
+    env.dispatch(location, "change"); root.querySelectorAll(".lds-story-choice")[1].click();
+    check("Love and Deepspace expanded dates", "the first café choice changes the next scene", root.querySelector(".lds-story-text").textContent !== left);
+    const reloaded = App.ldsReadDates(env.store.get("love-deepspace-dates-v1"));
+    check("Love and Deepspace expanded dates", "new and old endings survive the existing save format", App.ldsPartners.every(p => reloaded.stories[p.id].length === 6));
+  }
+});
+
+run("Love and Deepspace new bilingual copy", () => {
+  const helpers = ["love-deepspace-duet", "love-deepspace-dates"].map(name => fs.readFileSync(path.join(__dirname, "../../assets/app", name + ".js"), "utf8")).join("\n");
+  const keys = new Set(Array.from(helpers.matchAll(/\b((?:ldd|ldsStory)[A-Za-z0-9]+): \[/g), match => match[1])); keys.add("ldsDateDuet");
+  for (const language of ["en-US", "zh-CN"]) { const App = boot({ language }).window.CapitalConvert; for (const key of keys) check("Love and Deepspace new bilingual copy", language + " resolves " + key, App.t(key) !== key && !App.t(key).includes("undefined")); }
+});
+
 run("Love and Deepspace date translations", () => {
   const helper = fs.readFileSync(path.join(__dirname, "../../assets/app/love-deepspace-dates.js"), "utf8");
   const keys = new Set(Array.from(helper.matchAll(/"(lds[A-Z][a-zA-Z0-9]+)"/g), match => match[1]));
-  for (const prefix of ["ldsDate", "ldsToy", "ldsKittyColor", "ldsStoryReply", "ldsStoryScene", "ldsStoryChoice", "ldsPhoto", "ldsPartner", "ldsDateLine", "ldsTactic"]) keys.delete(prefix);
+  for (const prefix of ["ldsDate", "ldsToy", "ldsKittyColor", "ldsStoryReply", "ldsStoryScene", "ldsStoryChoice", "ldsPhoto", "ldsPartner", "ldsDateLine", "ldsTactic", "ldsStory", "ldsStoryPlace", "ldsStoryEnding"]) keys.delete(prefix);
   for (const language of ["en-US", "zh-CN"]) {
     const App = boot({ language }).window.CapitalConvert;
     for (const key of keys) check("Love and Deepspace date translations", language + " resolves " + key, App.t(key) !== key && !App.t(key).includes("undefined"));

@@ -25,7 +25,14 @@ if (isMainThread) {
     .filter((f) => f.endsWith(".js") && !f.startsWith("_"))
     .map((f) => f.slice(0, -3));
 
-  const concurrency = Math.min(os.cpus().length || 4, snippets.length);
+  /* Optional thread cap: `node tools/verify-parallel.js 8` or VERIFY_THREADS=8.
+   * Unbounded os.cpus() parallelism starved the desktop, so the cap is the
+   * sanctioned way to run this on a machine you are also using. */
+  const capArgument = parseInt(process.argv[2] || process.env.VERIFY_THREADS || "", 10);
+  const concurrency = Math.min(
+    Number.isFinite(capArgument) && capArgument > 0 ? capArgument : os.cpus().length || 4,
+    snippets.length,
+  );
   const startTime = Date.now();
 
   let active = 0;
@@ -62,7 +69,7 @@ if (isMainThread) {
       if (msg.failures && msg.failures.length > 0) {
         allFailures.push(...msg.failures);
       }
-      process.stdout.write(msg.failures.length === 0 ? "." : "F");
+      if (msg.failures && msg.failures.length > 0) { console.log("\n[FAIL: " + slug + "] " + msg.failures.join("; ")); } else { process.stdout.write(" [OK: " + slug + "]"); }
     });
 
     worker.on("error", (err) => {

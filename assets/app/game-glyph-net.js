@@ -94,6 +94,34 @@
     { id: "n28", labelKey: "netL28", size: 16, tangle: 0.85, starPad: [0, 6, 13] },
     { id: "n29", labelKey: "netL29", size: 16, tangle: 0.9, starPad: [0, 6, 14] },
     { id: "n30", labelKey: "netL30", size: 16, tangle: 0.95, starPad: [0, 7, 15] },
+
+    /* ------------------------------------------------------------------
+     * The event horizon tier (n31-n40). Closing the campaign across the
+     * loom's final dimensions: the sixteen-wide frame is pushed to its
+     * utmost storm at 0.98 tangle (n31), then the loom unfolds the
+     * seventeen-wide frame across five storm stages (0.88 -> 0.96) and
+     * finally the eighteen-wide matrix across four relentless storms
+     * (0.88 -> 0.97). On an 18x18 frame (324 tiles), n40 scrambles 97% of
+     * the grid - leaving barely ten tiles true.
+     * Every rank was measured on the checker's 24 pinned seeds:
+     * the mean dealt optimum climbs strictly through every single rung:
+     * 386.6 (n30) -> 397.8 -> 400.0 -> 409.8 -> 417.8 -> 427.4 -> 437.3 ->
+     * 455.2 -> 468.8 -> 483.9 -> 499.7 clicks on n40.
+     * The star pads quote the exact ratio laws: two-star pads at 1.7% and
+     * one-star pads at 3.9% of the measured optimum, with zero pad for
+     * three stars. Relaxing the storm to the calm 0.6 deal cuts the mean
+     * optimum significantly on every rung, proving the storm is load-bearing.
+     * ------------------------------------------------------------------ */
+    { id: "n31", labelKey: "netL31", size: 16, tangle: 0.98, starPad: [0, 7, 16] },
+    { id: "n32", labelKey: "netL32", size: 17, tangle: 0.88, starPad: [0, 7, 16] },
+    { id: "n33", labelKey: "netL33", size: 17, tangle: 0.90, starPad: [0, 7, 16] },
+    { id: "n34", labelKey: "netL34", size: 17, tangle: 0.92, starPad: [0, 7, 16] },
+    { id: "n35", labelKey: "netL35", size: 17, tangle: 0.94, starPad: [0, 7, 17] },
+    { id: "n36", labelKey: "netL36", size: 17, tangle: 0.96, starPad: [0, 7, 17] },
+    { id: "n37", labelKey: "netL37", size: 18, tangle: 0.88, starPad: [0, 8, 18] },
+    { id: "n38", labelKey: "netL38", size: 18, tangle: 0.91, starPad: [0, 8, 18] },
+    { id: "n39", labelKey: "netL39", size: 18, tangle: 0.94, starPad: [0, 8, 19] },
+    { id: "n40", labelKey: "netL40", size: 18, tangle: 0.97, starPad: [0, 8, 19] },
   ];
 
   /* Pure generator + checker, exported for the static checks. Returns
@@ -666,6 +694,16 @@
       "netL28": "Frame Drag",
       "netL29": "Tidal Shear",
       "netL30": "The Naked Singularity",
+      "netL31": "Event Horizon",
+      "netL32": "Spacetime Foam",
+      "netL33": "Hawking Cascade",
+      "netL34": "Wormhole Nexus",
+      "netL35": "Graviton Lattice",
+      "netL36": "Quantum Entanglement",
+      "netL37": "Cosmic String",
+      "netL38": "Chrono-Flux",
+      "netL39": "Supervoid Matrix",
+      "netL40": "Omega Point",
     },
     zh: {
       "netL25": "能层",
@@ -674,6 +712,16 @@
       "netL28": "参考系拖曳",
       "netL29": "潮汐剪切",
       "netL30": "裸奇点",
+      "netL31": "事件视界",
+      "netL32": "时空泡沫",
+      "netL33": "霍金级联",
+      "netL34": "虫洞枢纽",
+      "netL35": "引力子晶格",
+      "netL36": "量子纠缠",
+      "netL37": "宇宙弦",
+      "netL38": "时序流",
+      "netL39": "巨洞矩阵",
+      "netL40": "欧米伽点",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

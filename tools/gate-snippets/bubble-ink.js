@@ -28,9 +28,25 @@
  * wall leaves alive, down to eight shots. The curve is the card's own
  * currency: demand per shot climbs strictly through the six and opens past
  * w24, the three-star line per shot climbs with it, and the closer ends the
- * ladder as its highest demand. The cuts take the paired dial away - the
+ * summit as its highest demand. The cuts take the paired dial away - the
  * wall rungs' shafts poured solid, the quiver rungs' pour cut to six inks -
  * and the same planner cannot reach the target on any seeded deal.
+ *
+ * The hollow tier w31-w40 turns the dial inward, onto the deck the panels
+ * hang from: every card pours the summit's own ten-row wall - widest shafts,
+ * three inks, then two - on a single-row plate (`plateRows: 1`, where every
+ * sparse card before them pours the engine's two-row default). One solid row
+ * carrying the whole wall severs sooner, the panels come down in curtains,
+ * and the planner's six-deal spread lands 490-1055 on the triad's shared
+ * plate. The price walks under that spread: 820 in nine prices over 695 in
+ * eight, five eight-shot cards at 695, and the triad's target stays inside
+ * the seeds' third-quartile reach - then the pour itself thins to two inks,
+ * never shipped before, and the price leaves the triad's economy: 1075,
+ * 1000, 960 and 815 in eight, seven, six and five shots, the highest demand
+ * per shot the ladder has ever asked. The hollow cards' win lines all sit
+ * under the wall's all-pop floor, so a round always clears before the well
+ * runs dry, and the pour-dial cut - six inks - leaves the same planner
+ * under the rung's own three-star line on every seeded deal.
  *
  * Every rung here is benched on its own fresh boot of the whole app - the
  * panel opened on that rung with every predecessor cleared, the save a
@@ -56,11 +72,12 @@ module.exports = function gate(ctx) {
   const levels = App.bubLevels;
   const tierIds = ["w21", "w22", "w23", "w24"];
   const summitIds = ["w25", "w26", "w27", "w28", "w29", "w30"];
+  const hollowIds = ["w31", "w32", "w33", "w34", "w35", "w36", "w37", "w38", "w39", "w40"];
   const byId = (id) => levels.find((level) => level.id === id);
 
   /* ---- ladder shape ---- */
-  check("game-bubble-ink", "the ladder holds all thirty springs",
-    levels.length >= 30, String(levels.length));
+  check("game-bubble-ink", "the ladder holds all forty springs",
+    levels.length === 40, String(levels.length));
   check("game-bubble-ink", "every spring id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -70,6 +87,60 @@ module.exports = function gate(ctx) {
   const missingSummit = summitIds.filter((id) => !byId(id));
   check("game-bubble-ink", "the summit tier w25-w30 is present",
     missingSummit.length === 0, missingSummit.join(","));
+  const missingHollow = hollowIds.filter((id) => !byId(id));
+  check("game-bubble-ink", "the hollow tier w31-w40 is present",
+    missingHollow.length === 0, missingHollow.join(","));
+
+  /* The hollow dial is new to the tier and inert for everything before it:
+   * no shipped spring thins the deck, and none pours fewer than three inks. */
+  const staleDials = levels.slice(0, 30).filter((level) => level.plateRows || level.colors < 3)
+    .map((level) => level.id);
+  check("game-bubble-ink",
+    "no shipped spring thins the deck or pours two inks - the hollow dials are dead for w1-w30",
+    staleDials.length === 0, staleDials.join(","));
+
+  /* The tier law, real in the rows: every hollow card pours the summit's own
+   * wall on a one-row plate, and the two-ink cards close the tier. */
+  const hollow = hollowIds.map((id) => byId(id));
+  const lawProblems = [];
+  hollow.forEach((level) => {
+    if (level.rows !== 10 || level.sparse === undefined || level.plateRows !== 1) {
+      lawProblems.push(level.id + " does not pour the summit's wall on a single stay");
+    }
+  });
+  if (!hollow.slice(0, 6).every((level) => level.colors === 3) ||
+      !hollow.slice(6).every((level) => level.colors === 2)) {
+    lawProblems.push("the triad cards w31-w36 and the two-ink cards w37-w40 are mixed up");
+  }
+  check("game-bubble-ink",
+    "every hollow card pours the summit's ten-row wall from a single-row plate, triad then two-ink",
+    lawProblems.length === 0, lawProblems.join(" | "));
+
+  /* The dry-well guard: a card's win line must sit under the all-pop floor
+   * of its own pour, so a round always clears before the well runs dry. The
+   * pour is the engine's own carve: rows of 14 and 13 cells, shafts on every
+   * fourth column below the plate. */
+  const cellsOf = (level) => {
+    let cells = 0;
+    for (let r = 0; r < level.rows; r += 1) {
+      const rowCells = r % 2 ? 13 : 14;
+      const carved = level.sparse && r >= (level.plateRows || 2)
+        ? [2, 6, 10].filter((c) => c < rowCells).length
+        : 0;
+      cells += rowCells - carved;
+    }
+    return cells;
+  };
+  const dryProblems = hollow.filter((level) => level.target >= 10 * cellsOf(level))
+    .map((level) => level.id + " asks " + level.target + " of " + 10 * cellsOf(level));
+  check("game-bubble-ink",
+    "every hollow win line sits under the all-pop floor of its own pour - a round clears before the well runs dry",
+    dryProblems.length === 0, dryProblems.join(","));
+  check("game-bubble-ink",
+    "the two-ink cards really do sit one all-pop from the dry well (w37 asks " +
+      byId("w37").target + " of " + 10 * cellsOf(byId("w37")) + ")",
+    10 * cellsOf(byId("w37")) - byId("w37").target <= 10,
+    10 * cellsOf(byId("w37")) - byId("w37").target + " under");
 
   /* ---- the engine's own geometry, mirrored for aiming ---- */
   const R = 11;
@@ -527,7 +598,7 @@ module.exports = function gate(ctx) {
 
   /* The summit is the deep tier's currency carried to the field's edge: the
    * demand per shot climbs strictly through the six, opens past w24, the
-   * three-star line per shot climbs with it, and the closer ends the ladder
+   * three-star line per shot climbs with it, and the closer ends the summit
    * as its highest demand. */
   const w24 = byId("w24");
   const w24Demand = w24.target / w24.shots;
@@ -543,9 +614,9 @@ module.exports = function gate(ctx) {
       summitLines.map((n) => n.toFixed(1)).join(" -> ") + " vs w24 " + w24Line.toFixed(1) + ")",
     climbs(summitLines) && summitLines[0] > w24Line,
     summitLines.join("/") + " vs " + w24Line);
-  check("game-bubble-ink", "w30 ends the ladder as its highest demand per shot",
+  check("game-bubble-ink", "w30 ends the summit as its highest demand per shot",
     summitDemands[summitDemands.length - 1] ===
-      Math.max.apply(null, levels.map((l) => l.target / l.shots)),
+      Math.max.apply(null, summitDemands),
     "w30 " + summitDemands[summitDemands.length - 1].toFixed(1));
   check("game-bubble-ink", "the summit pairs the field's edge: its walls and quivers set the campaign records",
     byId("w25").rows === 11 && byId("w26").rows === 11 && byId("w28").rows === 11 &&
@@ -556,8 +627,95 @@ module.exports = function gate(ctx) {
     "rows " + byId("w25").rows + ", shots " + byId("w27").shots + "/" + byId("w29").shots +
       ", sparse " + byId("w26").sparse);
 
+  /* ---- the hollow tier: one fresh boot per rung, the deck's own price ---- */
+  const hollowProofs = [];
+  hollowIds.forEach((id, rungIndex) => {
+    const level = byId(id);
+    const bench = makeBench(30 + rungIndex);
+
+    const deals = [];
+    for (let k = 1; k <= 6; k += 1) deals.push(bench.playDeal(id, k * 31337, "planner"));
+    const clears = deals.filter((d) => d.cleared).length;
+    const threeStars = deals.filter((d) => d.stars === 3).length;
+    check("game-bubble-ink", id + ": the aim planner clears most seeded deals and wins a full replay",
+      deals.every((d) => d.selected) && clears >= 4 && threeStars >= 1,
+      "clears " + clears + "/6, three-star " + threeStars + " " +
+        JSON.stringify(deals.map((d) => [d.score, d.stars])));
+
+    const idle = bench.idleRead(id);
+    const wild = [];
+    for (let k = 1; k <= 4; k += 1) wild.push(bench.playDeal(id, k * 6271, "wild"));
+    check("game-bubble-ink", id + ": doing nothing scores nothing and wild aims never clear",
+      idle.score === 0 && !/Popped /.test(idle.text) &&
+        wild.every((d) => d.selected && !d.cleared),
+      "idle " + idle.score + " wild " + JSON.stringify(wild.map((d) => d.score)));
+
+    /* The pour is the load-bearing dial: cut it to six inks on the live def,
+     * re-select so the engine re-deals under the cut, and the same planner
+     * cannot reach the target on any seeded deal - its best cut deal also
+     * falls under the rung's own three-star line. */
+    const live = bench.liveDef(id);
+    const saved = JSON.parse(JSON.stringify(level));
+    Object.assign(live, { colors: 6 });
+    const cutDeals = [];
+    for (let k = 1; k <= 4; k += 1) cutDeals.push(bench.playDeal(id, k * 31337, "planner"));
+    Object.assign(live, saved);
+    bench.reselect(id);
+    const cutClears = cutDeals.filter((d) => d.cleared).length;
+    const cutMax = Math.max.apply(null, cutDeals.map((d) => d.score));
+    const threeStarLine = Math.round(level.target * level.starGain[0]);
+    hollowProofs.push(id + (cutClears === 0 && cutMax < threeStarLine ? ":ok" : ":" + cutClears + "/4 max " + cutMax));
+    check("game-bubble-ink", id + " (pour cut to six inks): the same planner cannot reach the target on any seeded deal",
+      cutClears === 0 && cutDeals.every((d) => d.selected) && cutMax < threeStarLine,
+      "cut clears " + cutClears + "/4, best " + cutMax + " vs three-star line " + threeStarLine);
+
+    /* The clear survived the cut and the idle hands. */
+    check("game-bubble-ink", id + " stays cleared at three stars in the campaign save",
+      bench.readSave().cleared[id] && bench.readSave().cleared[id].stars === 3,
+      JSON.stringify(bench.readSave().cleared[id] || null));
+
+    /* The next rung unlocks only through the clear this rung just recorded. */
+    const nextId = hollowIds[rungIndex + 1];
+    if (nextId) {
+      check("game-bubble-ink", nextId + " unlocks once " + id + " is cleared",
+        bench.reselect(nextId) === nextId, "reselected " + nextId);
+    }
+  });
+  check("game-bubble-ink", "every cut left the hollow tier unbeatable in its advertised shape",
+    hollowProofs.every((p) => p.endsWith(":ok")), hollowProofs.join(" "));
+
+  /* The hollow tier is the summit's own currency carried past it: the price
+   * per shot opens a hair over the summit's peak, climbs strictly through
+   * the ten - the two-ink cards leave the triad's economy outright - the
+   * three-star line per shot climbs with it, and the closer ends the ladder
+   * as its highest demand. */
+  const w30 = byId("w30");
+  const w30Demand = w30.target / w30.shots;
+  const w30Line = Math.round(w30.target * w30.starGain[0]) / w30.shots;
+  const hollowDemands = hollowIds.map((id) => byId(id).target / byId(id).shots);
+  const hollowLines = hollowIds.map((id) =>
+    Math.round(byId(id).target * byId(id).starGain[0]) / byId(id).shots);
+  check("game-bubble-ink", "the hollow tier's demand per shot climbs and opens above the summit (" +
+      hollowDemands.map((n) => n.toFixed(1)).join(" -> ") + " vs w30 " + w30Demand.toFixed(1) + ")",
+    climbs(hollowDemands) && hollowDemands[0] > w30Demand,
+    hollowDemands.join("/") + " vs " + w30Demand);
+  check("game-bubble-ink", "the hollow tier's three-star line per shot climbs (" +
+      hollowLines.map((n) => n.toFixed(1)).join(" -> ") + " vs w30 " + w30Line.toFixed(1) + ")",
+    climbs(hollowLines) && hollowLines[0] > w30Line,
+    hollowLines.join("/") + " vs " + w30Line);
+  check("game-bubble-ink", "w40 ends the ladder as its highest demand per shot",
+    hollowDemands[hollowDemands.length - 1] ===
+      Math.max.apply(null, levels.map((l) => l.target / l.shots)),
+    "w40 " + hollowDemands[hollowDemands.length - 1].toFixed(1));
+  check("game-bubble-ink", "the hollow tier holds the quiver at the summit's floor and walks it past the record",
+    byId("w31").shots === 9 && byId("w32").shots === 8 &&
+      byId("w37").shots === 8 && byId("w38").shots === 7 &&
+      byId("w39").shots === 6 && byId("w40").shots === 5 &&
+      byId("w40").shots < Math.min.apply(null, levels.slice(0, 30).map((l) => l.shots)),
+    "shots " + hollowIds.map((id) => byId(id).shots).join("/"));
+
   /* The unlock chain is derived, never stored: clearing each spring in order
-   * hands the player exactly the next one, all thirty times. */
+   * hands the player exactly the next one, all forty times. */
   const chain = App.createCampaign({
     key: "bubble-ink-gate-chain",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -570,16 +728,18 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-bubble-ink", "the unlock chain walks all thirty springs in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-bubble-ink", "the unlock chain walks all forty springs in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 
   /* Copy travels with the module. */
   const copyKeys = ["bubL21", "bubL22", "bubL23", "bubL24",
-    "bubL25", "bubL26", "bubL27", "bubL28", "bubL29", "bubL30"];
+    "bubL25", "bubL26", "bubL27", "bubL28", "bubL29", "bubL30",
+    "bubL31", "bubL32", "bubL33", "bubL34",
+    "bubL35", "bubL36", "bubL37", "bubL38", "bubL39", "bubL40"];
   const copyProblems = copyKeys.filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-bubble-ink", "the ten deep and summit spring names resolve in both languages",
+  check("game-bubble-ink", "the twenty deep, summit and hollow spring names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 };

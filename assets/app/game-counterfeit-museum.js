@@ -159,6 +159,40 @@
      * three-way split (13/12/11) and 108 printed lines, of which 86 decide it. */
     { id: "cfm30", labelKey: "cfmHall30", count: 36, verdicts: ["genuine", "restored", "forgery"],
       mix: [{ v: "genuine", n: 13 }, { v: "restored", n: 12 }, { v: "forgery", n: 11 }], twin: true, decoyLog: true, clue: 0 },
+
+    /* The paired wing: ten more halls, each two frames wider than the last and
+     * one forgery heavier - the east wing's own law carried on - and every one
+     * of them hangs TWIN PAIRS on the wall. The whole ladder shipped one twin
+     * or none: `twins` is a field no earlier row carries, and it deals that
+     * many restored/genuine pairs, each pair sharing record, pigment and
+     * ledger lines one wear line apart, so a hall with four pairs hangs four
+     * readings that only close once they have been compared. Measured forcing
+     * minimums run 96, 100, 104, 108, 112, 116, 120, 124, 128, 132 - the east
+     * wing's +4-per-hall climb continued past its 86 - with the rule-order
+     * passes averaging 105.7, 110.1, 115.5, 118.9, 124.8, 129.8, 135.2,
+     * 141.2, 144.0 and 149.0 of 114 to 168 printed lines (10 seeds per hall,
+     * every deal unique, every need exact). No lot note anywhere in the wing:
+     * the census and the pairs have to be earned card by card. */
+    { id: "cfm31", labelKey: "cfmHall31", count: 38, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 23 }, { v: "restored", n: 6 }, { v: "forgery", n: 9 }], twin: true, twins: 2, decoyLog: true, clue: 0 },
+    { id: "cfm32", labelKey: "cfmHall32", count: 40, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 24 }, { v: "restored", n: 6 }, { v: "forgery", n: 10 }], twin: true, twins: 2, decoyLog: true, clue: 0 },
+    { id: "cfm33", labelKey: "cfmHall33", count: 42, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 24 }, { v: "restored", n: 7 }, { v: "forgery", n: 11 }], twin: true, twins: 3, decoyLog: true, clue: 0 },
+    { id: "cfm34", labelKey: "cfmHall34", count: 44, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 25 }, { v: "restored", n: 7 }, { v: "forgery", n: 12 }], twin: true, twins: 3, decoyLog: true, clue: 0 },
+    { id: "cfm35", labelKey: "cfmHall35", count: 46, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 25 }, { v: "restored", n: 8 }, { v: "forgery", n: 13 }], twin: true, twins: 3, decoyLog: true, clue: 0 },
+    { id: "cfm36", labelKey: "cfmHall36", count: 48, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 26 }, { v: "restored", n: 8 }, { v: "forgery", n: 14 }], twin: true, twins: 4, decoyLog: true, clue: 0 },
+    { id: "cfm37", labelKey: "cfmHall37", count: 50, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 26 }, { v: "restored", n: 9 }, { v: "forgery", n: 15 }], twin: true, twins: 4, decoyLog: true, clue: 0 },
+    { id: "cfm38", labelKey: "cfmHall38", count: 52, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 27 }, { v: "restored", n: 9 }, { v: "forgery", n: 16 }], twin: true, twins: 4, decoyLog: true, clue: 0 },
+    { id: "cfm39", labelKey: "cfmHall39", count: 54, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 27 }, { v: "restored", n: 10 }, { v: "forgery", n: 17 }], twin: true, twins: 5, decoyLog: true, clue: 0 },
+    { id: "cfm40", labelKey: "cfmHall40", count: 56, verdicts: ["genuine", "restored", "forgery"],
+      mix: [{ v: "genuine", n: 28 }, { v: "restored", n: 10 }, { v: "forgery", n: 18 }], twin: true, twins: 5, decoyLog: true, clue: 0 },
   ];
 
   /* Ledger artists: the working window is what rule 3 checks. */
@@ -573,21 +607,33 @@
       exhibits.push(e);
     }
     if (level.twin) {
-      var srcIndex = -1;
-      var dstIndex = -1;
-      for (var r = 0; r < exhibits.length; r += 1) {
-        if (srcIndex === -1 && exhibits[r].truth === "restored") {
-          srcIndex = r;
-        } else if (dstIndex === -1 && exhibits[r].truth === "genuine") {
-          dstIndex = r;
+      /* Twin pairs: every shipped hall deals exactly one (no row carries
+       * `twins`), the paired wing's rungs deal k - each pair an unused
+       * restored card and an unused genuine card sharing record, pigment and
+       * ledger, one wear line apart. The single-pair walk below is the
+       * shipped one, unchanged: with no `twins` field the loop runs once and
+       * scans exactly as before. */
+      var pairs = typeof level.twins === "number" && level.twins > 1 ? Math.min(level.twins, 8) : 1;
+      for (var t = 0; t < pairs; t += 1) {
+        var srcIndex = -1;
+        var dstIndex = -1;
+        for (var r = 0; r < exhibits.length; r += 1) {
+          if (exhibits[r].twin >= 0) {
+            continue;
+          }
+          if (srcIndex === -1 && exhibits[r].truth === "restored") {
+            srcIndex = r;
+          } else if (dstIndex === -1 && exhibits[r].truth === "genuine") {
+            dstIndex = r;
+          }
         }
+        var twin = srcIndex >= 0 && dstIndex >= 0 ? cfmTwinOf(rng, exhibits[srcIndex], dstIndex) : null;
+        if (!twin) {
+          return null;
+        }
+        exhibits[srcIndex].twin = dstIndex;
+        exhibits[dstIndex] = twin;
       }
-      var twin = srcIndex >= 0 && dstIndex >= 0 ? cfmTwinOf(rng, exhibits[srcIndex], dstIndex) : null;
-      if (!twin) {
-        return null;
-      }
-      exhibits[srcIndex].twin = dstIndex;
-      exhibits[dstIndex] = twin;
     }
     var caseObj = {
       hall: level.id,
@@ -1240,6 +1286,10 @@
       "cfmHall21": "The Grand Rotunda", "cfmHall22": "The Shadow Wing", "cfmHall23": "The Conservator's Vault", "cfmHall24": "The Curator's Master Trial",
       "cfmHall25": "The Silver Rotunda", "cfmHall26": "The Long Attic", "cfmHall27": "The Renewal Hall",
       "cfmHall28": "The Forger's Gallery", "cfmHall29": "The Silent Vault", "cfmHall30": "The Final Inventory",
+      "cfmHall31": "The Paired Gallery", "cfmHall32": "The Hanging Pairs", "cfmHall33": "The Third Pair",
+      "cfmHall34": "The Sister Walls", "cfmHall35": "The Mirror Vault", "cfmHall36": "The Coupled Cabinets",
+      "cfmHall37": "The Four Pairs", "cfmHall38": "The Kindred Wings", "cfmHall39": "The Five Pairs",
+      "cfmHall40": "The Final Pairing",
       "cfmHallLabel": "Hall", "cfmSurveyLabel": "Survey", "cfmOpenLabel": "Opened", "cfmMarkLabel": "Marked",
       "cfmHallSelectLabel": "Choose a hall", "cfmOpenCount": "{n}/{max} lines", "cfmMarkCount": "{n}/{max}",
       "cfmRule1": "Rule 1 wear: scratches only collect on genuine surfaces - under 25 marks per century the top layer is new, over 95 the marks were forced.",
@@ -1291,6 +1341,10 @@
       "cfmHall21": "宏伟大厅", "cfmHall22": "暗影侧厅", "cfmHall23": "修复师秘藏", "cfmHall24": "馆长终极评鉴",
       "cfmHall25": "\u94f6\u8f89\u5706\u5385", "cfmHall26": "\u957f\u9601\u697c", "cfmHall27": "\u91cd\u4fee\u5385",
       "cfmHall28": "\u8d5d\u9020\u8005\u753b\u5eca", "cfmHall29": "\u65e0\u58f0\u5b9d\u5e93", "cfmHall30": "\u6700\u7ec8\u6e05\u518c",
+      "cfmHall31": "\u6210\u5bf9\u753b\u5eca", "cfmHall32": "\u6ee1\u5899\u53cc\u751f", "cfmHall33": "\u7b2c\u4e09\u5bf9",
+      "cfmHall34": "\u59ca\u59b9\u5c55\u5899", "cfmHall35": "\u955c\u50cf\u5e93\u623f", "cfmHall36": "\u8054\u5bf9\u67dc\u5eca",
+      "cfmHall37": "\u56db\u5bf9\u5e76\u60ac", "cfmHall38": "\u540c\u5b97\u4e24\u7ffc", "cfmHall39": "\u4e94\u5bf9\u5e76\u60ac",
+      "cfmHall40": "\u6700\u540e\u4e00\u5bf9",
       "cfmHallLabel": "展厅", "cfmSurveyLabel": "普查", "cfmOpenLabel": "展阅", "cfmMarkLabel": "判定",
       "cfmHallSelectLabel": "选择展厅", "cfmOpenCount": "已开 {n}/{max} 行", "cfmMarkCount": "{n}/{max}",
       "cfmRule1": "规则一 磨损：划痕只在真品表面累积——每百年少于 25 道说明表层是新做的，多于 95 道就是人为刻出来的。",
@@ -1348,18 +1402,20 @@
         '<text x="90" y="54" font-size="8" fill="#ff6b35" text-anchor="middle">1921</text>' +
         '<path d="M12 64h36M72 64h36" stroke="rgba(148,163,184,.4)"/></svg>',
       en: [
-        "Aim: mark every exhibit genuine, later restoration or forgery, and close the hall with all of them right - 30 halls run from 4 exhibits to 36.",
+        "Aim: mark every exhibit genuine, later restoration or forgery, and close the hall with all of them right - 40 halls run from 4 exhibits to 56.",
         "Action: press a line to inspect it - wear, pigment, ledger - then press a verdict button; arrows jump between exhibits, 1 to 3 mark, i inspects the next line.",
         "Rule: a genuine piece needs all three to agree - marks between 25 and 95 per century, a pigment older than the object, and an artist who was working when it was dated.",
         "Watch out: a perfect scratch pattern cannot save a ledger that names an artist after the object's date, and a restoration log only excuses what it postdates.",
         "Scoring: the ledger prints how many lines decide the case; closing it inside that budget earns three stars.",
+        "Pairs: the last ten halls hang twin pairs on the wall - two to five of them - where the earlier halls shipped one or none. Every pair shares its record, pigment and ledger lines and sits one wear line apart, so each reading only closes once the two cards have been compared.",
       ],
       zh: [
-        "\u76ee\u6807\uff1a\u7ed9\u6bcf\u4ef6\u5c55\u54c1\u5224\u5b9a\u771f\u54c1\u3001\u540e\u4ee3\u4fee\u590d\u6216\u4f2a\u9020\uff0c\u5168\u90e8\u5224\u5bf9\u624d\u80fd\u7ed3\u6848\u2014\u2014\u4e09\u5341\u4e2a\u5c55\u5385\uff0c\u5c55\u54c1\u4ece 4 \u4ef6\u5230 36 \u4ef6\u3002",
+        "\u76ee\u6807\uff1a\u7ed9\u6bcf\u4ef6\u5c55\u54c1\u5224\u5b9a\u771f\u54c1\u3001\u540e\u4ee3\u4fee\u590d\u6216\u4f2a\u9020\uff0c\u5168\u90e8\u5224\u5bf9\u624d\u80fd\u7ed3\u6848\u2014\u2014\u56db\u5341\u4e2a\u5c55\u5385\uff0c\u5c55\u54c1\u4ece 4 \u4ef6\u5230 56 \u4ef6\u3002",
         "\u64cd\u4f5c\uff1a\u70b9\u51fb\u4e00\u884c\u5c55\u5f00\u8bc1\u636e\u2014\u2014\u78e8\u635f\u3001\u989c\u6599\u3001\u5f52\u85cf\u53f0\u8d26\u2014\u2014\u518d\u70b9\u5224\u5b9a\u6309\u94ae\uff1b\u65b9\u5411\u952e\u5207\u6362\u5c55\u54c1\uff0c1 \u5230 3 \u5224\u5b9a\uff0ci \u5c55\u5f00\u4e0b\u4e00\u884c\u3002",
         "\u89c4\u5219\uff1a\u771f\u54c1\u8981\u4e09\u6761\u5168\u5bf9\u4e0a\u2014\u2014\u6bcf\u767e\u5e74 25 \u5230 95 \u9053\u5212\u75d5\u3001\u989c\u6599\u65e9\u4e8e\u5c55\u54c1\u5e74\u4ee3\u3001\u4e14\u767b\u8bb0\u7684\u753b\u5bb6\u5728\u5f53\u5e74\u786e\u5b9e\u5728\u4e16\u3002",
         "\u5c0f\u5fc3\uff1a\u5212\u75d5\u518d\u50cf\u771f\u54c1\u4e5f\u6551\u4e0d\u4e86\u4e00\u4efd\u63d0\u5230\u540e\u4e16\u753b\u5bb6\u7684\u5f52\u85cf\u8bb0\u5f55\uff1b\u4fee\u590d\u65e5\u5fd7\u53ea\u80fd\u89e3\u91ca\u5b83\u4e4b\u540e\u7684\u75d5\u8ff9\u3002",
         "\u8ba1\u5206\uff1a\u53f0\u8d26\u4f1a\u5199\u660e\u672c\u6848\u9700\u8981\u51e0\u884c\u8bc1\u636e\uff0c\u5728\u8fd9\u4e2a\u9884\u7b97\u5185\u7ed3\u6848\u5c31\u662f\u4e09\u661f\u3002",
+        "\u6210\u5bf9\uff1a\u6700\u540e\u5341\u4e2a\u5c55\u5385\u6ee1\u5899\u6302\u7740\u53cc\u751f\u5bf9\u2014\u2014\u4e24\u5230\u4e94\u5bf9\u4e0d\u7b49\uff0c\u800c\u6b64\u524d\u7684\u5c55\u5385\u81f3\u591a\u4e00\u5bf9\u3002\u6bcf\u4e00\u5bf9\u5171\u7528\u5f52\u85cf\u3001\u989c\u6599\u4e0e\u8d26\u7c3f\u4e09\u884c\uff0c\u53ea\u5dee\u4e00\u884c\u78e8\u635f\uff0c\u5fc5\u987b\u4e24\u5f20\u5bf9\u7167\u7740\u8bfb\u624d\u80fd\u6536\u53e3\u3002",
       ],
     },
   });

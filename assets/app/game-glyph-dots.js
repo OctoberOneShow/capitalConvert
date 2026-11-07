@@ -40,7 +40,17 @@
    * them, and it pairs the two extremes the ladder kept apart: the first
    * eight-box plates it ever pours, under tails the wide flipped plate
    * bears, and the heaviest shake it ever hands a flipped full-plate
-   * reader. The summit bands are tuned by the same bench. */
+   * reader. The summit bands are tuned by the same bench. Ranks 31-40
+   * pour the plates the drawer never held: the wide plate played the
+   * player's way round, then the first nine-box plates - nineteen columns
+   * at nineteen pixels, one pixel of cell less than the summit's - under
+   * tails the great plate bears, all steady-handed. No rank of the tier
+   * shakes at all: the deals are deterministic, and every band is the
+   * strong line's own measured win, which climbs thirty, thirty-two,
+   * thirty-three, thirty-five, thirty-seven, thirty-nine, forty-one,
+   * forty-three, forty-five and forty-nine boxes past the summit's
+   * heaviest ask of twenty-nine. Every number was measured through the
+   * seeded bench in tools/gate-snippets/glyph-dots.js. */
   var dotRanks = [
     { id: "d1", labelKey: "dotsL1", boxes: 3, blunder: 0.4, margin: [3, 2, 1] },
     { id: "d2", labelKey: "dotsL2", boxes: 3, blunder: 0.15, margin: [4, 2, 1] },
@@ -136,6 +146,35 @@
     { id: "d28", labelKey: "dotsL28", boxes: 7, blunder: 0.02, hold: 2, foeFirst: true, setup: true, count: true, margin: [21, 9, 1] },
     { id: "d29", labelKey: "dotsL29", boxes: 7, blunder: 0.03, hold: 2, foeFirst: true, setup: true, count: true, margin: [25, 9, 1] },
     { id: "d30", labelKey: "dotsL30", boxes: 7, blunder: 0.035, hold: 2, foeFirst: true, setup: true, count: true, margin: [29, 9, 1] },
+    /* Ranks 31-40 are the far plates, and they are steady-handed: no rank of
+     * the tier shakes at all, so every deal is deterministic and every band
+     * is the strong line's own measured win. The mirror half plays the
+     * summit's wide plate the other way round - d25-d27 all hand the rival
+     * the opening stick, and no rank below hands the player one on a plate
+     * this wide - under tails the mirrored plate bears: five back, then six.
+     * The great half pours the first nine-box plates the campaign has ever
+     * held (nineteen columns at nineteen pixels, one pixel of cell under the
+     * summit's eights), flipped and mirrored both, under tails the great
+     * plate bears - the untailed plate itself, then holds four through
+     * seven - and it closes on the first blunder-free rank to play the
+     * double cross blind (setup without the count, which d9 shipped only
+     * behind a shake). The tail sweep on the flipped great plate lands
+     * twenty-one untailed, lost outright at tails two and three, and
+     * twenty-nine at the smallest tail that wins at all, so every shipped
+     * tail is load-bearing and the plate is lost at two and three. Every
+     * band is tuned to the seeded bench in
+     * tools/gate-snippets/glyph-dots.js, which replays the shipped players
+     * against every far deal. */
+    { id: "d31", labelKey: "dotsL31", boxes: 8, blunder: 0, hold: 5, setup: true, count: true, margin: [30, 15, 2] },
+    { id: "d32", labelKey: "dotsL32", boxes: 8, blunder: 0, hold: 6, setup: true, count: true, margin: [32, 16, 2] },
+    { id: "d33", labelKey: "dotsL33", boxes: 9, blunder: 0, hold: 5, foeFirst: true, setup: true, count: true, margin: [33, 16, 2] },
+    { id: "d34", labelKey: "dotsL34", boxes: 9, blunder: 0, setup: true, count: true, margin: [35, 17, 2] },
+    { id: "d35", labelKey: "dotsL35", boxes: 9, blunder: 0, hold: 6, foeFirst: true, setup: true, count: true, margin: [37, 18, 2] },
+    { id: "d36", labelKey: "dotsL36", boxes: 9, blunder: 0, hold: 4, setup: true, count: true, margin: [39, 19, 2] },
+    { id: "d37", labelKey: "dotsL37", boxes: 9, blunder: 0, hold: 7, foeFirst: true, setup: true, count: true, margin: [41, 20, 2] },
+    { id: "d38", labelKey: "dotsL38", boxes: 9, blunder: 0, hold: 6, setup: true, count: true, margin: [43, 21, 2] },
+    { id: "d39", labelKey: "dotsL39", boxes: 9, blunder: 0, hold: 7, setup: true, count: true, margin: [45, 22, 2] },
+    { id: "d40", labelKey: "dotsL40", boxes: 9, blunder: 0, hold: 4, foeFirst: true, setup: true, margin: [49, 24, 2] },
   ];
 
   function dotsIndex(y, x, width) {
@@ -860,6 +899,12 @@
       if (boxes <= 3) {
         return 40;
       }
+      if (boxes >= 9) {
+        /* nineteen columns at nineteen pixels: the far tier's nine-box
+         * plates draw one pixel of cell under the summit's eights, so the
+         * widest board the drawer holds stays inside the same envelope */
+        return 19;
+      }
       if (boxes >= 8) {
         /* seventeen columns at twenty-two pixels is the widest plate the
          * drawer holds: the summit's eight-box boards shrink to fit it */
@@ -1082,7 +1127,10 @@
    * deep tier retunes the keeping for the small flipped plate: one box back,
    * three back, the small plate shaken, the wide plate shaken - and the
    * summit pairs the two extremes, the widest plate the campaign pours and
-   * the heaviest shake it hands a reader. */
+   * the heaviest shake it hands a reader. The far tier plays those plates the
+   * other way round and pours the first nine-box ones: the wide plate
+   * mirrored, the great plate flipped and mirrored, and one blind double
+   * cross to close. */
   App.addStrings({
     en: {
       "dotsL9": "Chainwright",
@@ -1107,6 +1155,16 @@
       "dotsL28": "The Heavy Shake",
       "dotsL29": "The Heavier Shake",
       "dotsL30": "The Heaviest Shake",
+      "dotsL31": "The Wide Mirror",
+      "dotsL32": "The Long Mirror",
+      "dotsL33": "The Great Plate",
+      "dotsL34": "The Open Great Plate",
+      "dotsL35": "The Great Keeper",
+      "dotsL36": "The Great Reply",
+      "dotsL37": "The Great First Stick",
+      "dotsL38": "The Mirrored Great Plate",
+      "dotsL39": "The Long Great Plate",
+      "dotsL40": "The Blind Keeper",
     },
     zh: {
       "dotsL9": "织链匠",
@@ -1131,6 +1189,16 @@
       "dotsL28": "重颤者",
       "dotsL29": "愈颤者",
       "dotsL30": "极颤者",
+      "dotsL31": "镜像宽盘",
+      "dotsL32": "长镜宽盘",
+      "dotsL33": "至大盘者",
+      "dotsL34": "开盘至大盘",
+      "dotsL35": "大盘留者",
+      "dotsL36": "回手大盘",
+      "dotsL37": "大盘先手",
+      "dotsL38": "镜像至大盘",
+      "dotsL39": "长盘至大盘",
+      "dotsL40": "盲留者",
     },
   });
 

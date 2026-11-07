@@ -120,6 +120,108 @@
     { id: "tw30", labelKey: "towL30", discs: 30, opt: 13600,
       deal: [[14, 13, 10, 5, 4, 3, 2, 1], [11, 8, 7], [30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 12, 9, 6]],
       starMoves: [13600, 14022, 15300] },
+
+    /* The sixth tier, the day shift. The dawn rung tw30 opened the working
+     * day and the ten benches below work it: every one is still the
+     * classic perfect solve frozen a whisker from done - the deal is the
+     * optimal line with exactly `opt` moves left in it, read off the
+     * analytic pose the gate proves against the shipped recursion - and
+     * the rings climb past the deep night's peak ring over ring, from
+     * thirty-one up to forty, the tallest bench the shop has ever rung.
+     * The frozen tails lengthen with the rings, fifteen-two hundred up to
+     * thirty-eight-six hundred, a full shift of counter work each; the
+     * bands keep the shop's convention: three stars for the proven
+     * optimum, two for three percent over, one for an eighth over. */
+    { id: "tw31", labelKey: "towL31", discs: 31, opt: 15200,
+      deal: [[11, 8, 5, 4, 3, 2, 1], [14, 13, 12, 7, 6], [31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 15, 10, 9]],
+      starMoves: [15200, 15671, 17100] },
+    { id: "tw32", labelKey: "towL32", discs: 32, opt: 17000,
+      deal: [[14, 13, 12, 11, 4], [15, 10, 7, 6, 3, 2, 1], [32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 9, 8, 5]],
+      starMoves: [17000, 17527, 19125] },
+    { id: "tw33", labelKey: "towL33", discs: 33, opt: 19000,
+      deal: [[15, 12, 9, 8, 7], [14, 13, 10, 3, 2, 1], [33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 11, 6, 5, 4]],
+      starMoves: [19000, 19589, 21375] },
+    { id: "tw34", labelKey: "towL34", discs: 34, opt: 21200,
+      deal: [[14, 9, 6], [15, 12, 11, 8, 7, 4, 3, 2, 1], [34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 13, 10, 5]],
+      starMoves: [21200, 21857, 23850] },
+    { id: "tw35", labelKey: "towL35", discs: 35, opt: 23600,
+      deal: [[15, 10, 9, 8, 7, 4, 3, 2, 1], [14], [35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 13, 12, 11, 6, 5]],
+      starMoves: [23600, 24332, 26550] },
+    { id: "tw36", labelKey: "towL36", discs: 36, opt: 26200,
+      deal: [[6, 3, 2, 1], [15, 14, 11, 10, 7], [36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 13, 12, 9, 8, 5, 4]],
+      starMoves: [26200, 27012, 29475] },
+    { id: "tw37", labelKey: "towL37", discs: 37, opt: 29000,
+      deal: [[15, 14, 13, 8, 3, 2, 1], [12, 11, 10, 7, 4], [37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 9, 6, 5]],
+      starMoves: [29000, 29899, 32625] },
+    { id: "tw38", labelKey: "towL38", discs: 38, opt: 32000,
+      deal: [[10], [15, 14, 13, 12, 11, 8, 7, 6, 5, 4, 3, 2, 1], [38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16, 9]],
+      starMoves: [32000, 32992, 36000] },
+    { id: "tw39", labelKey: "towL39", discs: 39, opt: 35200,
+      deal: [[15, 14, 13], [16, 11, 10, 7, 6, 5, 4, 3, 2, 1], [39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 12, 9, 8]],
+      starMoves: [35200, 36291, 39600] },
+    { id: "tw40", labelKey: "towL40", discs: 40, opt: 38600,
+      deal: [[16, 13, 8, 7, 4], [15, 14, 11, 10, 3, 2, 1], [40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 12, 9, 6, 5]],
+      starMoves: [38600, 39797, 43425] },
+
+    /* The seventh tier, the late shift. The shop never clocks out: every
+     * bench below is still the classic perfect solve frozen a whisker from
+     * done - the deal is the optimal line with exactly `opt` moves left in
+     * it, read off the analytic pose the gate proves against the shipped
+     * recursion (and re-proved independently: the exact remaining distance
+     * of every deal below was computed by the largest-disc recursion and
+     * equals the pinned opt). The rings climb past the day shift's peak
+     * ring over ring, from forty-one up to forty-six, and the frozen tails
+     * keep the day shift's widening step - three-six hundred up to
+     * four-six hundred a rung - so the tails more than double across the
+     * tier, sixty-three-two hundred on the capstone: the longest finish
+     * the shop has ever rung, still a whisker from done. The bands keep
+     * the shop's convention: three stars for the proven optimum, two for
+     * three percent over, one for an eighth over. */
+    { id: "tw41", labelKey: "lvlNum41", discs: 41, opt: 42200,
+      deal: [[15, 10, 9, 6, 3, 2, 1], [16, 13, 12, 5, 4], [41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 14, 11, 8, 7]],
+      starMoves: [42200, 43508, 47475] },
+    { id: "tw42", labelKey: "lvlNum42", discs: 42, opt: 46000,
+      deal: [[16, 7, 4, 3, 2, 1], [15, 12, 11, 6, 5], [42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 14, 13, 10, 9, 8]],
+      starMoves: [46000, 47426, 51750] },
+    { id: "tw43", labelKey: "lvlNum43", discs: 43, opt: 50000,
+      deal: [[7, 4, 3, 2, 1], [16, 15, 10, 9, 6], [43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 14, 13, 12, 11, 8, 5]],
+      starMoves: [50000, 51550, 56250] },
+    { id: "tw44", labelKey: "lvlNum44", discs: 44, opt: 54200,
+      deal: [[16, 15, 12, 11, 6, 5, 4], [13, 10, 9, 8, 3, 2, 1], [44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 14, 7]],
+      starMoves: [54200, 55880, 60975] },
+    { id: "tw45", labelKey: "lvlNum45", discs: 45, opt: 58600,
+      deal: [[13, 12, 5], [16, 15, 14, 11, 8, 7, 6, 3, 2, 1], [45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 10, 9, 4]],
+      starMoves: [58600, 60417, 65925] },
+    { id: "tw46", labelKey: "lvlNum46", discs: 46, opt: 63200,
+      deal: [[16, 15, 14, 13, 8, 7, 6], [11, 10, 5, 4, 3, 2, 1], [46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 12, 9]],
+      starMoves: [63200, 65159, 71100] },
+
+    /* The eighth tier, the dawn shift. The late shift runs to sunrise and
+     * the shop's clock comes round - the floor never goes dark for long.
+     * Every bench below is still the classic perfect solve frozen a whisker
+     * from done - the deal is the optimal line with exactly `opt` moves left
+     * in it, read off the analytic pose the gate proves against the shipped
+     * recursion (and re-proved independently: the exact remaining distance
+     * of every deal below was computed by the largest-disc recursion and
+     * equals the pinned opt). The rings climb past the late shift's peak
+     * ring over ring, from forty-seven up to fifty, the tallest bench the
+     * shop has ever rung, and the frozen tails keep widening - five
+     * thousand a rung, sixty-eight up to eighty-three thousand on the
+     * capstone, the longest finish the shop has ever rung, still a whisker
+     * from done. The bands keep the shop's convention: three stars for the
+     * proven optimum, two for three percent over, one for an eighth over. */
+    { id: "tw47", labelKey: "lvlNum47", discs: 47, opt: 68000,
+      deal: [[17, 12, 9, 8, 5, 4, 3, 2, 1], [16, 15, 14, 13, 6], [47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 11, 10, 7]],
+      starMoves: [68000, 70108, 76500] },
+    { id: "tw48", labelKey: "lvlNum48", discs: 48, opt: 73000,
+      deal: [[16, 15, 14, 9, 6, 3, 2, 1], [17, 10, 5], [48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 13, 12, 11, 8, 7, 4]],
+      starMoves: [73000, 75263, 82125] },
+    { id: "tw49", labelKey: "lvlNum49", discs: 49, opt: 78000,
+      deal: [[17, 14, 13, 8], [16, 15, 12, 11, 10, 9, 6, 5], [49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 7, 4, 3, 2, 1]],
+      starMoves: [78000, 80418, 87750] },
+    { id: "tw50", labelKey: "lvlNum50", discs: 50, opt: 83000,
+      deal: [[16, 11, 6, 5, 4], [17, 14, 13, 12, 3, 2, 1], [50, 49, 48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 15, 10, 9, 8, 7]],
+      starMoves: [83000, 85573, 93375] },
   ];
 
   /* Pure optimum, exported for the static checks. */
@@ -1849,7 +1951,10 @@
    * does not already hold, so the shared dictionary stays the authority for
    * the drawer chrome and the shipped rung names. The deep-night rungs keep
    * the night shift's vocabulary and walk it to dawn: the capstone ends the
-   * night the first tier began. */
+   * night the first tier began. The day shift that follows works the
+   * shop-floor day - the swing shift, the tall order, overtime, the double
+   * shift, the graveyard, the long haul, the midnight oil, the second
+   * wind, the last crane, and the capstone that rounds the clock. */
   App.addStrings({
     en: {
       "towL10": "Zero Tolerance",
@@ -1859,6 +1964,16 @@
       "towL28": "First Light",
       "towL29": "The Morning Ferry",
       "towL30": "Day Shift",
+      "towL31": "Swing Shift",
+      "towL32": "The Tall Order",
+      "towL33": "Overtime",
+      "towL34": "The Double Shift",
+      "towL35": "Graveyard Shift",
+      "towL36": "The Long Haul",
+      "towL37": "Midnight Oil",
+      "towL38": "Second Wind",
+      "towL39": "The Last Crane",
+      "towL40": "Round the Clock",
     },
     zh: {
       "towL10": "零公差塔",
@@ -1868,6 +1983,16 @@
       "towL28": "初晓",
       "towL29": "晨渡",
       "towL30": "白班",
+      "towL31": "中班台",
+      "towL32": "大活",
+      "towL33": "加班",
+      "towL34": "双班",
+      "towL35": "大夜班",
+      "towL36": "长活",
+      "towL37": "夜油",
+      "towL38": "回劲",
+      "towL39": "末吊",
+      "towL40": "连轴转",
     },
   });
 

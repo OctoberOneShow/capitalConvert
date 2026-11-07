@@ -31,7 +31,25 @@
  * In aggregate over a hundred dealt nights the cut twin comes home with
  * strictly more leftover fuel on every rung, and it never once loses a
  * night the rung as shipped won, so the bands below the fuel lines are
- * the surge's own measured lines, not the quota's. */
+ * the surge's own measured lines, not the quota's.
+ *
+ * The testy tier l31-l40 spends the lever the summit left: the run COUNT.
+ * `testy` adds head-shakes to every hooked fish, so the rhythm is the same
+ * and the verse count grows - and no bed here carries a surge, the two
+ * levers never sharing a night. The tank is capped at 270 for the whole
+ * tier, the quota deepens to the lake's records (18 fish, 10 of a kind at
+ * the capstone), no bed deals a snatcher, and the gate holds the tier to
+ * the same authored bar as the summit: the scripted night lands every
+ * dealt night with the three-star band under its worst dealt leftover,
+ * and the cut twin (testy removed) comes home with strictly more
+ * leftover fuel in aggregate and never once a reversal. The cheap road is
+ * barred too: a hand that strikes on time but hauls through every run -
+ * the easing discipline gone, the line loaded through the pulls - parts
+ * the line on every hooked fish it meets, so the tier's stars are bought
+ * with the fight's rhythm and not with strength. The tier's climb
+ * is measured, not asserted: the script's burn rises rung over rung from
+ * 120 to 194 seconds, and the capstone's night burns half a minute longer
+ * than the shipped summit's own average night. */
 
 function makeRng(seed) {
   let state = (seed >>> 0) + 1;
@@ -42,8 +60,10 @@ function makeRng(seed) {
 }
 
 /* One scripted night on `level`. Returns { won, left, landed, named, stolen,
- * snaps } - `left` is the fuel the night finished with. */
-function night(App, level, seed, noStrike) {
+ * snaps } - `left` is the fuel the night finished with. `noStrike` plays the
+ * whole night without ever setting the hook; `haul` keeps the reel loaded
+ * through the runs too - the trap hands. */
+function night(App, level, seed, noStrike, haul) {
   const species = App.lanternSpecies;
   const top = 58;
   const height = 420;
@@ -99,7 +119,7 @@ function night(App, level, seed, noStrike) {
       limit: 100,
       over: 0,
       slack: 0,
-      runs: spec.runs,
+      runs: spec.runs + (level.testy || 0),
       runTimer: 0,
       waitTimer: spec.wait * 0.5,
       inRun: false,
@@ -124,8 +144,9 @@ function night(App, level, seed, noStrike) {
        * its limit, ease while it runs - fed 150ms late, the way the rung
        * comments describe the proof hand. The governor keeps a late hand
        * from pushing a paused line over the limit; the runs still cost the
-       * script its snaps. */
-      reelQueue.push(fight.inRun || fight.tension > fight.limit - 12 ? 0 : 1);
+       * script its snaps. The trap hand drops the discipline and hauls
+       * through the pulls too. */
+      reelQueue.push(haul ? 1 : fight.inRun || fight.tension > fight.limit - 12 ? 0 : 1);
       const delay = Math.round(0.15 / dt);
       const reel = reelQueue.length > delay ? reelQueue[reelQueue.length - 1 - delay] : 0;
       const step = App.tensionStep(fight, { reel }, dt);
@@ -265,12 +286,14 @@ module.exports = function gate(ctx) {
   const byId = (id) => levels.find((level) => level.id === id);
   const deepIds = ["l21", "l22", "l23", "l24"];
   const summitIds = ["l25", "l26", "l27", "l28", "l29", "l30"];
+  const testyIds = ["l31", "l32", "l33", "l34", "l35", "l36", "l37", "l38", "l39", "l40"];
 
   if (process.env.LFS_MEASURE) {
     levels.forEach((level) => {
       const m = measure(App, level);
-      const twin = level.surge ? measure(App, Object.assign({}, level, { surge: 1 })) : null;
-      console.log(level.id, "surge", level.surge || 1,
+      const twin = level.surge ? measure(App, Object.assign({}, level, { surge: 1 }))
+        : level.testy ? measure(App, Object.assign({}, level, { testy: 0 })) : null;
+      console.log(level.id, "surge", level.surge || 1, "testy", level.testy || 0,
         "won", m.won + "/" + m.total,
         "leftMin", m.leftMin, "leftMean", m.leftMean,
         "twinMean", twin ? twin.leftMean : "-",
@@ -280,8 +303,12 @@ module.exports = function gate(ctx) {
     return;
   }
 
-  check("game-lantern-fishing", "the ladder holds thirty beds",
-    levels.length === 30, String(levels.length));
+  const expectedIds = Array.from({ length: 40 }, (_, index) => "l" + (index + 1));
+  check("game-lantern-fishing", "the ladder holds forty beds",
+    levels.length === 40, String(levels.length));
+  check("game-lantern-fishing", "the ids run l1 through l40 in order",
+    levels.map((level) => level.id).join(",") === expectedIds.join(","),
+    levels.map((level) => level.id).join(","));
   check("game-lantern-fishing", "every bed id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -294,18 +321,25 @@ module.exports = function gate(ctx) {
       summitIds.every((id, index) => levels.findIndex((level) => level.id === id) >
         (index === 0 ? -1 : levels.findIndex((level) => level.id === summitIds[index - 1]))),
     missingSummit.join(",") || "ordered");
+  const missingTesty = testyIds.filter((id) => !byId(id));
+  check("game-lantern-fishing", "the testy tier l31-l40 is present in order",
+    missingTesty.length === 0 &&
+      testyIds.every((id, index) => levels.findIndex((level) => level.id === id) >
+        (index === 0 ? -1 : levels.findIndex((level) => level.id === testyIds[index - 1]))),
+    missingTesty.join(",") || "ordered");
 
   /* The shipped beds replay under the scripted night: a mediocre hand that
    * loses the occasional unlucky spawn still lands the quota on most dealt
    * nights, and its average leftover clears the one-star band. The strict
    * bar holds for every rung authored against this script - the deep summit
-   * l24 and the whole summit tier - so every dealt night must land, with
-   * the three-star band under the worst dealt leftover. */
+   * l24, the whole summit tier and the whole testy tier - so every dealt
+   * night must land, with the three-star band under the worst dealt
+   * leftover. */
   const ladders = {};
   levels.forEach((level) => {
     const m = measure(App, level);
     ladders[level.id] = m;
-    if (level.id === "l24" || summitIds.includes(level.id)) {
+    if (level.id === "l24" || summitIds.includes(level.id) || testyIds.includes(level.id)) {
       check("game-lantern-fishing", `${level.id} the scripted night lands the quota on every dealt spawn`,
         m.won === m.total, m.failures.slice(0, 3).join(" ") || `${m.won}/${m.total}`);
       check("game-lantern-fishing", `${level.id} three stars is inside the worst dealt leftover`,
@@ -328,15 +362,53 @@ module.exports = function gate(ctx) {
   check("game-lantern-fishing", "every bed's bands run downwards",
     unordered.length === 0, unordered.map((level) => level.id).join(","));
 
-  /* The summit is the heaviest haul on the ladder: twelve fish with six
-   * razors, and no rung below asks for more of either. */
+  /* The summit was the heaviest haul of the first thirty: twelve fish with
+   * six razors, and no rung below it asks for more of either. The testy
+   * capstone then takes both records - eighteen fish, ten of a kind. */
   const summit = byId("l30");
-  check("game-lantern-fishing", "the summit asks for the deepest quota",
-    levels.every((level) => level.need <= summit.need),
-    levels.map((level) => level.need).join(","));
-  check("game-lantern-fishing", "the summit asks for the most named fish",
-    levels.every((level) => level.namedNeed <= summit.namedNeed),
-    levels.map((level) => level.namedNeed).join(","));
+  const capstone = byId("l40");
+  const firstThirty = levels.slice(0, 30);
+  check("game-lantern-fishing", "the summit asks for the deepest quota of the first thirty",
+    firstThirty.every((level) => level.need <= summit.need),
+    firstThirty.map((level) => level.need).join(","));
+  check("game-lantern-fishing", "the summit asks for the most named fish of the first thirty",
+    firstThirty.every((level) => level.namedNeed <= summit.namedNeed),
+    firstThirty.map((level) => level.namedNeed).join(","));
+  check("game-lantern-fishing", "the testy capstone asks for the deepest quota on the ladder",
+    levels.every((level) => level.need <= capstone.need && level.namedNeed <= capstone.namedNeed),
+    levels.map((level) => level.need + "/" + level.namedNeed).join(","));
+
+  /* The testy law, real in the rows: every testy bed carries the field -
+   * one extra head-shake at the walk-in, two from l34 on - no bed before
+   * the tier carries it, and the dial never falls. The two fight levers
+   * never share a night: the tier carries no surge, the summit no testy. */
+  const testyLevels = testyIds.map((id) => byId(id));
+  const lawProblems = [];
+  if (levels.slice(0, 30).some((level) => level.testy)) {
+    lawProblems.push("a shipped bed carries a testy: " +
+      levels.slice(0, 30).filter((level) => level.testy).map((level) => level.id).join(","));
+  }
+  if (testyLevels.some((level) => level.surge)) {
+    lawProblems.push("a testy bed carries a surge: " +
+      testyLevels.filter((level) => level.surge).map((level) => level.id).join(","));
+  }
+  testyLevels.forEach((level, index) => {
+    if (level.testy !== 1 && level.testy !== 2) {
+      lawProblems.push(level.id + " carries a testy of " + level.testy);
+    }
+    if (level.testy !== (index < 3 ? 1 : 2)) {
+      lawProblems.push(level.id + " testy " + level.testy + " off the 1-1-1-2...-2 ladder");
+    }
+    if (level.fuel !== 270) {
+      lawProblems.push(level.id + " tank " + level.fuel + " off the tier's capped 270");
+    }
+    if (level.pool.reduce((n, kind) => n + (kind === "snatcher" ? 1 : 0), 0) > 0) {
+      lawProblems.push(level.id + " deals a snatcher into the testy water");
+    }
+  });
+  check("game-lantern-fishing",
+    "the testy tier runs one extra run, then two, on a capped 270 tank with no thief and no surge - and no bed before it carries the field",
+    lawProblems.length === 0, lawProblems.join(" | "));
 
   /* The summit's lever is the fight itself: `surge` stretches every run a
    * hooked fish makes, and no bed before l25 carries the field. */
@@ -419,12 +491,113 @@ module.exports = function gate(ctx) {
     "cutting the surge out of a summit rung hands the same night strictly more fuel in aggregate, and never a reversal",
     twinProblems.length === 0, twinProblems.slice(0, 4).join(" | "));
 
+  /* The testy tier is priced the way the summit was: cut the dial out of a
+   * copy of each bed and replay the same scripted night over the same
+   * hundred dealt seeds. The cut twin comes home with strictly more
+   * leftover fuel in aggregate on every rung and never once loses a night
+   * the bed as shipped won; every dealt night lands; the three-star band
+   * stays under the script's worst dealt leftover. */
+  const testyTwinProblems = [];
+  const testyBurns = [];
+  testyLevels.forEach((level) => {
+    const twin = Object.assign({}, level, { testy: 0 });
+    let fullWon = 0;
+    let fullSum = 0;
+    let fullBurnSum = 0;
+    let fullMin = Infinity;
+    let twinSum = 0;
+    let twinWon = 0;
+    let reversals = 0;
+    for (const seed of WIDE_SEEDS) {
+      const full = night(App, level, seed);
+      const cut = night(App, twin, seed);
+      if (full.won) {
+        fullWon += 1;
+        fullSum += full.left;
+        fullMin = Math.min(fullMin, full.left);
+        fullBurnSum += level.fuel - full.left;
+      }
+      if (cut.won) {
+        twinWon += 1;
+        twinSum += cut.left;
+      }
+      if (full.won && !cut.won) {
+        reversals += 1;
+      }
+    }
+    const fullMean = fullWon ? Math.round(fullSum / fullWon) : 0;
+    const twinMean = twinWon ? Math.round(twinSum / twinWon) : 0;
+    testyBurns.push(fullWon ? fullBurnSum / fullWon : Infinity);
+    /* Exact integer comparison: rounding two near means can erase a real
+     * two-second edge. */
+    if (!(twinSum * fullWon > fullSum * twinWon)) {
+      testyTwinProblems.push(level.id + ": the cut twin's mean leftover " + twinMean +
+        " does not clear the bed's " + fullMean);
+    }
+    if (reversals > 0) {
+      testyTwinProblems.push(level.id + ": the bed won " + reversals +
+        " dealt nights its cut twin lost");
+    }
+    if (fullWon !== WIDE_SEEDS.length) {
+      testyTwinProblems.push(level.id + ": the scripted night landed only " + fullWon +
+        "/" + WIDE_SEEDS.length + " dealt nights");
+    }
+    if (fullWon && !(fullMin >= level.starFuel[0])) {
+      testyTwinProblems.push(level.id + ": a dealt night landed under the three-star band " +
+        level.starFuel[0] + " (worst leftover " + fullMin + ")");
+    }
+  });
+  check("game-lantern-fishing",
+    "cutting the testy out of a testy bed hands the same night strictly more fuel in aggregate, and never a reversal",
+    testyTwinProblems.length === 0, testyTwinProblems.slice(0, 4).join(" | "));
+
+  /* And the tier's climb is the script's own measured burn: it rises rung
+   * over rung, and the capstone's night burns longer than the shipped
+   * summit's average night on the same seeds. */
+  const l30Wide = measure(App, summit, WIDE_SEEDS);
+  const summitBurn = summit.fuel - l30Wide.leftMean;
+  const capstoneBurn = testyBurns[testyBurns.length - 1];
+  const burnRise = testyBurns.every((burn, index) =>
+    index === 0 || burn > testyBurns[index - 1]);
+  check("game-lantern-fishing",
+    "the testy tier's measured burn climbs rung over rung (" +
+      testyBurns.map((burn) => Math.round(burn)).join("/") + "s) and the capstone out-burns the shipped summit's " +
+      Math.round(summitBurn) + "s night",
+    burnRise && capstoneBurn > summitBurn,
+    "burns " + testyBurns.map((burn) => burn.toFixed(1)).join("/") +
+      " vs summit " + summitBurn.toFixed(1));
+
   /* A night that never strikes lands nothing. */
   const still = JSON.parse(JSON.stringify(byId("l1")));
   still.band = 999;
   const idle = night(App, still, SEEDS[0], true);
   check("game-lantern-fishing", "a night that never strikes lands nothing",
     !idle.won && idle.landed === 0, JSON.stringify(idle));
+
+  /* And the testy water's own trap: a hand that strikes on time but hauls
+   * through every run - the easing discipline gone, the line loaded through
+   * the pulls - parts the line on every hooked fish it meets. Over the
+   * documented twenty dealt nights a bed it never once lands the quota, so
+   * the tier's stars are bought with the fight's rhythm, not with strength. */
+  const haulProblems = [];
+  testyLevels.forEach((level) => {
+    let won = 0;
+    let landed = 0;
+    for (const seed of SEEDS) {
+      const run = night(App, level, seed, false, true);
+      if (run.won) {
+        won += 1;
+      }
+      landed += run.landed;
+    }
+    if (won > 0) {
+      haulProblems.push(level.id + ": the hauling hand landed the quota on " +
+        won + " dealt nights (" + landed + " fish)");
+    }
+  });
+  check("game-lantern-fishing",
+    "a hand that hauls through every run never lands the quota on the testy water",
+    haulProblems.length === 0, haulProblems.slice(0, 4).join(" | "));
 
   /* Tier labels travel in both dictionaries and never fall back to keys. */
   ["en", "zh"].forEach((lang) => {
@@ -438,5 +611,24 @@ module.exports = function gate(ctx) {
       !!ok(deepIds), deepIds.join(","));
     check("game-lantern-fishing", `the summit tier labels resolve in ${lang}`,
       !!ok(summitIds), summitIds.join(","));
+    check("game-lantern-fishing", `the testy tier labels resolve in ${lang}`,
+      !!ok(testyIds), testyIds.join(","));
   });
+
+  /* The unlock chain is derived, never stored: clearing each bed in order
+   * hands the player exactly the next one, all forty times. */
+  const chain = App.createCampaign({
+    key: "lantern-fishing-gate-chain",
+    levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey })),
+  });
+  let walked = 0;
+  let chained = true;
+  levels.forEach((level, index) => {
+    const outcome = chain.record(level.id, { stars: 3, best: 1, better: "high" });
+    if (outcome.firstClear) walked += 1;
+    const expected = index + 1 < levels.length ? levels[index + 1].id : null;
+    if (outcome.unlockedNext !== expected) chained = false;
+  });
+  check("game-lantern-fishing", "the unlock chain walks all forty beds in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 };

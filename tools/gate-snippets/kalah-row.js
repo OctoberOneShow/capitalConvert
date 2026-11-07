@@ -26,7 +26,35 @@
  * the exact numbers are asserted below. The audit's dead levers are
  * asserted dead too: the ring with a wider count and a deeper budget
  * benches game for game with the seamless ring, which is why the tier
- * rides the four levers that bite. */
+ * rides the four levers that bite.
+ *
+ * The breach tier 41-44 is read the way its comment advertises: the Clear
+ * Eye's clean play carries (the audit's ring, flub zero, refusal seven),
+ * the tell opens past the audit's widest - 48, 53, 57 and 63 in a hundred -
+ * and pays the first asks past the wall of forty, where a rout's margin
+ * pays in pairs of stones: forty-one leaves the rival three, forty-three
+ * leaves him two. The (toll, two-star) pair climbs strictly rung over
+ * rung - 41/28, 41/30, 43/30, 43/32 - both lines past the capstone's own
+ * 39 and 25, the tell climbs with it, and the bench holds every rung to
+ * the fairness floor. The tier's records are cut two ways: the tell closed
+ * back to the audit's 0.33 drops both breach bands off the floor (12.5%
+ * and 7.5% - the audit's own play cannot pay the wall), and each rung's
+ * ask cut moves the measured share the moment it lands. The shutout tolls
+ * 45 and 47 are asserted unreachable: benched across the tell range they
+ * never clear the floor, so the purse has no more stones to give.
+ *
+ * The last stones 45-50 close the ladder. The audit capped the breach by
+ * benching the shutout asks and stepping over the forty-four; the
+ * forty-four ships on the Confession's own tell at exactly the floor's
+ * share, and the tier's hand never changes - every rung keeps the
+ * Confession's search, prices, refusal, blind sow, tell and flub, and
+ * deepens only the asks: the toll takes the forty-four and holds it, the
+ * two-star line climbs 33, 35, 37, 39, 41, 42 beneath it, and the gap
+ * between the stars closes 11, 9, 7, 5, 3, 2. The gate re-benches every
+ * rung (the toll at the floor, the bench winning three games in four
+ * outright, the two-star line thinning 32.5 -> 20 -> 20 -> 17.5 -> 17.5
+ * -> 17.5), holds the hand unchanged, and the shutout tolls stay dead
+ * beside it. */
 module.exports = function gate(ctx) {
   const { App, check, path, root } = ctx;
   const kalahForge = require(path.join(root, "tools", "kalah-forge.js"));
@@ -37,11 +65,11 @@ module.exports = function gate(ctx) {
   const posOf = (id) => ranks.findIndex((rank) => rank.id === id);
   const before = (id) => ranks.slice(0, posOf(id));
 
-  check("game-kalah-row", "the bench ladder holds forty ranks",
-    ranks.length === 40, String(ranks.length));
+  check("game-kalah-row", "the bench ladder holds fifty ranks",
+    ranks.length === 50, String(ranks.length));
   check("game-kalah-row", "every rank id is distinct",
     new Set(ranks.map((rank) => rank.id)).size === ranks.length);
-  check("game-kalah-row", "the ids run m1 through m40 in order",
+  check("game-kalah-row", "the ids run m1 through m50 in order",
     ranks.every((rank, index) => rank.id === "m" + (index + 1)),
     ranks.map((rank) => rank.id).join(","));
 
@@ -148,7 +176,9 @@ module.exports = function gate(ctx) {
   check("game-kalah-row", "the ransom climbs - five, nine, thirteen, seventeen, nineteen, twenty-five",
     ransom.map((rank) => rank.margin[0]).join(",") === "5,9,13,17,19,25",
     ransom.map((rank) => rank.margin[0]).join(","));
-  const audit = ranks.slice(30);
+  const audit = ranks.slice(30, 40);
+  const breach = ranks.slice(40, 44);
+  const stones = ranks.slice(44);
   check("game-kalah-row", "the audit tier is present",
     audit.length === 10 && audit.every((rank, index) => rank.id === "m" + (31 + index)),
     audit.map((rank) => rank.id).join(","));
@@ -329,7 +359,209 @@ module.exports = function gate(ctx) {
       `cut measured ${verdict.top}/${verdict.mid}/${verdict.win}, want ${want.join("/")}`);
   });
 
-  /* The audit tier's names travel with the module: both languages hold a
+  /* The breach tier 41-44: the shape its comment advertises. The Clear
+   * Eye's clean play carries - the audit's ring, flub zero, refusal seven -
+   * the tell opens past the audit's widest to pay the first asks past the
+   * wall of forty, and the (toll, two-star) pair climbs strictly rung over
+   * rung, both lines past the capstone's own 39 and 25. */
+  check("game-kalah-row", "the breach tier is present",
+    breach.length === 4 && breach.every((rank, index) => rank.id === "m" + (41 + index)),
+    breach.map((rank) => rank.id).join(","));
+  check("game-kalah-row", "the breach tier carries the Clear Eye's clean play",
+    breach.every((rank) =>
+      rank.depth === 8 && rank.noise === 0 && rank.keep === 16 && rank.threat === 4.5 &&
+      rank.deny === 7 && rank.tempo === 5 && rank.count === 28 && rank.nodes === 3000 &&
+      rank.flub === 0),
+    JSON.stringify(breach));
+  check("game-kalah-row",
+    "the breach tier's pair climbs strictly - 41/28, 41/30, 43/30, 43/32",
+    breach.every((rank, index) => index === 0 ||
+      rank.margin[0] > breach[index - 1].margin[0] ||
+      (rank.margin[0] === breach[index - 1].margin[0] &&
+        rank.margin[1] > breach[index - 1].margin[1])) &&
+      breach.map((rank) => rank.margin[0]).join(",") === "41,41,43,43" &&
+      breach.map((rank) => rank.margin[1]).join(",") === "28,30,30,32",
+    breach.map((rank) => rank.margin[0] + "/" + rank.margin[1]).join(" "));
+  check("game-kalah-row",
+    "the breach tier's tell opens past the audit's widest and climbs rung over rung",
+    breach.map((rank) => rank.slip).join(",") === "0.48,0.53,0.57,0.63" &&
+      breach.every((rank) => rank.slip > 0.33),
+    breach.map((rank) => rank.slip).join(","));
+  check("game-kalah-row",
+    "m41 is the first rank past the wall of forty: toll and two-star both past every earlier rank",
+    byId.m41.margin[0] === 41 && before("m41").every((rank) => rank.margin[0] < 41) &&
+      byId.m41.margin[1] === 28 && before("m41").every((rank) => rank.margin[1] < 28),
+    "previous peaks toll " + Math.max.apply(null, before("m41").map((rank) => rank.margin[0])) +
+      ", two-star " + Math.max.apply(null, before("m41").map((rank) => rank.margin[1])));
+  check("game-kalah-row",
+    "m43 is the second breach: the toll steps to forty-three, past every rank before it",
+    byId.m43.margin[0] === 43 && before("m43").every((rank) => rank.margin[0] < 43),
+    "previous peak " + Math.max.apply(null, before("m43").map((rank) => rank.margin[0])));
+  check("game-kalah-row",
+    "m44 is the Full Confession: the dearest two-star in the row on the widest tell",
+    byId.m44.margin[1] === 32 && before("m44").every((rank) => rank.margin[1] < 32) &&
+      byId.m44.slip === 0.63 && before("m44").every((rank) => (rank.slip || 0) < 0.63),
+    "previous peaks two-star " + Math.max.apply(null, before("m44").map((rank) => rank.margin[1])) +
+      ", tell " + Math.max.apply(null, before("m44").map((rank) => rank.slip || 0)));
+
+  /* The breach census: the forge's own stream, benched live, pinned exactly
+   * - the three-star band holds the fairness floor on three of the four
+   * rungs while the wins climb as the tell widens, and the middle of the
+   * distribution fattens with it. */
+  const breachCensus = {};
+  breach.forEach((rank) => {
+    breachCensus[rank.id] = kalahForge.shares(kalah, rank);
+  });
+  const wantBreachCensus = {
+    m41: [15, 20, 55], m42: [22.5, 25, 65], m43: [15, 32.5, 62.5], m44: [15, 37.5, 75],
+  };
+  breach.forEach((rank) => {
+    const want = wantBreachCensus[rank.id];
+    const got = breachCensus[rank.id];
+    check("game-kalah-row",
+      `${rank.id} benches on the shipped numbers: band ${want[0]}%, two-star ${want[1]}%, wins ${want[2]}%`,
+      got.top === want[0] && got.mid === want[1] && got.win === want[2],
+      `measured ${got.top}/${got.mid}/${got.win}`);
+  });
+
+  /* The star bands are honest on the bench's own line: the three-star band
+   * lands in at least six of the forty games (the fairness floor's share,
+   * the same standard the whole ladder rides), the two-star band has games
+   * of its own, and a dawdling win - a game won by less than the two-star
+   * ask - lands in a quarter or more of them, so the one-star line is a
+   * real road and not a lottery ticket. */
+  breach.forEach((rank) => {
+    const margins = kalahForge.bench(kalah, rank);
+    const threeStar = margins.filter((m) => m >= rank.margin[0]).length;
+    const twoStarOnly = margins.filter((m) =>
+      m >= rank.margin[1] && m < rank.margin[0]).length;
+    const dawdlers = margins.filter((m) => m >= 1 && m < rank.margin[1]).length;
+    check("game-kalah-row",
+      `${rank.id} stars off the bench's own line: three-star ${threeStar}/40, ` +
+        `two-star ${twoStarOnly}/40, dawdling wins ${dawdlers}/40`,
+      threeStar === { m41: 6, m42: 9, m43: 6, m44: 6 }[rank.id] &&
+        twoStarOnly === { m41: 2, m42: 1, m43: 7, m44: 9 }[rank.id] &&
+        dawdlers === { m41: 14, m42: 16, m43: 12, m44: 15 }[rank.id] &&
+        threeStar >= 6 && dawdlers >= 10,
+      `measured ${threeStar}/${twoStarOnly}/${dawdlers}`);
+  });
+
+  /* The breach cuts: the tier's records reverted in copies of their own
+   * ranks and re-benched on the same stream. Close the tell to the audit's
+   * 0.33 and both breach bands fall off the fairness floor - the audit's
+   * own play cannot pay the wall, so the tell is what pays it. Cut the ask
+   * and the share moves the moment it lands: the capstone's toll back under
+   * each breach, the capstone's two-star back under the first and the
+   * last. */
+  const breachTellCuts = {
+    m41: [12.5, 22.5, 52.5], m42: [12.5, 22.5, 52.5],
+    m43: [7.5, 22.5, 52.5], m44: [7.5, 22.5, 52.5],
+  };
+  breach.forEach((rank) => {
+    const cut = kalahForge.TIER_CUTS[rank.id];
+    const verdict = kalahForge.shares(kalah, Object.assign({}, rank, cut.patch));
+    const want = breachTellCuts[rank.id];
+    check("game-kalah-row",
+      `${rank.id} cut (${cut.label}) drops the breach band off the floor`,
+      verdict.top === want[0] && verdict.mid === want[1] && verdict.win === want[2] &&
+        verdict.top < 15 && verdict.top !== breachCensus[rank.id].top,
+      `cut measured ${verdict.top}/${verdict.mid}/${verdict.win}, want ${want.join("/")}`);
+  });
+  const breachAskCuts = [
+    ["m41", { margin: [39, 28, 1] }, [17.5, 20, 55]],
+    ["m42", { margin: [39, 30, 1] }, [25, 25, 65]],
+    ["m43", { margin: [39, 30, 1] }, [22.5, 32.5, 62.5]],
+    ["m44", { margin: [39, 32, 1] }, [17.5, 37.5, 75]],
+    ["m41", { margin: [41, 25, 1] }, [15, 22.5, 55]],
+    ["m44", { margin: [43, 25, 1] }, [15, 50, 75]],
+  ];
+  breachAskCuts.forEach((entry) => {
+    const rank = byId[entry[0]];
+    const verdict = kalahForge.shares(kalah, Object.assign({}, rank, entry[1]));
+    const want = entry[2];
+    const base = breachCensus[rank.id];
+    check("game-kalah-row",
+      `${rank.id} ask cut (${JSON.stringify(entry[1])}) moves the measured share`,
+      verdict.top === want[0] && verdict.mid === want[1] && verdict.win === want[2] &&
+        (verdict.top !== base.top || verdict.mid !== base.mid),
+      `cut measured ${verdict.top}/${verdict.mid}/${verdict.win}, want ${want.join("/")}`);
+  });
+
+  /* The shutout tolls, asserted unreachable: a rout's margin pays in pairs
+   * of stones, so forty-five asks the rival keep one and forty-seven asks
+   * a shutout - and across the tell range, from the audit's own 0.33
+   * through the widest the tier ships to the runner-up sow on every hand,
+   * neither band ever clears the fairness floor. The purse has no more
+   * stones to give. */
+  const shutoutShares = [0.33, 0.44, 0.63, 1].map((slip) => {
+    const margins = kalahForge.bench(kalah,
+      Object.assign({}, byId.m44, { slip: slip, margin: [45, 30, 1] }));
+    const share = (need) =>
+      (100 * margins.filter((m) => m >= need).length) / margins.length;
+    return [share(45), share(47)];
+  });
+  check("game-kalah-row",
+    "the shutout tolls never clear the floor on any tell - " +
+      shutoutShares.map((s) => s.join("/")).join(", "),
+    JSON.stringify(shutoutShares) === JSON.stringify([[5, 2.5], [12.5, 12.5], [10, 10], [0, 0]]) &&
+      shutoutShares.every((s) => s[0] < 15 && s[1] < 15),
+    JSON.stringify(shutoutShares));
+
+  /* ---- the last stones 45-50: the tier that closes the gap ---- */
+  /* The audit stepped over a stone to cap the ladder: it benched the
+   * shutout asks forty-five and forty-seven and never benched the
+   * forty-four. The forty-four ships - on the Confession's own tell the
+   * reference player beats it by exactly the floor's share - and the
+   * tier's hand never changes: every rung keeps the Confession's depth,
+   * prices, refusal, blind sow, tell and flub, and deepens only the asks.
+   * The three-star toll takes the forty-four and holds it; the two-star
+   * line climbs beneath it - 33, 35, 37, 39, 41, 42 - and the gap between
+   * the stars closes 11, 9, 7, 5, 3, 2. */
+  check("game-kalah-row", "the last-stones tier is present",
+    stones.length === 6 && stones.every((rank, index) => rank.id === "m" + (45 + index)),
+    stones.map((rank) => rank.id).join(","));
+  check("game-kalah-row", "the last stones carry the Confession's unchanged hand",
+    stones.every((rank) =>
+      rank.depth === byId.m44.depth && rank.noise === byId.m44.noise &&
+      rank.keep === byId.m44.keep && rank.threat === byId.m44.threat &&
+      rank.deny === byId.m44.deny && rank.tempo === byId.m44.tempo &&
+      rank.count === byId.m44.count && rank.nodes === byId.m44.nodes &&
+      rank.slip === byId.m44.slip && rank.flub === byId.m44.flub),
+    JSON.stringify(stones.map((rank) => [rank.depth, rank.slip, rank.deny])));
+  check("game-kalah-row",
+    "the three-star toll takes the forty-four and holds it - the stone the shutout audit stepped over",
+    stones.every((rank) => rank.margin[0] === 44) &&
+      ranks.slice(0, 44).every((rank) => rank.margin[0] < 44),
+    stones.map((rank) => rank.margin[0]).join(","));
+  check("game-kalah-row",
+    "the two-star line climbs where the ladder never walked - past the Confession's thirty-two",
+    stones.map((rank) => rank.margin[1]).join(",") === "33,35,37,39,41,42" &&
+      stones.every((rank, index) => index === 0 || rank.margin[1] > stones[index - 1].margin[1]) &&
+      ranks.slice(0, 44).every((rank) => rank.margin[1] < 33),
+    stones.map((rank) => rank.margin[1]).join(","));
+  check("game-kalah-row",
+    "the gap between the stars closes - 11, 9, 7, 5, 3, 2 - and no earlier rank at the wall ever carried a pair this tight",
+    stones.map((rank) => rank.margin[0] - rank.margin[1]).join(",") === "11,9,7,5,3,2" &&
+      ranks.slice(0, 44).every((rank) => rank.margin[0] < 40 || rank.margin[0] - rank.margin[1] > 2),
+    stones.map((rank) => rank.margin[0] - rank.margin[1]).join(","));
+  /* The shares, re-benched here: the breach band holds the floor share it
+   * opened at, the bench wins three games in four outright on every rung,
+   * and the two-star line thins as the toll climbs - quantized the way
+   * forty games are. */
+  const stonesCensus = {};
+  stones.forEach((rank) => {
+    stonesCensus[rank.id] = kalahForge.shares(kalah, rank);
+  });
+  check("game-kalah-row",
+    "the last stones' measured shares: the toll holds 15.0 at the floor, the bench wins 75 outright," +
+      " and the two-star line thins 32.5 -> 20 -> 20 -> 17.5 -> 17.5 -> 17.5",
+    stones.every((rank) => stonesCensus[rank.id].top === 15 && stonesCensus[rank.id].win === 75) &&
+      JSON.stringify(stones.map((rank) => stonesCensus[rank.id].mid)) ===
+        JSON.stringify([32.5, 20, 20, 17.5, 17.5, 17.5]),
+    stones.map((rank) => rank.id + " " + stonesCensus[rank.id].top + "/" +
+      stonesCensus[rank.id].mid + "/" + stonesCensus[rank.id].win).join(", "));
+
+  /* The breach tier's names travel with the module: both languages hold a
    * real string for every new rank, and t() never falls back to the key. */
   check("game-kalah-row", "the audit tier's ten rank names resolve in both languages",
     audit.every((rank) => {
@@ -338,9 +570,23 @@ module.exports = function gate(ctx) {
       return !!en && en !== rank.labelKey && !!zh && zh !== rank.labelKey &&
         en !== zh && App.t(rank.labelKey) !== rank.labelKey;
     }), "an audit rank label fell back to its key");
+  check("game-kalah-row", "the breach tier's four rank names resolve in both languages",
+    breach.every((rank) => {
+      const en = App.I18N && App.I18N.en ? App.I18N.en[rank.labelKey] : null;
+      const zh = App.I18N && App.I18N.zh ? App.I18N.zh[rank.labelKey] : null;
+      return !!en && en !== rank.labelKey && !!zh && zh !== rank.labelKey &&
+        en !== zh && App.t(rank.labelKey) !== rank.labelKey;
+    }), "a breach rank label fell back to its key");
+  check("game-kalah-row", "the last stones' six rank names resolve in both languages",
+    stones.every((rank) => {
+      const en = App.I18N && App.I18N.en ? App.I18N.en[rank.labelKey] : null;
+      const zh = App.I18N && App.I18N.zh ? App.I18N.zh[rank.labelKey] : null;
+      return !!en && en !== rank.labelKey && !!zh && zh !== rank.labelKey &&
+        en !== zh && App.t(rank.labelKey) !== rank.labelKey;
+    }), "a last-stones rank label fell back to its key");
 
   /* The unlock chain is derived, never stored: clearing each rank in order
-   * must hand the player exactly the next one, all forty times. */
+   * must hand the player exactly the next one, all fifty times. */
   const chain = App.createCampaign({
     key: "kalah-row-gate-chain",
     levels: ranks.map((rank) => ({ id: rank.id, labelKey: rank.labelKey })),
@@ -353,7 +599,7 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < ranks.length ? ranks[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-kalah-row", "the unlock chain walks all forty ranks in order",
-    walked === 40 && chained && chain.clearedCount() === 40,
+  check("game-kalah-row", "the unlock chain walks all fifty ranks in order",
+    walked === 50 && chained && chain.clearedCount() === 50,
     walked + " first clears");
 };

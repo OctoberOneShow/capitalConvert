@@ -24,16 +24,28 @@
  * the bench squeaks out the win - and every rung's bands are played for and
  * landed from both directions. And the ladder is whole: thirty floors, the
  * unlock chain walks them all, and the six summit names resolve in both
- * languages. */
+ * languages.
+ *
+ * The quarter tier f31-f40 holds every rung to the same bench with the
+ * fourth door: `holes: 4` opens four columns in every rubble row on the
+ * ten-column board, so no row clears until all four are built. The bar
+ * is the summit close's own bench, two wins of slack - the fourth door
+ * costs the bench real wins, and the tier as a whole wins strictly less
+ * often than the close does on the same seeds. Structurally: no earlier
+ * rung opens four doors, every quarter deal really lays four distinct
+ * doors per row through the game's own hole chooser, and the quarter
+ * heaps open exactly four times the ground a single-door twin opens. */
 
 module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const levels = App.blkLevels;
   const deepIds = ["f21", "f22", "f23", "f24"];
   const summitIds = ["f25", "f26", "f27", "f28", "f29", "f30"];
+  const quarterIds = ["f31", "f32", "f33", "f34", "f35",
+    "f36", "f37", "f38", "f39", "f40"];
 
-  check("game-glyph-blocks", "the ladder holds all thirty floors",
-    levels.length === 30, String(levels.length));
+  check("game-glyph-blocks", "the ladder holds all forty floors",
+    levels.length === 40, String(levels.length));
   check("game-glyph-blocks", "every floor id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -43,6 +55,9 @@ module.exports = function gate(ctx) {
   const missingSummit = summitIds.filter((id) => !levels.some((level) => level.id === id));
   check("game-glyph-blocks", "the summit tier f25-f30 is present",
     missingSummit.length === 0, missingSummit.join(","));
+  const missingQuarter = quarterIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-glyph-blocks", "the quarter tier f31-f40 is present",
+    missingQuarter.length === 0, missingQuarter.join(","));
 
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
@@ -233,6 +248,7 @@ module.exports = function gate(ctx) {
    * column, through the game's own hole chooser on a seeded stream. */
   const shallowHoles = levels.filter((level) =>
     !deepIds.includes(level.id) && !summitIds.includes(level.id) &&
+    !quarterIds.includes(level.id) &&
     level.holes !== undefined && level.holes >= 2);
   check("game-glyph-blocks",
     "no shipped rung opens two doors in its rubble",
@@ -320,7 +336,8 @@ module.exports = function gate(ctx) {
    * chooser, and the summit's heaps open exactly three times the ground a
    * single-door twin opens. */
   const shallowTriples = levels.filter((level) =>
-    !summitIds.includes(level.id) && level.holes !== undefined && level.holes >= 3);
+    !summitIds.includes(level.id) && !quarterIds.includes(level.id) &&
+    level.holes !== undefined && level.holes >= 3);
   check("game-glyph-blocks",
     "no earlier rung opens three doors in its rubble",
     shallowTriples.length === 0, shallowTriples.map((level) => level.id).join(","));
@@ -353,18 +370,94 @@ module.exports = function gate(ctx) {
     groundOpens(byId.f25) === 3 * groundOpens(single),
     `${groundOpens(byId.f25)} vs ${groundOpens(single)}`);
 
+  /* ---- the quarter tier: the fourth door, on the same bench ---- */
+  const f30Bench = bench(byId.f30, blkSeeds);
+  const quarter = quarterIds.map((id) => byId[id]);
+  const quarterProblems = [];
+  let quarterWins = 0;
+  let quarterRuns = 0;
+  quarter.forEach((level) => {
+    const run = bench(level, blkSeeds);
+    quarterWins += run.won;
+    quarterRuns += run.total;
+    const name = `${level.id} goal=${level.goal} garbage=${level.garbage} startMs=${level.startMs}` +
+      ` holes=${level.holes}` +
+      `${level.pieces ? " " + level.pieces : ""}${level.rise ? " rise=" + level.rise : ""}`;
+    if (!(run.won >= 3 && run.won >= f30Bench.won - 2)) {
+      quarterProblems.push(`${name} won ${run.won}/6 (f30 ${f30Bench.won}/6)`);
+    }
+    if (run.worst === null || run.worst > level.starTimes[1]) {
+      quarterProblems.push(`${name} a won line missed the two-star band` +
+        ` (worst ${run.worst} vs ${level.starTimes[1]})`);
+    }
+    if (run.best === null || run.best > level.starTimes[0] ||
+        level.starTimes[0] >= level.starTimes[1]) {
+      quarterProblems.push(`${name} the three-star line is not played for` +
+        ` (best ${run.best} vs ${level.starTimes[0]})`);
+    }
+    if (!(level.starTimes[0] < level.starTimes[1] &&
+        level.starTimes[1] < level.starTimes[2])) {
+      quarterProblems.push(`${name} bands do not run downwards ${level.starTimes.join("/")}`);
+    }
+  });
+  check("game-glyph-blocks",
+    "every quarter rung clears the bench at the summit close's bar and lands its own bands",
+    quarterProblems.length === 0, quarterProblems.join(" | "));
+  check("game-glyph-blocks",
+    "the fourth door costs wins: the quarter tier wins strictly less often than the summit close on the same seeds",
+    quarterWins / quarterRuns < f30Bench.won / f30Bench.total,
+    `tier ${quarterWins}/${quarterRuns} vs f30 ${f30Bench.won}/${f30Bench.total}`);
+
+  /* The fourth door is structural: no earlier rung opens four doors, every
+   * quarter deal lays four distinct doors per row through the game's own
+   * chooser, and the quarter heaps open exactly four times the ground a
+   * single-door twin opens. */
+  const shallowFours = levels.filter((level) =>
+    !quarterIds.includes(level.id) && level.holes !== undefined && level.holes >= 4);
+  check("game-glyph-blocks",
+    "no earlier rung opens four doors in its rubble",
+    shallowFours.length === 0, shallowFours.map((level) => level.id).join(","));
+  const fourProblems = [];
+  quarter.forEach((level) => {
+    if (level.holes !== 4) {
+      fourProblems.push(level.id + " does not ask for four doors");
+      return;
+    }
+    for (let probe = 0; probe < 40; probe += 1) {
+      const holes = App.blkRubbleHoles(level, blkRng(91000 + probe * 7));
+      if (holes.length !== 4 || new Set(holes).size !== 4) {
+        fourProblems.push(`${level.id} dealt ${holes.length} doors on seed ${probe}`);
+      }
+    }
+  });
+  check("game-glyph-blocks",
+    "every quarter rung's rubble really opens four distinct doors per row",
+    fourProblems.length === 0, fourProblems.join(" | "));
+  const singleDoor = Object.assign({}, byId.f31, { holes: 1 });
+  const quarterOpens = (level) => {
+    let opens = 0;
+    for (let row = 0; row < level.garbage; row += 1) {
+      App.blkRubbleHoles(level, blkRng(515000 + row * 13)).forEach(() => { opens += 1; });
+    }
+    return opens;
+  };
+  check("game-glyph-blocks",
+    "f31's starting heap opens four times the ground its single-door twin opens",
+    quarterOpens(byId.f31) === 4 * quarterOpens(singleDoor),
+    `${quarterOpens(byId.f31)} vs ${quarterOpens(singleDoor)}`);
+
   /* The tier's names travel with the page: both languages hold a real string
    * and t() never falls back to the raw key. */
-  const copyProblems = deepIds.concat(summitIds).map((id) =>
+  const copyProblems = deepIds.concat(summitIds, quarterIds).map((id) =>
     byId[id].labelKey).filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-glyph-blocks", "the ten deep and summit floor names resolve in both languages",
+  check("game-glyph-blocks", "the twenty deep, summit and quarter floor names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 
   /* The unlock chain is derived, never stored: clearing each floor in order
-   * hands the player exactly the next one, all thirty times. */
+   * hands the player exactly the next one, all forty times. */
   const chain = App.createCampaign({
     key: "glyph-blocks-gate-chain",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -377,6 +470,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-glyph-blocks", "the unlock chain walks all thirty floors in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-glyph-blocks", "the unlock chain walks all forty floors in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 };

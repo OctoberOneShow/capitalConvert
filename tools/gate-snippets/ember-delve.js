@@ -33,16 +33,31 @@
  * bleeds from the deep tier into the summit and wins nothing at all on the
  * capstone; and each rung's advertised mechanic - the plate, the mending,
  * the deepest drain - is cut out of a copy and hands the bench its wins
- * straight back. The panel boots the capstone with the gauge at 12/12. */
+ * straight back. The panel boots the capstone with the gauge at 12/12.
+ *
+ * The cold-camp tier (d31-d40) turns the one dial the ladder had never
+ * turned: the camp fire itself. Every rung carries `heal: 3` - a rest mends
+ * three vitals where every shipped floor mends the module's five - and the
+ * pool sinks past the summit's drained floor: 14 down to 9 at the capstone,
+ * two below where the summit bottomed out, behind the summit's own peak
+ * plate and its mending pack. The strong turtle clears every seed of every
+ * rung and its lines fix the bands; the mid hand takes at most two seeds of
+ * six off any rung and none off the closing pair; the naive hand falls on
+ * every first floor of every seed; and both new dials are load-bearing -
+ * on a wider twelve-seed bench, restoring the five-mend camp on copies never
+ * loses the mid hand a seed and hands it three more across the tier, and
+ * cutting the pool back to eighteen never loses it a seed and hands it
+ * twenty-four more. The panel boots the capstone with the gauge at 9/9. */
 
 module.exports = function gate(ctx) {
   const { App, env, check } = ctx;
   const levels = App.delveLevels;
   const deepIds = ["d21", "d22", "d23", "d24"];
   const summitIds = ["d25", "d26", "d27", "d28", "d29", "d30"];
+  const coldIds = ["d31", "d32", "d33", "d34", "d35", "d36", "d37", "d38", "d39", "d40"];
 
-  check("game-ember-delve", "the ladder holds thirty floors",
-    levels.length === 30, String(levels.length));
+  check("game-ember-delve", "the ladder holds forty floors",
+    levels.length === 40, String(levels.length));
   check("game-ember-delve", "every floor id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -52,17 +67,22 @@ module.exports = function gate(ctx) {
   const missingSummit = summitIds.filter((id) => !levels.some((level) => level.id === id));
   check("game-ember-delve", "the summit tier d25-d30 is present",
     missingSummit.length === 0, missingSummit.join(","));
-  check("game-ember-delve", "the deep and summit tiers sit at the tail in order",
+  const missingCold = coldIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-ember-delve", "the cold-camp tier d31-d40 is present",
+    missingCold.length === 0, missingCold.join(","));
+  check("game-ember-delve", "the deep, summit and cold-camp tiers sit at the tail in order",
     levels.slice(20).map((level) => level.id).join(",") ===
-      deepIds.concat(summitIds).join(","),
+      deepIds.concat(summitIds, coldIds).join(","),
     levels.slice(20).map((level) => level.id).join(","));
 
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
   const deep = deepIds.map((id) => byId[id]);
   const summit = summitIds.map((id) => byId[id]);
+  const cold = coldIds.map((id) => byId[id]);
   const shipped = levels.filter((level) =>
-    !deepIds.includes(level.id) && !summitIds.includes(level.id));
+    !deepIds.includes(level.id) && !summitIds.includes(level.id) &&
+    !coldIds.includes(level.id));
 
   /* The lesson is structural: no shipped rung carries the field, every deep
    * and summit rung does, and the drain ratchets strictly downwards - 24-22-
@@ -266,7 +286,10 @@ module.exports = function gate(ctx) {
         continue;
       }
       if (hand.rest(hero, depth, floor, at, rests)) {
-        hero.hp = Math.min(hero.maxHp, hero.hp + REST_HEAL);
+        /* The camp fire's own heat, read from the rung exactly where the
+         * panel reads it: every shipped floor mends the module's five, the
+         * cold-camp tier deals fires that mend less. */
+        hero.hp = Math.min(hero.maxHp, hero.hp + (level.heal || REST_HEAL));
         turns += 1;
         rests += 1;
         edlRestWake(level, floor, at, depth, rand);
@@ -544,11 +567,127 @@ module.exports = function gate(ctx) {
     "cutting each summit rung's advertised mechanic out of a copy hands the bench its wins back",
     cutProblems.length === 0, cutProblems.join(" | "));
 
+  /* ---- the cold-camp tier: the camp fire itself is the dial ----
+   * The law, real in the rows: every cold rung's camp mends three where
+   * every shipped floor mends the module's five, the pool sinks past the
+   * summit's drained floor - 14 down to 9 at the capstone, never rising -
+   * behind the summit's own peak plate and its mending pack, on the summit's
+   * own shell-and-fang mix. */
+  const coldLawProblems = [];
+  const coldVitals = [];
+  cold.forEach((level) => {
+    if (level.heal !== 3) {
+      coldLawProblems.push(`${level.id} camp mends ${level.heal === undefined ? "the shipped five" : level.heal}, not three`);
+    }
+    if (level.armor !== 6 || level.regen !== 1 || level.count !== 4) {
+      coldLawProblems.push(`${level.id} does not hold the summit's plate, mending and pack density`);
+    }
+    if (level.kinds.some((kind) => kind === "warden")) {
+      coldLawProblems.push(level.id + " fields the summoner the summit left behind");
+    }
+    coldVitals.push(level.vitals);
+  });
+  for (let i = 1; i < coldVitals.length; i += 1) {
+    if (coldVitals[i] > coldVitals[i - 1]) {
+      coldLawProblems.push(`the pool rises to ${coldVitals[i]} at rung ${i}`);
+    }
+  }
+  if (coldVitals[coldVitals.length - 1] >= byId.d30.vitals) {
+    coldLawProblems.push(`the capstone pool ${coldVitals[coldVitals.length - 1]} does not sink past the summit's ${byId.d30.vitals}`);
+  }
+  check("game-ember-delve",
+    `every cold-camp camp mends three, the pool never rises and sinks past the summit's floor (${coldVitals.join("-")})`,
+    coldLawProblems.length === 0, coldLawProblems.join(" | "));
+  const healLeak = shipped.filter((level) => level.heal !== undefined).map((level) => level.id);
+  check("game-ember-delve",
+    "no shipped rung carries the camp dial at all - every shipped rest mends the module's five",
+    healLeak.length === 0, healLeak.join(","));
+
+  /* Every cold rung: the strong hand's line clears all six seeds, its worst
+   * line lands inside the two-star band, its best plays for the three-star
+   * line, and the bands run in order under the cap. */
+  const coldProblems = [];
+  cold.forEach((level) => {
+    const run = bench(level, strong);
+    const name = `${level.id} vitals=${level.vitals} heal=${level.heal} bands=${level.starTurns.join("/")}`;
+    if (run.won !== 6) {
+      coldProblems.push(`${name} the strong hand cleared ${run.won}/6`);
+    }
+    if (run.worst === null || run.worst > level.starTurns[1]) {
+      coldProblems.push(`${name} a winning line missed the two-star band (worst ${run.worst})`);
+    }
+    if (run.best === null || run.best > level.starTurns[0]) {
+      coldProblems.push(`${name} the three-star line is not played for (best ${run.best})`);
+    }
+    if (!(level.starTurns[0] < level.starTurns[1] &&
+        level.starTurns[1] < level.starTurns[2] &&
+        level.starTurns[2] < TURN_CAP)) {
+      coldProblems.push(`${name} bands do not run downwards under the cap ${level.starTurns.join("/")}`);
+    }
+  });
+  check("game-ember-delve",
+    "the strong hand clears every cold-camp seed and its lines fix the bands",
+    coldProblems.length === 0, coldProblems.join(" | "));
+
+  /* Not free: the naive hand wins nothing and does not even see the second
+   * floor, and the mid hand that still takes games off the shipped ladder
+   * takes at most two seeds of six off any cold rung and none off the
+   * closing pair. */
+  const naiveCold = cold.reduce((sum, level) => sum + bench(level, naive).won, 0);
+  const naiveFirstFloor = cold.every((level) =>
+    bench(level, naive).runs.every((run) => !run.won && run.why === "fell" && run.depth === 1));
+  check("game-ember-delve",
+    "a naive hand three-stars nothing on the cold-camp tier and falls on every first floor",
+    naiveCold === 0 && naiveFirstFloor, `${naiveCold} naive wins`);
+  const midCold = cold.map((level) => bench(level, mid).won);
+  check("game-ember-delve",
+    `the mid hand takes at most two seeds of six off the tier and none off the closing pair (${midCold.join("/")})`,
+    midCold.every((won) => won <= 2) && midCold[midCold.length - 2] === 0 && midCold[midCold.length - 1] === 0,
+    midCold.join("/"));
+
+  /* Both cold dials are load-bearing, priced on a wider twelve-seed bench
+   * (attempts 1-12, the same stream the panel deals, doubled): restore the
+   * five-mend camp on copies of the rows and the mid hand never loses a
+   * seed and takes three more across the tier; cut the pool back to
+   * eighteen and it never loses a seed and takes twenty-four more. */
+  const WIDE_SEEDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+  const wideBench = (level, hand) => {
+    const runs = WIDE_SEEDS.map((attempt) => delveRun(level, attempt, hand));
+    return runs.filter((run) => run.won).length;
+  };
+  let midColdTotal = 0;
+  let midHealTotal = 0;
+  let midPoolTotal = 0;
+  const healCutProblems = [];
+  const poolCutProblems = [];
+  cold.forEach((level) => {
+    const plain = wideBench(level, mid);
+    const healed = wideBench(Object.assign({}, level, { heal: 5 }), mid);
+    const pooled = wideBench(Object.assign({}, level, { vitals: 18 }), mid);
+    midColdTotal += plain;
+    midHealTotal += healed;
+    midPoolTotal += pooled;
+    if (healed < plain) {
+      healCutProblems.push(`${level.id} lost seeds when the camp mended five (${plain} vs ${healed})`);
+    }
+    if (pooled < plain) {
+      poolCutProblems.push(`${level.id} lost seeds when the pool refilled (${plain} vs ${pooled})`);
+    }
+  });
+  check("game-ember-delve",
+    `cutting the cold camp out of copies hands the mid hand its wins back (${midHealTotal} of 120 vs ${midColdTotal}) and never costs it one`,
+    midHealTotal > midColdTotal && healCutProblems.length === 0,
+    healCutProblems.join(" | ") || `heal5 ${midHealTotal}/120 vs cold ${midColdTotal}/120`);
+  check("game-ember-delve",
+    `cutting the drained pool out of copies hands the mid hand its wins back straight (${midPoolTotal} of 120 vs ${midColdTotal}) and never costs it one`,
+    midPoolTotal > midColdTotal && poolCutProblems.length === 0,
+    poolCutProblems.join(" | ") || `pool18 ${midPoolTotal}/120 vs cold ${midColdTotal}/120`);
+
   /* The engine itself opens the drained tiers drained: boot the real panel
    * with the campaign progressed past d20 and the vitals gauge reads the
    * deep drain; progress it past d29 and the gauge reads the summit's
-   * twelve; boot it fresh and it reads the shipped 30. The store is left
-   * clean. */
+   * twelve; progress it past d39 and the gauge reads the cold camp's nine;
+   * boot it fresh and it reads the shipped 30. The store is left clean. */
   const store = env.localStorage;
   const campaignKey = "ember-delve-campaign";
   const cleared = {};
@@ -579,6 +718,14 @@ module.exports = function gate(ctx) {
   check("game-ember-delve",
     "the engine boots the d30 capstone with the gauge at 12/12",
     summitGauge === "12/12", `summit boot ${summitGauge}`);
+  const clearedCold = {};
+  levels.slice(0, 39).forEach((level) => {
+    clearedCold[level.id] = { stars: 3, best: 30 };
+  });
+  const coldGauge = panelVitals(JSON.stringify({ v: 1, cleared: clearedCold }));
+  check("game-ember-delve",
+    "the engine boots the d40 capstone with the gauge at 9/9",
+    coldGauge === "9/9", `cold boot ${coldGauge}`);
 
   /* The tiers' names and twists travel with the game: both languages hold a
    * real string and t() never falls back to the raw key. */
@@ -598,9 +745,17 @@ module.exports = function gate(ctx) {
     !App.t(key) || App.t(key) === key);
   check("game-ember-delve", "the six summit floor names and twists resolve in both languages",
     summitCopyProblems.length === 0, summitCopyProblems.join(","));
+  const coldKeys = cold.reduce((keys, level) =>
+    keys.concat([level.labelKey, level.twistKey]), []);
+  const coldCopyProblems = coldKeys.filter((key) =>
+    !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
+    !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
+    !App.t(key) || App.t(key) === key);
+  check("game-ember-delve", "the ten cold-camp floor names and twists resolve in both languages",
+    coldCopyProblems.length === 0, coldCopyProblems.join(","));
 
   /* The unlock chain is derived, never stored: clearing each floor in order
-   * hands the player exactly the next one, all thirty times. */
+   * hands the player exactly the next one, all forty times. */
   const chain = App.createCampaign({
     key: "ember-delve-gate-chain",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -613,6 +768,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-ember-delve", "the unlock chain walks all thirty floors in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-ember-delve", "the unlock chain walks all forty floors in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 };

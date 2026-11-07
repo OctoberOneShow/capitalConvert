@@ -92,6 +92,21 @@
     { id: "b28", labelKey: "lvlNum28", balls: 6, orange: 44, bucketSpeed: 500, wind: -180, bucketHalf: 16, starBands: [2, 1, 0], seed: 353 },
     { id: "b29", labelKey: "lvlNum29", balls: 6, orange: 42, bucketSpeed: 500, wind: 200, bucketHalf: 14, starBands: [3, 2, 1], seed: 333 },
     { id: "b30", labelKey: "lvlNum30", balls: 6, orange: 44, bucketSpeed: 500, wind: -220, bucketHalf: 12, starBands: [3, 2, 1], seed: 335 },
+    /* Boards 31-40, the tempest tier: extreme gusts and needle mouths. The
+     * crosswind climbs twenty a rung from 240 up to 420, alternating banks,
+     * while the bucket mouth narrows from 12 down to 9 and orange targets reach
+     * 46. Every board is calibrated on the simulator so that a strong reading
+     * hand earns three stars, while wild fire or uncompensated drops score zero. */
+    { id: "b31", labelKey: "lvlNum31", balls: 6, orange: 42, bucketSpeed: 500, wind: 240, bucketHalf: 12, starBands: [3, 2, 1], seed: 402 },
+    { id: "b32", labelKey: "lvlNum32", balls: 6, orange: 42, bucketSpeed: 500, wind: -260, bucketHalf: 12, starBands: [3, 2, 1], seed: 428 },
+    { id: "b33", labelKey: "lvlNum33", balls: 6, orange: 44, bucketSpeed: 500, wind: 280, bucketHalf: 11, starBands: [3, 2, 1], seed: 440 },
+    { id: "b34", labelKey: "lvlNum34", balls: 6, orange: 44, bucketSpeed: 500, wind: -300, bucketHalf: 11, starBands: [3, 2, 1], seed: 460 },
+    { id: "b35", labelKey: "lvlNum35", balls: 6, orange: 44, bucketSpeed: 500, wind: 320, bucketHalf: 10, starBands: [3, 2, 1], seed: 480 },
+    { id: "b36", labelKey: "lvlNum36", balls: 6, orange: 44, bucketSpeed: 500, wind: -340, bucketHalf: 10, starBands: [3, 2, 1], seed: 500 },
+    { id: "b37", labelKey: "lvlNum37", balls: 6, orange: 46, bucketSpeed: 500, wind: 360, bucketHalf: 10, starBands: [3, 2, 1], seed: 528 },
+    { id: "b38", labelKey: "lvlNum38", balls: 6, orange: 46, bucketSpeed: 500, wind: -380, bucketHalf: 10, starBands: [2, 1, 0], seed: 542 },
+    { id: "b39", labelKey: "lvlNum39", balls: 6, orange: 46, bucketSpeed: 500, wind: 400, bucketHalf: 9, starBands: [3, 2, 1], seed: 572 },
+    { id: "b40", labelKey: "lvlNum40", balls: 6, orange: 46, bucketSpeed: 500, wind: -420, bucketHalf: 9, starBands: [3, 2, 1], seed: 656 },
   ];
 
   function mulberry32(seed) {

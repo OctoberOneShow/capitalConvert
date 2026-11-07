@@ -221,6 +221,118 @@
      * band any rank has carried: a win by twenty-five for the second star,
      * where the tolls below it stopped at twenty-two. */
     { id: "m40", labelKey: "malR40", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.33, flub: 0, margin: [39, 25, 1] },
+
+    /* Ranks 41-44: the breach tier. The audit closed the row's account on
+     * the fairness floor - the capstone's band lands in exactly the fair
+     * share, and no rung of the audit could ask a two-star past twenty-five
+     * without falling off it. What is left is the tell, opened wider than
+     * the audit ever dealt, and the routs past the wall of forty are paid
+     * out of it. A rout's margin pays in pairs of stones - the whole purse
+     * is forty-eight, so a toll counts down what the rival keeps: the
+     * audit's capstone asks four, the breach asks three, the second breach
+     * two - and the shutout asks, one and none, were benched for the tier
+     * and rejected: across the whole tell range, from the audit's own
+     * thirty-three to the runner-up sow on every hand, the forty-five band
+     * never clears the floor (twelve and a half percent at its widest, on
+     * the audit's tell five, on the capstone's ten, on every hand zero) and
+     * the forty-seven never clears it either, so the purse has no more
+     * stones to give. The pair the tier asks climbs strictly rung over
+     * rung - forty-one and twenty-eight, forty-one and thirty, forty-three
+     * and thirty, forty-three and thirty-two - the tell climbs with it,
+     * forty-eight, fifty-three, fifty-seven and sixty-three in a hundred,
+     * the widest the row has dealt, and the audit's own tell cannot pay
+     * either breach: closed back to thirty-three the breach bands read
+     * twelve and a half and seven and a half percent, both off the floor.
+     * Where the measured shares rise, the cause is pinned in the rung's own
+     * comment: the tell feeds the middle of the distribution as it pays the
+     * wall. Every rank below was run against the same seeded bench that
+     * judged the forty above - beaten outright in at least one game in
+     * twenty and by its own three-star band in at least three games in
+     * twenty - before it shipped: band 41 at 15% (wins 55%), 41 at 22.5%
+     * (65%), 43 at 15% (62.5%) and 43 at 15% (75%). And every record below
+     * was proved load-bearing by cutting it out of a copy of its own rank
+     * and re-benching the cut: the tell cuts drop both breach bands off the
+     * floor, and the ask cuts move the share the moment they land - the
+     * capstone's toll back under each breach, the capstone's two-star back
+     * under the first and the last. */
+    /* The Breach: the first toll past the audit's capstone - the rival kept
+     * to three stones where thirty-nine left him four - and the first
+     * two-star past the capstone's cut, twenty-eight where twenty-five and
+     * twenty-six cut alike. The tell reopens at twelve games in twenty-five,
+     * fifteen points past the audit's widest, and the capstone's own tell
+     * cannot pay this band: closed back to thirty-three it reads twelve and
+     * a half, off the floor. */
+    { id: "m41", labelKey: "malR41", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.48, flub: 0, margin: [41, 28, 1] },
+    /* The tell crosses half the hands and the band eases to the capstone's
+     * own clearing share - the bench takes the breach in a game in four and
+     * a half now - while the two-star steps to thirty. The tell fattens the
+     * middle of the distribution as it pays: the second star lands in a
+     * game in four where the breach opened at a game in five. */
+    { id: "m42", labelKey: "malR42", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.53, flub: 0, margin: [41, 30, 1] },
+    /* The Second Breach: the toll steps again - the rival kept to two
+     * stones - and no rank before this one ever asked it. The tell widens
+     * again to pay it, and the audit's own tell reads seven and a half
+     * here: half the floor, so the wall cannot be paid without it. */
+    { id: "m43", labelKey: "malR43", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.57, flub: 0, margin: [43, 30, 1] },
+    /* The Full Confession: the dearest two-star any rank has carried -
+     * thirty-two, the rival kept to eight stones where the capstone's
+     * twenty-five left him eleven - on the widest tell the row has dealt:
+     * the runner-up sow on three hands in five, the bench winning three
+     * games in four outright, and the breach band still clearing at the
+     * floor. */
+    { id: "m44", labelKey: "malR44", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.63, flub: 0, margin: [43, 32, 1] },
+
+    /* Ranks 45-50, the last stones - the tier that closes the gap. The
+     * breach tier ended at the Confession's 43/32, and the audit that
+     * capped it benched the shutout asks one stone at a time: the
+     * forty-five band never clears the fairness floor at any tell, and
+     * neither reads the forty-seven. But the audit stepped over a stone to
+     * get there - it never benched the forty-four, and the forty-four
+     * ships: on the Confession's own tell the reference player beats it by
+     * forty-four in exactly the floor's share, fifteen games in a hundred,
+     * the same clearing share the Final Audit shipped at. The tier lives
+     * on that stone: every rung keeps the Confession's hand unchanged -
+     * depth, prices, refusal, blind sow, tell, the lot - and deepens only
+     * the asks. The three-star toll takes the forty-four and holds it; the
+     * two-star line, the dial the whole ladder never walked past
+     * thirty-two, climbs beneath it: thirty-three, thirty-five,
+     * thirty-seven, thirty-nine, forty-one, forty-two. The gap between the
+     * stars closes eleven, nine, seven, five, three, two - the closing
+     * rung asks the second star within two stones of the third, the
+     * tightest pair any rank at the wall has carried.
+     *
+     * The measured shares ride the quantiles the bench actually beats:
+     * the two-star line lands 32.5, 20.0, 20.0, 17.5, 17.5, 17.5 games in
+     * a hundred - non-increasing as the toll climbs, quantized the way
+     * forty games are - while the breach band holds its floor share and
+     * the bench wins three games in four outright on every rung. Every
+     * number was measured through the game's own bench in
+     * tools/kalah-forge.js - the same seeded forty-game run the static
+     * check has always used - and the gate re-benches the shutout asks
+     * beside the tier to prove the stone the audit stepped over is the
+     * last one the purse had: forty-five and forty-seven stay dead at the
+     * audit's own tell, at the tells the row ships, and at the every-hand
+     * tell. */
+    { id: "m45", labelKey: "malR45", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.63, flub: 0, margin: [44, 33, 1] },
+    /* The Second Purse: the two-star crosses the breach - thirty-five,
+     * past every two-star ask the row has carried, with the three-star
+     * toll holding the forty-four it opened at. */
+    { id: "m46", labelKey: "malR46", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.63, flub: 0, margin: [44, 35, 1] },
+    /* The Long Second: thirty-seven, and the gap under the toll narrows to
+     * seven - the second star now asks more than the First Breach's own
+     * three-star did. */
+    { id: "m47", labelKey: "malR47", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.63, flub: 0, margin: [44, 37, 1] },
+    /* The Narrow Ring: thirty-nine, five stones under the toll - the ring
+     * the bench beats in a game in five and a half. */
+    { id: "m48", labelKey: "malR48", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.63, flub: 0, margin: [44, 39, 1] },
+    /* The Three Stone: forty-one, three under - a two-star ask deeper than
+     * every three-star toll before the breach tier's own. */
+    { id: "m49", labelKey: "malR49", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.63, flub: 0, margin: [44, 41, 1] },
+    /* The Two Stone: forty-two, two under the forty-four - the second star
+     * within two of the third, the tightest pair any rank at the wall has
+     * carried, and the purse's last honest ask: the forty-three would sit
+     * inside the toll itself. */
+    { id: "m50", labelKey: "malR50", depth: 8, noise: 0, keep: 16, threat: 4.5, deny: 7, tempo: 5, count: 28, nodes: 3000, slip: 0.63, flub: 0, margin: [44, 42, 1] },
   ];
 
   function malFresh() {
@@ -780,6 +892,16 @@
       "malR38": "The War Levy",
       "malR39": "The Tithe",
       "malR40": "The Final Audit",
+      "malR41": "The Breach",
+      "malR42": "The Open Book",
+      "malR43": "The Second Breach",
+      "malR44": "The Full Confession",
+      "malR45": "The Overlooked Stone",
+      "malR46": "The Second Purse",
+      "malR47": "The Long Second",
+      "malR48": "The Narrow Ring",
+      "malR49": "The Three Stone",
+      "malR50": "The Two Stone",
     },
     zh: {
       "malR5": "石墙凳",
@@ -818,6 +940,16 @@
       "malR38": "战捐",
       "malR39": "什一税",
       "malR40": "终局清账",
+      "malR41": "破墙手",
+      "malR42": "明牌客",
+      "malR43": "再破墙",
+      "malR44": "和盘托出",
+      "malR45": "漏石",
+      "malR46": "第二钱包",
+      "malR47": "久二星",
+      "malR48": "窄环",
+      "malR49": "三石约",
+      "malR50": "两石约",
     },
   });
 

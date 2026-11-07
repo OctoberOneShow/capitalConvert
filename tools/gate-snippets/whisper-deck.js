@@ -23,16 +23,23 @@
  * the rung advertises, and the bands sit on its measured lines - reachable,
  * never free, ordered, every win paying a star. The tier climbs past the
  * deep tier on the pressure table (w30's thunder court outweighs w24's
- * night) and no summit rung is a re-deal of a shipped deck's fight. */
+ * night) and no summit rung is a re-deal of a shipped deck's fight.
+ *
+ * The abyss w31-w40 is the supreme vigil: the run stretches into nine and
+ * ten duels, with thin-breath rungs w33 (9 duels) and w38 (10 duels) testing
+ * pure draw discipline, ravenous card-eating horrors across the nights, and
+ * the Abyssal Crown w40 setting the supreme pressure record with four
+ * thunders across ten unrelenting duels. */
 
 module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const levels = App.whisperLevels;
   const deepIds = ["w21", "w22", "w23", "w24"];
   const summitIds = ["w25", "w26", "w27", "w28", "w29", "w30"];
+  const abyssIds = ["w31", "w32", "w33", "w34", "w35", "w36", "w37", "w38", "w39", "w40"];
 
-  check("game-whisper-deck", "the ladder holds thirty chambers",
-    levels.length === 30, String(levels.length));
+  check("game-whisper-deck", "the ladder holds forty chambers",
+    levels.length === 40, String(levels.length));
   check("game-whisper-deck", "every chamber id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -45,13 +52,20 @@ module.exports = function gate(ctx) {
       summitIds.every((id, index) => levels.findIndex((level) => level.id === id) >
         (index === 0 ? -1 : levels.findIndex((level) => level.id === summitIds[index - 1]))),
     summitMissing.join(",") || "ordered");
+  const abyssMissing = abyssIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-whisper-deck", "the abyss tier w31-w40 is present in order",
+    abyssMissing.length === 0 &&
+      abyssIds.every((id, index) => levels.findIndex((level) => level.id === id) >
+        (index === 0 ? -1 : levels.findIndex((level) => level.id === abyssIds[index - 1]))),
+    abyssMissing.join(",") || "ordered");
 
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
   const deep = deepIds.map((id) => byId[id]);
   const summit = summitIds.map((id) => byId[id]);
+  const abyss = abyssIds.map((id) => byId[id]);
   const shallow = levels.filter((level) =>
-    !deepIds.includes(level.id) && !summitIds.includes(level.id));
+    !deepIds.includes(level.id) && !summitIds.includes(level.id) && !abyssIds.includes(level.id));
 
   /* The scripted hand over ten seeded attempts per rung. */
   const ATTEMPTS = 10;
@@ -74,10 +88,10 @@ module.exports = function gate(ctx) {
     (level.foes || []).reduce((sum, key) => sum + (FOES[key] || 0), 0);
 
   const runProblems = [];
-  [byId.w20].concat(deep, summit).forEach((level) => {
+  [byId.w20].concat(deep, summit, abyss).forEach((level) => {
     const runs = bench(level);
     const wins = runs.filter((run) => run.won);
-    const isExtended = deepIds.includes(level.id) || summitIds.includes(level.id);
+    const isExtended = deepIds.includes(level.id) || summitIds.includes(level.id) || abyssIds.includes(level.id);
     /* The hand wins in a realistic share - the shipped peak calibrates. */
     if (wins.length < ATTEMPTS - 2) {
       runProblems.push(`${level.id}: the scripted hand wins only ${wins.length}/${ATTEMPTS}`);
@@ -110,14 +124,14 @@ module.exports = function gate(ctx) {
     }
     /* Deep bands never sit above the shipped peak's one-star line - the
      * deep rungs deal more duels than shipped, so attrition pushes the
-     * whole band ladder down. The summit's defense decks legitimately bank
-     * more resolve, so its bands hang off their own measured lines only. */
+     * whole band ladder down. The summit's and abyss's defense decks legitimately bank
+     * more resolve, so their bands hang off their own measured lines only. */
     if (deepIds.includes(level.id) && bands[2] > byId.w20.starResolve[2]) {
       runProblems.push(`${level.id}: one-star band ${bands[2]} above the shipped peak's`);
     }
   });
   check("game-whisper-deck",
-    `the scripted hand plays every extended night and the bands sit on its lines (${ATTEMPTS} runs x 11 rungs)`,
+    `the scripted hand plays every extended night and the bands sit on its lines (${ATTEMPTS} runs x 21 rungs)`,
     runProblems.length === 0, runProblems.slice(0, 4).join(" | "));
 
   /* The lesson is structural. */
@@ -164,17 +178,39 @@ module.exports = function gate(ctx) {
     `w30 ${pressure(byId.w30)} vs deep max ` +
       Math.max.apply(null, deep.map((level) => pressure(level))));
 
+  /* The abyss structure: nine and ten duels, thin breath paired with both,
+   * and the culminating Abyssal Crown setting the apex pressure. */
+  check("game-whisper-deck",
+    "the abyss deals nine and ten duels across all ten rungs",
+    abyss.map((level) => level.duels).join("/") === "9/9/9/9/9/10/10/10/10/10",
+    "abyss duels " + abyss.map((level) => level.duels).join("/"));
+  check("game-whisper-deck",
+    "the abyss pairs two breath with nine and ten duels",
+    byId.w33.breath === 2 && byId.w33.duels === 9 &&
+      byId.w38.breath === 2 && byId.w38.duels === 10 &&
+      summit.every((level) => level.breath > 2 || level.duels <= 8),
+    "w33 breath " + byId.w33.breath + "/" + byId.w33.duels +
+      ", w38 breath " + byId.w38.breath + "/" + byId.w38.duels);
+  check("game-whisper-deck",
+    "the abyssal crown out-pressures every night the summit dealt",
+    pressure(byId.w40) > pressure(byId.w30) &&
+      summit.every((level) => pressure(byId.w40) > pressure(level)) &&
+      abyss.every((level, index) => index === 0 ||
+        pressure(level) !== pressure(abyss[index - 1])),
+    `w40 ${pressure(byId.w40)} vs summit max ` +
+      Math.max.apply(null, summit.map((level) => pressure(level))));
+
   /* The tier's names and twists resolve in both languages. */
-  const copyProblems = deep.concat(summit).reduce((bad, level) => bad.concat([level.labelKey, level.twistKey]), [])
+  const copyProblems = deep.concat(summit, abyss).reduce((bad, level) => bad.concat([level.labelKey, level.twistKey]), [])
     .filter((key) =>
       !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
       !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
       !App.t(key) || App.t(key) === key);
-  check("game-whisper-deck", "the ten deep and summit chamber names and twists resolve in both languages",
+  check("game-whisper-deck", "the twenty deep, summit and abyss chamber names and twists resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 
   /* The unlock chain is derived, never stored: clearing each chamber in
-   * order hands the player exactly the next one, all twenty-four times. */
+   * order hands the player exactly the next one, all thirty-nine times. */
   const chain = App.createCampaign({
     key: "whisper-deck-gate-chain",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -187,6 +223,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-whisper-deck", "the unlock chain walks all thirty chambers in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-whisper-deck", "the unlock chain walks all forty chambers in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 };

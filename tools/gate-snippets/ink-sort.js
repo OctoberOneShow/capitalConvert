@@ -22,13 +22,28 @@
  * three-star line, and the cut relaxes the rung's acceptance back to the
  * deep tier's loosest - the engine's unfiltered racks then carry walks
  * past every summit band, so the selection is what keeps the printed line
- * a line the dealer has actually replayed. */
+ * a line the dealer has actually replayed.
+ *
+ * The narrow tier q31-q40 ships a dial the ladder never had: the rack's
+ * last spare vial holds two units of glass. Every number below is dealt
+ * by the module's own dealer under the pinned prng and replayed through
+ * the narrow-aware pour rules: eight deals per rung sort clean inside
+ * the band, a pinned line deal lands the walk exactly on it, and the
+ * floor is proved by starvation - narrow the second spare and the
+ * dealer collapses to the fallback on four of six pinned deals. On the
+ * same eight seeds under loose acceptance the full glass sorts in 58-72
+ * and the narrow glass in 58-85, so the glass is what the extra length
+ * is made of; the cuts take the dials away - the glass on the open
+ * rungs, the acceptance on the close rungs - and the tier's work
+ * dissolves in both. */
 
 module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const levels = App.inkSortLevels || null;
   const deepIds = ["q21", "q22", "q23", "q24"];
   const summitIds = ["q25", "q26", "q27", "q28", "q29", "q30"];
+  const narrowIds = ["q31", "q32", "q33", "q34", "q35",
+    "q36", "q37", "q38", "q39", "q40"];
 
   /* The ladder lives in the module; the booted App exposes it through the
    * campaign picker only, so the slice is re-hosted the way
@@ -44,8 +59,8 @@ module.exports = function gate(ctx) {
     ? "return [];"
     : src.slice(tableStart, tableEnd) + "\nreturn sortLevels;")();
 
-  check("game-ink-sort", "the ladder holds thirty racks",
-    table.length === 30, String(table.length));
+  check("game-ink-sort", "the ladder holds forty racks",
+    table.length === 40, String(table.length));
   check("game-ink-sort", "every rack id is distinct",
     new Set(table.map((level) => level.id)).size === table.length,
     table.map((level) => level.id).join(","));
@@ -55,6 +70,9 @@ module.exports = function gate(ctx) {
   const missingSummit = summitIds.filter((id) => !table.some((level) => level.id === id));
   check("game-ink-sort", "the summit tier q25-q30 is present",
     missingSummit.length === 0, missingSummit.join(","));
+  const missingNarrow = narrowIds.filter((id) => !table.some((level) => level.id === id));
+  check("game-ink-sort", "the narrow tier q31-q40 is present",
+    missingNarrow.length === 0, missingNarrow.join(","));
 
   const byId = {};
   table.forEach((level) => { byId[level.id] = level; });
@@ -78,17 +96,21 @@ module.exports = function gate(ctx) {
   const uniform = (tubes) => tubes.every((tube) =>
     !tube.length ||
     (tube.length === CAP && tube.every((c) => c === tube[0])));
-  const replay = (deal) => {
+  /* The narrow count shrinks the rack's last spare tubes to two units of
+   * glass; the replay has to pour through whatever room the rung gives. */
+  const replay = (deal, narrow) => {
+    const capOf = (index) =>
+      narrow && index >= deal.tubes.length - narrow ? 2 : CAP;
     const tubes = deal.tubes.map((tube) => tube.slice());
     for (const [from, to] of deal.solution) {
-      if (from === to || !tubes[from].length || tubes[to].length >= CAP) {
+      if (from === to || !tubes[from].length || tubes[to].length >= capOf(to)) {
         return false;
       }
       const run = topRun(tubes, from);
       if (tubes[to].length && tubes[to][tubes[to].length - 1] !== run.color) {
         return false;
       }
-      const amount = Math.min(run.count, CAP - tubes[to].length);
+      const amount = Math.min(run.count, capOf(to) - tubes[to].length);
       for (let u = 0; u < amount; u += 1) {
         tubes[to].push(tubes[from].pop());
       }
@@ -109,7 +131,8 @@ module.exports = function gate(ctx) {
     try { return fn(); } finally { Math.random = real; }
   };
   const dealFor = (level, seed) =>
-    seeded(seed, () => App.inkSortGenerate(level.colors, level.tubes, level.shuffle, level.maxPath));
+    seeded(seed, () => App.inkSortGenerate(level.colors, level.tubes,
+      level.shuffle, level.maxPath, level.narrow || 0));
 
   /* Every deep rung deals real racks: eight seeded deals each, all replaying
    * to uniform inside the advertised budget, none of them the one-pour
@@ -174,7 +197,7 @@ module.exports = function gate(ctx) {
    * anything before it. */
   const ratio = (level) => (level.tubes - level.colors) / level.colors;
   const shallow = table.filter((level) => !deepIds.includes(level.id) &&
-    !summitIds.includes(level.id));
+    !summitIds.includes(level.id) && !narrowIds.includes(level.id));
   const drainProblems = [];
   deep.forEach((level, index) => {
     if (index === 0) return;
@@ -352,6 +375,186 @@ module.exports = function gate(ctx) {
     starved52 === 7 && starved48 === 4,
     "maxPath 52 starves " + starved52 + "/10, maxPath 48 starves " + starved48 + "/4");
 
+  /* ---- the narrow tier: half the staging glass, the solver as witness -- */
+  const narrow = narrowIds.map((id) => byId[id]);
+  const narrowSeeds = [];
+  for (let k = 0; k < 8; k += 1) narrowSeeds.push(91500 + k * 23);
+
+  /* Eight seeded deals per rung through the narrow glass: all real racks,
+   * all replaying to uniform inside the advertised band through the
+   * narrow-aware pour rules, none of them the fallback. */
+  const narrowProblems = [];
+  const narrowTops = [];
+  narrow.forEach((level) => {
+    const walks = [];
+    for (let k = 0; k < 8; k += 1) {
+      const deal = dealFor(level, narrowSeeds[k]);
+      walks.push(deal.solution.length);
+      if (deal.solution.length <= 1) {
+        narrowProblems.push(level.id + " trial " + k + ": the dealer fell back");
+      } else if (deal.solution.length > level.maxPath) {
+        narrowProblems.push(level.id + " trial " + k + ": walk " +
+          deal.solution.length + " over maxPath " + level.maxPath);
+      } else if (!replay(deal, level.narrow || 0)) {
+        narrowProblems.push(level.id + " trial " + k +
+          ": the recorded walk does not sort the rack");
+      }
+    }
+    narrowTops.push(Math.max.apply(null, walks));
+  });
+  check("game-ink-sort",
+    "every seeded narrow deal sorts clean inside its band through the half glass",
+    narrowProblems.length === 0, narrowProblems.slice(0, 4).join(" | "));
+  check("game-ink-sort",
+    "the narrow bench's longest replay shortens from 70 at the open to 63 at the close",
+    narrowTops[0] === 70 && narrowTops[9] === 63 &&
+      narrowTops.every((top, index) =>
+        index === 0 || top <= narrowTops[index - 1]),
+    narrowTops.join("/"));
+
+  /* The line deals: one pinned seed per rung where the solver's own walk
+   * lands exactly on the band. */
+  const narrowLineSeeds = {
+    q31: 82265, q32: 82441, q33: 82115, q34: 82019, q35: 82027,
+    q36: 82003, q37: 82057, q38: 82039, q39: 82039, q40: 82007,
+  };
+  const narrowLineProblems = [];
+  narrow.forEach((level) => {
+    const deal = dealFor(level, narrowLineSeeds[level.id]);
+    const walk = deal.solution.length;
+    if (walk <= 1) {
+      narrowLineProblems.push(level.id + ": the dealer fell back");
+    } else if (walk !== level.maxPath) {
+      narrowLineProblems.push(level.id + ": walk " + walk +
+        " misses the band " + level.maxPath);
+    } else if (!replay(deal, level.narrow || 0)) {
+      narrowLineProblems.push(level.id + ": the recorded walk does not sort the rack");
+    }
+  });
+  check("game-ink-sort",
+    "each pinned narrow line deal lands the solver's own walk exactly on the band",
+    narrowLineProblems.length === 0, narrowLineProblems.slice(0, 4).join(" | "));
+
+  /* The glass is what the extra length is made of: the same eight seeds
+   * under loose acceptance sort in 58-72 through the full glass and
+   * 58-85 through the narrow one - the narrow roof overshoots even the
+   * loosest open band, the full roof fits inside the tightest. */
+  const roofQ31 = Object.assign({}, byId.q31, { maxPath: 200 });
+  const narrowRoofWalks = narrowSeeds.map((seed) =>
+    dealFor(roofQ31, seed).solution.length);
+  const fullRoofWalks = narrowSeeds.map((seed) =>
+    dealFor(Object.assign({}, byId.q31, { maxPath: 200, narrow: 0 }), seed)
+      .solution.length);
+  const narrowRoofTop = Math.max.apply(null, narrowRoofWalks);
+  const fullRoofTop = Math.max.apply(null, fullRoofWalks);
+  check("game-ink-sort",
+    "on the same seeds the narrow glass sorts in " +
+      Math.min.apply(null, narrowRoofWalks) + "-" + narrowRoofTop +
+      " and the full glass in " + Math.min.apply(null, fullRoofWalks) + "-" +
+      fullRoofTop + " - the glass is the extra length",
+    narrowRoofTop === 85 && fullRoofTop === 72 &&
+      fullRoofTop <= byId.q36.maxPath && narrowRoofTop > byId.q31.maxPath,
+    "narrow " + narrowRoofWalks.join("/") + " vs full " + fullRoofWalks.join("/"));
+
+  /* The floor is proved by starvation, the way the deep tier proved its
+   * two-spare floor: narrow the second spare and the dealer collapses. */
+  const starveSeeds = [];
+  for (let k = 0; k < 6; k += 1) starveSeeds.push(61000 + k * 11);
+  const narrowTwoWalks = starveSeeds.map((seed) =>
+    dealFor(Object.assign({}, byId.q31, { narrow: 2, maxPath: 300 }), seed)
+      .solution.length);
+  const fellBack = narrowTwoWalks.filter((walk) => walk <= 1).length;
+  check("game-ink-sort",
+    "narrow the second spare and the dealer starves: the one-narrow floor is real",
+    fellBack === 4 && narrowTwoWalks.every((walk) => walk === 1 || walk >= 59),
+    "deals " + narrowTwoWalks.join("/") + " (" + fellBack + " fallbacks)");
+
+  /* Below the close the edge is measured: 58 already starves one deal in
+   * ten and 54 starves eight, so the close at 64 sits a measured six
+   * moves above the first starvation. */
+  const starved58 = [];
+  const starved54 = [];
+  for (let k = 0; k < 10; k += 1) {
+    starved58.push(dealFor(Object.assign({}, byId.q40, { maxPath: 58 }),
+      61000 + k * 11).solution.length);
+    starved54.push(dealFor(Object.assign({}, byId.q40, { maxPath: 54 }),
+      61000 + k * 11).solution.length);
+  }
+  const starved58Count = starved58.filter((walk) => walk <= 1).length;
+  const starved54Count = starved54.filter((walk) => walk <= 1).length;
+  check("game-ink-sort",
+    "below the narrow close the dealer starves: the collapse line is real",
+    starved58Count === 1 && starved54Count === 8,
+    "maxPath 58 starves " + starved58Count + "/10, maxPath 54 starves " +
+      starved54Count + "/10");
+
+  /* The cuts: on the open rungs cut the glass - the same roofed seeds
+   * sort in 58-72, inside even the tightest open band, so the hunt the
+   * glass forced is gone; on the close rungs roof the acceptance - the
+   * unfiltered racks carry walks of 67-72, past every close band, and
+   * the best lands two stars, not three. */
+  const glassCutWalks = narrowSeeds.map((seed) =>
+    dealFor(Object.assign({}, byId.q36, { maxPath: 200, narrow: 0 }), seed)
+      .solution.length);
+  check("game-ink-sort",
+    "cut the glass and the roofed seeds sort in " +
+      Math.min.apply(null, glassCutWalks) + "-" + Math.max.apply(null, glassCutWalks) +
+      " - inside even the tightest open band",
+    Math.max.apply(null, glassCutWalks) === 72 &&
+      Math.min.apply(null, glassCutWalks) === 58 &&
+      Math.max.apply(null, glassCutWalks) <= byId.q36.maxPath,
+    glassCutWalks.join("/"));
+  const cutSeedsNarrow = [5, 7, 10, 29].map((k) => 92700 + k * 31);
+  const closeCutProblems = [];
+  narrowIds.slice(6).forEach((id) => {
+    const level = byId[id];
+    const loose = Object.assign({}, level, { maxPath: 200 });
+    const walks = cutSeedsNarrow.map((seed) => dealFor(loose, seed).solution.length);
+    const cutMax = Math.max.apply(null, walks);
+    if (cutMax !== 72 || cutMax <= level.maxPath ||
+        stars(cutMax, level.maxPath) !== 2) {
+      closeCutProblems.push(id + ": cut max " + cutMax + " against band " + level.maxPath);
+    }
+  });
+  check("game-ink-sort",
+    "roof the acceptance on the close rungs and the walks land past every band, two stars not three",
+    closeCutProblems.length === 0, closeCutProblems.join(" | "));
+
+  /* The tier's shape: the glass holds at one narrow vial, the bands stay
+   * the solver's own law and descend strictly, and the close sits above
+   * the shipped summit's close - the extra moves the half glass costs. */
+  const narrowShapeProblems = [];
+  narrow.forEach((level, index) => {
+    if (level.tubes !== 17 || level.colors !== 15 || level.narrow !== 1) {
+      narrowShapeProblems.push(level.id + " leaves the narrow floor rack");
+    }
+    if (level.starMoves[0] !== level.maxPath) {
+      narrowShapeProblems.push(level.id + " three-star band " +
+        level.starMoves[0] + " != maxPath " + level.maxPath);
+    }
+    if (!(level.starMoves[0] < level.starMoves[1] &&
+        level.starMoves[1] < level.starMoves[2])) {
+      narrowShapeProblems.push(level.id + " bands do not rise " + level.starMoves.join("/"));
+    }
+    if (index > 0 && level.maxPath >= narrow[index - 1].maxPath) {
+      narrowShapeProblems.push(level.id + " does not tighten on " + narrow[index - 1].id);
+    }
+    if (level.maxPath <= byId.q30.maxPath) {
+      narrowShapeProblems.push(level.id + " does not open above the summit's close");
+    }
+  });
+  check("game-ink-sort",
+    "the narrow tier holds the floor rack and descends strictly above the summit's close",
+    narrowShapeProblems.length === 0, narrowShapeProblems.join(" | "));
+
+  /* The narrow tier's names resolve in both languages. */
+  const narrowCopyProblems = narrow.map((level) => level.labelKey).filter((key) =>
+    !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
+    !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
+    !App.t(key) || App.t(key) === key);
+  check("game-ink-sort", "the ten narrow rack names resolve in both languages",
+    narrowCopyProblems.length === 0, narrowCopyProblems.join(","));
+
   /* The summit's names resolve in both languages. */
   const summitCopyProblems = summit.map((level) => level.labelKey).filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
@@ -361,7 +564,7 @@ module.exports = function gate(ctx) {
     summitCopyProblems.length === 0, summitCopyProblems.join(","));
 
   /* The unlock chain is derived, never stored: clearing each rack in order
-   * hands the player exactly the next one, all thirty times. */
+   * hands the player exactly the next one, all forty times. */
   const chain = App.createCampaign({
     key: "ink-sort-gate-chain",
     levels: table.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -374,6 +577,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < table.length ? table[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-ink-sort", "the unlock chain walks all thirty racks in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-ink-sort", "the unlock chain walks all forty racks in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 };

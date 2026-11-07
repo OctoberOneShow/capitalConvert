@@ -792,6 +792,372 @@
       ],
       starTimes: [408, 612, 836],
     },
+/* c41 */
+    {
+      id: "c41", labelKey: "croL41",
+      lanes: [
+        { row: 1, dir: 1, speed: 238, len: 92, gap: 56 },
+        { row: 2, dir: 1, speed: 272, len: 80, gap: 54 },
+        { row: 3, dir: 1, speed: 234, len: 74, gap: 62 },
+        { row: 5, dir: 1, speed: 250, len: 98, gap: 54 },
+        { row: 6, dir: 1, speed: 256, len: 76, gap: 54 },
+        { row: 7, dir: 1, speed: 236, len: 84, gap: 52 },
+        { row: 6, dir: -1, speed: 258, len: 60, gap: 48 },
+        { row: 2, dir: -1, speed: 296, len: 66, gap: 62 },
+        { row: 7, dir: -1, speed: 294, len: 68, gap: 68 },
+        { row: 5, dir: -1, speed: 270, len: 70, gap: 68 },
+        { row: 1, dir: -1, speed: 244, len: 68, gap: 60 },
+        { row: 3, dir: -1, speed: 288, len: 64, gap: 68 },
+      ],
+      starTimes: [413, 619, 846],
+    },
+    /* c42 */
+    {
+      id: "c42", labelKey: "croL42",
+      lanes: [
+        { row: 1, dir: -1, speed: 256, len: 94, gap: 50 },
+        { row: 2, dir: -1, speed: 266, len: 94, gap: 62 },
+        { row: 3, dir: -1, speed: 242, len: 86, gap: 52 },
+        { row: 5, dir: 1, speed: 254, len: 74, gap: 48 },
+        { row: 6, dir: -1, speed: 242, len: 92, gap: 62 },
+        { row: 7, dir: -1, speed: 250, len: 98, gap: 56 },
+        { row: 6, dir: 1, speed: 254, len: 62, gap: 48 },
+        { row: 2, dir: 1, speed: 300, len: 64, gap: 60 },
+        { row: 7, dir: 1, speed: 284, len: 64, gap: 46 },
+        { row: 5, dir: -1, speed: 304, len: 68, gap: 56 },
+        { row: 1, dir: 1, speed: 276, len: 68, gap: 54 },
+        { row: 3, dir: 1, speed: 302, len: 70, gap: 62 },
+      ],
+      starTimes: [420, 630, 861],
+    },
+    /* c43 */
+    {
+      id: "c43", labelKey: "croL43",
+      lanes: [
+        { row: 1, dir: -1, speed: 250, len: 100, gap: 50 },
+        { row: 2, dir: 1, speed: 256, len: 100, gap: 60 },
+        { row: 3, dir: 1, speed: 282, len: 98, gap: 60 },
+        { row: 5, dir: 1, speed: 270, len: 86, gap: 56 },
+        { row: 6, dir: -1, speed: 256, len: 72, gap: 54 },
+        { row: 7, dir: 1, speed: 250, len: 92, gap: 50 },
+        { row: 6, dir: 1, speed: 258, len: 74, gap: 46 },
+        { row: 2, dir: -1, speed: 270, len: 66, gap: 60 },
+        { row: 7, dir: -1, speed: 272, len: 72, gap: 64 },
+        { row: 5, dir: -1, speed: 296, len: 74, gap: 56 },
+        { row: 1, dir: 1, speed: 302, len: 60, gap: 50 },
+        { row: 3, dir: -1, speed: 308, len: 66, gap: 46 },
+      ],
+      starTimes: [463, 695, 950],
+    },
+    /* c44 */
+    {
+      id: "c44", labelKey: "croL44",
+      lanes: [
+        { row: 1, dir: 1, speed: 264, len: 74, gap: 52 },
+        { row: 2, dir: -1, speed: 280, len: 98, gap: 46 },
+        { row: 3, dir: -1, speed: 276, len: 72, gap: 46 },
+        { row: 5, dir: -1, speed: 252, len: 92, gap: 58 },
+        { row: 6, dir: 1, speed: 264, len: 90, gap: 58 },
+        { row: 7, dir: 1, speed: 262, len: 94, gap: 54 },
+        { row: 6, dir: -1, speed: 312, len: 66, gap: 46 },
+        { row: 2, dir: 1, speed: 292, len: 66, gap: 48 },
+        { row: 7, dir: -1, speed: 288, len: 70, gap: 54 },
+        { row: 5, dir: 1, speed: 308, len: 68, gap: 56 },
+        { row: 1, dir: -1, speed: 298, len: 66, gap: 42 },
+        { row: 3, dir: 1, speed: 312, len: 74, gap: 46 },
+      ],
+      starTimes: [538, 806, 1102],
+    },
+
+    /* ------------------------------------------------------------------
+     * The timetable tier (c45-c54). Every ford the campaign has ever
+     * shipped runs at most two trains per row - one each way - so the one
+     * lane-shaped thing left to explore is the third train, and this tier
+     * lays it. Streets only, and in the campaign's own order: row 6, the
+     * street that doubled first (c10), triples at c45; row 7 (c21) at c46;
+     * row 5 (c23) at c47 - by then every street has fielded a third train;
+     * row 2, the first river the campaign doubled (c17), takes the rivers'
+     * only third trains beside them from c48. Thirteen lanes a board, then
+     * fourteen - the first fords past the flood's twelve - while the brief
+     * bands hold the floodgate's own 232/274/50/64 (stepping to 238/280/48/62
+     * at c51 and 244/286/46/60 for the capstone). That holding is the tier's
+     * one honest cost, pinned here: no rung's fastest lane passes the
+     * Cataract's 312 (the express dice roll 290-306), the windows open at
+     * 52 where the flood closed at 42 and only claw back to 44, and the
+     * base lanes return to 234-248 where the Deep Current had cleared 250 -
+     * the third train is bought with tempo, and the records here are
+     * counted in trains, not clicks: 13 a board from c45, 14 from c48, and
+     * the spawner's peak at 72 props on c53, twelve past The Logjam's
+     * standing 60, which the flood had held at 59-60 for four rungs.
+     * As ever a ford ships only because tools/crossing-forge.js proves it:
+     * each rung was laid against its own brief at the seed the brief pins,
+     * and ships because the prover's breadth-first search over (pads, row,
+     * position, time) found a route that stands on all four pads. The rungs
+     * sit in the order that proof measured - the cleanest route climbs 226t
+     * -> 232t -> 437t -> 466t -> 548t -> 596t -> 682t -> 685t -> 687t ->
+     * 692t, every rung strictly past the one before and the whole tier past
+     * the Cataract's 224t - and the star bands quote each route at the deep
+     * tier's own margin (48x the prover's route; 542s opening to 1661s),
+     * widened by the same 1.5x / 2.05x steps. The tier's signature proof is
+     * the prover's own ablation, which draws the water line for it. Pull a
+     * street's third train and the twin always routes shorter - 174t under
+     * all three 13-lane rungs, 345t/357t/257t under c48-c50, 219t/383t/290t
+     * under c51-c53 and 98t under the capstone - the third train is the
+     * tier's whole difficulty, worth +52t on row 6, +58t on row 7 and +263t
+     * on the median street. Pull row 2's third train and nothing moves:
+     * 466t, 548t, 596t, 682t, 685t, 687t and 692t hold tick for tick, the
+     * deluge's own law (a river train is platform as well as hazard) read
+     * to its end - a river's third train is shadow, so rows 1 and 3 stay
+     * doubled, and the gate holds every 14-lane rung to that identity.
+     * The rolled fastest lane breathes inside the bands (296 to 306) because
+     * the express dice, not the brief, set each sheet's pace; the tier's
+     * laws are its trains and its routes, and the gate asserts those. Every
+     * number was measured through the forge; nothing here is hand-tuned.
+     * ------------------------------------------------------------------ */
+    /* The Third Train: the first thirteen-lane ford. Row 6 - the street the
+     * campaign doubled first, back at c10 - takes the ladder's first third
+     * train, and the board spawns 65 props, five past The Logjam's standing
+     * 60. The cleanest route opens one breath past the Cataract at 226t;
+     * pull the third train and the twelve-train twin routes 174t. */
+    {
+      id: "c45", labelKey: "croL45",
+      lanes: [
+        { row: 1, dir: -1, speed: 246, len: 82, gap: 56 },
+        { row: 2, dir: -1, speed: 240, len: 100, gap: 56 },
+        { row: 3, dir: 1, speed: 264, len: 96, gap: 52 },
+        { row: 5, dir: 1, speed: 248, len: 94, gap: 60 },
+        { row: 6, dir: 1, speed: 256, len: 86, gap: 58 },
+        { row: 7, dir: -1, speed: 254, len: 80, gap: 54 },
+        { row: 6, dir: -1, speed: 262, len: 64, gap: 60 },
+        { row: 2, dir: 1, speed: 262, len: 68, gap: 70 },
+        { row: 7, dir: 1, speed: 248, len: 64, gap: 66 },
+        { row: 5, dir: -1, speed: 266, len: 60, gap: 66 },
+        { row: 1, dir: 1, speed: 266, len: 58, gap: 66 },
+        { row: 3, dir: -1, speed: 296, len: 66, gap: 60 },
+        { row: 6, dir: -1, speed: 262, len: 62, gap: 58 },
+      ],
+      starTimes: [542, 814, 1112],
+    },
+    /* The Loop Line: row 7 - the far street, the deep tier's first
+     * recruit - runs three ways. The route steps to 232t over the same
+     * 174t twin, and the third train rides the street the frog enters
+     * first, where a missed read costs the run. */
+    {
+      id: "c46", labelKey: "croL46",
+      lanes: [
+        { row: 1, dir: -1, speed: 246, len: 82, gap: 56 },
+        { row: 2, dir: -1, speed: 240, len: 100, gap: 56 },
+        { row: 3, dir: 1, speed: 264, len: 96, gap: 52 },
+        { row: 5, dir: 1, speed: 248, len: 94, gap: 60 },
+        { row: 6, dir: 1, speed: 256, len: 86, gap: 58 },
+        { row: 7, dir: -1, speed: 254, len: 80, gap: 54 },
+        { row: 6, dir: -1, speed: 262, len: 64, gap: 60 },
+        { row: 2, dir: 1, speed: 262, len: 68, gap: 70 },
+        { row: 7, dir: 1, speed: 248, len: 64, gap: 66 },
+        { row: 5, dir: -1, speed: 266, len: 60, gap: 66 },
+        { row: 1, dir: 1, speed: 266, len: 58, gap: 66 },
+        { row: 3, dir: -1, speed: 296, len: 66, gap: 60 },
+        { row: 7, dir: 1, speed: 262, len: 62, gap: 58 },
+      ],
+      starTimes: [557, 835, 1141],
+    },
+    /* The Inside Lane: row 5 - the median street, the last the campaign
+     * ever doubled - takes its third train, and every street has now
+     * fielded one. It is the costliest third train on the board: the twin
+     * routes the same 174t and the ford 437t, +263 ticks where row 6's
+     * third train cost 52 and row 7's 58 - the lane the frog crosses last
+     * before the water is where the timetable bites. */
+    {
+      id: "c47", labelKey: "croL47",
+      lanes: [
+        { row: 1, dir: -1, speed: 246, len: 82, gap: 56 },
+        { row: 2, dir: -1, speed: 240, len: 100, gap: 56 },
+        { row: 3, dir: 1, speed: 264, len: 96, gap: 52 },
+        { row: 5, dir: 1, speed: 248, len: 94, gap: 60 },
+        { row: 6, dir: 1, speed: 256, len: 86, gap: 58 },
+        { row: 7, dir: -1, speed: 254, len: 80, gap: 54 },
+        { row: 6, dir: -1, speed: 262, len: 64, gap: 60 },
+        { row: 2, dir: 1, speed: 262, len: 68, gap: 70 },
+        { row: 7, dir: 1, speed: 248, len: 64, gap: 66 },
+        { row: 5, dir: -1, speed: 266, len: 60, gap: 66 },
+        { row: 1, dir: 1, speed: 266, len: 58, gap: 66 },
+        { row: 3, dir: -1, speed: 296, len: 66, gap: 60 },
+        { row: 5, dir: -1, speed: 262, len: 62, gap: 58 },
+      ],
+      starTimes: [1049, 1573, 2150],
+    },
+    /* The Full Board: the first fourteen-lane ford. Row 2 - the first
+     * river the campaign doubled, at c17 - takes the rivers' only third
+     * train, beside row 6's second. The prover's water line ships with the
+     * rung: pull the river's third train and the route holds 466t tick for
+     * tick (shadow, as the deluge's law says); pull the street's and the
+     * twin routes 345t. */
+    {
+      id: "c48", labelKey: "croL48",
+      lanes: [
+        { row: 1, dir: 1, speed: 234, len: 84, gap: 54 },
+        { row: 2, dir: 1, speed: 242, len: 82, gap: 52 },
+        { row: 3, dir: -1, speed: 252, len: 86, gap: 58 },
+        { row: 5, dir: 1, speed: 252, len: 74, gap: 52 },
+        { row: 6, dir: 1, speed: 252, len: 80, gap: 62 },
+        { row: 7, dir: 1, speed: 260, len: 74, gap: 50 },
+        { row: 6, dir: -1, speed: 264, len: 62, gap: 70 },
+        { row: 2, dir: -1, speed: 262, len: 64, gap: 56 },
+        { row: 7, dir: -1, speed: 266, len: 72, gap: 50 },
+        { row: 5, dir: -1, speed: 298, len: 76, gap: 60 },
+        { row: 1, dir: -1, speed: 246, len: 60, gap: 68 },
+        { row: 3, dir: 1, speed: 296, len: 76, gap: 68 },
+        { row: 6, dir: -1, speed: 242, len: 70, gap: 52 },
+        { row: 2, dir: -1, speed: 274, len: 64, gap: 58 },
+      ],
+      starTimes: [1118, 1678, 2293],
+    },
+    /* The Night Shift: row 7 runs its second third-train service, with row
+     * 2's shadow train beside it. The street twin routes 357t under the
+     * 548t ford; the river pull again moves nothing. */
+    {
+      id: "c49", labelKey: "croL49",
+      lanes: [
+        { row: 1, dir: 1, speed: 238, len: 96, gap: 54 },
+        { row: 2, dir: 1, speed: 256, len: 98, gap: 56 },
+        { row: 3, dir: 1, speed: 240, len: 90, gap: 50 },
+        { row: 5, dir: -1, speed: 238, len: 92, gap: 54 },
+        { row: 6, dir: 1, speed: 236, len: 92, gap: 58 },
+        { row: 7, dir: 1, speed: 236, len: 100, gap: 62 },
+        { row: 6, dir: -1, speed: 280, len: 60, gap: 56 },
+        { row: 2, dir: -1, speed: 288, len: 64, gap: 70 },
+        { row: 7, dir: -1, speed: 282, len: 68, gap: 66 },
+        { row: 5, dir: 1, speed: 266, len: 70, gap: 54 },
+        { row: 1, dir: -1, speed: 296, len: 68, gap: 54 },
+        { row: 3, dir: -1, speed: 270, len: 72, gap: 58 },
+        { row: 7, dir: -1, speed: 254, len: 74, gap: 54 },
+        { row: 2, dir: -1, speed: 258, len: 62, gap: 58 },
+      ],
+      starTimes: [1315, 1973, 2696],
+    },
+    /* The Tidal Lane: row 5's second service closes the first wave - every
+     * row the campaign ever doubled now runs three trains except rows 1
+     * and 3, whose third train the prover proves would be shadow. The
+     * window closes to 46, the street twin routes 257t, and the river pull
+     * holds the ford's 596t. */
+    {
+      id: "c50", labelKey: "croL50",
+      lanes: [
+        { row: 1, dir: 1, speed: 236, len: 88, gap: 62 },
+        { row: 2, dir: 1, speed: 240, len: 94, gap: 58 },
+        { row: 3, dir: -1, speed: 270, len: 94, gap: 58 },
+        { row: 5, dir: 1, speed: 246, len: 100, gap: 64 },
+        { row: 6, dir: 1, speed: 274, len: 86, gap: 54 },
+        { row: 7, dir: 1, speed: 260, len: 84, gap: 52 },
+        { row: 6, dir: -1, speed: 290, len: 66, gap: 54 },
+        { row: 2, dir: -1, speed: 294, len: 66, gap: 58 },
+        { row: 7, dir: -1, speed: 282, len: 66, gap: 54 },
+        { row: 5, dir: -1, speed: 298, len: 72, gap: 70 },
+        { row: 1, dir: -1, speed: 294, len: 76, gap: 46 },
+        { row: 3, dir: 1, speed: 270, len: 62, gap: 66 },
+        { row: 5, dir: -1, speed: 272, len: 62, gap: 58 },
+        { row: 2, dir: -1, speed: 236, len: 70, gap: 60 },
+      ],
+      starTimes: [1430, 2146, 2932],
+    },
+    /* The Overtime: the timetable runs again, faster - the bands step to
+     * 238/280/48/62 and the same row 6 + row 2 pairing routes 682t where
+     * c48's did 466t. The street twin routes 219t; the river pull holds. */
+    {
+      id: "c51", labelKey: "croL51",
+      lanes: [
+        { row: 1, dir: -1, speed: 240, len: 84, gap: 60 },
+        { row: 2, dir: -1, speed: 254, len: 86, gap: 54 },
+        { row: 3, dir: -1, speed: 248, len: 94, gap: 58 },
+        { row: 5, dir: 1, speed: 274, len: 72, gap: 50 },
+        { row: 6, dir: -1, speed: 254, len: 90, gap: 58 },
+        { row: 7, dir: -1, speed: 240, len: 90, gap: 52 },
+        { row: 6, dir: 1, speed: 266, len: 70, gap: 58 },
+        { row: 2, dir: 1, speed: 278, len: 58, gap: 56 },
+        { row: 7, dir: 1, speed: 298, len: 62, gap: 48 },
+        { row: 5, dir: -1, speed: 302, len: 66, gap: 66 },
+        { row: 1, dir: 1, speed: 292, len: 70, gap: 56 },
+        { row: 3, dir: 1, speed: 270, len: 68, gap: 46 },
+        { row: 6, dir: 1, speed: 248, len: 76, gap: 48 },
+        { row: 2, dir: 1, speed: 266, len: 72, gap: 62 },
+      ],
+      starTimes: [1637, 2455, 3355],
+    },
+    /* The Last Service: row 7 + row 2 again, faster - 685t over c49's
+     * 548t, the window down to 44, and the express at 304. */
+    {
+      id: "c52", labelKey: "croL52",
+      lanes: [
+        { row: 1, dir: -1, speed: 270, len: 86, gap: 54 },
+        { row: 2, dir: -1, speed: 260, len: 72, gap: 52 },
+        { row: 3, dir: -1, speed: 240, len: 88, gap: 50 },
+        { row: 5, dir: 1, speed: 276, len: 96, gap: 60 },
+        { row: 6, dir: -1, speed: 262, len: 88, gap: 48 },
+        { row: 7, dir: 1, speed: 246, len: 96, gap: 60 },
+        { row: 6, dir: 1, speed: 304, len: 72, gap: 62 },
+        { row: 2, dir: 1, speed: 274, len: 60, gap: 50 },
+        { row: 7, dir: -1, speed: 260, len: 64, gap: 66 },
+        { row: 5, dir: -1, speed: 250, len: 70, gap: 54 },
+        { row: 1, dir: 1, speed: 302, len: 60, gap: 66 },
+        { row: 3, dir: 1, speed: 274, len: 72, gap: 44 },
+        { row: 7, dir: -1, speed: 274, len: 66, gap: 60 },
+        { row: 2, dir: 1, speed: 264, len: 76, gap: 52 },
+      ],
+      starTimes: [1644, 2466, 3370],
+    },
+    /* The Double Peak: row 5 + row 2 again, faster, and both of the
+     * tier's rolling peaks land here together - the fastest lane the tier
+     * fields (306) and the busiest spawner (72 props, twelve past The
+     * Logjam). The street twin routes 290t under the 687t ford. */
+    {
+      id: "c53", labelKey: "croL53",
+      lanes: [
+        { row: 1, dir: -1, speed: 248, len: 96, gap: 56 },
+        { row: 2, dir: -1, speed: 246, len: 78, gap: 58 },
+        { row: 3, dir: -1, speed: 248, len: 88, gap: 50 },
+        { row: 5, dir: -1, speed: 250, len: 90, gap: 56 },
+        { row: 6, dir: -1, speed: 268, len: 94, gap: 52 },
+        { row: 7, dir: 1, speed: 254, len: 72, gap: 62 },
+        { row: 6, dir: 1, speed: 298, len: 68, gap: 56 },
+        { row: 2, dir: 1, speed: 298, len: 58, gap: 46 },
+        { row: 7, dir: -1, speed: 290, len: 64, gap: 48 },
+        { row: 5, dir: 1, speed: 278, len: 62, gap: 58 },
+        { row: 1, dir: 1, speed: 274, len: 62, gap: 44 },
+        { row: 3, dir: 1, speed: 306, len: 64, gap: 46 },
+        { row: 5, dir: 1, speed: 276, len: 62, gap: 56 },
+        { row: 2, dir: 1, speed: 252, len: 60, gap: 56 },
+      ],
+      starTimes: [1649, 2473, 3380],
+    },
+    /* The Timetable: the capstone re-triples the campaign's original pair
+     * - rows 6 and 2, the streets that opened the doubling at c10 and c17 -
+     * at the Deep Current's own 244/286/46/60. The cleanest route is the
+     * longest the prover has ever measured: 692t, 34.6s, against 98t for
+     * the twin without the third trains (the street pull routes 98t and
+     * this rung's river pull is the gate's own identity, so the bare
+     * twelve-train board routes the same 98t) - the timetable itself is
+     * the ford. Three stars wait at 1661s, and the ladder closes fourteen
+     * trains wide. */
+    {
+      id: "c54", labelKey: "croL54",
+      lanes: [
+        { row: 1, dir: -1, speed: 264, len: 76, gap: 54 },
+        { row: 2, dir: 1, speed: 278, len: 82, gap: 48 },
+        { row: 3, dir: 1, speed: 254, len: 80, gap: 56 },
+        { row: 5, dir: -1, speed: 248, len: 72, gap: 56 },
+        { row: 6, dir: -1, speed: 262, len: 78, gap: 50 },
+        { row: 7, dir: -1, speed: 250, len: 80, gap: 60 },
+        { row: 6, dir: 1, speed: 280, len: 66, gap: 64 },
+        { row: 2, dir: -1, speed: 290, len: 72, gap: 52 },
+        { row: 7, dir: 1, speed: 264, len: 72, gap: 64 },
+        { row: 5, dir: 1, speed: 282, len: 68, gap: 58 },
+        { row: 1, dir: 1, speed: 282, len: 70, gap: 52 },
+        { row: 3, dir: -1, speed: 258, len: 70, gap: 44 },
+        { row: 6, dir: 1, speed: 256, len: 76, gap: 56 },
+        { row: 2, dir: -1, speed: 260, len: 70, gap: 52 },
+      ],
+      starTimes: [1661, 2491, 3405],
+    },
   ];
   var STREAK_COLORS = ["#f472b6", "#fb7185", "#fbbf24", "#a78bfa"];
 
@@ -1282,8 +1648,9 @@
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already hold, so the shared dictionary stays the authority for
    * the drawer chrome and the first twenty rung names. The deep tier's four,
-   * the summit's six and the deluge's ten are new here - the shared
-   * dictionary stops at croL20 - so they travel with the module. */
+   * the summit's six, the deluge's ten, the flood's four and the timetable's
+   * ten are new here - the shared dictionary stops at croL20 - so they
+   * travel with the module. */
   App.addStrings({
     en: {
       "croL10": "Two-Way Street",
@@ -1307,6 +1674,20 @@
       "croL38": "The Long Spate",
       "croL39": "The Torrent",
       "croL40": "The Cataract",
+      "croL41": "The Floodgate",
+      "croL42": "The Undertow",
+      "croL43": "The Deep Current",
+      "croL44": "The Maelstrom",
+      "croL45": "The Third Train",
+      "croL46": "The Loop Line",
+      "croL47": "The Inside Lane",
+      "croL48": "The Full Board",
+      "croL49": "The Night Shift",
+      "croL50": "The Tidal Lane",
+      "croL51": "The Overtime",
+      "croL52": "The Last Service",
+      "croL53": "The Double Peak",
+      "croL54": "The Timetable",
     },
     zh: {
       "croL10": "双向街",
@@ -1330,6 +1711,20 @@
       "croL38": "长汛",
       "croL39": "激流",
       "croL40": "大瀑布",
+      "croL41": "洪闸",
+      "croL42": "暗流",
+      "croL43": "深层流",
+      "croL44": "漩涡",
+      "croL45": "第三班车",
+      "croL46": "环线",
+      "croL47": "内线",
+      "croL48": "满盘",
+      "croL49": "夜班",
+      "croL50": "潮汐车道",
+      "croL51": "加班车",
+      "croL52": "末班车",
+      "croL53": "双峰",
+      "croL54": "时刻表",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

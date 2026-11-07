@@ -29,19 +29,26 @@ module.exports = function gate(ctx) {
   const levels = App.mayorDistricts;
   const deepIds = ["o21", "o22", "o23", "o24", "o25", "o26", "o27", "o28", "o29", "o30"];
 
-  check("game-one-minute-mayor", "the ladder holds thirty districts",
-    levels.length === 30, String(levels.length));
+  check("game-one-minute-mayor", "the ladder holds forty districts",
+    levels.length === 40, String(levels.length));
   check("game-one-minute-mayor", "every district id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
   const missing = deepIds.filter((id) => !levels.some((level) => level.id === id));
   check("game-one-minute-mayor", "the deep tier o21-o30 is present",
     missing.length === 0, missing.join(","));
+  const charterIds = ["o31", "o32", "o33", "o34", "o35", "o36", "o37", "o38", "o39", "o40"];
+  const charterMissing = charterIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-one-minute-mayor", "the charter tier o31-o40 is present",
+    charterMissing.length === 0, charterMissing.join(","));
 
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
   const deep = deepIds.map((id) => byId[id]);
+  const charter = charterIds.map((id) => byId[id]);
+  const deepAll = deep.concat(charter);
   const shallow = levels.filter((level) => !deepIds.includes(level.id));
+  const shipped20 = levels.filter((level) => Number(level.id.slice(1)) <= 20);
 
   /* A seeded greedy hand, written against the exported primitives only: every
    * legal blueprint on every lot is scored, the best gain is kept, and the
@@ -107,7 +114,8 @@ module.exports = function gate(ctx) {
    * band, the bands run downwards to a live target, and the plan's ledger
    * prints the jobless homes the shape makes unavoidable. */
   const runProblems = [];
-  deep.forEach((level) => {
+  const joblessProblems = [];
+  deepAll.forEach((level) => {
     const proof = level.proof || App.mayorBeatable(level);
     if (!proof || !proof.ok) {
       runProblems.push(`${level.id}: the shipped solver cannot prove it beatable`);
@@ -138,17 +146,53 @@ module.exports = function gate(ctx) {
       runProblems.push(`${level.id}: replaying the authored line scores ` +
         `${App.mayorScore(grid)}, not ${level.stars[0]}`);
     }
-    if (kinds.indexOf("W") !== -1) {
-      runProblems.push(`${level.id}: the measured plan buys a worksite (${kinds})`);
-    }
-    const analysis = App.mayorAnalyze(grid);
-    if (analysis.counts.jobless < 2) {
-      runProblems.push(`${level.id}: the plan prints only ${analysis.counts.jobless} jobless homes`);
+    /* The worksite lesson is the deep tier's own: the far-shore shapes close
+     * the ledger without one. The charter tier's lesson is the zoning law -
+     * its ground is open, so its plans may buy a worksite where the law
+     * allows the ground to carry one. */
+    if (deepIds.includes(level.id)) {
+      if (kinds.indexOf("W") !== -1) {
+        joblessProblems.push(`${level.id}: the measured plan buys a worksite (${kinds})`);
+      }
+      const analysis = App.mayorAnalyze(grid);
+      if (analysis.counts.jobless < 2) {
+        joblessProblems.push(`${level.id}: the plan prints only ${analysis.counts.jobless} jobless homes`);
+      }
     }
   });
   check("game-one-minute-mayor",
-    "the game's own plan proves every deep rung beatable, and no measured plan buys a worksite",
+    "the game's own plan proves every deep and charter rung beatable and replays to its own band",
     runProblems.length === 0, runProblems.slice(0, 4).join(" | "));
+  check("game-one-minute-mayor",
+    "every deep plan closes without a worksite and prints the jobless homes the shape makes unavoidable",
+    joblessProblems.length === 0, joblessProblems.slice(0, 4).join(" | "));
+
+  /* The charter's zoning law, probed on the engine's own legality reader:
+   * every zoned lot refuses every other blueprint and accepts its own, on a
+   * fresh grid, on every charter rung. */
+  const zoneProblems = [];
+  charter.forEach((level) => {
+    if (!level.zone || !level.zone.lots || !level.zone.lots.length) {
+      zoneProblems.push(`${level.id}: ships no zone`);
+      return;
+    }
+    const fresh = App.mayorFresh(level);
+    level.zone.lots.forEach((index) => {
+      App.mayorTypes.forEach((kind) => {
+        const verdict = App.mayorLegal(fresh, kind, index % fresh.side, Math.floor(index / fresh.side));
+        if (kind === level.zone.kind) {
+          if (verdict !== "ok") {
+            zoneProblems.push(`${level.id}: the zone's own ${kind} is refused at lot ${index} (${verdict})`);
+          }
+        } else if (verdict === "ok") {
+          zoneProblems.push(`${level.id}: ${kind} is allowed on ground zoned ${level.zone.kind} at lot ${index}`);
+        }
+      });
+    });
+  });
+  check("game-one-minute-mayor",
+    "every charter zone is real ground: the reader refuses every other blueprint and accepts its own",
+    zoneProblems.length === 0, zoneProblems.slice(0, 4).join(" | "));
 
   /* The lesson is structural, in both directions. Every shipped rung's plan
    * pays for a worksite; every deep rung's plan proves the ledger closes
@@ -156,13 +200,13 @@ module.exports = function gate(ctx) {
    * lots the legality reader still sells to a worksite lie beyond a stop's
    * five-street bridge (omvStopReach) of every lot a home can stand on, so
    * an empty plant there scores -2 forever. */
-  const buyers = shallow.filter((level) => {
+  const buyers = shipped20.filter((level) => {
     const moves = (level.proof && level.proof.moves) || App.mayorPlan(level).moves;
     return moves.some((move) => move.kind === "W");
   });
   check("game-one-minute-mayor",
     "every shipped plan buys a worksite; the deep tier's plans prove the ledger closes without one",
-    buyers.length === shallow.length, "shipped buyers " + buyers.length + "/" + shallow.length);
+    buyers.length === shipped20.length, "shipped buyers " + buyers.length + "/" + shipped20.length);
   const walls = [];
   deep.forEach((level) => {
     const fresh = App.mayorFresh(level);
@@ -192,7 +236,7 @@ module.exports = function gate(ctx) {
       knobs.push(`${deep[i].id}: slack rises to ${deep[i].slack}`);
     }
   }
-  const shortestShipped = Math.min.apply(null, shallow.map((level) => level.turns));
+  const shortestShipped = Math.min.apply(null, shipped20.map((level) => level.turns));
   if (!(deep[0].slack <= byId.o20.slack) || !deep[1] ||
     !deep.every((level) => level.slack <= byId.o20.slack)) {
     knobs.push("deep slack is looser than o20's");
@@ -200,8 +244,16 @@ module.exports = function gate(ctx) {
   if (!deep.every((level) => level.turns < shortestShipped || level.id === "o23")) {
     knobs.push("a tight rung prints more placements than the shortest shipped ledger");
   }
+  for (let i = 1; i < charter.length; i += 1) {
+    if (charter[i].slack > charter[i - 1].slack) {
+      knobs.push(`${charter[i].id}: charter slack rises to ${charter[i].slack}`);
+    }
+  }
+  if (charter.length && !charter.every((level) => level.turns <= charter[0].turns)) {
+    knobs.push("a charter rung prints a longer ledger than the tier opens with");
+  }
   check("game-one-minute-mayor",
-    "deep slack stays at o20's floor or below and the tight rungs out-short the shipped ledger",
+    "deep slack stays at o20's floor or below, the tight rungs out-short the shipped ledger, and the charter's slack and ledger never loosen",
     knobs.length === 0, knobs.join(" | "));
 
   /* The bench, in the engine's own currency. Greedy hands over every seed
@@ -213,7 +265,7 @@ module.exports = function gate(ctx) {
   const FORCED_SEEDS = [5, 11, 29];
   const FORCED_ROOMS = [0, 2];
   const benchProblems = [];
-  deep.forEach((level) => {
+  deepAll.forEach((level) => {
     let peak = 0;
     let worstForced = Infinity;
     SEEDS.forEach((seed) => ROOMS.forEach((room) => {
@@ -230,8 +282,15 @@ module.exports = function gate(ctx) {
       benchProblems.push(`${level.id}: a hand forced to open with a worksite still ` +
         `reaches ${worstForced} against a three-star band of ${level.stars[0]}`);
     }
-    if (peak > level.stars[0]) {
+    /* The deep tier's plan is the ceiling - nothing beats it. The charter's
+     * open ground leaves the plan heuristic, so the bench holds the charter
+     * to its targets instead: the one-star line is reachable by real hands,
+     * and a free hand never lands under the plan's own two-star line. */
+    if (deepIds.includes(level.id) && peak > level.stars[0]) {
       benchProblems.push(`${level.id}: a free hand reaches ${peak}, over the plan's ${level.stars[0]}`);
+    }
+    if (!deepIds.includes(level.id) && peak < level.stars[1]) {
+      benchProblems.push(`${level.id}: the bench peak ${peak} never reaches the two-star band ${level.stars[1]}`);
     }
     const sprawl = naiveHand(level, ["H", "W", "T", "R", "G"]);
     const recipe = naiveHand(level, ["H", "W", "T"]);
@@ -246,15 +305,15 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-one-minute-mayor",
-    "the bench holds: nothing beats the plan, the worksite is a trap on every rung, the sprawl never stars",
+    "the bench holds: nothing beats the deep plans, the worksite is a trap, the habit hands never star and every target is reachable",
     benchProblems.length === 0, benchProblems.slice(0, 4).join(" | "));
 
   /* The tier's names resolve in both languages. */
-  const copyProblems = deep.map((level) => level.labelKey).filter((key) =>
+  const copyProblems = deepAll.map((level) => level.labelKey).filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-one-minute-mayor", "the ten deep district names resolve in both languages",
+  check("game-one-minute-mayor", "the twenty deep and charter district names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 
   /* The guide carries the new-tier line in both languages. */
@@ -275,7 +334,7 @@ module.exports = function gate(ctx) {
     guideProblems.length === 0, guideProblems.join(" | "));
 
   /* The unlock chain is derived, never stored: clearing each district in
-   * order hands the player exactly the next one, all thirty times. */
+   * order hands the player exactly the next one, all forty times. */
   const chain = App.createCampaign({
     key: "one-minute-mayor-gate-chain",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -290,6 +349,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-one-minute-mayor", "the unlock chain walks all thirty districts in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-one-minute-mayor", "the unlock chain walks all forty districts in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 };

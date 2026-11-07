@@ -132,22 +132,48 @@ module.exports = function gate(ctx) {
     s20Bench.wins > 0 && s20Bench.reach > 0,
     `s20 wins ${s20Bench.wins}/${TRIALS}, top band reached ${s20Bench.reach}`);
 
-  /* The summit is s30: it closes the ladder, carries the largest room and the
-   * highest target, and its replayed line is the longest in the house. */
+  /* The summit is s40: it closes the ladder, carries the highest target, the
+   * widest room and the house's longest replayed line - three refusals walk
+   * in together and the standing pot answers them. */
   const summitProblems = [];
-  if (levels[levels.length - 1].id !== "s30") { summitProblems.push("s30 is not the last sitting"); }
-  if (s30.need !== Math.max.apply(null, levels.map((level) => level.need))) {
-    summitProblems.push(`s30 need ${s30.need} is not the ladder maximum`);
+  const s40 = byId.s40;
+  if (!s40) { summitProblems.push("s40 is missing"); }
+  if (s40 && levels[levels.length - 1].id !== "s40") { summitProblems.push("s40 is not the last sitting"); }
+  if (s40 && s40.need !== Math.max.apply(null, levels.map((level) => level.need))) {
+    summitProblems.push(`s40 need ${s40.need} is not the ladder maximum`);
   }
-  if (chairsOf(s30) !== Math.max.apply(null, levels.map(chairsOf))) {
-    summitProblems.push(`s30 chairs ${chairsOf(s30)} are not the widest room`);
+  if (s40 && chairsOf(s40) !== Math.max.apply(null, levels.map(chairsOf))) {
+    summitProblems.push(`s40 chairs ${chairsOf(s40)} are not the widest room`);
   }
-  if (s30.need <= s20.need) { summitProblems.push(`s30 need ${s30.need} not above s20's ${s20.need}`); }
-  const s30Line = App.teaBestLine(s30);
-  const longest = Math.max.apply(null, levels.map((level) => App.teaBestLine(level).soothed));
-  if (s30Line.soothed !== longest) { summitProblems.push(`s30 line ${s30Line.soothed} is not the house's longest`); }
-  check("game-tea-house", "s30 is the summit: the last sitting, the widest room, the highest target",
+  if (s40 && s40.need <= s20.need) { summitProblems.push(`s40 need ${s40.need} not above s20's ${s20.need}`); }
+  if (s40) {
+    const s40Line = App.teaBestLine(s40);
+    const longest = Math.max.apply(null, levels.map((level) => App.teaBestLine(level).soothed));
+    if (s40Line.soothed !== longest) { summitProblems.push(`s40 line ${s40Line.soothed} is not the house's longest`); }
+    if (s40Line.soothed !== s40.need) {
+      summitProblems.push(`s40 line ${s40Line.soothed} is not the summit's own target ${s40.need}`);
+    }
+  }
+  check("game-tea-house", "s40 is the summit: the last sitting, the widest room, the highest target",
     summitProblems.length === 0, summitProblems.slice(0, 4).join(" | "));
+
+  /* The long-night tier s31-s40 climbs rung over rung in need, every rung's
+   * target stays under its own replayed line, and the summit sits exactly on
+   * its line - the tier's target is the replayed line, never a guess. */
+  const longIds = ["s31", "s32", "s33", "s34", "s35", "s36", "s37", "s38", "s39", "s40"];
+  const longNights = longIds.map((id) => byId[id]).filter(Boolean);
+  const longProblems = [];
+  if (longNights.length !== 10) { longProblems.push("the long-night tier s31-s40 is not complete"); }
+  longNights.forEach((level, index) => {
+    if (index > 0 && level.need <= longNights[index - 1].need) {
+      longProblems.push(`${level.id} need ${level.need} <= ${longNights[index - 1].id} ${longNights[index - 1].need}`);
+    }
+    if (level.need > App.teaBestLine(level).soothed) {
+      longProblems.push(`${level.id} need ${level.need} is above its own line`);
+    }
+  });
+  check("game-tea-house", "the long-night tier s31-s40 climbs in need and every target sits under its own replayed line",
+    longProblems.length === 0, longProblems.slice(0, 4).join(" | "));
 
   /* The long nights keep the shipped voice: every claim the house hands over
    * speaks in both languages. */

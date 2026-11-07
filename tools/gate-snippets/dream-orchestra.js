@@ -32,23 +32,144 @@
  * that only bites in the closing half, and a hush that empties steps
  * outright. Each rung's family is proven by re-dealing the same seed with
  * that family lifted: the deal must change and the line it produces must
- * break the shipped law with a violation of exactly that family's kind. */
+ * break the shipped law with a violation of exactly that family's kind.
+ *
+ * The rationed bar d31-d40 adds one family the engine never read - a bar
+ * ration, the total rings a voice may spend in the whole bar, read by the
+ * cap sentence the panel has shipped all along - and walks it to the bone
+ * without ever loosening a dial. Every rung holds the summit's own load,
+ * the full sixteen-beat bar at the 140 ms floor with the dealt line at
+ * fifteen notes, d30's own count, and tightens exactly one dial: the caps
+ * arrive at the voices' unrationed appetite, the bell's share walks six to
+ * three, the run caps close to d29's all-ones, the bell's wait walks to
+ * five, and the closer leashes both rhythm voices between steps, where the
+ * bar spends its every allowed ring. Each rung's ration is measured on its
+ * dealt line: re-deal the same seed without the ration and the line breaks
+ * the shipped law with the cap's own violation. No shipped piece names a
+ * bar ration; the fields are inert for d1-d30. */
 module.exports = function gate(ctx) {
   const { App, env, check } = ctx;
   const levels = App.drmLevels;
   const tierIds = ["d21", "d22", "d23", "d24"];
   const summitIds = ["d25", "d26", "d27", "d28", "d29", "d30"];
+  const rationIds = ["d31", "d32", "d33", "d34", "d35", "d36", "d37", "d38", "d39", "d40"];
   const byId = (id) => levels.find((level) => level.id === id);
 
   /* ---- ladder shape ---- */
-  check("game-dream-orchestra", "the ladder holds at least thirty pieces",
-    levels.length >= 30, String(levels.length));
+  check("game-dream-orchestra", "the ladder holds forty pieces",
+    levels.length === 40, String(levels.length));
   check("game-dream-orchestra", "every piece id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
   const missing = tierIds.concat(summitIds).filter((id) => !byId(id));
   check("game-dream-orchestra", "the hard tier d21-d24 and the summit d25-d30 are present",
     missing.length === 0, missing.join(","));
+  const missingRation = rationIds.filter((id) => !byId(id));
+  check("game-dream-orchestra", "the rationed bar d31-d40 is present",
+    missingRation.length === 0, missingRation.join(","));
+
+  /* The ration is new to the tier and inert for everything before it: no
+   * shipped piece names a bar cap. */
+  const rationed = levels.slice(0, 30).filter((level) =>
+    level.rules.bassCap || level.rules.strCap || level.rules.bellCap).map((level) => level.id);
+  check("game-dream-orchestra",
+    "no shipped piece names a bar ration - the cap fields are dead for d1-d30",
+    rationed.length === 0, rationed.join(","));
+
+  /* The tier law, real in the rows: every rationed piece holds the summit's
+   * own load - full bar, rest zero, the 140 ms floor, fifteen notes - and
+   * carries at least one bar cap. */
+  const lawProblems = [];
+  rationIds.forEach((id) => {
+    const level = byId(id);
+    const caps = [level.rules.bassCap, level.rules.strCap, level.rules.bellCap];
+    if (!caps.some((cap) => cap)) {
+      lawProblems.push(id + " carries no bar ration");
+    }
+    if (level.beats.length !== 16 || level.rest !== 0 || level.stepMs !== 140) {
+      lawProblems.push(id + " leaves the summit's full bar at the 140 ms floor");
+    }
+    if (level.target.filter(Boolean).length !== 15) {
+      lawProblems.push(id + " deals " + level.target.filter(Boolean).length + " notes, not fifteen");
+    }
+  });
+  check("game-dream-orchestra",
+    "every rationed piece holds the full bar at the 140 ms floor, deals fifteen notes and carries a ration",
+    lawProblems.length === 0, lawProblems.join(" | "));
+
+  /* The walk tightens: rung over rung no dial loosens and exactly one
+   * tightens, from the caps' arrival to the closer leashing both rhythm
+   * voices - and the closer spends its every allowed ring (caps 7/5/3, bar
+   * fifteen, no slack). */
+  const chainProblems = [];
+  const dialOf = (level) => Object.assign({}, level.rules);
+  /* Wait dials run the other way: a bigger gap is a longer forced wait, so
+   * those tighten upward while every cap and run tightens downward. */
+  const waitDials = new Set(["bellGap", "strGap", "bassGap"]);
+  let prevDial = null;
+  rationIds.forEach((id) => {
+    const dial = dialOf(byId(id));
+    if (prevDial) {
+      const keys = new Set(Object.keys(prevDial).concat(Object.keys(dial)));
+      let tightened = 0;
+      let loosened = 0;
+      keys.forEach((key) => {
+        const was = prevDial[key] || (waitDials.has(key) ? -Infinity : Infinity);
+        const now = dial[key] || (waitDials.has(key) ? -Infinity : Infinity);
+        const up = waitDials.has(key) ? now > was : now < was;
+        const down = waitDials.has(key) ? now < was : now > was;
+        if (up) tightened += 1;
+        else if (down) loosened += 1;
+      });
+      if (loosened || tightened !== 1) {
+        chainProblems.push(id + " loosens " + loosened + " and tightens " + tightened + " dials");
+      }
+    }
+    prevDial = dial;
+  });
+  const d40 = byId("d40");
+  if (d40.rules.bassCap + d40.rules.strCap + d40.rules.bellCap !==
+      d40.target.filter(Boolean).length) {
+    chainProblems.push("the closer's bar leaves " +
+      (d40.rules.bassCap + d40.rules.strCap + d40.rules.bellCap -
+        d40.target.filter(Boolean).length) + " rings unspent");
+  }
+  check("game-dream-orchestra",
+    "the rationed bar tightens exactly one dial per rung and never loosens one, closing on a bar that spends every allowed ring",
+    chainProblems.length === 0, chainProblems.join(" | "));
+
+  /* Each ration is load-bearing on its own dealt line: re-deal the same
+   * seed with the caps lifted and the line changes - and breaks the shipped
+   * law with the cap's own violation kind. */
+  const rationLift = (level) => {
+    const clone = JSON.parse(JSON.stringify({
+      id: level.id, seed: level.seed, voices: level.voices, beats: level.beats,
+      rest: level.rest, rules: level.rules, stepMs: level.stepMs,
+    }));
+    delete clone.rules.bassCap;
+    delete clone.rules.strCap;
+    delete clone.rules.bellCap;
+    return App.orchestraDeal(clone);
+  };
+  const compactLine = (target) => target.map((note) => note ? note.v + note.r : "-").join(",");
+  const rationBindProblems = [];
+  rationIds.forEach((id) => {
+    const level = byId(id);
+    const cut = rationLift(level);
+    const cutPattern = App.orchestraEmptyPattern();
+    cut.forEach((note, step) => {
+      if (note) cutPattern[note.v][step] = note.r;
+    });
+    const kinds = new Set(App.orchestraViolations(cutPattern, level.rules)
+      .map((entry) => entry.kind));
+    if (compactLine(cut) === compactLine(level.target) || !kinds.has("cap")) {
+      rationBindProblems.push(id + ":" + (compactLine(cut) === compactLine(level.target)
+        ? "same-deal" : "no cap violation"));
+    }
+  });
+  check("game-dream-orchestra",
+    "every ration binds: lifting it re-deals the same seed into a line the shipped law rejects with the cap's own violation",
+    rationBindProblems.length === 0, rationBindProblems.join(" "));
 
   /* ---- the load-time deal still holds for every piece ---- */
   const patternOf = (level) => {
@@ -81,7 +202,7 @@ module.exports = function gate(ctx) {
   /* The bands are demanding: three stars is the exact minimum, one extra
    * note drops a star, and five extra notes pay nothing. */
   const bandProblems = [];
-  tierIds.concat(summitIds).forEach((id) => {
+  tierIds.concat(summitIds, rationIds).forEach((id) => {
     const level = byId(id);
     const par = level.starCredits[0];
     if (App.starsFor(par, level.starCredits, "low") !== 3 ||
@@ -325,9 +446,35 @@ module.exports = function gate(ctx) {
       "cells to three stars and record it",
     summitProblems.length === 0, summitProblems.join(" | "));
 
+  /* The rationed bar unlocks behind the summit, so the same panel is driven
+   * once more: select each piece, click its dealt line, read three stars
+   * and the save. */
+  const rationProblems = [];
+  rationIds.forEach((id) => {
+    const level = byId(id);
+    sel.value = id;
+    env.dispatch(sel, "change");
+    if (sel.value !== id) {
+      rationProblems.push(id + ":locked");
+      return;
+    }
+    level.target.forEach((note, step) => {
+      if (note) cells[(7 - note.r) * 16 + step].click();
+    });
+    const won = /(\d) stars!/.exec(resultEl.textContent);
+    const stars = won ? Number(won[1]) : 0;
+    const saved = readSave().cleared[id];
+    if (stars !== 3 || !saved || saved.stars !== 3) {
+      rationProblems.push(id + ":replay " + stars + "/" + JSON.stringify(saved || null));
+    }
+  });
+  check("game-dream-orchestra", "d31-d40 each replay their dealt line through the real " +
+      "cells to three stars and record it",
+    rationProblems.length === 0, rationProblems.join(" | "));
+
   /* An empty pattern can never match: the engine's own matcher on the
    * tier's targets. */
-  const emptyProblems = tierIds.filter((id) => {
+  const emptyProblems = tierIds.concat(rationIds).filter((id) => {
     const empty = App.orchestraEmptyPattern();
     return App.orchestraMatch(empty, byId(id).target).done;
   });
@@ -336,11 +483,13 @@ module.exports = function gate(ctx) {
 
   /* Copy travels with the module. */
   const copyKeys = ["drmP21", "drmP22", "drmP23", "drmP24",
-    "drmP25", "drmP26", "drmP27", "drmP28", "drmP29", "drmP30"];
+    "drmP25", "drmP26", "drmP27", "drmP28", "drmP29", "drmP30",
+    "drmP31", "drmP32", "drmP33", "drmP34",
+    "drmP35", "drmP36", "drmP37", "drmP38", "drmP39", "drmP40"];
   const copyProblems = copyKeys.filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-dream-orchestra", "the ten piece names resolve in both languages",
+  check("game-dream-orchestra", "the twenty hard, summit and rationed piece names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 };

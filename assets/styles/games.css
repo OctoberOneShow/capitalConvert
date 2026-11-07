@@ -19388,9 +19388,56 @@ html:not([data-motion="off"]) .gm-win.is-on .gm-win-line {
 }
 
 
+/* The zenith and apex tiers go past eleven cells. The gutters hold at six
+ * pixels so the crease buttons keep a usable hit area, and the sheet box
+ * keeps widening so the extra paper stays readable instead of shrinking
+ * every cell toward the stamp size. */
+.shf-sheet[data-side="12"] {
+    grid-template-columns: 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr;
+    grid-template-rows: 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr;
+}
+
+
+.shf-sheet[data-side="13"] {
+    grid-template-columns: 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr;
+    grid-template-rows: 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr;
+}
+
+
+.shf-sheet[data-side="14"] {
+    grid-template-columns: 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr;
+    grid-template-rows: 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr;
+}
+
+
+.shf-sheet[data-side="15"] {
+    grid-template-columns: 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr;
+    grid-template-rows: 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr;
+}
+
+
+.shf-sheet[data-side="16"] {
+    grid-template-columns: 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr;
+    grid-template-rows: 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr 6px 1fr;
+}
+
+
 .shf-sheetbox[data-side="10"],
 .shf-sheetbox[data-side="11"] {
     max-width: 440px;
+}
+
+
+.shf-sheetbox[data-side="12"],
+.shf-sheetbox[data-side="13"] {
+    max-width: 480px;
+}
+
+
+.shf-sheetbox[data-side="14"],
+.shf-sheetbox[data-side="15"],
+.shf-sheetbox[data-side="16"] {
+    max-width: 520px;
 }
 
 

@@ -2,7 +2,7 @@
  * Each net is a hand-authored DAG with a target truth table, and the shipped
  * gate assignment is the one a brute-force pass proved cheapest over the very
  * sockets the net offers, so every net can be completed and the star line is
- * honest. Thirty nets, one new idea each: two-wire difference, a three-wire
+ * honest. Forty nets, one new idea each: two-wire difference, a three-wire
  * vote, a counted vote, an inhibited difference, a staged relay, then a
  * steered pair, a half-specified strobe table, a difference two branches
  * share, a four-wire consensus, a two-bit comparison, a four-wire quorum,
@@ -11,7 +11,10 @@
  * a shared run of three, a balanced four, two lone sparks on six wires and
  * the gap law, then a three-bit tie relay, twin thermometer decoders, a
  * carry with a spare rail hanging off the answer, an equal-nonzero decoder,
- * a refused comparison and the finale that chains them. */
+ * a refused comparison and the finale that chains them, and then the
+ * letting-go tier: one seven-rail arbiter - a three-bit comparison whose
+ * full tie the seventh rail takes - asked ten times as its reprieve runs
+ * out, from seventy-two required rows to the whole slate. */
 (function (App) {
   /* Shared names from the other modules (see window.CapitalConvert). */
   var t = App.t;
@@ -758,6 +761,279 @@
       gates: { s1: "xor", s2: "xor", s3: "xor", s4: "not", s5: "not", s6: "and", s7: "and", s8: "and", s9: "and", s10: "or", s11: "and", s12: "or", s13: "not", s14: "and" },
       par: 14,
     },
+
+    /* Nets 31-40 are the letting-go tier, and they are one net asked ten
+     * times. Every row below carries the same thirteen sockets - the ladder's
+     * first seven-wire cone, a three-bit comparison between A B C and D E F
+     * whose full tie the seventh rail takes - and the rows differ only in
+     * the reprieve: which rows of the hundred-and-twenty-eight-row table the
+     * net is asked to answer. The first reprieve frees fifty-six of those
+     * rows and asks seventy-two - eight more than the finale's whole slate
+     * on six wires - and the reprieve then runs out eight pins at a time
+     * (four, then two, then two at the very end) until k40 answers the whole
+     * slate. The free rows only ever shrink: every row one rung must answer
+     * the next must answer too, and every rung keeps the full tie on its
+     * slate - all sixteen rows the seventh rail answers stand required from
+     * k31 to k40. Every number here was measured, not guessed: the same
+     * bit-parallel cone sweep that priced the summit prices all ten
+     * reprieved tables in one shared walk (5, 8, 8, 12 and 13 parts - the
+     * pars are the sweep's own minima, and the whole slate costs one part
+     * under the finale's 14 because the seventh rail takes the tie the
+     * finale had to carry through the low pair), the replay proves each
+     * shipped seating clean at its own par, every seated gate is
+     * load-bearing, no seating of the first thirty lights any rung's table,
+     * and pulling the rail's leg out of the arbiter leaves no seating at all
+     * that holds any rung's table. */
+    {
+      id: "k31",
+      labelKey: "cirL31",
+      inputs: ["A", "B", "C", "D", "E", "F", "G"],
+        truth: "01x1x1x1xxxxxxxxx101x1x1xxxxxxxxx1x101x1xxxxxxxxx1x1x101xxxxxxxx" +
+        "1111111101x1x1x111111111x101x1x111111111x1x101x111111111x1x1x101",
+      out: "s13",
+      slots: [
+        { id: "s1", a: "A", b: "D" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "C", b: "F" },
+        { id: "s4", a: "s1" },
+        { id: "s5", a: "s2" },
+        { id: "s6", a: "A", b: "s1" },
+        { id: "s7", a: "B", b: "s2" },
+        { id: "s8", a: "C", b: "s3" },
+        { id: "s9", a: "s8", b: "s5" },
+        { id: "s10", a: "s7", b: "s9" },
+        { id: "s11", a: "s10", b: "G" },
+        { id: "s12", a: "s4", b: "s11" },
+        { id: "s13", a: "s6", b: "s12" },
+      ],
+      gates: { s1: "and", s6: "xor", s11: "or", s12: "or", s13: "or" },
+      par: 5,
+    },
+    {
+      id: "k32",
+      labelKey: "cirL32",
+      inputs: ["A", "B", "C", "D", "E", "F", "G"],
+        truth: "01x1x1x1xxxxxxxxx101x1x1xxxxxxxx111101x1xxxxxxxx1111x101xxxxxxxx" +
+        "1111111101x1x1x111111111x101x1x111111111111101x1111111111111x101",
+      out: "s13",
+      slots: [
+        { id: "s1", a: "A", b: "D" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "C", b: "F" },
+        { id: "s4", a: "s1" },
+        { id: "s5", a: "s2" },
+        { id: "s6", a: "A", b: "s1" },
+        { id: "s7", a: "B", b: "s2" },
+        { id: "s8", a: "C", b: "s3" },
+        { id: "s9", a: "s8", b: "s5" },
+        { id: "s10", a: "s7", b: "s9" },
+        { id: "s11", a: "s10", b: "G" },
+        { id: "s12", a: "s4", b: "s11" },
+        { id: "s13", a: "s6", b: "s12" },
+      ],
+      gates: { s1: "and", s2: "and", s6: "xor", s7: "xor", s10: "or", s11: "or", s12: "or", s13: "or" },
+      par: 8,
+    },
+    {
+      id: "k33",
+      labelKey: "cirL33",
+      inputs: ["A", "B", "C", "D", "E", "F", "G"],
+        truth: "01x10101xxxxxxxxx1010101xxxxxxxx111101x1xxxxxxxx1111x101xxxxxxxx" +
+        "1111111101x1010111111111x101010111111111111101x1111111111111x101",
+      out: "s13",
+      slots: [
+        { id: "s1", a: "A", b: "D" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "C", b: "F" },
+        { id: "s4", a: "s1" },
+        { id: "s5", a: "s2" },
+        { id: "s6", a: "A", b: "s1" },
+        { id: "s7", a: "B", b: "s2" },
+        { id: "s8", a: "C", b: "s3" },
+        { id: "s9", a: "s8", b: "s5" },
+        { id: "s10", a: "s7", b: "s9" },
+        { id: "s11", a: "s10", b: "G" },
+        { id: "s12", a: "s4", b: "s11" },
+        { id: "s13", a: "s6", b: "s12" },
+      ],
+      gates: { s1: "and", s2: "and", s6: "xor", s7: "xor", s10: "or", s11: "or", s12: "or", s13: "or" },
+      par: 8,
+    },
+    {
+      id: "k34",
+      labelKey: "cirL34",
+      inputs: ["A", "B", "C", "D", "E", "F", "G"],
+        truth: "01010101xxxxxxxx11010101xxxxxxxx11110101xxxxxxxx11111101xxxxxxxx" +
+        "1111111101010101111111111101010111111111111101011111111111111101",
+      out: "s13",
+      slots: [
+        { id: "s1", a: "A", b: "D" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "C", b: "F" },
+        { id: "s4", a: "s1" },
+        { id: "s5", a: "s2" },
+        { id: "s6", a: "A", b: "s1" },
+        { id: "s7", a: "B", b: "s2" },
+        { id: "s8", a: "C", b: "s3" },
+        { id: "s9", a: "s8", b: "s5" },
+        { id: "s10", a: "s7", b: "s9" },
+        { id: "s11", a: "s10", b: "G" },
+        { id: "s12", a: "s4", b: "s11" },
+        { id: "s13", a: "s6", b: "s12" },
+      ],
+      gates: { s1: "and", s2: "xor", s3: "and", s5: "not", s6: "xor", s7: "and", s8: "xor", s9: "and", s10: "or", s11: "or", s12: "or", s13: "or" },
+      par: 12,
+    },
+    {
+      id: "k35",
+      labelKey: "cirL35",
+      inputs: ["A", "B", "C", "D", "E", "F", "G"],
+        truth: "010101010000000011010101xxxxxxxx11110101xxxxxxxx11111101xxxxxxxx" +
+        "1111111101010101111111111101010111111111111101011111111111111101",
+      out: "s13",
+      slots: [
+        { id: "s1", a: "A", b: "D" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "C", b: "F" },
+        { id: "s4", a: "s1" },
+        { id: "s5", a: "s2" },
+        { id: "s6", a: "A", b: "s1" },
+        { id: "s7", a: "B", b: "s2" },
+        { id: "s8", a: "C", b: "s3" },
+        { id: "s9", a: "s8", b: "s5" },
+        { id: "s10", a: "s7", b: "s9" },
+        { id: "s11", a: "s10", b: "G" },
+        { id: "s12", a: "s4", b: "s11" },
+        { id: "s13", a: "s6", b: "s12" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "and", s4: "not", s5: "not", s6: "and", s7: "and", s8: "xor", s9: "and", s10: "or", s11: "or", s12: "and", s13: "or" },
+      par: 13,
+    },
+    {
+      id: "k36",
+      labelKey: "cirL36",
+      inputs: ["A", "B", "C", "D", "E", "F", "G"],
+        truth: "0101010100000000110101010000000011110101xxxxxxxx11111101xxxxxxxx" +
+        "1111111101010101111111111101010111111111111101011111111111111101",
+      out: "s13",
+      slots: [
+        { id: "s1", a: "A", b: "D" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "C", b: "F" },
+        { id: "s4", a: "s1" },
+        { id: "s5", a: "s2" },
+        { id: "s6", a: "A", b: "s1" },
+        { id: "s7", a: "B", b: "s2" },
+        { id: "s8", a: "C", b: "s3" },
+        { id: "s9", a: "s8", b: "s5" },
+        { id: "s10", a: "s7", b: "s9" },
+        { id: "s11", a: "s10", b: "G" },
+        { id: "s12", a: "s4", b: "s11" },
+        { id: "s13", a: "s6", b: "s12" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "and", s4: "not", s5: "not", s6: "and", s7: "and", s8: "xor", s9: "and", s10: "or", s11: "or", s12: "and", s13: "or" },
+      par: 13,
+    },
+    {
+      id: "k37",
+      labelKey: "cirL37",
+      inputs: ["A", "B", "C", "D", "E", "F", "G"],
+        truth: "01010101000000001101010100000000111101010000000011111101xxxxxxxx" +
+        "1111111101010101111111111101010111111111111101011111111111111101",
+      out: "s13",
+      slots: [
+        { id: "s1", a: "A", b: "D" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "C", b: "F" },
+        { id: "s4", a: "s1" },
+        { id: "s5", a: "s2" },
+        { id: "s6", a: "A", b: "s1" },
+        { id: "s7", a: "B", b: "s2" },
+        { id: "s8", a: "C", b: "s3" },
+        { id: "s9", a: "s8", b: "s5" },
+        { id: "s10", a: "s7", b: "s9" },
+        { id: "s11", a: "s10", b: "G" },
+        { id: "s12", a: "s4", b: "s11" },
+        { id: "s13", a: "s6", b: "s12" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "and", s4: "not", s5: "not", s6: "and", s7: "and", s8: "xor", s9: "and", s10: "or", s11: "or", s12: "and", s13: "or" },
+      par: 13,
+    },
+    {
+      id: "k38",
+      labelKey: "cirL38",
+      inputs: ["A", "B", "C", "D", "E", "F", "G"],
+        truth: "010101010000000011010101000000001111010100000000111111010000xxxx" +
+        "1111111101010101111111111101010111111111111101011111111111111101",
+      out: "s13",
+      slots: [
+        { id: "s1", a: "A", b: "D" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "C", b: "F" },
+        { id: "s4", a: "s1" },
+        { id: "s5", a: "s2" },
+        { id: "s6", a: "A", b: "s1" },
+        { id: "s7", a: "B", b: "s2" },
+        { id: "s8", a: "C", b: "s3" },
+        { id: "s9", a: "s8", b: "s5" },
+        { id: "s10", a: "s7", b: "s9" },
+        { id: "s11", a: "s10", b: "G" },
+        { id: "s12", a: "s4", b: "s11" },
+        { id: "s13", a: "s6", b: "s12" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "and", s4: "not", s5: "not", s6: "and", s7: "and", s8: "xor", s9: "and", s10: "or", s11: "or", s12: "and", s13: "or" },
+      par: 13,
+    },
+    {
+      id: "k39",
+      labelKey: "cirL39",
+      inputs: ["A", "B", "C", "D", "E", "F", "G"],
+        truth: "01010101000000001101010100000000111101010000000011111101000000xx" +
+        "1111111101010101111111111101010111111111111101011111111111111101",
+      out: "s13",
+      slots: [
+        { id: "s1", a: "A", b: "D" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "C", b: "F" },
+        { id: "s4", a: "s1" },
+        { id: "s5", a: "s2" },
+        { id: "s6", a: "A", b: "s1" },
+        { id: "s7", a: "B", b: "s2" },
+        { id: "s8", a: "C", b: "s3" },
+        { id: "s9", a: "s8", b: "s5" },
+        { id: "s10", a: "s7", b: "s9" },
+        { id: "s11", a: "s10", b: "G" },
+        { id: "s12", a: "s4", b: "s11" },
+        { id: "s13", a: "s6", b: "s12" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "and", s4: "not", s5: "not", s6: "and", s7: "and", s8: "xor", s9: "and", s10: "or", s11: "or", s12: "and", s13: "or" },
+      par: 13,
+    },
+    {
+      id: "k40",
+      labelKey: "cirL40",
+      inputs: ["A", "B", "C", "D", "E", "F", "G"],
+        truth: "0101010100000000110101010000000011110101000000001111110100000000" +
+        "1111111101010101111111111101010111111111111101011111111111111101",
+      out: "s13",
+      slots: [
+        { id: "s1", a: "A", b: "D" },
+        { id: "s2", a: "B", b: "E" },
+        { id: "s3", a: "C", b: "F" },
+        { id: "s4", a: "s1" },
+        { id: "s5", a: "s2" },
+        { id: "s6", a: "A", b: "s1" },
+        { id: "s7", a: "B", b: "s2" },
+        { id: "s8", a: "C", b: "s3" },
+        { id: "s9", a: "s8", b: "s5" },
+        { id: "s10", a: "s7", b: "s9" },
+        { id: "s11", a: "s10", b: "G" },
+        { id: "s12", a: "s4", b: "s11" },
+        { id: "s13", a: "s6", b: "s12" },
+      ],
+      gates: { s1: "xor", s2: "xor", s3: "and", s4: "not", s5: "not", s6: "and", s7: "and", s8: "xor", s9: "and", s10: "or", s11: "or", s12: "and", s13: "or" },
+      par: 13,
+    },
   ];
 
   function cirGate(gate, a, b) {
@@ -1416,6 +1692,16 @@
       "cirL28": "Same Fire",
       "cirL29": "The Refusal",
       "cirL30": "Final Ledger",
+      "cirL31": "The First Reprieve",
+      "cirL32": "The Mid Arm",
+      "cirL33": "The Mid Refusal",
+      "cirL34": "The Low Arm",
+      "cirL35": "The Lost Rows",
+      "cirL36": "The Grip Tightens",
+      "cirL37": "The Last Free Rows",
+      "cirL38": "The Narrow Reprieve",
+      "cirL39": "The Near Slate",
+      "cirL40": "The Whole Slate",
       "cirPartsLabel": "Parts",
       "cirRowsLabel": "Rows",
       "cirNetSelectLabel": "Pick a net",
@@ -1453,7 +1739,7 @@
       "cirCleared": "Every row holds on {n} parts (par {p}) - {s} stars.",
       "cirBestParts": "best {n} parts",
       "cirNextNet": "Next net unlocked.",
-      "cirCampaignDone": "Thirty nets, all truthing out.",
+      "cirCampaignDone": "Forty nets, all truthing out.",
       "cirLocked": "{name} is taped over until the net before it works.",
       "cirHint": "A dead socket reads as 0, so an OR or XOR on a spare wire passes the live one straight through.",
       "cirHintFree": "Rows printed as don't care ask nothing of the board, so this net does not have to answer its strobe - spend those parts on the half that counts.",
@@ -1491,6 +1777,16 @@
       "cirL28": "同码有火",
       "cirL29": "反相判决",
       "cirL30": "终局连算",
+      "cirL31": "初次宽限",
+      "cirL32": "中段裁决",
+      "cirL33": "中段驳回",
+      "cirL34": "低段裁决",
+      "cirL35": "失守之行",
+      "cirL36": "收紧之手",
+      "cirL37": "最后宽行",
+      "cirL38": "窄余宽限",
+      "cirL39": "近全盘",
+      "cirL40": "全盘之律",
       "cirPartsLabel": "元件",
       "cirRowsLabel": "行",
       "cirNetSelectLabel": "选择电路",
@@ -1528,7 +1824,7 @@
       "cirCleared": "{n} 个元件让所有行都成立（标准 {p}）- 获得 {s} 星。",
       "cirBestParts": "最佳 {n} 个元件",
       "cirNextNet": "解锁下一张电路。",
-      "cirCampaignDone": "三十张电路全部按预期出电平。",
+      "cirCampaignDone": "四十张电路全部按预期出电平。",
       "cirLocked": "「{name}」还被胶带封着——先让上一张电路工作。",
       "cirHint": "空插座读作 0，所以把多余的那一路接成或门或异或门，就等于让有效信号直通过去。",
       "cirHintFree": "写着不限的行不必成立：这半张表电路板无需回答，所以别把选通线接进输出，元件留给要紧的那一半。",

@@ -104,6 +104,36 @@
     { id: "f28", labelKey: "blkL28", goal: 46, garbage: 2, startMs: 215, holes: 3, pieces: "noI", rise: 9, starTimes: [265, 400, 545] },
     { id: "f29", labelKey: "blkL29", goal: 46, garbage: 5, startMs: 190, holes: 3, starTimes: [200, 300, 420] },
     { id: "f30", labelKey: "blkL30", goal: 50, garbage: 3, startMs: 205, holes: 3, pieces: "noI", rise: 7, starTimes: [250, 375, 515] },
+    /* Ranks 31-40 are the quarter tier, and its one lesson is the fourth
+     * door: `holes: 4` opens four columns in every rubble row on the
+     * ten-column board - no row clears until all four are built, and one
+     * of the four is always a deliberate build, never the lucky hole the
+     * drop happens to leave. Every rung keeps the fourth door; the other
+     * dials layer the summit's twists back on top of it. All numbers were
+     * measured on the gate's seeded bench (the one-ply Dellacherie
+     * stacker plus a best reply, seeds 1000-1385): the bench clears every
+     * rung in a realistic share of seeds - three to five of six - against
+     * the summit close's five of six, and the quarter tier as a whole
+     * wins 38 of 60 bench runs against the close's 5 of 6, so the fourth
+     * door costs the bench real wins. The star bands are priced from the
+     * measured lines: every three-star line sits above the bench's best
+     * and every two-star band above its worst. f31 teaches the fourth
+     * door on its own; f32 sends the rubble rising under it; f33 takes
+     * the I-beams away; f34 layers rise and no I-beams at once; f35 is
+     * the fastest clock the fourth door has run at; f36 loads the floor
+     * with seven rubble rows; f37 pairs a heavy goal with the steepest
+     * rise; f38 and f39 take the fifty-line goals through the beamless
+     * bag; and f40 closes on the deepest goal in the campaign at 52. */
+    { id: "f31", labelKey: "blkL31", goal: 46, garbage: 6, startMs: 210, holes: 4, starTimes: [175, 255, 355] },
+    { id: "f32", labelKey: "blkL32", goal: 46, garbage: 4, startMs: 210, holes: 4, rise: 8, starTimes: [220, 350, 490] },
+    { id: "f33", labelKey: "blkL33", goal: 46, garbage: 5, startMs: 200, holes: 4, pieces: "noI", starTimes: [175, 290, 405] },
+    { id: "f34", labelKey: "blkL34", goal: 46, garbage: 2, startMs: 215, holes: 4, pieces: "noI", rise: 9, starTimes: [270, 375, 525] },
+    { id: "f35", labelKey: "blkL35", goal: 46, garbage: 6, startMs: 190, holes: 4, starTimes: [175, 250, 350] },
+    { id: "f36", labelKey: "blkL36", goal: 48, garbage: 7, startMs: 205, holes: 4, starTimes: [200, 350, 490] },
+    { id: "f37", labelKey: "blkL37", goal: 48, garbage: 4, startMs: 205, holes: 4, rise: 9, starTimes: [145, 375, 525] },
+    { id: "f38", labelKey: "blkL38", goal: 50, garbage: 6, startMs: 200, holes: 4, pieces: "noI", starTimes: [245, 375, 525] },
+    { id: "f39", labelKey: "blkL39", goal: 50, garbage: 3, startMs: 200, holes: 4, pieces: "noI", rise: 8, starTimes: [245, 360, 505] },
+    { id: "f40", labelKey: "blkL40", goal: 52, garbage: 3, startMs: 205, holes: 4, pieces: "noI", starTimes: [215, 450, 630] },
   ];
 
   function rotateMatrix(matrix) {
@@ -933,7 +963,7 @@
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already own, so the shared dictionary stays authoritative. The
    * summit keeps the mining register the deep tier carries and names the
-   * third door on every rung. */
+   * third door on every rung; the quarter tier names the fourth. */
   App.addStrings({
     en: {
       "blkL25": "Triple Shafts",
@@ -942,6 +972,16 @@
       "blkL28": "The Deep Triple",
       "blkL29": "Breakneck Triple",
       "blkL30": "The Triple Core",
+      "blkL31": "Four Shafts",
+      "blkL32": "Four-Door Tide",
+      "blkL33": "Beamless Four",
+      "blkL34": "The Deep Four",
+      "blkL35": "Breakneck Four",
+      "blkL36": "The Loaded Floor",
+      "blkL37": "The Swelling Tide",
+      "blkL38": "The Beamless Fifty",
+      "blkL39": "The Sinking Shaft",
+      "blkL40": "The Four-Door Core",
     },
     zh: {
       "blkL25": "三竖井",
@@ -950,6 +990,16 @@
       "blkL28": "深部三门",
       "blkL29": "险段三门",
       "blkL30": "三重核心",
+      "blkL31": "四竖井",
+      "blkL32": "四门渣潮",
+      "blkL33": "无梁四门",
+      "blkL34": "深部四门",
+      "blkL35": "险段四门",
+      "blkL36": "重载矿层",
+      "blkL37": "涨潮矿道",
+      "blkL38": "无梁五十",
+      "blkL39": "沉降竖井",
+      "blkL40": "四门核心",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

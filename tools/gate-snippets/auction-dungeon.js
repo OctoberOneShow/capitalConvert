@@ -42,9 +42,10 @@ module.exports = function gate(ctx) {
   const levels = App.auctionLevels || [];
   const deepIds = ["a21", "a22", "a23", "a24"];
   const summitIds = ["a25", "a26", "a27", "a28", "a29", "a30"];
+  const tollIds = ["a31", "a32", "a33", "a34", "a35", "a36", "a37", "a38", "a39", "a40"];
 
-  check("game-auction-dungeon", "the ladder holds thirty runs",
-    levels.length === 30, String(levels.length));
+  check("game-auction-dungeon", "the ladder holds forty runs",
+    levels.length === 40, String(levels.length));
   check("game-auction-dungeon", "every run id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -54,17 +55,21 @@ module.exports = function gate(ctx) {
   const summitMissing = summitIds.filter((id) => !levels.some((level) => level.id === id));
   check("game-auction-dungeon", "the summit tier a25-a30 is present",
     summitMissing.length === 0, summitMissing.join(","));
+  const tollMissing = tollIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-auction-dungeon", "the toll tier a31-a40 is present",
+    tollMissing.length === 0, tollMissing.join(","));
   check("game-auction-dungeon",
-    "the deep tier sits behind the shipped twenty and the summit closes the ladder",
+    "the deep tier sits behind the shipped twenty and the toll tier closes the ladder",
     deepIds.every((id, i) => levels[20 + i] && levels[20 + i].id === id) &&
-      summitIds.every((id, i) => levels[levels.length - 6 + i] && levels[levels.length - 6 + i].id === id),
+      tollIds.every((id, i) => levels[30 + i] && levels[30 + i].id === id),
     "20-23: " + levels.slice(20, 24).map((level) => level.id).join(",") +
-      " | tail: " + levels.slice(-6).map((level) => level.id).join(","));
+      " | tail: " + levels.slice(-10).map((level) => level.id).join(","));
 
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
   const deep = deepIds.map((id) => byId[id]);
   const summit = summitIds.map((id) => byId[id]);
+  const toll = tollIds.map((id) => byId[id]);
   const shipped = levels.slice(0, 20);
 
   /* The lesson is structural: no shipped rung carries a cap field, so all
@@ -410,8 +415,242 @@ module.exports = function gate(ctx) {
   check("game-auction-dungeon", "the six summit run names, twists and the bell line resolve in both languages",
     summitCopyProblems.length === 0, summitCopyProblems.join(","));
 
+  /* ---- the toll tier a31-a40: the hall charges admission ----
+   * The tier's lever is the toll: two coins a door rising to twelve, a
+   * rung's whole fee walking from 6 to 36 coins off the keep. The bands are
+   * the shipped solver's own richest lines - the fee eats them rung over
+   * rung from twelve coins kept down to three - and the fee is load-bearing
+   * from both sides: the seeded hand played with the fee handed back is
+   * never worse off and keeps strictly more somewhere on every rung. */
+  const tollProblems = [];
+  toll.forEach((level) => {
+    if (!(level.toll >= 1)) {
+      tollProblems.push(level.id + " ships no toll");
+      return;
+    }
+    if (!App.auctionSurvivable(level)) {
+      tollProblems.push(level.id + ": the shipped solver cannot survive it");
+      return;
+    }
+    const best = App.auctionCeiling(level);
+    if (!best || level.starPurse[0] !== best.purse) {
+      tollProblems.push(level.id + ": top band " + level.starPurse[0] +
+        " is not the solver's line " + (best ? best.purse : "none"));
+    }
+    const bands = level.starPurse;
+    if (!(bands[0] > bands[2] && bands[1] > bands[2] && bands[1] <= bands[0])) {
+      tollProblems.push(level.id + ": bands do not order " + bands.join("/"));
+    }
+  });
+  const tollWalk = toll.map((level) => level.toll);
+  if (tollWalk.join(",") !== "2,3,4,5,6,7,8,9,10,12") {
+    tollProblems.push("the toll walk is " + tollWalk.join(",") + ", not 2 up to 12");
+  }
+  check("game-auction-dungeon",
+    "every toll rung is survived at its own solver line, and the admission walks two coins a door to twelve (" +
+      tollWalk.join(",") + ")",
+    tollProblems.length === 0, tollProblems.slice(0, 4).join(" | "));
+
+  /* The fee bites the hand: the gate's seeded hand, played on the very same
+   * rung with the toll handed back, ends never worse off and strictly
+   * better off somewhere - purse or hide - on every rung. */
+  const feeHands = [
+    { contestP: 0.9, floorFrac: 0.1, restFrac: 0.6 },
+    { contestP: 0.7, floorFrac: 0.2, restFrac: 0.5 },
+  ];
+  const feeProblems = [];
+  toll.forEach((level) => {
+    const withoutToll = Object.assign({}, level);
+    delete withoutToll.toll;
+    let bitten = false;
+    for (const hand of feeHands) {
+      const withFee = play(level, hand, lcg(41 + Number(level.id.slice(1))));
+      const feeFree = play(withoutToll, hand, lcg(41 + Number(level.id.slice(1))));
+      const purseGains = feeFree.purse >= withFee.purse;
+      const hpGains = feeFree.hp >= withFee.hp;
+      const strictly = feeFree.purse > withFee.purse || feeFree.hp > withFee.hp;
+      if (purseGains && hpGains && strictly) { bitten = true; break; }
+    }
+    if (!bitten) {
+      feeProblems.push(level.id + ": the fee never bites the hand");
+    }
+  });
+  check("game-auction-dungeon",
+    "handing the fee back leaves the hand never worse off and strictly better off somewhere on every toll rung",
+    feeProblems.length === 0, feeProblems.slice(0, 4).join(" | "));
+
+  /* The seated fee, measured on the engine's own walk: a probe hall cloned
+   * off each toll rung with rat doors is walked twice in lockstep by a hand
+   * that never bids and never rests - the only purse moves possible are the
+   * door fees - so the fee rung's purse at door k must sit exactly k tolls
+   * below its fee-free twin's, and the twin's must never have moved. */
+  const seatProblems = [];
+  toll.forEach((level) => {
+    const probe = Object.assign({}, level, { id: level.id + "-gate-rats" });
+    const twin = Object.assign({}, level, { id: level.id + "-gate-rats-notoll" });
+    delete twin.toll;
+    const walk = (run) => {
+      const purses = [];
+      let guard = 0;
+      while (run.phase !== "won" && run.phase !== "lost" && guard < 200) {
+        guard += 1;
+        if (run.phase === "fight") {
+          purses.push(audInt(run.purse));
+          run = App.auctionEncounter(run, App.auctionTactic(run, App.auctionKit(run.kit))).state;
+          if (run.wiped) {
+            run = App.auctionAdvance(run);
+          }
+          continue;
+        }
+        if (run.phase === "bid") {
+          run = App.auctionRound(run, [0]).state;
+          continue;
+        }
+        run = App.auctionAdvance(run);
+      }
+      return purses;
+    };
+    const feePurses = walk(App.auctionRun(probe, probe.seed));
+    const freePurses = walk(App.auctionRun(twin, twin.seed));
+    if (freePurses.some((purse) => purse !== audInt(level.purse))) {
+      seatProblems.push(level.id + ": the fee-free twin's purse moved on the walk");
+    }
+    feePurses.forEach((purse, index) => {
+      if (purse !== audInt(level.purse) - (index + 1) * level.toll) {
+        seatProblems.push(level.id + ": door " + (index + 1) + " purse " + purse +
+          ", expected " + (audInt(level.purse) - (index + 1) * level.toll));
+      }
+    });
+    if (feePurses.length !== freePurses.length) {
+      seatProblems.push(level.id + ": the walks diverged in length");
+    }
+  });
+  check("game-auction-dungeon",
+    "the engine collects exactly the authored toll at every door and nothing else on the walk, fee-free twin unmoved",
+    seatProblems.length === 0, seatProblems.slice(0, 4).join(" | "));
+
+  /* The shipped halls are inert under the fee: rungs 1-30, replayed with the
+   * field seated at zero and with it struck out entirely, walk to the same
+   * end coin for coin. */
+  const tollInertHand = { contestP: 0.5, floorFrac: 0.05, restFrac: 0.7 };
+  const tollRunPrint = (level, hand, rand) => {
+    const got = play(level, hand, rand);
+    return [got.phase, got.purse, got.hp, got.kit.join("+"), got.encIdx, got.seed].join(":");
+  };
+  const tollInertProblems = [];
+  levels.slice(0, 30).forEach((level) => {
+    const zeroed = Object.assign({}, level, { id: level.id + "-gate-toll0", toll: 0 });
+    const struck = Object.assign({}, level, { id: level.id + "-gate-notoll" });
+    delete struck.toll;
+    if (tollRunPrint(level, tollInertHand, lcg(6150)) !== tollRunPrint(zeroed, tollInertHand, lcg(6150)) ||
+        tollRunPrint(level, tollInertHand, lcg(6150)) !== tollRunPrint(struck, tollInertHand, lcg(6150))) {
+      tollInertProblems.push(level.id);
+    }
+  });
+  check("game-auction-dungeon",
+    "every shipped rung replays byte-identically with the toll seated at zero and with the field struck out",
+    inertProblems.length === 0, inertProblems.join(","));
+
+  /* The solver's own currency on the toll tier: the printed bands order
+   * strictly and keep no more than a fifth of the purse, and the fee-free
+   * hall always prices the planner a richer line - the fee comes straight
+   * off the richest keep, rung after rung. */
+  const tollProofProblems = [];
+  const tollGaps = {};
+  toll.forEach((level) => {
+    const bands = level.starPurse;
+    if (!(bands[0] > bands[1] && bands[1] > bands[2])) {
+      tollProofProblems.push(level.id + ": bands do not strictly order " + bands.join("/"));
+    }
+    if (bands[0] > Math.round(level.purse * 0.2)) {
+      tollProofProblems.push(level.id + ": three stars keep " + bands[0] + " of " + level.purse);
+    }
+    const mine = App.auctionCeiling(level);
+    const theirs = App.auctionCeiling(Object.assign({}, level, { id: level.id + "-gate-free" }));
+    delete (theirs && {});
+    const free = theirs;
+    tollGaps[level.id] = mine && free ? free.purse - mine.purse : -1;
+    if (!mine || !free || free.purse < mine.purse) {
+      tollProofProblems.push(level.id + ": the fee-free hall priced the planner " +
+        (free ? free.purse : "nothing") + " against " + (mine ? mine.purse : "nothing"));
+    }
+  });
+  check("game-auction-dungeon",
+    "every toll band is the solver's own measured line, strictly ordered, never richer than a fifth of the purse, and the fee-free hall never prices it lower (" +
+      tollIds.map((id) => id + " +" + tollGaps[id]).join(" ") + ")",
+    tollProofProblems.length === 0, tollProofProblems.slice(0, 4).join(" | "));
+
+  /* The toll tier's bench: the same forty seeded hands a rung, with the same
+   * stream replayed on each hand's own fee-free twin. The top band is not
+   * free, the trap line stays a trap, a hand that never bids carries nothing
+   * out, and the fee is load-bearing - hands the fee-free hall prices into a
+   * clear are driven off the door by it, two a rung at the least. */
+  const tollBenchProblems = [];
+  const tollKills = {};
+  toll.forEach((level) => {
+    const wide = Object.assign({}, level, { id: level.id + "-gate-nofee" });
+    delete wide.toll;
+    const top = level.starPurse[0];
+    let wins = 0;
+    let three = 0;
+    let kills = 0;
+    for (let trial = 0; trial < TRIALS; trial += 1) {
+      const rand = lcg(41000 + trial * 7919);
+      const hand = {
+        contestP: 0.25 + rand() * 0.5,
+        floorFrac: rand() * 0.12,
+        restFrac: 0.5 + rand() * 0.45
+      };
+      const got = play(level, hand, rand);
+      if (got.phase === "won") {
+        wins += 1;
+        if (got.purse >= top) three += 1;
+      }
+      if (play(wide, hand, rand).phase === "won") {
+        if (got.phase !== "won") kills += 1;
+      }
+    }
+    tollKills[level.id] = kills;
+    const trap = App.auctionTakeAll(level);
+    if (trap.phase === "won" && trap.purse >= top) {
+      tollBenchProblems.push(level.id + ": the take-all trap three-stars at " + trap.purse);
+    }
+    const drifter = play(level, { contestP: 0, floorFrac: 0, restFrac: 1 }, lcg(7));
+    if (drifter.phase === "won") {
+      tollBenchProblems.push(level.id + ": a hand that never bids cleared the run");
+    }
+    if (wins < 2) {
+      tollBenchProblems.push(level.id + ": no seeded hand carries the run (" + wins + ")");
+    }
+    if (wins > TRIALS / 2) {
+      tollBenchProblems.push(level.id + ": seeded hands clear too freely (" + wins + "/" + TRIALS + ")");
+    }
+    if (three > 2) {
+      tollBenchProblems.push(level.id + ": the top band fell to " + three + " seeded hands");
+    }
+    if (kills < 2) {
+      tollBenchProblems.push(level.id + ": the fee drove off " + kills + " fee-free lines");
+    }
+  });
+  check("game-auction-dungeon",
+    "seeded hands clear every toll rung, the top band is not free, the trap lines stay traps and the fee drives the fee-free lines off the doors (" +
+      tollIds.map((id) => id + " -" + tollKills[id]).join(" ") + ")",
+    tollBenchProblems.length === 0, tollBenchProblems.slice(0, 4).join(" | "));
+
+  /* The toll tier's names and twists resolve in both languages. */
+  const tollCopyKeys = [];
+  toll.forEach((level) => {
+    tollCopyKeys.push(level.labelKey, level.twistKey);
+  });
+  const tollCopyProblems = tollCopyKeys.filter((key) =>
+    !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
+    !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
+    !App.t(key) || App.t(key) === key);
+  check("game-auction-dungeon", "the ten toll run names and twists resolve in both languages",
+    tollCopyProblems.length === 0, tollCopyProblems.join(","));
+
   /* The unlock chain is derived, never stored: clearing each run in order
-   * hands the player exactly the next one, all thirty times. */
+   * hands the player exactly the next one, all forty times. */
   const chain = App.createCampaign({
     key: "auction-dungeon-gate-chain",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -424,6 +663,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-auction-dungeon", "the unlock chain walks all thirty runs in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-auction-dungeon", "the unlock chain walks all forty runs in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 };

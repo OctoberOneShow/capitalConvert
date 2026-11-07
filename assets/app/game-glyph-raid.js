@@ -109,6 +109,36 @@
     { id: "v28", labelKey: "lvlNum28", rows: 6, cols: 10, stepMs: 105, dropMs: 400, armor: 3, armorRanks: 2, volley: 3, stride: 10, starTimes: [310, 411, 515] },
     { id: "v29", labelKey: "lvlNum29", rows: 6, cols: 10, stepMs: 100, dropMs: 380, armor: 2, armorRanks: 4, volley: 3, stride: 10, starTimes: [326, 433, 542] },
     { id: "v30", labelKey: "lvlNum30", rows: 6, cols: 10, stepMs: 96, dropMs: 372, armor: 3, armorRanks: 3, volley: 3, stride: 11, starTimes: [343, 456, 570] },
+    /* Waves 31-40 - the parade tier. The deep tier armored the vanguard and
+     * the summit armored four ranks at most, so one lever is still untouched:
+     * the TOP ranks. Every parade wave marches its whole formation plated -
+     * all six ranks (`armorRanks: 6`, the fields inert for v1-30, where no
+     * rung plates more than four) - while the plate count walks two to four
+     * a raider, the heaviest armor the raid has ever fielded: 120 to 240
+     * plates around the 60 raiders, a shot floor of 59.4s to 99.0s against
+     * the summit's 49.5s at the same 330ms cadence. The summit's other dials
+     * keep climbing under it: the march walks 96ms to 76ms, the stride
+     * widens past the summit's own 11 to 12 and 13, the volleys go three and
+     * then four bombs a beat (four is new), and the drop pressure climbs
+     * strictly every rung. Measured through the module's own mirror with the
+     * gate's two hands and seeds: the untouched descent still lands - sooner
+     * every rung, 157 ticks down to 128 against v30's 161, because the
+     * plated rows only stand there while the march keeps accelerating - and
+     * the raiding hand soaks on every rung on every seed while clearing
+     * nothing. The star bands keep the summit's walk (about six percent a
+     * wave, the same 1.33 and 1.66 spreads) and every three-star line clears
+     * its own shot floor six times over. The names ride the wave's own keys
+     * (raidL31-40); the shared numbered shelf stops at thirty. */
+    { id: "v31", labelKey: "raidL31", rows: 6, cols: 10, stepMs: 94, dropMs: 356, armor: 2, armorRanks: 6, volley: 3, stride: 12, starTimes: [362, 481, 602] },
+    { id: "v32", labelKey: "raidL32", rows: 6, cols: 10, stepMs: 92, dropMs: 344, armor: 2, armorRanks: 6, volley: 3, stride: 12, starTimes: [384, 511, 639] },
+    { id: "v33", labelKey: "raidL33", rows: 6, cols: 10, stepMs: 90, dropMs: 332, armor: 3, armorRanks: 6, volley: 3, stride: 12, starTimes: [407, 541, 677] },
+    { id: "v34", labelKey: "raidL34", rows: 6, cols: 10, stepMs: 88, dropMs: 322, armor: 3, armorRanks: 6, volley: 3, stride: 12, starTimes: [431, 573, 717] },
+    { id: "v35", labelKey: "raidL35", rows: 6, cols: 10, stepMs: 86, dropMs: 312, armor: 3, armorRanks: 6, volley: 4, stride: 13, starTimes: [457, 608, 760] },
+    { id: "v36", labelKey: "raidL36", rows: 6, cols: 10, stepMs: 84, dropMs: 304, armor: 3, armorRanks: 6, volley: 4, stride: 13, starTimes: [484, 644, 805] },
+    { id: "v37", labelKey: "raidL37", rows: 6, cols: 10, stepMs: 82, dropMs: 296, armor: 4, armorRanks: 6, volley: 4, stride: 13, starTimes: [513, 682, 853] },
+    { id: "v38", labelKey: "raidL38", rows: 6, cols: 10, stepMs: 80, dropMs: 290, armor: 4, armorRanks: 6, volley: 4, stride: 13, starTimes: [544, 723, 905] },
+    { id: "v39", labelKey: "raidL39", rows: 6, cols: 10, stepMs: 78, dropMs: 284, armor: 4, armorRanks: 6, volley: 4, stride: 13, starTimes: [577, 767, 960] },
+    { id: "v40", labelKey: "raidL40", rows: 6, cols: 10, stepMs: 76, dropMs: 278, armor: 4, armorRanks: 6, volley: 4, stride: 13, starTimes: [611, 813, 1016] },
   ];
 
   function initGlyphRaidGame() {
@@ -844,4 +874,35 @@
   App.raidArmorPlates = raidArmorPlates;
   App.raidSimulate = raidSimulate;
   App.initGlyphRaidGame = initGlyphRaidGame;
+
+  /* The parade waves carry their own names: the shared numbered shelf in
+   * i18n.js stops at thirty, so these keys live here - addStrings only fills
+   * keys the shared dictionary does not already own, so the shelf stays the
+   * authority for v1-v30. */
+  App.addStrings({
+    en: {
+      "raidL31": "The Iron Parade",
+      "raidL32": "The Full Line",
+      "raidL33": "The Heavy Vanguard",
+      "raidL34": "The Triple Hull",
+      "raidL35": "The Quad Plating",
+      "raidL36": "The Walking Fortress",
+      "raidL37": "The Four-Lane Rain",
+      "raidL38": "The Wide March",
+      "raidL39": "The Iron Tide",
+      "raidL40": "The Iron Curtain",
+    },
+    zh: {
+      "raidL31": "铁甲梯队",
+      "raidL32": "全线披甲",
+      "raidL33": "重甲前锋",
+      "raidL34": "三重甲壳",
+      "raidL35": "四重装甲",
+      "raidL36": "移动堡垒",
+      "raidL37": "四路弹雨",
+      "raidL38": "宽步推进",
+      "raidL39": "铁甲之潮",
+      "raidL40": "铁幕终章",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

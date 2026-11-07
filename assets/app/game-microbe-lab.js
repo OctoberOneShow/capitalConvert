@@ -159,6 +159,46 @@
     { id: "m38", labelKey: "mcbZ38", twistKey: "mcbTwist38", gens: 12, seed: 50002, cap: 16, traitMax: 4, start: 11, base: 2, step: 1, points: 2, plan: [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]], starBand: [4880, 4580, 4230] },
     { id: "m39", labelKey: "mcbZ39", twistKey: "mcbTwist39", gens: 12, seed: 50002, cap: 15, traitMax: 4, start: 11, base: 2, step: 1, points: 2, plan: [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]], starBand: [4880, 4580, 4230] },
     { id: "m40", labelKey: "mcbZ40", twistKey: "mcbTwist40", gens: 12, seed: 50005, cap: 15, traitMax: 4, start: 11, base: 2, step: 1, points: 1, plan: [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]], starBand: [4990, 4690, 4340] },
+    /* Dishes 41-44, the cinder bench. The summit bench walked every floor
+     * lever the lab has to its minimum and priced the walk into the player's
+     * hand; these four cross the two floors the summit only reached - the
+     * budget under fifteen and the trial past twelve - one rung a floor,
+     * with the hand, the pool, the flask, the climb and the soft opening all
+     * held at the capstone's own minimums. m41 drops the budget to fourteen,
+     * the first dish under fifteen, and the freeze the tighter budget prints
+     * is what the walk pays: a colony at fourteen points is shut three
+     * generations in, so the founding batch either freezes into a shape that
+     * covers the whole storm or rides the floor of four from the dip on -
+     * measured, not assumed: 270 of a thousand seedings finish where the
+     * capstone's own levers finished 308, and the rung's window is the
+     * budget's price, not the seed's luck (restore fifteen on a mutated copy
+     * and the window climbs back to the capstone's own). m42 deals the same
+     * culture a thirteenth generation, the first trial past twelve, and m43
+     * a fourteenth; the extra generations pay their floor rides into the
+     * metric the way m32's did. m44 is the capstone: fifteen generations -
+     * the longest trial the lab has shipped - on the deck narrowed to flare
+     * and venom alone, and there the window shuts: fourteen seedings in a
+     * thousand finish, the deck's price again (the whole deck back on the
+     * same levers finishes forty-eight in two hundred where the narrowed one
+     * finishes two). What survives the tighter levers is the culture that
+     * never dips: the cinder cultures float - the first one-point-hand
+     * cultures the lab has shipped that never touch the floor of four,
+     * where the capstone's own rode it - and the bands measure both lines.
+     * The three-star line sits one hundred and one under the shipped
+     * culture's own walk; the one surviving slip - the last spendable point
+     * thrown at the wrong square - drops the culture onto the floor line,
+     * and the one-star line sits one hundred under that, so a dawdling win
+     * still stars on m41-m43; the two-star band between them is the
+     * conservative middle (the dip leaves no walk between the two lines),
+     * and the capstone leaves no slip to star at all: its line is the only
+     * line that finishes it. Every dish here was walked with
+     * microbeBeatable before its band was written (tools/microbe-forge.js,
+     * the cinder table, and its --cinder mode): greedy scores 6891, 7490,
+     * 8089 and 8688. */
+    { id: "m41", labelKey: "mcbZ41", twistKey: "mcbTwist41", gens: 12, seed: 60018, cap: 14, traitMax: 4, start: 11, base: 2, step: 1, points: 1, plan: [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]], starBand: [6790, 6490, 4990] },
+    { id: "m42", labelKey: "mcbZ42", twistKey: "mcbTwist42", gens: 13, seed: 60018, cap: 14, traitMax: 4, start: 11, base: 2, step: 1, points: 1, plan: [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]], starBand: [7389, 7089, 5390] },
+    { id: "m43", labelKey: "mcbZ43", twistKey: "mcbTwist43", gens: 14, seed: 60018, cap: 14, traitMax: 4, start: 11, base: 2, step: 1, points: 1, plan: [["heat"], ["acid"], ["defence"], ["speed"], ["heat", "defence"], ["acid", "speed"], ["defence", "speed"], ["heat", "acid"], ["heat", "speed"], ["acid", "defence"]], starBand: [7988, 7688, 5788] },
+    { id: "m44", labelKey: "mcbZ44", twistKey: "mcbTwist44", gens: 15, seed: 60655, cap: 14, traitMax: 4, start: 11, base: 2, step: 1, points: 1, plan: [["heat", "speed"], ["acid", "defence"]], starBand: [8587, 8287, 7937] },
   ];
 
   function mcbInt(value) {
@@ -1033,6 +1073,10 @@
       "mcbZ38": "Twelve Deep",
       "mcbZ39": "Fifteen Tall",
       "mcbZ40": "The Last Point",
+      "mcbZ41": "Fourteen Tall",
+      "mcbZ42": "Thirteen Deep",
+      "mcbZ43": "Fourteen Deep",
+      "mcbZ44": "The Last Throat",
       "mcbTwist1": "heat wave only",
       "mcbTwist2": "acid bloom only",
       "mcbTwist3": "predators, then famine",
@@ -1073,6 +1117,10 @@
       "mcbTwist38": "the longest trial the lab has run",
       "mcbTwist39": "the budget falls to fifteen",
       "mcbTwist40": "one mutation a generation, every lever at its floor",
+      "mcbTwist41": "the budget breaks under fifteen",
+      "mcbTwist42": "the storm runs a thirteenth generation",
+      "mcbTwist43": "the storm runs a fourteenth generation",
+      "mcbTwist44": "nothing prints but flare and venom, fifteen deep",
       "mcbGenLabel": "Generation",
       "mcbPointLabel": "Mutations",
       "mcbPopLabel": "Colony",
@@ -1188,6 +1236,10 @@
       "mcbZ38": "十二代深",
       "mcbZ39": "十五极限",
       "mcbZ40": "最后一点",
+      "mcbZ41": "十四极限",
+      "mcbZ42": "十三代深",
+      "mcbZ43": "十四代深",
+      "mcbZ44": "最后一喉",
       "mcbTwist1": "只有热浪",
       "mcbTwist2": "只有酸华",
       "mcbTwist3": "捕食季，随后饥荒",
@@ -1228,6 +1280,10 @@
       "mcbTwist38": "实验室至今最长的试炼",
       "mcbTwist39": "预算掉到十五",
       "mcbTwist40": "每代一个突变点，所有杠杆都到底",
+      "mcbTwist41": "预算跌破十五",
+      "mcbTwist42": "风暴刮进第十三代",
+      "mcbTwist43": "风暴刮进第十四代",
+      "mcbTwist44": "只剩灼饥和獠牙，一刮十五代",
       "mcbGenLabel": "世代",
       "mcbPointLabel": "突变点",
       "mcbPopLabel": "菌群",

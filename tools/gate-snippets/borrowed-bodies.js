@@ -1,7 +1,8 @@
 "use strict";
 
 /* game-borrowed-bodies: every room is proved by the panel's own resolver, and
- * the deep tier and the summit are each gated by the mechanic they name
+ * the deep tier, the summit and the tether tier are each gated by the mechanic
+ * they name
  *
  * brbSolve is breadth-first over brbApply - the same function the keys and the
  * pointer drive - so a proved route is a route a player can take, and the par
@@ -20,16 +21,29 @@
  * The pars open above b24 and climb strictly to a closer that ends the ladder
  * as its longest room; the moth can never open a summit room, the last two
  * cannot be opened by the eel either, and cutting the crates out of any summit
- * map drops it to a quarter of par or less. */
+ * map drops it to a quarter of par or less.
+ *
+ * The tether tier b31-b40 taxes the borrow itself: `tether` authors the
+ * settling count, the moves the mind has to walk in a borrowed body before it
+ * can borrow again, and structurally nothing before the tier carries the
+ * field. The rooms walk back over the summit's own long dance with the crab
+ * alone holding the opening, the settling count walks three moves to fifteen,
+ * and the prover holds every rung to the brief: the pars open above b30's 120
+ * and climb strictly (134 to 358), cutting the tether out of any tier map
+ * drops it back toward the bare walk, the moth and the eel can open none of
+ * them, and the proved plans never hold two possessions closer together than
+ * the authored tether - the engine's own rule, visible in the route it
+ * proofed. */
 module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const rooms = App.bodyRooms;
   const byId = (id) => rooms.find((room) => room.id === id);
   const deepIds = ["b21", "b22", "b23", "b24"];
   const summitIds = ["b25", "b26", "b27", "b28", "b29", "b30"];
+  const tetherIds = ["b31", "b32", "b33", "b34", "b35", "b36", "b37", "b38", "b39", "b40"];
 
-  check("game-borrowed-bodies", "the campaign holds at least thirty rooms",
-    rooms.length >= 30, String(rooms.length));
+  check("game-borrowed-bodies", "the campaign holds at least forty rooms",
+    rooms.length >= 40, String(rooms.length));
   check("game-borrowed-bodies", "every room id is distinct",
     new Set(rooms.map((room) => room.id)).size === rooms.length,
     rooms.map((room) => room.id).join(","));
@@ -39,6 +53,25 @@ module.exports = function gate(ctx) {
   const missingSummit = summitIds.filter((id) => !byId(id));
   check("game-borrowed-bodies", "the summit tier b25-b30 is present",
     missingSummit.length === 0, missingSummit.join(","));
+  const missingTether = tetherIds.filter((id) => !byId(id));
+  check("game-borrowed-bodies", "the tether tier b31-b40 is present",
+    missingTether.length === 0, missingTether.join(","));
+  check("game-borrowed-bodies", "the tether tier sits behind the summit and closes the ladder",
+    tetherIds.every((id, index) =>
+      rooms.indexOf(byId(id)) === rooms.indexOf(byId("b30")) + 1 + index),
+    tetherIds.map((id) => rooms.indexOf(byId(id))).join(","));
+
+  /* The tether tier as structure: no shipped room carries the field, and the
+   * ten author the settling counts the tier comment prints. */
+  check("game-borrowed-bodies", "no room before the tier authors a tether - the lever is dead for b1-b30",
+    rooms.filter((room) => !tetherIds.includes(room.id))
+      .every((room) => !room.tether),
+    rooms.filter((room) => !tetherIds.includes(room.id) && room.tether)
+      .map((room) => room.id).join(","));
+  check("game-borrowed-bodies", "the ten tier rooms author settling counts from three moves to fifteen",
+    tetherIds.map((id) => byId(id).tether).join(",") === "3,7,7,10,10,11,12,13,14,15" &&
+      tetherIds.every((id) => byId(id).tether >= 3),
+    tetherIds.map((id) => byId(id).tether).join(","));
 
   /* The load-time proof must still hold when re-run, and the bands must be the
    * ones the module wrote from it. */
@@ -170,18 +203,67 @@ module.exports = function gate(ctx) {
     summitPars.every((par, index) => (index === 0 || par > summitPars[index - 1]) && par > b24.par),
     summitPars.join("/") + " vs " + b24.par);
   const b30 = byId("b30");
-  check("game-borrowed-bodies", "b30 ends the ladder as its longest room",
-    b30.par === Math.max.apply(null, rooms.map((room) => room.par)),
-    b30.par + " vs " + Math.max.apply(null, rooms.map((room) => room.par)));
+  check("game-borrowed-bodies", "b30 ends the shipped ladder as its longest room",
+    b30.par === Math.max.apply(null, rooms.slice(0, 30).map((room) => room.par)),
+    b30.par + " vs " + Math.max.apply(null, rooms.slice(0, 30).map((room) => room.par)));
+
+  /* The tether tier is priced on the same prover. The settling count is the
+   * lesson, so each rung must open above the summit's closer, climb strictly
+   * through the ten, keep the borrow tax load-bearing (cutting the tether
+   * out drops the rung back toward the bare walk), stay shut to the moth and
+   * the eel, and show the engine's own rule inside the proved route: no two
+   * possessions land closer together than the authored tether. */
+  const b31 = byId("b31");
+  let tetherPrev = b30.par;
+  const gapProblems = [];
+  const gaps = {};
+  tetherIds.forEach((id) => {
+    const room = byId(id);
+    const proof = App.bodySolve(room, 120000);
+    const bare = App.bodySolve({ id: room.id + "-gate-bare", labelKey: room.labelKey, map: room.map, mind: room.mind }, 120000);
+    const moth = otherMind(room, "M");
+    const eel = otherMind(room, "E");
+    check("game-borrowed-bodies", id + ": the tether is load-bearing and the room opens for the crab alone",
+      proof.solved && proof.par > tetherPrev && proof.par > b30.par &&
+        bare.solved && bare.par < proof.par && !moth.solved && !eel.solved,
+      "par " + proof.par + " (prev " + tetherPrev + "), bare " +
+        (bare.solved ? bare.par : "x") + ", moth " + (moth.solved ? moth.par : "shut") +
+        ", eel " + (eel.solved ? eel.par : "shut"));
+    if (proof.solved && proof.par > tetherPrev) {
+      tetherPrev = proof.par;
+    }
+    let lastPossess = -Infinity;
+    let roomGap = Infinity;
+    proof.plan.forEach((action, index) => {
+      if (action.type === "possess") {
+        roomGap = Math.min(roomGap, index - lastPossess);
+        lastPossess = index;
+      }
+    });
+    gaps[id] = roomGap;
+    if (!(roomGap >= room.tether)) {
+      gapProblems.push(id + ": possessions " + roomGap + " apart under a tether of " + room.tether);
+    }
+  });
+  check("game-borrowed-bodies", "the tether pars climb strictly to the closer (" +
+      tetherIds.map((id) => byId(id).par).join(" -> ") + " vs " + b30.par + ")",
+    tetherIds.every((id, index) => index === 0 || byId(id).par > byId(tetherIds[index - 1]).par) &&
+      b31.par > b30.par && byId("b40").par === Math.max.apply(null, rooms.map((room) => room.par)),
+    tetherIds.map((id) => byId(id).par).join("/") + " vs " + b30.par);
+  check("game-borrowed-bodies", "no proved tier route borrows twice within its own settling count (" +
+      tetherIds.map((id) => id + " " + gaps[id] + "/" + byId(id).tether).join(" ") + ")",
+    gapProblems.length === 0, gapProblems.join(" | "));
 
   /* Copy travels with the module: a real string in both packs, and t() never
    * falls back to the raw key. */
   const copyKeys = ["brbR21", "brbR22", "brbR23", "brbR24",
-    "brbR25", "brbR26", "brbR27", "brbR28", "brbR29", "brbR30"];
+    "brbR25", "brbR26", "brbR27", "brbR28", "brbR29", "brbR30",
+    "brbR31", "brbR32", "brbR33", "brbR34", "brbR35",
+    "brbR36", "brbR37", "brbR38", "brbR39", "brbR40"];
   const copyProblems = copyKeys.filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-borrowed-bodies", "the ten deep and summit room names resolve in both languages",
+  check("game-borrowed-bodies", "the twenty deep, summit and tether room names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 };

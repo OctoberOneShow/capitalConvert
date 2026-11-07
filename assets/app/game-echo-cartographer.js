@@ -107,6 +107,32 @@
      * Three stars sits on the measured thirty-two. The capstone leaves two
      * spare shots where c24 left three, so the summit's squeeze is the rung. */
     { id: "c30", labelKey: "echZ30", style: "switchback", pings: 34, quota: 19, starPings: [32, 33, 34], fish: 2 },
+
+    /* c31-c40 - the dead-air tier. The summit remixed the map; the dead-air
+     * tier remixed the SOUND. Every rung deals `radius: 2` - the echo carries
+     * two cells instead of the module's three, a dial the first thirty caves
+     * never touch - and asks twenty or more fossils, past the summit's
+     * nineteen, all of it on the summit's own two deepest seams: the coiled
+     * dark and the last hairpin, swept again with a shorter voice. Measured
+     * on the gate's own cover solver over the forty dealt seeds: the coiled
+     * dark costs 41 pings at the two-cell voice (the summit's spiral cost
+     * thirty) and the hairpin 44 and 83 at two cells and one, every floor
+     * above the summit capstone's 32, no floor ever falling rung over rung,
+     * the quota never shrinking (20 through 27), and the spare ink only ever
+     * tightening - six pings over the floor at c31, two at the capstone,
+     * where the summit never went below two. The three-star band is quoted
+     * from the same replay as always, and a startle's two spare shots still
+     * reach the one-star band on every rung. */
+    { id: "c31", labelKey: "echZ31", style: "spiral", pings: 47, quota: 20, starPings: [41, 42, 43], fish: 2, radius: 2 },
+    { id: "c32", labelKey: "echZ32", style: "spiral", pings: 46, quota: 21, starPings: [41, 42, 43], fish: 2, radius: 2 },
+    { id: "c33", labelKey: "echZ33", style: "spiral", pings: 45, quota: 22, starPings: [41, 42, 43], fish: 2, radius: 2 },
+    { id: "c34", labelKey: "echZ34", style: "spiral", pings: 45, quota: 23, starPings: [41, 42, 43], fish: 2, radius: 2 },
+    { id: "c35", labelKey: "echZ35", style: "spiral", pings: 45, quota: 24, starPings: [41, 42, 43], fish: 2, radius: 2 },
+    { id: "c36", labelKey: "echZ36", style: "spiral", pings: 45, quota: 25, starPings: [41, 42, 43], fish: 2, radius: 2 },
+    { id: "c37", labelKey: "echZ37", style: "switchback", pings: 48, quota: 26, starPings: [44, 45, 46], fish: 2, radius: 2 },
+    { id: "c38", labelKey: "echZ38", style: "switchback", pings: 47, quota: 27, starPings: [44, 45, 46], fish: 2, radius: 2 },
+    { id: "c39", labelKey: "echZ39", style: "switchback", pings: 86, quota: 27, starPings: [83, 84, 85], fish: 2, radius: 1 },
+    { id: "c40", labelKey: "echZ40", style: "switchback", pings: 85, quota: 27, starPings: [83, 84, 85], fish: 2, radius: 1 },
   ];
 
   /* --- pure core ----------------------------------------------------------
@@ -642,12 +668,15 @@
       }
     }
     /* A fully open shell is always solvable, so a bad roll can never hang or
-     * deal an unwinnable cave. */
+     * deal an unwinnable cave. The fossils wrap over a 7x4 lattice inside the
+     * room: the old straight run stepped two cells apart forever and ran off
+     * the grid once a quota passed eight, which the deep-quota tier can hit
+     * on a bad deal. */
     var safe = echBlank(w, h, 1);
     echCarveRoom(safe, 1, 1, w - 2, h - 2);
     var safeFossils = [];
     for (var f = 0; f < quota; f += 1) {
-      safeFossils.push({ x: 2 + f * 2, y: 2 + (f % 3) });
+      safeFossils.push({ x: 2 + (f % 7) * 2, y: 2 + (Math.floor(f / 7) % 4) * 2 });
     }
     return {
       w: w,
@@ -827,7 +856,9 @@
         return;
       }
       pingsLeft -= 1;
-      var cells = echReveal(cave.grid, player, echRadius);
+      /* The echo's own voice: every shipped cave carries the module's
+       * three-cell reach; a rung may deal dead air and shorten it. */
+      var cells = echReveal(cave.grid, player, level.radius || echRadius);
       for (var i = 0; i < cells.length; i += 1) {
         var cell = cells[i];
         marks[cell.y][cell.x] = cell.stone ? 2 : 1;
@@ -1426,4 +1457,33 @@
 
   /* Exported for the other modules. */
   App.initEchoCartographerGame = initEchoCartographerGame;
+
+  /* The dead-air caves carry their own names: addStrings only fills keys
+   * i18n.js does not already own, so the picker never prints a raw key. */
+  App.addStrings({
+    en: {
+      "echZ31": "Thin Air",
+      "echZ32": "The Muffled Coil",
+      "echZ33": "Dead Air",
+      "echZ34": "The Whisper Deep",
+      "echZ35": "The Long Silence",
+      "echZ36": "Faint Returns",
+      "echZ37": "The Hairpin's Hush",
+      "echZ38": "The Soundless Traverse",
+      "echZ39": "The One-Cell Voice",
+      "echZ40": "Where Sound Dies",
+    },
+    zh: {
+      "echZ31": "\u8584\u58f0\u4e4b\u7a74",
+      "echZ32": "\u95f7\u54cd\u76d8\u7a74",
+      "echZ33": "\u6b7b\u5bc2\u4e4b\u7a9f",
+      "echZ34": "\u4f4e\u8bed\u6df1\u6e0a",
+      "echZ35": "\u957f\u5bc2\u4e4b\u7a9f",
+      "echZ36": "\u5fae\u5f31\u56de\u58f0",
+      "echZ37": "\u53d1\u5361\u5f2f\u9759\u9ed8",
+      "echZ38": "\u65e0\u58f0\u6a2a\u6e21",
+      "echZ39": "\u4e00\u683c\u4e4b\u58f0",
+      "echZ40": "\u58f0\u706d\u4e4b\u5730",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

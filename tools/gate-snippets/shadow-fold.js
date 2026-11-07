@@ -31,18 +31,60 @@
  * orbits never reach the ink. Records are scoped by position - later tiers
  * legitimately overtake earlier ones - and the par, tray and paper lines
  * never fall within the tier. Star bands, both languages and the unlock
- * chain are checked last. */
+ * chain are checked last.
+ *
+ * The zenith tier f41-f43 widens the paper again and takes one
+ * record per rung against every sheet before it: f41 the first
+ * fifteen-cell paper and the heaviest print the game has ever stamped
+ * (eighty-eight cells, past the capstone's eighty), f42 the first
+ * ten-crease sheet, f43 the first thirteen-stamp tray. The same bench the
+ * fourth tier answers - sixty seeded deals, every crease load-bearing -
+ * runs over the zenith too, its keep-clears are whole orbits, its pool
+ * covers its tray, and its par, tray and paper lines never fall.
+ *
+ * The apex tier f44-f46 widens the paper once more and keeps the same
+ * bench, one record per rung: f44 the first sixteen-cell paper, f45 the
+ * widest open pool the drawer has dealt from (all sixteen orbits in
+ * play, no keep-clear at all - the far creases pair columns and rows
+ * instead of banding them), f46 the first fourteen-stamp tray. The
+ * certification bar is the same, and goes one step further: on every
+ * apex sheet each crease's cut strands more pool representatives than a
+ * deal can leave out, so every conceivable deal - not just the seeded
+ * ones - needs every crease, and any tray-sized pick of the pool spreads
+ * past the ink budget, so no deal can ever fall through to the reserve.
+ *
+ * The crown tier f47-f56 closes the drawer out on eighteen-cell paper
+ * under eleven creases, one record per rung: f47 the first seventeen-cell
+ * paper and the first fifteen-stamp tray, f48 the heaviest print the game
+ * has ever stamped (a hundred and twenty-one cells, past the zenith's
+ * eighty-eight), f49 the first sixteen-stamp tray from the widest pool
+ * any sheet has drawn from (nineteen open orbits, past f45's sixteen),
+ * f50 the first eleven-crease sheet - and with it the first six-crease
+ * axis, f52 the first eighteen-cell paper, f55 the widest sheet ever
+ * dealt with no keep-clear at all (eighteen open orbits, past f45's
+ * sixteen), and f56 the capstone: the only twelve-crease sheet, whose
+ * pool is spent exactly - sixteen stamps against sixteen open orbits -
+ * so every deal inks all 324 cells. The tier's difficulty line is the
+ * deal floor - the least ink any conceivable deal can lay, the sum of
+ * the tray's smallest orbit prints, computed exactly off the engine for
+ * every sheet on the ladder: it climbs 224, 242, 258, 324 across the
+ * floor rungs f51, f53, f54 and f56 (each claim against every sheet
+ * before it, past the whole-cloth capstone f40's 192), and where it dips
+ * (f49, f52, f55) the dip is the record's own cost. The same sixty-deal
+ * bench the fourth tier answers runs over the crown, every crease is cut
+ * on every dealt sheet, keep-clears are whole orbits, and both languages
+ * hold real names for all ten rungs. */
 module.exports = function gate(ctx) {
   const { App, check, path, root } = ctx;
   const foldForge = require(path.join(root, "tools", "fold-forge.js"));
   const shfSheets = App.foldSheets;
   const shfKeyOf = (cell) => cell.x + "," + cell.y;
 
-  check("game-shadow-fold", "the ladder holds forty sheets",
-    shfSheets.length === 40, String(shfSheets.length));
+  check("game-shadow-fold", "the ladder holds fifty-six sheets",
+    shfSheets.length === 56, String(shfSheets.length));
   check("game-shadow-fold", "every sheet id is distinct",
     new Set(shfSheets.map((sheet) => sheet.id)).size === shfSheets.length);
-  check("game-shadow-fold", "the ids run f1 through f40 in order",
+  check("game-shadow-fold", "the ids run f1 through f56 in order",
     shfSheets.every((sheet, index) => sheet.id === "f" + (index + 1)),
     shfSheets.map((sheet) => sheet.id).join(","));
 
@@ -263,17 +305,24 @@ module.exports = function gate(ctx) {
   const shfPoolOf = {};
   const shfUnitOf = {};
   const shfAuthoredTgt = {};
+  const shfFloorOf = {};
   shfSheets.forEach((sheet) => {
     const avoid = new Set(sheet.avoid || []);
     const unit = foldForge.shfUnit(sheet.intended, sheet.side);
     let printMax = 0;
     let pool = 0;
+    const prints = [];
     unit.forEach((cell) => {
       if (avoid.has(shfKeyOf(cell))) return;
       pool += 1;
-      printMax = Math.max(printMax,
-        foldForge.shfPositions([cell], sheet.intended, sheet.side).length);
+      const size = foldForge.shfPositions([cell], sheet.intended, sheet.side).length;
+      prints.push(size);
+      printMax = Math.max(printMax, size);
     });
+    prints.sort((a, b) => a - b);
+    /* The deal floor: the least ink any conceivable deal can lay - the sum
+     * of the tray's smallest orbit prints. */
+    shfFloorOf[sheet.id] = prints.slice(0, sheet.wants).reduce((sum, n) => sum + n, 0);
     shfPrintMax[sheet.id] = printMax;
     shfPoolOf[sheet.id] = pool;
     shfUnitOf[sheet.id] = unit.length;
@@ -382,6 +431,341 @@ module.exports = function gate(ctx) {
     `authored targets f32 ${shfAuthoredTgt.f32} vs f33 ${shfAuthoredTgt.f33}, ` +
       `f36 ${shfAuthoredTgt.f36} vs f37 ${shfAuthoredTgt.f37}`);
 
+  /* ---- the zenith tier f41-f43: one record per rung, the fourth tier's
+   * bench, whole-orbit keep-clears ------------------------------------- */
+  const shfZenithIds = ["f41", "f42", "f43"];
+  const shfZenith = shfZenithIds.map((id) => shfSheet(id));
+  const shfZenithProblems = [];
+  const shfZenithStats = {};
+  shfZenith.forEach((sheet) => {
+    const unitKeys = new Set(
+      foldForge.shfUnit(sheet.intended, sheet.side).map((cell) => shfKeyOf(cell)));
+    if (!sheet.avoid || !sheet.avoid.length || !shfOrbitClosed(sheet)) {
+      shfZenithProblems.push(sheet.id + ": the keep-clear is not a whole orbit");
+    }
+    if (shfPoolOf[sheet.id] < sheet.wants) {
+      shfZenithProblems.push(sheet.id + ": pool " + shfPoolOf[sheet.id] +
+        " cannot supply " + sheet.wants + " stamps");
+    }
+    const stats = { min: Infinity, max: 0, stalls: 0 };
+    let needed = true;
+    for (let seed = 1; seed <= shfBench; seed += 1) {
+      const deal = shfSeeded(seed * 104729 + sheet.wants, () => App.foldDeal(sheet));
+      if (!deal) {
+        stats.stalls += 1;
+        continue;
+      }
+      const good = deal.stamps.length === sheet.wants &&
+        deal.stamps.every((cell) => unitKeys.has(shfKeyOf(cell))) &&
+        deal.budget === deal.stamps.length + 1 &&
+        deal.target.length > deal.budget &&
+        App.foldTargetSolvable(deal.target, sheet.intended, sheet.side).ok;
+      if (!good) shfZenithProblems.push(sheet.id + ": seed " + seed + " dealt a bad sheet");
+      for (let g = 0; g < sheet.intended.length; g += 1) {
+        const rest = sheet.intended.filter((_, j) => j !== g);
+        const spread = App.foldPositions(deal.stamps, rest, sheet.side);
+        if (deal.target.every((cell) =>
+          spread.some((sp) => sp.x === cell.x && sp.y === cell.y))) {
+          needed = false;
+        }
+      }
+      stats.min = Math.min(stats.min, deal.target.length);
+      stats.max = Math.max(stats.max, deal.target.length);
+    }
+    if (stats.stalls) {
+      shfZenithProblems.push(sheet.id + ": the dealer stalled on " + stats.stalls + " seeds");
+    }
+    if (!needed) {
+      shfZenithProblems.push(sheet.id + ": an intended crease is not needed for a dealt sheet");
+    }
+    shfZenithStats[sheet.id] = stats;
+  });
+  check("game-shadow-fold",
+    `the zenith deals clean on the fourth tier's bench and every intended crease is load-bearing (${shfBench} deals x 3 rungs)`,
+    shfZenithProblems.length === 0, shfZenithProblems.slice(0, 4).join(" | "));
+  const shfZenithPars = shfZenith.map((sheet) => sheet.par);
+  const shfZenithWants = shfZenith.map((sheet) => sheet.wants);
+  const shfZenithSides = shfZenith.map((sheet) => sheet.side);
+  check("game-shadow-fold",
+    "the zenith's par, tray and paper lines never fall",
+    shfRises(shfZenithPars) && shfRises(shfZenithWants) && shfRises(shfZenithSides) &&
+      shfZenithSides.every((side) => side === 15) &&
+      shfZenithPars[0] === 9 && shfZenithPars[shfZenithPars.length - 1] === 10 &&
+      shfZenithWants[shfZenithWants.length - 1] === 13,
+    `par ${shfZenithPars.join("/")} wants ${shfZenithWants.join("/")} side ${shfZenithSides.join("/")}`);
+  check("game-shadow-fold",
+    "f41 opens the first fifteen-cell paper and stamps the heaviest print the game has carried: eighty-eight cells, past the capstone's eighty",
+    shfSheet("f41").side === 15 && shfPrintMax.f41 === 88 &&
+      shfBefore("f41").every((sheet) => sheet.side < 15 && shfPrintMax[sheet.id] < 88),
+    "previous peaks side " + Math.max.apply(null, shfBefore("f41").map((sheet) => sheet.side)) +
+      ", print " + Math.max.apply(null, shfBefore("f41").map((sheet) => shfPrintMax[sheet.id])));
+  check("game-shadow-fold",
+    "f42 opens the first ten-crease sheet, one more than any sheet before it",
+    shfSheet("f42").par === 10 && shfSheet("f42").intended.length === 10 &&
+      shfBefore("f42").every((sheet) => sheet.par < 10),
+    "previous peak " + Math.max.apply(null, shfBefore("f42").map((sheet) => sheet.par)));
+  check("game-shadow-fold",
+    "f43 deals the first thirteen-stamp tray and its pool still covers it",
+    shfSheet("f43").wants === 13 &&
+      shfBefore("f43").every((sheet) => sheet.wants < 13) &&
+      shfPoolOf.f43 >= 13,
+    "previous peak " + Math.max.apply(null, shfBefore("f43").map((sheet) => sheet.wants)) +
+      "; pool " + shfPoolOf.f43);
+  check("game-shadow-fold",
+    "no rung below the zenith fields its hardware - fifteen-cell paper, ten creases and the thirteen-stamp tray all live above f40",
+    shfSheets.slice(0, 40).every((sheet) =>
+      sheet.side <= 14 && sheet.par <= 9 && sheet.wants <= 12),
+    shfSheets.slice(0, 40).filter((sheet) =>
+      sheet.side > 14 || sheet.par > 9 || sheet.wants > 12)
+      .map((sheet) => sheet.id).join(","));
+
+  /* ---- the apex tier f44-f46: sixteen-cell paper, one record per rung,
+   * the zenith's bench, and a pigeonhole bar on top: each crease's cut
+   * must strand more pool reps than a deal can leave out, so every
+   * conceivable deal needs every crease ------------------------------- */
+  const shfApexIds = ["f44", "f45", "f46"];
+  const shfApex = shfApexIds.map((id) => shfSheet(id));
+  const shfApexProblems = [];
+  const shfApexStats = {};
+  shfApex.forEach((sheet) => {
+    const unitKeys = new Set(
+      foldForge.shfUnit(sheet.intended, sheet.side).map((cell) => shfKeyOf(cell)));
+    if (sheet.avoid && sheet.avoid.length && !shfOrbitClosed(sheet)) {
+      shfApexProblems.push(sheet.id + ": the keep-clear is not a whole orbit");
+    }
+    if (shfPoolOf[sheet.id] < sheet.wants) {
+      shfApexProblems.push(sheet.id + ": pool " + shfPoolOf[sheet.id] +
+        " cannot supply " + sheet.wants + " stamps");
+    }
+    /* The pigeonhole bar: for each crease, count pool reps whose orbit
+     * shrinks when it is cut. A deal draws `wants` of the pool, so if
+     * more than pool - wants reps shrink, every conceivable deal picks
+     * at least one stranded rep and the crease is always load-bearing. */
+    const poolReps = foldForge.shfUnit(sheet.intended, sheet.side)
+      .filter((cell) => !(sheet.avoid || []).some((key) => key === shfKeyOf(cell)));
+    sheet.intended.forEach((_, g) => {
+      const rest = sheet.intended.filter((_, j) => j !== g);
+      const stranded = poolReps.filter((rep) =>
+        foldForge.shfPositions([rep], rest, sheet.side).length <
+        foldForge.shfPositions([rep], sheet.intended, sheet.side).length).length;
+      if (stranded <= poolReps.length - sheet.wants) {
+        shfApexProblems.push(sheet.id + ": cutting crease " + g +
+          " strands only " + stranded + " of " + poolReps.length +
+          " pool reps - a deal could leave them all out");
+      }
+    });
+    const stats = { min: Infinity, max: 0, stalls: 0 };
+    let needed = true;
+    for (let seed = 1; seed <= shfBench; seed += 1) {
+      const deal = shfSeeded(seed * 104729 + sheet.wants, () => App.foldDeal(sheet));
+      if (!deal) {
+        stats.stalls += 1;
+        continue;
+      }
+      const good = deal.stamps.length === sheet.wants &&
+        deal.stamps.every((cell) => unitKeys.has(shfKeyOf(cell))) &&
+        deal.budget === deal.stamps.length + 1 &&
+        deal.target.length > deal.budget &&
+        App.foldTargetSolvable(deal.target, sheet.intended, sheet.side).ok;
+      if (!good) shfApexProblems.push(sheet.id + ": seed " + seed + " dealt a bad sheet");
+      for (let g = 0; g < sheet.intended.length; g += 1) {
+        const rest = sheet.intended.filter((_, j) => j !== g);
+        const spread = App.foldPositions(deal.stamps, rest, sheet.side);
+        if (deal.target.every((cell) =>
+          spread.some((sp) => sp.x === cell.x && sp.y === cell.y))) {
+          needed = false;
+        }
+      }
+      stats.min = Math.min(stats.min, deal.target.length);
+      stats.max = Math.max(stats.max, deal.target.length);
+    }
+    if (stats.stalls) {
+      shfApexProblems.push(sheet.id + ": the dealer stalled on " + stats.stalls + " seeds");
+    }
+    if (!needed) {
+      shfApexProblems.push(sheet.id + ": an intended crease is not needed for a dealt sheet");
+    }
+    shfApexStats[sheet.id] = stats;
+  });
+  check("game-shadow-fold",
+    `the apex deals clean on the zenith's bench and every crease strands more reps than a deal can skip (${shfBench} deals x 3 rungs)`,
+    shfApexProblems.length === 0, shfApexProblems.slice(0, 4).join(" | "));
+  const shfApexPars = shfApex.map((sheet) => sheet.par);
+  const shfApexWants = shfApex.map((sheet) => sheet.wants);
+  const shfApexSides = shfApex.map((sheet) => sheet.side);
+  check("game-shadow-fold",
+    "the apex's par, tray and paper lines never fall",
+    shfRises(shfApexPars) && shfRises(shfApexWants) && shfRises(shfApexSides) &&
+      shfApexSides.every((side) => side === 16) &&
+      shfApexPars.every((par) => par === 10) &&
+      shfApexWants[shfApexWants.length - 1] === 14,
+    `par ${shfApexPars.join("/")} wants ${shfApexWants.join("/")} side ${shfApexSides.join("/")}`);
+  check("game-shadow-fold",
+    "f44 opens the first sixteen-cell paper, one cell wider than the zenith's fifteen",
+    shfSheet("f44").side === 16 &&
+      shfBefore("f44").every((sheet) => sheet.side < 16),
+    "previous peak " + Math.max.apply(null, shfBefore("f44").map((sheet) => sheet.side)));
+  check("game-shadow-fold",
+    "f45 deals from the widest open pool the drawer has held: sixteen orbits in play, none kept clear, past f37's fifteen",
+    shfPoolOf.f45 === 16 && !(shfSheet("f45").avoid || []).length &&
+      shfBefore("f45").every((sheet) => shfPoolOf[sheet.id] < 16),
+    "previous peak " + Math.max.apply(null, shfBefore("f45").map((sheet) => shfPoolOf[sheet.id])) +
+      "; f45 keeps " + (shfSheet("f45").avoid || []).length + " cells clear");
+  check("game-shadow-fold",
+    "f46 deals the first fourteen-stamp tray and its pool still covers it",
+    shfSheet("f46").wants === 14 &&
+      shfBefore("f46").every((sheet) => sheet.wants < 14) &&
+      shfPoolOf.f46 >= 14,
+    "previous peak " + Math.max.apply(null, shfBefore("f46").map((sheet) => sheet.wants)) +
+      "; pool " + shfPoolOf.f46);
+  check("game-shadow-fold",
+    "no rung below the apex fields its hardware - sixteen-cell paper and the fourteen-stamp tray all live above f43",
+    shfSheets.slice(0, 43).every((sheet) =>
+      sheet.side <= 15 && sheet.par <= 10 && sheet.wants <= 13),
+    shfSheets.slice(0, 43).filter((sheet) =>
+      sheet.side > 15 || sheet.par > 10 || sheet.wants > 13)
+      .map((sheet) => sheet.id).join(","));
+
+  /* ---- the crown tier f47-f56: eighteen-cell paper under eleven creases,
+   * one record per rung, the deal floor as the difficulty line ---------
+   * The floor is computed exactly (the sum of the tray's smallest orbit
+   * prints), so the four floor claims below are not seeded samples but
+   * bounds on every conceivable deal. */
+  const shfCrownIds = ["f47", "f48", "f49", "f50", "f51", "f52", "f53", "f54", "f55", "f56"];
+  const shfCrown = shfCrownIds.map((id) => shfSheet(id));
+  const shfCrownProblems = [];
+  const shfCrownStats = {};
+  shfCrown.forEach((sheet) => {
+    const unitKeys = new Set(
+      foldForge.shfUnit(sheet.intended, sheet.side).map((cell) => shfKeyOf(cell)));
+    if (sheet.avoid && sheet.avoid.length && !shfOrbitClosed(sheet)) {
+      shfCrownProblems.push(sheet.id + ": the keep-clear is not a whole orbit");
+    }
+    if (shfPoolOf[sheet.id] < sheet.wants) {
+      shfCrownProblems.push(sheet.id + ": pool " + shfPoolOf[sheet.id] +
+        " cannot supply " + sheet.wants + " stamps");
+    }
+    const stats = { min: Infinity, max: 0, stalls: 0 };
+    let needed = true;
+    for (let seed = 1; seed <= shfBench; seed += 1) {
+      const deal = shfSeeded(seed * 104729 + sheet.wants, () => App.foldDeal(sheet));
+      if (!deal) {
+        stats.stalls += 1;
+        continue;
+      }
+      const good = deal.stamps.length === sheet.wants &&
+        deal.stamps.every((cell) => unitKeys.has(shfKeyOf(cell))) &&
+        deal.budget === deal.stamps.length + 1 &&
+        deal.target.length > deal.budget &&
+        App.foldTargetSolvable(deal.target, sheet.intended, sheet.side).ok;
+      if (!good) shfCrownProblems.push(sheet.id + ": seed " + seed + " dealt a bad sheet");
+      for (let g = 0; g < sheet.intended.length; g += 1) {
+        const rest = sheet.intended.filter((_, j) => j !== g);
+        const spread = App.foldPositions(deal.stamps, rest, sheet.side);
+        if (deal.target.every((cell) =>
+          spread.some((sp) => sp.x === cell.x && sp.y === cell.y))) {
+          needed = false;
+        }
+      }
+      stats.min = Math.min(stats.min, deal.target.length);
+      stats.max = Math.max(stats.max, deal.target.length);
+    }
+    if (stats.stalls) {
+      shfCrownProblems.push(sheet.id + ": the dealer stalled on " + stats.stalls + " seeds");
+    }
+    if (!needed) {
+      shfCrownProblems.push(sheet.id + ": an intended crease is not needed for a dealt sheet");
+    }
+    shfCrownStats[sheet.id] = stats;
+  });
+  check("game-shadow-fold",
+    `the crown deals clean on the fourth tier's bench and every intended crease is load-bearing (${shfBench} deals x 10 rungs)`,
+    shfCrownProblems.length === 0, shfCrownProblems.slice(0, 4).join(" | "));
+  const shfCrownPars = shfCrown.map((sheet) => sheet.par);
+  const shfCrownWants = shfCrown.map((sheet) => sheet.wants);
+  const shfCrownSides = shfCrown.map((sheet) => sheet.side);
+  check("game-shadow-fold",
+    "the crown's par, tray and paper lines never fall",
+    shfRises(shfCrownPars) && shfRises(shfCrownWants) && shfRises(shfCrownSides) &&
+      shfCrownPars[0] === 10 && shfCrownPars[shfCrownPars.length - 1] === 12 &&
+      shfCrownWants[0] === 15 && shfCrownWants[shfCrownWants.length - 1] === 16 &&
+      shfCrownSides[0] === 17 && shfCrownSides[shfCrownSides.length - 1] === 18,
+    `par ${shfCrownPars.join("/")} wants ${shfCrownWants.join("/")} side ${shfCrownSides.join("/")}`);
+  check("game-shadow-fold",
+    "f47 opens the first seventeen-cell paper and the first fifteen-stamp tray",
+    shfSheet("f47").side === 17 && shfSheet("f47").wants === 15 &&
+      shfBefore("f47").every((sheet) => sheet.side < 17 && sheet.wants < 15),
+    "previous peaks side " + Math.max.apply(null, shfBefore("f47").map((sheet) => sheet.side)) +
+      ", tray " + Math.max.apply(null, shfBefore("f47").map((sheet) => sheet.wants)));
+  check("game-shadow-fold",
+    "f48 prints past every sheet before it: a hundred and twenty-one cells off one stamp, past the zenith's eighty-eight",
+    shfPrintMax.f48 === 121 &&
+      shfBefore("f48").every((sheet) => shfPrintMax[sheet.id] < 121),
+    "previous peak " + Math.max.apply(null, shfBefore("f48").map((sheet) => shfPrintMax[sheet.id])));
+  check("game-shadow-fold",
+    "f49 deals the first sixteen-stamp tray from the widest pool any sheet has drawn from: nineteen open orbits, past f45's sixteen",
+    shfSheet("f49").wants === 16 && shfPoolOf.f49 === 19 &&
+      shfBefore("f49").every((sheet) => sheet.wants < 16 && shfPoolOf[sheet.id] < 19),
+    "previous peaks tray " + Math.max.apply(null, shfBefore("f49").map((sheet) => sheet.wants)) +
+      ", pool " + Math.max.apply(null, shfBefore("f49").map((sheet) => shfPoolOf[sheet.id])));
+  check("game-shadow-fold",
+    "f50 opens the first eleven-crease sheet, and with it the first six-crease axis",
+    shfSheet("f50").par === 11 &&
+      Math.max.apply(null, shfBefore("f50").map((sheet) => sheet.par)) < 11 &&
+      shfAxisPeak(shfSheet("f50")) === 6 &&
+      shfBefore("f50").every((sheet) => shfAxisPeak(sheet) < 6),
+    "previous peaks par " + Math.max.apply(null, shfBefore("f50").map((sheet) => sheet.par)) +
+      ", axis " + Math.max.apply(null, shfBefore("f50").map(shfAxisPeak)));
+  check("game-shadow-fold",
+    "f51's deal floor is the first past the whole-cloth capstone's 192: no conceivable deal lays less than 224 cells",
+    shfFloorOf.f51 === 224 &&
+      shfBefore("f51").every((sheet) => shfFloorOf[sheet.id] < 224),
+    "previous peak " + Math.max.apply(null, shfBefore("f51").map((sheet) => shfFloorOf[sheet.id])));
+  check("game-shadow-fold",
+    "f52 opens the first eighteen-cell paper",
+    shfSheet("f52").side === 18 &&
+      shfBefore("f52").every((sheet) => sheet.side < 18),
+    "previous peak " + Math.max.apply(null, shfBefore("f52").map((sheet) => sheet.side)));
+  check("game-shadow-fold",
+    "the floor ladder climbs 224, 242, 258 across f51, f53 and f54, each claim against every sheet before it",
+    shfFloorOf.f53 === 242 && shfFloorOf.f53 > shfFloorOf.f51 &&
+      shfBefore("f53").every((sheet) => shfFloorOf[sheet.id] < 242) &&
+      shfFloorOf.f54 === 258 && shfFloorOf.f54 > shfFloorOf.f53 &&
+      shfBefore("f54").every((sheet) => shfFloorOf[sheet.id] < 258),
+    `f51 ${shfFloorOf.f51}, f53 ${shfFloorOf.f53}, f54 ${shfFloorOf.f54}`);
+  check("game-shadow-fold",
+    "f55 is the widest sheet ever dealt with no keep-clear at all: eighteen open orbits, past f45's sixteen-cell sheet",
+    !(shfSheet("f55").avoid || []).length && shfSheet("f55").side === 18 &&
+      shfBefore("f55").every((sheet) =>
+        (sheet.avoid || []).length || sheet.side < 18),
+    "previous avoid-free peak side " +
+      Math.max.apply(null, shfBefore("f55")
+        .filter((sheet) => !(sheet.avoid || []).length)
+        .map((sheet) => sheet.side).concat(0)));
+  check("game-shadow-fold",
+    "f56 is the only twelve-crease sheet: its pool is spent exactly, sixteen stamps against sixteen open orbits, and every deal floods all 324 cells",
+    shfSheets.filter((sheet) => sheet.par >= 12).map((sheet) => sheet.id).join(",") === "f56" &&
+      shfPoolOf.f56 === shfSheet("f56").wants &&
+      shfCrownStats.f56.min === 324 && shfCrownStats.f56.max === 324 &&
+      shfFloorOf.f56 === 324 && shfFloorOf.f56 > shfFloorOf.f54 &&
+      shfBefore("f56").every((sheet) => shfFloorOf[sheet.id] < 324),
+    `twelve-crease rungs beyond f56: ` +
+      shfSheets.slice(shfPosOf("f56") + 1).filter((sheet) => sheet.par >= 12)
+        .map((sheet) => sheet.id).join(",") +
+      `; pool ${shfPoolOf.f56}, dealt ${shfCrownStats.f56.min}-${shfCrownStats.f56.max}, floor ${shfFloorOf.f56}`);
+  check("game-shadow-fold",
+    "no rung below the crown fields its hardware - seventeen-cell paper, eleven creases, the fifteen-stamp tray, the six-crease axis, the hundred-plus print and the nineteen-orbit pool all live above f46",
+    shfSheets.slice(0, 46).every((sheet) =>
+      sheet.side <= 16 && sheet.par <= 10 && sheet.wants <= 14 &&
+      shfAxisPeak(sheet) <= 5 && shfPrintMax[sheet.id] <= 88 &&
+      shfPoolOf[sheet.id] <= 16),
+    shfSheets.slice(0, 46).filter((sheet) =>
+      sheet.side > 16 || sheet.par > 10 || sheet.wants > 14 ||
+      shfAxisPeak(sheet) > 5 || shfPrintMax[sheet.id] > 88 ||
+      shfPoolOf[sheet.id] > 16)
+      .map((sheet) => sheet.id).join(","));
+
+
   /* The summit sheet names travel with the module: both languages hold a
    * real string for every summit sheet (shfS21-shfS30 from the module's own
    * addStrings), and t() never falls back to the key. */
@@ -399,10 +783,31 @@ module.exports = function gate(ctx) {
       const zh = App.I18N && App.I18N.zh ? App.I18N.zh[key] : null;
       return !!en && en !== key && !!zh && zh !== key && App.t(key) !== key;
     }), "a fourth-tier label fell back to its key");
+  check("game-shadow-fold", "the three zenith sheet names resolve in both languages",
+    shfZenithIds.every((id) => {
+      const key = "lvlNum" + id.slice(1);
+      const en = App.I18N && App.I18N.en ? App.I18N.en[key] : null;
+      const zh = App.I18N && App.I18N.zh ? App.I18N.zh[key] : null;
+      return !!en && en !== key && !!zh && zh !== key && App.t(key) !== key;
+    }), "a zenith label fell back to its key");
+  check("game-shadow-fold", "the three apex sheet names resolve in both languages",
+    shfApexIds.every((id) => {
+      const key = "lvlNum" + id.slice(1);
+      const en = App.I18N && App.I18N.en ? App.I18N.en[key] : null;
+      const zh = App.I18N && App.I18N.zh ? App.I18N.zh[key] : null;
+      return !!en && en !== key && !!zh && zh !== key && App.t(key) !== key;
+    }), "an apex label fell back to its key");
+  check("game-shadow-fold", "the ten crown sheet names resolve in both languages",
+    shfCrownIds.every((id) => {
+      const key = "shfS" + id.slice(1);
+      const en = App.I18N && App.I18N.en ? App.I18N.en[key] : null;
+      const zh = App.I18N && App.I18N.zh ? App.I18N.zh[key] : null;
+      return !!en && en !== key && !!zh && zh !== key && App.t(key) !== key;
+    }), "a crown label fell back to its key");
 
   /* The unlock chain is derived, never stored, so it scales with the ladder:
    * clearing each sheet in order must hand the player exactly the next one,
-   * all forty times, with nothing left locked behind the last. */
+   * all fifty-six times, with nothing left locked behind the last. */
   const shfChain = App.createCampaign({
     key: "shadow-fold-gate-chain",
     levels: shfSheets.map((sheet) => ({ id: sheet.id, labelKey: sheet.labelKey })),
@@ -415,7 +820,7 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < shfSheets.length ? shfSheets[index + 1].id : null;
     if (outcome.unlockedNext !== expected) shfChained = false;
   });
-  check("game-shadow-fold", "the unlock chain walks all forty sheets in order",
-    shfWalked === 40 && shfChained && shfChain.clearedCount() === 40,
+  check("game-shadow-fold", "the unlock chain walks all fifty-six sheets in order",
+    shfWalked === 56 && shfChained && shfChain.clearedCount() === 56,
     shfWalked + " first clears");
 };

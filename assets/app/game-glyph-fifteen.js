@@ -144,6 +144,89 @@
     { id: "t28", labelKey: "ftL28", grid: 5, walk: 8000, starMoves: [248, 362, 528] },
     { id: "t29", labelKey: "ftL29", grid: 5, walk: 8600, starMoves: [252, 368, 536] },
     { id: "t30", labelKey: "ftL30", grid: 5, walk: 9200, starMoves: [256, 374, 544] },
+
+    /* t31-t40, the hadal tier - past Challenger Deep the trenches keep
+     * going, and so does the walk. Every rung deals past the summit's
+     * ceiling, six hundred steps at a time up to the fifteen-thousand-
+     * four-hundred capstone, and the deep tier's lesson is held on every
+     * one: each seeded deal takes its whole walk, passes the sliding-
+     * parity rule, and leaves all twenty-four plates displaced. Every
+     * number below was measured on the gate's seeded bench through the
+     * shipped solver: the admissible floors - no line of any kind can
+     * beat them - run 100, 98, 98, 100, 100, 98, 104, 100, 102, 106, all
+     * past the summit's 96; the proven lines run 210, 204, 206, 204, 208,
+     * 206, 210, 204, 204, 208, every one dearer than the shipped summit's
+     * deepest 202. The walk is load-bearing on every rung: the same seed
+     * dealt at the summit's ceiling walk (9200) proves a line of 134-176,
+     * under every hadal line. Bands stay on the shipped curve and climb
+     * past t30's on all three thresholds. t31 sinks past the Tonga
+     * Trench; t40 closes the drawer on the deepest walk it has ever dealt
+     * and the highest floor it has ever measured. */
+    { id: "t31", labelKey: "ftL31", grid: 5, walk: 10000, starMoves: [258, 388, 572] },
+    { id: "t32", labelKey: "ftL32", grid: 5, walk: 10600, starMoves: [260, 392, 578] },
+    { id: "t33", labelKey: "ftL33", grid: 5, walk: 11200, starMoves: [262, 394, 584] },
+    { id: "t34", labelKey: "ftL34", grid: 5, walk: 11800, starMoves: [264, 398, 590] },
+    { id: "t35", labelKey: "ftL35", grid: 5, walk: 12400, starMoves: [266, 400, 596] },
+    { id: "t36", labelKey: "ftL36", grid: 5, walk: 13000, starMoves: [268, 404, 602] },
+    { id: "t37", labelKey: "ftL37", grid: 5, walk: 13600, starMoves: [270, 406, 608] },
+    { id: "t38", labelKey: "ftL38", grid: 5, walk: 14200, starMoves: [272, 410, 614] },
+    { id: "t39", labelKey: "ftL39", grid: 5, walk: 14800, starMoves: [274, 412, 620] },
+    { id: "t40", labelKey: "ftL40", grid: 5, walk: 15400, starMoves: [276, 416, 626] },
+
+    /* t41-t46, the abyss tier - past the hadal trenches the seafloor keeps
+     * sinking, and so does the walk. Every rung deals past the hadal
+     * ceiling, six hundred steps at a time up to the nineteen-thousand
+     * capstone, and the lesson holds on every one: each seeded deal takes
+     * its whole walk, passes the sliding-parity rule, and leaves all
+     * twenty-four plates displaced. Every number below was measured on the
+     * gate's seeded bench through the shipped solver. The admissible floor
+     * has no headroom left - deeper walks saturate the tray's distance and
+     * the hadal tier already fished its tail to 106 - so the abyss sells
+     * its depth on the proven line: every deal below sits in the tray's
+     * ceiling band - the admissible floors run 106, 102, 104, 104, 104,
+     * 104, no line of any kind can beat them - and every proven line is
+     * dearer than the hadal crown's 208, each anchoring its own
+     * three-star band: the proven lines run 218, 210, 210, 216, 214,
+     * 210. The walk
+     * is load-bearing on every rung: the same seed dealt at the hadal
+     * ceiling walk (15400) proves a line under the rung's, every time.
+     * Bands stay on the shipped curve - two-star near one and a half
+     * times the three-star line, one-star near two and a third - and
+     * climb past t40's on all three thresholds. t41 sinks past the
+     * Horizon Deep; t46 closes the drawer on the deepest walk it has ever
+     * dealt. */
+    { id: "t41", labelKey: "lvlNum41", grid: 5, walk: 16000, starMoves: [278, 418, 632] },
+    { id: "t42", labelKey: "lvlNum42", grid: 5, walk: 16600, starMoves: [280, 422, 638] },
+    { id: "t43", labelKey: "lvlNum43", grid: 5, walk: 17200, starMoves: [282, 424, 644] },
+    { id: "t44", labelKey: "lvlNum44", grid: 5, walk: 17800, starMoves: [284, 428, 650] },
+    { id: "t45", labelKey: "lvlNum45", grid: 5, walk: 18400, starMoves: [286, 430, 656] },
+    { id: "t46", labelKey: "lvlNum46", grid: 5, walk: 19000, starMoves: [288, 434, 662] },
+
+    /* t47-t50, the benthic tier - past the abyssal plains the floor keeps
+     * giving way, and so does the walk. Every rung deals past the abyss
+     * ceiling, six hundred steps at a time up to the twenty-one-thousand-
+     * four-hundred capstone, and the lesson holds on every one: each
+     * seeded deal takes its whole walk, passes the sliding-parity rule,
+     * and leaves all twenty-four plates displaced, with the floor still
+     * pinned inside the tray's ceiling band. Every number below was
+     * measured on the gate's seeded bench through the shipped solver. The
+     * admissible floors run 104, 104, 104, 106 - no line of any kind can
+     * beat them - and the tier keeps the abyss's currency, the proven
+     * line, while climbing on it: the proven lines run 212, 216, 222,
+     * 222, every one dearer than the abyss crown's 210, climbing rung
+     * over rung to a crown the capstone closes on, each anchoring its own
+     * three-star band. The walk is load-bearing on every rung: the same
+     * seed dealt at the abyss ceiling walk (19000) proves a line of
+     * 138-188, under every benthic line, every time. Bands stay on the
+     * shipped curve - two-star near one and a half times the three-star
+     * line, one-star near two and a third - and climb past t46's on all
+     * three thresholds. t47 sinks past the abyss peak; t50 closes the
+     * drawer on the deepest walk it has ever dealt and the dearest line
+     * it has ever proven. */
+    { id: "t47", labelKey: "lvlNum47", grid: 5, walk: 19600, starMoves: [290, 437, 667] },
+    { id: "t48", labelKey: "lvlNum48", grid: 5, walk: 20200, starMoves: [292, 440, 673] },
+    { id: "t49", labelKey: "lvlNum49", grid: 5, walk: 20800, starMoves: [294, 443, 678] },
+    { id: "t50", labelKey: "lvlNum50", grid: 5, walk: 21400, starMoves: [296, 446, 684] },
   ];
 
   function easeOut(k) {
@@ -1514,7 +1597,9 @@
 
   /* The deep tier's names travel with the game: addStrings only fills keys
    * i18n.js does not already own, so the shared dictionary stays the
-   * authority for the pages and the drawer chrome. */
+   * authority for the pages and the drawer chrome. The hadal tier keeps
+   * diving through the real map: the trenches and deeps past Challenger
+   * Deep, down to the certification every hadal ship dives for. */
   App.addStrings({
     en: {
       "ftL21": "Midnight Zone",
@@ -1527,6 +1612,16 @@
       "ftL28": "Full Pressure",
       "ftL29": "The Last Fathom",
       "ftL30": "Challenger Deep",
+      "ftL31": "Tonga Trench",
+      "ftL32": "The Ryukyu Deep",
+      "ftL33": "Java Trench",
+      "ftL34": "The Litke Deep",
+      "ftL35": "Milwaukee Deep",
+      "ftL36": "The Molloy Deep",
+      "ftL37": "The Sirena Deep",
+      "ftL38": "Horizon Deep",
+      "ftL39": "Vityaz Trench",
+      "ftL40": "Full Ocean Depth",
     },
     zh: {
       "ftL21": "无光层",
@@ -1539,6 +1634,16 @@
       "ftL28": "全压深境",
       "ftL29": "最后一浔",
       "ftL30": "挑战者深渊",
+      "ftL31": "汤加海沟",
+      "ftL32": "琉球深渊",
+      "ftL33": "爪哇海沟",
+      "ftL34": "利特克深渊",
+      "ftL35": "密尔沃基深渊",
+      "ftL36": "莫洛伊深渊",
+      "ftL37": "塞壬深渊",
+      "ftL38": "地平深渊",
+      "ftL39": "维提亚兹海沟",
+      "ftL40": "全海深",
     },
   });
 

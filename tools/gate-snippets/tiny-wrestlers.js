@@ -22,19 +22,24 @@ module.exports = function gate(ctx) {
   const { App, env, check, fs, path, root } = ctx;
   const ranks = App.wrestlerRanks;
   const summitIds = ["w25", "w26", "w27", "w28", "w29", "w30"];
-  const summitKeys = ["twrR25", "twrR26", "twrR27", "twrR28", "twrR29", "twrR30"];
+  const pantheonIds = ["w31", "w32", "w33", "w34", "w35", "w36", "w37", "w38", "w39", "w40"];
+  const extendedIds = summitIds.concat(pantheonIds);
+  const extendedKeys = [
+    "twrR25", "twrR26", "twrR27", "twrR28", "twrR29", "twrR30",
+    "twrR31", "twrR32", "twrR33", "twrR34", "twrR35", "twrR36", "twrR37", "twrR38", "twrR39", "twrR40"
+  ];
   const byId = {};
   ranks.forEach((rank) => { byId[rank.id] = rank; });
 
   /* ---- the ladder shape: the same laws the whole table is held to ---- */
-  check("game-tiny-wrestlers", "the ladder holds thirty ranks",
-    ranks.length === 30, String(ranks.length));
+  check("game-tiny-wrestlers", "the ladder holds forty ranks",
+    ranks.length === 40, String(ranks.length));
   check("game-tiny-wrestlers", "every rank id is distinct",
     new Set(ranks.map((r) => r.id)).size === ranks.length,
     ranks.map((r) => r.id).join(","));
   const expectedIds = ranks.map((r, index) => "w" + (index + 1));
   check("game-tiny-wrestlers",
-    "the ids run w1 through w30 in order - the shipped twenty-four stay first and untouched",
+    "the ids run w1 through w40 in order - the shipped twenty-four stay first and untouched",
     ranks.map((r) => r.id).join(",") === expectedIds.join(","),
     ranks.map((r) => r.id).join(","));
   check("game-tiny-wrestlers", "the window only tightens and lands on the engine's floor",
@@ -43,7 +48,7 @@ module.exports = function gate(ctx) {
     ranks[ranks.length - 1].windowMs === 900,
     ranks.map((r) => r.windowMs).join("/"));
   check("game-tiny-wrestlers", "the noise only drains and never reaches zero",
-    ranks.every((r, index) => index === 0 || r.noise <= ranks[index - 1].noise) &&
+    ranks.every((r, index) => index === 0 || r.noise < ranks[index - 1].noise) &&
     ranks.every((r) => r.noise > 0),
     ranks.map((r) => r.noise).join("/"));
   check("game-tiny-wrestlers", "the deep tier keeps the machine at full attention",
@@ -58,41 +63,37 @@ module.exports = function gate(ctx) {
        r.starBeats[1] >= ranks[index - 1].starBeats[1])),
     ranks.map((r) => r.starBeats.join("/")).join(" "));
 
-  /* ---- the summit tier: the still read ---- */
-  const missingSummit = summitIds.filter((id) => !byId[id]);
-  check("game-tiny-wrestlers", "the summit tier w25-w30 is present and appended",
-    missingSummit.length === 0 &&
-    ranks.slice(ranks.length - 6).map((r) => r.id).join(",") === summitIds.join(","),
-    ranks.slice(ranks.length - 6).map((r) => r.id).join(","));
-  const summit = summitIds.map((id) => byId[id]);
+  /* ---- the summit and pantheon tiers: the still read ---- */
+  const missingExtended = extendedIds.filter((id) => !byId[id]);
+  check("game-tiny-wrestlers", "the summit and pantheon tiers w25-w40 are present and appended",
+    missingExtended.length === 0 &&
+    ranks.slice(ranks.length - 16).map((r) => r.id).join(",") === extendedIds.join(","),
+    ranks.slice(ranks.length - 16).map((r) => r.id).join(","));
+  const extended = extendedIds.map((id) => byId[id]);
   const apex = byId.w24;
   check("game-tiny-wrestlers",
-    "the summit keeps the machine at full attention on the engine's own window floor",
-    summit.every((r) => r.predict === 1 && r.rush === 1 && r.greed === 1 && r.windowMs === 900),
-    summit.map((r) => r.windowMs + ":" + r.predict + r.rush + r.greed).join(","));
-  /* The one lever left: the flicker - the grain of noise twrAiPick stirs
-   * into the close calls its evaluator cannot separate. Every summit read
-   * is stiller than every earlier rung, the drain runs rung by rung, and
-   * the engine's own jitter amplitude ((random - 0.5) * noise * 40) sinks
-   * with it without ever reaching zero. */
-  const shipped = ranks.filter((r) => !summitIds.includes(r.id));
-  check("game-tiny-wrestlers", "every summit read is stiller than every earlier rung's",
-    summit.every((r) => shipped.every((m) => r.noise < m.noise)),
-    "apex " + apex.noise + " -> summit " + summit.map((r) => r.noise).join("/"));
+    "the extended tier keeps the machine at full attention on the engine's own window floor",
+    extended.every((r) => r.predict === 1 && r.rush === 1 && r.greed === 1 && r.windowMs === 900),
+    extended.map((r) => r.windowMs + ":" + r.predict + r.rush + r.greed).join(","));
+
+  const shipped = ranks.filter((r) => !extendedIds.includes(r.id));
+  check("game-tiny-wrestlers", "every extended read is stiller than every earlier rung's",
+    extended.every((r) => shipped.every((m) => r.noise < m.noise)),
+    "apex " + apex.noise + " -> extended " + extended.map((r) => r.noise).join("/"));
   check("game-tiny-wrestlers", "the flicker drains rung by rung and never dies",
-    summit.every((r, index) => index === 0 || r.noise < summit[index - 1].noise) &&
-    summit.every((r) => r.noise > 0),
-    summit.map((r) => r.noise).join("/"));
+    extended.every((r, index) => index === 0 || r.noise < extended[index - 1].noise) &&
+    extended.every((r) => r.noise > 0),
+    extended.map((r) => r.noise).join("/"));
   check("game-tiny-wrestlers", "the engine's own jitter amplitude sinks with the flicker",
-    summit.every((r, index) => index === 0 || r.noise * 40 < summit[index - 1].noise * 40) &&
-    summit[summit.length - 1].noise * 40 < apex.noise * 40,
-    "apex " + apex.noise * 40 + " -> w30 " + summit[summit.length - 1].noise * 40);
-  check("game-tiny-wrestlers", "the summit bands concede one beat at a time above the apex",
-    summit.every((r, index) =>
-      r.starBeats[0] >= (index === 0 ? apex.starBeats[0] : summit[index - 1].starBeats[0]) &&
-      r.starBeats[1] >= (index === 0 ? apex.starBeats[1] : summit[index - 1].starBeats[1]) &&
+    extended.every((r, index) => index === 0 || r.noise * 40 < extended[index - 1].noise * 40) &&
+    extended[extended.length - 1].noise * 40 < apex.noise * 40,
+    "apex " + apex.noise * 40 + " -> w40 " + extended[extended.length - 1].noise * 40);
+  check("game-tiny-wrestlers", "the extended bands concede beats monotonically above the apex",
+    extended.every((r, index) =>
+      r.starBeats[0] >= (index === 0 ? apex.starBeats[0] : extended[index - 1].starBeats[0]) &&
+      r.starBeats[1] >= (index === 0 ? apex.starBeats[1] : extended[index - 1].starBeats[1]) &&
       r.starBeats[2] === 40),
-    summit.map((r) => r.starBeats.join("/")).join(" "));
+    extended.map((r) => r.starBeats.join("/")).join(" "));
 
   /* ---- the bench: the shipped gate's own machinery, re-hosted here ----
    * Deterministic end to end: the one die the engine rolls (twrAiPick's
@@ -189,12 +190,12 @@ module.exports = function gate(ctx) {
     apexBench.wins >= 54 && apexBench.fastest <= 8 && apexBench.illegal === 0,
     `${apexBench.wins}/${apexBench.bouts}, fastest ${apexBench.fastest}, illegal ${apexBench.illegal}`);
 
-  /* Every summit rung is dominated the same way: cleared in a realistic
+  /* Every summit and pantheon rung is dominated the same way: cleared in a realistic
    * share of bouts, no illegal machine answer, the fastest win inside the
    * three-star band, and a passive line losing fast - the rank is only
    * held by wrestling it. */
   const summitProblems = [];
-  summit.forEach((rank) => {
+  extended.forEach((rank) => {
     const run = benchApex(rank);
     const name = `${rank.id} noise=${rank.noise} bands=${rank.starBeats.join("/")}`;
     if (!(run.wins >= 54 && run.illegal === 0)) {
@@ -230,7 +231,7 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-tiny-wrestlers",
-    "every summit rung is beaten at the apex's bar and lands its own star bands",
+    "every summit and pantheon rung is beaten at the apex's bar and lands its own star bands",
     summitProblems.length === 0, summitProblems.join(" | "));
 
   /* ---- the boot: the shell's real init path, in a fresh stub DOM ---- */
@@ -258,7 +259,8 @@ module.exports = function gate(ctx) {
     !bootError && !!bootApp && !!bootEnv.byId("gamePanelTinyWrestlers") &&
     typeof bootApp.quietResetTinyWrestlers === "function",
     bootError ? String(bootError && bootError.message) : "panel or pause hook missing");
-  /* The live picker lists all thirty ranks and names the summit in whichever
+
+  /* The live picker lists all forty ranks and names the summit in whichever
    * language the page booted in - the names the game module registers
    * through addStrings, read back off the shipped DOM. */
   const rankSel = bootError ? null : bootEnv.byId("twrRankSel");
@@ -267,9 +269,9 @@ module.exports = function gate(ctx) {
   options.forEach((option) => { optionTexts[option.value] = option.textContent; });
   const bootDict = bootApp && bootApp.I18N ? bootApp.I18N : { en: {}, zh: {} };
   const pickerProblems = [];
-  if (options.length !== 30) { pickerProblems.push(options.length + " options"); }
-  summitIds.forEach((id, index) => {
-    const key = summitKeys[index];
+  if (options.length !== 40) { pickerProblems.push(options.length + " options"); }
+  extendedIds.forEach((id, index) => {
+    const key = extendedKeys[index];
     const text = optionTexts[id] || "";
     const wanted = [bootDict.en[key], bootDict.zh[key]].filter((name) => !!name);
     if (!text || !wanted.some((name) => text.indexOf(name) !== -1)) {
@@ -277,7 +279,7 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-tiny-wrestlers",
-    "the live picker lists thirty ranks and names the summit in the boot language",
+    "the live picker lists forty ranks and names the summit in the boot language",
     pickerProblems.length === 0, pickerProblems.join(" | "));
 
   /* ---- the unlock chain is derived, never stored ---- */
@@ -293,14 +295,14 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < ranks.length ? ranks[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-tiny-wrestlers", "the unlock chain walks all thirty ranks in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-tiny-wrestlers", "the unlock chain walks all forty ranks in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 
   /* ---- the tier's names travel with the page ---- */
-  const copyProblems = summitKeys.filter((key) =>
+  const copyProblems = extendedKeys.filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key || App.I18N.en[key] === App.I18N.zh[key]);
-  check("game-tiny-wrestlers", "the six summit rank names resolve in both languages",
+  check("game-tiny-wrestlers", "the sixteen summit and pantheon rank names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 };

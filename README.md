@@ -79,6 +79,9 @@ Many games generate their deals and prove the deal before shipping it:
 
 - Glyph Pusher rooms are BFS-verified; Glyph Glide quotes a BFS-proven par.
 - Glyph Tower bands are checked against the `2^n - 1` optimum.
+- Shadow Fold sheets are certified by seeded deals where every crease is
+  provably load-bearing; Glyph Fifteen boards are dealt under a seed and
+  solved by the same weighted A* the game ships.
 - Glyph Sketch nonograms are solvable by row/column logic alone; Glyph Sudoku
   keeps a unique answer.
 - Prism Path replays every reachable mirror orientation through the real beam.
@@ -100,12 +103,22 @@ Open it from any page's game drawer, or directly with
 - **Gallery:** nine locally bundled artworks per partner (45 originals plus 45
   compact thumbnails), with zoom, favorites, keyboard navigation, and original-file
   download.
-- **Together:** scene strips, a six-goal Journey per partner, twelve Starpath
+- **Together:** scene strips, an eight-goal Journey per partner, twelve Starpath
   constellation puzzles, and 18 keepsakes / 54 stars across Mosaic, Bouquet, and
   Expedition.
 - **Date activities:** claw machine, Kitty Cards, date stories, photo studio and
   four-shot strips, quality time, heart-to-heart conversations, cooking, and room
   decoration.
+- **Resonance duet / 心动合拍:** 15 partner-specific rhythm charts with chords,
+  hold notes, optional synthesized music, and saved ranks. Practice at 50%, 75%,
+  or full speed with optional mirrored lanes and visible key hints. Practice
+  never changes ranked records, stars, or affinity; Performance first clears
+  at 70% accuracy earn a keepsake once per partner and chart.
+- **Date journal:** night walks, a midnight café, and an observatory offer six
+  endings per partner. Choices change later scenes. Reread unlocked endings,
+  favourite them, and filter the journal without replaying the whole date or
+  collecting duplicate rewards. Journey now tracks a successful Performance
+  duet and the complete set of six endings alongside its original six goals.
 - **Missions:** an action arena (Starbond Hunt) and a turn-based strategy mode
   (Starbond Relay), with per-partner skills and saved best stars.
 
@@ -138,14 +151,14 @@ english_filter.html         English Letter Filter
 chinese_punctuation.html    Chinese Punctuation Remover
 words_replacing.html        Words Replacer
 
-assets/app/                 126 JavaScript modules
+assets/app/                 127 JavaScript modules
   core.js                   storage, i18n, theme, history, layout, effects
   i18n.js                   English/Chinese dictionary
   tools.js                  text transforms and replacement presets
   main.js                   page bootstrap
   game-*.js                 game engines and registry modules
   pet-*.js                  companion
-assets/styles/              9 stylesheets (base, games, presentation, pet, Love)
+assets/styles/              10 stylesheets (base, games, presentation, pet, Love)
 assets/media/love-deepspace/
                             45 artworks, 45 thumbnails, credits and source hashes
 tools/                      headless checks, browser drivers, level forges

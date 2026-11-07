@@ -63,6 +63,32 @@
     { id: "j28", par: [28, 32, 37], cars: [[0, 4, 2, 1], [2, 3, 2, 1], [2, 5, 2, 1], [4, 2, 2, 1], [1, 1, 2, 0], [5, 4, 2, 0], [2, 0, 3, 0], [3, 0, 3, 0], [4, 4, 2, 0]] },
     { id: "j29", par: [31, 35, 40], cars: [[0, 4, 2, 1], [5, 0, 2, 0], [1, 2, 2, 1], [0, 0, 2, 0], [3, 3, 3, 0], [4, 2, 2, 0], [2, 4, 2, 0], [1, 1, 3, 1], [5, 3, 2, 0]] },
     { id: "j30", par: [35, 39, 44], cars: [[0, 3, 2, 1], [4, 3, 3, 0], [0, 1, 2, 0], [1, 0, 2, 0], [5, 1, 3, 0], [2, 2, 3, 0], [3, 2, 2, 1], [4, 0, 2, 1], [5, 4, 2, 0]] },
+
+    /* Boards 31-40, the gridlock tier: the lot's ceiling, in vehicles and in
+     * price. Every deal is eleven cars - one per colour, the whole paint rail,
+     * where the depot topped out at nine - and the cab starts backed against
+     * the left wall with all four lane cells standing cars, so the escape
+     * opens by peeling the wall column by column instead of dodging a single
+     * blocker. The first thirty never deal that shape - their fullest lane is
+     * three standing cars, and no deal exceeds nine vehicles - and the gate
+     * proves both facts along with the pars. Every number here was measured,
+     * not guessed: the same unit-step breadth-first walk through trafSlide
+     * that priced the depot prices these (35, 36, 37, 38, 40, 42, 44, 46, 48
+     * and 52 steps against the depot summit's 34), trafficSolvable re-proves
+     * each deal through the rules the build ships, and the star lines keep
+     * the depot's tight spread - three stars one step over the measured
+     * optimum, two and one star four and nine above that. A truck rides in
+     * every deal, two or three of them standing in the wall itself. */
+    { id: "j31", labelKey: "trafB31", par: [36, 40, 45], cars: [[0, 3, 2, 1], [2, 2, 3, 0], [3, 3, 2, 0], [4, 3, 3, 0], [5, 2, 2, 0], [1, 1, 2, 0], [1, 5, 2, 1], [3, 1, 2, 1], [0, 1, 2, 0], [5, 4, 2, 0], [1, 0, 2, 1]] },
+    { id: "j32", labelKey: "trafB32", par: [37, 41, 46], cars: [[0, 2, 2, 1], [2, 1, 3, 0], [3, 2, 3, 0], [4, 2, 2, 0], [5, 1, 3, 0], [0, 3, 2, 0], [0, 0, 2, 1], [2, 5, 2, 1], [4, 4, 2, 1], [1, 3, 2, 0], [4, 0, 2, 0]] },
+    { id: "j33", labelKey: "trafB33", par: [38, 42, 47], cars: [[0, 3, 2, 1], [2, 2, 3, 0], [3, 1, 3, 0], [4, 2, 3, 0], [5, 2, 2, 0], [0, 1, 2, 0], [1, 0, 2, 0], [2, 0, 2, 1], [0, 5, 2, 1], [4, 1, 2, 1], [5, 4, 2, 0]] },
+    { id: "j34", labelKey: "trafB34", par: [39, 43, 48], cars: [[0, 2, 2, 1], [2, 2, 2, 0], [3, 2, 2, 0], [4, 0, 3, 0], [5, 0, 3, 0], [0, 4, 2, 0], [3, 5, 3, 1], [1, 4, 2, 0], [2, 4, 2, 0], [3, 4, 2, 1], [4, 3, 2, 1]] },
+    { id: "j35", labelKey: "trafB35", par: [41, 45, 50], cars: [[0, 2, 2, 1], [2, 1, 2, 0], [3, 0, 3, 0], [4, 0, 3, 0], [5, 1, 3, 0], [2, 3, 2, 0], [4, 4, 2, 1], [2, 5, 3, 1], [0, 4, 2, 0], [0, 0, 3, 1], [1, 4, 2, 0]] },
+    { id: "j36", labelKey: "trafB36", par: [43, 47, 52], cars: [[0, 4, 2, 1], [2, 4, 2, 0], [3, 3, 3, 0], [4, 2, 3, 0], [5, 2, 3, 0], [1, 2, 3, 1], [0, 0, 2, 0], [1, 3, 2, 1], [2, 0, 3, 1], [4, 5, 2, 1], [4, 1, 2, 1]] },
+    { id: "j37", labelKey: "trafB37", par: [45, 49, 54], cars: [[0, 4, 2, 1], [2, 4, 2, 0], [3, 3, 3, 0], [4, 2, 3, 0], [5, 2, 3, 0], [1, 2, 3, 1], [0, 0, 2, 0], [1, 3, 2, 1], [1, 0, 3, 1], [4, 5, 2, 1], [1, 1, 2, 1]] },
+    { id: "j38", labelKey: "trafB38", par: [47, 51, 56], cars: [[0, 3, 2, 1], [2, 3, 3, 0], [3, 3, 3, 0], [4, 3, 2, 0], [5, 1, 3, 0], [3, 0, 2, 1], [4, 1, 2, 0], [0, 5, 2, 1], [0, 1, 2, 0], [2, 1, 2, 1], [1, 0, 2, 0]] },
+    { id: "j39", labelKey: "trafB39", par: [49, 53, 58], cars: [[0, 3, 2, 1], [2, 3, 3, 0], [3, 3, 3, 0], [4, 3, 3, 0], [5, 2, 2, 0], [0, 0, 2, 0], [1, 0, 2, 0], [2, 0, 2, 1], [0, 5, 2, 1], [2, 1, 2, 1], [5, 0, 2, 0]] },
+    { id: "j40", labelKey: "trafB40", par: [53, 57, 62], cars: [[0, 2, 2, 1], [2, 2, 2, 0], [3, 1, 3, 0], [4, 1, 3, 0], [5, 2, 2, 0], [3, 5, 2, 1], [0, 4, 2, 0], [0, 3, 2, 1], [4, 4, 2, 1], [2, 4, 2, 0], [1, 4, 2, 0]] },
   ];
 
   function trafGrid(cars) {
@@ -651,7 +677,11 @@
         selectEl,
         campaign,
         function (def) {
-          return t("trafBoardLabelN", { n: campaign.indexOf(def.id) + 1 });
+          /* the gridlock tier deals carry their own names; the earlier
+           * blocks keep the numbered label */
+          return def.labelKey
+            ? t(def.labelKey)
+            : t("trafBoardLabelN", { n: campaign.indexOf(def.id) + 1 });
         },
         t("elementsLocked"),
       );
@@ -941,4 +971,36 @@
   App.trafGrid = trafGrid;
   App.trafLevels = trafLevels;
   App.initTrafficGame = initTrafficGame;
+
+  /* The gridlock tier carries its own names: addStrings only fills keys i18n.js
+   * does not already hold, so the picker never prints a raw key and the first
+   * thirty blocks keep their numbered labels. It lives below the exports so
+   * the level gate can lift the engine's slide rules into a bare function
+   * sandbox without dragging an App call along. */
+  App.addStrings({
+    en: {
+      "trafB31": "The First Wall",
+      "trafB32": "Eleven Deep",
+      "trafB33": "The Standing Queue",
+      "trafB34": "The Wide Wall",
+      "trafB35": "The Packed Lot",
+      "trafB36": "The Long Wait",
+      "trafB37": "The Slow Peel",
+      "trafB38": "The Solid Row",
+      "trafB39": "The Last Column",
+      "trafB40": "The Gridlock",
+    },
+    zh: {
+      "trafB31": "头一道墙",
+      "trafB32": "十一辆车",
+      "trafB33": "排队的车柱",
+      "trafB34": "一整面墙",
+      "trafB35": "塞满的车场",
+      "trafB36": "漫长的等待",
+      "trafB37": "慢慢拆",
+      "trafB38": "堵实的车道",
+      "trafB39": "最后一根车柱",
+      "trafB40": "大堵车",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

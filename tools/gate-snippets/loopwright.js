@@ -40,6 +40,7 @@ module.exports = function gate(ctx) {
   const floors = App.lpwFloors;
   const summitIds = ["f25", "f26", "f27", "f28", "f29", "f30"];
   const overhaulIds = ["f31", "f32", "f33", "f34", "f35", "f36", "f37", "f38", "f39", "f40"];
+  const roomIds = ["f41", "f42", "f43", "f44"];
 
   /* The floor build (lpwParse + piston phases) is seeded inside the module,
    * but the boot itself may reach for Math.random elsewhere; pin it the way
@@ -55,8 +56,8 @@ module.exports = function gate(ctx) {
   };
 
   /* ---- ladder shape ---- */
-  check("game-loopwright", "the ladder holds forty floors",
-    floors.length === 40, String(floors.length));
+  check("game-loopwright", "the ladder holds forty-four floors",
+    floors.length === 44, String(floors.length));
   check("game-loopwright", "every floor id is distinct and in ladder order",
     new Set(floors.map((floor) => floor.id)).size === floors.length &&
       floors.every((floor, index) => floor.id === "f" + (index + 1)),
@@ -77,12 +78,15 @@ module.exports = function gate(ctx) {
     tierInOrder(summitIds), summitIds.filter((id) => !floors.some((f) => f.id === id)).join(",") || "ordered");
   check("game-loopwright", "the overhaul tier f31-f40 is present in order",
     tierInOrder(overhaulIds), overhaulIds.filter((id) => !floors.some((f) => f.id === id)).join(",") || "ordered");
+  check("game-loopwright", "the moving-yard tier f41-f44 is present in order",
+    tierInOrder(roomIds), roomIds.filter((id) => !floors.some((f) => f.id === id)).join(",") || "ordered");
 
   const byId = {};
   floors.forEach((floor) => { byId[floor.id] = floor; });
   const f24 = byId.f24;
   const summit = summitIds.map((id) => byId[id]);
   const overhaul = overhaulIds.map((id) => byId[id]);
+  const room = roomIds.map((id) => byId[id]);
   const posOf = (id) => floors.findIndex((floor) => floor.id === id);
   const before = (id) => floors.slice(0, posOf(id));
 
@@ -359,6 +363,21 @@ module.exports = function gate(ctx) {
       "runs 6 then 7 then 8, plates 8 to 12, pistons 3, doors 4, pads 3, crates 5, ticks 48 and 52, waits 6)",
     recProblems.length === 0, recProblems.join(" | "));
 
+  /* The moving yard's own records, measured the same way - against every
+   * floor before it. */
+  const recRoom = (id, label, ok, detail) => {
+    if (!ok) roomProblems.push(id + " " + label + (detail ? " (" + detail + ")" : ""));
+  };
+  const roomProblems = [];
+  recRoom("f44", "first nine-run crew",
+    byId.f44.parRuns === 9 && peakBefore("f44", (f) => f.parRuns) === 8);
+  recRoom("f44", "first thirteen-plate yard",
+    byId.f44.grid.plates.length === 13 && peakBefore("f44", (f) => f.grid.plates.length) === 12);
+  check("game-loopwright",
+    "every moving-yard rung takes its measured record against every floor before it " +
+      "(nine runs, thirteen plates)",
+    roomProblems.length === 0, roomProblems.join(" | "));
+
   /* The crews are arithmetic: (runs-2) ghosts press measurably fewer
    * plates than the yard holds, so the shipped crew is the count the yard
    * itself demands. f37 overrides - its fourth column's pusher has no
@@ -381,6 +400,116 @@ module.exports = function gate(ctx) {
     overhaul.map((floor) => floor.id + ":" +
       (winPress[floor.id].bodies + "+" + winPress[floor.id].ghostCrates + "+" +
         winPress[floor.id].liveCrates + "+" + winPress[floor.id].pads)).join(" "));
+
+  /* ---- the moving yard f41-f44: the doors breathe, and they aim at the
+   * relay. Structure first: the door walk 1-2-3-3, the plate walk to the
+   * capstone's thirteen, every run inside the panel's eight slots, the
+   * shipped star calibration, and the two firsts measured against the
+   * whole ladder before the tier. ---- */
+  check("game-loopwright",
+    "the moving yard's doors walk 1, 2, 3, 3 and its plates hold 12, 12, 12, 13",
+    JSON.stringify(room.map((floor) => floor.grid.pistons.length)) === JSON.stringify([1, 2, 3, 3]) &&
+      JSON.stringify(room.map((floor) => floor.grid.plates.length)) === JSON.stringify([12, 12, 12, 13]),
+    room.map((floor) => floor.id + ":" + floor.grid.pistons.length + "doors/" +
+      floor.grid.plates.length + "plates").join(" "));
+  check("game-loopwright",
+    "every moving-yard run keeps inside the panel's eight slots and the star calibration holds",
+    room.every((floor) =>
+      floor.parOps === 8 &&
+      floor.programs.every((run) => run.length <= 8) &&
+      floor.parRuns === floor.programs.length &&
+      floor.parOps === Math.max.apply(null, floor.programs.map((run) => run.length)) &&
+      floor.starRuns[0] === floor.parRuns &&
+      floor.starRuns[1] === floor.parRuns + 1 &&
+      floor.starRuns[2] === floor.parRuns + 3 &&
+      App.starsFor(floor.parRuns, floor.starRuns, "low") === 3 &&
+      App.starsFor(floor.parRuns + 1, floor.starRuns, "low") === 2),
+    room.map((floor) => floor.id + ":" + floor.parRuns + "runs/" + floor.parOps + "ops").join(" "));
+
+  /* The crew is the floor and the closer is the measured minimum - the
+   * whole tier, seeded - and every door is proved two ways: walled shut,
+   * the shipped crew fails (the phase is load-bearing, never decoration);
+   * and the phase law pins each door to the waitless natural arrival tick
+   * of a run it gates. The closer's own route crosses no door at all. */
+  seeded(() => {
+    room.forEach((floor) => {
+      const replay = lpw.replayRuns(floor);
+      const last = replay.runs[replay.runs.length - 1];
+      check("game-loopwright",
+        `${floor.id}: every authored run ends clean, leaves its ghost, and the last wins with every plate held`,
+        replay.solved &&
+          replay.ghosts.length === floor.programs.length - 1 &&
+          replay.runs.every((run, index) =>
+            index === replay.runs.length - 1 ? run.win : run.reason === "done") &&
+          last.end.x === replay.base.goal.x && last.end.y === replay.base.goal.y &&
+          last.allPlates,
+        JSON.stringify(replay.runs));
+      const alone = App.loopSim(lpw.gridWith(replay.base, []), floor.programs[floor.programs.length - 1], 64);
+      const closerCells = new Set(alone.frames.map((frame) => frame.w.x + "," + frame.w.y));
+      check("game-loopwright",
+        `${floor.id}: the final run alone cannot win - the crew is the floor`,
+        !alone.win, "reason " + alone.reason);
+      const shorter = lpw.searchMinimum(floor, {
+        ghosts: replay.ghosts,
+        alphabet: ["F", "B", "L", "R", "W", "P"],
+        maxLen: floor.parOps - 1,
+      });
+      check("game-loopwright",
+        `${floor.id}: no program under ${floor.parOps} ops wins - the shipped closer is the measured minimum`,
+        shorter === null, JSON.stringify(shorter));
+      const twinBase = Object.assign({}, replay.base, { crates: [] });
+      const twinGhosts = replay.ghosts.map((frames) =>
+        frames.map((frame) => Object.assign({}, frame, { crates: [] })));
+      const twin = lpw.searchMinProgram(twinBase, twinGhosts,
+        ["F", "B", "L", "R", "W"], floor.parOps);
+      check("game-loopwright",
+        `${floor.id}: the crateless twin finds no win - the fleet is load-bearing`,
+        twin === null, JSON.stringify(twin));
+      const doorCells = replay.base.pistons.map((piston) => piston.x + "," + piston.y);
+      check("game-loopwright",
+        `${floor.id}: the closer's route crosses no door - the doors aim at the relay`,
+        doorCells.every((cell) => !closerCells.has(cell)),
+        doorCells.filter((cell) => closerCells.has(cell)).join(" "));
+      floor.grid.pistons.forEach((piston, pi) => {
+        const wallTwin = JSON.parse(JSON.stringify(floor));
+        wallTwin.map = wallTwin.map.map((row, y) =>
+          row.split("").map((ch, x) =>
+            x === piston.x && y === piston.y ? "#" : ch).join(""));
+        const wallReplay = lpw.replayRuns(wallTwin);
+        check("game-loopwright",
+          `${floor.id}: door ${pi} walled shut fails the shipped crew - the phase is load-bearing`,
+          wallReplay.solved !== true, "walled floor solved=" + wallReplay.solved);
+        const floorTwin = JSON.parse(JSON.stringify(floor));
+        floorTwin.map = floorTwin.map.map((row, y) =>
+          row.split("").map((ch, x) =>
+            x === piston.x && y === piston.y ? "." : ch).join(""));
+        const arrivals = [];
+        let aimed = false;
+        floor.programs.forEach((program) => {
+          const stripped = program.slice();
+          while (stripped.length && stripped[0] === "W") stripped.shift();
+          if (!stripped.length) return;
+          const sim = App.loopSim(lpw.gridWith(App.loopParse(floorTwin), []),
+            stripped, 64);
+          for (let t = 0; t < sim.frames.length; t += 1) {
+            const frame = sim.frames[t];
+            if (frame.w.x === piston.x && frame.w.y === piston.y) {
+              /* frame index t = after t ops; the step INTO the cell was
+               * judged at op time t - 1, which is the tick the door sees */
+              const tick = Math.max(0, t - 1);
+              arrivals.push(tick);
+              if ((tick + piston.off) % piston.period === 0) aimed = true;
+              break;
+            }
+          }
+        });
+        check("game-loopwright",
+          `${floor.id}: door ${pi} slams on a waitless natural arrival (ticks ${arrivals.join(",") || "none"})`,
+          aimed, "off=" + piston.off + " residues=" +
+            arrivals.map((t) => (t + piston.off) % piston.period).join(","));
+      });
+    });
+  });
 
   /* The ram phases are load-bearing where the tier deals them: the straight
    * no-wait walks and parks die on the down-ticks the authored runs wait
@@ -415,18 +544,18 @@ module.exports = function gate(ctx) {
     const savedZh = App.I18N.zh;
     App.I18N.en = savedZh;
     App.I18N.zh = savedEn;
-    const swapped = summit.concat(overhaul).every((floor) => {
+    const swapped = summit.concat(overhaul).concat(room).every((floor) => {
       const text = App.t(floor.labelKey);
       return text && text !== floor.labelKey;
     });
     App.I18N.en = savedEn;
     App.I18N.zh = savedZh;
-    check("game-loopwright", "the summit and overhaul names resolve through App.t in the boot language",
-      summit.concat(overhaul).every((floor) => {
+    check("game-loopwright", "the summit, overhaul and moving-yard names resolve through App.t in the boot language",
+      summit.concat(overhaul).concat(room).every((floor) => {
         const text = App.t(floor.labelKey);
         return text && text !== floor.labelKey;
       }), "a tier label fell back to its key");
-    check("game-loopwright", "the summit and overhaul names resolve through App.t in the other language",
+    check("game-loopwright", "the summit, overhaul and moving-yard names resolve through App.t in the other language",
       swapped, "a tier label fell back to its key");
   });
 
@@ -443,7 +572,7 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < floors.length ? floors[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-loopwright", "the unlock chain walks all forty rungs in order",
-    walked === 40 && chained && chain.clearedCount() === 40,
+  check("game-loopwright", "the unlock chain walks all forty-four rungs in order",
+    walked === 44 && chained && chain.clearedCount() === 44,
     walked + " first clears");
 };

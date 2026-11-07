@@ -320,7 +320,60 @@
      * purse is one fast kit's price, and the ledger shuts at three coins. */
     { id: "a30", labelKey: "audR30", twistKey: "audTwist30", seed: 20270311, purse: 88, hp: 46, slots: 4, step: 2, reserve: 1.45, cap: 10, buff: 2, hammer: 8,
       pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern", "canteen"], packs: [["warden"], ["brute", "brute", "hook"], ["warden", "warden", "brute"]],
-      restPrice: 10, restHeal: 9, rests: 2, rivalPurse: 104, greed: 1.4, jockey: 1.6, miser: 0.8, miserRaises: 3 }
+      restPrice: 10, restHeal: 9, rests: 2, rivalPurse: 104, greed: 1.4, jockey: 1.6, miser: 0.8, miserRaises: 3 },
+    /* The toll tier. The fuse taxed the party's time and the bell taxed the
+     * sale; these ten tax the coins themselves. `toll` authors the hall's
+     * door fee: the moment the party steps through a door, the purse pays it,
+     * once a door, three doors a run. Structurally nothing before the tier
+     * carries the field, so every shipped door is entered exactly as it
+     * always was - the gate replays rungs 1-30 byte-identically with the toll
+     * seated at zero. The scenes walk back over the summit's own grounds with
+     * the bell rehung long, so the lever that climbs is the toll alone - two
+     * coins rising to twelve, a rung's whole fee walking from 6 to 36 coins.
+     * The bands stay lines the planner replayed through auctionRound,
+     * audFightRound and audAdvance, never a guess: the fee comes straight off
+     * the keep, so the tier's richest line falls twelve coins to three while
+     * the purse it burns from shifts, and the fee is load-bearing from both
+     * sides - hands the fee-free hall prices into a clear are driven off the
+     * door by it, and the planner's own richest line keeps strictly more when
+     * the fee is handed back. */
+    /* The First Toll: two coins a door, six a run - the lesson is only that
+     * the hall now charges admission, and the ladder's arithmetic starts
+     * again from the top. */
+    { id: "a31", labelKey: "audR31", twistKey: "audTwist31", seed: 20270320, purse: 60, hp: 44, slots: 5, step: 2, reserve: 1.35, cap: 10, buff: 2, hammer: 14, toll: 2,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern"], packs: [["adder", "adder"], ["brute", "hook"], ["warden", "brute"]],
+      restPrice: 10, restHeal: 9, rests: 2, rivalPurse: 80, greed: 1.4, jockey: 1.55, miser: 0.78, miserRaises: 3 },
+    { id: "a32", labelKey: "audR32", twistKey: "audTwist32", seed: 20271747, purse: 70, hp: 44, slots: 5, step: 2, reserve: 1.35, cap: 9, buff: 2, hammer: 12, toll: 3,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "canteen"], packs: [["hook", "adder"], ["brute", "brute"], ["warden", "brute"]],
+      restPrice: 10, restHeal: 8, rests: 2, rivalPurse: 80, greed: 1.4, jockey: 1.7, miser: 0.7, miserRaises: 2 },
+    { id: "a33", labelKey: "audR33", twistKey: "audTwist33", seed: 20270403, purse: 76, hp: 44, slots: 5, step: 2, reserve: 1.3, cap: 9, buff: 2, hammer: 11, toll: 4,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern", "canteen"], packs: [["adder", "adder"], ["warden", "hook"], ["brute", "brute", "hook"]],
+      restPrice: 10, restHeal: 9, rests: 2, rivalPurse: 83, greed: 1.3, jockey: 1.45, miser: 0.9, miserRaises: 5 },
+    { id: "a34", labelKey: "audR34", twistKey: "audTwist34", seed: 20271304, purse: 100, hp: 44, slots: 4, step: 2, reserve: 1.3, cap: 9, buff: 2, hammer: 10, toll: 5,
+      pool: ["dirk", "axe", "buckler", "vial", "goad", "lantern"], packs: [["brute", "adder"], ["warden", "brute"], ["warden", "warden"]],
+      restPrice: 10, restHeal: 9, rests: 2, rivalPurse: 85, greed: 1.35, jockey: 1.55, miser: 0.75, miserRaises: 3 },
+    { id: "a35", labelKey: "audR35", twistKey: "audTwist35", seed: 20270417, purse: 93, hp: 46, slots: 4, step: 2, reserve: 1.3, cap: 8, buff: 2, hammer: 9, toll: 6,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern"], packs: [["warden"], ["brute", "brute", "adder"], ["warden", "brute"]],
+      restPrice: 11, restHeal: 9, rests: 1, rivalPurse: 85, greed: 1.35, jockey: 1.5, miser: 0.72, miserRaises: 2 },
+    { id: "a36", labelKey: "audR36", twistKey: "audTwist36", seed: 20270424, purse: 101, hp: 46, slots: 4, step: 2, reserve: 1.45, cap: 10, buff: 2, hammer: 8, toll: 7,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern", "canteen"], packs: [["warden"], ["brute", "brute", "hook"], ["warden", "warden", "brute"]],
+      restPrice: 10, restHeal: 9, rests: 2, rivalPurse: 104, greed: 1.4, jockey: 1.6, miser: 0.8, miserRaises: 3 },
+    { id: "a37", labelKey: "audR37", twistKey: "audTwist37", seed: 20271123, purse: 76, hp: 44, slots: 5, step: 2, reserve: 1.35, cap: 10, buff: 2, hammer: 14, toll: 8,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern"], packs: [["adder", "adder"], ["warden", "hook"], ["warden", "brute"]],
+      restPrice: 10, restHeal: 9, rests: 2, rivalPurse: 82, greed: 1.42, jockey: 1.6, miser: 0.8, miserRaises: 3 },
+    { id: "a38", labelKey: "audR38", twistKey: "audTwist38", seed: 20272203, purse: 107, hp: 44, slots: 4, step: 2, reserve: 1.3, cap: 9, buff: 2, hammer: 10, toll: 9,
+      pool: ["dirk", "axe", "buckler", "vial", "goad", "lantern"], packs: [["brute", "adder"], ["warden", "warden"], ["warden", "brute"]],
+      restPrice: 10, restHeal: 9, rests: 2, rivalPurse: 88, greed: 1.38, jockey: 1.58, miser: 0.78, miserRaises: 3 },
+    { id: "a39", labelKey: "audR39", twistKey: "audTwist39", seed: 20270515, purse: 106, hp: 46, slots: 4, step: 2, reserve: 1.3, cap: 8, buff: 2, hammer: 9, toll: 10,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern"], packs: [["warden"], ["warden", "brute", "adder"], ["brute", "brute"]],
+      restPrice: 11, restHeal: 9, rests: 1, rivalPurse: 88, greed: 1.38, jockey: 1.55, miser: 0.75, miserRaises: 2 },
+    /* The Last Toll: the summit. Twelve coins a door, thirty-six a run - more
+     * than a third of the purse before the first crate is even bid - and the
+     * wardens hold all three doors with one fire on the whole run. The hall's
+     * fee and the ledger shut together. */
+    { id: "a40", labelKey: "audR40", twistKey: "audTwist40", seed: 20270601, purse: 110, hp: 46, slots: 4, step: 2, reserve: 1.3, cap: 8, buff: 2, hammer: 9, toll: 12,
+      pool: ["dirk", "axe", "buckler", "cloak", "vial", "goad", "lantern"], packs: [["warden"], ["warden", "brute", "adder"], ["brute", "brute"]],
+      restPrice: 11, restHeal: 9, rests: 1, rivalPurse: 88, greed: 1.38, jockey: 1.55, miser: 0.75, miserRaises: 2 }
   ];
 
   function audInt(value) {
@@ -601,6 +654,16 @@
     var def = input && input.level ? input.level : input;
     var hammer = audInt(def && def.hammer);
     return hammer > 0 ? hammer : AUD_SALE_CAP;
+  }
+
+  /* The door toll a rung seats: the shipped halls collect nothing, so rungs
+   * 1-30 leave `toll` off and this seats zero. The toll tier's rungs author
+   * two coins rising to twelve. Reads a level or a live run, so the panel,
+   * the planner and the checks all ask once. */
+  function audTollOf(input) {
+    var def = input && input.level ? input.level : input;
+    var toll = audInt(def && def.toll);
+    return toll > 0 ? toll : 0;
   }
 
   /* The bell that ends a sale early: after the authored count of paddles the
@@ -894,6 +957,14 @@
     run.wiped = false;
     run.fallen = false;
     run.stalled = false;
+    /* The door toll: the hall collects its fee the moment the party steps
+     * through, so coins are taxed exactly where the fight is bought. False
+     * wherever no toll is authored, so every shipped rung enters its doors
+     * exactly as it always did. */
+    var toll = audInt(run.level.toll);
+    if (toll > 0) {
+      run.purse = Math.max(0, audInt(run.purse) - toll);
+    }
     return run;
   }
 
@@ -1760,7 +1831,7 @@
         campHead.textContent = t("audCampHead", {
           left: audInt(run.restsLeft), rests: audInt(level.rests), price: coins(level.restPrice),
           heal: t("audHpGain", { n: audInt(level.restHeal) + audInt(stats.rest) }), purse: coins(run.purse), hp: hitWords(run)
-        });
+        }) + (audInt(level.toll) > 0 ? " " + t("audTollLine", { n: audTollOf(level) }) : "");
         restBtn.disabled = run.restsLeft <= 0 || run.purse < audInt(level.restPrice) || run.hp >= run.maxHp;
         logLine.textContent = roundLog.length ? roundLog.join(" / ") : t("audCampQuiet");
         return;
@@ -2075,6 +2146,16 @@
       "audR28": "The Bell and the Warden",
       "audR29": "One Fire Left",
       "audR30": "The Closing Bell",
+      "audR31": "The First Toll",
+      "audR32": "Toll and the Fangs",
+      "audR33": "The Guarded Toll",
+      "audR34": "Toll and the Hooks",
+      "audR35": "Toll and the Spree",
+      "audR36": "Toll and the Warden",
+      "audR37": "Toll on One Fire",
+      "audR38": "The Narrow Toll",
+      "audR39": "The Tollkeeper's Round",
+      "audR40": "The Last Toll",
       "audTwist1": "three honest lots, one soft door",
       "audTwist2": "Margra sets every price against you",
       "audTwist3": "the healer's vial is in the pool and a rest decides the run",
@@ -2105,6 +2186,16 @@
       "audTwist28": "ten paddles to the bell, four slots for six crates, and a warden behind both late doors: every crate the bell hands to a rival is a strike the wardens will not forgive",
       "audTwist29": "nine paddles to the bell, the warden holds the first door again, and one rest on the whole run - what the bell takes from your kit, no campfire gives back",
       "audTwist30": "the doors breathe out to ten rounds but the house closes every sale on the eighth paddle: eight crates crowd four slots and the whole purse is one fast kit's price - the ledger shuts at three coins",
+      "audTwist31": "the hall now charges admission: two coins at every door, six a run, collected the moment you step through - the coins the ladder taught you to hoard are taxed where the fight is bought",
+      "audTwist32": "three coins a door and Margra lifts hers only while you stand: every coin the bell and the doors take is a coin your own paddle cannot win back",
+      "audTwist33": "four coins a door and Ost lifts five paddles at nine tenths of the worth: the fee and the spree drain the same purse before your price is ready",
+      "audTwist34": "five coins a door, four slots for six crates, and the warden twice at the back: every crate you haul across a toll door has to pay for itself twice",
+      "audTwist35": "six coins a door and one rest on the whole run: the fee, the doors and the empty camp all draw on the same purse",
+      "audTwist36": "seven coins a door - twenty-one a run - and every reserve in the top of its band: the whole purse is one fast kit's price plus the hall's fee",
+      "audTwist37": "eight coins a door and the warden holds the first door again: the fee is due before your first fight is even bought",
+      "audTwist38": "nine coins a door and the wardens walk the middle door together: twenty-seven coins of fee before the last crate is even bid",
+      "audTwist39": "ten coins a door and one rest on the whole run: thirty coins of fee, a warden up front, and no fire to fall back on",
+      "audTwist40": "twelve coins a door, thirty-six a run - more than a third of the purse before the first crate is bid - and the wardens hold all three doors: the hall's fee and the ledger shut together",
       "audItDirk": "Iron Dirk",
       "audItAxe": "Splitter Axe",
       "audItBuckler": "Tin Buckler",
@@ -2212,6 +2303,7 @@
       "audEvMend": "Your kit mends {n} hit points ({h} left)",
       "audNoPatch": "No field dressing left this fight.",
       "audCampHead": "Camp: {left} of {rests} rests left. A rest costs {price} and mends {heal}. Purse {purse}, party {hp}.",
+      "audTollLine": "The hall collects a toll of {n} coins at every door.",
       "audBtnRest": "Rest",
       "audBtnMarch": "March on (M)",
       "audRested": "You rest: {h} mended for {c}, party at {hp}.",
@@ -2225,7 +2317,7 @@
       "audLostHp": "The party fell at encounter {n}. Run {seed} replays this auction - pass more and spend it on rests.",
       "audLostStall": "Encounter {n} would not break: {cap} rounds and the door still stood. Run {seed} - your kit was too blunt to clear it.",
       "audNextRun": "Next run unlocked.",
-      "audAllRuns": "All thirty runs cleared.",
+      "audAllRuns": "All forty runs cleared.",
       "audBands": "Three stars keeps {three}; one star keeps {one}.",
       "audBest": "Best keep: {n}.",
       "audHint": "Passing is a bid too: every coin left between encounters buys the only healing the run has.",
@@ -2263,6 +2355,16 @@
       "audR28": "铃与狱卒",
       "audR29": "只剩一堆火",
       "audR30": "打烊铃",
+      "audR31": "头一道门税",
+      "audR32": "门税与群牙",
+      "audR33": "架防的门税",
+      "audR34": "门税与铁钩",
+      "audR35": "门税与挥霍",
+      "audR36": "门税与狱卒",
+      "audR37": "一堆火上的门税",
+      "audR38": "窄行囊的门税",
+      "audR39": "收税人的一轮",
+      "audR40": "最后的门税",
       "audTwist1": "三件实在货，一扇软门",
       "audTwist2": "玛格丽特专门针对你抬价",
       "audTwist3": "治疗师小瓶在货架上，一次扎营决定成败",
@@ -2293,6 +2395,16 @@
       "audTwist28": "十块牌落铃，四个格子装六件货，而最后两道门后各站着一名狱卒：铃替对手接走的每一件货，都是狱卒不会轻饶的那一记劈砍",
       "audTwist29": "九块牌落铃，狱卒再度镇守头一道门，而整趟只有一次扎营——铃从你的装备里拿走什么，营火就还不回什么",
       "audTwist30": "门后的引线放宽到十轮，可宅子在第八块牌就替每场拍卖落槌：八件货挤四个格子，整个钱袋就是一套快刀的价钱——账簿在三枚钱币时合上",
+      "audTwist31": "堂口如今要收过门钱：每道门两枚，一趟六枚，人一跨过门就收——阶梯教你们攒下的钱，恰恰在买那一仗的地方被抽了税",
+      "audTwist32": "每道门三枚门税，而玛格丽特只在你还在场时举牌：铃和门拿走的每一枚，都是你自己的牌赢不回来的钱",
+      "audTwist33": "每道门四枚门税，而奥斯特几乎贴着九成标称价值连举五块牌：费与挥霍抢着掏同一个钱袋，赶在你的价钱凑好之前",
+      "audTwist34": "每道门五枚门税，四个格子装六件货，狱卒还两度坐镇后场：每一件跨过收税门的货，都得把这份税挣回来两遍",
+      "audTwist35": "每道门六枚门税，而整趟只有一次扎营：门税、门后的敌人、空空的营火，掏的都是同一个钱袋",
+      "audTwist36": "每道门七枚门税——一趟二十一枚——而每件底价都贴着价位带顶端：整个钱袋就是一套快刀的价钱，外加堂口的费",
+      "audTwist37": "每道门八枚门税，狱卒再度镇守头一道门：还没买第一仗，费就先到了",
+      "audTwist38": "每道门九枚门税，狱卒结伴守住中门：最后一件货还没上拍，二十七枚的费就已经先付了",
+      "audTwist39": "每道门十枚门税，整趟只有一次扎营：三十枚的费、当先的狱卒，身后没有营火可退",
+      "audTwist40": "每道门十二枚，一趟三十六枚——还没举第一块牌，钱袋的三分之一就先没了——而狱卒守着全部三道门：堂口的费与账簿一起合上",
       "audItDirk": "铁匕首",
       "audItAxe": "劈裂斧",
       "audItBuckler": "锡圆盾",
@@ -2400,6 +2512,7 @@
       "audEvMend": "装备替你缝了 {n} 点生命（剩 {h}）",
       "audNoPatch": "这一仗的敷料已经用尽。",
       "audCampHead": "扎营：{rests} 次机会还剩 {left} 次。一次扎营花 {price}，回 {heal}。钱袋 {purse}，队伍 {hp}。",
+      "audTollLine": "每过一道门，堂口都要收 {n} 枚钱币的过门税。",
       "audBtnRest": "扎营",
       "audBtnMarch": "继续行军（M）",
       "audRested": "你歇了一晚：花 {c} 回了 {h}，队伍现为 {hp}。",
@@ -2413,7 +2526,7 @@
       "audLostHp": "队伍倒在第 {n} 关。种子 {seed} 可完整重放这趟拍卖——多放弃几次，把钱留给扎营。",
       "audLostStall": "第 {n} 关打不穿：{cap} 轮过去门还立着。种子 {seed}——你的装备太钝，啃不下它。",
       "audNextRun": "解锁下一趟拍卖。",
-      "audAllRuns": "三十趟拍卖全部打通。",
+      "audAllRuns": "四十趟拍卖全部打通。",
       "audBands": "三星需要剩下 {three}；一星只需剩下 {one}。",
       "audBest": "最佳结余：{n}。",
       "audHint": "放弃也是一种出价：关卡之间剩下的每一枚钱币，都是这趟旅程唯一的医术。",
@@ -2452,9 +2565,10 @@
         "Rivals: Greed the Cox bids until he cannot pay, Margra the Setter only raises while you are still in and quits the moment you do, Ost the Miser lifts a set number of paddles at his own share of the worth and then hoards - and each run sets that number and that share.",
         "Fight: foes telegraph their intent - hits, bites, guards and rends. Strike, Brace and Patch cost the round's actions, and 16 rounds without a break drives you off.",
         "Rest: coins only turn into healing between encounters, at the run's price per rest - take every lot and you will meet the last door bleeding.",
-        "Ladder: thirty runs, from Stall Fares to The Closing Bell, and every rung's stars are the planner's own measured line - a clear that keeps coins burns four in ten of the purse at the front of the ladder and twenty-six in twenty-seven by The Last Ledger.",
+        "Ladder: forty runs, from Stall Fares to The Last Toll, and every rung's stars are the planner's own measured line - a clear that keeps coins burns four in ten of the purse at the front of the ladder and twenty-six in twenty-seven by The Last Ledger.",
         "New tier: the deep halls sit on a fuse - twelve rounds at the Twelve-Round Bell, eight at The Last Fuse - so a party that cannot break a door is driven off it, and the coins the first twenty runs taught you to hoard have to become damage.",
         "Summit: the last six runs put a house bell on every sale - after so many paddles the lot closes and the top bid takes it - so a paddle is a bid and a tick of the bell at once, fourteen paddles at The First Bell falling to eight at The Closing Bell, and a crate you lose to the bell is a strike the doors will miss.",
+        "Toll: the last ten runs charge admission at the doors - the hall collects two coins a door at The First Toll rising to twelve at The Last Toll, paid the moment the party steps through, so the coins left over after the sale are taxed exactly where the fight is bought.",
       ],
       zh: [
         "目标：让队伍活着打通这趟拍卖的三个关卡，并且尽量把钱留在袋里——终局钱袋就是分数；星级由导出的规划器实测得出，同一个种子完全重放同一趟拍卖。",
@@ -2463,9 +2577,10 @@
         "对手：贪心的科克斯一直叫到付不起；设局的玛格丽特只在你还在场时抬价，你一撤她立刻收手；吝啬的奥斯特只按本趟设定的次数举牌，只出他自己那一份价值，之后就抱着钱不动——举几次、出几成，每一趟都由这一趟的规则定。",
         "战斗：敌人会预告意图——重打、撕咬、架防、撕裂。劈砍、格挡、包扎消耗本轮行动数，16 轮打不穿就被赶下门。",
         "扎营：钱币只在关卡之间变成治疗，每处营地按本趟价格收费——每件货物都抢，最后一道门你就会流着血进去。",
-        "阶梯：从摊位小市到打烊铃一共三十趟，每一趟的星级都由规划器实测得出——一次合法的通关，在阶梯前半段要烧掉钱袋的十之三四，到最后的账簿要烧掉二十七份里的二十六。",
+        "阶梯：从摊位小市到最后的门税一共四十趟，每一趟的星级都由规划器实测得出——一次合法的通关，在阶梯前半段要烧掉钱袋的十之三四，到最后的账簿要烧掉二十七份里的二十六。",
         "新阶梯：深层关卡都装上了引线——十二轮的钟声处十二轮，最后的引线处只剩八轮——打不穿门的队伍会被赶下门去，前二十关教你攒下的钱，如今必须买成输出。",
         "巅峰段：最后六趟的每场拍卖都压着一口宅铃——举满规定块数货物即落槌、当场价最高者得——于是每块牌既是出价也是铃上的一响，从第一声铃的十四块一路收到打烊铃的八块，而输给铃的那件货，就是门后缺的那一记输出。",
+        "门税：最后十趟的每道门都要收过门钱——头一道门税处每门两枚，最后的门税处涨到十二枚，人一跨过门当场收讫——拍卖之后剩下的钱币，恰好在买那一仗的地方被抽税。",
       ]
     }
   });
@@ -2484,6 +2599,7 @@
   App.auctionBand = audBand;
   App.auctionCap = audCapOf;
   App.auctionHammer = audHammerOf;
+  App.auctionToll = audTollOf;
   App.auctionKit = audKit;
   App.auctionIntent = audIntent;
   App.auctionEnter = audEnter;

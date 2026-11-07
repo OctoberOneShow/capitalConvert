@@ -109,6 +109,74 @@
     { id: "b28", labelKey: "bjT28", decks: 1, start: 13421772800, bets: [838860800, 1677721600, 3355443200], target: 20132659200, starHands: [3, 20, 72], soft17: true, pushLose: true, pays: 1.4, restake: 5033164800 },
     { id: "b29", labelKey: "bjT29", decks: 1, start: 26843545600, bets: [1677721600, 3355443200, 6710886400], target: 40265318400, starHands: [3, 16, 69], soft17: true, pushLose: true, pays: 1.4, restake: 5033164800 },
     { id: "b30", labelKey: "bjT30", decks: 1, start: 53687091200, bets: [3355443200, 6710886400, 13421772800], target: 80530636800, starHands: [3, 16, 84], soft17: true, pushLose: true, pays: 1.4, restake: 6710886400 },
+
+    /* Tables 31-40: the tower above the rope. The rope changed the rules;
+     * the tower changes the price of sitting down. `ante` authors the seat
+     * fee: every settled hand pays it, win or lose, taken before the felt
+     * judges whether the target is met or the bankroll is broke - so the fee
+     * is charged on the hands that win, the hands that lose, and the hand
+     * that clears, and every buy-back the felt grants lands back under it.
+     * Structurally nothing before the tier carries the field, so every
+     * shipped hand resolves exactly as it always did. The rope's rules ride
+     * along at the summit's own floor - soft seventeen, the push tax, seven
+     * for five, the half-stack buy-back - so the lever that climbs is the fee
+     * alone: three hundredths of the minimum bet per hand at The Sitting Fee
+     * rising to thirty-five hundredths at The Rope's Price. The paired bench
+     * (one deep shuffle dealt to every ruleset, no reshuffle to break the
+     * pairing) climbs rung over rung: 71.7 hands to clear on the first fee,
+     * 72.6, 73.6, 75.4, 76.9, 78.7, 80.9, 83.3, 85.3 and 88.4 up the tower,
+     * the clear share never below 85.9%. Every step was cut-tested - pull
+     * the rung's own fee and the same deals clear strictly faster. The
+     * three-star line never moves: three hands, where the rope printed it -
+     * two naturals still outrun any fee. The deeper bands buy back the clock
+     * the fee takes: the two-star and one-star lines calibrate to the paired
+     * bench's own 42% and 72% clear marks, so each rung stays winnable at
+     * all. */
+    { id: "b31", labelKey: "bjT31", decks: 1, start: 107374182400, bets: [6710886400, 13421772800, 26843545600], target: 161061273600, starHands: [3, 34, 101], soft17: true, pushLose: true, pays: 1.4, restake: 13421772800, ante: 201326592 },
+    { id: "b32", labelKey: "bjT32", decks: 1, start: 214748364800, bets: [13421772800, 26843545600, 53687091200], target: 322122547200, starHands: [3, 34, 102], soft17: true, pushLose: true, pays: 1.4, restake: 26843545600, ante: 805306368 },
+    { id: "b33", labelKey: "bjT33", decks: 1, start: 429496729600, bets: [26843545600, 53687091200, 107374182400], target: 644245094400, starHands: [3, 35, 105], soft17: true, pushLose: true, pays: 1.4, restake: 53687091200, ante: 2415919104 },
+    { id: "b34", labelKey: "bjT34", decks: 1, start: 858993459200, bets: [53687091200, 107374182400, 214748364800], target: 1288490188800, starHands: [3, 35, 108], soft17: true, pushLose: true, pays: 1.4, restake: 107374182400, ante: 6442450944 },
+    { id: "b35", labelKey: "bjT35", decks: 1, start: 1717986918400, bets: [107374182400, 214748364800, 429496729600], target: 2576980377600, starHands: [3, 36, 111], soft17: true, pushLose: true, pays: 1.4, restake: 214748364800, ante: 16106127360 },
+    { id: "b36", labelKey: "bjT36", decks: 1, start: 3435973836800, bets: [214748364800, 429496729600, 858993459200], target: 5153960755200, starHands: [3, 38, 114], soft17: true, pushLose: true, pays: 1.4, restake: 429496729600, ante: 38654705664 },
+    { id: "b37", labelKey: "bjT37", decks: 1, start: 6871947673600, bets: [429496729600, 858993459200, 1717986918400], target: 10307921510400, starHands: [3, 40, 117], soft17: true, pushLose: true, pays: 1.4, restake: 858993459200, ante: 94489280512 },
+    { id: "b38", labelKey: "bjT38", decks: 1, start: 13743895347200, bets: [858993459200, 1717986918400, 3435973836800], target: 20615843020800, starHands: [3, 41, 123], soft17: true, pushLose: true, pays: 1.4, restake: 1717986918400, ante: 223338399232 },
+    { id: "b39", labelKey: "bjT39", decks: 1, start: 27487790694400, bets: [1717986918400, 3435973836800, 6871947673600], target: 41231686041600, starHands: [3, 44, 125], soft17: true, pushLose: true, pays: 1.4, restake: 3435973836800, ante: 515396075520 },
+    { id: "b40", labelKey: "bjT40", decks: 1, start: 54975581388800, bets: [3435973836800, 6871947673600, 13743895347200], target: 82463372083200, starHands: [3, 46, 132], soft17: true, pushLose: true, pays: 1.4, restake: 6871947673600, ante: 1202590842880 },
+
+    /* Tables 41-44: the even-money room above the tower. The tower changed
+     * the price of sitting down; the room changes the price of the game's
+     * own jackpot. The seat fee stops where the rope's price left it -
+     * thirty-five hundredths of the minimum bet, pinned across all four
+     * rungs, the walk the tower ended on - and the dial that climbs is one
+     * the house never touched before: the natural's own price, discounted
+     * rung by rung from the seven for five the rope printed - thirteen for
+     * ten, six for five, eleven for ten, and at the capstone even money,
+     * where the best hand in the room pays exactly what a plain win pays.
+     * Nothing before the tier drops the natural below seven for five, so
+     * the discount is the one lever that is new here. The paired bench (one
+     * deep shuffle dealt to every ruleset, no reshuffle to break the
+     * pairing) climbs rung over rung past the rope's price: 88.7 hands to
+     * clear at the rope's price, then 91.8, 93.1, 96.9 and 98.2 up the
+     * room, the clear share walking 84.0 -> 82.9 -> 79.6 -> 76.1 as the
+     * discount taxes the bench's one fast lane. Each rung's own lever is
+     * load-bearing: restore the seven-for-five natural on the same deals
+     * and the rung clears at the base economy (88.7), strike the fee and
+     * it clears faster still (62.8 to 66.8) - the tower's dial still rides.
+     * The three-hand door narrows with the price: at seven for five a
+     * natural among two wins outruns the fee, from eleven for ten it takes
+     * three straight net wins and nothing less - still real, never common
+     * (three in twenty to one in eighty of the sweep's clears). The deeper
+     * bands buy back the clock the discount takes: the two-star and
+     * one-star lines calibrate to the paired bench's own 42% and 72% clear
+     * marks, so each rung stays winnable at all, and the sweep - the
+     * fee-free floor every tier rides on - still clears 149 to 154 of 160
+     * at the top stake, three stars rare but real on every felt. Every
+     * step was swept 160 times on the seeded bench, appended to the
+     * shipped ladder in table order, before any of it shipped. */
+    { id: "b41", labelKey: "bjT41", decks: 1, start: 109951162777600, bets: [6871947673600, 13743895347200, 27487790694400], target: 164926744166400, starHands: [3, 49, 138], soft17: true, pushLose: true, pays: 1.3, restake: 13743895347200, ante: 2405181685760 },
+    { id: "b42", labelKey: "bjT42", decks: 1, start: 219902325555200, bets: [13743895347200, 27487790694400, 54975581388800], target: 329853488332800, starHands: [3, 50, 141], soft17: true, pushLose: true, pays: 1.2, restake: 27487790694400, ante: 4810363371520 },
+    { id: "b43", labelKey: "bjT43", decks: 1, start: 439804651110400, bets: [27487790694400, 54975581388800, 109951162777600], target: 659706976665600, starHands: [3, 54, 147], soft17: true, pushLose: true, pays: 1.1, restake: 54975581388800, ante: 9620726743040 },
+    { id: "b44", labelKey: "bjT44", decks: 1, start: 879609302220800, bets: [54975581388800, 109951162777600, 219902325555200], target: 1319413953331200, starHands: [3, 55, 150], soft17: true, pushLose: true, pays: 1.0, restake: 109951162777600, ante: 19241453486080 },
   ];
 
   /* Presentation beats, in milliseconds: the hole card turns after the deal has
@@ -618,6 +686,14 @@
         line = t("bjPush", { you: you });
       }
       chips += won;
+      if (table.ante) {
+        /* The tower felts: the seat fee comes off every settled hand, win or
+         * lose, before the felt judges the target or the buy-back - so a
+         * clearing hand pays its fee too, and every restake lands back under
+         * it. False wherever no fee is authored, so every shipped hand
+         * settles exactly as it always did. */
+        chips = Math.max(0, chips - table.ante);
+      }
       revealDelay = naturalDeal ? BJ_DEAL_REVEAL_MS : BJ_REVEAL_MS;
       renderBoard();
       if (chips >= table.target) {
@@ -862,7 +938,7 @@
         target: table.target,
         decks: table.decks,
         start: table.start,
-      });
+      }) + (table.ante ? " " + t("bjAnteLine", { n: table.ante }) : "");
     }
 
     /* The felt borrows the panel hue token so the table matches the room it is
@@ -962,7 +1038,22 @@
       "bjT28": "The Thin Reload",
       "bjT29": "The Bare Reload",
       "bjT30": "The Last Chip",
+      "bjT31": "The Sitting Fee",
+      "bjT32": "The Meter Starts",
+      "bjT33": "The Rent Rises",
+      "bjT34": "The Meter Runs",
+      "bjT35": "Rent Day",
+      "bjT36": "The High Seat",
+      "bjT37": "The Meter Spins",
+      "bjT38": "The Seat Bleeds",
+      "bjT39": "The Last Rent",
+      "bjT40": "The Rope's Price",
+      "bjT41": "Thirteen for Ten",
+      "bjT42": "Six for Five",
+      "bjT43": "Eleven for Ten",
+      "bjT44": "Even Money",
       "bjPushLose": "Tied at {you} - the rope takes the bet: {n} lost.",
+      "bjAnteLine": "The seat fee is {n} a hand, win or lose.",
     },
     zh: {
       "bjT21": "庄家靴桌",
@@ -975,7 +1066,22 @@
       "bjT28": "薄筹桌",
       "bjT29": "空筹桌",
       "bjT30": "末筹桌",
+      "bjT31": "落座费桌",
+      "bjT32": "计价起步桌",
+      "bjT33": "租金上浮桌",
+      "bjT34": "计价飞转桌",
+      "bjT35": "租期已至桌",
+      "bjT36": "高座桌",
+      "bjT37": "计价狂转桌",
+      "bjT38": "座位放血桌",
+      "bjT39": "最后的租金桌",
+      "bjT40": "绳室要价桌",
+      "bjT41": "十三赔十桌",
+      "bjT42": "六赔五桌",
+      "bjT43": "十一赔十桌",
+      "bjT44": "平赔桌",
       "bjPushLose": "和局 {you} 点——绳室规矩：赌注归庄，损失 {n} 枚。",
+      "bjAnteLine": "每手落座费 {n} 枚，输赢都收。",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

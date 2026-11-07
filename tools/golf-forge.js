@@ -97,7 +97,9 @@ function fly(course, angle, power, dt) {
 }
 
 /* Coarse sweep, then a local refine: enough to prove a hole-in-one exists and
- * to size the basin around it. */
+ * to size the basin around it. Every refined seed is kept, ranked by basin,
+ * so a bound brief can promote a lower-ranked answer that needs its giant
+ * without paying for one extra flight. */
 function bestShot(course) {
   const coarse = [];
   for (let a = -Math.PI; a < Math.PI; a += 0.03) {
@@ -107,8 +109,8 @@ function bestShot(course) {
     }
   }
   if (!coarse.length) return null;
-  /* Refine around every coarse hit and keep the one with the widest basin. */
-  let best = null;
+  /* Refine around every coarse hit and rank the seeds by basin width. */
+  const ranks = [];
   coarse.forEach(function (seed) {
     const hits = [];
     for (let da = -0.04; da <= 0.0401; da += 0.02) {
@@ -118,15 +120,16 @@ function bestShot(course) {
         if (fly(course, a, p).hit) hits.push({ angle: a, power: p });
       }
     }
-    if (!best || hits.length > best.basin) {
-      best = { angle: seed.angle, power: seed.power, basin: hits.length };
-    }
+    ranks.push({ angle: seed.angle, power: seed.power, basin: hits.length });
   });
+  ranks.sort(function (a, b) { return b.basin - a.basin; });
+  const best = ranks[0];
+  best.ranks = ranks;
   best.totalHits = coarse.length;
   return best;
 }
 
-function checkCourse(course) {
+function checkCourse(course, opts) {
   const problems = [];
   /* Every well must sit inside the sky and clear of tee and target. */
   course.wells.forEach(function (well, index) {
@@ -157,13 +160,37 @@ function checkCourse(course) {
   if (nearest > 70) {
     problems.push("no well sits near the flight line - the hole is scenery");
   }
-  const shot = bestShot(course);
-  if (!shot) {
+  const found = bestShot(course);
+  if (!found) {
     problems.push("no one-shot solution exists");
-  } else if (shot.basin < 3) {
+    return { problems: problems, shot: null, shots: [] };
+  }
+  /* The ranked answers: every refined seed whose basin clears the keyboard
+   * bar, widest first. The widest is the shipped default; the ranks let a
+   * bound brief (wantBound) promote the widest answer that actually needs
+   * its singularity - one that dies when the giant is cut out of a mutant
+   * copy - without paying for a single extra flight. */
+  const shots = found.ranks.filter(function (rank) { return rank.basin >= 3; });
+  let shot = found;
+  if (opts && opts.wantBound) {
+    const mutant = {
+      tee: course.tee,
+      target: course.target,
+      wells: course.wells.filter(function (well) { return well.m < 2; }),
+    };
+    shot = shots.find(function (rank) {
+      return !fly(mutant, rank.angle, rank.power).hit;
+    }) || null;
+    if (shot) {
+      shot.totalHits = found.totalHits;
+    } else {
+      problems.push("no bound one-shot: every wide answer still lands without the singularity");
+    }
+  }
+  if (shot && shot.basin < 3) {
     problems.push("the only shot is a hair-thin window (" + shot.basin + "/25)");
   }
-  return { problems: problems, shot: shot };
+  return { problems: problems, shot: shot, shots: shots };
 }
 
 /* ---- generator ---------------------------------------------------------------- */
@@ -193,8 +220,14 @@ function forgeCourse(spec, seed) {
       x: Math.round(60 + rng() * (CGF_WIDTH - 120)),
       y: Math.round(50 + rng() * (CGF_HEIGHT - 100)),
       /* spec.maxM lifts the mass cap - the deep-field tier breaks the 1.8
-       * guardian every earlier tier stopped at. */
-      m: Math.round((0.7 + rng() * (spec.maxM ? spec.maxM - 0.7 : 1.1)) * 10) / 10,
+       * guardian every earlier tier stopped at. spec.minWell lifts the mass
+       * FLOOR - the citadel tier's skies carry no filler: every well is a
+       * giant, and the floor climbs rung over rung. The elder expression is
+       * kept byte-exact when no floor is set: the gate re-generates the
+       * shipped rows from their recorded seeds and compares well for well. */
+      m: spec.minWell
+        ? Math.round((spec.minWell + rng() * (spec.maxM - spec.minWell)) * 10) / 10
+        : Math.round((0.7 + rng() * (spec.maxM ? spec.maxM - 0.7 : 1.1)) * 10) / 10,
       r: Math.round(9 + rng() * 5),
     });
   }
@@ -284,6 +317,54 @@ const brief = {
   g38: { bump: 28, wells: 13, r: 8, noStraight: true, ringGuard: 30, seeds: 1200 },
   g39: { bump: 29, wells: 13, r: 8, noStraight: true, maxM: 1.9, ringGuardMass: 1.9, seeds: 1200 },
   g40: { bump: 30, wells: 13, r: 8, noStraight: true, minMass: 18 },
+  /* The singularity tier past g40: fourteen wells in the same sky (the
+   * first field past the deep-field tier's thirteen), the ring holding the
+   * eight-pixel floor, and the advertised mechanic - a 2.0 singularity,
+   * the first well the drawer has ever dealt past the 1.9 cap g34 broke.
+   * The sky keeps swelling past the capstone's 18.6: each rung demands a
+   * heavier total mass than the one before, the tier opens with exactly
+   * one singularity per sky (wantSolo), g43 doubles it, and g44 pairs the
+   * records as the capstone. Every hole refuses the
+   * lazy straight line and carries wantBound: the proven one-shot has to
+   * die when the singularity is cut out of a mutant copy, so the giant
+   * bends the answer rather than decorating the field. The 2.0 masses are
+   * rare finds under the 2.0 cap - they get the wider seed sweep. */
+  g41: { bump: 31, wells: 14, r: 8, noStraight: true, maxM: 2, wantSingularity: true, wantSolo: true, minMass: 19, wantBound: true, seeds: 1200 },
+  g42: { bump: 32, wells: 14, r: 8, noStraight: true, maxM: 2, wantSingularity: true, wantSolo: true, minMass: 19.5, wantBound: true, seeds: 1200 },
+  g43: { bump: 33, wells: 14, r: 8, noStraight: true, maxM: 2, wantTwins: true, minMass: 20, wantBound: true, seeds: 1200 },
+  g44: { bump: 34, wells: 14, r: 8, noStraight: true, maxM: 2, wantTwins: true, minMass: 21, wantBound: true, seeds: 5000 },
+  /* The citadel tier past g44: the singularity stops roaming the sky and
+   * takes the cup. Every course parks a 2.0 giant in close orbit of the
+   * ring - the nearest well to the target masses 2.0 (ringGuardMass) inside
+   * a disjoint pixel band (ringGuardMin/ringGuard) that strictly closes rung
+   * over rung: 44-48, 40-43, 36-39, 32-35, 28-31, then the capstone's 24-27,
+   * where the guardian's crash disc all but kisses the capture disc and the
+   * moat shot has to sling the last pixels. The bands never overlap, so the
+   * measured guard falls rung over rung no matter where in its band each
+   * hole landed - the tier's monotone line is measured, not hoped for. The
+   * second line is the sky's floor: minWell lifts the mass of EVERY well in
+   * the field - no filler - and its base sits at 1.2 across the tier (every
+   * pre-tier sky carried wells down to 0.7), stepping to 1.3 and 1.4 on the
+   * body rungs where the moat allows and easing back to the base on the
+   * close-moat tail, where one-shot windows get scarce; one tier-wide
+   * minMass floor of 22.2 keeps every citadel sky past the tier-five
+   * capstone's 22.1. The field holds fourteen wells, the ring holds the
+   * eight-pixel floor, and the par line climbs from twenty-one to the
+   * capstone's twenty-three, the deepest launch budget the sky has ever
+   * asked for. g47 doubles the guard with a twin partner and the pair stays
+   * through the capstone. Every hole refuses the lazy straight line and
+   * carries wantBound: cut the 2.0 giants out of a mutant copy and the
+   * proven one-shot must die - the moat bends the answer rather than
+   * decorating the approach. A giant this close to the cup is a rare deal
+   * under the generator, so the tail rungs sweep wide - but the sweep is
+   * cheap: the structural filters are arithmetic, and only the handful of
+   * candidates that clear them ever pay for flights. */
+  g45: { bump: 35, wells: 14, r: 8, noStraight: true, maxM: 2, minWell: 1.2, wantSingularity: true, ringGuardMass: 2, ringGuardMin: 44, ringGuard: 48, minMass: 22.2, wantBound: true, seeds: 9000 },
+  g46: { bump: 36, wells: 14, r: 8, noStraight: true, maxM: 2, minWell: 1.3, wantSingularity: true, ringGuardMass: 2, ringGuardMin: 40, ringGuard: 43, minMass: 22.2, wantBound: true, seeds: 9000 },
+  g47: { bump: 37, wells: 14, r: 8, noStraight: true, maxM: 2, minWell: 1.3, wantSingularity: true, wantTwins: true, ringGuardMass: 2, ringGuardMin: 36, ringGuard: 39, minMass: 22.2, wantBound: true, seeds: 20000 },
+  g48: { bump: 38, wells: 14, r: 8, noStraight: true, maxM: 2, minWell: 1.4, wantSingularity: true, wantTwins: true, ringGuardMass: 2, ringGuardMin: 32, ringGuard: 35, minMass: 22.2, wantBound: true, seeds: 20000 },
+  g49: { bump: 39, wells: 14, r: 8, noStraight: true, maxM: 2, minWell: 1.2, wantSingularity: true, wantTwins: true, ringGuardMass: 2, ringGuardMin: 28, ringGuard: 31, minMass: 22.2, wantBound: true, seeds: 500000 },
+  g50: { bump: 40, wells: 14, r: 8, noStraight: true, maxM: 2, minWell: 1.2, wantSingularity: true, wantTwins: true, ringGuardMass: 2, ringGuardMin: 24, ringGuard: 27, minMass: 22.2, wantBound: true, seeds: 500000 },
 };
 
 function main() {
@@ -294,7 +375,11 @@ function main() {
     let bad = 0;
     const t0 = Date.now();
     courses.forEach(function (course) {
-      const report = checkCourse(course);
+      /* Bound briefs are judged by their own convention: the widest answer
+       * that dies without its singularity, the same shot the forge shipped
+       * and the gate replays. */
+      const spec = brief[course.id];
+      const report = checkCourse(course, { wantBound: !!(spec && spec.wantBound) });
       if (report.problems.length) bad += 1;
       console.log(
         (report.problems.length ? "FAIL" : "ok  ") +
@@ -322,6 +407,10 @@ function main() {
       g34: [2, 7, 15], g35: [2, 7, 16], g36: [2, 7, 16],
       g37: [2, 8, 17], g38: [2, 8, 17], g39: [2, 8, 17],
       g40: [2, 8, 18],
+      g41: [2, 8, 19], g42: [2, 8, 19], g43: [2, 9, 20],
+      g44: [2, 9, 21],
+      g45: [2, 8, 21], g46: [2, 8, 21], g47: [2, 9, 22],
+      g48: [2, 9, 22], g49: [2, 9, 22], g50: [2, 9, 23],
     };
     /* The deep-field tier's record predicates, measured through the same
      * flight the panel flies: a hole ships only when the candidate actually
@@ -357,6 +446,11 @@ function main() {
       });
       return mass;
     };
+    /* The singularity census: wells massing 2.0 or more, the sizes the
+     * singularity tier is about. */
+    const cgfSingularities = function (course) {
+      return course.wells.filter(function (well) { return well.m >= 2; }).length;
+    };
 
     (ids.length ? ids : Object.keys(brief)).forEach(function (id) {
       const spec = brief[id];
@@ -366,15 +460,25 @@ function main() {
       let usedSeed = 0;
       for (let seed = 1; seed <= (spec.seeds || 220) && !course; seed += 1) {
         const candidate = forgeCourse(
-          { id: id, labelKey: "cgfL" + id.slice(1), wells: spec.wells, r: spec.r, maxM: spec.maxM },
+          { id: id, labelKey: "cgfL" + id.slice(1), wells: spec.wells, r: spec.r, maxM: spec.maxM, minWell: spec.minWell },
           seed * 7919 + spec.wells * 131 + spec.r + spec.bump * 104729,
         );
         if (spec.minMass && cgfMass(candidate) < spec.minMass) continue;
         if (spec.wantHeavy && !candidate.wells.some(function (well) { return well.m >= 1.9; })) continue;
+        if (spec.wantSingularity && cgfSingularities(candidate) < 1) continue;
+        if (spec.wantSolo && cgfSingularities(candidate) !== 1) continue;
+        if (spec.wantTwins && cgfSingularities(candidate) < 2) continue;
         if (spec.ringGuard && cgfRingGuard(candidate) > spec.ringGuard) continue;
+        if (spec.ringGuardMin && cgfRingGuard(candidate) < spec.ringGuardMin) continue;
         if (spec.ringGuardMass && cgfRingGuardMass(candidate) < spec.ringGuardMass) continue;
         if (spec.noStraight && cgfStraightHits(candidate) > 0) continue;
-        const attempt = checkCourse(candidate);
+        /* The bound briefs get the ranked answers: checkCourse promotes the
+         * widest basin >= 3 answer that dies when the 2.0 giants are cut
+         * out of a mutant copy - the singularity has to be load-bearing, a
+         * shot that still lands without it marks the giant as scenery. The
+         * ranks cost no extra flights: they are the refinements bestShot
+         * already flew. */
+        const attempt = checkCourse(candidate, { wantBound: !!spec.wantBound });
         if (attempt.problems.length) continue;
         /* Ask for a wide basin: a keyboard player re-issues the shot in 0.05
          * steps, so the answer must survive that quantisation. */
@@ -389,6 +493,7 @@ function main() {
       }
       const ride = fly(course, report.shot.angle, report.shot.power);
       console.log(id + ": " + course.wells.length + " wells, mass " + cgfMass(course) +
+        ", singularities " + cgfSingularities(course) +
         ", basin " + report.shot.basin + "/25, one-shot at " + report.shot.angle.toFixed(3) + " / " + report.shot.power.toFixed(2) +
         ", ride " + ride.age.toFixed(2) + "s, ring guard " + Math.round(cgfRingGuard(course)) +
         " at mass " + cgfRingGuardMass(course) +

@@ -79,6 +79,51 @@
     { id: "h28", labelKey: "snkL28", goal: 31, starTimes: [132, 185, 266], wrap: true, start: { x: 2, y: 7, dx: -1 }, walls: [[3, 3, 6, 3], [9, 3, 12, 3], [3, 12, 6, 12], [9, 12, 12, 12], [3, 4, 3, 6], [3, 9, 3, 11], [12, 4, 12, 6], [12, 9, 12, 11], [6, 6, 9, 6], [6, 9, 9, 9], [6, 7, 6, 8], [1, 1, 2, 1], [13, 1, 14, 1], [1, 14, 2, 14], [13, 14, 14, 14], [0, 7, 0, 8], [15, 7, 15, 8], [8, 0, 8, 1], [7, 14, 8, 14], [5, 0, 6, 0], [9, 15, 10, 15], [0, 3, 1, 3], [14, 12, 15, 12]] },
     { id: "h29", labelKey: "snkL29", goal: 32, starTimes: [138, 194, 278], wrap: true, start: { x: 7, y: 12, dx: 1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 6, 6], [9, 5, 10, 6], [5, 9, 6, 10], [9, 9, 10, 10], [7, 7, 8, 8], [0, 7, 0, 8], [15, 7, 15, 8], [7, 0, 8, 1], [7, 14, 8, 15]] },
     { id: "h30", labelKey: "snkL30", goal: 33, starTimes: [146, 205, 294], wrap: true, start: { x: 5, y: 1, dx: 1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 6, 6], [9, 5, 10, 6], [5, 9, 6, 10], [9, 9, 10, 10], [7, 7, 8, 8], [0, 0, 0, 0], [15, 0, 15, 0], [0, 15, 0, 15], [15, 15, 15, 15], [0, 7, 1, 7], [14, 8, 15, 8], [7, 0, 8, 0], [7, 15, 8, 15], [3, 4, 3, 4], [12, 4, 12, 4], [3, 11, 3, 11], [12, 11, 12, 11], [7, 3, 8, 3], [7, 12, 8, 12]] },
+
+    /* Houses 31-40, the ziggurat district. The keep's hollow stone - the
+     * coil's gated ring, the one piece of perforated masonry the citadel
+     * ever built - becomes a grammar here: eight of the ten houses raise
+     * rings and terraces with doors cut into them, standing free of the
+     * outer walls, and the doors stagger rung over rung so most berry runs
+     * are half or full circuits that climb a wall each way. h32, h36, h37
+     * and h40 set their gated ring between two shell halves, h39 raises
+     * two stone blocks facing each other across the wrap seams, and the
+     * wrap houses keep the seams open as the fast road the serpent's own
+     * body closes behind it at these lengths. The quota climbs past the
+     * sky crown's thirty-three to forty bites, and the numbers are
+     * measured, not guessed: the release bench played every house on seven
+     * seeded streams through the engine's own tick - the routing hand
+     * cleared all seventy runs, and the star bands are cut from those
+     * runs' medians by the same law the keep's rows ship under (three
+     * stars at one and a half times the median, one star at three times
+     * it). A greedy hand cannot hold the district. */
+    { id: "h31", labelKey: "snkL31", goal: 34, starTimes: [92, 128, 183], wrap: false, start: { x: 8, y: 8, dx: 1 }, walls: [[2, 2, 13, 2], [2, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 9, 5], [5, 6, 5, 10], [5, 11, 9, 11], [11, 7, 11, 8], [0, 0, 0, 0], [15, 0, 15, 0], [0, 15, 0, 15], [15, 15, 15, 15]] },
+    { id: "h32", labelKey: "snkL32", goal: 35, starTimes: [81, 114, 162], wrap: false, start: { x: 8, y: 12, dx: -1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 12], [13, 3, 13, 12], [5, 5, 10, 5], [5, 10, 10, 10], [5, 6, 5, 6], [5, 9, 5, 9], [10, 6, 10, 6], [10, 9, 10, 9], [7, 7, 8, 8]] },
+    { id: "h33", labelKey: "snkL33", goal: 36, starTimes: [67, 94, 134], wrap: true, start: { x: 8, y: 12, dx: -1 }, walls: [[2, 2, 13, 2], [2, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 9, 5], [5, 6, 5, 10], [5, 11, 9, 11], [11, 7, 11, 8], [0, 0, 0, 0], [15, 0, 15, 0], [0, 15, 0, 15], [15, 15, 15, 15]] },
+    { id: "h34", labelKey: "snkL34", goal: 36, starTimes: [67, 93, 133], wrap: false, start: { x: 8, y: 14, dx: -1 }, walls: [[3, 3, 6, 3], [3, 4, 3, 6], [3, 11, 3, 12], [3, 12, 6, 12], [9, 3, 12, 3], [12, 4, 12, 6], [12, 9, 12, 11], [9, 12, 12, 12], [6, 7, 9, 7], [6, 8, 6, 8], [9, 8, 9, 8], [0, 0, 0, 0], [15, 0, 15, 0], [0, 15, 0, 15], [15, 15, 15, 15]] },
+    { id: "h35", labelKey: "snkL35", goal: 37, starTimes: [49, 69, 98], wrap: true, start: { x: 1, y: 5, dx: 1 }, walls: [[3, 3, 6, 3], [3, 4, 3, 6], [3, 11, 3, 12], [3, 12, 6, 12], [9, 3, 12, 3], [12, 4, 12, 6], [12, 9, 12, 11], [9, 12, 12, 12], [6, 7, 9, 7], [6, 8, 6, 8], [9, 8, 9, 8], [4, 0, 4, 0], [11, 0, 11, 0], [4, 15, 4, 15], [11, 15, 11, 15], [0, 0, 0, 1], [0, 7, 0, 8], [0, 14, 0, 15], [15, 0, 15, 1], [15, 7, 15, 8], [15, 14, 15, 15], [0, 3, 0, 4], [0, 11, 0, 12], [15, 3, 15, 4], [15, 11, 15, 12]] },
+    { id: "h36", labelKey: "snkL36", goal: 38, starTimes: [76, 106, 152], wrap: false, start: { x: 8, y: 12, dx: -1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 6, 5], [9, 5, 10, 5], [5, 10, 6, 10], [9, 10, 10, 10], [5, 6, 5, 9], [10, 6, 10, 9], [7, 7, 8, 8]] },
+    { id: "h37", labelKey: "snkL37", goal: 38, starTimes: [94, 132, 188], wrap: false, start: { x: 8, y: 3, dx: 1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 12], [13, 3, 13, 12], [5, 5, 10, 5], [5, 10, 10, 10], [5, 6, 5, 6], [5, 9, 5, 9], [10, 6, 10, 6], [10, 9, 10, 9], [7, 7, 8, 8]] },
+    { id: "h38", labelKey: "snkL38", goal: 39, starTimes: [73, 102, 145], wrap: false, start: { x: 8, y: 8, dx: -1 }, walls: [[1, 1, 6, 1], [9, 1, 14, 1], [1, 14, 6, 14], [9, 14, 14, 14], [14, 2, 14, 6], [14, 9, 14, 13], [1, 2, 1, 6], [1, 9, 1, 13], [4, 4, 5, 4], [8, 4, 11, 4], [4, 12, 8, 12], [11, 12, 11, 12], [11, 5, 11, 6], [11, 9, 11, 11], [6, 6, 7, 6], [9, 9, 10, 9]] },
+    { id: "h39", labelKey: "snkL39", goal: 39, starTimes: [47, 65, 93], wrap: true, start: { x: 7, y: 7, dx: 1 }, walls: [[3, 2, 6, 5], [3, 9, 6, 12], [9, 2, 12, 4], [11, 5, 12, 5], [9, 9, 12, 12], [0, 0, 0, 0], [15, 0, 15, 0], [0, 15, 0, 15], [15, 15, 15, 15]] },
+    { id: "h40", labelKey: "snkL40", goal: 40, starTimes: [56, 79, 112], wrap: true, start: { x: 8, y: 12, dx: -1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 6, 5], [9, 5, 10, 5], [5, 10, 6, 10], [9, 10, 10, 10], [5, 6, 5, 9], [10, 6, 10, 9], [7, 7, 8, 8], [0, 0, 0, 0], [15, 0, 15, 0], [0, 15, 0, 15], [15, 15, 15, 15]] },
+
+    /* Houses 41-44, the apex above the ziggurat. The district's grammar
+     * holds to the top: h41 re-cuts the coil's ring between waist-gapped
+     * shell columns with its doors set at two heights, h42 and h44 post
+     * stone astride the wrap seams so the fast road around the board is
+     * gated too, h42's posts single and h44's reaching a brick inland, and
+     * h43 crowns the three terraces with a heart stone. The quota climbs
+     * past the district's forty to forty-four bites, and the numbers are
+     * measured, not guessed: every apex house was played on sixteen seeded
+     * streams through the engine's own tick, the star bands are cut from
+     * those runs by the same law the keep's rows ship under (three stars
+     * at one and a half times the median, one star at three times it),
+     * and a greedy hand cannot hold the apex. */
+    { id: "h41", labelKey: "snkL41", goal: 41, starTimes: [80, 112, 160], wrap: false, start: { x: 8, y: 0, dx: 1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 10, 5], [5, 10, 10, 10], [5, 6, 5, 6], [5, 9, 5, 9], [10, 6, 10, 6], [10, 7, 10, 7], [7, 7, 8, 8]] },
+    { id: "h42", labelKey: "snkL42", goal: 42, starTimes: [60, 84, 120], wrap: true, start: { x: 1, y: 8, dx: -1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 6, 5], [9, 5, 10, 5], [5, 10, 6, 10], [9, 10, 10, 10], [5, 6, 5, 9], [10, 6, 10, 9], [7, 7, 8, 8], [0, 0, 0, 0], [15, 0, 15, 0], [0, 15, 0, 15], [15, 15, 15, 15], [0, 7, 0, 7], [15, 8, 15, 8]] },
+    { id: "h43", labelKey: "snkL43", goal: 43, starTimes: [106, 148, 212], wrap: false, start: { x: 7, y: 15, dx: 1 }, walls: [[2, 2, 13, 2], [2, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 9, 5], [5, 6, 5, 10], [5, 11, 9, 11], [11, 7, 11, 8], [7, 7, 8, 8], [7, 0, 8, 0], [12, 12, 12, 12]] },
+    { id: "h44", labelKey: "snkL44", goal: 44, starTimes: [67, 94, 134], wrap: true, start: { x: 8, y: 1, dx: -1 }, walls: [[2, 2, 6, 2], [9, 2, 13, 2], [2, 13, 6, 13], [9, 13, 13, 13], [2, 3, 2, 6], [2, 9, 2, 12], [13, 3, 13, 6], [13, 9, 13, 12], [5, 5, 6, 5], [9, 5, 10, 5], [5, 10, 6, 10], [9, 10, 10, 10], [5, 6, 5, 9], [10, 6, 10, 9], [7, 7, 8, 8], [0, 0, 0, 0], [15, 0, 15, 0], [0, 15, 0, 15], [15, 15, 15, 15], [0, 7, 1, 7], [14, 8, 15, 8]] },
   ];
 
   /* The court takes its tint from the panel hue; the serpent stays jade and the
@@ -1555,8 +1600,10 @@
   /* Bilingual copy travels with the game: addStrings only fills keys i18n.js
    * does not already own, so the shared dictionary stays authoritative. The
    * inner keep continues the fortress ascent the shared dictionary carries
-   * through the citadel, and the summit climbs past the crown into the
-   * rooms a royal serpent rules. */
+   * through the citadel, the summit climbs past the crown into the rooms a
+   * royal serpent rules, the ziggurat district names the nested rings and
+   * winding stairs it builds, and the apex crowns the district with the
+   * slant doors, seam watches and vault it climbs toward. */
   App.addStrings({
     en: {
       "snkL21": "The Coil",
@@ -1569,6 +1616,20 @@
       "snkL28": "The Arrow Slits",
       "snkL29": "The Royal Maze",
       "snkL30": "The Sky Crown",
+      "snkL31": "The First Terrace",
+      "snkL32": "Staggered Rings",
+      "snkL33": "Three Terraces",
+      "snkL34": "The Ringed Cross",
+      "snkL35": "The Seam Courts",
+      "snkL36": "The Keep in the Keep",
+      "snkL37": "The Wound Stair",
+      "snkL38": "The Deep Stair",
+      "snkL39": "The Twin Stairs",
+      "snkL40": "The Ziggurat",
+      "snkL41": "The Slant Doors",
+      "snkL42": "The Seam Watch",
+      "snkL43": "The Crowned Terraces",
+      "snkL44": "The Heaven Vault",
     },
     zh: {
       "snkL21": "盘环阵",
@@ -1581,6 +1642,20 @@
       "snkL28": "箭窗阵",
       "snkL29": "王家迷阵",
       "snkL30": "天冠殿",
+      "snkL31": "初重台地",
+      "snkL32": "错门双环",
+      "snkL33": "三重台地",
+      "snkL34": "环心十字",
+      "snkL35": "缝畔庭院",
+      "snkL36": "城中之城",
+      "snkL37": "盘升石阶",
+      "snkL38": "深阶回廊",
+      "snkL39": "双生石阶",
+      "snkL40": "通天塔",
+      "snkL41": "斜门环殿",
+      "snkL42": "缝哨环城",
+      "snkL43": "戴冠台地",
+      "snkL44": "凌霄宝殿",
     },
   });
 })(window.CapitalConvert = window.CapitalConvert || {});

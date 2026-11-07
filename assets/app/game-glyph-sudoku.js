@@ -80,6 +80,31 @@
     { id: "u28", labelKey: "lvlNum28", size: 12, bw: 2, bh: 6, clues: 48, seed: 5, starTimes: [18344, 28505, 44808] },
     { id: "u29", labelKey: "lvlNum29", size: 12, bw: 6, bh: 2, clues: 50, seed: 57, starTimes: [22013, 34206, 53770] },
     { id: "u30", labelKey: "lvlNum30", size: 12, bw: 3, bh: 4, clues: 48, seed: 5, starTimes: [26416, 41047, 64524] },
+    /* Grids 31-40, the undercroft. Past the deep hall the floor gives way
+     * and the rooms only grow: fourteen across, in boxes two wide and seven
+     * tall and then the same room laid seven wide, each shape dug deeper
+     * the second time it opens (the two-wide rooms give up six givens
+     * between their two rungs, the seven-wide two); fifteen across, boxes
+     * three wide and five tall and the transpose, dug six and then two
+     * deeper; and the sixteen closes the game - the first square-boxed room
+     * the ladder has laid since the nine, four deep four, and the capstone
+     * digs it four givens past its own opening rung. Every geometry here is
+     * a room the shipped ladder never drew, each is dug as deep as its carve
+     * surrenders while the deal still lands in seconds, and every rung is
+     * sealed to a seed and deals the same proven grid on every visit - the
+     * carve stops the moment a second answer would appear, so the sweep
+     * cannot ship a board logic cannot finish. The clock keeps the shipped
+     * 1.2x ramp, so the undercroft is the longest crawl in the game. */
+    { id: "u31", labelKey: "sudL31", size: 14, bw: 2, bh: 7, clues: 84, seed: 12, starTimes: [31699, 49256, 77429] },
+    { id: "u32", labelKey: "sudL32", size: 14, bw: 2, bh: 7, clues: 78, seed: 12, starTimes: [38039, 59107, 92915] },
+    { id: "u33", labelKey: "sudL33", size: 14, bw: 7, bh: 2, clues: 84, seed: 13, starTimes: [45647, 70928, 111498] },
+    { id: "u34", labelKey: "sudL34", size: 14, bw: 7, bh: 2, clues: 82, seed: 13, starTimes: [54776, 85114, 133798] },
+    { id: "u35", labelKey: "sudL35", size: 15, bw: 3, bh: 5, clues: 98, seed: 23, starTimes: [65731, 102137, 160558] },
+    { id: "u36", labelKey: "sudL36", size: 15, bw: 3, bh: 5, clues: 92, seed: 23, starTimes: [78877, 122564, 192670] },
+    { id: "u37", labelKey: "sudL37", size: 15, bw: 5, bh: 3, clues: 98, seed: 19, starTimes: [94652, 147077, 231204] },
+    { id: "u38", labelKey: "sudL38", size: 15, bw: 5, bh: 3, clues: 96, seed: 19, starTimes: [113582, 176492, 277445] },
+    { id: "u39", labelKey: "sudL39", size: 16, bw: 4, bh: 4, clues: 116, seed: 18, starTimes: [136298, 211790, 332934] },
+    { id: "u40", labelKey: "sudL40", size: 16, bw: 4, bh: 4, clues: 112, seed: 18, starTimes: [163558, 254148, 399521] },
   ];
 
   /* Pure generator + checker, exported for the static checks. */
@@ -708,4 +733,38 @@
 
   /* Exported for the other modules. */
   App.initGlyphSudokuGame = initGlyphSudokuGame;
+
+  /* The undercroft's names travel with the game: addStrings only fills keys
+   * i18n.js does not already hold, so the first thirty grids keep their
+   * numbered labels and the shared dictionary stays the authority for the
+   * drawer chrome. The rooms keep the vault-and-hall vocabulary and sink:
+   * the undercroft stretches into its long gallery, the colonnade lays the
+   * same room seven wide, the cistern and the nave flood the fifteen, and
+   * the sixteen closes on its forest of columns. */
+  App.addStrings({
+    en: {
+      "sudL31": "The Undercroft",
+      "sudL32": "The Long Gallery",
+      "sudL33": "The Colonnade",
+      "sudL34": "The Grand Colonnade",
+      "sudL35": "The Cistern",
+      "sudL36": "The Deep Cistern",
+      "sudL37": "The Nave",
+      "sudL38": "The Great Nave",
+      "sudL39": "The Columned Hall",
+      "sudL40": "The Forest of Columns",
+    },
+    zh: {
+      "sudL31": "地下拱厅",
+      "sudL32": "长画廊",
+      "sudL33": "柱廊",
+      "sudL34": "大柱廊",
+      "sudL35": "地下水宫",
+      "sudL36": "深水宫",
+      "sudL37": "中殿",
+      "sudL38": "大中殿",
+      "sudL39": "千柱厅",
+      "sudL40": "万柱厅",
+    },
+  });
 })(window.CapitalConvert = window.CapitalConvert || {});

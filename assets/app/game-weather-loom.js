@@ -968,6 +968,141 @@
         wlkWind(8, 6, 1), wlkWind(0, 7), wlkWind(1, 7), wlkWind(2, 7),
       ],
     },
+    /* Seasons 41-44, the walled coast. The crowded decade ended on eleven
+     * parishes at forty-two points, and every season it shipped drew from a
+     * fully open sea column - all eight rows kept a live water cell at x=0.
+     * These four run ridge down onto the open column itself, so whole rows
+     * lose their sea mouth and the canals must share the mouths that remain:
+     * two stones, then three, four and five, leaving six, five, four and
+     * three live mouths - the first time the loom has ever rationed the sea.
+     * No walled row keeps a lake, so its parishes drink only from branch
+     * arrows pushed out of the open rows beside them, and the walled-row
+     * parishes climb 2 -> 3 -> 4 -> 5 across the tier while the capstone's
+     * twelve parishes top the ladder's eleven and carry the storm bill on
+     * top. The weaves get leaner as the mouths
+     * close (41 -> 26 -> 23 -> 19 points against budgets two above them)
+     * because the wall does the constraining, not the purse. Every season
+     * below was woven and re-windowed by tools/weather-forge.js --coast, then
+     * re-proved by App.loomRun: three stars, every parish fed, nothing
+     * flooded, no weave with a spare tool, no window cut around a dry
+     * settlement - and flatten the coast on any of them and the shipped weave
+     * busts its bands, so the stones are load-bearing. What is printed is
+     * what wins. */
+    {
+      id: "w41", labelKey: "wlkZ41", points: 43, ticks: 20,
+      cfg: { source: 8, lakeSource: 4 },
+      ridge: [wlkSpot(0, 3), wlkSpot(0, 6)],
+      lake: [wlkSpot(9, 1), wlkSpot(7, 5)],
+      villages: [
+        wlkVillage(5, 0, 59, 73),
+        wlkVillage(2, 1, 60, 74),
+        wlkVillage(8, 1, 58, 72),
+        wlkVillage(7, 2, 58, 72),
+        wlkVillage(1, 3, 58, 72),
+        wlkVillage(2, 4, 60, 74),
+        wlkVillage(7, 4, 68, 82),
+        wlkVillage(2, 5, 60, 74),
+        wlkVillage(6, 5, 60, 74),
+        wlkVillage(2, 6, 59, 73),
+        wlkVillage(7, 7, 61, 75),
+      ],
+      plan: [
+        wlkWind(0, 0), wlkWind(1, 0), wlkWind(2, 0), wlkWind(3, 0),
+        wlkWind(4, 0), wlkWind(0, 1), wlkWind(1, 1), wlkWind(4, 1),
+        wlkWind(5, 1), wlkWind(6, 1), wlkWind(7, 1), wlkWind(0, 2),
+        wlkWind(1, 2, 1), wlkWind(3, 2), wlkWind(4, 2), wlkWind(5, 2),
+        wlkWind(6, 2), wlkWind(0, 4), wlkWind(1, 4), wlkWind(4, 4, 1),
+        wlkWind(5, 4), wlkWind(6, 4), wlkWind(0, 5), wlkWind(1, 5),
+        wlkWind(3, 5), wlkWind(4, 5), wlkWind(5, 5), wlkWind(1, 6),
+        wlkWind(0, 7), wlkWind(1, 7, 3), wlkWind(4, 7), wlkWind(5, 7),
+        wlkWind(6, 7), wlkWind(5, 6, 1), wlkHeat(7, 5), wlkWind(6, 0, 2),
+        wlkShade(8, 1), wlkShade(7, 2), wlkShade(7, 7), wlkShade(6, 5),
+      ],
+    },
+    {
+      id: "w42", labelKey: "wlkZ42", points: 28, ticks: 20,
+      cfg: { source: 8, lakeSource: 2.5 },
+      ridge: [wlkSpot(0, 1), wlkSpot(0, 4), wlkSpot(0, 6)],
+      lake: [wlkSpot(9, 2), wlkSpot(8, 5), wlkSpot(9, 7)],
+      villages: [
+        wlkVillage(5, 0, 26, 40),
+        wlkVillage(1, 1, 58, 72),
+        wlkVillage(2, 2, 25, 39),
+        wlkVillage(8, 2, 67, 81),
+        wlkVillage(5, 3, 26, 40),
+        wlkVillage(6, 3, 26, 40),
+        wlkVillage(1, 4, 58, 72),
+        wlkVillage(2, 5, 25, 39),
+        wlkVillage(9, 5, 60, 74),
+        wlkVillage(1, 6, 58, 72),
+        wlkVillage(3, 7, 25, 39),
+        wlkVillage(8, 7, 67, 81),
+      ],
+      plan: [
+        wlkWind(0, 0), wlkWind(1, 0), wlkWind(2, 0), wlkWind(3, 0),
+        wlkWind(4, 0), wlkWind(0, 2), wlkWind(1, 2, 3), wlkShade(2, 2),
+        wlkWind(3, 2, 2), wlkWind(9, 2, 2), wlkWind(0, 3), wlkWind(1, 3),
+        wlkWind(2, 3), wlkWind(3, 3), wlkWind(4, 3), wlkShade(6, 3),
+        wlkWind(0, 5), wlkWind(1, 5, 3), wlkShade(2, 5), wlkWind(3, 5, 2),
+        wlkWind(8, 5), wlkWind(0, 7), wlkWind(1, 7, 3), wlkWind(2, 7),
+        wlkShade(3, 7), wlkWind(9, 7, 2),
+      ],
+    },
+    {
+      id: "w43", labelKey: "wlkZ43", points: 25, ticks: 20,
+      cfg: { source: 8, lakeSource: 2.5 },
+      ridge: [wlkSpot(0, 1), wlkSpot(0, 3), wlkSpot(0, 5), wlkSpot(0, 7)],
+      lake: [wlkSpot(9, 2), wlkSpot(8, 4), wlkSpot(8, 6)],
+      villages: [
+        wlkVillage(4, 0, 58, 72),
+        wlkVillage(5, 0, 26, 40),
+        wlkVillage(9, 0, 58, 72),
+        wlkVillage(2, 2, 25, 39),
+        wlkVillage(8, 2, 67, 81),
+        wlkVillage(1, 1, 58, 72),
+        wlkVillage(1, 3, 58, 72),
+        wlkVillage(2, 4, 25, 39),
+        wlkVillage(7, 4, 66, 80),
+        wlkVillage(1, 5, 58, 72),
+        wlkVillage(7, 6, 66, 80),
+        wlkVillage(2, 7, 25, 39),
+      ],
+      plan: [
+        wlkWind(0, 0), wlkWind(1, 0), wlkWind(2, 0), wlkWind(3, 0),
+        wlkShade(5, 0), wlkWind(7, 0), wlkWind(8, 0), wlkShade(9, 0),
+        wlkWind(0, 2), wlkWind(1, 2, 3), wlkShade(2, 2), wlkWind(3, 2, 2),
+        wlkWind(9, 2, 2), wlkWind(0, 4), wlkWind(1, 4, 3), wlkShade(2, 4),
+        wlkWind(3, 4, 2), wlkWind(8, 4, 2), wlkWind(0, 6), wlkWind(1, 6, 3),
+        wlkWind(2, 6, 1), wlkWind(8, 6, 2), wlkShade(2, 7),
+      ],
+    },
+    {
+      id: "w44", labelKey: "wlkZ44", points: 21, ticks: 20,
+      cfg: { source: 8, lakeSource: 2.5, rainAt: 54, dump: 0.5, floodLimit: 70, floodWeight: 3 },
+      ridge: [wlkSpot(0, 1), wlkSpot(0, 3), wlkSpot(0, 4), wlkSpot(0, 6), wlkSpot(0, 7)],
+      lake: [wlkSpot(2, 5), wlkSpot(4, 5), wlkSpot(8, 5), wlkSpot(9, 2)],
+      villages: [
+        wlkVillage(5, 0, 20, 34),
+        wlkVillage(8, 0, 20, 34),
+        wlkVillage(3, 2, 20, 34),
+        wlkVillage(8, 2, 51, 65),
+        wlkVillage(5, 5, 20, 34),
+        wlkVillage(7, 5, 49, 63),
+        wlkVillage(9, 5, 21, 35),
+        wlkVillage(1, 1, 48, 62),
+        wlkVillage(1, 3, 48, 62),
+        wlkVillage(2, 4, 49, 63),
+        wlkVillage(4, 4, 49, 63),
+        wlkVillage(1, 6, 48, 62),
+      ],
+      plan: [
+        wlkWind(0, 0), wlkWind(1, 0, 1), wlkWind(4, 0), wlkShade(5, 0),
+        wlkWind(7, 0), wlkShade(8, 0), wlkWind(0, 2), wlkWind(1, 2, 1),
+        wlkWind(2, 2), wlkShade(3, 2), wlkWind(9, 2, 2), wlkWind(0, 5),
+        wlkWind(1, 5, 1), wlkWind(2, 5, 3), wlkWind(4, 5, 3), wlkShade(5, 5),
+        wlkWind(6, 5, 2), wlkWind(8, 5, 2), wlkShade(9, 5),
+      ],
+    },
   ];
 
   function wlkCfg(level) {
@@ -1843,6 +1978,10 @@
       "wlkZ38": "The Deep Purse",
       "wlkZ39": "The Fourteen Window",
       "wlkZ40": "Eleven Parishes",
+      "wlkZ41": "The Walled Coast",
+      "wlkZ42": "The Rationed Sea",
+      "wlkZ43": "Four Stones",
+      "wlkZ44": "The Last Mouths",
       "wlkSeasonLabel": "Season",
       "wlkPointsLabel": "Loom",
       "wlkFedLabel": "Fed",
@@ -1925,6 +2064,10 @@
       "wlkZ38": "深袋织季",
       "wlkZ39": "十四窄窗",
       "wlkZ40": "十一村终章",
+      "wlkZ41": "封海石岸",
+      "wlkZ42": "配给之海",
+      "wlkZ43": "四石锁滩",
+      "wlkZ44": "仅存水口",
       "wlkSeasonLabel": "季度",
       "wlkPointsLabel": "织点",
       "wlkFedLabel": "灌足",
@@ -1989,7 +2132,7 @@
         "Watch out: rain above the band floods the cell and floods cost you, double in a storm year; a canal that is too short delivers more than a village can hold.",
         "Run: Run Season steps the loom its whole fixed length - twenty steps, twenty-four on the chasing front. Every cell prints heat above and moisture below, so colour is never the only clue.",
         "Scoring: all villages fed with no flood is three stars, one short still clears, and Z undoes a weave before you run.",
-        "New tier: the crowded decade - ten seasons where every rung takes a record: the first ten-parish year, a far country where no parish drinks within four cells of the sea, the earliest rain call under a triple bill, a frost year that fills the map, the first scorched fen, the leanest source the canals have carried, a monsoon that walks under a storm bill, the biggest weave the loom has ever spent, the tightest fourteen-wide windows, and an eleven-parish capstone.",
+        "New tier: the walled coast - four seasons where the loom walls the open sea itself: ridge runs down onto the water column, so whole rows lose their mouth and the live mouths shrink six, five, four, three; the walled rows keep no lake, and their parishes - huddled against the stone - drink only from branch arrows pushed across the rows above and below, two, three, four, five of them, until the capstone waters twelve parishes on three mouths under the storm bill.",
       ],
       zh: [
         "目标：季度结束时，每个村庄收到的雨量都要落在自己的区间内。",
@@ -1998,7 +2141,7 @@
         "小心：雨量高过区间就是淹，淹一格要扣分，风暴之年还要翻倍；水渠太短送来的水会超过村庄能装的量。",
         "运行：按运行季度会把这一季固定的步数走完——通常是二十步，逐锋之季是二十四步。每格上方写着温度、下方写着湿度，绝不只靠颜色传信。",
         "计分：所有村庄灌足且没有一格受淹是三星，少灌一个村庄也能过关；运行前用 Z 可以撤掉一次织入。",
-        "新层级：拥挤的十年——再添十季，每季都拿下一项纪录：首个十村之年、没有村庄坐落在离海四格之内的远海之乡、三倍水账下最早的落雨线、灌满地图的霜季、首片灼热荒原、最细的水源、走进风暴账本的季风、最大的一次织造、最窄的十四点区间，以及十一村收官。",
+        "新层级：封海石岸——再添四季，织机第一次把山脊压到开放的海面上：整行失去水口，活口从六个减到五个、四个、三个；被封闭的行没有湖，贴着石堤的村庄只能靠上下行推来的支渠喝水，两支、三支、四支、五支，直到收官之季在三处活口与风暴账本之下灌足十二个村庄。",
       ],
     },
   });

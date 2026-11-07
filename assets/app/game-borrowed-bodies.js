@@ -579,6 +579,164 @@
       ],
       mind: "C",
     },
+    /* b31-b40 - the tether tier, and its dial is the borrow itself. `tether`
+     * authors the settling count: after each possession the mind has to walk
+     * that many moves in the borrowed body before it can borrow again, so the
+     * handoff dance the whole campaign teaches now pays a toll on every beat
+     * of it. Structurally nothing before the tier carries the field, so every
+     * shipped room borrows exactly as it always did. The rooms walk back over
+     * the summit's own long dance - the crate on the wet road, the perch link,
+     * the warden's corner reshaped rung by rung - with the crab alone holding
+     * the opening (the moth and the eel can never start one), while the tether
+     * climbs three moves to fifteen. Every number below is re-measured by the
+     * release gate through the module's own prover, which is breadth-first
+     * over brbApply and deterministic - there are no seeds to pin. The pars
+     * open above b30's 120 and climb strictly (134, 158, 190, 200, 244, 274,
+     * 286, 316, 328, 358); cutting the tether out of any tier map drops it
+     * back toward the bare walk (120, 94, 120, 112, 120, 120, 120, 120, 120,
+     * 120), and the proved plans never hold two possessions closer together
+     * than the authored tether - the engine's own rule, visible in the route
+     * it proofed. */
+    {
+      id: "b31",
+      labelKey: "brbR31",
+      map: [
+        "##########",
+        "#__~.~E._#",
+        "####.#^C.#",
+        "#.~BM##~^#",
+        "#X_B^___~#",
+        "##########",
+      ],
+      mind: "C",
+      tether: 3,
+    },
+    {
+      id: "b32",
+      labelKey: "brbR32",
+      map: [
+        "##########",
+        "#__..~E._#",
+        "####.#^C.#",
+        "#.~BM##~_#",
+        "#X_B^___~#",
+        "##########",
+      ],
+      mind: "C",
+      tether: 7,
+    },
+    {
+      id: "b33",
+      labelKey: "brbR33",
+      map: [
+        "##########",
+        "#__..~E._#",
+        "####~#^C.#",
+        "#.~BM##~^#",
+        "#X_B^___~#",
+        "##########",
+      ],
+      mind: "C",
+      tether: 7,
+    },
+    {
+      id: "b34",
+      labelKey: "brbR34",
+      map: [
+        "##########",
+        "#__..~E.~#",
+        "####.#^C.#",
+        "#.~BM##~^#",
+        "#X_B^___~#",
+        "##########",
+      ],
+      mind: "C",
+      tether: 10,
+    },
+    {
+      id: "b35",
+      labelKey: "brbR35",
+      map: [
+        "##########",
+        "#__~.~E._#",
+        "####.#^C.#",
+        "#.~BM##~^#",
+        "#X_B^___~#",
+        "##########",
+      ],
+      mind: "C",
+      tether: 10,
+    },
+    {
+      id: "b36",
+      labelKey: "brbR36",
+      map: [
+        "##########",
+        "#__.~~E._#",
+        "####.#^C.#",
+        "#.~BM##~^#",
+        "#X_B^___~#",
+        "##########",
+      ],
+      mind: "C",
+      tether: 11,
+    },
+    {
+      id: "b37",
+      labelKey: "brbR37",
+      map: [
+        "##########",
+        "#__~.~E._#",
+        "####.#^C.#",
+        "#.~BM##~^#",
+        "#X_B^___~#",
+        "##########",
+      ],
+      mind: "C",
+      tether: 12,
+    },
+    {
+      id: "b38",
+      labelKey: "brbR38",
+      map: [
+        "##########",
+        "#__..~E._#",
+        "####.#^C.#",
+        "#.~BM##~^#",
+        "#X_B^^__~#",
+        "##########",
+      ],
+      mind: "C",
+      tether: 13,
+    },
+    {
+      id: "b39",
+      labelKey: "brbR39",
+      map: [
+        "##########",
+        "#__~.~E._#",
+        "####.#^C.#",
+        "#.~BM##~^#",
+        "#X_B^___~#",
+        "##########",
+      ],
+      mind: "C",
+      tether: 14,
+    },
+    {
+      id: "b40",
+      labelKey: "brbR40",
+      map: [
+        "##########",
+        "#__~.~E._#",
+        "####.#^C.#",
+        "#.~BM##~^#",
+        "#X_B^___~#",
+        "##########",
+      ],
+      mind: "C",
+      tether: 15,
+    },
   ];
 
   function brbBody(id) {
@@ -651,6 +809,7 @@
       latch: latch,
       latchOpen: false,
       pipe: pipe,
+      cool: 0,
       moves: 0,
       over: false,
       won: false,
@@ -674,6 +833,7 @@
       latch: state.latch,
       latchOpen: state.latchOpen,
       pipe: state.pipe,
+      cool: state.cool || 0,
       moves: state.moves,
       over: state.over,
       won: state.won,
@@ -785,6 +945,9 @@
       if (next.ground[ty][tx] === "P" && next.pipe && (tx !== next.pipe.x || ty !== next.pipe.y)) {
         next.bodies[body.id] = { x: next.pipe.x, y: next.pipe.y };
       }
+      if (next.cool > 0) {
+        next.cool -= 1;
+      }
       next.moves += 1;
       brbCheck(next);
       return { state: next };
@@ -795,12 +958,20 @@
       if (!target || action.id === body.id) {
         return null;
       }
+      /* The tether: a room may demand the mind settle into its new body for a
+       * few moves before it can borrow again. Zero wherever no tether is
+       * authored, so every shipped room borrows exactly as it always did. */
+      var tether = next.room && next.room.tether > 0 ? next.room.tether : 0;
+      if (tether > 0 && (next.cool || 0) > 0) {
+        return { error: t("brbTetherHolds", { n: next.cool }) };
+      }
       var a = next.bodies[body.id];
       var b = next.bodies[target.id];
       if (Math.abs(a.x - b.x) + Math.abs(a.y - b.y) !== 1) {
         return { error: t("brbNotAdjacent", { name: t(target.nameKey) }) };
       }
       next.mind = target.id;
+      next.cool = tether;
       next.moves += 1;
       brbCheck(next);
       return { state: next };
@@ -821,6 +992,9 @@
         return { error: t("brbTooFarLatch") };
       }
       next.latchOpen = true;
+      if (next.cool > 0) {
+        next.cool -= 1;
+      }
       next.moves += 1;
       brbCheck(next);
       return { state: next };
@@ -846,6 +1020,7 @@
       parts.push("B" + c.x + c.y);
     });
     parts.push(state.latchOpen ? "1" : "0");
+    parts.push(state.cool || 0);
     return parts.join("|");
   }
 
@@ -1573,7 +1748,7 @@
         name: t(room.labelKey),
         par: room.par,
         body: t(brbBody(room.mind).nameKey),
-      });
+      }) + (room.tether > 0 ? " " + t("brbTetherLine", { n: room.tether }) : "");
       refreshPicker();
       render();
       var dealt = [];
@@ -1678,6 +1853,16 @@
       "brbR28": "The Mid-Road Perch",
       "brbR29": "The Crab's Door",
       "brbR30": "The Last Crossing",
+      "brbR31": "The First Tether",
+      "brbR32": "The Chasm Handback",
+      "brbR33": "The Wet Mid-Road",
+      "brbR34": "The Damp Crossing",
+      "brbR35": "Ten Steps to Settle",
+      "brbR36": "The Long Tether",
+      "brbR37": "The Perch Pair",
+      "brbR38": "The Taut Tether",
+      "brbR39": "Fourteen Steps to Settle",
+      "brbR40": "The Last Tether",
       "brbTerrain.": "floor",
       "brbTerrain#": "wall",
       "brbTerrain_": "chasm",
@@ -1720,12 +1905,14 @@
       "brbLatchAlready": "The latch is already thrown.",
       "brbNeedsLatcher": "Only the eel can work the latch.",
       "brbTooFarLatch": "Stand next to the latch to reach it.",
+      "brbTetherHolds": "The mind is still settling: {n} more moves before the next borrow.",
       "brbNothingToUndo": "Nothing to undo yet.",
       "brbUndid": "One move back.",
       "brbWon": "Out in {n} moves (par {par}) - {s} stars.",
+      "brbTetherLine": "The tether holds: after each borrow the mind walks {n} moves before it can borrow again.",
       "brbNextRoom": "Next room unlocked.",
       "brbAllRooms": "Every room walked out.",
-      "brbHint": "Bodies stay where you leave them, so park one where you will need it later. Summit: rooms 25-30 recode the road to the flag rung by rung - the moth can never open any of them, and in the last two not even the eel can, so the crab's whole opening dance has to land before anything moves.",
+      "brbHint": "Bodies stay where you leave them, so park one where you will need it later. Summit: rooms 25-30 recode the road to the flag rung by rung - the moth can never open any of them, and in the last two not even the eel can, so the crab's whole opening dance has to land before anything moves. Tether: rooms 31-40 hold the mind to a settling count - after each borrow it walks that many moves before it can borrow again, so park the next body even further ahead.",
       "logBorrowedBodies": "Walked out of a room in {n} moves",
     },
     zh: {
@@ -1763,6 +1950,16 @@
       "brbR28": "路心的高台",
       "brbR29": "只有蟹能开的门",
       "brbR30": "最后的渡口",
+      "brbR31": "头一道系绳",
+      "brbR32": "裂口交还",
+      "brbR33": "路心的水洼",
+      "brbR34": "潮湿的横路",
+      "brbR35": "十步定神",
+      "brbR36": "长系绳",
+      "brbR37": "高台成双",
+      "brbR38": "绷紧的系绳",
+      "brbR39": "十四步定神",
+      "brbR40": "最后的系绳",
       "brbTerrain.": "地面",
       "brbTerrain#": "墙",
       "brbTerrain_": "裂口",
@@ -1805,12 +2002,14 @@
       "brbLatchAlready": "门闩已经拔开了。",
       "brbNeedsLatcher": "只有鳗能拔门闩。",
       "brbTooFarLatch": "站到门闩旁边才够得着。",
+      "brbTetherHolds": "意识还未定神：再走 {n} 步才能再次借体。",
       "brbNothingToUndo": "还没有可退回的步。",
       "brbUndid": "退回一步。",
       "brbWon": "{n} 步走出去（标准 {par}）——获得 {s} 星。",
+      "brbTetherLine": "系绳未松：每次借体之后，意识要先走 {n} 步才能再次借体。",
       "brbNextRoom": "解锁下一间。",
       "brbAllRooms": "每一间都走完了。",
-      "brbHint": "身体会留在你放下它的地方，所以要提前把它停在以后用得上的位置。巅峰段：第 25-30 关把通往旗标的路逐关换上只有一种身体能过的地形——蛾永远开不了其中任何一关，最后两关连鳗也不行，只能靠蟹把开场的一整套舞步走完，路才通。",
+      "brbHint": "身体会留在你放下它的地方，所以要提前把它停在以后用得上的位置。巅峰段：第 25-30 关把通往旗标的路逐关换上只有一种身体能过的地形——蛾永远开不了其中任何一关，最后两关连鳗也不行，只能靠蟹把开场的一整套舞步走完，路才通。系绳段：第 31-40 关给意识定了定神步数——每次借体之后要先走那么多步才能再借，所以下一具身体要停得更远。",
       "logBorrowedBodies": "用 {n} 步走出了房间",
     },
   });

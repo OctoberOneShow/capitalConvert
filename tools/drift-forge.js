@@ -462,24 +462,31 @@ function variants() {
 
 /* Best keyboard lap: the fastest finishing variant at any phase offset. The
  * module reports the worst of its three phase offsets, which this reproduces by
- * reporting the median, so a course only ships on a lap that a hand clears. */
-function keyboardLap(course) {
+ * reporting the median, so a course only ships on a lap that a hand clears.
+ * quick=true runs every ninth variant at phase 0 only - roughly 1/27th of the
+ * grid - as a cheap pre-filter for the forge's search; a candidate that clears
+ * the quick lap is re-judged on the full grid before it ships. */
+function keyboardLap(course, quick) {
+  const grid = variants();
   let best = null;
-  variants().forEach(function (variant) {
+  for (let v = 0; v < grid.length; v += 1) {
+    if (quick && v % 9 !== 0) continue;
+    const variant = grid[v];
     const times = [];
     [0, 1, 2].forEach(function (phase) {
+      if (quick && phase === 2) return;
       const lap = replayLap(course, variant, phase);
       if (lap !== null) times.push(lap);
     });
-    if (!times.length) return;
+    if (!times.length) continue;
     times.sort((a, b) => a - b);
     const worst = times[times.length - 1];
     if (best === null || worst < best.worst) best = { worst: worst, variant: variant };
-  });
+  }
   return best;
 }
 
-function checkCourse(course) {
+function checkCourse(course, quick) {
   const problems = [];
   const par = nirPar(course);
   if (par === null) {
@@ -499,7 +506,7 @@ function checkCourse(course) {
     }
   });
   if (course.width < 20) problems.push("the corridor is too narrow to drive");
-  const key = keyboardLap(course);
+  const key = keyboardLap(course, quick);
   const bands = par !== null
     ? [Math.round(par * 10) / 10, Math.round(par * 1.18 * 10) / 10, Math.round(par * 1.5 * 10) / 10]
     : null;
@@ -552,6 +559,17 @@ function courseMetrics(course) {
       if (w > wake) wake = w;
     }
   }
+  /* designed knots: waypoints the tape visits more than once (the n27/n29
+   * through-knot - the lap crosses its own corridor at a shared junction) */
+  const seen = new Map();
+  pts.forEach((p) => {
+    const key = p.x + "," + p.y;
+    seen.set(key, (seen.get(key) || 0) + 1);
+  });
+  let taps = 0;
+  seen.forEach((n) => {
+    if (n > 1) taps += 1;
+  });
   return {
     gates: gates,
     tape: Math.round(tape),
@@ -561,6 +579,7 @@ function courseMetrics(course) {
     hairpins: hairpins,
     crossings: crossings,
     wake: Math.round(wake),
+    taps: taps,
     density: gates / tape * 100,
     pads: course.pads.length,
     width: course.width,
@@ -659,6 +678,49 @@ function forgeCourse(spec, seed) {
   };
 }
 
+/* Lay a braid: the n43/n44 pattern - bands of out-and-back sawtooth teeth
+ * stacked down the arena, each band an out-row (teeth zigzag base..base+depth)
+ * plus a return row (base+rowGap..base+rowGap+depth), connected by short
+ * diagonals at the left wall. The jitter seed nudges each x by a couple of
+ * pixels; the shipped n43/n44 braids are points in exactly this family, and
+ * the reference is chaotic enough that the nudges decide stall or finish, so
+ * the forge searches seeds per brief until one passes the dual bar. */
+function braidCourse(spec, seed) {
+  const rng = mulberry(seed);
+  const nudge = () => Math.floor(rng() * 5) - 2;
+  const pts = [];
+  const push = (x, y) => {
+    const p = { x: Math.round(x), y: Math.round(y) };
+    const last = pts[pts.length - 1];
+    if (last && last.x === p.x && last.y === p.y) return;
+    pts.push(p);
+  };
+  for (let b = 0; b < spec.bands; b += 1) {
+    const base = 30 + spec.bandPitch * b;
+    const last = b === spec.bands - 1;
+    for (let i = 0; i < spec.teeth - 1; i += 1) {
+      push(spec.x0 + spec.step * i + nudge(), base + (i % 2) * spec.depth);
+    }
+    push(spec.x0 + spec.step * (spec.teeth - 1) + nudge(), base + 48);
+    if (last) break;
+    for (let i = 1; i < spec.teeth; i += 1) {
+      const x = spec.x0 + spec.step * (spec.teeth - 1) -
+        (i === 1 ? 32 : 32 + spec.step * (i - 1)) + nudge();
+      push(x, base + spec.rowGap + ((i - 1) % 2) * spec.depth);
+    }
+    push(spec.x0 - 32 + nudge(), base + 100);
+  }
+  return {
+    id: spec.id,
+    labelKey: spec.labelKey,
+    width: spec.width,
+    limit: 0,
+    basePar: spec.basePar,
+    points: pts,
+    pads: [],
+  };
+}
+
 function fmtCourse(course, limit, basePar) {
   const pts = course.points.map(function (p) {
     return "{ x: " + p.x + ", y: " + p.y + " }";
@@ -705,7 +767,7 @@ function main() {
       return { id: course.id, m: courseMetrics(course) };
     });
     console.log(
-      "id   gates tape  straight turns rev hair cross wake dens pads wid");
+      "id   gates tape  straight turns rev hair cross wake taps dens pads wid");
     rows.forEach(function (row) {
       const m = row.m;
       console.log(
@@ -718,6 +780,7 @@ function main() {
           String(m.hairpins).padStart(5) +
           String(m.crossings).padStart(6) +
           String(m.wake).padStart(5) +
+          String(m.taps).padStart(5) +
           "  " + m.density.toFixed(2).padStart(5) +
           String(m.pads).padStart(5) +
           String(m.width).padStart(4),
@@ -766,25 +829,115 @@ function main() {
         basePar: 52 + step * 4,
       };
     }
+    /* The sixth tier's briefs: the loom tier - the n43/n44 braid pattern
+     * stacked to the arena's full height and widened rung over rung. Each
+     * brief carries a list of family points (teeth per band, tooth depth,
+     * tooth pitch, width); the forge searches jitter seeds across them until
+     * a braid passes the dual bar, and the minPar floor is carried forward
+     * from the previous rung's measured par so the tier's par never falls. */
+    const loomBriefs = [
+      { variants: [{ teeth: 7, depth: 40, pitch: 36, width: 21 }], minPar: 112.9, seeds: 150 },
+      { variants: [{ teeth: 7, depth: 40, pitch: 36, width: 20 }, { teeth: 7, depth: 40, pitch: 36, width: 21 }], minPar: 116, seeds: 200 },
+      { variants: [{ teeth: 8, depth: 46, pitch: 40, width: 21 }, { teeth: 8, depth: 46, pitch: 36, width: 21 }, { teeth: 7, depth: 40, pitch: 36, width: 20 }], minPar: 119, seeds: 200 },
+      { variants: [{ teeth: 8, depth: 46, pitch: 36, width: 21 }, { teeth: 8, depth: 46, pitch: 40, width: 21 }], minPar: 132, seeds: 250 },
+      { variants: [{ teeth: 8, depth: 46, pitch: 38, width: 21 }, { teeth: 8, depth: 46, pitch: 36, width: 21 }, { teeth: 8, depth: 46, pitch: 40, width: 21 }], minPar: 137.5, seeds: 100 },
+      { variants: [{ teeth: 8, depth: 46, pitch: 40, width: 21 }, { teeth: 8, depth: 46, pitch: 38, width: 21 }, { teeth: 8, depth: 46, pitch: 36, width: 20 }], minPar: 140.5, seeds: 100 },
+      { variants: [{ teeth: 8, depth: 46, pitch: 36, width: 20 }, { teeth: 8, depth: 46, pitch: 40, width: 21 }, { teeth: 8, depth: 46, pitch: 38, width: 21 }], minPar: 142.5, seeds: 100 },
+      { variants: [{ teeth: 8, depth: 46, pitch: 40, width: 21 }, { teeth: 8, depth: 46, pitch: 38, width: 21 }, { teeth: 8, depth: 46, pitch: 44, width: 21 }], minPar: 147.3, seeds: 150 },
+      { variants: [{ teeth: 8, depth: 46, pitch: 44, width: 21 }, { teeth: 8, depth: 46, pitch: 40, width: 21 }, { teeth: 8, depth: 46, pitch: 38, width: 21 }], minPar: 148, seeds: 150 },
+      { variants: [{ teeth: 8, depth: 46, pitch: 44, width: 21 }, { teeth: 8, depth: 46, pitch: 42, width: 21 }, { teeth: 8, depth: 46, pitch: 40, width: 21 }], minPar: 149, seeds: 150 },
+    ];
+    let loomFloor = 112.9;
+    loomBriefs.forEach(function (lb, index) {
+      const id = "n" + (45 + index);
+      brief[id] = {
+        id: id,
+        labelKey: "nirZ" + (45 + index),
+        style: "braid",
+        bands: 4,
+        rowGap: 52,
+        bandPitch: 104,
+        x0: 76,
+        pads: 0,
+        basePar: 110,
+        variants: lb.variants,
+        minPar: Math.max(lb.minPar || 0, loomFloor, 104 + index),
+        parCap: lb.parCap,
+        seeds: lb.seeds,
+      };
+    });
     (ids.length ? ids : Object.keys(brief)).forEach(function (id) {
       const spec = brief[id];
       let course = null;
       let report = null;
-      for (let seed = 1; seed <= 400 && !course; seed += 1) {
-        const candidate = forgeCourse(spec, seed * 7919 + spec.width * 131 + spec.points);
-        if (!candidate) continue;
-        const attempt = checkCourse(candidate);
-        if (attempt.problems.length) continue;
-        /* A keyboard lap must clear the three-star band, not merely finish. */
-        if (!attempt.keyboard) continue;
-        if (attempt.keyboard.worst > attempt.bands[0] * 0.95) continue;
-        course = candidate;
-        report = attempt;
+      const t0 = Date.now();
+      let tried = 0;
+      let quickPass = 0;
+      if (spec.style === "braid") {
+        /* the reference is chaotic over the jitter, so the search sweeps the
+         * whole seed budget, keeps every candidate that passes the dual bar
+         * (quick grid), and ships the smallest measured par at or above the
+         * floor - minimums pack tightly, which is what lets ten rungs tile
+         * the family's range without gaps */
+        const pool = [];
+        const floor = Math.max(spec.minPar, loomFloor);
+        for (const variant of spec.variants) {
+          const vspec = { ...spec, teeth: variant.teeth, depth: variant.depth, step: variant.pitch, width: variant.width };
+          for (let seed = 0; seed <= (spec.seeds || 70); seed += 1) {
+            tried += 1;
+            if (tried % 60 === 0) console.log(id + ": tried " + tried + ", pool " + pool.length + ", " + Math.round((Date.now() - t0) / 1000) + "s");
+            const candidate = braidCourse(vspec, seed);
+            const attempt = checkCourse(candidate, true);
+            if (attempt.problems.length) continue;
+            if (attempt.par === null || attempt.par < floor) continue;
+            /* A keyboard lap must clear the three-star band, not merely finish;
+             * the quick grid pre-filters, the full grid confirms. */
+            if (!attempt.keyboard) continue;
+            if (attempt.keyboard.worst > attempt.bands[0] * 0.95) continue;
+            quickPass += 1;
+            pool.push({ seed, candidate, attempt, variant });
+          }
+        }
+        pool.sort((a, b) => a.attempt.par - b.attempt.par);
+        for (const entry of pool) {
+          const full = checkCourse(entry.candidate);
+          if (full.problems.length) continue;
+          if (!full.keyboard || full.keyboard.worst > full.bands[0] * 0.95) continue;
+          course = entry.candidate;
+          report = full;
+          console.log(id + ": verified at teeth " + entry.variant.teeth + " depth " + entry.variant.depth +
+            " pitch " + entry.variant.pitch + " width " + entry.variant.width + " jitter seed " + entry.seed +
+            " (pool " + pool.length + ", quick passes " + quickPass + ")");
+          break;
+        }
+      } else {
+        for (let seed = 1; seed <= 400 && !course; seed += 1) {
+          tried = seed;
+          if (seed % 100 === 0) console.log(id + ": seed " + seed + ", " + Math.round((Date.now() - t0) / 1000) + "s");
+          const candidate = forgeCourse(spec, seed * 7919 + spec.width * 131 + spec.points);
+          if (!candidate) continue;
+          const attempt = checkCourse(candidate, true);
+          if (attempt.problems.length) continue;
+          if (spec.minPar && (attempt.par === null || attempt.par < spec.minPar)) continue;
+          /* A keyboard lap must clear the three-star band, not merely finish;
+           * the quick grid pre-filters, the full grid confirms. */
+          if (!attempt.keyboard) continue;
+          if (attempt.keyboard.worst > attempt.bands[0] * 0.95) continue;
+          quickPass += 1;
+          const full = checkCourse(candidate);
+          if (full.problems.length) continue;
+          if (!full.keyboard || full.keyboard.worst > full.bands[0] * 0.95) continue;
+          course = candidate;
+          report = full;
+          console.log(id + ": seed " + seed + " verified (quick passes " + quickPass + ")");
+        }
       }
       if (!course) {
-        console.log(id + ": NO VERIFIED COURSE");
+        console.log(id + ": NO VERIFIED COURSE (tried " + tried + " seeds in " +
+          Math.round((Date.now() - t0) / 1000) + "s)");
         return;
       }
+      if (id >= "n45" && id <= "n54") loomFloor = report.par + 0.1;
       const par = report.par;
       const limit = Math.max(
         Math.ceil(par * 1.9),
@@ -804,6 +957,7 @@ module.exports = {
   checkCourse,
   courseMetrics,
   forgeCourse,
+  braidCourse,
   nirPar,
   keyboardLap,
   replayLap,

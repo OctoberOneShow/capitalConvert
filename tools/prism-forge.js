@@ -755,6 +755,40 @@ function forge(seed) {
     { w: 12, h: 12, walls: 9, elements: 13, splitters: 6, locked: 5, targets: 11, turns: 12, cells: 46, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 80000 },
     { w: 12, h: 12, walls: 8, elements: 13, splitters: 6, locked: 5, targets: 11, turns: 12, cells: 68, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 180, attempts: 80000, chain: true, gapMin: 3, gapMax: 6 },
     { w: 12, h: 12, walls: 8, elements: 13, splitters: 6, locked: 5, targets: 12, turns: 13, cells: 60, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 200, attempts: 100000, chain: true, gapMin: 2, gapMax: 5 },
+    /* The apex tier keeps the zenith's bar - deals four to five flips out,
+     * at most two solving orientations, every element on the beam - and
+     * takes one record per rung against every board before it: the first
+     * fourteen-across bench, the first eight-fork bench, the first
+     * fifteen-element bench, and the closer's fourteen marks lit from
+     * exactly one orientation. The dials never fall across the tier, and
+     * the dense benches are laid out by the forge's beam walk because the
+     * scatter search cannot feed them. */
+    { w: 14, h: 14, walls: 9, elements: 14, splitters: 7, locked: 6, targets: 13, turns: 11, cells: 44, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 60000, chain: true, gapMin: 1, gapMax: 3 },
+    { w: 14, h: 14, walls: 9, elements: 14, splitters: 8, locked: 6, targets: 13, turns: 11, cells: 44, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 80000, chain: true, gapMin: 2, gapMax: 4 },
+    { w: 14, h: 14, walls: 9, elements: 15, splitters: 8, locked: 6, targets: 13, turns: 12, cells: 46, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 80000, chain: true, gapMin: 2, gapMax: 4 },
+    { w: 14, h: 14, walls: 9, elements: 15, splitters: 8, locked: 6, targets: 14, turns: 12, cells: 48, spread: 9, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 180, attempts: 100000, chain: true, gapMin: 2, gapMax: 5 },
+    /* The pinnacle tier keeps the apex's bar - deals four to five flips out,
+     * at most two solving orientations, every element on the beam - and takes
+     * one record per rung against every board before it: the first
+     * fifteen-across bench, the first nine-fork bench, the first
+     * sixteen-element bench, the first seven-weld board, the first
+     * fifteen-mark fan, the heaviest sweep past p45's eighty-seven cells,
+     * the first sixteen-across bench, the bendiest route the game has
+     * carried, the first seventeen-element bench, and the closer's sixteen
+     * marks lit from exactly one orientation out of a thousand and
+     * twenty-four. The dials never fall across the tier, and the dense
+     * benches are laid out by the forge's beam walk because the scatter
+     * search cannot feed them. */
+    { w: 15, h: 15, walls: 9, elements: 15, splitters: 8, locked: 6, targets: 14, turns: 11, cells: 46, spread: 10, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 60000, chain: true, gapMin: 2, gapMax: 4 },
+    { w: 15, h: 15, walls: 9, elements: 15, splitters: 9, locked: 6, targets: 14, turns: 11, cells: 46, spread: 10, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 80000, chain: true, gapMin: 2, gapMax: 4 },
+    { w: 15, h: 15, walls: 9, elements: 16, splitters: 9, locked: 6, targets: 14, turns: 12, cells: 46, spread: 10, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 80000, chain: true, gapMin: 2, gapMax: 4 },
+    { w: 15, h: 15, walls: 9, elements: 16, splitters: 9, locked: 7, targets: 14, turns: 12, cells: 46, spread: 10, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 80000, chain: true, gapMin: 2, gapMax: 4 },
+    { w: 15, h: 15, walls: 9, elements: 16, splitters: 9, locked: 7, targets: 15, turns: 12, cells: 48, spread: 10, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 180, attempts: 80000, chain: true, gapMin: 2, gapMax: 5 },
+    { w: 15, h: 15, walls: 8, elements: 16, splitters: 9, locked: 7, targets: 15, turns: 13, cells: 110, spread: 10, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 180, attempts: 100000, chain: true, gapMin: 4, gapMax: 8 },
+    { w: 16, h: 16, walls: 9, elements: 16, splitters: 9, locked: 7, targets: 15, turns: 12, cells: 50, spread: 10, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 160, attempts: 80000, chain: true, gapMin: 2, gapMax: 4 },
+    { w: 16, h: 16, walls: 9, elements: 16, splitters: 9, locked: 7, targets: 15, turns: 28, cells: 50, spread: 10, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 180, attempts: 100000, chain: true, gapMin: 1, gapMax: 3 },
+    { w: 16, h: 16, walls: 10, elements: 17, splitters: 9, locked: 7, targets: 15, turns: 13, cells: 50, spread: 10, minFlips: 4, maxFlips: 5, maxSolutions: 2, maxLitDeal: 2, samples: 180, attempts: 100000, chain: true, gapMin: 2, gapMax: 4 },
+    { w: 16, h: 16, walls: 10, elements: 17, splitters: 9, locked: 7, targets: 16, turns: 13, cells: 52, spread: 10, minFlips: 4, maxFlips: 5, maxSolutions: 1, maxLitDeal: 2, samples: 200, attempts: 100000, chain: true, gapMin: 2, gapMax: 5 },
   ];
   var names = [
     ["p11", "prismL11"], ["p12", "prismL12"], ["p13", "prismL13"],
@@ -768,6 +802,12 @@ function forge(seed) {
     ["p34", "prismL34"], ["p35", "prismL35"], ["p36", "prismL36"],
     ["p37", "prismL37"], ["p38", "prismL38"], ["p39", "prismL39"],
     ["p40", "prismL40"],
+    ["p47", "lvlNum47"], ["p48", "lvlNum48"], ["p49", "lvlNum49"],
+    ["p50", "lvlNum50"],
+    ["p51", "prismL51"], ["p52", "prismL52"], ["p53", "prismL53"],
+    ["p54", "prismL54"], ["p55", "prismL55"], ["p56", "prismL56"],
+    ["p57", "prismL57"], ["p58", "prismL58"], ["p59", "prismL59"],
+    ["p60", "prismL60"],
   ];
   var times = [
     [42, 64, 90], [46, 70, 98], [50, 76, 106], [54, 82, 114], [58, 88, 122],
@@ -778,17 +818,30 @@ function forge(seed) {
     [168, 252, 336], [178, 267, 356], [188, 282, 376], [198, 297, 396],
     [210, 315, 420], [220, 330, 440], [232, 348, 464], [244, 366, 488],
     [256, 384, 512], [272, 408, 544],
+    [384, 576, 768], [400, 600, 800], [416, 624, 832], [432, 648, 864],
+    [448, 672, 896], [464, 696, 928], [480, 720, 960], [496, 744, 992],
+    [512, 768, 1024], [528, 792, 1056], [544, 816, 1088], [560, 840, 1120],
+    [576, 864, 1152], [592, 888, 1184],
   ];
   /* `from` lets a search re-run only the deep rungs (board number, default 11)
-   * so an already-shipped rung is never re-forged over. */
+   * so an already-shipped rung is never re-forged over, and an optional fifth
+   * argument narrows the search to a single board so one rung can be forged
+   * and verified on its own without paying for the rest of the ladder. */
   var from = Number((typeof process !== "undefined" &&
     process.argv && process.argv[4]) || 11);
+  var only = (typeof process !== "undefined" &&
+    process.argv && process.argv[5]) || null;
   specs.forEach(function (spec, index) {
     if (Number(String(names[index][0]).replace(/\D/g, "")) < from) {
       return;
     }
+    if (only && names[index][0] !== only) {
+      return;
+    }
     var found = null;
+    var spent = 0;
     for (var attempt = 0; attempt < (spec.attempts || 14000) && !found; attempt += 1) {
+      spent = attempt + 1;
       var rand = mulberry32(seed + index * 7919 + attempt * 104729);
       var result = forgeOne(rand, spec);
       if (result && result.score >= 60) {
@@ -796,7 +849,8 @@ function forge(seed) {
       }
     }
     if (!found) {
-      console.log("/* " + names[index][0] + ": no board cleared the bar */");
+      console.log("/* " + names[index][0] + ": no board cleared the bar in " +
+        spent + " attempts */");
       return;
     }
     console.log(printLevel(found.level, {
@@ -804,7 +858,8 @@ function forge(seed) {
       labelKey: names[index][1],
       starTimes: times[index],
     }));
-    console.log("/* " + names[index][0] + " " + JSON.stringify(found.report) + " */");
+    console.log("/* " + names[index][0] + " " + JSON.stringify(found.report) +
+      " (attempt " + spent + ") */");
   });
 }
 

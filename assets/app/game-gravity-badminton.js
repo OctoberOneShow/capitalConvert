@@ -34,7 +34,7 @@
   var gbmG = [{ x: 0, y: 1 }, { x: -1, y: 0 }, { x: 0, y: -1 }, { x: 1, y: 0 }];
   var gbmDirKeys = ["gbmPullDown", "gbmPullLeft", "gbmPullUp", "gbmPullRight"];
 
-  /* Thirty opponents, all data, so a level can be replayed and measured:
+  /* Forty-four opponents, all data, so a level can be replayed and measured:
    *   speed/reach/height  baseline slide, reach, and the height it can swing at
    *   lock                gravity indexes where it never miscues (the wall)
    *   offLock             its speed multiplier while the pull is sideways
@@ -355,6 +355,140 @@
       line: [{ u: 108, target: 132, track: true }, { u: 108, target: 132, track: true },
         { u: 20, target: 170, track: true }, { u: 24, target: 152, track: true }],
     },
+    /* b31-b40: the locked rotation. The event horizon closed the leaks one
+     * by one and ended on a champion that still parked for a third of a
+     * second after you struck; these ten close that last window - every
+     * rung is locked on all four pulls, gives nothing away (err zero) and
+     * never stops moving (freeze zero) - and then pushes the champion's own
+     * dials past their ceiling: base pace 192 up to 228, power 1.42 up to
+     * 1.6, reach 19 to 23.5, swing 63 to 72, spread 2.7 to 3.15, and the
+     * re-read falls from 0.018 to 0.002. Every stored line below is the
+     * rung's own - ten distinct programs, none copied whole from an earlier
+     * court - and each was proven through the same replay the bands hang
+     * off: the par is that line's measured concession, never a guess. */
+    {
+      id: "b31", labelKey: "gbmL31", style: "mover", seed: 93131, cap: 38,
+      speed: 192, reach: 19, height: 63, power: 1.42, err: 0, offLock: 1, freeze: 0,
+      react: 0.018, spread: 2.7, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [0, 2, 4],
+      line: [{ u: 104, target: 134, track: true }, { u: 24, target: 152, track: true },
+        { u: 96, target: 136, track: true }, { u: 28, target: 226, track: true }],
+    },
+    {
+      id: "b32", labelKey: "gbmL32", style: "mover", seed: 93132, cap: 38,
+      speed: 196, reach: 19.5, height: 64, power: 1.44, err: 0, offLock: 1, freeze: 0,
+      react: 0.016, spread: 2.75, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [2, 4, 6],
+      line: [{ u: 108, target: 132, track: true }, { u: 20, target: 170, track: true },
+        { u: 24, target: 152, track: true }, { u: 100, target: 226, track: true }],
+    },
+    {
+      id: "b33", labelKey: "gbmL33", style: "wall", seed: 93133, cap: 38,
+      speed: 200, reach: 20, height: 65, power: 1.46, err: 0, offLock: 1, freeze: 0,
+      react: 0.014, spread: 2.8, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [0, 2, 4],
+      line: [{ u: 60, target: 240, track: true }, { u: 56, target: 134, track: true },
+        { u: 84, target: 202, track: true }, { u: 40, target: 152, track: true }],
+    },
+    {
+      id: "b34", labelKey: "gbmL34", style: "mover", seed: 93134, cap: 38,
+      speed: 204, reach: 20.5, height: 66, power: 1.48, err: 0, offLock: 1, freeze: 0,
+      react: 0.013, spread: 2.85, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [4, 6, 8],
+      line: [{ u: 68, target: 240, track: true }, { u: 108, target: 132, track: true },
+        { u: 20, target: 132, track: true }, { u: 24, target: 152, track: true }],
+    },
+    {
+      id: "b35", labelKey: "gbmL35", style: "mover", seed: 93135, cap: 38,
+      speed: 208, reach: 21, height: 67, power: 1.5, err: 0, offLock: 1, freeze: 0,
+      react: 0.011, spread: 2.9, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [4, 6, 8],
+      line: [{ u: 92, target: 230, track: true }, { u: 20, target: 132, track: true },
+        { u: 108, target: 132, track: true }, { u: 24, target: 152, track: true }],
+    },
+    {
+      id: "b36", labelKey: "gbmL36", style: "mover", seed: 93136, cap: 38,
+      speed: 212, reach: 21.5, height: 68, power: 1.52, err: 0, offLock: 1, freeze: 0,
+      react: 0.009, spread: 2.95, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [1, 3, 5],
+      line: [{ u: 108, target: 136, track: true }, { u: 24, target: 152, track: true },
+        { u: 108, target: 132, track: true }, { u: 28, target: 170, track: true }],
+    },
+    {
+      id: "b37", labelKey: "gbmL37", style: "wall", seed: 93137, cap: 38,
+      speed: 216, reach: 22, height: 69, power: 1.54, err: 0, offLock: 1, freeze: 0,
+      react: 0.007, spread: 3, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [0, 2, 4],
+      line: [{ u: 108, target: 134, track: true }, { u: 108, target: 134, track: true },
+        { u: 28, target: 152, track: true }, { u: 100, target: 136, track: true }],
+    },
+    {
+      id: "b38", labelKey: "gbmL38", style: "mover", seed: 93138, cap: 38,
+      speed: 220, reach: 22.5, height: 70, power: 1.56, err: 0, offLock: 1, freeze: 0,
+      react: 0.005, spread: 3.05, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [2, 4, 6],
+      line: [{ u: 56, target: 240, track: true }, { u: 44, target: 134, track: true },
+        { u: 84, target: 164, track: true }, { u: 64, target: 152, track: true }],
+    },
+    {
+      id: "b39", labelKey: "gbmL39", style: "mover", seed: 93139, cap: 38,
+      speed: 224, reach: 23, height: 71, power: 1.58, err: 0, offLock: 1, freeze: 0,
+      react: 0.004, spread: 3.1, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [3, 5, 7],
+      line: [{ u: 56, target: 132, track: true }, { u: 84, target: 240, track: true },
+        { u: 56, target: 136, track: true }, { u: 40, target: 152, track: true }],
+    },
+    /* b40: the perfected seal, and the capstone. The champion's own style
+     * with the window gone, the heaviest hit and the fastest re-read in the
+     * ladder - the whole rotation locked, nothing gifted, nothing parked. */
+    {
+      id: "b40", labelKey: "gbmL40", style: "mover", seed: 93140, cap: 38,
+      speed: 228, reach: 23.5, height: 72, power: 1.6, err: 0, offLock: 1, freeze: 0,
+      react: 0.002, spread: 3.15, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [3, 5, 7],
+      line: [{ u: 36, target: 170, track: true }, { u: 24, target: 134, track: true },
+        { u: 74, target: 202, track: true }, { u: 44, target: 134, track: true }],
+    },
+    /* b41-b44: the long courts. Every match the ladder had shipped before
+     * this tier - the apex, the horizon and the perfected seal included -
+     * was played to seven, and these four spend the one dial no earlier
+     * rung could touch: the match itself. Each long court is played to
+     * nine (toWin: 9, and the panel's order line asks for nine), so the
+     * seal has to hold for a third longer, and the points the ladder's own
+     * line must live through climb one per rung - ten, eleven, twelve,
+     * thirteen points - opening exactly at the rotation capstone's whole
+     * match. Nothing here hits heavier or reads faster than the champion
+     * (power 1.6 and react 0.002 stand), every rung keeps the seal's
+     * discipline (err zero, freeze zero, nothing gifted, nothing parked),
+     * the wall keeps the horizon's crosswise sprint (offLock 1.4) and the
+     * capstone fields the fastest body the ladder has ever seen: pace 244,
+     * reach 28, swing 78. Each stored line below is the rung's own and was
+     * replayed through the module's runner in ladder order - the par is
+     * that line's measured concession through the nine-point match, the
+     * bands hang off it by the shipped [par, par+2, par+4] ladder, and the
+     * one-star line stays winnable everywhere (par + 4 never passes eight,
+     * the last concession a nine-point match can survive). The fallback
+     * program - stand, aim down the middle, hold the key - loses outright
+     * on the first three long courts and cannot reach a three-star band on
+     * any of the four. */
+    {
+      id: "b41", labelKey: "gbmL41", style: "reader", seed: 94141, cap: 38, toWin: 9,
+      speed: 224, reach: 22, height: 70, power: 1.6, err: 0, offLock: 1, freeze: 0,
+      react: 0.002, spread: 3.2, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [1, 3, 5],
+      line: [{ u: 36, target: 132, track: true }, { u: 36, target: 240, track: true },
+        { u: 36, target: 132, track: true }, { u: 36, target: 240, track: true }],
+    },
+    {
+      id: "b42", labelKey: "gbmL42", style: "mover", seed: 94142, cap: 38, toWin: 9,
+      speed: 236, reach: 26, height: 75, power: 1.6, err: 0, offLock: 1, freeze: 0,
+      react: 0.002, spread: 3.25, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [2, 4, 6],
+      line: [{ u: 60, target: 200, track: true }, { u: 60, target: 240, track: true },
+        { u: 90, target: 220, track: true }, { u: 30, target: 150, track: true }],
+    },
+    {
+      id: "b43", labelKey: "gbmL43", style: "wall", seed: 94143, cap: 38, toWin: 9,
+      speed: 236, reach: 25, height: 75, power: 1.6, err: 0, offLock: 1.4, freeze: 0,
+      react: 0.002, spread: 3.3, lock: [0, 2], targets: [8, 118], baseBands: [3, 5, 7],
+      line: [{ u: 28, target: 200, track: true }, { u: 60, target: 140, track: true },
+        { u: 90, target: 220, track: true }, { u: 30, target: 150, track: true }],
+    },
+    {
+      id: "b44", labelKey: "gbmL44", style: "mover", seed: 94144, cap: 38, toWin: 9,
+      speed: 244, reach: 28, height: 78, power: 1.6, err: 0, offLock: 1, freeze: 0,
+      react: 0.002, spread: 3.4, lock: [0, 1, 2, 3], targets: [8, 118], baseBands: [4, 6, 8],
+      line: [{ u: 60, target: 200, track: true }, { u: 60, target: 140, track: true },
+        { u: 36, target: 220, track: true }, { u: 30, target: 150, track: true }],
+    },
   ];
 
   /* --- tiny pure helpers ------------------------------------------------ */
@@ -530,7 +664,8 @@
     var open = gbmAimFor(56, gbmRacketV, 192, 0, "near");
     return {
       levelId: def.id, style: def.style, gravity: 0, rallies: 0, clock: 0, hold: 0,
-      phase: "ready", seed: def.seed, cap: def.cap, outcome: null,
+      phase: "ready", seed: def.seed, cap: def.cap, toWin: gbmNum(def.toWin, gbmToWin),
+      outcome: null,
       score: { you: 0, foe: 0 }, you: { u: 56 },
       foe: {
         u: 196, want: 196, read: 196, commit: 0, telegraph: 0, speed: def.speed,
@@ -765,7 +900,8 @@
   }
 
   function gbmStartRally(state) {
-    if (state.score.you >= gbmToWin || state.score.foe >= gbmToWin || state.rallies >= state.cap) {
+    if (state.score.you >= state.toWin || state.score.foe >= state.toWin ||
+      state.rallies >= state.cap) {
       state.phase = "done";
       return;
     }
@@ -909,7 +1045,8 @@
     var def = level || gbmLevels[0];
     if (gbmParCache[def.id] !== undefined) { return gbmParCache[def.id]; }
     var run = gbmRally(gbmNewState(def, { slow: false, assist: true }), def.line);
-    gbmParCache[def.id] = run && run.won >= gbmToWin && run.conceded < gbmToWin ? run.conceded : null;
+    var win = gbmNum(def.toWin, gbmToWin);
+    gbmParCache[def.id] = run && run.won >= win && run.conceded < win ? run.conceded : null;
     return gbmParCache[def.id];
   }
   function gbmBands(level) {
@@ -924,7 +1061,8 @@
     var def = level || gbmLevels[0];
     if (!def.line || !def.line.length) { return false; }
     var run = gbmRally(gbmNewState(def, { slow: false, assist: true }), def.line);
-    return !!run && run.won >= gbmToWin && run.conceded < gbmToWin && run.rallies <= def.cap;
+    var win = gbmNum(def.toWin, gbmToWin);
+    return !!run && run.won >= win && run.conceded < win && run.rallies <= def.cap;
   }
 
   /* --- the panel ---------------------------------------------------------- */
@@ -1109,7 +1247,7 @@
       renderHud();
       line.textContent = intentLine();
       result.classList.remove("gbm-lost");
-      result.textContent = t("gbmPrompt", { name: t(level.labelKey), n: gbmToWin, b: band[0] });
+      result.textContent = t("gbmPrompt", { name: t(level.labelKey), n: state.toWin, b: band[0] });
       draw();
     }
 
@@ -1138,10 +1276,10 @@
       finished = true;
       matchLive = false;
       stopLoop();
-      var won = state.score.you >= gbmToWin;
+      var won = state.score.you >= state.toWin;
       var against = state.score.foe;
       if (!won) {
-        result.textContent = against >= gbmToWin
+        result.textContent = against >= state.toWin
           ? t("gbmYouLose", { a: state.score.you, b: against, name: t(level.labelKey) })
           : t("gbmCapHit", { a: state.score.you, b: against, n: state.cap });
         draw();
@@ -1524,6 +1662,20 @@
       "gbmL28": "Total Canopy",
       "gbmL29": "Everywhere Runner",
       "gbmL30": "The Locked Champion",
+      "gbmL31": "The Windowless Court",
+      "gbmL32": "The Turning Wall",
+      "gbmL33": "The Baseline Machine",
+      "gbmL34": "The Iron Rally",
+      "gbmL35": "The Standing Tide",
+      "gbmL36": "The Metronome",
+      "gbmL37": "The Perfect Read",
+      "gbmL38": "The Wide Shadow",
+      "gbmL39": "The Corner Warden",
+      "gbmL40": "The Perfected Seal",
+      "gbmL41": "The Long Read",
+      "gbmL42": "The Long Chase",
+      "gbmL43": "The Long Sprint",
+      "gbmL44": "The Long Seal",
       "gbmScoreLabel": "Score",
       "gbmPullLabel": "Pull",
       "gbmPowerLabel": "Power",
@@ -1564,7 +1716,7 @@
       "gbmYouLose": "Match lost {a}-{b}. {name} reads the rotation better.",
       "gbmCapHit": "The rally cap of {n} was reached at {a}-{b}, so the match is dropped.",
       "gbmNextFoe": "Next opponent unlocked.",
-      "gbmAllBeat": "All thirty opponents beaten.",
+      "gbmAllBeat": "All forty-four opponents beaten.",
       "gbmHint":
         "Read the arrow, not the memory: every rally turns the court. Slide under the shuttle, raise the aim, then smash.",
       "logGravityBadminton": "Beat {name} in gravity badminton {a}-{b}",
@@ -1601,6 +1753,20 @@
       "gbmL28": "遮天华盖",
       "gbmL29": "满场奔跑者",
       "gbmL30": "全域锁王",
+      "gbmL31": "无窗球场",
+      "gbmL32": "旋转壁垒",
+      "gbmL33": "底线机器",
+      "gbmL34": "铁意志对攻",
+      "gbmL35": "驻立之潮",
+      "gbmL36": "节拍器",
+      "gbmL37": "完美预读",
+      "gbmL38": "广影壁垒",
+      "gbmL39": "角落守卫",
+      "gbmL40": "圆满封印",
+      "gbmL41": "长局预读",
+      "gbmL42": "长局追击",
+      "gbmL43": "长局疾壁",
+      "gbmL44": "长局封印",
       "gbmScoreLabel": "比分",
       "gbmPullLabel": "引力",
       "gbmPowerLabel": "力量",
@@ -1640,7 +1806,7 @@
       "gbmYouLose": "以 {a}-{b} 落败。「{name}」更懂得利用旋转。",
       "gbmCapHit": "打到 {n} 回合的上限，比分 {a}-{b}，本局作废。",
       "gbmNextFoe": "解锁下一位对手。",
-      "gbmAllBeat": "三十位对手全部取胜。",
+      "gbmAllBeat": "四十四位对手全部取胜。",
       "gbmHint": "要看箭头而不是凭记忆：每一回合球场都会旋转。跑到球下，抬高瞄准角，再扣杀。",
       "logGravityBadminton": "在重力羽毛球中以 {a}-{b} 战胜了「{name}」",
     },
@@ -1668,7 +1834,7 @@
         "Action: slide with Arrow Left and Right (or A and D), raise or lower the aim with Arrow Up and Down, set power with Q and E, then smash with Space or by dragging and releasing on the court.",
         "Rule: gravity pulls toward one wall, and after every point it swings to the next - the court is redrawn rotated with it, so read the yellow arrow again.",
         "Watch out: the opponent telegraphs its next slide with a red arrow, so answer it with one short rally and one deep rally instead of the same shot twice.",
-        "Scoring: first to 7 points. You lose a point when the shuttle lands on your side, your shot hits the net band, or your shot leaves play, and the stars count the points you concede.",
+        "Scoring: first to 7 points - the four long courts at the very top are played to 9. You lose a point when the shuttle lands on your side, your shot hits the net band, or your shot leaves play, and the stars count the points you concede.",
         "Access: the Slow shuttle and Aim assist switches under the court are game options, and both are written into the exported sim.",
       ],
       zh: [
@@ -1676,7 +1842,7 @@
         "操作：左右方向键（或 A、D）移动，上下方向键抬高或压低瞄准角，Q 和 E 调整力量，空格键扣杀，也可以在球场上拖拽瞄准后松开。",
         "规则：引力朝着某一面墙拉，每一分之后都会换到下一面墙，球场跟着旋转，所以要重新看那个黄色箭头。",
         "注意：对手会用红色箭头预告它下一步往哪走，一回合打短、一回合打深，别连着打同一板球。",
-        "计分：先得 7 分者胜。球落在你这一侧、你的球撞网、或你的球出界都会丢分，星数按整局丢掉的分数计算。",
+        "计分：先得 7 分者胜，最顶上的四座长局球场则以先得 9 分获胜。球落在你这一侧、你的球撞网、或你的球出界都会丢分，星数按整局丢掉的分数计算。",
         "无障碍：球场下方的慢速球和瞄准辅助是游戏选项，两者都会写进对外导出的模拟里。",
       ],
     },

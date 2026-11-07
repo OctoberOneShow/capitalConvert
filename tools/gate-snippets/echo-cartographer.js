@@ -32,7 +32,20 @@
  * startle's worth of spare ink still reaches the one-star band, the summit
  * labels resolve in both dictionaries, and the unlock chain walks all thirty
  * caves. A surveyor that never pings cannot leave the entrance, so no rung is
- * a free ride. */
+ * a free ride.
+ *
+ * The dead-air tier c31-c40 remixes the SOUND instead of the stone. Every
+ * rung deals `radius: 2` - the echo carries two cells where every shipped
+ * cave carries the module's three - and asks twenty or more fossils, past the
+ * summit's nineteen, all on the summit's own two deepest seams, with the last
+ * two caves at the one-cell voice. The gate's survey reads the same dial the
+ * panel reads, so every floor below is priced at the rung's own voice: the
+ * coiled dark costs 41 pings at two cells, the hairpin 44, and the hairpin 83
+ * at one - every floor above the summit capstone's 32, no floor falling, the
+ * quota never shrinking, and the spare ink only tightening, from six pings
+ * over the floor at c31 to the capstone's two. Restoring the full three-cell
+ * voice on a copy of each dealt cave makes the same survey cheaper, so the
+ * dead air - not the quota - is what the tier charges for. */
 
 const SEEDS = [];
 for (let i = 1; i <= 40; i += 1) {
@@ -57,6 +70,10 @@ function revealDisc(App, grid, origin, radius) {
 function survey(App, level, seed, caveOverride) {
   const cave = caveOverride || App.echoCave(level, seed);
   const grid = cave.grid;
+  /* The echo's voice, read from the rung exactly where the panel reads it:
+   * every shipped cave keeps the module's three-cell reach, the dead-air
+   * tier deals less. The start ring stays radius one, as the panel's is. */
+  const voice = level.radius || 3;
   const marks = grid.map((row) => row.map(() => 0));
   const taken = cave.fossils.map(() => 0);
   let player = { x: cave.start.x, y: cave.start.y };
@@ -190,7 +207,7 @@ function survey(App, level, seed, caveOverride) {
           nearestPending = d;
         }
       }
-      const disc = revealDisc(App, grid, c, 3);
+      const disc = revealDisc(App, grid, c, voice);
       let gain = 0;
       disc.forEach((cell) => {
         if (marks[cell.y][cell.x] === 0) {
@@ -218,7 +235,7 @@ function survey(App, level, seed, caveOverride) {
         return { won: true, pings, collected: level.quota };
       }
     }
-    revealDisc(App, grid, player, 3).forEach(absorb);
+    revealDisc(App, grid, player, voice).forEach(absorb);
     pings += 1;
     collectHere();
     if (pings > level.pings) {
@@ -400,8 +417,8 @@ module.exports = function gate(ctx) {
     return;
   }
 
-  check("game-echo-cartographer", "the ladder holds thirty caves",
-    levels.length === 30, String(levels.length));
+  check("game-echo-cartographer", "the ladder holds forty caves",
+    levels.length === 40, String(levels.length));
   check("game-echo-cartographer", "every cave id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -411,6 +428,10 @@ module.exports = function gate(ctx) {
   const missingSummit = summitIds.filter((id) => !byId(id));
   check("game-echo-cartographer", "the summit tier c25-c30 is present",
     missingSummit.length === 0, missingSummit.join(","));
+  const deadAirIds = ["c31", "c32", "c33", "c34", "c35", "c36", "c37", "c38", "c39", "c40"];
+  const missingDeadAir = deadAirIds.filter((id) => !byId(id));
+  check("game-echo-cartographer", "the dead-air tier c31-c40 is present",
+    missingDeadAir.length === 0, missingDeadAir.join(","));
   const summitStyles = {
     c25: "ring", c26: "doublefork", c27: "comb",
     c28: "lattice", c29: "spiral", c30: "switchback",
@@ -425,10 +446,41 @@ module.exports = function gate(ctx) {
         level.style === summitStyles[id];
     }),
     summitIds.map((id) => id + ":" + (byId(id) ? byId(id).style : "missing")).join(" "));
-  check("game-echo-cartographer", "the deep and summit tiers sit at the tail in order",
+  check("game-echo-cartographer", "the deep, summit and dead-air tiers sit at the tail in order",
     levels.slice(20).map((level) => level.id).join(",") ===
-      deepIds.concat(summitIds).join(","),
+      deepIds.concat(summitIds, deadAirIds).join(","),
     levels.slice(20).map((level) => level.id).join(","));
+
+  /* The dead-air law, real in the rows: every tier rung deals a shorter voice
+   * than the module's three - two cells, then the last two at one - and a
+   * quota past the summit's nineteen, all on the summit's own two deepest
+   * seams. No shipped cave carries the dial at all, and none ever asked
+   * twenty fossils. */
+  const deadAir = deadAirIds.map((id) => byId(id));
+  const lawProblems = [];
+  deadAir.forEach((level, index) => {
+    const expectedVoice = index < 8 ? 2 : 1;
+    if (level.radius !== expectedVoice) {
+      lawProblems.push(`${level.id} deals voice ${level.radius}, not ${expectedVoice}`);
+    }
+    if (level.style !== "spiral" && level.style !== "switchback") {
+      lawProblems.push(level.id + " leaves the two deepest seams");
+    }
+    if (level.quota < 20) {
+      lawProblems.push(`${level.id} asks only ${level.quota} fossils`);
+    }
+    if (level.fish !== 2) {
+      lawProblems.push(level.id + " does not swim the hunting fish");
+    }
+  });
+  check("game-echo-cartographer",
+    "every dead-air cave deals the shortened voice, a twenty-plus quota and the two deepest seams",
+    lawProblems.length === 0, lawProblems.join(" | "));
+  const staleDials = levels.slice(0, 30).filter((level) =>
+    level.radius !== undefined || level.quota >= 20).map((level) => level.id);
+  check("game-echo-cartographer",
+    "no shipped cave deals a shortened voice or a twenty-fossil quota - the dead-air dials are dead for c1-c30",
+    staleDials.length === 0, staleDials.join(","));
 
   /* The whole ladder replays: on every dealt seed the executable survey wins
    * inside the rung's own ink budget, so a rung that cannot be finished fails
@@ -544,6 +596,84 @@ module.exports = function gate(ctx) {
     "below the capstone's proven floor, seams are lost outright",
     tight.wins < tight.total, `${tight.wins}/${tight.total} winnable`);
 
+  /* ---- the dead-air tier: the voice, priced ----
+   * Every rung's floor is the solver's worst dealt cave at the rung's own
+   * voice, and the tier's three currencies never fall: the floor, the quota,
+   * and the spare ink only ever tightens - six pings over the floor at c31,
+   * two at the capstone, where the summit never went below two. */
+  const deadAirProblems = [];
+  let prevFloor = m30.maxPar;
+  let prevQuota = byId("c30").quota;
+  let prevSpare = Infinity;
+  deadAirIds.forEach((id) => {
+    const level = byId(id);
+    const m = ladders[id];
+    const tierSpare = spare(id);
+    if (m.maxPar < prevFloor) {
+      deadAirProblems.push(`${id} floor ${m.maxPar} falls under the rung before it (${prevFloor})`);
+    }
+    if (m.maxPar <= m30.maxPar) {
+      deadAirProblems.push(`${id} floor ${m.maxPar} does not clear the summit capstone's ${m30.maxPar}`);
+    }
+    if (level.quota < prevQuota) {
+      deadAirProblems.push(`${id} quota ${level.quota} shrinks under the rung before it (${prevQuota})`);
+    }
+    if (tierSpare > prevSpare) {
+      deadAirProblems.push(`${id} leaves ${tierSpare} spare pings over the floor, more than the rung before it (${prevSpare})`);
+    }
+    if (level.starPings[0] !== m.maxPar ||
+        level.starPings[1] !== m.maxPar + 1 ||
+        level.starPings[2] !== m.maxPar + 2) {
+      deadAirProblems.push(`${id} bands ${level.starPings.join("/")} are not the replayed floor + 0/1/2 (${m.maxPar})`);
+    }
+    if (m.maxPar + 2 > level.starPings[2]) {
+      deadAirProblems.push(`${id} loses its one-star band to a startle`);
+    }
+    if (level.pings < m.maxPar) {
+      deadAirProblems.push(`${id} budget ${level.pings} sits under its own floor ${m.maxPar}`);
+    }
+    prevFloor = m.maxPar;
+    prevQuota = level.quota;
+    prevSpare = tierSpare;
+  });
+  check("game-echo-cartographer",
+    "every dead-air floor clears the summit capstone and never falls, the quota never shrinks, the spare only tightens (" +
+      deadAirIds.map((id) => `${id}:${ladders[id].maxPar}+${spare(id)}`).join(" ") + ")",
+    deadAirProblems.length === 0, deadAirProblems.join(" | "));
+
+  /* The dead air is load-bearing: deal the same caves at the module's full
+   * three-cell voice and the same survey prices them cheaper on every rung -
+   * the shortened voice, not the quota, is what the tier charges for. The
+   * twin is priced on every other dealt seed, the same family halved, to
+   * keep the suite's wall clock near the ladder's own. */
+  const TWIN_SEEDS = SEEDS.filter((_, index) => index % 2 === 0);
+  const twinMeasure = (level) => {
+    let wins = 0;
+    let maxPar = 0;
+    TWIN_SEEDS.forEach((seed) => {
+      const run = survey(App, level, seed);
+      if (run.won) {
+        wins += 1;
+        if (run.pings > maxPar) {
+          maxPar = run.pings;
+        }
+      }
+    });
+    return { wins, total: TWIN_SEEDS.length, maxPar };
+  };
+  const twinProblems = [];
+  deadAirIds.forEach((id) => {
+    const level = byId(id);
+    const twin = Object.assign({}, level, { radius: 3, pings: 9999 });
+    const twinM = twinMeasure(twin);
+    if (!(twinM.wins === twinM.total && twinM.maxPar < ladders[id].maxPar)) {
+      twinProblems.push(`${id} full-voice twin ${twinM.maxPar}/${twinM.wins} is not cheaper than ${ladders[id].maxPar}`);
+    }
+  });
+  check("game-echo-cartographer",
+    "restoring the three-cell voice on a copy prices every dead-air cave cheaper - the shortened voice is the lesson",
+    twinProblems.length === 0, twinProblems.join(" | "));
+
   /* A surveyor that never pings cannot even leave the entrance: the start
    * reveal only opens a radius-one ring, and steps onto unknown cells are
    * refused by the panel, so a zero-ink survey of the first rung dries out
@@ -554,8 +684,9 @@ module.exports = function gate(ctx) {
   check("game-echo-cartographer", "a silent surveyor collects nothing",
     !silent.won && silent.collected === 0, JSON.stringify(silent));
 
-  /* Summit labels travel in both dictionaries and never fall back to keys. */
-  [["the deep labels", deepIds], ["the summit labels", summitIds]].forEach((row) => {
+  /* The tiers' labels travel in both dictionaries and never fall back to keys. */
+  [["the deep labels", deepIds], ["the summit labels", summitIds],
+    ["the dead-air labels", deadAirIds]].forEach((row) => {
     ["en", "zh"].forEach((lang) => {
       const ok = row[1].every((id) => {
         const level = byId(id);
@@ -569,7 +700,7 @@ module.exports = function gate(ctx) {
   });
 
   /* The unlock chain is derived, never stored: clearing each cave in order
-   * hands the player exactly the next one, all thirty times. */
+   * hands the player exactly the next one, all forty times. */
   const chain = App.createCampaign({
     key: "echo-cartographer-gate-chain",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -586,6 +717,6 @@ module.exports = function gate(ctx) {
       chained = false;
     }
   });
-  check("game-echo-cartographer", "the unlock chain walks all thirty caves in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-echo-cartographer", "the unlock chain walks all forty caves in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 };

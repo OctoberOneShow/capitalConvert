@@ -82,6 +82,31 @@
     { id: "r28", labelKey: "gomokuRank28", noise: 0.06, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 4, hold: 3, depth: 14, starMoves: [122, 182, 246] },
     { id: "r29", labelKey: "gomokuRank29", noise: 0.05, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 4, hold: 3, depth: 14, starMoves: [126, 188, 254] },
     { id: "r30", labelKey: "gomokuRank30", noise: 0.04, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 5, hold: 3, depth: 14, starMoves: [130, 194, 262] },
+    /* Ranks 31-40: the patient answers. The summit's fourteen plies are the
+     * panel's wall - a rank that searched deeper would stall it - so this
+     * tier steps the sight down to five plies, what the clock affords with
+     * room to spare, and spends every ply it handed back on the other dial
+     * the engine's hold has always read: `narrow`, the number of rival
+     * answers a read must survive. No shipped rank carries the field; every
+     * shipped read took three answers a ply. The answers climb four to
+     * thirteen rung over rung at the fixed sight, so the read changes
+     * character while its think stays a fraction of the wall's own - the
+     * branching the answers add is paid for by the plies they replace. The
+     * dial is live, not decorative: seeded against the ladder's own wall
+     * (r10), the plain five-ply read - three answers - lost every one of
+     * four duels, while the five-answer read won all four at the same
+     * sight. The star law continues the ladder's own four, six
+     * and eight a band, rising all the way up. */
+    { id: "r31", labelKey: "gomokuRank31", noise: 0.04, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 5, hold: 3, depth: 5, narrow: 4, starMoves: [134, 200, 270] },
+    { id: "r32", labelKey: "gomokuRank32", noise: 0.04, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 5, hold: 3, depth: 5, narrow: 5, starMoves: [138, 206, 278] },
+    { id: "r33", labelKey: "gomokuRank33", noise: 0.04, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 5, hold: 3, depth: 5, narrow: 6, starMoves: [142, 212, 286] },
+    { id: "r34", labelKey: "gomokuRank34", noise: 0.04, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 5, hold: 3, depth: 5, narrow: 7, starMoves: [146, 218, 294] },
+    { id: "r35", labelKey: "gomokuRank35", noise: 0.04, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 5, hold: 3, depth: 5, narrow: 8, starMoves: [150, 224, 302] },
+    { id: "r36", labelKey: "gomokuRank36", noise: 0.04, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 5, hold: 3, depth: 5, narrow: 9, starMoves: [154, 230, 310] },
+    { id: "r37", labelKey: "gomokuRank37", noise: 0.04, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 5, hold: 3, depth: 5, narrow: 10, starMoves: [158, 236, 318] },
+    { id: "r38", labelKey: "gomokuRank38", noise: 0.04, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 5, hold: 3, depth: 5, narrow: 11, starMoves: [162, 242, 326] },
+    { id: "r39", labelKey: "gomokuRank39", noise: 0.04, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 5, hold: 3, depth: 5, narrow: 12, starMoves: [166, 248, 334] },
+    { id: "r40", labelKey: "gomokuRank40", noise: 0.04, defense: 4, holes: 1, fork: 1, spread: 0, sente: 1, tempo: 5, hold: 3, depth: 5, narrow: 13, starMoves: [170, 254, 342] },
   ];
   var gmDirs = [[1, 0], [0, 1], [1, 1], [1, -1]];
 
@@ -1354,6 +1379,34 @@
       "gomokuRank28": "\u9759\u6c34\u6df1\u6d41",
       "gomokuRank29": "\u9759\u89c2\u4e4b\u773c",
       "gomokuRank30": "\u4e0d\u7728\u4e4b\u5723",
+    },
+  });
+
+  /* The patient answers carry theirs the same way. */
+  App.addStrings({
+    en: {
+      "gomokuRank31": "The Longer Wait",
+      "gomokuRank32": "The Counting Hand",
+      "gomokuRank33": "The Wide Patience",
+      "gomokuRank34": "The Deep Patience",
+      "gomokuRank35": "The Seven Answers",
+      "gomokuRank36": "The Eight Answers",
+      "gomokuRank37": "The Nine Answers",
+      "gomokuRank38": "The Ten Answers",
+      "gomokuRank39": "The Eleven Answers",
+      "gomokuRank40": "The Answer to Everything",
+    },
+    zh: {
+      "gomokuRank31": "\u66f4\u957f\u7684\u7b49\u5f85",
+      "gomokuRank32": "\u6570\u7b54\u4e4b\u624b",
+      "gomokuRank33": "\u5bbd\u539a\u7684\u8010\u5fc3",
+      "gomokuRank34": "\u6df1\u5904\u7684\u8010\u5fc3",
+      "gomokuRank35": "\u4e03\u91cd\u5e94\u7b54",
+      "gomokuRank36": "\u516b\u91cd\u5e94\u7b54",
+      "gomokuRank37": "\u4e5d\u91cd\u5e94\u7b54",
+      "gomokuRank38": "\u5341\u91cd\u5e94\u7b54",
+      "gomokuRank39": "\u5341\u4e00\u91cd\u5e94\u7b54",
+      "gomokuRank40": "\u4e07\u7b54\u4e4b\u624b",
     },
   });
 

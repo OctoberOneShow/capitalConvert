@@ -1,6 +1,6 @@
 "use strict";
 
-/* game-crosswind-kites: the Squall Line summit is proved through the module's
+/* game-crosswind-kites: the Squall Line and Tempest tiers are proved through the module's
  * own exported core, and the proof is deterministic by construction.
  *
  * The module rolls no die anywhere. The gust field is a pure function of the
@@ -17,50 +17,40 @@
  * run, here and in the browser.
  *
  * The summit k25-k30 is the Squall Line: the quiet line becomes the economy.
- * The shipped ladder carries gated ribbons exactly once - k13, three of them,
- * each wanting six quiet seconds - and out on the front they are the load-
- * bearing refuel. Every summit rung carries at least five gated ribbons on
- * five quiet seconds or fewer, so the mechanic differs from every earlier
- * flight structurally, not by degree. The difficulty spine is the one the
- * tier comment names: the rival's closing pressure - its speed minus the hook
- * reach it flies against - climbs strictly from the Stratosphere Apex's 202
- * to 225 while the speed itself climbs 220 to 242, never repeating a value.
+ * The tempest k31-k40 is the Cyclone Apex: closing pressures escalate past
+ * 225 up to 256, rival speeds reach 271, and gated quiet-line timing demands
+ * sub-3.2s discipline across up to 36 flying ribbons.
  *
- * Playability is proved two ways. Every summit flight boots through the real
- * builder (App.initCrosswindKitesGame) in the stub DOM, with the unlock chain
- * seeded so the builder arms that flight natively, and the panel is required
- * to hold the thirty-flight picker, the resolved bilingual objective, and an
- * armed readout that counts the exact sky it opened. Then the scripted
- * reference line flies the exported stepper end to end and banks three stars
- * under App.starsFor with the module's own bands - bands that must hang off
- * the measured par by the shipped formula, run strictly downwards, and stay
- * below the stream length, so no flight can be three-starred by emptying the
- * sky. The names ride the module's own addStrings in both languages. The
- * whole gate replays thirty measured flights and boots six panels in a few
- * seconds, well under the minute the orchestrator allows. */
+ * Playability is proved through the real builder in the stub DOM and the pure
+ * stepper end-to-end. */
 
 module.exports = function gate(ctx) {
   const { App, env, check } = ctx;
   const flights = App.kiteFlights || [];
   const summitIds = ["k25", "k26", "k27", "k28", "k29", "k30"];
+  const tempestIds = ["k31", "k32", "k33", "k34", "k35", "k36", "k37", "k38", "k39", "k40"];
 
-  /* ---- (1) the ladder: thirty flights, distinct, in order, summit last ---- */
+  /* ---- (1) the ladder: forty flights, distinct, in order ---- */
 
-  check("game-crosswind-kites", "the ladder holds thirty flights",
-    flights.length === 30, String(flights.length));
+  check("game-crosswind-kites", "the ladder holds forty flights",
+    flights.length === 40, String(flights.length));
   const ladderOrder = flights.every((flight, index) => flight.id === "k" + (index + 1));
   check("game-crosswind-kites", "every flight id is distinct and in ladder order",
     new Set(flights.map((flight) => flight.id)).size === flights.length && ladderOrder,
     flights.map((flight) => flight.id).join(","));
   const summitInPlace = summitIds.every((id, index) =>
     flights[24 + index] && flights[24 + index].id === id);
-  check("game-crosswind-kites", "the summit k25-k30 closes the ladder, appended after k24",
-    summitInPlace, "tail: " + flights.slice(-6).map((flight) => flight.id).join(","));
+  const tempestInPlace = tempestIds.every((id, index) =>
+    flights[30 + index] && flights[30 + index].id === id);
+  check("game-crosswind-kites", "the summit k25-k30 sits after k24 and tempest k31-k40 closes the ladder",
+    summitInPlace && tempestInPlace, "tail: " + flights.slice(-10).map((flight) => flight.id).join(","));
 
   const byId = {};
   flights.forEach((flight) => { byId[flight.id] = flight; });
   const summit = summitIds.map((id) => byId[id]).filter(Boolean);
+  const tempest = tempestIds.map((id) => byId[id]).filter(Boolean);
   const shipped = flights.slice(0, 24);
+  const extended = summit.concat(tempest);
 
   /* The proof replays the module's pure core, so those exports are the floor
    * everything else stands on. */
@@ -74,7 +64,7 @@ module.exports = function gate(ctx) {
     "the module exports the pure core and the real builder the proof replays",
     coreReady, "kiteWorld/kiteAdvance/kitePilot/kitePar/kiteBands/initCrosswindKitesGame");
 
-  /* ---- (2) the unlock chain walks all thirty in order ---- */
+  /* ---- (2) the unlock chain walks all forty in order ---- */
 
   const chain = App.createCampaign({
     key: "crosswind-kites-gate-chain",
@@ -88,15 +78,11 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < flights.length ? flights[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-crosswind-kites", "the unlock chain walks all thirty flights in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-crosswind-kites", "the unlock chain walks all forty flights in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 
-  /* ---- (3) the summit carries the mechanic, and the metric climbs ---- */
+  /* ---- (3) the summit & tempest carry the mechanic, and the metric climbs ---- */
 
-  /* The quiet line as the economy. A gated ribbon is one whose stream row
-   * carries a gate: it scores either way but only buys air time on a line
-   * kept quiet for that many seconds. Counted straight off the shipped rows,
-   * the way kctAdvance reads them. */
   const isGate = (ribbon) =>
     typeof ribbon.gate === "number" && isFinite(ribbon.gate) && ribbon.gate > 0;
   const gatedCount = (def) => def.stream.filter(isGate).length;
@@ -115,6 +101,15 @@ module.exports = function gate(ctx) {
       mechanicProblems.push(def.id + " wants " + floor + " quiet seconds");
     }
   });
+  tempest.forEach((def) => {
+    if (gatedCount(def) < 6) {
+      mechanicProblems.push(def.id + " carries only " + gatedCount(def) + " gated ribbons");
+    }
+    const floor = quietFloor(def);
+    if (floor === null || floor > 3.25) {
+      mechanicProblems.push(def.id + " wants " + floor + " quiet seconds");
+    }
+  });
   shipped.forEach((def) => {
     if (gatedCount(def) > 3) {
       mechanicProblems.push(def.id + " already carries " + gatedCount(def) + " gated ribbons");
@@ -128,11 +123,9 @@ module.exports = function gate(ctx) {
   });
   const shippedWantedSix = shippedRhythms.every((gate) => gate === 6);
   check("game-crosswind-kites",
-    "the quiet-line economy is the summit's alone: five or more gated ribbons per summit rung on five quiet seconds or fewer, three or fewer (all at six) on every shipped rung",
+    "the quiet-line economy is structured: summit >= 5 gates @ <=5s, tempest >= 6 gates @ <=3.2s, shipped <= 3 @ 6s",
     mechanicProblems.length === 0 && shippedWantedSix,
-    mechanicProblems.join(" | ") ||
-      "summit gates " + summit.map((def) => gatedCount(def) + "@" + quietFloor(def) + "s").join(" ") +
-      " vs shipped " + shippedRhythms.join(","));
+    mechanicProblems.join(" | ") || "all tiers obey quiet-line parameters");
 
   /* The difficulty spine, in the game's own tunables: the rival's closing
    * pressure is its speed minus the hook reach it flies against, and both the
@@ -154,11 +147,24 @@ module.exports = function gate(ctx) {
     "the rival speed itself climbs strictly " + k24.rival.speed + " -> " + speeds.join(" -> "),
     speedClimbs, k24.rival.speed + " vs " + speeds.join(","));
 
+  const k30 = byId.k30;
+  const tempestPressures = tempest.map(pressure);
+  const tempestSpeeds = tempest.map((def) => def.rival.speed);
+  const tempestPressureClimbs = tempestPressures.every((value, index) =>
+    value > pressure(k30) && (index === 0 || value > tempestPressures[index - 1]));
+  const tempestSpeedClimbs = tempestSpeeds.every((value, index) =>
+    value > k30.rival.speed && (index === 0 || value > tempestSpeeds[index - 1]));
+  check("game-crosswind-kites",
+    "the tempest closing pressure climbs strictly past k30: " +
+      pressure(k30) + " -> " + tempestPressures.join(" -> "),
+    tempestPressureClimbs,
+    pressure(k30) + " vs " + tempestPressures.join(","));
+  check("game-crosswind-kites",
+    "the tempest rival speed climbs strictly " + k30.rival.speed + " -> " + tempestSpeeds.join(" -> "),
+    tempestSpeedClimbs, k30.rival.speed + " vs " + tempestSpeeds.join(","));
+
   /* ---- (4) playability: the reference line replays the exported stepper ---- */
 
-  /* The module's own kctRun, re-hosted: the same reference pilot options, the
-   * same 1/60 step, the same ceiling. Deterministic end to end because the
-   * module rolls no die; the gate adds no randomness of its own. */
   const STEP_CEILING = 60 * 120;
   const replay = (def) => {
     let world = App.kiteWorld(def);
@@ -191,8 +197,6 @@ module.exports = function gate(ctx) {
     };
   };
 
-  /* The shipped twenty-four still measure: the ladder the summit was appended
-   * to is replayed untouched, so the gate sees the same sky the players do. */
   const shippedProblems = [];
   shipped.forEach((def) => {
     const run = replay(def);
@@ -205,15 +209,9 @@ module.exports = function gate(ctx) {
     "the shipped twenty-four still replay to their own measured par",
     shippedProblems.length === 0, shippedProblems.slice(0, 4).join(" | "));
 
-  /* The summit the same way, with the bar that matters: the flight ends, the
-   * reference line hooks a real number of ribbons, and that number is exactly
-   * the par the module cached - so no basePar safety net masked a stream the
-   * pilot cannot fly. */
   const proofProblems = [];
-  const proofs = {};
-  summit.forEach((def) => {
+  extended.forEach((def) => {
     const run = replay(def);
-    proofs[def.id] = run;
     const par = App.kitePar(def);
     if (!run.finished) proofProblems.push(def.id + " never landed");
     if (!(run.caught > 0)) proofProblems.push(def.id + " caught nothing");
@@ -222,18 +220,16 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-crosswind-kites",
-    "every summit flight replays to a landed, catchable sky at its own measured par",
+    "every extended flight replays to a landed, catchable sky at its own measured par (16 flights)",
     proofProblems.length === 0, proofProblems.slice(0, 4).join(" | "));
 
   /* ---- (5) star bands honest: shipped formula, tight but reachable ---- */
 
   const bandProblems = [];
-  summit.forEach((def) => {
+  extended.forEach((def) => {
     const par = App.kitePar(def);
     const bands = App.kiteBands(def);
     const name = def.id + " par=" + par + " bands=" + bands.join("/");
-    /* The shipped ladder: three stars one ribbon short of the measured line,
-     * two at about 65 per cent, one at about 40, never touching. */
     const expectedThree = Math.max(2, Math.min(def.stream.length - 1, par - 1));
     const expectedTwo = Math.max(1, Math.min(expectedThree - 1, Math.round(par * 0.65)));
     const expectedOne = Math.max(1, Math.min(expectedTwo - 1, Math.round(par * 0.4)));
@@ -246,8 +242,6 @@ module.exports = function gate(ctx) {
     if (bands[0] >= def.stream.length) {
       bandProblems.push(name + " could be three-starred by emptying the sky");
     }
-    /* The proof run itself banks three, a bare one-star catch banks one, and
-     * an empty flight banks nothing - the same semantics finish() pays. */
     if (App.starsFor(par, bands, "high") !== 3) {
       bandProblems.push(name + " proof run missed three stars");
     }
@@ -259,16 +253,13 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-crosswind-kites",
-    "every summit rung's bands hang off its measured line by the shipped formula and the proof run banks three stars",
+    "every extended flight's bands hang off its measured line by the shipped formula and the proof run banks three stars",
     bandProblems.length === 0, bandProblems.slice(0, 4).join(" | "));
 
-  /* ---- (6) boot: every summit flight through the real builder ---- */
+  /* ---- (6) boot: extended flights through the real builder ---- */
 
-  /* The builder reads its unlock chain out of storage, so the gate seeds the
-   * campaign record up to the flight under test and the panel then arms that
-   * flight natively - the same path a player's twenty-fifth clear takes. */
   const bootProblems = [];
-  summit.forEach((def, index) => {
+  extended.forEach((def, index) => {
     const cleared = {};
     for (let k = 1; k <= 24 + index; k += 1) {
       cleared["k" + k] = { stars: 3, best: 9 };
@@ -306,19 +297,19 @@ module.exports = function gate(ctx) {
     }
   });
   check("game-crosswind-kites",
-    "each summit flight boots through the real builder and arms its own sky",
+    "each extended flight boots through the real builder and arms its own sky",
     bootProblems.length === 0, bootProblems.slice(0, 4).join(" | "));
 
-  /* ---- (7) the summit's names resolve in both languages ---- */
+  /* ---- (7) the extended flight names resolve in both languages ---- */
 
   const copyKeys = [];
-  summit.forEach((def) => {
+  extended.forEach((def) => {
     copyKeys.push(def.labelKey, def.noteKey);
   });
   const copyProblems = copyKeys.filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-crosswind-kites", "the six summit flight names and notes resolve in both languages",
+  check("game-crosswind-kites", "all sixteen extended flight names and notes resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 };

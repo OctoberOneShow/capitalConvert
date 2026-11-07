@@ -3,8 +3,8 @@
 /* game-glyph-glide: what the gate proves and why the bar is what it is.
  *
  * The README law for this rink is that the printed par is a line the game's
- * own BFS has replayed, so the deep tier is held to that law in the engine's
- * own currency rather than to a plausible-looking board. Five proofs:
+ * own BFS has replayed, so each tier is held to that law in the engine's
+ * own currency rather than to a plausible-looking board. Seven proofs:
  *
  * 1. The quoted par is the true optimum. Every deep rung is dealt on a
  *    pinned stream through the module's own drift dealer, and the deal's par
@@ -36,18 +36,45 @@
  *    on the dealt boards themselves - strip the snow off them and the
  *    driftless replay prices below each rung's printed floor, so the summit's
  *    demand is unreachable on the bare ice.
+ * 6. The homecoming i31-i40 runs the ladder home on its own pinned stream
+ *    (88000's sibling, 87000 + trial*37 + drifts): every goal hangs at the
+ *    front door - `goal === start`, a shape no rung 1-30 ships - and each
+ *    deal is re-proven by both provers as a closed loop inside the printed
+ *    window, strictly dearer than the same board re-hung one-way at the
+ *    trail's far stop. Every rung's mean proven par prices past i30's mean
+ *    on the same stream, the floors step 41-45 past the crown's 39, and the
+ *    sockets and floor dimensions are records the first thirty never held.
+ *    The tier comment's own claim - that the loop's price is set by the
+ *    errand count and not by the other dials - is why the floors hold at 45
+ *    instead of stepping to 50: the gate holds the printed numbers to the
+ *    measured band, not to a wish.
+ * 7. The close i44-i46 answers to the same law on the homecoming's own
+ *    stream: the detour priced the ride home, the close adds the errands -
+ *    twelve sockets a rink, one more than any homecoming asked for and the
+ *    most the solver's star mask can hold, under the crown's twelve-drift
+ *    snowpack, with the ride home priced at twelve slides past the detour's
+ *    ten. Floors never shrink and widen a column a rung to the widest the
+ *    ladder has held, the printed floors step 46-50 past the detour's
+ *    crest, and every deal is re-proven by both provers as a closed loop
+ *    inside the window with the toll paid. The mean proven par climbs
+ *    strictly through the three and opens past the detour's mean on the
+ *    same stream, and each rung's mean one-way price falls below its
+ *    printed floor - the loop, not the trail spread, is what the floor
+ *    asks for.
  *
  * Everything loops over fixed small counts (8 deals a rung, capped BFS
- * depth), so the gate finishes in seconds and nothing can hang. */
+ * depth, capped dealer retries), so the gate finishes in minutes and
+ * nothing can hang. */
 
 module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const levels = App.glyphGlideLevels;
   const deepIds = ["i21", "i22", "i23", "i24"];
   const summitIds = ["i25", "i26", "i27", "i28", "i29", "i30"];
+  const homeIds = ["i31", "i32", "i33", "i34", "i35", "i36", "i37", "i38", "i39", "i40"];
 
-  check("game-glyph-glide", "the ladder holds thirty rinks",
-    Array.isArray(levels) && levels.length === 30, String(levels && levels.length));
+  check("game-glyph-glide", "the ladder holds forty-six rinks",
+    Array.isArray(levels) && levels.length === 46, String(levels && levels.length));
   check("game-glyph-glide", "every rink id is distinct",
     new Set(levels.map((level) => level.id)).size === levels.length,
     levels.map((level) => level.id).join(","));
@@ -60,14 +87,21 @@ module.exports = function gate(ctx) {
   const missingSummit = summitIds.filter((id) => !levels.some((level) => level.id === id));
   check("game-glyph-glide", "the summit tier i25-i30 is present",
     missingSummit.length === 0, missingSummit.join(","));
-  check("game-glyph-glide", "the summit tier closes the ladder: the last six rungs in order",
+  check("game-glyph-glide", "the summit tier sits at rungs 25-30 in order",
     summitIds.every((id, index) => levels[24 + index] && levels[24 + index].id === id),
-    levels.slice(24).map((level) => level.id).join(","));
+    levels.slice(24, 30).map((level) => level.id).join(","));
+  const missingHome = homeIds.filter((id) => !levels.some((level) => level.id === id));
+  check("game-glyph-glide", "the homecoming tier i31-i40 is present",
+    missingHome.length === 0, missingHome.join(","));
+  check("game-glyph-glide", "the homecoming tier runs i31-i40 in order before the detour",
+    homeIds.every((id, index) => levels[30 + index] && levels[30 + index].id === id),
+    levels.slice(30).map((level) => level.id).join(","));
 
   const byId = {};
   levels.forEach((level) => { byId[level.id] = level; });
   const deep = deepIds.map((id) => byId[id]);
   const summit = summitIds.map((id) => byId[id]);
+  const home = homeIds.map((id) => byId[id]);
 
   /* One pinned stream per deal - the same Math.random the panel deals with,
    * counting draws so the inertness proof can compare stream consumption. */
@@ -117,8 +151,9 @@ module.exports = function gate(ctx) {
     var startMask = 0;
     seen[start * 4096 + startMask] = true;
     var queue = [{ p: start, m: startMask, d: 0 }];
-    while (queue.length) {
-      var st = queue.shift();
+    var head = 0;
+    while (head < queue.length) {
+      var st = queue[head++];
       var hasAll = true;
       for (var s = 0; s < stars.length; s += 1) {
         if (!((st.m >> s) & 1)) {
@@ -294,16 +329,28 @@ module.exports = function gate(ctx) {
    * module's shift-queue search so agreement is evidence, not echo. */
   const gateSolve = function (wall, drift, w, h, start, goal, stars) {
     const all = (1 << stars.length) - 1;
-    const starAt = new Map(stars.map((cell, index) => [cell, index]));
-    const seen = new Set([start * 4096]);
-    let frontier = [[start, 0]];
-    for (let depth = 0; frontier.length && depth < 400; depth += 1) {
-      const next = [];
-      for (const [pos, mask] of frontier) {
+    const starBits = new Uint16Array(w * h);
+    for (let i = 0; i < stars.length; i += 1) {
+      starBits[stars[i]] = 1 << i;
+    }
+    const maxMask = 1 << stars.length;
+    const seen = new Uint8Array(w * h * maxMask);
+    seen[start * maxMask] = 1;
+    let frontierPos = [start];
+    let frontierMask = [0];
+    for (let depth = 0; frontierPos.length && depth < 400; depth += 1) {
+      const nextPos = [];
+      const nextMask = [];
+      const len = frontierPos.length;
+      for (let i = 0; i < len; i += 1) {
+        const pos = frontierPos[i];
+        const mask = frontierMask[i];
         if (pos === goal && mask === all) {
           return depth;
         }
-        for (const [dx, dy] of GLIDE_DIRS) {
+        for (let d = 0; d < 4; d += 1) {
+          const dx = GLIDE_DIRS[d][0];
+          const dy = GLIDE_DIRS[d][1];
           let x = pos % w;
           let y = Math.floor(pos / w);
           let moved = 0;
@@ -324,32 +371,38 @@ module.exports = function gate(ctx) {
             continue;
           }
           const end = y * w + x;
-          const star = starAt.get(end);
-          const m2 = star === undefined ? mask : mask | (1 << star);
-          const key = end * 4096 + m2;
-          if (!seen.has(key)) {
-            seen.add(key);
-            next.push([end, m2]);
+          const m2 = mask | starBits[end];
+          const key = end * maxMask + m2;
+          if (!seen[key]) {
+            seen[key] = 1;
+            nextPos.push(end);
+            nextMask.push(m2);
           }
         }
       }
-      frontier = next;
+      frontierPos = nextPos;
+      frontierMask = nextMask;
     }
     return -1;
   };
 
   /* Deal one rung on a pinned stream. Eight deals a rung keeps the whole
-   * gate in seconds; the seed scheme is fixed, so the run is deterministic.
+   * gate in minutes; the seed scheme is fixed, so the run is deterministic.
    * The deep tier rides the 91000 stream it has always ridden; the summit
    * deals on its own 88000 stream, the one the tier's evidence comment
-   * quotes, because the deep stream starves the dealer at twelve drifts. */
+   * quotes, because the deep stream starves the dealer at twelve drifts;
+   * the homecoming closes the ladder on 88000's sibling, 87000, through the
+   * module's own homecoming dealer. */
   const DEALS = 8;
   const dealRung = (level, trial, base) =>
-    level.drifts
-      ? stream((base || 91000) + trial * 37 + level.drifts).run(() =>
-        App.glyphGlideDriftGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density, level.drifts))
-      : stream((base || 91000) + trial * 37).run(() =>
-        App.glyphGlideTrailGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density));
+    level.home
+      ? stream((base || 87000) + trial * 37 + level.drifts).run(() =>
+        App.glyphGlideHomecomingGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density, level.drifts, level.toll))
+      : level.drifts
+        ? stream((base || 91000) + trial * 37 + level.drifts).run(() =>
+          App.glyphGlideDriftGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density, level.drifts))
+        : stream((base || 91000) + trial * 37).run(() =>
+          App.glyphGlideTrailGenerate(level.w, level.h, level.stars, level.minPar, level.maxPar, level.density));
 
   /* 1+3. Every deep deal is real, and its quoted par is the truth: the
    * engine's own prover and the independent one agree on it, the par sits in
@@ -482,13 +535,13 @@ module.exports = function gate(ctx) {
   const shipped = levels.slice(0, 24);
   const record = (pick) => Math.max.apply(null, shipped.map(pick));
   if (!(summit[5].w > record((l) => l.w)) || !(summit[5].h > record((l) => l.h))) {
-    shapeProblems.push("the summit does not hold the deepest floor the ladder has seen");
+    shapeProblems.push("the summit does not hold the deepest floor the first thirty held");
   }
   if (!(summit[5].stars > record((l) => l.stars))) {
-    shapeProblems.push("the summit does not hold the most sockets the ladder has seen");
+    shapeProblems.push("the summit does not hold the most sockets the first thirty held");
   }
   check("game-glyph-glide",
-    "the summit escalates the dials the engine deals: one more drift per rung 7-12, windows past the crown's, and the campaign's deepest floor and most sockets",
+    "the summit escalates the dials the engine deals: one more drift per rung 7-12, windows past the crown's, and the deepest floor and most sockets the first thirty held",
     shapeProblems.length === 0, shapeProblems.join(" | "));
 
   /* Every summit deal meets the deep law on the summit's own pinned stream:
@@ -620,6 +673,177 @@ module.exports = function gate(ctx) {
     "the summit's star bands are reachable by the proven line and not free for a sloppy one",
     summitBandProblems.length === 0, summitBandProblems.join(" | "));
 
+  /* ---- the homecoming i31-i40: the goal is the front door ---- */
+  /* The tier's authored shape: every rink hangs its goal at the start cell -
+   * a shape no rung 1-30 ships - on the campaign's widest and deepest floors
+   * with eleven sockets, one more than the summit ever asked for, under the
+   * crown's own twelve-drift snowpack. The floors step 41-45 past i30's 39
+   * and hold there - the loop's price is set by the errand count, not by the
+   * other dials, so the printed floors hold the measured band instead of
+   * wishing past it - while the ceilings keep climbing 71-80. */
+  const first30 = levels.slice(0, 30);
+  check("game-glyph-glide",
+    "no rung before the homecoming hangs its goal at the front door",
+    first30.every((level) => !level.home),
+    first30.filter((level) => level.home).map((level) => level.id).join(","));
+  const homeShapeProblems = [];
+  home.forEach((level, index) => {
+    if (!level.home) {
+      homeShapeProblems.push(`${level.id} does not hang its goal at the front door`);
+    }
+    if (level.drifts !== byId.i30.drifts) {
+      homeShapeProblems.push(`${level.id} does not hold the crown's ${byId.i30.drifts}-drift snowpack`);
+    }
+    if (level.stars !== 11) {
+      homeShapeProblems.push(`${level.id} does not carry the eleven sockets`);
+    }
+    const prev = index === 0 ? byId.i30 : home[index - 1];
+    if (!(level.minPar >= prev.minPar)) {
+      homeShapeProblems.push(`${level.id} floor ${level.minPar} falls below ${prev.minPar}`);
+    }
+    if (!(level.maxPar > prev.maxPar)) {
+      homeShapeProblems.push(`${level.id} ceiling does not climb past ${prev.maxPar}`);
+    }
+  });
+  for (let k = 1; k < 4; k += 1) {
+    if (!(home[k].minPar > home[k - 1].minPar)) {
+      homeShapeProblems.push(`${home[k].id} floor does not clear the rung before it`);
+    }
+  }
+  if (home.slice(4).some((level) => level.minPar !== home[3].minPar)) {
+    homeShapeProblems.push("the floor does not hold its crest once the band tops out");
+  }
+  if (!(home[0].minPar > byId.i30.minPar)) {
+    homeShapeProblems.push(`the homecoming opens at floor ${home[0].minPar}, not past the crown's ${byId.i30.minPar}`);
+  }
+  const homeRecord = (pick) => Math.max.apply(null, first30.map(pick));
+  if (!(home[0].w > homeRecord((l) => l.w)) || !(home[4].h > homeRecord((l) => l.h))) {
+    homeShapeProblems.push("the homecoming does not hold the widest and deepest floors the first thirty saw");
+  }
+  if (!(home[0].stars > homeRecord((l) => l.stars))) {
+    homeShapeProblems.push("the homecoming does not hold the most sockets the first thirty saw");
+  }
+  check("game-glyph-glide",
+    "the homecoming hangs every goal at the front door: eleven sockets on 24-wide floors, the crown's snowpack held, floors 41-44 past i30's 39 and ceilings 71-80",
+    homeShapeProblems.length === 0, homeShapeProblems.join(" | "));
+
+  /* Every homecoming deal meets the deep law on the homecoming stream: a
+   * closed loop - goal === start - re-proven at its quoted par by the
+   * module's prover and the independent one inside the printed window, the
+   * snow sown where the dealer says, and the same board re-hung one-way at
+   * the trail's far stop pricing at least six slides under the loop - the
+   * homecoming's toll, paid on every deal. */
+  const homeMean = {};
+  const homeOneWay = {};
+  home.forEach((level) => {
+    const problems = [];
+    let parSum = 0;
+    let oneSum = 0;
+    for (let trial = 0; trial < DEALS; trial += 1) {
+      const deal = dealRung(level, trial, 87000);
+      const tag = `${level.id} trial ${trial}`;
+      if (!deal || !deal.drifts) {
+        problems.push(`${tag}: the dealer fell back, no loop dealt`);
+        continue;
+      }
+      if (deal.goal !== deal.start) {
+        problems.push(`${tag}: the gate is not the front door`);
+      }
+      if (!deal.away || deal.away === deal.start || deal.wall[deal.away]) {
+        problems.push(`${tag}: the counterfactual gate is not an open cell apart from the start`);
+      }
+      let laid = 0;
+      for (let cell = 0; cell < deal.drifts.length; cell += 1) {
+        if (!deal.drifts[cell]) {
+          continue;
+        }
+        laid += 1;
+        if (deal.wall[cell]) {
+          problems.push(`${tag}: a drift is sown on a wall cell`);
+        }
+        if (cell === deal.start || cell === deal.goal || deal.stars.indexOf(cell) >= 0) {
+          problems.push(`${tag}: a drift doubles as the start, the goal or a star`);
+        }
+      }
+      if (laid !== level.drifts) {
+        problems.push(`${tag}: dealt ${laid} drifts, the rung asks for ${level.drifts}`);
+      }
+      const par = App.glyphGlideSolve(deal.wall, level.w, level.h, deal.start, deal.goal, deal.stars, deal.drifts);
+      const par2 = gateSolve(deal.wall, deal.drifts, level.w, level.h, deal.start, deal.goal, deal.stars);
+      if (par !== deal.par || par2 !== deal.par) {
+        problems.push(`${tag}: quoted ${deal.par}, engine ${par}, independent ${par2}`);
+      }
+      if (deal.par < level.minPar || deal.par > level.maxPar) {
+        problems.push(`${tag}: par ${deal.par} outside the printed window ${level.minPar}-${level.maxPar}`);
+      }
+      const one = App.glyphGlideSolve(deal.wall, level.w, level.h, deal.start, deal.away, deal.stars, deal.drifts);
+      const one2 = gateSolve(deal.wall, deal.drifts, level.w, level.h, deal.start, deal.away, deal.stars);
+      if (one !== one2) {
+        problems.push(`${tag}: the one-way replay disagrees, engine ${one}, independent ${one2}`);
+      }
+      if (one < 1 || one > deal.par - 6) {
+        problems.push(`${tag}: the homecoming toll ${deal.par - one} does not pay the six-slide minimum`);
+      }
+      parSum += deal.par;
+      oneSum += one;
+    }
+    check("game-glyph-glide",
+      `${level.id}: its eight pinned deals are closed loops, proven at their quoted par by both provers inside the printed window and at least six slides dearer than the one-way replay`,
+      problems.length === 0, problems.slice(0, 3).join(" | "));
+    homeMean[level.id] = parSum / DEALS;
+    homeOneWay[level.id] = oneSum / DEALS;
+  });
+
+  /* The homecoming is the top of the ladder in the BFS's own currency:
+   * every rung's mean proven par prices past i30's mean on the same stream,
+   * and every rung's mean one-way price - the same errands with the gate
+   * re-hung at the trail's far stop - falls below the printed floor, so the
+   * loop, not the trail spread, is what the printed floor asks for. */
+  const i30HomeMean = (() => {
+    let sum = 0;
+    for (let trial = 0; trial < DEALS; trial += 1) {
+      sum += dealRung(byId.i30, trial, 87000).par;
+    }
+    return sum / DEALS;
+  })();
+  const homeClimbProblems = [];
+  home.forEach((level) => {
+    if (!(homeMean[level.id] > i30HomeMean)) {
+      homeClimbProblems.push(`${level.id} mean par ${homeMean[level.id].toFixed(1)} not above i30 ${i30HomeMean.toFixed(1)}`);
+    }
+    if (!(homeOneWay[level.id] < level.minPar)) {
+      homeClimbProblems.push(`${level.id} one-way mean ${homeOneWay[level.id].toFixed(1)} not under floor ${level.minPar}`);
+    }
+  });
+  check("game-glyph-glide",
+    "the homecoming's pars climb past the crown: every rung's mean proven par beats i30's on the same stream, and every rung's mean one-way price falls below its printed floor - the loop is what the floor asks for",
+    homeClimbProblems.length === 0,
+    homeClimbProblems.join(" | ") ||
+      `i30 ${i30HomeMean.toFixed(1)} -> ${homeIds.map((id) => `${id} ${homeMean[id].toFixed(1)}`).join(" -> ")}`);
+
+  /* The homecoming's star bands against the engine's own law, on its own
+   * deals: the proven line earns three stars, two extra slides cost the
+   * third, four cost the second, and a line eight over par earns nothing
+   * the engine has to round up. */
+  const homeBandProblems = [];
+  home.forEach((level) => {
+    const deal = dealRung(level, 0, 87000);
+    if (!deal || !deal.drifts || deal.goal !== deal.start) {
+      homeBandProblems.push(level.id + " dealt no closed loop for the band probe");
+      return;
+    }
+    const par = deal.par;
+    const bands = [par + 1, par + 3, par + 7];
+    const earned = (moves) => App.starsFor(moves, bands, "low");
+    if (earned(par) !== 3) homeBandProblems.push(`${level.id} the optimal ${par}-slide loop does not earn three stars`);
+    if (earned(par + 2) !== 2) homeBandProblems.push(`${level.id} two over par still earns three stars`);
+    if (earned(par + 4) !== 1) homeBandProblems.push(`${level.id} four over par still earns two stars`);
+    if (earned(par + 8) !== 0) homeBandProblems.push(`${level.id} eight over par still earns one star`);
+  });
+  check("game-glyph-glide",
+    "the homecoming's star bands are reachable by the proven loop and not free for a sloppy one",
+    homeBandProblems.length === 0, homeBandProblems.join(" | "));
+
   /* 4. The shipped twenty are untouched. No shallow rung carries the field,
    * and under a pinned stream the live generators deal byte-identical boards
    * with byte-identical draw counts against the verbatim pre-deep copies -
@@ -683,16 +907,298 @@ module.exports = function gate(ctx) {
     openMasked === openBare && openMasked === openGate && openMasked < deepDeal.par,
     `masked ${openMasked}, bare ${openBare}, independent ${openGate}, par ${deepDeal.par}`);
 
+  /* ---- the detour i41-i43: the ride home is priced ----
+   * Every homecoming before it left `toll` unset, so the loop only had to
+   * beat the one-way line by the dealer's default six. The detour tier
+   * names its price: eight slides at the opening, ten from i42 on, on
+   * floors that widen past the homecoming's twenty-four columns. The shape
+   * never falls - width, toll and window climb or hold - and every pinned
+   * deal on the homecoming's own 87000 stream is a closed loop proven at
+   * its quoted par by both provers inside the printed window, with the
+   * one-way replay landing at least the rung's toll under the loop: the
+   * toll is paid on every board the tier deals. */
+  const detourIds = ["i41", "i42", "i43"];
+  const detourMissing = detourIds.filter((id) => !byId[id]);
+  check("game-glyph-glide", "the detour tier i41-i43 is present, after the homecoming",
+    detourMissing.length === 0 &&
+      detourIds.every((id, index) => levels[40 + index] && levels[40 + index].id === id),
+    detourMissing.join(",") || "ordered");
+  const detour = detourIds.map((id) => byId[id]);
+  const detourShapeProblems = [];
+  detour.forEach((level, index) => {
+    const prev = index === 0 ? byId.i40 : detour[index - 1];
+    if (!level.home) detourShapeProblems.push(`${level.id} does not hang its goal at the front door`);
+    if (level.toll !== [8, 10, 10][index]) {
+      detourShapeProblems.push(`${level.id} prices the ride home at ${level.toll}, not the tier's ${[8, 10, 10][index]}`);
+    }
+    if (!(level.toll >= (index === 0 ? 6 : detour[index - 1].toll))) {
+      detourShapeProblems.push(`${level.id} toll falls below the rung before it`);
+    }
+    if (!(level.w >= prev.w) || !(level.h >= prev.h)) {
+      detourShapeProblems.push(`${level.id} shrinks the floor below the rung before it`);
+    }
+    if (index > 0 && level.w === prev.w && level.h === prev.h) {
+      detourShapeProblems.push(`${level.id} does not widen the floor`);
+    }
+    if (!(level.maxPar > prev.maxPar)) {
+      detourShapeProblems.push(`${level.id} ceiling does not climb past ${prev.maxPar}`);
+    }
+  });
+  if (!(detour[0].toll > 6)) {
+    detourShapeProblems.push("the detour opens at the dealer's default six, the toll never debuts");
+  }
+  if (!(detour[2].w > 24)) {
+    detourShapeProblems.push("the detour never widens past the homecoming's twenty-four columns");
+  }
+  check("game-glyph-glide",
+    "the detour prices the ride home - toll 8 then 10 - on floors that widen 24/25/26 with ceilings climbing past the homecoming's",
+    detourShapeProblems.length === 0, detourShapeProblems.join(" | "));
+  detour.forEach((level) => {
+    const problems = [];
+    let parSum = 0;
+    for (let trial = 0; trial < DEALS; trial += 1) {
+      const deal = dealRung(level, trial, 87000);
+      const tag = `${level.id} trial ${trial}`;
+      if (!deal || !deal.drifts) {
+        problems.push(`${tag}: the dealer fell back, no loop dealt`);
+        continue;
+      }
+      if (deal.goal !== deal.start) {
+        problems.push(`${tag}: the gate is not the front door`);
+      }
+      if (!deal.away || deal.away === deal.start || deal.wall[deal.away]) {
+        problems.push(`${tag}: the counterfactual gate is not an open cell apart from the start`);
+      }
+      let laid = 0;
+      for (let cell = 0; cell < deal.drifts.length; cell += 1) {
+        if (!deal.drifts[cell]) continue;
+        laid += 1;
+        if (deal.wall[cell]) problems.push(`${tag}: a drift is sown on a wall cell`);
+        if (cell === deal.start || cell === deal.goal || deal.stars.indexOf(cell) >= 0) {
+          problems.push(`${tag}: a drift doubles as the start, the goal or a star`);
+        }
+      }
+      if (laid !== level.drifts) {
+        problems.push(`${tag}: dealt ${laid} drifts, the rung asks for ${level.drifts}`);
+      }
+      const par = App.glyphGlideSolve(deal.wall, level.w, level.h, deal.start, deal.goal, deal.stars, deal.drifts);
+      const par2 = gateSolve(deal.wall, deal.drifts, level.w, level.h, deal.start, deal.goal, deal.stars);
+      if (par !== deal.par || par2 !== deal.par) {
+        problems.push(`${tag}: quoted ${deal.par}, engine ${par}, independent ${par2}`);
+      }
+      if (deal.par < level.minPar || deal.par > level.maxPar) {
+        problems.push(`${tag}: par ${deal.par} outside the printed window ${level.minPar}-${level.maxPar}`);
+      }
+      const one = App.glyphGlideSolve(deal.wall, level.w, level.h, deal.start, deal.away, deal.stars, deal.drifts);
+      const one2 = gateSolve(deal.wall, deal.drifts, level.w, level.h, deal.start, deal.away, deal.stars);
+      if (one !== one2) {
+        problems.push(`${tag}: the one-way replay disagrees, engine ${one}, independent ${one2}`);
+      }
+      if (one < 1 || one > deal.par - level.toll) {
+        problems.push(`${tag}: the homecoming toll ${deal.par - one} does not pay the rung's ${level.toll}`);
+      }
+      parSum += deal.par;
+    }
+    check("game-glyph-glide",
+      `${level.id}: its eight pinned deals are closed loops, proven at their quoted par by both provers inside the printed window and at least ${level.toll} slides dearer than the one-way replay`,
+      problems.length === 0, problems.slice(0, 3).join(" | "));
+  });
+
+  /* ---- the close i44-i46: every errand at once ----
+   * The detour priced the ride home; the close adds the errands. Every
+   * rink here carries twelve sockets - one more than any homecoming asked
+   * for, and the most the solver's star mask can hold - under the crown's
+   * own twelve-drift snowpack, with the ride home priced at twelve
+   * slides, the detour's ten raised and held across the tier, on floors
+   * that never shrink and widen a column a rung to the widest and deepest
+   * the ladder has held. The printed floors step 46-50 past the detour's
+   * crest at 44 because that is where the twelve-errand loop's price
+   * actually lives: measured through the module's own homecoming dealer
+   * on the gate's pinned stream, seed 87000 + trial*37 + drifts, eight
+   * deals a rung, every deal ships only when the closed loop lands in the
+   * rung's window AND beats the one-way line by at least the rung's
+   * toll. */
+  const closeIds = ["i44", "i45", "i46"];
+  const closeMissing = closeIds.filter((id) => !byId[id]);
+  check("game-glyph-glide", "the close tier i44-i46 is present, after the detour",
+    closeMissing.length === 0 &&
+      closeIds.every((id, index) => levels[43 + index] && levels[43 + index].id === id),
+    closeMissing.join(",") || "ordered");
+  const closeTier = closeIds.map((id) => byId[id]);
+  const first43 = levels.slice(0, 43);
+  check("game-glyph-glide",
+    "no rung before the close carries twelve sockets",
+    first43.every((level) => level.stars !== 12),
+    first43.filter((level) => level.stars === 12).map((level) => level.id).join(","));
+  const closeShapeProblems = [];
+  closeTier.forEach((level, index) => {
+    const prev = index === 0 ? byId.i43 : closeTier[index - 1];
+    if (!level.home) closeShapeProblems.push(`${level.id} does not hang its goal at the front door`);
+    if (level.stars !== 12) closeShapeProblems.push(`${level.id} does not carry the twelve sockets`);
+    if (level.drifts !== byId.i30.drifts) {
+      closeShapeProblems.push(`${level.id} does not hold the crown's ${byId.i30.drifts}-drift snowpack`);
+    }
+    if (!(level.toll >= (index === 0 ? byId.i43.toll : closeTier[index - 1].toll))) {
+      closeShapeProblems.push(`${level.id} toll falls below the rung before it`);
+    }
+    if (!(level.minPar > prev.minPar)) {
+      closeShapeProblems.push(`${level.id} floor ${level.minPar} does not clear ${prev.minPar}`);
+    }
+    if (!(level.w >= prev.w) || !(level.h >= prev.h)) {
+      closeShapeProblems.push(`${level.id} shrinks the floor below the rung before it`);
+    }
+    if (level.w === prev.w && level.h === prev.h) {
+      closeShapeProblems.push(`${level.id} does not widen or deepen the floor`);
+    }
+    if (!(level.maxPar > prev.maxPar)) {
+      closeShapeProblems.push(`${level.id} ceiling does not climb past ${prev.maxPar}`);
+    }
+  });
+  if (!(closeTier[0].toll > byId.i43.toll)) {
+    closeShapeProblems.push("the close opens at the detour's toll, the price never rises");
+  }
+  const record43 = (pick) => Math.max.apply(null, first43.map(pick));
+  if (!(closeTier[2].w > record43((l) => l.w)) || !(closeTier[2].h > record43((l) => l.h))) {
+    closeShapeProblems.push("the close does not hold the widest and deepest floors the first forty-three held");
+  }
+  if (!(closeTier[0].stars > record43((l) => l.stars))) {
+    closeShapeProblems.push("the close does not hold the most sockets the first forty-three held");
+  }
+  check("game-glyph-glide",
+    "the close adds the errands - twelve sockets a rink past the homecoming's eleven, the crown's snowpack held, the ride home priced at twelve past the detour's ten, floors widening 26/27/28 columns deepened to 23 rows, ceilings 88/90/92 and printed floors stepping 46-50",
+    closeShapeProblems.length === 0, closeShapeProblems.join(" | "));
+  const closeMean = {};
+  const closeOneWay = {};
+  closeTier.forEach((level) => {
+    const problems = [];
+    let parSum = 0;
+    let oneSum = 0;
+    for (let trial = 0; trial < DEALS; trial += 1) {
+      const deal = dealRung(level, trial, 87000);
+      const tag = `${level.id} trial ${trial}`;
+      if (!deal || !deal.drifts) {
+        problems.push(`${tag}: the dealer fell back, no loop dealt`);
+        continue;
+      }
+      if (deal.goal !== deal.start) {
+        problems.push(`${tag}: the gate is not the front door`);
+      }
+      if (!deal.away || deal.away === deal.start || deal.wall[deal.away]) {
+        problems.push(`${tag}: the counterfactual gate is not an open cell apart from the start`);
+      }
+      let laid = 0;
+      for (let cell = 0; cell < deal.drifts.length; cell += 1) {
+        if (!deal.drifts[cell]) continue;
+        laid += 1;
+        if (deal.wall[cell]) problems.push(`${tag}: a drift is sown on a wall cell`);
+        if (cell === deal.start || cell === deal.goal || deal.stars.indexOf(cell) >= 0) {
+          problems.push(`${tag}: a drift doubles as the start, the goal or a star`);
+        }
+      }
+      if (laid !== level.drifts) {
+        problems.push(`${tag}: dealt ${laid} drifts, the rung asks for ${level.drifts}`);
+      }
+      const par = App.glyphGlideSolve(deal.wall, level.w, level.h, deal.start, deal.goal, deal.stars, deal.drifts);
+      const par2 = gateSolve(deal.wall, deal.drifts, level.w, level.h, deal.start, deal.goal, deal.stars);
+      if (par !== deal.par || par2 !== deal.par) {
+        problems.push(`${tag}: quoted ${deal.par}, engine ${par}, independent ${par2}`);
+      }
+      if (deal.par < level.minPar || deal.par > level.maxPar) {
+        problems.push(`${tag}: par ${deal.par} outside the printed window ${level.minPar}-${level.maxPar}`);
+      }
+      const one = App.glyphGlideSolve(deal.wall, level.w, level.h, deal.start, deal.away, deal.stars, deal.drifts);
+      const one2 = gateSolve(deal.wall, deal.drifts, level.w, level.h, deal.start, deal.away, deal.stars);
+      if (one !== one2) {
+        problems.push(`${tag}: the one-way replay disagrees, engine ${one}, independent ${one2}`);
+      }
+      if (one < 1 || one > deal.par - level.toll) {
+        problems.push(`${tag}: the homecoming toll ${deal.par - one} does not pay the rung's ${level.toll}`);
+      }
+      parSum += deal.par;
+      oneSum += one;
+    }
+    check("game-glyph-glide",
+      `${level.id}: its eight pinned deals are closed loops, proven at their quoted par by both provers inside the printed window and at least ${level.toll} slides dearer than the one-way replay`,
+      problems.length === 0, problems.slice(0, 3).join(" | "));
+    closeMean[level.id] = parSum / DEALS;
+    closeOneWay[level.id] = oneSum / DEALS;
+  });
+
+  /* The close is the top of the ladder in the BFS's own currency: every
+   * rung's mean proven par prices past the detour's mean on the same
+   * stream and climbs strictly through the three, and every rung's mean
+   * one-way price falls below the printed floor - the loop, not the trail
+   * spread, is what the floor asks for. */
+  const i43CloseMean = (() => {
+    let sum = 0;
+    for (let trial = 0; trial < DEALS; trial += 1) {
+      sum += dealRung(byId.i43, trial, 87000).par;
+    }
+    return sum / DEALS;
+  })();
+  const closeClimbProblems = [];
+  closeTier.forEach((level, index) => {
+    if (!(closeMean[level.id] > i43CloseMean)) {
+      closeClimbProblems.push(`${level.id} mean par ${closeMean[level.id].toFixed(1)} not above i43 ${i43CloseMean.toFixed(1)}`);
+    }
+    if (index && !(closeMean[level.id] > closeMean[closeTier[index - 1].id])) {
+      closeClimbProblems.push(`${level.id} mean par does not clear the rung before it`);
+    }
+    if (!(closeOneWay[level.id] < level.minPar)) {
+      closeClimbProblems.push(`${level.id} one-way mean ${closeOneWay[level.id].toFixed(1)} not under floor ${level.minPar}`);
+    }
+  });
+  check("game-glyph-glide",
+    "the close's pars climb past the detour: every rung's mean proven par beats i43's on the same stream and climbs strictly through the three, and every rung's mean one-way price falls below its printed floor - the loop is what the floor asks for",
+    closeClimbProblems.length === 0,
+    closeClimbProblems.join(" | ") ||
+      `i43 ${i43CloseMean.toFixed(1)} -> ${closeIds.map((id) => `${id} ${closeMean[id].toFixed(1)}`).join(" -> ")}`);
+
+  /* The close's star bands against the engine's own law, on its own
+   * deals: the proven line earns three stars, two extra slides cost the
+   * third, four cost the second, and a line eight over par earns nothing
+   * the engine has to round up. */
+  const closeBandProblems = [];
+  closeTier.forEach((level) => {
+    const deal = dealRung(level, 0, 87000);
+    if (!deal || !deal.drifts || deal.goal !== deal.start) {
+      closeBandProblems.push(level.id + " dealt no closed loop for the band probe");
+      return;
+    }
+    const par = deal.par;
+    const bands = [par + 1, par + 3, par + 7];
+    const earned = (moves) => App.starsFor(moves, bands, "low");
+    if (earned(par) !== 3) closeBandProblems.push(`${level.id} the optimal ${par}-slide loop does not earn three stars`);
+    if (earned(par + 2) !== 2) closeBandProblems.push(`${level.id} two over par still earns three stars`);
+    if (earned(par + 4) !== 1) closeBandProblems.push(`${level.id} four over par still earns two stars`);
+    if (earned(par + 8) !== 0) closeBandProblems.push(`${level.id} eight over par still earns one star`);
+  });
+  check("game-glyph-glide",
+    "the close's star bands are reachable by the proven loop and not free for a sloppy one",
+    closeBandProblems.length === 0, closeBandProblems.join(" | "));
+
   /* The tier's names travel with the page: both languages hold a real string
-   * and t() never falls back to the raw key - the four deep rinks and the six
-   * summit rinks. The guide line carries the stopping law in both languages
-   * too. */
-  const copyProblems = deep.concat(summit).map((level) => level.labelKey).filter((key) =>
+   * and t() never falls back to the raw key - the four deep rinks, the six
+   * summit rinks and the ten homecoming rinks. The guide line carries the
+   * stopping law in both languages too. */
+  const copyProblems = deep.concat(summit, home).map((level) => level.labelKey).filter((key) =>
     !(App.I18N && App.I18N.en && typeof App.I18N.en[key] === "string" && App.I18N.en[key].length) ||
     !(App.I18N && App.I18N.zh && typeof App.I18N.zh[key] === "string" && App.I18N.zh[key].length) ||
     !App.t(key) || App.t(key) === key);
-  check("game-glyph-glide", "the ten deep and summit rink names resolve in both languages",
+  check("game-glyph-glide", "the twenty deep, summit and homecoming rink names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
+  const detourCopyProblems = detour.map((level) => level.labelKey).filter((key) =>
+    !(App.I18N && App.I18N.en && typeof App.I18N.en[key] === "string" && App.I18N.en[key].length) ||
+    !(App.I18N && App.I18N.zh && typeof App.I18N.zh[key] === "string" && App.I18N.zh[key].length) ||
+    !App.t(key) || App.t(key) === key);
+  check("game-glyph-glide", "the three detour rink names resolve in both languages",
+    detourCopyProblems.length === 0, detourCopyProblems.join(","));
+  const closeCopyProblems = closeTier.map((level) => level.labelKey).filter((key) =>
+    !(App.I18N && App.I18N.en && typeof App.I18N.en[key] === "string" && App.I18N.en[key].length) ||
+    !(App.I18N && App.I18N.zh && typeof App.I18N.zh[key] === "string" && App.I18N.zh[key].length) ||
+    !App.t(key) || App.t(key) === key);
+  check("game-glyph-glide", "the three close rink names resolve in both languages",
+    closeCopyProblems.length === 0, closeCopyProblems.join(","));
   const hintEn = (App.I18N && App.I18N.en && App.I18N.en.glHint) || "";
   const hintZh = (App.I18N && App.I18N.zh && App.I18N.zh.glHint) || "";
   check("game-glyph-glide",
@@ -703,7 +1209,7 @@ module.exports = function gate(ctx) {
     ", zh " + /新层级/.test(hintZh) + "/" + /雪堆/.test(hintZh));
 
   /* The unlock chain is derived, never stored: clearing each rink in order
-   * hands the player exactly the next one, all thirty times, on the game's
+   * hands the player exactly the next one, all forty-six times, on the game's
    * own campaign key. */
   const chain = App.createCampaign({
     key: "glyph-glide-campaign",
@@ -717,6 +1223,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-glyph-glide", "the unlock chain walks all thirty rinks in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-glyph-glide", "the unlock chain walks all forty-six rinks in order",
+    walked === 46 && chained && chain.clearedCount() === 46, walked + " first clears");
 };

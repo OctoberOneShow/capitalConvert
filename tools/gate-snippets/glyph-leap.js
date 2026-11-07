@@ -41,23 +41,37 @@
  * deal machinery measures the margin coming back - the mean landing slack a
  * hop leaves rises by 23-24 px on every summit rung over the same seeded
  * hops - while the hand's cut median finishes under the line it only
- * straddled at 0.62. */
+ * straddled at 0.62.
+ *
+ * The void h31-h40 is benched the same way, deeper: past the summit the air
+ * runs out - no springs at all on any void rung, where nothing shipped
+ * deals fewer than 0.08 - and the drift share climbs past the summit's
+ * ceiling rung over rung while the boards hold the summit floor's width, so
+ * the landing slack a hop leaves stays at the summit's own level and the
+ * tier's difficulty is steering and timing, not standing room. Twelve
+ * seeded slices per rung (81011 through 81173) price every rung through the
+ * strong hand: the tier opens above the summit's measured pace and never
+ * gives it back, the projected full-climb medians climb rung over rung,
+ * every three-star line is authored inside its rung's clean-slice straddle,
+ * and the weak hand never finishes a void slice at all. */
 
 module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const levels = App.leapLevels;
   const deepIds = ["h21", "h22", "h23", "h24"];
   const summitIds = ["h25", "h26", "h27", "h28", "h29", "h30"];
+  const voidIds = ["h31", "h32", "h33", "h34", "h35", "h36", "h37", "h38", "h39", "h40"];
 
-  check("game-glyph-leap", "the ladder holds thirty ascents",
-    levels.length === 30, String(levels.length));
+  check("game-glyph-leap", "the ladder holds forty ascents",
+    levels.length === 40, String(levels.length));
   check("game-glyph-leap", "every ascent id is distinct and in ladder order",
     new Set(levels.map((level) => level.id)).size === levels.length &&
     levels.every((level, index) => level.id === "h" + (index + 1)),
     levels.map((level) => level.id).join(","));
-  const missing = deepIds.concat(summitIds).filter((id) =>
+  const missing = deepIds.concat(summitIds, voidIds).filter((id) =>
     !levels.some((level) => level.id === id));
-  check("game-glyph-leap", "the deep tier h21-h24 and the summit h25-h30 are present",
+  check("game-glyph-leap",
+    "the deep tier h21-h24, the summit h25-h30 and the void h31-h40 are present",
     missing.length === 0, missing.join(","));
 
   const byId = {};
@@ -141,12 +155,12 @@ module.exports = function gate(ctx) {
     slackByLevel[level.id] = slackSum / slackHops;
   });
   const h20Unreachable = unreachableByLevel.h20;
-  const unreachableProblems = deepIds.concat(summitIds).filter((id) =>
+  const unreachableProblems = deepIds.concat(summitIds, voidIds).filter((id) =>
     unreachableByLevel[id] > h20Unreachable);
   check("game-glyph-leap",
-    "no deep or summit rung lays more positionally unreachable hops than the shipped peak does",
+    "no deep, summit or void rung lays more positionally unreachable hops than the shipped peak does",
     unreachableProblems.length === 0,
-    deepIds.concat(summitIds).map((id) => `${id} ${(unreachableByLevel[id] * 100).toFixed(2)}%` +
+    deepIds.concat(summitIds, voidIds).map((id) => `${id} ${(unreachableByLevel[id] * 100).toFixed(2)}%` +
       ` vs h20 ${(h20Unreachable * 100).toFixed(2)}%`).join(", "));
 
   /* The deep tier is the hard tier by construction. No shipped rung narrows
@@ -155,7 +169,7 @@ module.exports = function gate(ctx) {
    * above the shipped ceiling, while the summit keeps its +900 a rung. */
   const deep = deepIds.map((id) => byId[id]);
   const shallow = levels.filter((level) => !deepIds.includes(level.id) &&
-    !summitIds.includes(level.id));
+    !summitIds.includes(level.id) && !voidIds.includes(level.id));
   check("game-glyph-leap",
     "no shipped rung narrows its ledges; the deep tier narrows rung over rung",
     shallow.every((level) => !level.ledge) &&
@@ -177,7 +191,7 @@ module.exports = function gate(ctx) {
   check("game-glyph-leap",
     "the summit keeps its +900 a rung into the deep tier",
     deep.every((level, index) => index === 0
-      ? level.goal === shallow[shallow.length - 1].goal + 900
+      ? level.goal === byId.h20.goal + 900
       : level.goal === deep[index - 1].goal + 900),
     deep.map((level) => level.goal).join("/"));
 
@@ -585,8 +599,133 @@ module.exports = function gate(ctx) {
     cutProblems.length === 0,
     cutProblems.join(" | ") || cutSlackGains.join(" "));
 
+  /* ---- the void: dials, then the bench ---- */
+  const voidRungs = voidIds.map((id) => byId[id]);
+  const h30Def = byId.h30;
+  const sky = levels.filter((level) => !voidIds.includes(level.id));
+  check("game-glyph-leap",
+    "the void is the first airless climb: no springs on any void rung and no shipped rung below the 0.08 floor",
+    voidRungs.every((level) => level.spring === 0) &&
+    sky.every((level) => level.spring >= 0.08) &&
+    Math.min.apply(null, sky.map((level) => level.spring)) === 0.08,
+    voidRungs.map((level) => level.id + ":s" + level.spring).join(" "));
+
+  check("game-glyph-leap",
+    "the drift share passes the summit's ceiling and climbs rung over rung while the boards hold the summit floor's width",
+    voidRungs.every((level) => level.moving > h30Def.moving) &&
+    voidRungs.every((level, index) =>
+      index === 0 || level.moving > voidRungs[index - 1].moving) &&
+    voidRungs.every((level) => level.ledge <= h30Def.ledge && level.ledge >= 0.6) &&
+    voidRungs.every((level) => Math.round(64 * level.ledge) >= 4 * PLAYER_R) &&
+    voidRungs.every((level) => level.gapMin === 92 && level.gapMax === 92),
+    voidRungs.map((level) => level.id + ":m" + level.moving + "/x" + level.ledge).join(" "));
+
+  check("game-glyph-leap",
+    "the void keeps the +900 a rung and the 92 ceiling to 33800",
+    voidRungs.every((level, index) => index === 0
+      ? level.goal === h30Def.goal + 900
+      : level.goal === voidRungs[index - 1].goal + 900) &&
+    voidRungs[voidRungs.length - 1].goal === 33800,
+    voidRungs.map((level) => level.goal).join("/"));
+
+  /* The tier's difficulty is steering, not standing room: the boards keep
+   * the summit floor's width, so the mean landing slack a hop leaves stays
+   * at the summit's own level - the deep tier's slack-shrinking lever is not
+   * the lever this tier pulls. */
+  const voidSlackProblems = voidRungs.filter((level) =>
+    Math.abs(slackByLevel[level.id] - slackByLevel.h30) >= 4 ||
+    slackByLevel[level.id] >= slackByLevel.h20);
+  check("game-glyph-leap",
+    "the void keeps the summit's landing slack: its new levers are air and drift, not board width",
+    voidSlackProblems.length === 0,
+    voidSlackProblems.map((level) => level.id + " " + slackByLevel[level.id].toFixed(1)).join(" ") ||
+      `h30 ${slackByLevel.h30.toFixed(1)} vs ` +
+      voidRungs.map((level) => `${level.id} ${slackByLevel[level.id].toFixed(1)}`).join(" "));
+
+  check("game-glyph-leap",
+    "the void bands rise inside each rung and never dip below the summit",
+    voidRungs.every((level) =>
+      level.starTimes[0] < level.starTimes[1] && level.starTimes[1] < level.starTimes[2]) &&
+    voidRungs.every((level, index) => {
+      const prev = index === 0 ? h30Def : voidRungs[index - 1];
+      return level.starTimes[0] > prev.starTimes[0] &&
+        level.starTimes[1] > prev.starTimes[1] &&
+        level.starTimes[2] > prev.starTimes[2];
+    }),
+    voidRungs.map((level) => level.starTimes.join("/")).join(" "));
+
+  /* The void bench: twelve seeds per rung through the game's own headless
+   * ascent and the same strong hand that priced the summit. The climb is
+   * height-stationary, so a slice's seconds per 1000 project to the full
+   * rung. Every rung must cost the strong hand more than the summit's
+   * measured peak and the rung before it, at a pace the summit never
+   * reached, with a clean majority of the seeds so the medians are real. */
+  const VOID_SEEDS = BENCH_SEEDS.concat([81109, 81113, 81131, 81143, 81157, 81173]);
+  const h30Bench = summitBench[summitBench.length - 1];
+  const h30Pace = (h30Bench.median / h30Bench.level.goal) * 1000;
+  const voidBenchProblems = [];
+  let voidLast = h30Bench.median;
+  const voidBench = voidRungs.map((level) => {
+    const strong = VOID_SEEDS.map((seed) => sliceRun(level, makeStrongHand(), seed));
+    const clean = [];
+    strong.forEach((r) => {
+      if (r.cleared) {
+        clean.push((r.seconds / SLICE) * 1000 * (level.goal / 1000));
+      }
+    });
+    clean.sort((a, b) => a - b);
+    const median = clean.length ? clean[Math.floor((clean.length - 1) / 2)] : Infinity;
+    const max = clean.length ? clean[clean.length - 1] : Infinity;
+    const line = level.starTimes[0];
+    const pace = median === Infinity ? Infinity : (median / level.goal) * 1000;
+    if (clean.length < VOID_SEEDS.length / 2) {
+      voidBenchProblems.push(`${level.id} clean ${clean.length}/${VOID_SEEDS.length}`);
+    }
+    if (!(median > voidLast)) {
+      voidBenchProblems.push(
+        `${level.id} median ${median === Infinity ? "none" : median.toFixed(0)}` +
+        ` not above the rung before it (${voidLast === Infinity ? "none" : voidLast.toFixed(0)})`);
+    }
+    if (!(pace > h30Pace)) {
+      voidBenchProblems.push(
+        `${level.id} pace ${pace === Infinity ? "none" : pace.toFixed(2)}` +
+        ` not above the summit's ${h30Pace.toFixed(2)}`);
+    }
+    if (!(median <= line && line < max)) {
+      voidBenchProblems.push(
+        `${level.id} line ${line} outside its straddle` +
+        ` (median ${median === Infinity ? "none" : median.toFixed(0)},` +
+        ` max ${max === Infinity ? "none" : max.toFixed(0)})`);
+    }
+    voidLast = median;
+    return { level, clean, median, max, line };
+  });
+  check("game-glyph-leap",
+    "every void rung costs the strong hand more than the summit's peak and the rung before it, at a pace the summit never reached",
+    voidBenchProblems.length === 0,
+    voidBenchProblems.join(" | ") ||
+      voidBench.map((b) =>
+        `${b.level.id} ${b.clean.length}/${VOID_SEEDS.length}` +
+        ` median ${b.median.toFixed(0)} max ${b.max.toFixed(0)} line ${b.line}`).join(" "));
+
+  /* The weak hand never reaches the void's three-star line either: it either
+   * falls before the slice ends or, if it finishes, projects past the line. */
+  const voidWeakProblems = [];
+  voidBench.forEach((b) => {
+    VOID_SEEDS.forEach((seed) => {
+      const r = sliceRun(b.level, weakHand, seed);
+      if (r.cleared && (r.seconds / SLICE) * 1000 * (b.level.goal / 1000) <= b.line) {
+        voidWeakProblems.push(`${b.level.id} weak seed ${seed} under the line`);
+      }
+    });
+  });
+  check("game-glyph-leap",
+    "the weak hand the gate keeps never finishes a void slice at the three-star pace",
+    voidWeakProblems.length === 0,
+    voidWeakProblems.join(" | "));
+
   /* The unlock chain is derived, never stored: clearing each ascent in order
-   * hands the player exactly the next one, all thirty times. */
+   * hands the player exactly the next one, all forty times. */
   const chain = App.createCampaign({
     key: "glyph-leap-gate-chain",
     levels: levels.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -599,8 +738,8 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < levels.length ? levels[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-glyph-leap", "the unlock chain walks all thirty ascents in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-glyph-leap", "the unlock chain walks all forty ascents in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 
   /* The summit's names travel with the module in both languages. */
   const summitCopyProblems = summit.map((level) => level.labelKey).filter((key) =>

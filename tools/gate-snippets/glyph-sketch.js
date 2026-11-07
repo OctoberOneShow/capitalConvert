@@ -18,13 +18,23 @@
  * the summit's line-solvable promise is load-bearing: every summit board
  * sits one pixel above the ambiguity edge - clearing any of its keystone
  * pixels stalls the sweep with cells no line can place - and the gate
- * re-measures that count for every rung. */
+ * re-measures that count for every rung.
+ *
+ * The quarter tier e31-e40 widens the tray a third time: every board is
+ * sixteen by sixteen. The same machine proof runs over the ten - unique
+ * line solvability, the deduction waves climbing strictly past the
+ * summit's eighteen to the ladder's longest sweep on e40, and the
+ * keystone count re-measured per board, where the quarter's measured
+ * cuts run into the dozens - and the time bands take about a ninth
+ * over e30 for the wider tray, then resume the shipped pace. */
 
 module.exports = function gate(ctx) {
   const { App, check } = ctx;
   const levels = App.sketchLevels || null;
   const deepIds = ["e21", "e22", "e23", "e24"];
   const summitIds = ["e25", "e26", "e27", "e28", "e29", "e30"];
+  const quarterIds = ["e31", "e32", "e33", "e34", "e35",
+    "e36", "e37", "e38", "e39", "e40"];
 
   /* The level table is closure-bound, so the gate re-hosts it the way
    * tools/static-checks.js hosts other closure-bound tables. */
@@ -39,8 +49,8 @@ module.exports = function gate(ctx) {
     ? "return [];"
     : src.slice(tableStart, tableEnd) + "\nreturn sketchLevels;")();
 
-  check("game-glyph-sketch", "the ladder holds thirty boards",
-    table.length === 30, String(table.length));
+  check("game-glyph-sketch", "the ladder holds forty boards",
+    table.length === 40, String(table.length));
   check("game-glyph-sketch", "every board id is distinct",
     new Set(table.map((level) => level.id)).size === table.length,
     table.map((level) => level.id).join(","));
@@ -50,6 +60,9 @@ module.exports = function gate(ctx) {
   const missingSummit = summitIds.filter((id) => !table.some((level) => level.id === id));
   check("game-glyph-sketch", "the summit tier e25-e30 is present",
     missingSummit.length === 0, missingSummit.join(","));
+  const missingQuarter = quarterIds.filter((id) => !table.some((level) => level.id === id));
+  check("game-glyph-sketch", "the quarter tier e31-e40 is present",
+    missingQuarter.length === 0, missingQuarter.join(","));
 
   /* ---- the line solver, re-hosted ---------------------------------------- */
   const cluesOf = (line) => {
@@ -175,7 +188,8 @@ module.exports = function gate(ctx) {
   const deep = deepIds.map((id) => byId[id]);
   const summit = summitIds.map((id) => byId[id]);
   const shipped = table.filter((level) =>
-    !deepIds.includes(level.id) && !summitIds.includes(level.id));
+    !deepIds.includes(level.id) && !summitIds.includes(level.id) &&
+    !quarterIds.includes(level.id));
   check("game-glyph-sketch",
     "no shipped board exceeds ten columns, every deep board is twelve and every summit board is fourteen",
     shipped.every((level) => level.art[0].length <= 10) &&
@@ -271,9 +285,13 @@ module.exports = function gate(ctx) {
     mean(summitWaves) > mean(deepWaves) + 2,
     "summit " + summitWaves.join("/") + " vs deep " + deepWaves.join("/"));
   check("game-glyph-sketch",
-    "e30 ends the ladder as its longest sweep",
-    wavesByLevel.e30 === Math.max.apply(null, allWaves),
-    "e30 " + wavesByLevel.e30 + " waves, ladder max " + Math.max.apply(null, allWaves));
+    "e30 ends the pre-quarter ladder as its longest sweep",
+    wavesByLevel.e30 === Math.max.apply(null,
+      table.filter((level) => !quarterIds.includes(level.id))
+        .map((level) => wavesByLevel[level.id])),
+    "e30 " + wavesByLevel.e30 + " waves, pre-quarter max " +
+      Math.max.apply(null, table.filter((level) => !quarterIds.includes(level.id))
+        .map((level) => wavesByLevel[level.id])));
 
   /* The clue lines fragment with the altitude: the summit's runs per line
    * climb rung over rung. */
@@ -308,18 +326,99 @@ module.exports = function gate(ctx) {
       keystones >= 10, keystones + " of " + filled + " pixel cuts stall the sweep");
   });
 
+  /* ---- the quarter tier: the sixteen-wide tray ---- */
+  const quarter = quarterIds.map((id) => byId[id]);
+  const quarterProblems = [];
+  quarter.forEach((level, index) => {
+    const result = lineSolve(level.art);
+    if (!result.solved) {
+      quarterProblems.push(level.id + " does not line-solve to its own picture");
+      return;
+    }
+    const prev = index === 0 ? byId.e30 : quarter[index - 1];
+    if (!(result.waves > wavesByLevel[prev.id])) {
+      quarterProblems.push(level.id + " sweeps in " + result.waves + " waves, not past " +
+        prev.id + "'s " + wavesByLevel[prev.id]);
+    }
+    const sizeProblems = level.art.length !== 16 || level.art[0].length !== 16;
+    if (sizeProblems) {
+      quarterProblems.push(level.id + " is not a sixteen-wide tray (" +
+        level.art.length + "x" + level.art[0].length + ")");
+    }
+  });
+  check("game-glyph-sketch",
+    "every quarter board line-solves uniquely, sweeps past the rung before it, and is sixteen wide",
+    quarterProblems.length === 0, quarterProblems.join(" | "));
+  const quarterWaves = quarter.map((level) => wavesByLevel[level.id]);
+  const summitWavesMean = mean(summitWaves);
+  check("game-glyph-sketch",
+    "the quarter's mean sweep clears the summit's by two (" +
+      mean(quarterWaves).toFixed(1) + " vs " + summitWavesMean.toFixed(1) + ")",
+    mean(quarterWaves) > summitWavesMean + 2,
+    "quarter " + quarterWaves.join("/") + " vs summit " + summitWaves.join("/"));
+  check("game-glyph-sketch",
+    "e40 ends the ladder as its longest sweep",
+    wavesByLevel.e40 === Math.max.apply(null,
+      table.map((level) => wavesByLevel[level.id])),
+    "e40 " + wavesByLevel.e40 + " waves, ladder max " +
+      Math.max.apply(null, table.map((level) => wavesByLevel[level.id])));
+
+  /* The keystone promise re-measured on the wider tray: every quarter
+   * board keeps a measured set of pixels whose clearance stalls the
+   * sweep - the measured counts run into the dozens. */
+  quarter.forEach((level) => {
+    const art = level.art;
+    let filled = 0;
+    let keystones = 0;
+    for (let r = 0; r < art.length; r += 1) {
+      for (let c = 0; c < art[0].length; c += 1) {
+        if (art[r][c] !== "#") continue;
+        filled += 1;
+        const cut = art.map((row, ri) =>
+          ri === r ? row.slice(0, c) + "." + row.slice(c + 1) : row);
+        if (!lineSolve(cut).solved) keystones += 1;
+      }
+    }
+    check("game-glyph-sketch",
+      level.id + " sits well above the ambiguity edge",
+      keystones >= 10, keystones + " of " + filled + " pixel cuts stall the sweep");
+  });
+
+  /* The quarter's time bands: about a ninth over e30 for the wider tray,
+   * then the shipped pace (no band jumps more than six percent). */
+  const quarterBandProblems = [];
+  quarter.forEach((level, index) => {
+    const prev = index === 0 ? byId.e30 : quarter[index - 1];
+    const jump = level.starTimes[0] / prev.starTimes[0];
+    if (!(level.starTimes[0] < level.starTimes[1] && level.starTimes[1] < level.starTimes[2])) {
+      quarterBandProblems.push(level.id + ": bands are not ordered");
+    }
+    if (index === 0 && !(jump >= 1.08 && jump <= 1.1)) {
+      quarterBandProblems.push("e31 takes " + ((jump * 100 - 100).toFixed(1)) +
+        "% over e30, not about a ninth");
+    }
+    if (index > 0 && level.starTimes.some((band, b) => band / prev.starTimes[b] > 1.06)) {
+      quarterBandProblems.push(level.id + ": a band jumps more than six percent");
+    }
+  });
+  check("game-glyph-sketch",
+    "the quarter time bands climb from e30, jump about a ninth, then resume the shipped pace",
+    quarterBandProblems.length === 0, quarterBandProblems.join(" | ") ||
+      quarter.map((level) => level.starTimes.join("/")).join(" "));
+
   /* The tier's names resolve in both languages. */
   const copyKeys = deep.map((level) => level.labelKey)
-    .concat(summit.map((level) => level.labelKey));
+    .concat(summit.map((level) => level.labelKey))
+    .concat(quarter.map((level) => level.labelKey));
   const copyProblems = copyKeys.filter((key) =>
     !(App.I18N && App.I18N.en && App.I18N.en[key]) ||
     !(App.I18N && App.I18N.zh && App.I18N.zh[key]) ||
     !App.t(key) || App.t(key) === key);
-  check("game-glyph-sketch", "the ten deep and summit board names resolve in both languages",
+  check("game-glyph-sketch", "the twenty deep, summit and quarter board names resolve in both languages",
     copyProblems.length === 0, copyProblems.join(","));
 
   /* The unlock chain is derived, never stored: clearing each board in order
-   * hands the player exactly the next one, all thirty times. */
+   * hands the player exactly the next one, all forty times. */
   const chain = App.createCampaign({
     key: "glyph-sketch-gate-chain",
     levels: table.map((level) => ({ id: level.id, labelKey: level.labelKey })),
@@ -332,6 +431,6 @@ module.exports = function gate(ctx) {
     const expected = index + 1 < table.length ? table[index + 1].id : null;
     if (outcome.unlockedNext !== expected) chained = false;
   });
-  check("game-glyph-sketch", "the unlock chain walks all thirty boards in order",
-    walked === 30 && chained && chain.clearedCount() === 30, walked + " first clears");
+  check("game-glyph-sketch", "the unlock chain walks all forty boards in order",
+    walked === 40 && chained && chain.clearedCount() === 40, walked + " first clears");
 };

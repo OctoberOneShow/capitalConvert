@@ -1,16 +1,18 @@
 #!/usr/bin/env node
 /* Writes the forged boards from tools/_aurora_boards.json over the second tier
  * of game-aurora-flow.js, with the argument `summit` the summit boards from
- * tools/_aurora_summit.json over the f25-f30 tier, or with `flood` the flood
- * boards from tools/_aurora_flood.json over the f31-f40 tier. Each ladder is
- * ordered by the solver's measured ribbon length, ids are re-assigned to
- * follow that order, and the star bands are derived from the same
- * measurement - so the file can always be rebuilt from the forge instead of
- * being hand-edited.
+ * tools/_aurora_summit.json over the f25-f30 tier, with `flood` the flood
+ * boards from tools/_aurora_flood.json over the f31-f40 tier, or with `crest`
+ * the crest boards from tools/_aurora_crest.json over the f41-f44 tier. Each
+ * ladder is ordered by the solver's measured ribbon length, ids are
+ * re-assigned to follow that order, and the star bands are derived from the
+ * same measurement - so the file can always be rebuilt from the forge instead
+ * of being hand-edited.
  *
  *   node tools/apply-aurora-levels.js          # second tier f11-f20
  *   node tools/apply-aurora-levels.js summit   # summit tier f25-f30
  *   node tools/apply-aurora-levels.js flood    # flood tier f31-f40
+ *   node tools/apply-aurora-levels.js crest    # crest tier f41-f44
  */
 "use strict";
 
@@ -22,10 +24,16 @@ const gameFile = path.join(root, "assets", "app", "game-aurora-flow.js");
 const dataFile = path.join(__dirname, "_aurora_boards.json");
 const summitFile = path.join(__dirname, "_aurora_summit.json");
 const floodFile = path.join(__dirname, "_aurora_flood.json");
+const crestFile = path.join(__dirname, "_aurora_crest.json");
+const zenithFile = path.join(__dirname, "_aurora_zenith.json");
 
 const mode = process.argv[2] === "summit"
   ? "summit"
-  : process.argv[2] === "flood" ? "flood" : "second";
+  : process.argv[2] === "flood"
+    ? "flood"
+    : process.argv[2] === "crest"
+      ? "crest"
+      : process.argv[2] === "zenith" ? "zenith" : "second";
 
 if (mode === "summit") {
   if (!fs.existsSync(summitFile)) {
@@ -199,6 +207,208 @@ if (mode === "flood") {
   }
   fs.writeFileSync(gameFile, source);
   console.log(`wrote ${boards.length} flood boards into assets/app/game-aurora-flow.js`);
+  boards.forEach((board) => {
+    console.log(`  ${board.id}: size ${board.size}, ${board.pairs.length} pairs, ${board.ink} inked cells`);
+  });
+  process.exit(0);
+}
+
+if (mode === "crest") {
+  if (!fs.existsSync(crestFile)) {
+    console.error("run: node tools/aurora-forge.js crest");
+    process.exit(2);
+  }
+  const boards = JSON.parse(fs.readFileSync(crestFile, "utf8"));
+  if (boards.length !== 4) {
+    console.error(`expected 4 crest boards, got ${boards.length}`);
+    process.exit(2);
+  }
+  boards.forEach((board, index) => {
+    board.id = "f" + (41 + index);
+    board.labelKey = "auroL" + (41 + index);
+    const three = Math.round(board.ink * 1.02);
+    board.starTimes = [three, Math.round(three * 1.55), Math.round(three * 2.15)];
+  });
+
+  function fmtPairs(pairs) {
+    return pairs.map((p) => `[${p.join(", ")}]`).join(", ");
+  }
+
+  const decks = boards.map((b) => b.pairs.length);
+  const lines = [];
+  lines.push("    /* ------------------------------------------------------------------");
+  lines.push("     * The crest tier (f41-f44). The flood had filled the twelve-across");
+  lines.push("     * panel to the whole cloth - 144 cells, the most ribbon the drawer");
+  lines.push("     * has ever held - so the crest carries the tide past it: the grid");
+  lines.push("     * opens to 13x13, a size no earlier rung used, and the tide still");
+  lines.push("     * comes in course by course - straight ribbons, disjoint by");
+  lines.push("     * construction, each pair's unique shortest path being its own");
+  lines.push("     * course, so the solver's measured answer lands exactly on the");
+  lines.push("     * manhattan floor the pair distances set - the weave is pinned by");
+  lines.push(`     * geometry, never searched for. The ink climbs seven cells a rung`);
+  lines.push(`     * from just past the whole cloth: f41 ${boards[0].ink}, f42 ${boards[1].ink},`);
+  lines.push(`     * f43 ${boards[2].ink}, f44 ${boards[3].ink} - the second whole cloth, the biggest full`);
+  lines.push(`     * panel the drawer has ever held, and every rung needs more ribbon`);
+  lines.push("     * than the twelve panel holds cells, so no crest weave could");
+  lines.push("     * physically fit the flood's board. As the cloth fills the deck");
+  lines.push(`     * thins: ${decks[0]} ribbons at the crest's foot, then ${decks[1]}, ${decks[2]}, and`);
+  lines.push(`     * ${decks[3]} at the top, where the capstone relays the whole cloth in`);
+  lines.push("     * courses that all run the panel's full span of thirteen - against");
+  lines.push("     * the eight-cell ribbon floor the first whole cloth held. Every");
+  lines.push("     * board was verified by tools/aurora-forge.js (`node");
+  lines.push("     * tools/aurora-forge.js crest` rebuilds this block from");
+  lines.push("     * tools/_aurora_crest.json): the solver re-solves each board from");
+  lines.push("     * the pairs alone at the screen cap, lands on the floor, and the");
+  lines.push("     * rungs sit in the order that measure climbs. The star bands");
+  lines.push("     * follow the same one-second-per-inked-cell pace the whole forged");
+  lines.push("     * ladder ships at.");
+  lines.push("     * ------------------------------------------------------------------ */");
+  boards.forEach((board) => {
+    lines.push("    {");
+    lines.push(`      id: "${board.id}", labelKey: "${board.labelKey}", size: ${board.size},`);
+    lines.push("      pairs: [" + fmtPairs(board.pairs) + "],");
+    lines.push("      starTimes: [" + board.starTimes.join(", ") + "],");
+    lines.push("    },");
+  });
+  const block = lines.join("\n");
+
+  let source = fs.readFileSync(gameFile, "utf8");
+  /* The crest is the ladder's tail: rebuild it in place once shipped, or
+   * splice it in after the flood block, which is the tail until then. */
+  const crestMarker = "The crest tier (f41-f44)";
+  const floodMarker = "The flood tier (f31-f40)";
+  const marker = source.indexOf(crestMarker) >= 0 ? crestMarker : floodMarker;
+  const start = source.indexOf(marker);
+  if (start < 0) {
+    console.error("crest-tier splice point not found");
+    process.exit(2);
+  }
+  const end = source.indexOf("];", start);
+  if (end < 0) {
+    console.error("crest-tier block boundaries not found");
+    process.exit(2);
+  }
+  let blockStart;
+  if (marker === crestMarker) {
+    /* Rebuild: the whole crest block, comment through last rung, is replaced. */
+    blockStart = source.lastIndexOf("    /* ---", start);
+    if (blockStart < 0) {
+      console.error("crest-tier block start not found");
+      process.exit(2);
+    }
+    source = source.slice(0, blockStart) + block + "\n  " + source.slice(end);
+  } else {
+    /* First splice: the flood rungs stay; the crest block joins them at the
+     * tail, after the last rung's closing brace and before the array's own. */
+    const lastBrace = source.lastIndexOf("    },", end);
+    if (lastBrace < 0) {
+      console.error("flood tail not found");
+      process.exit(2);
+    }
+    source = source.slice(0, lastBrace + 6) + "\n\n" + block + "\n  " + source.slice(end);
+  }
+  fs.writeFileSync(gameFile, source);
+  console.log(`wrote ${boards.length} crest boards into assets/app/game-aurora-flow.js`);
+  boards.forEach((board) => {
+    console.log(`  ${board.id}: size ${board.size}, ${board.pairs.length} pairs, ${board.ink} inked cells`);
+  });
+  process.exit(0);
+}
+
+if (mode === "zenith") {
+  if (!fs.existsSync(zenithFile)) {
+    console.error("run: node tools/aurora-forge.js zenith");
+    process.exit(2);
+  }
+  const boards = JSON.parse(fs.readFileSync(zenithFile, "utf8"));
+  if (boards.length !== 4) {
+    console.error(`expected 4 zenith boards, got ${boards.length}`);
+    process.exit(2);
+  }
+  boards.forEach((board, index) => {
+    board.id = "f" + (45 + index);
+    board.labelKey = "auroL" + (45 + index);
+    const three = Math.round(board.ink * 1.02);
+    board.starTimes = [three, Math.round(three * 1.55), Math.round(three * 2.15)];
+  });
+
+  function fmtPairsZenith(pairs) {
+    return pairs.map((p) => `[${p.join(", ")}]`).join(", ");
+  }
+
+  const decks = boards.map((b) => b.pairs.length);
+  const lines = [];
+  lines.push("    /* ------------------------------------------------------------------");
+  lines.push("     * The zenith tier (f45-f48). The crest capstone relaid the whole");
+  lines.push("     * cloth on the thirteen panel - 169 cells, every one of them in");
+  lines.push("     * ribbon - so the zenith carries the tide past it: the grid opens");
+  lines.push("     * to 14x14, a size no earlier rung used, and the tide still comes");
+  lines.push("     * in course by course - straight ribbons, disjoint by construction,");
+  lines.push("     * each pair's unique shortest path being its own course, so the");
+  lines.push("     * solver's measured answer lands exactly on the manhattan floor the");
+  lines.push("     * pair distances set - the weave is pinned by geometry, never");
+  lines.push("     * searched for. The ink climbs from just past the crest's cloth:");
+  lines.push(`     * f45 ${boards[0].ink}, f46 ${boards[1].ink}, f47 ${boards[2].ink}, f48 ${boards[3].ink} -`);
+  lines.push("     * the third whole cloth, every cell of the fourteen panel in");
+  lines.push("     * ribbon, and every rung needs more ribbon than the thirteen panel");
+  lines.push("     * holds cells, so no zenith weave could physically fit the crest's");
+  lines.push(`     * board. The opener still carries ${decks[0]} courses; the cloth takes ${decks[3]},`);
+  lines.push("     * and the capstone relays it in courses that all run the panel's");
+  lines.push("     * full span of fourteen - against the eight-cell ribbon floor the");
+  lines.push("     * first whole cloth held. Every board was verified by");
+  lines.push("     * tools/aurora-forge.js (`node tools/aurora-forge.js zenith`");
+  lines.push("     * rebuilds this block from tools/_aurora_zenith.json): the solver");
+  lines.push("     * re-solves each board from the pairs alone, and a candidate only");
+  lines.push("     * ships when that solver proves it at the screen cap. The rungs sit");
+  lines.push("     * in the order that re-solve measured - no rung needs less ribbon");
+  lines.push("     * than the one before it - and the star bands follow the same");
+  lines.push("     * one-second-per-inked-cell pace the whole forged ladder ships at.");
+  lines.push("     * ------------------------------------------------------------------ */");
+  boards.forEach((board) => {
+    lines.push("    {");
+    lines.push(`      id: "${board.id}", labelKey: "${board.labelKey}", size: ${board.size},`);
+    lines.push("      pairs: [" + fmtPairsZenith(board.pairs) + "],");
+    lines.push("      starTimes: [" + board.starTimes.join(", ") + "],");
+    lines.push("    },");
+  });
+  const block = lines.join("\n");
+
+  let source = fs.readFileSync(gameFile, "utf8");
+  const zenithMarker = "The zenith tier (f45-f48)";
+  const crestMarker = "The crest tier (f41-f44)";
+  const marker = source.indexOf(zenithMarker) >= 0 ? zenithMarker : crestMarker;
+  const start = source.indexOf(marker);
+  if (start < 0) {
+    console.error("zenith-tier splice point not found");
+    process.exit(2);
+  }
+  const end = source.indexOf("];", start);
+  if (end < 0) {
+    console.error("zenith-tier block boundaries not found");
+    process.exit(2);
+  }
+  let blockStart;
+  if (marker === zenithMarker) {
+    /* Rebuild: the whole zenith block, comment through last rung, is replaced. */
+    blockStart = source.lastIndexOf("    /* ---", start);
+    if (blockStart < 0) {
+      console.error("zenith-tier block start not found");
+      process.exit(2);
+    }
+    source = source.slice(0, blockStart) + block + "\n  " + source.slice(end);
+  } else {
+    /* First splice: the crest rungs stay; the zenith block joins them at
+     * the tail, after the last rung's closing brace and before the
+     * array's own. */
+    const lastBrace = source.lastIndexOf("    },", end);
+    if (lastBrace < 0) {
+      console.error("crest tail not found");
+      process.exit(2);
+    }
+    source = source.slice(0, lastBrace + 6) + "\n\n" + block + "\n  " + source.slice(end);
+  }
+  fs.writeFileSync(gameFile, source);
+  console.log(`wrote ${boards.length} zenith boards into assets/app/game-aurora-flow.js`);
   boards.forEach((board) => {
     console.log(`  ${board.id}: size ${board.size}, ${board.pairs.length} pairs, ${board.ink} inked cells`);
   });
